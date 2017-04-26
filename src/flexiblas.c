@@ -1,4 +1,4 @@
-/* $Id$ */ 
+/* $Id: flexiblas.c 3914 2014-01-08 09:32:15Z komart $ */ 
 /* 
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
@@ -235,6 +235,9 @@ int __flexiblas_loadhook(void *handle, const char *symbol, const char *csymbol, 
 		return 1; 
 	}
 	snprintf(cfblas, 19, "%s_",symbol); 
+	if (__flexiblas_verbose > 1 ) {
+		fprintf(stderr, PRINT_PREFIX " Look up: %s", cfblas); 
+	}
 
 	// fprintf(stderr, "Look for %s\n", cfblas); 
 	ptr_fsymbol = dlsym(handle,cfblas);
@@ -246,6 +249,9 @@ int __flexiblas_loadhook(void *handle, const char *symbol, const char *csymbol, 
 		if (ptr_fsymbol) {
 			fn->call_fblas = ptr_fsymbol; 
 		} 
+	}
+	if ( __flexiblas_verbose > 1) {
+		fprintf(stderr, " %s.\n",(fn->call_fblas == NULL)?"failed":"sucess"); 
 	}
 #ifdef FLEXIBLAS_CBLAS 
 	// fprintf(stderr, "Look for %s\n",ccblas);

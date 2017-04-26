@@ -162,7 +162,7 @@ int __flexiblas_hook_single(void * handle){
 	/*-----------------------------------------------------------------------------
 	 *  Load SCABS1, Missing in ATLAS and ACML
 	 *-----------------------------------------------------------------------------*/
-	if ( __flexiblas_current_blas.scabs1_missing != 0 ) {
+	if ( __flexiblas_current_blas.scabs1_missing == 0 ) {
 		if ( LOAD_HOOK_INTERN(scabs1) != 0 ) {
 			__flexiblas_current_blas.scabs1_missing = 1; 
 		}
@@ -221,9 +221,9 @@ float scabs1_(float complex *Z){
 		ret= fabsf(crealf(*Z)) + fabsf(cimagf(*Z)); 
 	} else {
 		float (*fn)  (float complex *Z); 
-		fn = flexiblas_cdotc.call_fblas; 
+		fn = flexiblas_scabs1.call_fblas; 
 		if ( fn == NULL ) { 
-			fprintf(stderr, "cdotc_ not hooked, abort\n"); 
+			fprintf(stderr, "scabs1_ not hooked, abort\n"); 
 			abort(); 
 		}
 		ret = fn(Z); 
