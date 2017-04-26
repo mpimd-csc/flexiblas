@@ -62,8 +62,7 @@
       DATA ZERO,ONE,TWO/0.E0,1.E0,2.E0/
       DATA GAM,GAMSQ,RGAMSQ/4096.E0,1.67772E7,5.96046E-8/
 *     ..
-
-      SFLAG  = ONE
+      SFLAG = -ONE
       SH11 = ZERO
       SH12 = ZERO
       SH21 = ZERO

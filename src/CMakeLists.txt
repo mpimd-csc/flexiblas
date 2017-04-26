@@ -1,15 +1,23 @@
 SET ( SRC 
 	flexiblas.c 
-	integer.c
-	double.c 
-	single.c
-	complex.c
-	complex16.c
-	hashtable.c
+	flexiblas_api.c
+	loader.c
+	xerbla.c
 	lsame.c
 	utils.c
+	set_num_threads.c
 	sh_utils.c
+	wrap_cblas.c
+	wrapper_extblas.c
+	wrapper_real.c
+	wrapper_real_extblas.c
 	) 
+IF ( USE_INTERFACE_INTEL) 
+	SET (SRC ${SRC} wrapper_blas_intel.c) 
+ELSE () 
+	SET (SRC ${SRC} wrapper_blas_gnu.c) 
+ENDIF() 
+
 SET ( CBLAS_SRC 
 	# Globlas
 	cblas_interface/cblas_globals.c 
@@ -167,6 +175,12 @@ ENDIF()
 
 IF (EXTBLAS STREQUAL ON ) 
 	ADD_DEFINITIONS(-DEXTBLAS_ENABLED)
+	IF ( USE_INTERFACE_INTEL) 
+		SET (SRC ${SRC} wrapper_extblas_intel.c) 
+	ELSE () 
+		SET (SRC ${SRC} wrapper_extblas_gnu.c) 
+	ENDIF() 
+
 	SET (SRC ${SRC} 
 		ext_blas/daxpby.f
 		ext_blas/saxpby.f
@@ -182,6 +196,10 @@ IF (EXTBLAS STREQUAL ON )
 		ext_blas/dimatcopy.c
 		ext_blas/cimatcopy.c
 		ext_blas/zimatcopy.c
+		ext_blas/dgeadd.f90
+		ext_blas/sgeadd.f90
+		ext_blas/cgeadd.f90
+		ext_blas/zgeadd.f90
 
 	) 
 	IF (CBLAS STREQUAL ON) 
@@ -198,8 +216,10 @@ IF (EXTBLAS STREQUAL ON )
 			ext_blas/cblas_dimatcopy.c
 			ext_blas/cblas_cimatcopy.c
 			ext_blas/cblas_zimatcopy.c
-
-
+			ext_blas/cblas_dgeadd.c
+			ext_blas/cblas_cgeadd.c
+			ext_blas/cblas_zgeadd.c
+			ext_blas/cblas_sgeadd.c
 
 			)
 	ENDIF()
@@ -208,20 +228,33 @@ ENDIF ()
 
 
 
-INCLUDE_DIRECTORIES(${INCLUDE_DIR})
+INCLUDE_DIRECTORIES(${INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 add_library(flexiblas ${SRC})
 TARGET_LINK_LIBRARIES(flexiblas ${LIBS})
-set(GENERIC_LIB_VERSION "1.0")
+
+
+set(GENERIC_LIB_VERSION "1.3")
 set(GENERIC_LIB_SOVERSION "1")
 
-add_executable(flexiblas-tool flexiblas_tool.c hashtable.c utils.c) 
-
+add_executable(flexiblas-tool flexiblas_tool.c utils.c) 
+TARGET_LINK_LIBRARIES(flexiblas-tool ${LIBS}) 
 
 SET_TARGET_PROPERTIES(flexiblas PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} LINK_FLAGS "-Bsymbolic" )
 IF (USE_INTERFACE_INTEL) 
 	SET_TARGET_PROPERTIES(flexiblas PROPERTIES OUTPUT_NAME flexiblas_intel)	 
 ENDIF()
-SET_TARGET_PROPERTIES(flexiblas-tool PROPERTIES OUTPUT_NAME flexiblas) 
+
+IF(INTEGER8 STREQUAL ON) 
+	SET_TARGET_PROPERTIES(flexiblas PROPERTIES OUTPUT_NAME flexiblas64)
+	SET_TARGET_PROPERTIES(flexiblas-tool PROPERTIES OUTPUT_NAME flexiblas64)
+	IF (USE_INTERFACE_INTEL) 
+		SET_TARGET_PROPERTIES(flexiblas PROPERTIES OUTPUT_NAME flexiblas64_intel)	 
+	ENDIF()
+	SET (FLEXIBLASRC "flexiblasrc64")
+ELSE ()
+	SET_TARGET_PROPERTIES(flexiblas-tool PROPERTIES OUTPUT_NAME flexiblas) 
+	SET (FLEXIBLASRC "flexiblasrc")
+ENDIF()
 
 
 install(TARGETS flexiblas LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR} ARCHIVE  DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
@@ -231,10 +264,9 @@ INCLUDE(CheckBlasZdotcMKL)
 INCLUDE(CheckFortranFunctionExists)
 INCLUDE(CheckFunctionExists) 
 
-SET (FLEXIBLASRC "flexiblasrc")
+# SET(BLA_STATIC TRUE)
 
-
-MACRO(Build_Extra_BLAS VENDOR)
+MACRO(Build_Extra_BLAS VENDOR BACKEND_CODE)
 	MESSAGE(STATUS "")
 	UNSET(BLAS_FOUND CACHE) 
 	SET(BLAS_FOUND FALSE )
@@ -256,29 +288,25 @@ MACRO(Build_Extra_BLAS VENDOR)
 		ENDIF()
 	ELSE ()
 		MESSAGE(STATUS "Search for ${VENDOR}")
-		FIND_PACKAGE(BLAS)
+		IF (INTEGER8 STREQUAL ON) 
+			FIND_PACKAGE(BLAS64)
+		ELSE()
+			FIND_PACKAGE(BLAS)
+		ENDIF()
 	ENDIF()
 	IF (BLAS_FOUND) 
 		MESSAGE(STATUS "Build extra BLAS interface: ${VENDOR}")
 		MESSAGE(STATUS "Libs: ${BLAS_LIBRARIES}")
-		#		IF ( "${VENDOR}" MATCHES "Intel.*") 
-		#			STRING(FIND "${BLAS_LIBRARIES}" "gf" GFIN)
-		#			MESSAGE(STATUS "GFIN: ${GFIN}")
-		#			IF ( ${GFIN} EQUAL -1 )
-		#				SET(ZDOTC_MKL TRUE)
-		#			ELSE ()
-		#				SET(ZDOTC_MKL FALSE)
-		#			ENDIF()
-		#		ENDIF () 
+
 		CheckBlasZdotcMKL("${BLAS_LIBRARIES}" "${BLAS_LINKER_FLAGS}" ${INTEGER8})
 		SET(__CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES})
 		SET(CMAKE_REQUIRED_LIBRARIES ${BLAS_LIBRARIES} ${BLAS_LINKER_FLAGS})
-		UNSET(SCABS1_EXIST CACHE)
+		#UNSET(SCABS1_EXIST CACHE)
 		UNSET(ISFLEXIBLAS CACHE)
 		UNSET(DAXPY CACHE) 
 		UNSET(MKL_OMATCOPY CACHE)
 		UNSET(CBLAS_DAXPY CACHE) 
-		Check_Fortran_Function_Exists(SCABS1 SCABS1_EXIST)
+		#Check_Fortran_Function_Exists(SCABS1 SCABS1_EXIST)
 		Check_Function_Exists(flexiblas_exit ISFLEXIBLAS) 
 		Check_Fortran_Function_Exists(DAXPY  DAXPY)
 		Check_Fortran_Function_Exists(MKL_DOMATCOPY MKL_OMATCOPY)
@@ -291,16 +319,21 @@ MACRO(Build_Extra_BLAS VENDOR)
 		IF (NOT ISFLEXIBLAS) 
 			UNSET(EXTRA_FLAGS CACHE)	
 			string(TOLOWER ${VENDOR} ivendor)
-			ADD_LIBRARY(blas_${ivendor} SHARED dummy_lib.c)
-			SET(EXTRA_FLAGS "")
+			string(TOUPPER ${VENDOR} uvendor) 
+			ADD_LIBRARY(blas_${ivendor} SHARED ${BACKEND_CODE})
+			IF (INTEGER8 STREQUAL ON OR BLAS_INTERFACE64) 
+				SET(EXTRA_FLAGS "-DBACKEND_INTEGER8")
+			ELSE ()
+				SET(EXTRA_FLAGS "")
+			ENDIF()
 			IF (ZDOTC_MKL)
 				MESSAGE(STATUS "${VENDOR} uses Intel ZDOTC")
 				SET(EXTRA_FLAGS "${EXTRA_FLAGS} -DZDOTC_MKL")
 			ENDIF (ZDOTC_MKL)
-			IF (NOT SCABS1_EXIST)
-				MESSAGE(STATUS "${VENDOR} does not provide a scabs1 function")
-				SET(EXTRA_FLAGS "${EXTRA_FLAGS} -DSCABS_MISSING")
-			ENDIF(NOT SCABS1_EXIST)
+			# IF (NOT SCABS1_EXIST)
+			#	MESSAGE(STATUS "${VENDOR} does not provide a scabs1 function")
+			#	SET(EXTRA_FLAGS "${EXTRA_FLAGS} -DSCABS_MISSING")
+			# ENDIF(NOT SCABS1_EXIST)
 			IF(CBLAS_DAXPY)
 				IF (CBLAS STREQUAL ON) 
 					MESSAGE(STATUS "Add CBLAS in dummy library")
@@ -308,23 +341,24 @@ MACRO(Build_Extra_BLAS VENDOR)
 				ENDIF()
 			ENDIF()
 
-			IF ( MKL_OMATCOPY ) 
-				MESSAGE(STATUS "BLAS ${ivendor}$ seem to be an Intel MKL") 
-				SET_TARGET_PROPERTIES(blas_${ivendor} PROPERTIES COMPILE_DEFINITIONS "MKL")
-			ENDIF()
-
-			SET_TARGET_PROPERTIES(blas_${ivendor} PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS}" LINK_FLAGS "${BLAS_LINKER_FLAGS}") 
+			#IF ( MKL_OMATCOPY ) 
+			#	MESSAGE(STATUS "BLAS ${ivendor}$ seem to be an Intel MKL") 
+			#		SET_TARGET_PROPERTIES(blas_${ivendor} PROPERTIES COMPILE_DEFINITIONS "MKL")
+			#ENDIF()
+			MESSAGE(STATUS "Extra Linker Flags: ${BLAS_LINKER_FLAGS}")
+			SET_TARGET_PROPERTIES(blas_${ivendor} PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS}") 
+			# SET_TARGET_PROPERTIES(blas_${ivendor} PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS}" LINK_FLAGS "${BLAS_LINKER_FLAGS}") 
 
 			IF (CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")  
 				SET(BLAS_LIBRARIES ${BLAS_LIBRARIES} gfortran)
 			ENDIF() 
 			TARGET_LINK_LIBRARIES(blas_${ivendor} ${BLAS_LIBRARIES})
-			INSTALL(TARGETS blas_${ivendor} LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/flexiblas)
+			INSTALL(TARGETS blas_${ivendor} LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR})
 			
-			LIST(APPEND EXTRA_BLAS "${ivendor}")
+			LIST(APPEND EXTRA_BLAS "${uvendor}")
 			UNSET(LIBNAME CACHE)
 			SET(LIBNAME "${CMAKE_SHARED_LIBRARY_PREFIX}blas_${ivendor}${CMAKE_SHARED_LIBRARY_SUFFIX} ") 
-			FILE(APPEND "${CMAKE_BINARY_DIR}/${FLEXIBLASRC}" "${VENDOR} | ${LIBNAME}\n")
+			FILE(APPEND "${CMAKE_BINARY_DIR}/${FLEXIBLASRC}" "[${VENDOR}]\nlibrary = ${LIBNAME}\n\n")
 		ELSE ()
 			MESSAGE(STATUS "Skip BLAS ${ivendor} because it seems to contain FlexiBLAS")
 		ENDIF()
@@ -335,26 +369,108 @@ ENDMACRO()
 # Build BLAS interfaces 
 #
 FILE(REMOVE "${CMAKE_BINARY_DIR}/${FLEXIBLASRC}") 
-FILE(APPEND "${CMAKE_BINARY_DIR}/${FLEXIBLASRC}" "Netlib | libblas_netlib${CMAKE_SHARED_LIBRARY_SUFFIX}\n") 
+FILE(APPEND "${CMAKE_BINARY_DIR}/${FLEXIBLASRC}" "verbose = 0\nprofile = 0\n\n[NETLIB]\nlibrary = libblas_netlib${CMAKE_SHARED_LIBRARY_SUFFIX}\n\n") 
 #
 # Build Additional BLAS interfaces 
 #
 #Build_Extra_BLAS(Generic) 
-Build_Extra_BLAS(Goto)
-Build_Extra_BLAS(OpenBLAS)
-Build_Extra_BLAS(ATLAS)
-#Build_Extra_BLAS(SunPerf)
-#Build_Extra_BLAS(SCSL)
-#Build_Extra_BLAS(SGIMATH)
-#Build_Extra_BLAS(IBMESSL)
-Build_Extra_BLAS(Intel_32)
-Build_Extra_BLAS(Intel_32_seq)
-Build_Extra_BLAS(Intel_64lp)
-Build_Extra_BLAS(Intel_64lp_seq)
-Build_Extra_BLAS(ACML)
-Build_Extra_BLAS(ACML_MP)
-Build_Extra_BLAS(Apple)
+Build_Extra_BLAS(Goto 		backends/generic/backend.c)
+Build_Extra_BLAS(OpenBLAS 	backends/generic/backend.c)
+Build_Extra_BLAS(OpenBLAS-PThreads 	backends/generic/backend.c)
+Build_Extra_BLAS(OpenBLAS-OpenMP 	backends/generic/backend.c)
+Build_Extra_BLAS(ATLAS  	backends/generic/backend.c)
+IF (MKL_CUSTOM STREQUAL OFF) 
+	Build_Extra_BLAS(Intel_32       backends/intel_mkl/backend.c)
+	Build_Extra_BLAS(Intel_32_seq 	backends/intel_mkl/backend.c)
+	Build_Extra_BLAS(Intel_64lp 	backends/intel_mkl/backend.c)
+	Build_Extra_BLAS(Intel_64lp_seq backends/intel_mkl/backend.c)
+ENDIF()
+Build_Extra_BLAS(ACML 		backends/generic/backend.c)
+Build_Extra_BLAS(ACML_MP 	backends/amd_acml_mp/backend.c)
+Build_Extra_BLAS(Apple          backends/generic/backend.c)
+
+#
+# MKL Custom 
+#
+IF ( MKL_CUSTOM STREQUAL ON)
+	MESSAGE(STATUS "Build custom MKL from MKLROOT = $ENV{MKLROOT}")
+	IF(NOT DEFINED ENV{MKLROOT}) 
+		MESSAGE(FATAL_ERROR "MKLROOT must be set when building MKL backends.")
+	ENDIF()
+	EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
+	IF(${ARCHITECTURE} STREQUAL "x86_64") 
+		IF (INTEGER8 STREQUAL ON)
+			SET(MKL_INTERFACE ilp64)
+		ELSE()
+			SET(MKL_INTERFACE lp64)
+		ENDIF()
+		SET(MKL_TARGET libintel64) 
+	ELSE()
+		IF (INTEGER8 STREQUAL ON)
+			SET(MKL_INTERFACE ilp64)
+		ELSE()
+			SET(MKL_INTERFACE lp64)
+		ENDIF()
+		SET(MKL_TARGET libia32) 
+	ENDIF()
+
+	ADD_CUSTOM_TARGET(mkl_parallel COMMAND make -C "$ENV{MKLROOT}/tools/builder" ${MKL_TARGET} export=${CMAKE_CURRENT_SOURCE_DIR}/backends/intel_mkl/mkl_list_11_1.txt name="${CMAKE_BINARY_DIR}/libflexiblas_mkl_custom_parallel" threading=parallel interface=${MKL_INTERFACE}) 
+  	ADD_CUSTOM_TARGET(mkl_sequential COMMAND make -C "$ENV{MKLROOT}/tools/builder" ${MKL_TARGET} export=${CMAKE_CURRENT_SOURCE_DIR}/backends/intel_mkl/mkl_list_11_1.txt name="${CMAKE_BINARY_DIR}/libflexiblas_mkl_custom_sequential" threading=parallel interface=${MKL_INTERFACE}) 
+	SET(MKL_PARALLEL ${CMAKE_BINARY_DIR}/libflexiblas_mkl_custom_parallel.so)
+	SET(MKL_SEQUENTIAL ${CMAKE_BINARY_DIR}/libflexiblas_mkl_custom_sequential.so)
+
+	ADD_LIBRARY(blas_intel_mkl SHARED backends/intel_mkl/backend.c)
+	ADD_LIBRARY(blas_intel_mkl_seq SHARED backends/intel_mkl/backend.c)
+
+	IF (INTEGER8 STREQUAL ON OR BLAS_INTERFACE64) 
+		SET(EXTRA_FLAGS "-DMKL_CUSTOM -DBACKEND_INTEGER8")
+	ELSE ()
+		SET(EXTRA_FLAGS "-DMKL_CUSTOM")
+	ENDIF()
+	SET(EXTRA_FLAGS "${EXTRA_FLAGS} -DZDOTC_MKL")
+	SET_TARGET_PROPERTIES(blas_intel_mkl PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS}") 
+	SET_TARGET_PROPERTIES(blas_intel_mkl_seq PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS}") 
+	TARGET_LINK_LIBRARIES(blas_intel_mkl ${MKL_PARALLEL}) 
+	TARGET_LINK_LIBRARIES(blas_intel_mkl_seq ${MKL_SEQUENTIAL})
+	ADD_DEPENDENCIES(blas_intel_mkl mkl_parallel)
+	ADD_DEPENDENCIES(blas_intel_mkl_seq mkl_sequential) 
+
+	LIST(APPEND EXTRA_BLAS "INTEL_MKL")
+	LIST(APPEND EXTRA_BLAS "INTEL_MKL_SEQ")
+	
+	SET(LIBNAME "${CMAKE_SHARED_LIBRARY_PREFIX}blas_intel_mkl${CMAKE_SHARED_LIBRARY_SUFFIX} ") 
+	FILE(APPEND "${CMAKE_BINARY_DIR}/${FLEXIBLASRC}" "[INTEL_MKL]\nlibrary = ${LIBNAME}\n\n")
+	SET(LIBNAME "${CMAKE_SHARED_LIBRARY_PREFIX}blas_intel_mkl_seq${CMAKE_SHARED_LIBRARY_SUFFIX} ") 
+	FILE(APPEND "${CMAKE_BINARY_DIR}/${FLEXIBLASRC}" "[INTEL_MKL_SEQ]\nlibrary = ${LIBNAME}\n\n")
+
+	INSTALL(TARGETS blas_intel_mkl LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR})
+	INSTALL(TARGETS blas_intel_mkl_seq LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR})
+	INSTALL(FILES ${MKL_PARALLEL} ${MKL_SEQUENTIAL} DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
+
+
+ENDIF()
+#
+# Build Demo BACKEND  
+#
+IF ( DEV STREQUAL ON ) 
+	ADD_LIBRARY(blas_flexiblas_demo SHARED backends/demo/backend.c)
+	IF (INTEGER8 STREQUAL ON) 
+		SET(EXTRA_FLAGS "-DBACKEND_INTEGER8")
+	ELSE ()
+		SET(EXTRA_FLAGS "")
+	ENDIF()
+	SET_TARGET_PROPERTIES(blas_flexiblas_demo PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS}") 
+
+	TARGET_LINK_LIBRARIES(blas_flexiblas_demo blas_netlib)
+	FILE(APPEND "${CMAKE_BINARY_DIR}/${FLEXIBLASRC}" "[DEMO]\nlibrary = ${CMAKE_SHARED_LIBRARY_PREFIX}blas_flexiblas_demo${CMAKE_SHARED_LIBRARY_SUFFIX}\n\n")
+	INSTALL(TARGETS blas_flexiblas_demo LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/flexiblas)
+	LIST(APPEND EXTRA_BLAS "DEMO")
+ENDIF()
+
+
+
 #Build_Extra_BLAS(Generic)
 SET(EXTRA_BLAS "${EXTRA_BLAS}" PARENT_SCOPE)
 INSTALL(FILES "${CMAKE_BINARY_DIR}/${FLEXIBLASRC}" DESTINATION "${CMAKE_INSTALL_FULL_SYSCONFDIR}" PERMISSIONS OWNER_WRITE  OWNER_READ  GROUP_READ WORLD_READ) 
+
 

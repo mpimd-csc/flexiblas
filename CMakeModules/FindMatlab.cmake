@@ -7,8 +7,7 @@
 #  MATLAB_ENG_LIBRARY: path to libeng.lib
 #  MATLAB_ROOT: path to Matlab's root directory
 #  MATLAB_ARCH_DIR:    MATLAB ARCH DIR 
-#  MATLAB_EXT
-#  MATLAB_MEX: 		PAth to the mex compiler 
+#  MATALB_EXT
 
 # This file is part of Gerardus
 #
@@ -124,8 +123,6 @@ ELSE(WIN32)
   ENDIF((NOT DEFINED MATLAB_ROOT) 
     OR ("${MATLAB_ROOT}" STREQUAL ""))
 
-  SET (MATLAB_MEX "${MATLAB_ROOT}/bin/mex") 
-
   # Check if this is a Mac
   IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
@@ -136,7 +133,7 @@ ELSE(WIN32)
     IF((NOT DEFINED MATLAB_ROOT) OR ("${MATLAB_ROOT}" STREQUAL ""))
 
     # Search for a version of Matlab available, starting from the most modern one to older versions
-    FOREACH(MATVER "R2016b" "R2016a" "R2015b" "R2015a" "R2014b" "R2014a" "R2013b" "R2013a" "R2012b" "R2012a" "R2011b" "R2011a" "R2010b" "R2010a" "R2009b" "R2009a" "R2008b")
+      FOREACH(MATVER "R2013b" "R2013a" "R2012b" "R2012a" "R2011b" "R2011a" "R2010b" "R2010a" "R2009b" "R2009a" "R2008b")
         IF((NOT DEFINED MATLAB_ROOT) OR ("${MATLAB_ROOT}" STREQUAL ""))
           IF(EXISTS /Applications/MATLAB_${MATVER}.app)
             SET(MATLAB_ROOT /Applications/MATLAB_${MATVER}.app)
@@ -171,6 +168,7 @@ ELSE(WIN32)
 	  ENDIF(CMAKE_SIZEOF_VOID_P MATCHES "4")
   ENDIF(APPLE)
  
+  MESSAGE(STATUS "MATLAB_EXT = ${MATLAB_EXT}")
   SET(MATLAB_ARCH_DIR "${MATLAB_ROOT}/bin/${MATLAB_ARCH_DIR}/") 
   IF(EXISTS ${MATLAB_ARCH_DIR})
 	  EXECUTE_PROCESS(
@@ -198,13 +196,6 @@ ELSE(WIN32)
 
 ENDIF(WIN32)
 
-IF ( MATLAB_FOUND) 
-	MESSAGE(STATUS "Found MATLAB:") 
-	MESSAGE(STATUS " MATLAB_ROOT = ${MATLAB_ROOT}")
-	MESSAGE(STATUS " MATLAB_EXT  = ${MATLAB_EXT}")
-	MESSAGE(STATUS " MATLAB_MEX  = ${MATLAB_MEX}")
-ENDIF()
-
 # This is common to UNIX and Win32:
 SET(MATLAB_LIBRARIES
   ${MATLAB_MEX_LIBRARY}
@@ -224,7 +215,6 @@ MARK_AS_ADVANCED(
   MATLAB_INCLUDE_DIR
   MATLAB_FOUND
   MATLAB_ROOT
-  MATLAB_MEX 
 )
 
 include(FindPackageHandleStandardArgs)

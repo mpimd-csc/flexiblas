@@ -1,8 +1,26 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <complex.h>
-#include "f77blas_interface.h"
 #include "cblas.h" 
+
+#ifdef BLAS_INTERFACE_INTEL 
+#include "blas_intel.h"
+#include "extblas_intel.h"
+#else 
+#include "blas_gnu.h"
+#include "extblas_gnu.h"
+#endif 
+#ifdef FLEXIBLAS_CBLAS
+#include "cblas.h" 
+#endif 
+
+#ifdef INTEGER8
+#define Int int64_t
+#else 
+#define Int int
+#endif 
+
+
 
 int main ( int argc, char **argv ) {
 	printf("zdotc gnu\n");

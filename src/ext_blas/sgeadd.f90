@@ -1,0 +1,56 @@
+SUBROUTINE FSGEADD32(M, N, ALPHA, A, LDA, BETA, B, LDB) 
+    ! B:= alpha * A + beta *B
+    IMPLICIT NONE 
+    INTEGER*4 M, N, LDA, LDB
+    REAL ALPHA, BETA
+    REAL A(LDA,*), B(LDB, *)
+
+    ! Locals
+    INTEGER*4 COL
+    EXTERNAL FSAXPBY32, XERBLA
+    INTRINSIC MAX
+
+    IF (M .LE. 0 ) RETURN 
+    IF (N .LE. 0 ) RETURN 
+    IF (MAX(1,LDA) .LT. M) THEN 
+        CALL XERBLA("SGEADD", 5)
+    ENDIF 
+    IF (MAX(1,LDB) .LT. M) THEN 
+        CALL XERBLA("SGEADD", 8)
+    ENDIF 
+
+    DO COL = 1, N
+        CALL FSAXPBY32(M, ALPHA, A(1,COL), LDA,  BETA, B(1,COL), LDB) 
+    END DO 
+END SUBROUTINE
+
+
+SUBROUTINE FSGEADD64(M, N, ALPHA, A, LDA, BETA, B, LDB) 
+    ! B:= alpha * A + beta *B
+    IMPLICIT NONE 
+    INTEGER*8 M, N, LDA, LDB
+    REAL ALPHA, BETA
+    REAL A(LDA,*), B(LDB, *)
+
+    ! Locals
+    INTEGER*8 COL
+    EXTERNAL FSAXPBY64, XERBLA
+    INTRINSIC MAX
+
+    IF (M .LE. 0 ) RETURN 
+    IF (N .LE. 0 ) RETURN 
+    IF (MAX(1,LDA) .LT. M) THEN 
+        CALL XERBLA("SGEADD", 5)
+    ENDIF 
+    IF (MAX(1,LDB) .LT. M) THEN 
+        CALL XERBLA("SGEADD", 8)
+    ENDIF 
+
+    DO COL = 1, N
+        CALL FSAXPBY64(M, ALPHA, A(1,COL), LDA,  BETA, B(1,COL), LDB) 
+    END DO 
+END SUBROUTINE
+
+
+
+

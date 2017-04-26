@@ -137,15 +137,14 @@
 *     Quick return if possible.
 *
       IF ((N.EQ.0) .OR. (ALPHA.EQ.ZERO)) RETURN
-      KX = 1
-      KY = 1
-      JX = 1
-      JY = 1
-
 *
 *     Set up the start points in X and Y if the increments are not both
 *     unity.
 *
+      KX = 1
+      KY = 1
+      JX = 1
+      JY = 1
       IF ((INCX.NE.1) .OR. (INCY.NE.1)) THEN
           IF (INCX.GT.0) THEN
               KX = 1

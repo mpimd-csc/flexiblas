@@ -8,13 +8,19 @@
 #include "cblas.h"
 #include "cblas_test.h"
 
-void F77_zgemv(int *order, char *transp, int *m, int *n, 
+#ifdef  INTEGER8 
+	#include <stdint.h>
+	#define Int int64_t 
+#else 
+	#define Int int 
+#endif 
+void F77_zgemv(Int *order, char *transp, Int *m, Int *n, 
           const void *alpha,
-          CBLAS_TEST_ZOMPLEX *a, int *lda, const void *x, int *incx, 
-          const void *beta, void *y, int *incy) {
+          CBLAS_TEST_ZOMPLEX *a, Int *lda, const void *x, Int *incx, 
+          const void *beta, void *y, Int *incy) {
 
   CBLAS_TEST_ZOMPLEX *A;
-  int i,j,LDA;
+  Int i,j,LDA;
   enum CBLAS_TRANSPOSE trans;
 
   get_transpose_type(transp, &trans);
@@ -38,13 +44,13 @@ void F77_zgemv(int *order, char *transp, int *m, int *n,
                   *m, *n, alpha, a, *lda, x, *incx, beta, y, *incy );
 }
 
-void F77_zgbmv(int *order, char *transp, int *m, int *n, int *kl, int *ku, 
-	      CBLAS_TEST_ZOMPLEX *alpha, CBLAS_TEST_ZOMPLEX *a, int *lda, 
-	      CBLAS_TEST_ZOMPLEX *x, int *incx, 
-	      CBLAS_TEST_ZOMPLEX *beta, CBLAS_TEST_ZOMPLEX *y, int *incy) {
+void F77_zgbmv(Int *order, char *transp, Int *m, Int *n, Int *kl, Int *ku, 
+	      CBLAS_TEST_ZOMPLEX *alpha, CBLAS_TEST_ZOMPLEX *a, Int *lda, 
+	      CBLAS_TEST_ZOMPLEX *x, Int *incx, 
+	      CBLAS_TEST_ZOMPLEX *beta, CBLAS_TEST_ZOMPLEX *y, Int *incy) {
 
   CBLAS_TEST_ZOMPLEX *A;
-  int i,j,irow,jcol,LDA;
+  Int i,j,irow,jcol,LDA;
   enum CBLAS_TRANSPOSE trans;
 
   get_transpose_type(transp, &trans);
@@ -85,12 +91,12 @@ void F77_zgbmv(int *order, char *transp, int *m, int *n, int *kl, int *ku,
 		  *incx, beta, y, *incy );
 }
 
-void F77_zgeru(int *order, int *m, int *n, CBLAS_TEST_ZOMPLEX *alpha, 
-	 CBLAS_TEST_ZOMPLEX *x, int *incx, CBLAS_TEST_ZOMPLEX *y, int *incy, 
-         CBLAS_TEST_ZOMPLEX *a, int *lda){
+void F77_zgeru(Int *order, Int *m, Int *n, CBLAS_TEST_ZOMPLEX *alpha, 
+	 CBLAS_TEST_ZOMPLEX *x, Int *incx, CBLAS_TEST_ZOMPLEX *y, Int *incy, 
+         CBLAS_TEST_ZOMPLEX *a, Int *lda){
 
   CBLAS_TEST_ZOMPLEX *A;
-  int i,j,LDA;
+  Int i,j,LDA;
 
   if (*order == TEST_ROW_MJR) {
      LDA = *n+1;
@@ -114,11 +120,11 @@ void F77_zgeru(int *order, int *m, int *n, CBLAS_TEST_ZOMPLEX *alpha,
      cblas_zgeru( UNDEFINED, *m, *n, alpha, x, *incx, y, *incy, a, *lda );
 }
 
-void F77_zgerc(int *order, int *m, int *n, CBLAS_TEST_ZOMPLEX *alpha, 
-	 CBLAS_TEST_ZOMPLEX *x, int *incx, CBLAS_TEST_ZOMPLEX *y, int *incy, 
-         CBLAS_TEST_ZOMPLEX *a, int *lda) {
+void F77_zgerc(Int *order, Int *m, Int *n, CBLAS_TEST_ZOMPLEX *alpha, 
+	 CBLAS_TEST_ZOMPLEX *x, Int *incx, CBLAS_TEST_ZOMPLEX *y, Int *incy, 
+         CBLAS_TEST_ZOMPLEX *a, Int *lda) {
   CBLAS_TEST_ZOMPLEX *A;
-  int i,j,LDA;
+  Int i,j,LDA;
 
   if (*order == TEST_ROW_MJR) {
      LDA = *n+1;
@@ -142,12 +148,12 @@ void F77_zgerc(int *order, int *m, int *n, CBLAS_TEST_ZOMPLEX *alpha,
      cblas_zgerc( UNDEFINED, *m, *n, alpha, x, *incx, y, *incy, a, *lda );
 }
 
-void F77_zhemv(int *order, char *uplow, int *n, CBLAS_TEST_ZOMPLEX *alpha,
-      CBLAS_TEST_ZOMPLEX *a, int *lda, CBLAS_TEST_ZOMPLEX *x,
-      int *incx, CBLAS_TEST_ZOMPLEX *beta, CBLAS_TEST_ZOMPLEX *y, int *incy){
+void F77_zhemv(Int *order, char *uplow, Int *n, CBLAS_TEST_ZOMPLEX *alpha,
+      CBLAS_TEST_ZOMPLEX *a, Int *lda, CBLAS_TEST_ZOMPLEX *x,
+      Int *incx, CBLAS_TEST_ZOMPLEX *beta, CBLAS_TEST_ZOMPLEX *y, Int *incy){
 
   CBLAS_TEST_ZOMPLEX *A;
-  int i,j,LDA;
+  Int i,j,LDA;
   enum CBLAS_UPLO uplo;
 
   get_uplo_type(uplow,&uplo);
@@ -172,13 +178,13 @@ void F77_zhemv(int *order, char *uplow, int *n, CBLAS_TEST_ZOMPLEX *alpha,
 	   beta, y, *incy );
 }
 
-void F77_zhbmv(int *order, char *uplow, int *n, int *k,
-     CBLAS_TEST_ZOMPLEX *alpha, CBLAS_TEST_ZOMPLEX *a, int *lda, 
-     CBLAS_TEST_ZOMPLEX *x, int *incx, CBLAS_TEST_ZOMPLEX *beta,
-     CBLAS_TEST_ZOMPLEX *y, int *incy){
+void F77_zhbmv(Int *order, char *uplow, Int *n, Int *k,
+     CBLAS_TEST_ZOMPLEX *alpha, CBLAS_TEST_ZOMPLEX *a, Int *lda, 
+     CBLAS_TEST_ZOMPLEX *x, Int *incx, CBLAS_TEST_ZOMPLEX *beta,
+     CBLAS_TEST_ZOMPLEX *y, Int *incy){
 
 CBLAS_TEST_ZOMPLEX *A;
-int i,irow,j,jcol,LDA;
+Int i,irow,j,jcol,LDA;
 
   enum CBLAS_UPLO uplo;
 
@@ -236,12 +242,12 @@ int i,irow,j,jcol,LDA;
                  beta, y, *incy );
 }
 
-void F77_zhpmv(int *order, char *uplow, int *n, CBLAS_TEST_ZOMPLEX *alpha,
-     CBLAS_TEST_ZOMPLEX *ap, CBLAS_TEST_ZOMPLEX *x, int *incx, 
-     CBLAS_TEST_ZOMPLEX *beta, CBLAS_TEST_ZOMPLEX *y, int *incy){
+void F77_zhpmv(Int *order, char *uplow, Int *n, CBLAS_TEST_ZOMPLEX *alpha,
+     CBLAS_TEST_ZOMPLEX *ap, CBLAS_TEST_ZOMPLEX *x, Int *incx, 
+     CBLAS_TEST_ZOMPLEX *beta, CBLAS_TEST_ZOMPLEX *y, Int *incy){
 
   CBLAS_TEST_ZOMPLEX *A, *AP;
-  int i,j,k,LDA;
+  Int i,j,k,LDA;
   enum CBLAS_UPLO uplo;
 
   get_uplo_type(uplow,&uplo);
@@ -292,11 +298,11 @@ void F77_zhpmv(int *order, char *uplow, int *n, CBLAS_TEST_ZOMPLEX *alpha,
                   *incy );
 }
 
-void F77_ztbmv(int *order, char *uplow, char *transp, char *diagn,
-     int *n, int *k, CBLAS_TEST_ZOMPLEX *a, int *lda, CBLAS_TEST_ZOMPLEX *x,
-     int *incx) {
+void F77_ztbmv(Int *order, char *uplow, char *transp, char *diagn,
+     Int *n, Int *k, CBLAS_TEST_ZOMPLEX *a, Int *lda, CBLAS_TEST_ZOMPLEX *x,
+     Int *incx) {
   CBLAS_TEST_ZOMPLEX *A;
-  int irow, jcol, i, j, LDA;
+  Int irow, jcol, i, j, LDA;
   enum CBLAS_TRANSPOSE trans;
   enum CBLAS_UPLO uplo;
   enum CBLAS_DIAG diag;
@@ -355,12 +361,12 @@ void F77_ztbmv(int *order, char *uplow, char *transp, char *diagn,
      cblas_ztbmv(UNDEFINED, uplo, trans, diag, *n, *k, a, *lda, x, *incx);
 }
 
-void F77_ztbsv(int *order, char *uplow, char *transp, char *diagn,
-      int *n, int *k, CBLAS_TEST_ZOMPLEX *a, int *lda, CBLAS_TEST_ZOMPLEX *x,
-      int *incx) {
+void F77_ztbsv(Int *order, char *uplow, char *transp, char *diagn,
+      Int *n, Int *k, CBLAS_TEST_ZOMPLEX *a, Int *lda, CBLAS_TEST_ZOMPLEX *x,
+      Int *incx) {
 
   CBLAS_TEST_ZOMPLEX *A;
-  int irow, jcol, i, j, LDA;
+  Int irow, jcol, i, j, LDA;
   enum CBLAS_TRANSPOSE trans;
   enum CBLAS_UPLO uplo;
   enum CBLAS_DIAG diag;
@@ -419,10 +425,10 @@ void F77_ztbsv(int *order, char *uplow, char *transp, char *diagn,
      cblas_ztbsv(UNDEFINED, uplo, trans, diag, *n, *k, a, *lda, x, *incx);
 }
 
-void F77_ztpmv(int *order, char *uplow, char *transp, char *diagn,
-      int *n, CBLAS_TEST_ZOMPLEX *ap, CBLAS_TEST_ZOMPLEX *x, int *incx) {
+void F77_ztpmv(Int *order, char *uplow, char *transp, char *diagn,
+      Int *n, CBLAS_TEST_ZOMPLEX *ap, CBLAS_TEST_ZOMPLEX *x, Int *incx) {
   CBLAS_TEST_ZOMPLEX *A, *AP;
-  int i, j, k, LDA;
+  Int i, j, k, LDA;
   enum CBLAS_TRANSPOSE trans;
   enum CBLAS_UPLO uplo;
   enum CBLAS_DIAG diag;
@@ -474,10 +480,10 @@ void F77_ztpmv(int *order, char *uplow, char *transp, char *diagn,
      cblas_ztpmv( UNDEFINED, uplo, trans, diag, *n, ap, x, *incx );
 }
 
-void F77_ztpsv(int *order, char *uplow, char *transp, char *diagn,
-     int *n, CBLAS_TEST_ZOMPLEX *ap, CBLAS_TEST_ZOMPLEX *x, int *incx) {
+void F77_ztpsv(Int *order, char *uplow, char *transp, char *diagn,
+     Int *n, CBLAS_TEST_ZOMPLEX *ap, CBLAS_TEST_ZOMPLEX *x, Int *incx) {
   CBLAS_TEST_ZOMPLEX *A, *AP;
-  int i, j, k, LDA;
+  Int i, j, k, LDA;
   enum CBLAS_TRANSPOSE trans;
   enum CBLAS_UPLO uplo;
   enum CBLAS_DIAG diag;
@@ -529,11 +535,11 @@ void F77_ztpsv(int *order, char *uplow, char *transp, char *diagn,
      cblas_ztpsv( UNDEFINED, uplo, trans, diag, *n, ap, x, *incx );
 }
 
-void F77_ztrmv(int *order, char *uplow, char *transp, char *diagn,
-     int *n, CBLAS_TEST_ZOMPLEX *a, int *lda, CBLAS_TEST_ZOMPLEX *x,
-      int *incx) {
+void F77_ztrmv(Int *order, char *uplow, char *transp, char *diagn,
+     Int *n, CBLAS_TEST_ZOMPLEX *a, Int *lda, CBLAS_TEST_ZOMPLEX *x,
+      Int *incx) {
   CBLAS_TEST_ZOMPLEX *A;
-  int i,j,LDA;
+  Int i,j,LDA;
   enum CBLAS_TRANSPOSE trans;
   enum CBLAS_UPLO uplo;
   enum CBLAS_DIAG diag;
@@ -558,11 +564,11 @@ void F77_ztrmv(int *order, char *uplow, char *transp, char *diagn,
   else
      cblas_ztrmv(UNDEFINED, uplo, trans, diag, *n, a, *lda, x, *incx);
 }
-void F77_ztrsv(int *order, char *uplow, char *transp, char *diagn,
-       int *n, CBLAS_TEST_ZOMPLEX *a, int *lda, CBLAS_TEST_ZOMPLEX *x,
-              int *incx) {
+void F77_ztrsv(Int *order, char *uplow, char *transp, char *diagn,
+       Int *n, CBLAS_TEST_ZOMPLEX *a, Int *lda, CBLAS_TEST_ZOMPLEX *x,
+              Int *incx) {
   CBLAS_TEST_ZOMPLEX *A;
-  int i,j,LDA;
+  Int i,j,LDA;
   enum CBLAS_TRANSPOSE trans;
   enum CBLAS_UPLO uplo;
   enum CBLAS_DIAG diag;
@@ -588,10 +594,10 @@ void F77_ztrsv(int *order, char *uplow, char *transp, char *diagn,
      cblas_ztrsv(UNDEFINED, uplo, trans, diag, *n, a, *lda, x, *incx );
 }
 
-void F77_zhpr(int *order, char *uplow, int *n, double *alpha,
-	     CBLAS_TEST_ZOMPLEX *x, int *incx, CBLAS_TEST_ZOMPLEX *ap) {
+void F77_zhpr(Int *order, char *uplow, Int *n, double *alpha,
+	     CBLAS_TEST_ZOMPLEX *x, Int *incx, CBLAS_TEST_ZOMPLEX *ap) {
   CBLAS_TEST_ZOMPLEX *A, *AP;
-  int i,j,k,LDA;
+  Int i,j,k,LDA;
   enum CBLAS_UPLO uplo;
 
   get_uplo_type(uplow,&uplo);
@@ -663,11 +669,11 @@ void F77_zhpr(int *order, char *uplow, int *n, double *alpha,
      cblas_zhpr(UNDEFINED, uplo, *n, *alpha, x, *incx, ap );
 }
 
-void F77_zhpr2(int *order, char *uplow, int *n, CBLAS_TEST_ZOMPLEX *alpha,
-       CBLAS_TEST_ZOMPLEX *x, int *incx, CBLAS_TEST_ZOMPLEX *y, int *incy,
+void F77_zhpr2(Int *order, char *uplow, Int *n, CBLAS_TEST_ZOMPLEX *alpha,
+       CBLAS_TEST_ZOMPLEX *x, Int *incx, CBLAS_TEST_ZOMPLEX *y, Int *incy,
        CBLAS_TEST_ZOMPLEX *ap) {
   CBLAS_TEST_ZOMPLEX *A, *AP;
-  int i,j,k,LDA;
+  Int i,j,k,LDA;
   enum CBLAS_UPLO uplo;
 
   get_uplo_type(uplow,&uplo);
@@ -740,10 +746,10 @@ void F77_zhpr2(int *order, char *uplow, int *n, CBLAS_TEST_ZOMPLEX *alpha,
      cblas_zhpr2( UNDEFINED, uplo, *n, alpha, x, *incx, y, *incy, ap );
 }
 
-void F77_zher(int *order, char *uplow, int *n, double *alpha,
-  CBLAS_TEST_ZOMPLEX *x, int *incx, CBLAS_TEST_ZOMPLEX *a, int *lda) {
+void F77_zher(Int *order, char *uplow, Int *n, double *alpha,
+  CBLAS_TEST_ZOMPLEX *x, Int *incx, CBLAS_TEST_ZOMPLEX *a, Int *lda) {
   CBLAS_TEST_ZOMPLEX *A;
-  int i,j,LDA;
+  Int i,j,LDA;
   enum CBLAS_UPLO uplo;
 
   get_uplo_type(uplow,&uplo);
@@ -772,12 +778,12 @@ void F77_zher(int *order, char *uplow, int *n, double *alpha,
      cblas_zher( UNDEFINED, uplo, *n, *alpha, x, *incx, a, *lda );
 }
 
-void F77_zher2(int *order, char *uplow, int *n, CBLAS_TEST_ZOMPLEX *alpha,
-          CBLAS_TEST_ZOMPLEX *x, int *incx, CBLAS_TEST_ZOMPLEX *y, int *incy,
-	  CBLAS_TEST_ZOMPLEX *a, int *lda) {
+void F77_zher2(Int *order, char *uplow, Int *n, CBLAS_TEST_ZOMPLEX *alpha,
+          CBLAS_TEST_ZOMPLEX *x, Int *incx, CBLAS_TEST_ZOMPLEX *y, Int *incy,
+	  CBLAS_TEST_ZOMPLEX *a, Int *lda) {
 
   CBLAS_TEST_ZOMPLEX *A;
-  int i,j,LDA;
+  Int i,j,LDA;
   enum CBLAS_UPLO uplo;
 
   get_uplo_type(uplow,&uplo);

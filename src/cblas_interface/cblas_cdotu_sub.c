@@ -1,4 +1,4 @@
-/* $Id: hooks.h 3741 2013-10-01 12:54:54Z komart $ */
+/* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
 /* 
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
@@ -17,7 +17,7 @@
 #include "flexiblas_config.h"
 #include "cblas.h"
 #include "cblas_f77.h"
-#include "../hooks.h"
+#include "../flexiblas.h"
 #include <complex.h>
 
 void cblas_cdotu_sub( const int N, const void *X,
@@ -30,9 +30,13 @@ void cblas_cdotu_sub( const int N, const void *X,
    #define F77_incX incX
    #define F77_incY incY
 #endif
-   flexiblas_call_cdotu[POS_CBLAS] ++;
+   current_backend->blas.cdotu_sub.calls[POS_CBLAS] ++;
 
-   if ( flexiblas_cdotu.call_cblas != NULL ) {
+   if ( current_backend->post_init != 0 ) {
+   	__flexiblas_backend_init(current_backend);
+   	current_backend->post_init = 0;
+   }
+   if ( current_backend->blas.cdotu_sub.call_cblas != NULL ) {
 	   double te = 0, ts = 0;
 	   if (__flexiblas_profile) {
 		ts = flexiblas_wtime(); 
@@ -40,11 +44,11 @@ void cblas_cdotu_sub( const int N, const void *X,
 	   void (*fn)
 		  ( const int N, const void *X,
                      const int incX, const void *Y, const int incY,void *dotu)
-		   = flexiblas_cdotu.call_cblas;
+		   = current_backend->blas.cdotu_sub.call_cblas;
 	   fn(N,X,incX,Y,incY,dotu);
 	   if ( __flexiblas_profile ) {
 		   te = flexiblas_wtime(); 
-		   flexiblas_time_cdotu[POS_CBLAS] += (te - ts); 
+		   current_backend->blas.cdotu_sub.timings[POS_CBLAS] += (te - ts); 
 	   }
    } else {
 	float complex d; 

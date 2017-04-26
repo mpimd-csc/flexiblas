@@ -1,0 +1,3 @@
+The backend.c file is the generic dummy backend to interface AMD ACML.
+It is only used to set up some information and cheat the linker to include
+OpenMP. 

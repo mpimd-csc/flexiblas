@@ -6,6 +6,25 @@
 #define CBLAS_TEST_H
 #include "cblas.h"
 
+#ifdef INTEGER8 
+	#include <stdint.h>
+	#define F77_INT int64_t
+#endif
+
+#ifdef  F77_CHAR
+   #define FCHAR F77_CHAR
+#else
+   #define FCHAR char *
+#endif
+
+#ifdef F77_INT
+   #define FINT const F77_INT *
+   #define FINT2 F77_INT *
+#else
+   #define FINT const int *
+   #define FINT2 int *
+#endif
+
 #define  TRUE           1
 #define  PASSED         1
 #define  TEST_ROW_MJR	1

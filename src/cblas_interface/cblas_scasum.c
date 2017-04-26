@@ -1,4 +1,4 @@
-/* $Id: hooks.h 3741 2013-10-01 12:54:54Z komart $ */
+/* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
 /* 
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
@@ -16,7 +16,7 @@
 */
 #include "cblas.h"
 #include "cblas_f77.h"
-#include "../hooks.h"
+#include "../flexiblas.h"
 
 
 float cblas_scasum( const int N, const void *X, const int incX) 
@@ -28,20 +28,24 @@ float cblas_scasum( const int N, const void *X, const int incX)
    #define F77_N N
    #define F77_incX incX
 #endif
-   flexiblas_call_scasum[POS_CBLAS] ++;
+   current_backend->blas.scasum.calls[POS_CBLAS] ++;
 
-   if ( flexiblas_scasum.call_cblas != NULL ) {
+   if ( current_backend->post_init != 0 ) {
+   	__flexiblas_backend_init(current_backend);
+   	current_backend->post_init = 0;
+   }
+   if ( current_backend->blas.scasum.call_cblas != NULL ) {
 	   double te = 0, ts = 0;
 	   if (__flexiblas_profile) {
 		   ts = flexiblas_wtime(); 
 	   }
 	   float  (*fn)
 		  ( const int N, const void *X, const int incX) 
-		   = flexiblas_scasum.call_cblas;
+		   = current_backend->blas.scasum.call_cblas;
 	   asum  = fn(N,X,incX);
 	   if (__flexiblas_profile ) {
 		   te = flexiblas_wtime(); 
-		   flexiblas_time_scasum[POS_CBLAS] += (te - ts); 
+		   current_backend->blas.scasum.timings[POS_CBLAS] += (te - ts); 
 	   }
    } else {
    	asum = F77_scasum( &F77_N, X, &F77_incX);

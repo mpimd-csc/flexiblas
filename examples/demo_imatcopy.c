@@ -10,16 +10,25 @@
 #include <stdlib.h>
 #include <math.h>
 #include <complex.h>
-#include "f77blas_interface.h"
+
+#ifdef INTEGER8
+#define Int int64_t
+#define USE_BLAS_64
+#else 
+#define Int int
+#endif 
+
+#ifdef BLAS_INTERFACE_INTEL 
+#include "blas_intel.h"
+#include "extblas_intel.h"
+#else 
+#include "blas_gnu.h"
+#include "extblas_gnu.h"
+#endif 
 #ifdef FLEXIBLAS_CBLAS
-#include "cblas.h"
-#endif
+#include "cblas.h" 
+#endif 
 
-
-void simatcopy_( char* ORDER, char* TRANS, Int *rows, Int *cols, float *alpha, float *a, Int *lda, Int *ldb); 
-void dimatcopy_( char* ORDER, char* TRANS, Int *rows, Int *cols, double *alpha, double *a, Int *lda, Int *ldb); 
-void cimatcopy_( char* ORDER, char* TRANS, Int *rows, Int *cols, float complex *alpha, float complex *a, Int *lda, Int *ldb); 
-void zimatcopy_( char* ORDER, char* TRANS, Int *rows, Int *cols, double complex *alpha, double complex *a, Int *lda, Int *ldb); 
 
 #define SWAP_INT(X,Y) {int _x = (X); (X) = (Y); (Y) = _x; } 
 

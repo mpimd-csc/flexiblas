@@ -1,28 +1,37 @@
-/* $Id$ */
-/**
- * @file info.c
- * @brief <+brief+> 
- * @author Martin Köhler
- * @version $Id$ 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- * This file implelemts <+details+>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright (C) Martin Koehler, 2015
  */
-#include "../src/flexiblas_info.h" 
 
-void __flexiblas_info(struct flexiblas_info * info) {
-#ifdef __ICC
-	info -> zdotc_is_intel = 1; 
-	info -> zdotu_is_intel = 1; 
-	info -> cdotc_is_intel = 1; 
-	info -> cdotu_is_intel = 1; 
+
+
+
+#include "../src/flexiblas_backend.h" 
+
+FLEXIBLAS_INFO_FUNCTION(info)
+{
+#ifdef  INTEGER8
+	info -> backend_integer_size = 8; 
 #else 
-	info -> zdotc_is_intel = 0; 
-	info -> zdotu_is_intel = 0; 
-	info -> cdotc_is_intel = 0; 
-	info -> cdotu_is_intel = 0; 
+	info -> backend_integer_size = sizeof(int); 
 #endif 
-
-	info -> scabs1_missing = 0; 
+#ifdef __ICC
+	info -> intel_interface = 1; 
+#else 
+	info -> intel_interface = 0; 
+#endif 
 }
 
 

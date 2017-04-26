@@ -1,3 +1,25 @@
+flexiblas (1.3.0) unstable; urgency=low
+
+  * Add s/d/c/z geadd function from ATLAS/OpenBLAS
+  * Allow to overload BLAS functions using hooks.
+  * Runtime switching of BLAS libraries. 
+  * Profiling information in now held in the structure of the correponding BLAS
+    functions, but accumulated in the end.
+  * Configuration is done using libcscutils/ini, i.e., we have an ini-file like 
+    configuration system. 
+  * flexiblas command line tool redesigned. 
+  * BLAS routines can be replaced in the backends. See
+    src/backends/demo/backend.c for details. 
+  * The wrapper are generated via code generation software. 
+  * Different integer sizes are supported. Each routine comes with a default 
+    integer variant (which is either 32 or 64 bit selected at compile time.) and 
+    additionally a 32 and 64 bit interface. (experimental, please do not use in
+    production code) 
+  * Code cleanup 
+  * Octave Interface 
+
+ -- Martin Köhler <koehlerm@mpi-magdeburg.mpg.de>  Wed, 04 Nov 2015 15:00:00 +0200
+
 flexiblas (1.2.0) unstable; urgency=low
 
   * Will be copied from CHANGELOG 

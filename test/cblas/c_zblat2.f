@@ -1465,7 +1465,7 @@
                         END IF
 *
                         IF( .NOT.NULL )THEN
-                           IF( SNAME( 4: 5 ).EQ.'mv' )THEN
+                           IF( SNAME( 10: 11 ).EQ.'mv' )THEN
 *
 *                             Check the result.
 *
@@ -1473,7 +1473,8 @@
      $                                    INCX, ZERO, Z, INCX, XT, G,
      $                                    XX, EPS, ERR, FATAL, NOUT,
      $                                    .TRUE. )
-                           ELSE IF( SNAME( 4: 5 ).EQ.'sv' )THEN
+                              WRITE(*,*) "Hier" 
+                           ELSE IF( SNAME( 10: 11 ).EQ.'sv' )THEN
 *
 *                             Compute approximation to original vector.
 *
@@ -1488,6 +1489,7 @@
      $                                    XX, EPS, ERR, FATAL, NOUT,
      $                                    .FALSE. )
                            END IF
+                           WRITE(*,*) "Hoer: ", ERR
                            ERRMAX = MAX( ERRMAX, ERR )
 *                          If got really bad answer, report and return.
                            IF( FATAL )
@@ -2514,6 +2516,7 @@
          KY = 1
          INCYL = 1
       END IF
+      ERR = 0.0d0 
 *
 *     Compute expected result in YT using data in A, X and Y.
 *     Compute gauges in G.

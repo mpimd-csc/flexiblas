@@ -1,4 +1,4 @@
-/* $Id: hooks.h 3741 2013-10-01 12:54:54Z komart $ */
+/* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
 /* 
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
@@ -16,15 +16,19 @@
 */
 #include "cblas.h"
 #include "cblas_f77.h"
-#include "../hooks.h"
+#include "../flexiblas.h"
 
 
 void cblas_srotmg( float *d1, float *d2, float *b1, 
                         const float b2, float *p)
 {
-   flexiblas_call_srotmg[POS_CBLAS] ++;
+   current_backend->blas.srotmg.calls[POS_CBLAS] ++;
 
-   if ( flexiblas_srotmg.call_cblas != NULL ) {
+   if ( current_backend->post_init != 0 ) {
+   	__flexiblas_backend_init(current_backend);
+   	current_backend->post_init = 0;
+   }
+   if ( current_backend->blas.srotmg.call_cblas != NULL ) {
 	   float te = 0, ts = 0;
 	   if ( __flexiblas_profile ) {
 		   ts = flexiblas_wtime(); 
@@ -32,11 +36,11 @@ void cblas_srotmg( float *d1, float *d2, float *b1,
 	   void (*fn)
 		  ( float *d1, float *d2, float *b1, 
                         const float b2, float *p)
-		   = flexiblas_srotmg.call_cblas;
+		   = current_backend->blas.srotmg.call_cblas;
  	   fn(d1,d2,b1,b2,p);
 	   if ( __flexiblas_profile ){
 	   	te = flexiblas_wtime(); 
-                flexiblas_time_srotmg[POS_CBLAS] += (te - ts); 
+                current_backend->blas.srotmg.timings[POS_CBLAS] += (te - ts); 
 	   }
    } else {
 	F77_srotmg(d1,d2,b1,&b2,p);

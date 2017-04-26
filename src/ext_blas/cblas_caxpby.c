@@ -1,4 +1,4 @@
-/* $Id: hooks.h 3741 2013-10-01 12:54:54Z komart $ */
+/* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
 /* 
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
@@ -16,7 +16,7 @@
 */
 #include "cblas.h"
 #include "cblas_f77.h"
-#include "../hooks.h"
+#include "../flexiblas.h"
 #include "../extblas.h"
 
 void cblas_caxpby( const int N, const void *alpha, const void *X,
@@ -29,9 +29,13 @@ void cblas_caxpby( const int N, const void *alpha, const void *X,
    #define F77_incX incX
    #define F77_incY incY
 #endif
-   flexiblas_call_caxpby[POS_CBLAS] ++;
+   current_backend->extblas.caxpby.calls[POS_CBLAS] ++;
 
-   if ( flexiblas_caxpby.call_cblas != NULL ) {
+   if ( current_backend->post_init != 0 ) {
+   	__flexiblas_backend_init(current_backend);
+   	current_backend->post_init = 0;
+   }
+   if ( current_backend->extblas.caxpby.call_cblas != NULL ) {
 	   double te = 0, ts = 0;
 	   if (__flexiblas_profile ) {
 	   	ts = flexiblas_wtime(); 
@@ -39,11 +43,11 @@ void cblas_caxpby( const int N, const void *alpha, const void *X,
 	   void (*fn)
 		 ( const int N, const void *alpha, const void *X,
                        const int incX, const void *beta, void *Y, const int incY)
-		   = flexiblas_caxpby.call_cblas;
+		   = current_backend->extblas.caxpby.call_cblas;
 	   fn(N,alpha,X,incX,beta, Y,incY);
 	   if (__flexiblas_profile ) {
 	   	te = flexiblas_wtime(); 
-		flexiblas_time_caxpby[POS_CBLAS] += (te - ts); 
+		current_backend->extblas.caxpby.timings[POS_CBLAS] += (te - ts); 
 	   }
    } else {
 	F77_caxpby( &F77_N, alpha, X, &F77_incX, beta, Y, &F77_incY);

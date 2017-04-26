@@ -1,4 +1,4 @@
-/* $Id: hooks.h 3741 2013-10-01 12:54:54Z komart $ */
+/* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
 /* 
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
@@ -16,7 +16,7 @@
 */
 #include "cblas.h"
 #include "cblas_f77.h"
-#include "../hooks.h"
+#include "../flexiblas.h"
 
 void cblas_ccopy( const int N, const void *X,
                       const int incX, void *Y, const int incY)
@@ -28,9 +28,13 @@ void cblas_ccopy( const int N, const void *X,
    #define F77_incX incX
    #define F77_incY incY
 #endif
-   flexiblas_call_ccopy[POS_CBLAS] ++;
+   current_backend->blas.ccopy.calls[POS_CBLAS] ++;
 
-   if ( flexiblas_ccopy.call_cblas != NULL ) {
+   if ( current_backend->post_init != 0 ) {
+   	__flexiblas_backend_init(current_backend);
+   	current_backend->post_init = 0;
+   }
+   if ( current_backend->blas.ccopy.call_cblas != NULL ) {
 	   double te = 0, ts =0 ;
 	   if ( __flexiblas_profile) { 
 		   ts = flexiblas_wtime(); 
@@ -39,11 +43,11 @@ void cblas_ccopy( const int N, const void *X,
 	   void (*fn)
 		 ( const int N, const void *X,
                       const int incX, void *Y, const int incY)
-		   = flexiblas_ccopy.call_cblas;
+		   = current_backend->blas.ccopy.call_cblas;
 	   fn(N,X,incX,Y,incY);
 	   if ( __flexiblas_profile ) {
 	   	te = flexiblas_wtime(); 
-	        flexiblas_time_ccopy[POS_CBLAS] += (te - ts); 
+	        current_backend->blas.ccopy.timings[POS_CBLAS] += (te - ts); 
 	   } 
    } else {
 	F77_ccopy( &F77_N, X, &F77_incX, Y, &F77_incY);

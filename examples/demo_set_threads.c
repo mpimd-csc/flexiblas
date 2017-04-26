@@ -1,0 +1,94 @@
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright (C) Martin Koehler, 2015
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <unistd.h>
+#include <sys/time.h>
+
+
+#include "flexiblas_api.h"
+
+double wtime()
+{
+	struct timeval tv;
+	gettimeofday (&tv, NULL);
+	return tv.tv_sec + tv.tv_usec / 1e6;
+}
+
+void gemm(int N, float *A, float *B, float *C) 
+{
+    float fone = 1.0;
+    double tic, toc;
+    double flops = pow((N/1000.0),3)*2.0;
+
+    tic = wtime();
+    sgemm("N", "N", &N, &N, &N, &fone, A, &N, B, &N , &fone, C, &N);
+    toc = wtime();
+
+    printf("Time: %20lg, \tGFlops = %lg \n", toc-tic, flops/(toc-tic));
+    return ;
+}
+
+int main(int argc, char **argv)
+{
+    int N = 2000;
+    int i,j;
+
+    float *A, *B, *C;
+
+    if ( argc == 2 ){
+        N = atoi(argv[1]);
+    }
+    printf("N = %d\n", N);
+
+    A = malloc(sizeof(float) * N *N);
+    B = malloc(sizeof(float) * N *N);
+    C = malloc(sizeof(float) * N *N);
+
+    for (i = 0; i < N; i++) {
+        for (j = 0; j < N; j++) {
+            A[j+i*N] = 1.0;
+            B[j+i*N] = 1.0;
+            C[j+i*N] = 0.0;
+        }   
+    }
+
+    printf("Using 1 Thread (C-Interface)\n");
+    flexiblas_set_num_threads(1);
+    gemm(N, A, B, C);     
+
+    printf("Using 2 Thread (C-Interface)\n");
+    flexiblas_set_num_threads(2);
+    gemm(N, A, B, C);     
+
+    printf("Using 1 Thread (F77-Interface)\n");
+    i = 1;
+    flexiblas_set_num_threads_(&i);
+    gemm(N, A, B, C);     
+
+    printf("Using 2 Thread (F77-Interface)\n");
+    i =2;
+    flexiblas_set_num_threads_(&i);
+    gemm(N, A, B, C);     
+
+    free(A);
+    free(B);
+    free(C);
+    return 0;
+}

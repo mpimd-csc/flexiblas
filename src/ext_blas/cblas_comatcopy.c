@@ -1,4 +1,4 @@
-/* $Id: hooks.h 3741 2013-10-01 12:54:54Z komart $ */
+/* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
 /* 
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
@@ -16,7 +16,7 @@
 */
 #include "cblas.h"
 #include "cblas_f77.h"
-#include "../hooks.h"
+#include "../flexiblas.h"
 #include "../extblas.h"
 
 void cblas_comatcopy(const enum CBLAS_ORDER CORDER, const enum CBLAS_TRANSPOSE CTRANS, 
@@ -34,16 +34,20 @@ void cblas_comatcopy(const enum CBLAS_ORDER CORDER, const enum CBLAS_TRANSPOSE C
    #define F77_LDA  clda 
    #define F77_LDB  cldb 
 #endif
-   if ( flexiblas_comatcopy.call_cblas != NULL ) {
+   if ( current_backend->post_init != 0 ) {
+   	__flexiblas_backend_init(current_backend);
+   	current_backend->post_init = 0;
+   }
+   if ( current_backend->extblas.comatcopy.call_cblas != NULL ) {
 	   float te = 0, ts = 0;
 	   if ( __flexiblas_profile ) {
 		   ts = flexiblas_wtime(); 
 	   }
-	   void (*fn)(const enum CBLAS_ORDER, const enum CBLAS_TRANSPOSE, const int, const int, const void *, const void*, const int, void *, const int) = flexiblas_comatcopy.call_cblas;
+	   void (*fn)(const enum CBLAS_ORDER, const enum CBLAS_TRANSPOSE, const int, const int, const void *, const void*, const int, void *, const int) = current_backend->extblas.comatcopy.call_cblas;
 	   fn(CORDER, CTRANS, crows, ccols, calpha, a, clda, b, cldb);  
 	   if ( __flexiblas_profile ){
 		   te = flexiblas_wtime(); 
-		   flexiblas_time_comatcopy[POS_CBLAS] += (te - ts); 
+		   current_backend->extblas.comatcopy.timings[POS_CBLAS] += (te - ts); 
 	   }
    } else {
 	char ORDER[2]=" ";
@@ -76,6 +80,6 @@ void cblas_comatcopy(const enum CBLAS_ORDER CORDER, const enum CBLAS_TRANSPOSE C
 	}
    	F77_comatcopy( ORDER, TRANS, &F77_ROWS, &F77_COLS, calpha, a, &F77_LDA, b, &F77_LDB);
    }
-   flexiblas_call_comatcopy[POS_CBLAS] ++;
+   current_backend->extblas.comatcopy.calls[POS_CBLAS] ++;
 } 
 

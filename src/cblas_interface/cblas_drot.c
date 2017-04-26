@@ -1,4 +1,4 @@
-/* $Id: hooks.h 3741 2013-10-01 12:54:54Z komart $ */
+/* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
 /* 
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
@@ -16,7 +16,7 @@
 */
 #include "cblas.h"
 #include "cblas_f77.h"
-#include "../hooks.h"
+#include "../flexiblas.h"
 
 
 void cblas_drot(const int N, double *X, const int incX,
@@ -29,20 +29,24 @@ void cblas_drot(const int N, double *X, const int incX,
    #define F77_incX incX 
    #define F77_incY incY 
 #endif
-   flexiblas_call_drot[POS_CBLAS] ++;
+   current_backend->blas.drot.calls[POS_CBLAS] ++;
 
-   if ( flexiblas_drot.call_cblas != NULL ) {
+   if ( current_backend->post_init != 0 ) {
+   	__flexiblas_backend_init(current_backend);
+   	current_backend->post_init = 0;
+   }
+   if ( current_backend->blas.drot.call_cblas != NULL ) {
 	   double te = 0, ts = 0;
 	   if ( __flexiblas_profile ) {
 		   ts = flexiblas_wtime(); 
 	   }
 	   void (*fn)(const int N, double *X, const int incX,
    double *Y, const int incY, const double c, const double s)
-= flexiblas_drot.call_cblas;
+= current_backend->blas.drot.call_cblas;
 	fn(N,X,incX,Y,incY,c,s);
         if ( __flexiblas_profile ){
 	   te = flexiblas_wtime(); 
-	   flexiblas_time_drot[POS_CBLAS] += (te - ts); 
+	   current_backend->blas.drot.timings[POS_CBLAS] += (te - ts); 
 	}
    } else {
    	F77_drot(&F77_N, X, &F77_incX, Y, &F77_incY, &c, &s);

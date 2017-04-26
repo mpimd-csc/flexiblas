@@ -19,9 +19,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include "flexiblas.h"
-#include "string_tools.h"
 
 #define MAX_BUFFER_SIZE (4096 * 8)
+
+int __flexiblas_file_exist(const char *path) {
+	if( access( path, F_OK ) != -1 ) {
+		return -1; 
+	} else {
+		return 0; 
+	}
+}
+
 char *__flexiblas_getenv(int what) {
 	char container[MAX_BUFFER_SIZE];
 	container[0] = '\0';
@@ -87,15 +95,12 @@ void __flexiblas_print_copyright (int prefix) {
 /*-----------------------------------------------------------------------------
  *  Path management
  *-----------------------------------------------------------------------------*/
-int __flexiblas_count_additional_paths = 0;
-char **  __flexiblas_additional_paths = NULL ;
-
 void __flexiblas_add_path(const char * path ) {
 	__flexiblas_count_additional_paths++;
 	__flexiblas_additional_paths = (char **) realloc( __flexiblas_additional_paths,
 			sizeof(char *) * __flexiblas_count_additional_paths);
-	__flexiblas_additional_paths[__flexiblas_count_additional_paths-1] = (char *) calloc( strlen (path) +1, sizeof(char) );
-	strncpy(__flexiblas_additional_paths[__flexiblas_count_additional_paths-1], path, strlen(path)+1);
+	DPRINTF(2,"Add additional search path %s\n", path); 
+	__flexiblas_additional_paths[__flexiblas_count_additional_paths-1] = strdup(path); 
 }
 
 void __flexiblas_free_paths() {
@@ -111,114 +116,82 @@ void __flexiblas_free_paths() {
 /*-----------------------------------------------------------------------------
  *  Other Stuff 
  *-----------------------------------------------------------------------------*/
-void __flexiblas_insert_fallback_blas(hashtable table)
+void __flexiblas_insert_fallback_blas(csc_ini_file_t *config)
 {
 	char *SO_EXTENSION = __flexiblas_getenv(FLEXIBLAS_ENV_SO_EXTENSION);
 	size_t len=strlen(FALLBACK_NAME)+strlen(SO_EXTENSION)+2;
 	char *tmp = (char *) calloc(len,sizeof(char));
 	char *tmp2;
+	
 	snprintf(tmp,len, "%s%s", FALLBACK_NAME,SO_EXTENSION);
 	len = strlen("libblas_netlib")+strlen(SO_EXTENSION)+2;
 	tmp2 = (char*) calloc(len,sizeof(char));
 	snprintf(tmp2,len, "libblas_netlib%s", SO_EXTENSION);
-	kv_pair *  default_pair = __flexiblas_kv_new_pair("netlib", tmp2); 
-	kv_pair *  fallback_pair = __flexiblas_kv_new_pair("fallback", tmp);
+
+	if ( csc_ini_setstring(config,"NETLIB", "library", tmp2)!=CSC_INI_SUCCESS){
+		DPRINTF(0,"Can not insert Netlib  blas library.\n");
+		abort(); 
+	}
+	if ( csc_ini_setstring(config,"__FALLBACK__", "library", tmp2) != CSC_INI_SUCCESS) {
+		DPRINTF(0,"Can not insert Netlib  blas library.\n");
+		abort(); 
+	}
+
 	free(tmp);
 	free(tmp2);
-	free(SO_EXTENSION); 
-	if ( flexiblas_hashtable_insert(table, default_pair) == 0 ) {
-		fprintf(stderr, PRINT_PREFIX "Can not insert Netlib  blas library.\n");
-		abort();
-	}
-	if ( flexiblas_hashtable_insert(table, fallback_pair) == 0 ) {
-		fprintf(stderr, PRINT_PREFIX "Can not insert Netlib  blas library.\n");
-		abort();
-	}
-
-}
-
-void __flexiblas_read_config_file(FILE * fp, hashtable table, char **default_map ) {
-	char * line =NULL; 
-	char *k,*v,*k2,*v2; 
-	char *save; 
-	kv_pair * pair; 
-	size_t len = 0 ; 
-	char * SO_EXTENSION = __flexiblas_getenv(FLEXIBLAS_ENV_SO_EXTENSION);
-	while (!feof(fp)) {
-	        if( _getline(&line,&len, fp) < 0 ) 
-			break; 
-		if ( line == NULL) { 
-			continue; 
-		}
-#ifdef __WIN32__
-		k = strtok_s(line, "|,;\r\n", &save);
-#else 
-		k = strtok_r(line, "|,;\n", &save);
-#endif
-		if ( k == NULL ) { 
-			if ( line ) free(line); 
-			line = NULL;
-			continue; 
-		}
-#ifdef __WIN32__
-		v = strtok_s(NULL, "|,;\r\n", &save); 
-#else 
-		v = strtok_r(NULL, "|,;\n", &save); 
-#endif
-		if (v== NULL) {
-			if ( line ) free(line); 
-			line = NULL; 
-			continue; 
-		}
-		k2 = trim ( k ); 
-		v2 = trim ( v ); 
-		if (strcasecmp(k2,"default") == 0 ) {
-			/* Set the default entry */
-			if ( __flexiblas_verbose ) fprintf(stderr, PRINT_PREFIX "Set config file default BLAS to: %s\n",v2);
-			if (*default_map != NULL ) free(*default_map); 
-			*default_map = strdup(v2); 
-		} else if ( strcasecmp(k2, "path") == 0 ) {
-			/* Add a new search path  */
-			__flexiblas_add_path(v2);
-		} else {
-			/* Add a Library entry  */
-			if (strstr(v2, SO_EXTENSION) == NULL ) {
-				char *vtmp = calloc(sizeof(char), strlen(v2) + strlen(SO_EXTENSION) + 3);
-				if ( vtmp == NULL) abort(); 
-				if (__flexiblas_verbose) fprintf(stderr, PRINT_PREFIX "Library name without extension. Add %s to filename\n", SO_EXTENSION);
-				snprintf(vtmp, strlen(v2)+strlen(SO_EXTENSION) +3, "%s%s", v2, SO_EXTENSION); 
-				pair = __flexiblas_kv_new_pair(k2, vtmp); 
-				free(vtmp); 
-			} else {
-				pair = __flexiblas_kv_new_pair(k2,v2); 
-			}
-			if ( flexiblas_hashtable_insert(table, (data) pair) == 0 ) {
-				flexiblas_hashtable_remove(table, k ); 
-				if (flexiblas_hashtable_insert(table, (data) pair) == 0) {
-					fprintf(stderr, PRINT_PREFIX " Can not insert BLAS entry ( %s, %s) in Hashtable\n", k,v);
-					abort();
-				}
-			}
-		}
-		free(line); 
-		line = NULL; 
-	}
-	if ( line != NULL ) free(line); 
-	if ( SO_EXTENSION ) free(SO_EXTENSION);
+	free(SO_EXTENSION);
 	return; 
 }
 
-void __flexiblas_load_config ( const char * path, hashtable table , char **default_map ) {
-	FILE *configfile; 
-	if (path == NULL) return; 
-	
-	if ( (configfile = fopen(path, "r"))) {	
-		if (__flexiblas_verbose) fprintf(stderr, PRINT_PREFIX "Read %s\n",path);
-		__flexiblas_read_config_file(configfile, table, default_map ); 
-		fclose(configfile); 
-	} else {
-		if (__flexiblas_verbose) fprintf(stderr, PRINT_PREFIX "Cannot open %s. Skipped.\n", path);
+void __flexiblas_read_config_file(const char *filename, csc_ini_file_t *config, char **default_map ) {
+	char *dm = NULL;
+	csc_ini_section_t *sec; 
+	csc_ini_iterator_t iter; 
+	csc_ini_kvstore_t *kv; 
+	int verbose = 0 ;
+	int profile = 0; 
+
+	if (__flexiblas_file_exist(filename) == 0 ) {
+		DPRINTF(1,"Cannot open %s. Skipped.\n", filename);
+		return; 
 	}
+
+	if ( csc_ini_load(filename, config, CSC_INI_LOAD_SECTION_UPPERCASE) != CSC_INI_SUCCESS) {
+		DPRINTF(0, COLOR_RED "Failed to load %s. The file might be in the old format.\n" COLOR_RESET, filename); 
+	}
+
+	/* Get the default BLAS  */
+	if ( csc_ini_getstring(config, CSC_INI_DEFAULT_SECTION,"default", &dm) == CSC_INI_SUCCESS){
+		if ( *default_map == NULL ) {
+			*default_map = strdup(dm); 
+		} else {
+			free(*default_map); 
+			*default_map = strdup(dm); 
+		}
+	}
+
+	if ( csc_ini_getinteger(config, CSC_INI_DEFAULT_SECTION,"verbose", &verbose) == CSC_INI_SUCCESS){
+		__flexiblas_verbose = (__flexiblas_verbose > verbose ) ? (__flexiblas_verbose ) : (verbose); 
+	}
+	if ( csc_ini_getinteger(config, CSC_INI_DEFAULT_SECTION,"profile", &profile) == CSC_INI_SUCCESS){
+		__flexiblas_profile = (__flexiblas_profile || profile ) ? 1 : 0; 
+	}
+
+
+	/* Get additional PATHS  */
+	sec = csc_ini_getsection(config, CSC_INI_DEFAULT_SECTION); 
+	if ( sec == NULL ) {
+		DPRINTF(2, "No nameless section in configfile %s\n", filename); 
+		return; 
+	} 
+	iter = NULL; 
+	while ( (kv = csc_ini_kvstore_iterator(sec, &iter)) != NULL ) {
+		char *key = csc_ini_getkey(kv); 
+		if ( key[0] == 'p' && key[1]=='a' && key[2]=='t' && key[3] == 'h'){
+			__flexiblas_add_path(csc_ini_getvalue(kv)); 
+		}
+	}
+	
 }
 
 

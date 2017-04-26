@@ -150,18 +150,33 @@ ztrmm.f
 ztrmv.f
 ztrsm.f
 ztrsv.f		
-lsame.f
 info.c
 	)
 
+IF ( ${CMAKE_C_COMPILER_ID} STREQUAL "GNU") 
+	MESSAGE(STATUS "Setting GNU Compiler Flags")
+	SET(I8_FLAGS "-fdefault-integer-8 -frecursive")
+ELSEIF (${CMAKE_C_COMPILER_ID} STREQUAL "Intel" ) 
+	SET ( I8_FLAGS "-i8 -recursive") 
+ENDIF()
+
+IF ( INTEGER8 STREQUAL ON ) 
+	SET (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${I8_FLAGS}")
+	ADD_DEFINITIONS(-DINTEGER8)
+ENDIF()
+
+
 add_library (blas_netlib SHARED ${NETLIBSRC})
-if ( PROFILE STREQUAL ON ) 
-	install(TARGETS blas_netlib LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/flexiblas-profile)
-else () 
-	if (WIN32) 
-		install(TARGETS blas_netlib EXPORT flexiblas-targets LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/flexiblas RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
-	else ()
-		install(TARGETS blas_netlib LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/flexiblas)
-	endif()
+
+IF(INTEGER8 STREQUAL OFF AND NETLIB64 STREQUAL ON) 
+	add_library (blas_netlib64 SHARED ${NETLIBSRC}) 
+	set_target_properties(blas_netlib64 PROPERTIES COMPILE_FLAGS "${I8_FLAGS} -DINTEGER8") 
+	install(TARGETS blas_netlib64 LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/flexiblas)
+ENDIF()
+
+if (WIN32) 
+	install(TARGETS blas_netlib EXPORT flexiblas-targets LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR} RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
+else ()
+	install(TARGETS blas_netlib LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR})
 endif()
 

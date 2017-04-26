@@ -1,4 +1,4 @@
-/* $Id: hooks.h 3741 2013-10-01 12:54:54Z komart $ */
+/* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
 /* 
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
@@ -16,24 +16,28 @@
 */
 #include "cblas.h"
 #include "cblas_f77.h"
-#include "../hooks.h"
+#include "../flexiblas.h"
 
 
 void cblas_srotg(  float *a, float *b, float *c, float *s)
 {
-   flexiblas_call_srotg[POS_CBLAS] ++;
+   current_backend->blas.srotg.calls[POS_CBLAS] ++;
 
-   if ( flexiblas_srotg.call_cblas != NULL ) {
+   if ( current_backend->post_init != 0 ) {
+   	__flexiblas_backend_init(current_backend);
+   	current_backend->post_init = 0;
+   }
+   if ( current_backend->blas.srotg.call_cblas != NULL ) {
 	   float te = 0, ts = 0;
 	   if ( __flexiblas_profile ) {
 		   ts = flexiblas_wtime(); 
 	   }
 	   void (*fn)(float *, float *, float *, float *)
-		   = flexiblas_srotg.call_cblas;
+		   = current_backend->blas.srotg.call_cblas;
 	   fn(a,b,c,s); 
 	   if ( __flexiblas_profile ){
 		   te = flexiblas_wtime(); 
-		   flexiblas_time_srotg[POS_CBLAS] += (te - ts); 
+		   current_backend->blas.srotg.timings[POS_CBLAS] += (te - ts); 
 	   }
    } else {
 	F77_srotg(a,b,c,s);    

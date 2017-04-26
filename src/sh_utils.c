@@ -18,9 +18,10 @@
 #include "flexiblas.h"
 #include <ctype.h>
 #include <string.h>
-
+#include <stdlib.h>
+#include <limits.h>
 #ifndef __WIN32__
-#define DLOPEN_FLAGS (RTLD_NOW|RTLD_GLOBAL)
+#define DLOPEN_FLAGS (RTLD_NOW|RTLD_LOCAL)
 #else 
 #define DLOPEN_FLAGS (0) 
 #include <windows.h> 
@@ -33,7 +34,7 @@ static int is_absolute(const char * path )
 {
 	if ( path == NULL) return 0;
 #ifdef __WIN32__
-	if (strlen(path) < 2 ) return 0;
+	^if (strlen(path) < 2 ) return 0;
 	if (( tolower(path[0]) >= 'a' && tolower(path[0]) <= 'z' && path[1]==':') 
 	    || ((path[0] == '\\' ) && (path[1] == '\\'))) {
 		return 1;
@@ -101,7 +102,7 @@ static int file_exists(const char * path )
 #endif
 }
 
-void * __flexiblas_dlopen( const char *libname, int flags ){
+void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile ){
 	char *path = NULL;
 	char *filepath = NULL;
 	size_t len;
@@ -111,10 +112,10 @@ void * __flexiblas_dlopen( const char *libname, int flags ){
 
 
 
- 	if ( ! is_relative(libname) ) {
+ 	if ( strstr(libname,"/") == NULL ) {
 		for ( path_count = 0 ; path_count < __flexiblas_count_additional_paths; path_count++){
 			path =  __flexiblas_additional_paths[path_count];
-			if (__flexiblas_verbose) fprintf(stderr,PRINT_PREFIX "path: %s\n",path);
+			if (__flexiblas_verbose) fprintf(stderr,PRINT_PREFIX "path: %s\n", __flexiblas_additional_paths[path_count]);
 			len = strlen(path) + strlen(libname) + 5;
 			filepath = malloc(len * sizeof ( char ));
 		#ifdef __WIN32__
@@ -135,6 +136,33 @@ void * __flexiblas_dlopen( const char *libname, int flags ){
 			found = 1;
 			filepath = strdup( libname);
 		}
+	} else if ( is_relative(libname)) {
+		 size_t path_max; 
+		 char * resolvepath; 
+		 #ifdef PATH_MAX
+		 path_max = PATH_MAX;
+		 #else
+		 path_max = pathconf(path, _PC_PATH_MAX);
+		 if (path_max <= 0)
+			 path_max = 4096;
+		 #endif
+		 resolvepath = calloc(path_max, sizeof(char)); 
+		 
+         if ( realpath(libname, resolvepath) == NULL ) {
+             fprintf(stderr, COLOR_RED PRINT_PREFIX "Cannot determine type to the path: %s\n" COLOR_RESET,libname );
+             found = 0;
+             if (filepath) free(filepath); 
+             filepath = NULL;
+             free(resolvepath); 
+             return NULL; 
+         } else {
+             filepath = strdup(resolvepath); 
+             free(resolvepath); 	
+             DPRINTF(2, COLOR_RED PRINT_PREFIX "Filepath: %s\n" COLOR_RESET,filepath );
+         }
+         if (file_exists(filepath) ) {
+             found = 1; 
+         }
 	} else {
 		fprintf(stderr, COLOR_RED PRINT_PREFIX "Cannot determine type to the path: %s\n" COLOR_RESET,libname );
 		found = 0;
@@ -147,17 +175,82 @@ void * __flexiblas_dlopen( const char *libname, int flags ){
 #ifdef __WIN32__
 		handle = LoadLibrary(filepath); 
 #else
+        void * ld_flags_sym_global;
+        void * ld_flags_sym_lazy;
+        int32_t ld_flags_global;
+        int32_t ld_flags_lazy;
+#ifdef __linux__ 
+        void * ld_flags_sym_deep = NULL;
+        int32_t ld_flags_deep = 0 ; 
+#endif 
 
 		dlerror(); 
+        handle = dlopen(filepath, RTLD_LAZY | RTLD_LOCAL);
+        if (!handle) {
+            DPRINTF(0, COLOR_RED "Failed to load %s - error: %s \n" COLOR_RESET, filepath, dlerror());
+     		if ( filepath) free(filepath);
+            return NULL; 
+        }
+   
+        ld_flags_sym_global = dlsym(handle, "flexiblas_ld_global");
+        if ( ld_flags_sym_global == NULL) {
+            ld_flags_global = 0;
+        } else {
+            ld_flags_global = *((int32_t*) ld_flags_sym_global);
+        }
+
+        ld_flags_sym_lazy = dlsym(handle, "flexiblas_ld_lazy");
+        if ( ld_flags_sym_lazy == NULL) {
+            ld_flags_lazy = 0;
+        } else {
+            ld_flags_lazy = *((int32_t*) ld_flags_sym_lazy);
+        }
+#ifdef __linux__ 
+        ld_flags_sym_deep = dlsym(handle, "flexiblas_ld_deep");
+        if ( ld_flags_sym_deep == NULL) {
+            ld_flags_deep = 0;
+        } else {
+            ld_flags_deep = *((int32_t*) ld_flags_sym_deep);
+        }
+#endif 
+        dlclose(handle);
+
+        if ( ld_flags_global != 0 ) {
+            flags = RTLD_GLOBAL;
+            DPRINTF(1, "Load backend with RTLD_GLOBAL\n");
+        } else {
+            flags = RTLD_LOCAL; 
+        }
+
+        if ( ld_flags_lazy != 0 ) {
+            flags |= RTLD_LAZY;
+            DPRINTF(1, "Load backend with RTLD_LAZY\n");
+        } else {
+            flags |= RTLD_NOW; 
+        }
+
+#ifdef __linux__
+        if ( ld_flags_deep != 0 ) {
+            flags |= RTLD_DEEPBIND;
+            DPRINTF(1, "Load backend with RTLD_DEEPBIND\n");
+        }
+#endif 
+
 		handle = dlopen(filepath, flags); 
 #endif
-		if (handle == NULL){
+	
+        
+        
+        if (handle == NULL){
 #ifdef __WIN32__
 			fprintf(stderr, "Unable to load library: %s\r\n", filepath);
 #else
 			fprintf(stderr, COLOR_RED PRINT_PREFIX "dlopen: %s\n" COLOR_RESET, dlerror());
 #endif
 		}
+        if (sofile != NULL) {
+    		*sofile = strdup(filepath); 
+        }
 		free(filepath);
 		return handle;
 	} else {

@@ -1,4 +1,4 @@
-/* $Id: hooks.h 3741 2013-10-01 12:54:54Z komart $ */
+/* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
 /* 
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
@@ -16,7 +16,7 @@
 */
 #include "cblas.h"
 #include "cblas_f77.h"
-#include "../hooks.h"
+#include "../flexiblas.h"
 
 
 double cblas_dzasum( const int N, const void *X, const int incX) 
@@ -28,20 +28,24 @@ double cblas_dzasum( const int N, const void *X, const int incX)
    #define F77_N N
    #define F77_incX incX
 #endif
-   flexiblas_call_dzasum[POS_CBLAS] ++;
+   current_backend->blas.dzasum.calls[POS_CBLAS] ++;
 
-   if ( flexiblas_dzasum.call_cblas != NULL ) {
+   if ( current_backend->post_init != 0 ) {
+   	__flexiblas_backend_init(current_backend);
+   	current_backend->post_init = 0;
+   }
+   if ( current_backend->blas.dzasum.call_cblas != NULL ) {
 	   double te = 0, ts = 0;
 	   if ( __flexiblas_profile ) {
 		   ts = flexiblas_wtime(); 
 	   }
 	   double  (*fn)
 		  ( const int N, const void *X, const int incX) 
-		   = flexiblas_dzasum.call_cblas;
+		   = current_backend->blas.dzasum.call_cblas;
 	   asum  = fn(N,X,incX);
 	   if ( __flexiblas_profile ){
 		   te = flexiblas_wtime(); 
-		   flexiblas_time_dzasum[POS_CBLAS] += (te - ts); 
+		   current_backend->blas.dzasum.timings[POS_CBLAS] += (te - ts); 
 	   }
    } else {
    	asum = F77_dzasum( &F77_N, X, &F77_incX);

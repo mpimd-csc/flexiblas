@@ -607,6 +607,19 @@ void cblas_zimatcopy(const enum CBLAS_ORDER CORDER, const enum CBLAS_TRANSPOSE C
 		     const int crows, const int ccols, const void* calpha, void* a, const int clda, 
 		     const int cldb); 
 
+void cblas_cgeadd(const enum CBLAS_ORDER CORDER,  
+		     const int crows, const int ccols, const void *calpha, void *a, const int clda, 
+             const void * cbeta, void *b, const int cldb); 
+void cblas_dgeadd(const enum CBLAS_ORDER CORDER,  
+		     const int crows, const int ccols, const double calpha, double *a, const int clda, 
+             const double cbeta, double *b, const int cldb); 
+void cblas_sgeadd(const enum CBLAS_ORDER CORDER,  
+		     const int crows, const int ccols, const float calpha, float *a, const int clda, 
+             const float cbeta, float *b, const int cldb); 
+void cblas_zgeadd(const enum CBLAS_ORDER CORDER,  
+		     const int crows, const int ccols, const void *calpha, void *a, const int clda, 
+             const void * cbeta, void *b, const int cldb); 
+
 
 #ifdef __cplusplus
 }

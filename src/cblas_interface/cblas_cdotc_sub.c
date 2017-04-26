@@ -1,4 +1,4 @@
-/* $Id: hooks.h 3741 2013-10-01 12:54:54Z komart $ */
+/* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
 /* 
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
@@ -14,10 +14,11 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 #include "flexiblas_config.h"
 #include "cblas.h"
 #include "cblas_f77.h"
-#include "../hooks.h"
+#include "../flexiblas.h"
 #include <complex.h>
 
 void cblas_cdotc_sub( const int N, const void *X, const int incX,
@@ -30,9 +31,13 @@ void cblas_cdotc_sub( const int N, const void *X, const int incX,
    #define F77_incX incX
    #define F77_incY incY
 #endif
-   flexiblas_call_cdotc[POS_CBLAS] ++;
+   current_backend->blas.cdotc_sub.calls[POS_CBLAS] ++;
 
-   if ( flexiblas_cdotc.call_cblas != NULL ) {
+   if ( current_backend->post_init != 0 ) {
+   	__flexiblas_backend_init(current_backend);
+   	current_backend->post_init = 0;
+   }
+   if ( current_backend->blas.cdotc_sub.call_cblas != NULL ) {
 	   double te = 0, ts = 0;
 	   if ( __flexiblas_profile) {
 	   	ts = flexiblas_wtime(); 
@@ -40,11 +45,11 @@ void cblas_cdotc_sub( const int N, const void *X, const int incX,
 	   void (*fn)
 		  ( const int N, const void *X, const int incX,
                     const void *Y, const int incY,void *dotc)
-		   = flexiblas_cdotc.call_cblas;
+		   = current_backend->blas.cdotc_sub.call_cblas;
 	   fn(N,X,incX,Y,incY,dotc);
 	   if ( __flexiblas_profile ){ 
 	   	te = flexiblas_wtime(); 
-	        flexiblas_time_cdotc[POS_CBLAS] += (te - ts); 
+	        current_backend->blas.cdotc_sub.timings[POS_CBLAS] += (te - ts); 
 	   }
    } else {
 	float complex d; 

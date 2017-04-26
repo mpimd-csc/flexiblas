@@ -10,17 +10,29 @@
 #include <stdlib.h>
 #include <math.h>
 #include <complex.h>
-#include "f77blas_interface.h"
+
+#ifdef INTEGER8
+#define Int int64_t
+#define USE_BLAS_64
+#else 
+#define Int int
+#endif 
+
+#ifdef BLAS_INTERFACE_INTEL 
+#include "blas_intel.h"
+#include "extblas_intel.h"
+#else 
+#include "blas_gnu.h"
+#include "extblas_gnu.h"
+#endif 
 #ifdef FLEXIBLAS_CBLAS
-#include "cblas.h"
-#endif
+#include "cblas.h" 
+#endif 
 
 
 
-void caxpby_(Int *N, float complex *CA, float complex *CX, Int *INCX, float complex *CB, float complex *CY, Int *INCY); 
-void zaxpby_(Int *N, double complex *CA, double complex *CX, Int *INCX, double complex *CB, double complex *CY, Int *INCY); 
-void saxpby_(Int *N, float *CA, float *CX, Int *INCX, float *CB, float *CY, Int *INCY); 
-void daxpby_(Int *N, double *CA, double *CX, Int *INCX, double *CB, double *CY, Int *INCY); 
+
+
 
 
 int main(int argc, const char *argv[])

@@ -1,4 +1,4 @@
-/* $Id: hooks.h 3741 2013-10-01 12:54:54Z komart $ */
+/* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
 /* 
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
@@ -16,7 +16,7 @@
 */
 #include "cblas.h"
 #include "cblas_f77.h"
-#include "../hooks.h"
+#include "../flexiblas.h"
 
 void cblas_cgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA,
                  const enum CBLAS_TRANSPOSE TransB, const int M, const int N,
@@ -40,9 +40,13 @@ void cblas_cgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA
    #define F77_ldc ldc
 #endif
 
-   flexiblas_call_cgemm[POS_CBLAS] ++;
+   current_backend->blas.cgemm.calls[POS_CBLAS] ++;
 
-   if ( flexiblas_cgemm.call_cblas != NULL ) {
+   if ( current_backend->post_init != 0 ) {
+   	__flexiblas_backend_init(current_backend);
+   	current_backend->post_init = 0;
+   }
+   if ( current_backend->blas.cgemm.call_cblas != NULL ) {
 	   double te = 0, ts = 0;
 	   if ( __flexiblas_profile ) {
 		    ts  =flexiblas_wtime(); 
@@ -54,11 +58,11 @@ void cblas_cgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA
                  const int K, const void *alpha, const void  *A,
                  const int lda, const void  *B, const int ldb,
                  const void *beta, void  *C, const int ldc)
-		   = flexiblas_cgemm.call_cblas;
+		   = current_backend->blas.cgemm.call_cblas;
 	fn(Order,TransA,TransB,M,N,K,alpha,A,lda,B,ldb,beta,C,ldc);
 	if ( __flexiblas_profile ){
 	   te = flexiblas_wtime(); 
-	   flexiblas_time_cgemm[POS_CBLAS] += (te - ts); 
+	   current_backend->blas.cgemm.timings[POS_CBLAS] += (te - ts); 
 	}
    } else {
 

@@ -18,6 +18,16 @@ macro(add_blas_test name src)
     endif()
 endmacro(add_blas_test)
 
+IF ( INTEGER8 STREQUAL ON ) 
+	IF ( ${CMAKE_C_COMPILER_ID} STREQUAL "GNU") 
+		MESSAGE(STATUS "Setting GNU Compiler Flags")
+		SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fdefault-integer-8 -frecursive")
+	ELSEIF (${CMAKE_C_COMPILER_ID} STREQUAL "Intel" ) 
+		SET ( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -i8 -recursive") 
+	ENDIF()
+ENDIF (INTEGER8 STREQUAL ON) 
+
+
 add_blas_test(xblat1s sblat1.f)
 add_blas_test(xblat2s sblat2.f)
 add_blas_test(xblat3s sblat3.f)

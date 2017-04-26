@@ -1,10 +1,9 @@
-#include <ctype.h>
 
-void FNAME ( char* ORDER, char* TRANS, Int *rows, Int *cols, FLOAT *alpha, FLOAT *a, Int *lda, FLOAT *b, Int *ldb)
+void FNAME ( char* ORDER, char* TRANS, int64_t *rows, int64_t *cols, FLOAT *alpha, FLOAT *a, int64_t *lda, FLOAT *b, int64_t *ldb)
 {
 
 	char Order, Trans;
-	Int info = -1;
+	int64_t info = -1;
 
 	Order = *ORDER;
 	Trans = *TRANS;
@@ -37,7 +36,7 @@ void FNAME ( char* ORDER, char* TRANS, Int *rows, Int *cols, FLOAT *alpha, FLOAT
 	}
 
 	if (info >= 0) {
-    		xerbla_( ENAME , &info, sizeof(ENAME));
+    		xerbla64_( ENAME , &info, sizeof(ENAME));
     		return;
   	}
 
@@ -45,7 +44,7 @@ void FNAME ( char* ORDER, char* TRANS, Int *rows, Int *cols, FLOAT *alpha, FLOAT
 	{
 		if ( Trans == 'N' || Trans == 'R' )
 		{
-			Int i,j;
+			int64_t i,j;
 			FLOAT *aptr,*bptr;
 			FLOAT ALPHA; 
 			aptr = a;
@@ -91,7 +90,7 @@ void FNAME ( char* ORDER, char* TRANS, Int *rows, Int *cols, FLOAT *alpha, FLOAT
 		}
 		else
 		{
-			Int i,j;
+			int64_t i,j;
 			FLOAT *aptr,*bptr;
 			FLOAT ALPHA; 
 	
@@ -138,7 +137,7 @@ void FNAME ( char* ORDER, char* TRANS, Int *rows, Int *cols, FLOAT *alpha, FLOAT
 	{
 		if ( Trans == 'N' || Trans == 'R'  )
 		{
-			Int i,j;
+			int64_t i,j;
 			FLOAT *aptr,*bptr;
 			FLOAT ALPHA; 
 
@@ -184,7 +183,7 @@ void FNAME ( char* ORDER, char* TRANS, Int *rows, Int *cols, FLOAT *alpha, FLOAT
 		}
 		else
 		{
-			Int i,j;
+			int64_t i,j;
 			FLOAT *aptr,*bptr;
 			FLOAT ALPHA; 
 			ALPHA = *alpha; 

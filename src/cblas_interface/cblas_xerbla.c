@@ -1,4 +1,4 @@
-/* $Id: hooks.h 3741 2013-10-01 12:54:54Z komart $ */
+/* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
 /* 
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
@@ -21,7 +21,7 @@
 
 #include "cblas.h"
 #include "cblas_f77.h"
-#include "../hooks.h"
+#include "../flexiblas.h"
 
 #ifdef __ELF__
 void internal_cblas_xerbla(int info, const char *rout, const char *form, ...); 
@@ -35,7 +35,7 @@ void cblas_xerbla(int info, const char *rout, const char *form, ...)
    char empty[1] = "";
    va_list argptr;
 
-   flexiblas_call_xerbla[POS_CBLAS]++; 
+   current_backend->xerbla.calls[POS_CBLAS]++; 
    
    va_start(argptr, form);
 

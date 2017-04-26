@@ -1,15 +1,23 @@
 project (FlexiBLAS)
 ENABLE_LANGUAGE (Fortran)
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
+IF (${CMAKE_MAJOR_VERSION} GREATER "2") 
+	MESSAGE(STATUS "Using CMAKE below 3.0.0 setting CMP0026 to old") 
+	cmake_policy(SET CMP0026 OLD) 
+ENDIF() 
+
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/CMakeModules)
+
+# cmake_policy(SET CMP0026 OLD)
 
 OPTION(TESTS "Enable Tests" ON)
 OPTION(CBLAS "Enable CBLAS Interface" ON ) 
 OPTION(INTEGER8 "Use 8 Byte Integer" OFF) 
 OPTION(EXTBLAS "Add BLAS extensions like AXPBY" ON) 
 OPTION(BUILD_SHARED_LIBS "Enable Shared Library" ON) 
+OPTION(NETLIB64 "Build 64 Bit Netlib (not supported on 32bit systems)" OFF)
 OPTION(DEV "Development Build" OFF) 
-
+OPTION(MKL_CUSTOM "Build MKL support with Intel MKLs Custom library builder" OFF) 
 #SET(BUILD_SHARED_LIBS ON)
 SET(LIBS m) 
 
@@ -21,7 +29,8 @@ ENDIF()
 MESSAGE(STATUS "SYSCONFDIR: ${CMAKE_INSTALL_FULL_SYSCONFDIR}")
 MESSAGE(STATUS "LIBDIR:     ${CMAKE_INSTALL_FULL_LIBDIR}")
 MESSAGE(STATUS "BINDIR:     ${CMAKE_INSTALL_FULL_BINDIR}")
-MESSAGE(STATUS "INCLUDEIR:  ${CMAKE_INSTALL_FULL_INCLUDEDIR}")
+MESSAGE(STATUS "INCLUDEDIR: ${CMAKE_INSTALL_FULL_INCLUDEDIR}")
+MESSAGE(STATUS "MANDIR:     ${CMAKE_INSTALL_FULL_MANDIR}")
 
 #
 # build type
@@ -35,32 +44,20 @@ IF ( CMAKE_BUILD_TYPE STREQUAL "Debug" )
 	SET ( DEBUG "ON" )
 ENDIF ( CMAKE_BUILD_TYPE STREQUAL "Debug" )
 
-IF ( ${CMAKE_C_COMPILER_ID} STREQUAL "GNU")
+IF ( ${CMAKE_C_COMPILER_ID} STREQUAL "Intel")
 	SET( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fPIC")
-	SET( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Wall -fPIC")
+	SET( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fPIC -recursive")
+ELSE()
+	SET( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fPIC")
+	SET( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Wall -fPIC -frecursive")
 ENDIF()
 
 IF (DEBUG STREQUAL ON) 
 	SET( CMAKE_BUILD_TYPE "Debug" )
 	SET ( DEBUG TRUE)
+	ADD_DEFINITIONS(-DDEBUG)
 ENDIF (DEBUG STREQUAL ON )
 
-IF ( INTEGER8 STREQUAL ON ) 
-	IF ( ${CMAKE_C_COMPILER_ID} STREQUAL "GNU") 
-		MESSAGE(STATUS "Setting GNU Compiler Flags")
-		SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fdefault-integer-8 -frecursive")
-	ELSEIF (${CMAKE_C_COMPILER_ID} STREQUAL "Intel" ) 
-		SET ( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -i8 -recursive") 
-	ENDIF()
-	ADD_DEFINITIONS(-DINTEGER8)
-	SET(FLEXIBLAS_INTEGER8 TRUE)
-ELSE()
-	SET(FLEXIBLAS_INTEGER8 FALSE)
-ENDIF (INTEGER8 STREQUAL ON) 
-
-IF (CBLAS STREQUAL ON) 
-	ADD_DEFINITIONS(-DFLEXIBLAS_CBLAS)
-ENDIF()
 
 
 IF (DEV STREQUAL ON) 
@@ -70,7 +67,11 @@ IF (DEV STREQUAL ON)
 	MESSAGE (WARNING "- This is an development build and can not be install. Please set add -DDEV=OFF to cmake. -")
 	MESSAGE (WARNING "-------------------------------------------------------------------------------------------")
 ELSE()
-	SET ( FLEXIBLAS_DEFAULT_LIB_PATH "${CMAKE_INSTALL_FULL_LIBDIR}/flexiblas/")
+	IF ( INTEGER8 STREQUAL ON) 
+		SET ( FLEXIBLAS_DEFAULT_LIB_PATH "${CMAKE_INSTALL_FULL_LIBDIR}/flexiblas64/")
+	ELSE()
+		SET ( FLEXIBLAS_DEFAULT_LIB_PATH "${CMAKE_INSTALL_FULL_LIBDIR}/flexiblas/")
+	ENDIF()
 ENDIF() 
 
 
@@ -155,14 +156,66 @@ ELSE()
 	ENDIF()
 ENDIF()
 
+INCLUDE(CheckAttributeExists)
+Check_Attribute_Exists( constructor HAVE_ATTR_CONSTRUCTOR)
+Check_Attribute_Exists( "alias(\"foo\")" HAVE_ATTR_ALIAS)
+
 SET(EXTRA_BLAS "")
+
+### libcscutils 
+SET(CSCUTILS_FEATURES "inifile;file")
+add_subdirectory(libcscutils)
+SET(LIBS cscutils ${LIBS}) 
+SET(INCLUDE_DIR ${INCLUDE_DIR} "${PROJECT_SOURCE_DIR}/libcscutils/include")
+
+IF (CBLAS STREQUAL ON) 
+	ADD_DEFINITIONS(-DFLEXIBLAS_CBLAS)
+ENDIF()
+
+
+
+### Setup Integer8 option
+IF ( INTEGER8 STREQUAL ON ) 
+	ADD_DEFINITIONS(-DINTEGER8)
+	SET(FLEXIBLAS_INTEGER8 TRUE)
+	SET(FLEXIBLAS_INCLUDE_PREFIX "flexiblas64") 
+	SET(FLEXIBLAS_LIBRARY_DIR "flexiblas64")
+	SET(FLEXIBLAS_PKG_CONFIG "flexiblas64.pc")
+	set(flexiblasname flexiblas64)
+
+ELSE()
+	SET(FLEXIBLAS_INTEGER8 FALSE)
+	SET(FLEXIBLAS_INCLUDE_PREFIX "flexiblas") 
+	SET(FLEXIBLAS_PKG_CONFIG "flexiblas.pc") 
+	SET(FLEXIBLAS_LIBRARY_DIR "flexiblas")
+	set(flexiblasname flexiblas)
+
+ENDIF (INTEGER8 STREQUAL ON) 
+
+
+### Add Source 
 add_subdirectory(netlib)
 add_subdirectory(src)
 add_subdirectory(examples)
 
-INSTALL(FILES	${CMAKE_SOURCE_DIR}/include/f77blas_interface.h DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/flexiblas/)
+
+### Install 
+INSTALL(FILES   ${CMAKE_SOURCE_DIR}/include/blas_gnu.h
+		${CMAKE_SOURCE_DIR}/include/blas_intel.h
+		${CMAKE_SOURCE_DIR}/include/extblas_gnu.h
+		${CMAKE_SOURCE_DIR}/include/extblas_intel.h
+		${CMAKE_SOURCE_DIR}/include/cblas.h
+		DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/${FLEXIBLAS_INCLUDE_PREFIX}/)
+INSTALL(FILES   ${CMAKE_SOURCE_DIR}/src/flexiblas_backend.h 
+		${CMAKE_SOURCE_DIR}/src/flexiblas_real_calls.h 
+		${CMAKE_SOURCE_DIR}/src/flexiblas_real_extblas_calls.h 
+		${CMAKE_SOURCE_DIR}/src/flexiblas_api.h
+		${CMAKE_SOURCE_DIR}/src/flexiblas_dummy_fortran.h 
+		${CMAKE_SOURCE_DIR}/src/flexiblas_dummy_cblas.h 
+		DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/${FLEXIBLAS_INCLUDE_PREFIX}/) 
+
 IF(CBLAS STREQUAL ON) 
-	INSTALL(FILES	${CMAKE_SOURCE_DIR}/include/cblas.h DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/flexiblas/)
+	INSTALL(FILES	${CMAKE_SOURCE_DIR}/include/cblas.h DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/${FLEXIBLAS_INCLUDE_PREFIX}/)
 ENDIF()
 
 
@@ -172,19 +225,18 @@ CONFIGURE_FILE(
   IMMEDIATE @ONLY)
 ADD_CUSTOM_TARGET(uninstall "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake") 
 
+### Setup PKG_CONFIG
 set(prefix ${CMAKE_INSTALL_PREFIX})
 set(libdir ${CMAKE_INSTALL_FULL_LIBDIR})
 set(PKG_CONFIG_DIR ${CMAKE_INSTALL_FULL_LIBDIR}/pkgconfig)
+set(includedir ${CMAKE_INSTALL_PREFIX}/include/${FLEXIBLAS_INCLUDE_PREFIX}/)
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/flexiblas.pc.in ${CMAKE_CURRENT_BINARY_DIR}/${FLEXIBLAS_PKG_CONFIG})
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${FLEXIBLAS_PKG_CONFIG}  DESTINATION ${PKG_CONFIG_DIR} )
 
-set(includedir ${CMAKE_INSTALL_PREFIX}/include/flexiblas/)
-set(flexiblasname flexiblas)
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/flexiblas.pc.in ${CMAKE_CURRENT_BINARY_DIR}/flexiblas.pc)
+### Setup Man Pages 
+install(DIRECTORY doc/man/ DESTINATION ${CMAKE_INSTALL_FULL_MANDIR} FILES_MATCHING PATTERN "*.[1-9]")
 
-install(FILES
-	  ${CMAKE_CURRENT_BINARY_DIR}/flexiblas.pc
-	  DESTINATION ${PKG_CONFIG_DIR}
-)
-   
+
 IF ( TESTS ) 
 	MESSAGE( STATUS "Enable Testing...")
 	ENABLE_TESTING()

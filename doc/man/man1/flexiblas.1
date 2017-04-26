@@ -1,0 +1,102 @@
+.TH flexiblas 1 "Nov. 2015" "M. Koehler" "The FlexiBLAS Library" 
+.SH NAME
+flexiblas \- the FlexiBLAS administration tool  
+.SH SYNOPSIS
+flexiblas [\fIoptions\fR] \fIcommand\fR [\fIcommand\-options\fR] 
+.SH DESCRIPTION
+The flexiblas tool is a command line utility shipped with the FlexiBLAS
+library. It is used to configure the global and the local flexiblasrc 
+file. Its main purpose it selecting the default BLAS backend used with 
+FlexiBLAS and other runtime specific options. 
+
+Furthermore, it can be used to add or remove BLAS backends form 
+the configuration files. 
+.SH OPTIONS
+.SS Commands
+.TP
+\fBhelp\fR
+Print this information and exit.
+.TP
+\fBlist\fR
+List all configured BLAS libraries from the configuration files and additional configuration parameters like 
+verbose output or enabled profiling.
+.TP
+\fBdefault \fIBLASNAME\fR
+Sets the default BLAS backend in ~/.flexiblasrc or in the system wide configuration depending on the global options set.
+.TP
+\fBdefault\fR
+Removes the default setting from ~/.flexiblasrc or from the system wide configuration. 
+.TP
+add \fIBLASNAME sharedlibrary.so ["comment string"] [ILP64]\fR
+Add a new BLAS backend called "\fIBLASNAME\fR" to the selected configuration file. This will create a section like 
+.nf
+
+  [BLASNAME]
+  library=sharedlibrary.so
+  comment="comment string"
+  ilp64=0 
+
+.fi
+where the \fIcomment string\fR is optional as well as the \fIILP64\fR flag, which sets the "ilp64" entry to 1 if it is 
+specified. 
+.TP
+\fBremove \fINAME\fR
+Remove a BLAS backed called "NAME" from the selected configuration file.
+.TP 
+\fBset \fIproperty [value]\fR
+Set a property in the configuration file. If the value is not given the property is reset to its default. The available properties 
+are listed below. 
+
+.SS General Options: 
+.TP
+\fB\-u\fR, \fB\-\-user\fR
+Edit the user's flexiblasrc configuration (default options, except of executing as root).
+.TP
+\fB\-g\fR, \fB\-\-global\fR
+Edit the global flexiblasrc configuration (default in case of executing as root).
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print this information and exit.
+.TP
+\fB\-v\fR, \fB\-\-version\fR
+Print the versionformation and exit.
+
+.SS Properties 
+.TP
+\fBverbose \fIinteger\fR
+Change the verbosity level of FlexiBLAS. The default verbosity level is \fB0\fR which only displays critical errors. If
+a level larger than \fB\fR is specified, FlexiBLAS will produce many debug information on \fIstderr\fR. 
+.TP
+\fBprofile \fIboolean\fR
+Enable or disable the profiling functionally of FlexiBLAS. Accepted boolean values \fI1 = true\fR and \fI0 = false\fR. By 
+default the profiling is turned off. 
+.TP
+\fBprofile_file \fIfilename\fR
+Redirect the profiling output from \fIstdout\fR to a file. If the filename is relative it is written to the directory from 
+where a program using FlexiBLAS is called. 
+.SH FILES
+.TP
+\fI/etc/flexiblasrc\fR
+System-wide FlexiBLAS configuration file. 
+.TP
+\fI~/.flexiblasrc\fR
+User FlexiBLAS configuration file. 
+
+.SH REPORTING BUGS
+The current information about the developers and reporting bugs can be found on the FlexiBLAS homepage. 
+
+FlexiBLAS Homepage: <http://www.mpi-magdeburg.mpg.de/projects/flexiblas>
+.SH AUTHORS 
+ Martin Koehler, Jens Saak 
+.SH SEE ALSO 
+.nf
+ M. Koehler and J. Saak, FlexiBLAS - A flexible BLAS library with runtime exchangeable backends,
+ LAPACK Working Note 284, 2013
+.fi
+
+.SH COPYRIGHT
+Copyright (C) 2013, 2014, 2015 Martin Koehler, Jens Saak. 
+.SH LICENSE
+License GPLv2+: GNU GPL version 2 or later <http://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.  There is NO WARRANTY, to the extent permitted by law.
+

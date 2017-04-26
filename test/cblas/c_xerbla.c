@@ -5,6 +5,7 @@
 #include "cblas.h"
 #include "cblas_test.h"
 
+
 void cblas_xerbla(int info, const char *rout, const char *form, ...)
 {
    extern int cblas_lerr, cblas_info, cblas_ok;
@@ -96,12 +97,12 @@ void F77_xerbla(char *srname, void *vinfo)
 
    char rout[] = {'c','b','l','a','s','_','\0','\0','\0','\0','\0','\0','\0'};
 
-#ifdef F77_Integer
-   F77_Integer *info=vinfo;
-   F77_Integer i;
-   extern F77_Integer link_xerbla;
+#ifdef F77_INT
+   F77_INT info= * ((F77_INT*)vinfo);
+   F77_INT i;
+   extern int link_xerbla;
 #else
-   int *info=vinfo;
+   int info= *((int *)vinfo);
    int i;
    extern int link_xerbla;
 #endif
@@ -121,5 +122,6 @@ void F77_xerbla(char *srname, void *vinfo)
    /* We increment *info by 1 since the CBLAS interface adds one more
     * argument to all level 2 and 3 routines.
     */
-   cblas_xerbla(*info+1,rout,"");
+   cblas_xerbla(info+1,rout,"");
 }
+

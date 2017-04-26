@@ -1,4 +1,4 @@
-/* $Id: hooks.h 3741 2013-10-01 12:54:54Z komart $ */
+/* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
 /* 
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
@@ -16,7 +16,7 @@
 */
 #include "cblas.h"
 #include "cblas_f77.h"
-#include "../hooks.h"
+#include "../flexiblas.h"
 
 void cblas_zdscal( const int N, const double alpha, void *X,
                        const int incX)
@@ -27,17 +27,21 @@ void cblas_zdscal( const int N, const double alpha, void *X,
    #define F77_N N
    #define F77_incX incX
 #endif
-   flexiblas_call_zdscal[POS_CBLAS] ++;
+   current_backend->blas.zdscal.calls[POS_CBLAS] ++;
 
-   if ( flexiblas_zdscal.call_cblas != NULL ) {
+   if ( current_backend->post_init != 0 ) {
+   	__flexiblas_backend_init(current_backend);
+   	current_backend->post_init = 0;
+   }
+   if ( current_backend->blas.zdscal.call_cblas != NULL ) {
 	   double te = 0, ts = 0;
 	   if (__flexiblas_profile ) {
 	   	ts = flexiblas_wtime(); 
 	   }
 
 	   void (*fn) ( const int N, const double alpha, void *X, const int
-			   incX) = flexiblas_zdscal.call_cblas;
+			   incX) = current_backend->blas.zdscal.call_cblas;
 	   fn(N,alpha,X,incX); if ( __flexiblas_profile ){ te =
-		   flexiblas_wtime(); flexiblas_time_zdscal[POS_CBLAS] += (te -
+		   flexiblas_wtime(); current_backend->blas.zdscal.timings[POS_CBLAS] += (te -
 				   ts); } } else { F77_zdscal( &F77_N, &alpha,
 					   X, &F77_incX); } }

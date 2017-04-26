@@ -1,4 +1,4 @@
-/* $Id: hooks.h 3741 2013-10-01 12:54:54Z komart $ */
+/* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
 /* 
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
@@ -16,7 +16,7 @@
 */
 #include "cblas.h"
 #include "cblas_f77.h"
-#include "../hooks.h"
+#include "../flexiblas.h"
 
 double  cblas_dsdot( const int N, const float *X,
                       const int incX, const float *Y, const int incY)
@@ -30,9 +30,13 @@ double  cblas_dsdot( const int N, const float *X,
    #define F77_incY incY
 #endif
 
-   flexiblas_call_dsdot[POS_CBLAS] ++;
+   current_backend->blas.dsdot.calls[POS_CBLAS] ++;
 
-   if ( flexiblas_dsdot.call_cblas != NULL ) {
+   if ( current_backend->post_init != 0 ) {
+   	__flexiblas_backend_init(current_backend);
+   	current_backend->post_init = 0;
+   }
+   if ( current_backend->blas.dsdot.call_cblas != NULL ) {
 	   double te = 0, ts = 0;
 	   if ( __flexiblas_profile ) {
 		   ts = flexiblas_wtime(); 
@@ -40,11 +44,11 @@ double  cblas_dsdot( const int N, const float *X,
 	 double(*fn)
 		  ( const int N, const float *X,
                       const int incX, const float *Y, const int incY)
-		   = flexiblas_dsdot.call_cblas;
+		   = current_backend->blas.dsdot.call_cblas;
 	dot = fn(N,X,incX,Y,incY);
         if ( __flexiblas_profile ){
 	   te = flexiblas_wtime(); 
-	   flexiblas_time_dsdot[POS_CBLAS] += (te - ts); 
+	   current_backend->blas.dsdot.timings[POS_CBLAS] += (te - ts); 
 	}
    } else {
    	dot =  F77_dsdot( &F77_N, X, &F77_incX, Y, &F77_incY);

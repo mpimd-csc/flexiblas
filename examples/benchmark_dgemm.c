@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-// #include "f77blas_interface.h"
 #include <unistd.h>
 #include <sys/time.h>
 
@@ -10,7 +9,6 @@
 	#define Int int 
 #endif
 
-#define RUNS 50
 void dgemm_(const char * TRANSA, const char *TRANSB, Int *m, Int *n, Int *k, double *alpha, double *A, Int *lda, double *B, Int *ldb, double *beta, double *C, Int *ldc); 
 
 double wtime()
@@ -27,11 +25,14 @@ int main (int argc, char **argv) {
 	double ts,te;
 	double alpha=1, beta=1;
 	double flops; 
-	if ( argc != 2) {
-		printf("Usage: %s dim\n", argv[0]); 
+    Int RUNS; 
+
+	if ( argc != 3) {
+		printf("Usage: %s dim runs\n", argv[0]); 
 		exit(1); 
 	}
 	n = atoi(argv[1]); 
+    RUNS = atoi(argv[2]); 
 	A = malloc(sizeof(double) * n *n ); 
 	B = malloc(sizeof(double) * n *n ); 
 	C = malloc(sizeof(double) * n *n ); 

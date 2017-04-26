@@ -10,6 +10,7 @@ Package: libflexiblas-dev
 Section: libdevel
 Architecture: any
 Multi-Arch: same
+Recommends: libflexiblas-openblas, libflexiblas-atlas
 Depends: libflexiblas (= ${binary:Version}),libblas-dev
 Replaces: libflexiblas-profile-dev 
 Description: Development files for libflexiblas.
@@ -55,6 +56,34 @@ Description: Flexible and Exchangeable BLAS library.
  are supported. 
  .
  This package contains the runtime part of FlexiBLAS. 
+
+Package: libflexiblas-atlas
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends}, libflexiblas, libatlas3-base(>=3.8.0)
+Description: Flexible and Exchangeable BLAS library, ATLAS backend
+ The FlexiBLAS library is a flexible BLAS wrapper 
+ which allows one to exchange the system wide BLAS 
+ implementation without recompiling or relinking programs. 
+ Even dealing with runtime-loader specific tricks is 
+ not necessary with FlexiBLAS. 
+ .
+ This package contains the ATLAS backend for FlexiBLAS.
+
+Package: libflexiblas-openblas
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends}, libflexiblas, libopenblas-base 
+Description: Flexible and Exchangeable BLAS library, ATLAS backend
+ The FlexiBLAS library is a flexible BLAS wrapper 
+ which allows one to exchange the system wide BLAS 
+ implementation without recompiling or relinking programs. 
+ Even dealing with runtime-loader specific tricks is 
+ not necessary with FlexiBLAS. 
+ .
+ This package contains the ATLAS OpenBLAS for FlexiBLAS.
 
 Package: libflexiblas-dbg
 Architecture: any
