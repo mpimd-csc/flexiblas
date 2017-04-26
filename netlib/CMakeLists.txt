@@ -150,6 +150,7 @@ ztrmm.f
 ztrmv.f
 ztrsm.f
 ztrsv.f		
+lsame.f
 info.c
 	)
 
