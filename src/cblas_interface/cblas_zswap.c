@@ -29,24 +29,25 @@ void cblas_zswap( const int N, void *X, const int incX, void *Y,
    #define F77_incX incX
    #define F77_incY incY
 #endif
-#ifdef FLEXIBLAS_PROFILE
+   
    flexiblas_call_zswap[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_zswap.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   double te = 0, ts = 0;
+	   if (__flexiblas_profile ) {
+		   ts = flexiblas_wtime(); 
+	   }
 	   void (*fn)
 		  ( const int N, void *X, const int incX, void *Y,
                        const int incY)
 		   = flexiblas_zswap.call_cblas;
 	fn(N,X,incX,Y,incY);
-#ifdef FLEXIBLAS_PROFILE
+	if (__flexiblas_profile ){
 	   te = flexiblas_wtime(); 
 	   flexiblas_time_zswap[POS_CBLAS] += (te - ts); 
-#endif
+	}
    } else {
 	   F77_zswap( &F77_N, X, &F77_incX, Y, &F77_incY);
    }
 }
+

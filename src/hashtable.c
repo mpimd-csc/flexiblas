@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "flexiblas.h"
 #include "hashtable.h"
 
 
@@ -138,4 +139,37 @@ int flexiblas_hashtable_remove( hashtable s, char *name){
         }
     return 0;
 }
+
+/*-----------------------------------------------------------------------------
+ *  Implementation <-> Library mapping table 
+ *-----------------------------------------------------------------------------*/
+char* __flexiblas_kv_pair_getkey(data kv) {
+	return ((kv_pair *) kv)->key; 
+}
+
+void __flexiblas_kv_pair_free(data kv) {
+	kv_pair * kvi = (kv_pair *) kv; 
+	if ( kvi->key) free(kvi->key); 
+	if ( kvi->value) free(kvi->value); 
+	free(kvi); 
+}
+
+Int __flexiblas_kv_hash(char * name, Int size) {
+	Int ret = 0, i, len ; 
+	len = strlen(name); 
+	for (i = 0;  i < len ; i++) {
+		ret = (ret+tolower(name[i])) % size; 
+	}
+	return ret; 
+}
+
+kv_pair * __flexiblas_kv_new_pair(const char *key, const char *value){
+	kv_pair * pair = calloc ( sizeof(kv_pair), 1);
+	if ( pair == NULL ) return NULL; 
+	pair->key = strdup(key); 
+	pair->value = strdup(value); 
+	return pair; 
+}
+
+
 

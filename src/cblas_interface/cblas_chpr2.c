@@ -33,24 +33,23 @@ void cblas_chpr2(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
    #define F77_incX incx
    #define F77_incY incy
 #endif
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_chpr2[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_chpr2.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   double ts = 0, te = 0;
+	   if ( __flexiblas_profile ) {
+		ts = flexiblas_wtime(); 
+	   }
 	   void (*fn)
 		  (const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
                       const int N,const void *alpha, const void *X, 
                       const int incX,const void *Y, const int incY, void *Ap)
 		   = flexiblas_chpr2.call_cblas;
 	fn(order,Uplo,N,alpha,X,incX,Y,incY,Ap);
-#ifdef FLEXIBLAS_PROFILE
+	if ( __flexiblas_profile ){
 	   te = flexiblas_wtime(); 
 	   flexiblas_time_chpr2[POS_CBLAS] += (te - ts); 
-#endif
+	}
    } else {
 
 	   int n, i, j, tincx, tincy, incx=incX, incy=incY;

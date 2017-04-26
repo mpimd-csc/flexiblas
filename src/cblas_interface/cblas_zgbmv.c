@@ -39,14 +39,15 @@ void cblas_zgbmv(const enum CBLAS_ORDER order,
    #define F77_incX incx
    #define F77_incY incY
 #endif
-#ifdef FLEXIBLAS_PROFILE
+   
    flexiblas_call_zgbmv[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_zgbmv.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   double ts = 0, te = 0;
+	   if ( __flexiblas_profile ) {  
+	   	ts = flexiblas_wtime(); 
+	   }
+	   
 	   void (*fn)
 		  (const enum CBLAS_ORDER order,
                  const enum CBLAS_TRANSPOSE TransA, const int M, const int N,
@@ -56,10 +57,10 @@ void cblas_zgbmv(const enum CBLAS_ORDER order,
                  void  *Y, const int incY)
 		   = flexiblas_zgbmv.call_cblas;
 	fn(order,TransA,M,N,KL,KU,alpha,A,lda,X,incX,beta,Y,incY);
-#ifdef FLEXIBLAS_PROFILE
+	if (__flexiblas_profile ) {
 	   te = flexiblas_wtime(); 
 	   flexiblas_time_zgbmv[POS_CBLAS] += (te - ts); 
-#endif
+	}
    } else {
 	   int n=0, i=0, incx=incX;
 	   const double *xx= (double *)X, *alp= (double *)alpha, *bet = (double *)beta;

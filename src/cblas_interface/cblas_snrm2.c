@@ -27,21 +27,20 @@ float cblas_snrm2( const int N, const float *X, const int incX)
    #define F77_N N
    #define F77_incX incX
 #endif
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_snrm2[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_snrm2.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   float te = 0, ts = 0;
+	   if ( __flexiblas_profile ) {
+		   ts = flexiblas_wtime(); 
+	   }
 	   float (*fn) ( const int N, const float *X, const int incX) 
                  = flexiblas_snrm2.call_cblas;
 	   nrm2 = fn(N,X,incX);
-#ifdef FLEXIBLAS_PROFILE
-	   te = flexiblas_wtime(); 
-	   flexiblas_time_snrm2[POS_CBLAS] += (te - ts); 
-#endif
+	   if ( __flexiblas_profile ){
+		   te = flexiblas_wtime(); 
+		   flexiblas_time_snrm2[POS_CBLAS] += (te - ts); 
+	   }
    } else {
 	nrm2 = F77_snrm2( &F77_N, X, &F77_incX);
    }

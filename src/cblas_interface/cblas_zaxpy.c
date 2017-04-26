@@ -28,23 +28,22 @@ void cblas_zaxpy( const int N, const void *alpha, const void *X,
    #define F77_incX incX
    #define F77_incY incY
 #endif
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_zaxpy[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_zaxpy.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   double te = 0, ts = 0;
+	   if (__flexiblas_profile ) {
+	   	ts = flexiblas_wtime(); 
+	   }
 	   void (*fn)
 		 ( const int N, const void *alpha, const void *X,
                        const int incX, void *Y, const int incY)
 		   = flexiblas_zaxpy.call_cblas;
-	fn(N,alpha,X,incX,Y,incY);
-#ifdef FLEXIBLAS_PROFILE
-	   te = flexiblas_wtime(); 
-	   flexiblas_time_zaxpy[POS_CBLAS] += (te - ts); 
-#endif
+	   fn(N,alpha,X,incX,Y,incY);
+	   if (__flexiblas_profile ) {
+	   	te = flexiblas_wtime(); 
+		flexiblas_time_zaxpy[POS_CBLAS] += (te - ts); 
+	   }
    } else {
 	F77_zaxpy( &F77_N, alpha, X, &F77_incX, Y, &F77_incY);
    }

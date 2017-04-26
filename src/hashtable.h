@@ -52,6 +52,16 @@ extern "C" {
 	extern void flexiblas_hashtable_freeall( hashtable ht);
 	extern void flexiblas_hashtable_show( hashtable ht);
 	extern int flexiblas_hashtable_remove( hashtable ht, char *name);
+
+	typedef struct {
+		char *key; 
+		char *value; 
+	} kv_pair;
+	kv_pair *__flexiblas_kv_new_pair(const char *key, const char *value);
+	Int __flexiblas_kv_hash(char * name, Int size);
+	void __flexiblas_kv_pair_free(data kv);
+	char* __flexiblas_kv_pair_getkey(data kv);
+
 #ifdef __cplusplus
 }
 #endif

@@ -21,21 +21,20 @@
 
 void cblas_drotg(  double *a, double *b, double *c, double *s)
 {
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_drotg[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_drotg.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   double te = 0, ts = 0;
+	   if ( __flexiblas_profile ) {
+		   ts = flexiblas_wtime(); 
+	   }
 	   void (*fn)(double *, double *, double *, double *)
 		   = flexiblas_drotg.call_cblas;
 	   fn(a,b,c,s); 
-#ifdef FLEXIBLAS_PROFILE
-	   te = flexiblas_wtime(); 
-	   flexiblas_time_drotg[POS_CBLAS] += (te - ts); 
-#endif
+	   if ( __flexiblas_profile ){
+		   te = flexiblas_wtime(); 
+		   flexiblas_time_drotg[POS_CBLAS] += (te - ts); 
+	   }
    } else {
 	F77_drotg(a,b,c,s);    
    }

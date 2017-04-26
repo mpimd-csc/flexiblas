@@ -27,23 +27,23 @@ void cblas_cscal( const int N, const void *alpha, void *X,
    #define F77_N N
    #define F77_incX incX
 #endif
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_cscal[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_cscal.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   double te = 0 , ts = 0 ;
+	   if (__flexiblas_profile ) {
+		   flexiblas_wtime(); 
+	   }
+	   
 	   void (*fn)
 		  ( const int N, const void *alpha, void *X, 
                        const int incX)
 		   = flexiblas_cscal.call_cblas;
 	fn(N,alpha,X,incX);
-#ifdef FLEXIBLAS_PROFILE
+	if ( __flexiblas_profile ) {
 	   te = flexiblas_wtime(); 
 	   flexiblas_time_cscal[POS_CBLAS] += (te - ts); 
-#endif
+	}
    } else {
 	F77_cscal( &F77_N, alpha, X, &F77_incX);
    }

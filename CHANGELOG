@@ -1,3 +1,12 @@
+1.1.0 (September, 2014) 
+-----------------
+- rewrite internal function for handling the shared objects. 
+- include first parts of the Win32 and Win64 compatability 
+- integrated the profiling in the normal library. 
+- Using -DABI=Intel the library is configured to provide an ifort 
+  compatible interface. The name of the library changes to libflexblas_intel.so
+
+
 1.0.1 (April 30th, 2014) 
 ------------------------
 - Fixed SCABS1 

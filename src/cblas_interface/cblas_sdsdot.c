@@ -29,23 +29,22 @@ float cblas_sdsdot( const int N, const float alpha, const float *X,
    #define F77_incX incX
    #define F77_incY incY
 #endif
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_sdsdot[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_sdsdot.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   double te = 0, ts = 0;
+	   if (__flexiblas_profile ) {
+		   ts = flexiblas_wtime(); 
+	   }
 	   float (*fn)
 		  ( const int N, const float alpha, const float *X,
                       const int incX, const float *Y, const int incY)
 		   = flexiblas_sdsdot.call_cblas;
 	dot = fn(N,alpha,X,incX,Y,incY);
-#ifdef FLEXIBLAS_PROFILE
+	if (__flexiblas_profile ) {
 	   te = flexiblas_wtime(); 
-	   flexiblas_time_sdsdot[POS_CBLAS] += (te - ts); 
-#endif
+	   flexiblas_time_sdsdot[POS_CBLAS] += (te - ts);
+	}
    } else {
 	   dot = F77_sdsdot( &F77_N, &alpha, X, &F77_incX, Y, &F77_incY);
    }

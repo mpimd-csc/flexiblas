@@ -28,22 +28,21 @@ float cblas_scasum( const int N, const void *X, const int incX)
    #define F77_N N
    #define F77_incX incX
 #endif
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_scasum[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_scasum.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   double te = 0, ts = 0;
+	   if (__flexiblas_profile) {
+		   ts = flexiblas_wtime(); 
+	   }
 	   float  (*fn)
 		  ( const int N, const void *X, const int incX) 
 		   = flexiblas_scasum.call_cblas;
 	   asum  = fn(N,X,incX);
-#ifdef FLEXIBLAS_PROFILE
-	   te = flexiblas_wtime(); 
-	   flexiblas_time_scasum[POS_CBLAS] += (te - ts); 
-#endif
+	   if (__flexiblas_profile ) {
+		   te = flexiblas_wtime(); 
+		   flexiblas_time_scasum[POS_CBLAS] += (te - ts); 
+	   }
    } else {
    	asum = F77_scasum( &F77_N, X, &F77_incX);
    }

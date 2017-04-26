@@ -29,22 +29,21 @@ void cblas_srot(const int N, float *X, const int incX,
    #define F77_incX incX 
    #define F77_incY incY 
 #endif
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_srot[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_srot.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   float te = 0, ts = 0;
+	   if ( __flexiblas_profile ) {
+		   ts = flexiblas_wtime(); 
+	   }
 	   void (*fn)(const int N, float *X, const int incX,
    float *Y, const int incY, const float c, const float s)
 = flexiblas_srot.call_cblas;
 	fn(N,X,incX,Y,incY,c,s);
-#ifdef FLEXIBLAS_PROFILE
+        if ( __flexiblas_profile ){
 	   te = flexiblas_wtime(); 
 	   flexiblas_time_srot[POS_CBLAS] += (te - ts); 
-#endif
+	}
    } else {
    	F77_srot(&F77_N, X, &F77_incX, Y, &F77_incY, &c, &s);
    }

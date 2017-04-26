@@ -233,8 +233,13 @@ extern "C" {
    void F77_ccopy( FINT, const void *, FINT, void *, FINT);
    void F77_caxpy( FINT, const void *, const void *, FINT, void *, FINT);
    void F77_cswap( FINT, void *, FINT, void *, FINT);
+#ifdef USE_INTERFACE_INTEL
+   void  F77_cdotc( void *, FINT, const void *, FINT, const void *, FINT);
+   void  F77_cdotu( void *, FINT, const void *, FINT, const void *, FINT);
+#else 
    float complex F77_cdotc( FINT, const void *, FINT, const void *, FINT);
    float complex F77_cdotu( FINT, const void *, FINT, const void *, FINT);
+#endif
    void F77_cscal( FINT, const void *, void *, FINT);
    void F77_csscal( FINT, const float *, void *, FINT);
    float F77_scnrm2( FINT, const void *, FINT);
@@ -246,8 +251,15 @@ extern "C" {
    void F77_zcopy( FINT, const void *, FINT, void *, FINT);
    void F77_zaxpy( FINT, const void *, const void *, FINT, void *, FINT);
    void F77_zswap( FINT, void *, FINT, void *, FINT);
+   
+#ifdef USE_INTERFACE_INTEL 
+   void  F77_zdotc(void * RET, FINT, const void *, FINT, const void *, FINT);
+   void  F77_zdotu(void * RET, FINT, const void *, FINT, const void *, FINT);
+#else 
    double complex  F77_zdotc( FINT, const void *, FINT, const void *, FINT);
    double complex  F77_zdotu( FINT, const void *, FINT, const void *, FINT);
+#endif 
+   
    void F77_zdscal( FINT, const double *, void *, FINT);
    void F77_zscal( FINT, const void *, void *, FINT);
    double F77_dznrm2( FINT, const void *, FINT);

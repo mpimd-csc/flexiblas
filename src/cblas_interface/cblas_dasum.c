@@ -28,20 +28,21 @@ double cblas_dasum( const int N, const double *X, const int incX)
    #define F77_N N
    #define F77_incX incX
 #endif
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_dasum[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_dasum.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   double te = 0, ts = 0;
+	   if ( __flexiblas_profile ) {
+		   ts = flexiblas_wtime(); 
+	   }
+	   
 	   double (*fn)(const int , const double *, const int ) = flexiblas_dasum.call_cblas;
 	   asum = fn(N,X,incX); 
-#ifdef FLEXIBLAS_PROFILE
-	   te = flexiblas_wtime(); 
-	   flexiblas_time_dasum[POS_CBLAS] += (te - ts); 
-#endif
+
+	   if ( __flexiblas_profile ){
+	   	te = flexiblas_wtime(); 
+	        flexiblas_time_dasum[POS_CBLAS] += (te - ts); 
+	   }
    } else {
 	   asum = F77_dasum( &F77_N, X, &F77_incX);
    }

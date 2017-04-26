@@ -1,4 +1,4 @@
-/* $Id$ */ 
+/* $Id: double.c 3754 2013-10-09 13:56:41Z komart $ */ 
 /* 
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
@@ -22,9 +22,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <dlfcn.h>
+// #include <dlfcn.h>
 #include <complex.h> 
-
+#include <math.h>
 #include "f77blas_interface.h"
 #include "hooks.h"
 
@@ -32,6 +32,7 @@
  *  Initialize the Hooks
  *-----------------------------------------------------------------------------*/
 struct flexiblas_blasfn flexiblas_dasum  = HOOK_INIT;
+struct flexiblas_blasfn flexiblas_dcabs1 = HOOK_INIT; 
 struct flexiblas_blasfn flexiblas_dgbmv  = HOOK_INIT;
 struct flexiblas_blasfn flexiblas_drot   = HOOK_INIT;
 struct flexiblas_blasfn flexiblas_dscal  = HOOK_INIT;
@@ -68,7 +69,6 @@ struct flexiblas_blasfn flexiblas_dsyr2k = HOOK_INIT;
 struct flexiblas_blasfn flexiblas_dtpmv  = HOOK_INIT;
 struct flexiblas_blasfn flexiblas_dtrsv  = HOOK_INIT;
 
-#ifdef FLEXIBLAS_PROFILE
 /*-----------------------------------------------------------------------------
  *  Usecond counters for every function 
  *-----------------------------------------------------------------------------*/
@@ -150,7 +150,6 @@ unsigned long flexiblas_call_dsyr2k [2] = {0,0};
 unsigned long flexiblas_call_dtpmv  [2] = {0,0};
 unsigned long flexiblas_call_dtrsv  [2] = {0,0};
 unsigned long flexiblas_call_dcabs1 [2] = {0,0}; 
-#endif 
 
 /*-----------------------------------------------------------------------------
  *  Load the Hooks for every function 
@@ -159,13 +158,18 @@ int __flexiblas_hook_double(void *handle)
 {
 	LOAD_HOOK(dasum);
 	LOAD_HOOK(daxpy);
-	LOAD_HOOK(dcabs1);
+	// LOAD_HOOK(dcabs1);
+	if ( __flexiblas_current_blas.scabs1_missing == 0 ) {
+		if ( LOAD_HOOK_INTERN(dcabs1) != 0 ) {
+			__flexiblas_current_blas.scabs1_missing = 1; 
+		}
+	}
+
 	LOAD_HOOK(dcopy);
 	LOAD_HOOK(ddot);
 	LOAD_HOOK(dgbmv);
 	LOAD_HOOK(dgemm);
 	LOAD_HOOK(dgemv);
-	// __flexiblas_loadhook(handle,"__flexiblas_dgemv",&flexiblas_dgemv);
 	LOAD_HOOK(dger);
 	LOAD_HOOK(dnrm2);
 	LOAD_HOOK(drot);
@@ -204,7 +208,37 @@ int __flexiblas_hook_double(void *handle)
  *-----------------------------------------------------------------------------*/
 BLAS_NONVOID_FN	(double, dasum,	(Int *N, double *DX, Int *INCX),(N,DX,INCX)); 
 BLAS_FN		(void, 	daxpy,	(Int *N, double *DA, double *DX, Int * INCX, double *DY, Int *INCY), (N,DA,DX,INCX,DY,INCY)); 
-BLAS_NONVOID_FN	(double,	dcabs1,	(double complex *Z),(Z));
+// BLAS_NONVOID_FN	(double,	dcabs1,	(double complex *Z),(Z));
+
+double dcabs1_(double complex *Z){
+	float ret = 0.0; 
+	double te = 0, ts =  0;
+	if (__flexiblas_profile) {
+		ts = flexiblas_wtime(); 
+	}
+	if (__flexiblas_current_blas.scabs1_missing != 0 ) {
+		ret= fabs(creal(*Z)) + fabs(cimag(*Z)); 
+	} else {
+		float (*fn)  (double complex *Z); 
+		fn = flexiblas_dcabs1.call_fblas; 
+		if ( fn == NULL ) { 
+			fprintf(stderr, "dcabs1_ not hooked, abort\n"); 
+			abort(); 
+		}
+		ret = fn(Z); 
+	}
+	if ( __flexiblas_profile ) {
+		te = flexiblas_wtime(); 
+		flexiblas_call_dcabs1[0]++; 
+		flexiblas_time_dcabs1[0] += (te - ts); 
+	}
+	return ret; 
+}
+
+double dcabs1(double complex *Z){
+	return dcabs1_(Z); 
+}
+
 BLAS_FN		(void,	dcopy,	(Int *N, double *DX, Int * INCX, double *DY, Int *INCY),(N,DX,INCX, DY, INCY));
 BLAS_NONVOID_FN	(double,	ddot,	(Int *N, double *DX, Int * INCX, double *DY, Int *INCY),(N,DX,INCX, DY, INCY));
 BLAS_FN		(void,	dgbmv,	(char *TRANS, Int *M, Int *N, Int *KL, Int *KU, double *ALPHA, double *A, Int *LDA, double *X, Int *INCX, double *BETA, double *Y, Int *INCY), \

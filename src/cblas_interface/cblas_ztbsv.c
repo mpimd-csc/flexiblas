@@ -37,14 +37,13 @@ void cblas_ztbsv(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
    #define F77_lda lda
    #define F77_incX incX
 #endif
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_ztbsv[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_ztbsv.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   double te = 0, ts = 0;
+	   if ( __flexiblas_profile ) {
+		   ts = flexiblas_wtime(); 
+	   }
 	   void (*fn)
 		  (const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
                  const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_DIAG Diag,
@@ -52,10 +51,10 @@ void cblas_ztbsv(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
                  void  *X, const int incX)
 		   = flexiblas_ztbsv.call_cblas;
 	fn(order,Uplo,TransA,Diag,N,K,A,lda,X,incX);
-#ifdef FLEXIBLAS_PROFILE
+	if ( __flexiblas_profile ){
 	   te = flexiblas_wtime(); 
 	   flexiblas_time_ztbsv[POS_CBLAS] += (te - ts); 
-#endif
+	}
    } else {
 
    

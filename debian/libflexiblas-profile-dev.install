@@ -1,5 +1,0 @@
-usr/include/flexiblas-profile/*.h
-usr/lib/*/libflexiblas-profile.so
-usr/lib/*/libflexiblas-profile.a
-usr/lib/*/flexiblas-profile/update-alternatives/libblas.so
-usr/lib/*/pkgconfig/flexiblas-profile.pc

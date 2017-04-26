@@ -31,20 +31,18 @@ void cblas_dcopy( const int N, const double *X,
 #endif
 
    if ( flexiblas_dcopy.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   double te = 0, ts = 0;
+	   if ( __flexiblas_profile ) {
+		   ts = flexiblas_wtime(); 
+	   }
 	   void (*fn)(const int , const double *, const int, const double *Y, const int ) = flexiblas_dcopy.call_cblas;
 	   fn(N,X,incX,Y,incY); 
-#ifdef FLEXIBLAS_PROFILE
-	   te = flexiblas_wtime(); 
-	   flexiblas_time_dcopy[POS_CBLAS] += (te - ts); 
-#endif
+	   if ( __flexiblas_profile ){
+		   te = flexiblas_wtime(); 
+		   flexiblas_time_dcopy[POS_CBLAS] += (te - ts); 
+	   }
    } else {
  	   F77_dcopy( &F77_N, X, &F77_incX, Y, &F77_incY);
    }
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_dcopy[POS_CBLAS] ++;
-#endif 
-
 }

@@ -27,24 +27,17 @@ void cblas_zdscal( const int N, const double alpha, void *X,
    #define F77_N N
    #define F77_incX incX
 #endif
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_zdscal[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_zdscal.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
-	   void (*fn)
-		  ( const int N, const double alpha, void *X,
-                       const int incX)
-		   = flexiblas_zdscal.call_cblas;
-	fn(N,alpha,X,incX);
-#ifdef FLEXIBLAS_PROFILE
-	   te = flexiblas_wtime(); 
-	   flexiblas_time_zdscal[POS_CBLAS] += (te - ts); 
-#endif
-   } else {
-	   F77_zdscal( &F77_N, &alpha, X, &F77_incX);
-   }
-}
+	   double te = 0, ts = 0;
+	   if (__flexiblas_profile ) {
+	   	ts = flexiblas_wtime(); 
+	   }
+
+	   void (*fn) ( const int N, const double alpha, void *X, const int
+			   incX) = flexiblas_zdscal.call_cblas;
+	   fn(N,alpha,X,incX); if ( __flexiblas_profile ){ te =
+		   flexiblas_wtime(); flexiblas_time_zdscal[POS_CBLAS] += (te -
+				   ts); } } else { F77_zdscal( &F77_N, &alpha,
+					   X, &F77_incX); } }

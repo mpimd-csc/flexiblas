@@ -30,21 +30,20 @@ float cblas_sdot( const int N, const float *X,
    #define F77_incY incY
 #endif
    if ( flexiblas_sdot.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   float te = 0, ts = 0;
+	   if ( __flexiblas_profile ) {
+		   ts = flexiblas_wtime(); 
+	   }
 	   float (*fn)(const int , const float *, const int, const float *Y, const int ) = flexiblas_sdot.call_cblas;
 	   dot = fn(N,X,incX,Y,incY); 
-#ifdef FLEXIBLAS_PROFILE
-	   te = flexiblas_wtime(); 
-	   flexiblas_time_sdot[POS_CBLAS] += (te - ts); 
-#endif
+	   if ( __flexiblas_profile ){
+		   te = flexiblas_wtime(); 
+		   flexiblas_time_sdot[POS_CBLAS] += (te - ts); 
+	   }
    } else {
    	dot =  F77_sdot( &F77_N, X, &F77_incX, Y, &F77_incY);
    }
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_sdot[POS_CBLAS] ++;
-#endif 
 
 
    return dot;

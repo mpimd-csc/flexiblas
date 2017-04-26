@@ -14,6 +14,7 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "flexiblas_config.h"
 #include "cblas.h"
 #include "cblas_f77.h"
 #include "../hooks.h"
@@ -29,26 +30,30 @@ void cblas_cdotc_sub( const int N, const void *X, const int incX,
    #define F77_incX incX
    #define F77_incY incY
 #endif
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_cdotc[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_cdotc.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   double te = 0, ts = 0;
+	   if ( __flexiblas_profile) {
+	   	ts = flexiblas_wtime(); 
+	   }
 	   void (*fn)
 		  ( const int N, const void *X, const int incX,
                     const void *Y, const int incY,void *dotc)
 		   = flexiblas_cdotc.call_cblas;
-	fn(N,X,incX,Y,incY,dotc);
-#ifdef FLEXIBLAS_PROFILE
-	   te = flexiblas_wtime(); 
-	   flexiblas_time_cdotc[POS_CBLAS] += (te - ts); 
-#endif
+	   fn(N,X,incX,Y,incY,dotc);
+	   if ( __flexiblas_profile ){ 
+	   	te = flexiblas_wtime(); 
+	        flexiblas_time_cdotc[POS_CBLAS] += (te - ts); 
+	   }
    } else {
 	float complex d; 
+#ifdef USE_INTERFACE_INTEL 
+	F77_cdotc( &d, &F77_N, X, &F77_incX, Y, &F77_incY);
+#else 
 	d = F77_cdotc( &F77_N, X, &F77_incX, Y, &F77_incY);
+#endif
 	*((float complex *) dotc) = d; 
    }
 }
+

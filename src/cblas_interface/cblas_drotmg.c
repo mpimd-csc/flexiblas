@@ -22,23 +22,22 @@
 void cblas_drotmg( double *d1, double *d2, double *b1, 
                         const double b2, double *p)
 {
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_drotmg[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_drotmg.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   double te = 0, ts = 0;
+	   if ( __flexiblas_profile ) {
+		   ts = flexiblas_wtime(); 
+	   }
 	   void (*fn)
 		  ( double *d1, double *d2, double *b1, 
                         const double b2, double *p)
 		   = flexiblas_drotmg.call_cblas;
  	   fn(d1,d2,b1,b2,p);
-#ifdef FLEXIBLAS_PROFILE
-	   te = flexiblas_wtime(); 
-	   flexiblas_time_drotmg[POS_CBLAS] += (te - ts); 
-#endif
+	   if ( __flexiblas_profile ){
+	   	te = flexiblas_wtime(); 
+                flexiblas_time_drotmg[POS_CBLAS] += (te - ts); 
+	   }
    } else {
 	F77_drotmg(d1,d2,b1,&b2,p);
    }

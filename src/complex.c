@@ -1,4 +1,4 @@
-/* $Id$ */ 
+/* $Id: complex.c 3758 2013-10-10 14:35:20Z komart $ */ 
 /* 
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
@@ -22,7 +22,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <dlfcn.h>
+// #include <dlfcn.h>
 #include <complex.h> 
 
 #include "hooks.h"
@@ -65,7 +65,6 @@ struct flexiblas_blasfn flexiblas_ctrmv =HOOK_INIT;
 struct flexiblas_blasfn flexiblas_ctrsm =HOOK_INIT;
 struct flexiblas_blasfn flexiblas_ctrsv =HOOK_INIT;
 
-#ifdef FLEXIBLAS_PROFILE
 /*-----------------------------------------------------------------------------
  *  Profile timer
  *-----------------------------------------------------------------------------*/
@@ -144,7 +143,6 @@ unsigned long  flexiblas_call_ctrmv [2] = {0,0};
 unsigned long  flexiblas_call_ctrsm [2] = {0,0};
 unsigned long  flexiblas_call_ctrsv [2] = {0,0};
 
-#endif 
 
 /*-----------------------------------------------------------------------------
  *  Load the Hooks for every function 
@@ -266,12 +264,13 @@ BLAS_FN		(void,	ctrsv,	(char *UPLO,char*TRANS,char *DIAG,Int *N,Complex *A,Int *
 				(N,CX,INCX,CY,INCY));
 BLAS_FN(float complex,	cdotu,	(Int *N,Complex *CX,Int * INCX,Complex *CY,Int *INCY),\
 				(N,CX,INCX,CY,INCY)); */
-// The Intel MKL library can have a different calling sequence 
-float complex cdotc_(Int * N,Complex *CX,Int *INCX,Complex *CY,Int *INCY){
+#ifdef USE_INTERFACE_INTEL 
+void cdotc_(float complex *rp, Int * N,Complex *CX,Int *INCX,Complex *CY,Int *INCY){
 	Complex ret = 0; 
-#ifdef FLEXIBLAS_PROFILE 
-	double ts = flexiblas_wtime(); 
-#endif 
+	double ts  = 0 ;
+	if ( __flexiblas_profile ) {
+		ts = flexiblas_wtime(); 
+	}
 	if (__flexiblas_current_blas.cdotc_is_intel != 0 ) {
 		void (*fn) (Complex *ret, Int *N, Complex *CX, Int *INCX, Complex *CY, Int *INCY); 
 		fn = flexiblas_cdotc.call_fblas; 
@@ -289,23 +288,25 @@ float complex cdotc_(Int * N,Complex *CX,Int *INCX,Complex *CY,Int *INCY){
 		}
 		ret = fn(N, CX, INCX, CY, INCY); 
 	}
-#ifdef FLEXIBLAS_PROFILE
-	flexiblas_time_cdotc[0] = flexiblas_wtime() - ts; 
-	flexiblas_call_cdotc[0] ++; 
-#endif
-	return ret; 
+	if (__flexiblas_profile ) {
+		flexiblas_time_cdotc[0] = flexiblas_wtime() - ts; 
+		flexiblas_call_cdotc[0] ++; 
+	}
+	*rp = ret; 	
+	return;  
 }
 
-float complex cdotc(Int * N,Complex *CX,Int *INCX,Complex *CY,Int *INCY){
-	return cdotc_(N,CX,INCX,CY,INCY); 
+void cdotc(Complex *rp, Int * N,Complex *CX,Int *INCX,Complex *CY,Int *INCY){
+	cdotc_(rp,N,CX,INCX,CY,INCY); 
 }
 
-float complex cdotu_(Int * N,Complex *CX,Int *INCX,Complex *CY,Int *INCY){
+void cdotu_(Complex *rp, Int * N,Complex *CX,Int *INCX,Complex *CY,Int *INCY){
 	Complex ret = 0; 
-#ifdef FLEXIBLAS_PROFILE 
-	double ts = flexiblas_wtime(); 
-#endif 
-
+	double ts = 0;
+	if ( __flexiblas_profile ){
+		ts = flexiblas_wtime(); 
+	}
+	
 	if (__flexiblas_current_blas.cdotu_is_intel != 0 ) {
 		void (*fn) (Complex *ret, Int *N, Complex *CX, Int *INCX, Complex *CY, Int *INCY); 
 		fn = flexiblas_cdotu.call_fblas; 
@@ -323,14 +324,88 @@ float complex cdotu_(Int * N,Complex *CX,Int *INCX,Complex *CY,Int *INCY){
 		}
 		ret = fn(N, CX, INCX, CY, INCY); 
 	}
-#ifdef FLEXIBLAS_PROFILE
-	flexiblas_time_cdotu[0] = flexiblas_wtime() - ts; 
-	flexiblas_call_cdotu[0] ++; 
-#endif
+	if (__flexiblas_profile ){ 
+		flexiblas_time_cdotu[0] = flexiblas_wtime() - ts; 
+		flexiblas_call_cdotu[0] ++; 
+	}
+	*rp = ret ; 
+	return ; 
+}
+
+void cdotu(Complex *rp, Int * N,Complex *CX,Int *INCX,Complex *CY,Int *INCY){
+	return cdotu_(rp,N,CX,INCX,CY,INCY); 
+}
+
+
+#else 
+// The Intel MKL library can have a different calling sequence 
+float complex cdotc_(Int * N,Complex *CX,Int *INCX,Complex *CY,Int *INCY){
+	Complex ret = 0; 
+	double ts  = 0 ;
+	if ( __flexiblas_profile ) {
+		ts = flexiblas_wtime(); 
+	}
+	if (__flexiblas_current_blas.cdotc_is_intel != 0 ) {
+		void (*fn) (Complex *ret, Int *N, Complex *CX, Int *INCX, Complex *CY, Int *INCY); 
+		fn = flexiblas_cdotc.call_fblas; 
+		if ( fn == NULL ) { 
+			fprintf(stderr, PRINT_PREFIX "cdotc_ not hooked, abort\n"); 
+			abort(); 
+		}
+		fn(&ret, N, CX, INCX, CY, INCY); 
+	} else {
+		Complex (*fn)  (Int * N,Complex *CX,Int *INCX,Complex *CY,Int *INCY); 
+		fn = flexiblas_cdotc.call_fblas; 
+		if ( fn == NULL ) { 
+			fprintf(stderr, PRINT_PREFIX "cdotc_ not hooked, abort\n"); 
+			abort(); 
+		}
+		ret = fn(N, CX, INCX, CY, INCY); 
+	}
+	if (__flexiblas_profile ) {
+		flexiblas_time_cdotc[0] = flexiblas_wtime() - ts; 
+		flexiblas_call_cdotc[0] ++; 
+	}
+	
+	return ret; 
+}
+
+float complex cdotc(Int * N,Complex *CX,Int *INCX,Complex *CY,Int *INCY){
+	return cdotc_(N,CX,INCX,CY,INCY); 
+}
+
+float complex cdotu_(Int * N,Complex *CX,Int *INCX,Complex *CY,Int *INCY){
+	Complex ret = 0; 
+	double ts = 0;
+	if ( __flexiblas_profile ){
+		ts = flexiblas_wtime(); 
+	}
+	
+	if (__flexiblas_current_blas.cdotu_is_intel != 0 ) {
+		void (*fn) (Complex *ret, Int *N, Complex *CX, Int *INCX, Complex *CY, Int *INCY); 
+		fn = flexiblas_cdotu.call_fblas; 
+		if ( fn == NULL ) { 
+			fprintf(stderr, PRINT_PREFIX  "cdotu_ not hooked, abort\n"); 
+			abort(); 
+		}
+		fn(&ret, N, CX, INCX, CY, INCY); 
+	} else {
+		Complex (*fn)  (Int * N,Complex *CX,Int *INCX,Complex *CY,Int *INCY); 
+		fn = flexiblas_cdotu.call_fblas; 
+		if ( fn == NULL ) { 
+			fprintf(stderr, PRINT_PREFIX "cdotu_ not hooked, abort\n"); 
+			abort(); 
+		}
+		ret = fn(N, CX, INCX, CY, INCY); 
+	}
+	if (__flexiblas_profile ){ 
+		flexiblas_time_cdotu[0] = flexiblas_wtime() - ts; 
+		flexiblas_call_cdotu[0] ++; 
+	}
 	return ret; 
 }
 
 float complex cdotu(Int * N,Complex *CX,Int *INCX,Complex *CY,Int *INCY){
 	return cdotu_(N,CX,INCX,CY,INCY); 
 }
-
+#endif 

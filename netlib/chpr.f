@@ -124,6 +124,7 @@
 *     Quick return if possible.
 *
       IF ((N.EQ.0) .OR. (ALPHA.EQ.REAL(ZERO))) RETURN
+      KX = 1
 *
 *     Set the start point in X if the increment is not unity.
 *

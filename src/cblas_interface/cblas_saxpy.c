@@ -30,20 +30,19 @@ void cblas_saxpy( const int N, const float alpha, const float *X,
    #define F77_incY incY
 #endif
    if ( flexiblas_saxpy.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   float te = 0, ts = 0;
+	   if ( __flexiblas_profile ) {
+		   ts = flexiblas_wtime(); 
+	   }
 	   void (*fn)(const int , const float , const float *, const int, const float *Y, const int ) = flexiblas_saxpy.call_cblas;
 	   fn(N,alpha,X,incX,Y,incY); 
-#ifdef FLEXIBLAS_PROFILE
-	   te = flexiblas_wtime(); 
-	   flexiblas_time_saxpy[POS_CBLAS] += (te - ts); 
-#endif
+	   if ( __flexiblas_profile ){
+		   te = flexiblas_wtime(); 
+		   flexiblas_time_saxpy[POS_CBLAS] += (te - ts); 
+	   }
    } else {
    	F77_saxpy( &F77_N, &alpha, X, &F77_incX, Y, &F77_incY);
    }
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_saxpy[POS_CBLAS] ++;
-#endif 
 
 } 

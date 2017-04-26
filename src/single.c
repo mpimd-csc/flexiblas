@@ -1,4 +1,4 @@
-/* $Id$ */ 
+/* $Id: single.c 3754 2013-10-09 13:56:41Z komart $ */ 
 /* 
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
@@ -22,7 +22,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <dlfcn.h>
+// #include <dlfcn.h>
 #include <math.h>
 #include <complex.h> 
 
@@ -68,7 +68,6 @@ struct flexiblas_blasfn flexiblas_strmv  =HOOK_INIT;
 struct flexiblas_blasfn flexiblas_strsm  =HOOK_INIT;
 struct flexiblas_blasfn flexiblas_strsv  =HOOK_INIT;
 
-#ifdef FLEXIBLAS_PROFILE
 /*-----------------------------------------------------------------------------
  *  Profile Timing
  *-----------------------------------------------------------------------------*/
@@ -151,7 +150,6 @@ unsigned long  flexiblas_call_strmv  [2] = {0,0};
 unsigned long  flexiblas_call_strsm  [2] = {0,0};
 unsigned long  flexiblas_call_strsv  [2] = {0,0};
 
-#endif 
 /*-----------------------------------------------------------------------------
  *  Load the Hooks for every function 
  *-----------------------------------------------------------------------------*/
@@ -214,9 +212,10 @@ BLAS_FN(void, 	saxpy,	(Int *N, float *DA, float *DX, Int * INCX, float *DY, Int 
 // BLAS_FN(float,	scabs1,	(float complex *Z),(Z));
 float scabs1_(float complex *Z){
 	float ret = 0.0; 
-#ifdef FLEXIBLAS_PROFILE 
-	double te, ts = flexiblas_wtime(); 
-#endif 
+	double te = 0, ts =  0;
+	if (__flexiblas_profile) {
+		ts = flexiblas_wtime(); 
+	}
 	if (__flexiblas_current_blas.scabs1_missing != 0 ) {
 		ret= fabsf(crealf(*Z)) + fabsf(cimagf(*Z)); 
 	} else {
@@ -228,11 +227,11 @@ float scabs1_(float complex *Z){
 		}
 		ret = fn(Z); 
 	}
-#ifdef FLEXIBLAS_PROFILE
-	te = flexiblas_wtime(); 
-	flexiblas_call_scabs1[0]++; 
-	flexiblas_time_scabs1[0] += (te - ts); 
-#endif 
+	if ( __flexiblas_profile ) {
+		te = flexiblas_wtime(); 
+		flexiblas_call_scabs1[0]++; 
+		flexiblas_time_scabs1[0] += (te - ts); 
+	}
 	return ret; 
 }
 

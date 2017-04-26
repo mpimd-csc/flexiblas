@@ -11,6 +11,7 @@ Section: libdevel
 Architecture: any
 Multi-Arch: same
 Depends: libflexiblas (= ${binary:Version}),libblas-dev
+Replaces: libflexiblas-profile-dev 
 Description: Development files for libflexiblas.
  The FlexiBLAS library is a flexible BLAS wrapper 
  which allows one to exchange the system wide BLAS 
@@ -35,6 +36,7 @@ Section: libs
 Architecture: any
 Multi-Arch: same
 Depends: ${shlibs:Depends}, ${misc:Depends}
+Replaces: libflexiblas-profile 
 Description: Flexible and Exchangeable BLAS library.
  The FlexiBLAS library is a flexible BLAS wrapper 
  which allows one to exchange the system wide BLAS 
@@ -79,52 +81,4 @@ Description: Debug symbols for FlexiBLAS
  .
  This package contains the debug symbols. 
 
-Package: libflexiblas-profile
-Section: libs
-Multi-Arch: same
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Flexible and Exchangeable BLAS library. (With Profiling)
- The FlexiBLAS library is a flexible BLAS wrapper 
- which allows one to exchange the system wide BLAS 
- implementation without recompiling or relinking programs. 
- Even dealing with runtime-loader specific tricks is 
- not necessary with FlexiBLAS. 
- .
- You can select the BLAS implementation which is used behind 
- FlexiBLAS using a configuration file or a environment variable. 
- It is integrated in Debian/Ubuntu using the update-alternatives 
- mechanism.
- .
- The package supports OpenBLAS, ATLAS and the reference Netlib 
- implementation. If you compile FlexiBLAS on your own, other 
- BLAS implementations like the old GotoBLAS or the Intel MKL 
- are supported. 
- .
- This package contains the runtime part of FlexiBLAS with enabled 
- profiling. 
-
-Package: libflexiblas-profile-dev
-Section: libdevel
-Architecture: any
-Multi-Arch: same
-Depends: libflexiblas-profile (= ${binary:Version}),libblas-dev
-Description: Development files for libflexiblas-profile.
- The FlexiBLAS library is a flexible BLAS wrapper 
- which allows one to exchange the system wide BLAS 
- implementation without recompiling or relinking programs. 
- Even dealing with runtime-loader specific tricks is 
- not necessary with FlexiBLAS. 
- .
- You can select the BLAS implementation which is used behind 
- FlexiBLAS using a configuration file or a environment variable. 
- It is integrated in Debian/Ubuntu using the update-alternatives 
- mechanism.
- .
- The package supports OpenBLAS, ATLAS and the reference Netlib 
- implementation. If you compile FlexiBLAS on your own, other 
- BLAS implementations like the old GotoBLAS or the Intel MKL 
- are supported. 
- .
- This package contains the development files with profile support. 
 

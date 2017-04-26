@@ -27,22 +27,21 @@ double cblas_dznrm2( const int N, const void *X, const int incX)
    #define F77_N N
    #define F77_incX incX
 #endif
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_dznrm2[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_dznrm2.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   double te = 0, ts = 0;
+	   if ( __flexiblas_profile ) {
+		   ts = flexiblas_wtime(); 
+	   }
 	   double (*fn)
 		  ( const int N, const void *X, const int incX)
 		   = flexiblas_dznrm2.call_cblas;
 	nrm2 = fn(N,X,incX);
-#ifdef FLEXIBLAS_PROFILE
-	   te = flexiblas_wtime(); 
-	   flexiblas_time_dznrm2[POS_CBLAS] += (te - ts); 
-#endif
+	   if ( __flexiblas_profile ){
+		   te = flexiblas_wtime(); 
+		   flexiblas_time_dznrm2[POS_CBLAS] += (te - ts); 
+	   }
    } else {
 	   nrm2 =  F77_dznrm2( &F77_N, X, &F77_incX);
    }

@@ -149,6 +149,7 @@
 *     Quick return if possible.
 *
       IF (N.EQ.0) RETURN
+      KX = 1 
 *
       NOCONJ = LSAME(TRANS,'T')
       NOUNIT = LSAME(DIAG,'N')

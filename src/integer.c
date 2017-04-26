@@ -1,4 +1,4 @@
-/* $Id$ */ 
+/* $Id: integer.c 3903 2013-11-25 16:10:53Z komart $ */ 
 /* 
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
@@ -22,7 +22,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <dlfcn.h>
 #include <complex.h> 
 
 #include "hooks.h"
@@ -32,7 +31,6 @@ struct flexiblas_blasfn flexiblas_idamax=HOOK_INIT;
 struct flexiblas_blasfn flexiblas_isamax=HOOK_INIT;
 struct flexiblas_blasfn flexiblas_izamax=HOOK_INIT;
 
-#ifdef FLEXIBLAS_PROFILE
 double  flexiblas_time_icamax[2] = {0.0,0.0};
 double  flexiblas_time_idamax[2] = {0.0,0.0};
 double  flexiblas_time_isamax[2] = {0.0,0.0};
@@ -45,7 +43,6 @@ unsigned long  flexiblas_call_isamax[2] = {0,0};
 unsigned long  flexiblas_call_izamax[2] = {0,0};
 unsigned long  flexiblas_call_xerbla[2] = {0,0};
 
-#endif
 /*-----------------------------------------------------------------------------
  *  Load the Hooks for every function 
  *-----------------------------------------------------------------------------*/

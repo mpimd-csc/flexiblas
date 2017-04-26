@@ -30,20 +30,19 @@ void cblas_daxpy( const int N, const double alpha, const double *X,
    #define F77_incY incY
 #endif
    if ( flexiblas_daxpy.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   double te = 0, ts = 0;
+	   if ( __flexiblas_profile ) {
+		   ts = flexiblas_wtime(); 
+	   }
 	   void (*fn)(const int , const double , const double *, const int, const double *Y, const int ) = flexiblas_daxpy.call_cblas;
 	   fn(N,alpha,X,incX,Y,incY); 
-#ifdef FLEXIBLAS_PROFILE
-	   te = flexiblas_wtime(); 
-	   flexiblas_time_daxpy[POS_CBLAS] += (te - ts); 
-#endif
+	   if ( __flexiblas_profile ){
+		   te = flexiblas_wtime(); 
+		   flexiblas_time_daxpy[POS_CBLAS] += (te - ts); 
+	   }
    } else {
    	F77_daxpy( &F77_N, &alpha, X, &F77_incX, Y, &F77_incY);
    }
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_daxpy[POS_CBLAS] ++;
-#endif 
 
 } 

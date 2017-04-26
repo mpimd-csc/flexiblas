@@ -35,14 +35,15 @@ void cblas_zgemv(const enum CBLAS_ORDER order,
    #define F77_incX incx
    #define F77_incY incY
 #endif
-#ifdef FLEXIBLAS_PROFILE
+   
    flexiblas_call_zgemv[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_zgemv.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   double te = 0 , ts = 0;
+	   if ( __flexiblas_profile ) {
+		ts    = flexiblas_wtime(); 
+	   }
+	   
 	   void (*fn)
 		  (const enum CBLAS_ORDER order,
                  const enum CBLAS_TRANSPOSE TransA, const int M, const int N,
@@ -50,11 +51,11 @@ void cblas_zgemv(const enum CBLAS_ORDER order,
                  const void  *X, const int incX, const void *beta,
                  void  *Y, const int incY)
 		   = flexiblas_zgemv.call_cblas;
-	fn(order,TransA,M,N,alpha,A,lda,X,incX,beta,Y,incY);
-#ifdef FLEXIBLAS_PROFILE
-	   te = flexiblas_wtime(); 
-	   flexiblas_time_zgemv[POS_CBLAS] += (te - ts); 
-#endif
+	   fn(order,TransA,M,N,alpha,A,lda,X,incX,beta,Y,incY);
+	   if ( __flexiblas_profile ) {
+	   	te = flexiblas_wtime(); 
+		   flexiblas_time_zgemv[POS_CBLAS] += (te - ts); 
+	   }
    } else {
 	   int n=0, i=0, incx=incX;
 	   const double *xx= (const double *)X;

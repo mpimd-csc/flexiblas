@@ -186,6 +186,7 @@
 *     Quick return if possible.
 *
       IF (N.EQ.0) RETURN
+      KX = 1
 *
       NOUNIT = LSAME(DIAG,'N')
 *

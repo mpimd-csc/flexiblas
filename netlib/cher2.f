@@ -138,6 +138,11 @@
           CALL XERBLA('CHER2 ',INFO)
           RETURN
       END IF
+*     Init Variables 
+      KX = 1
+      KY = 1
+      JX = 1
+      JY = 1
 *
 *     Quick return if possible.
 *

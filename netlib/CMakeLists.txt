@@ -151,12 +151,17 @@ ztrmv.f
 ztrsm.f
 ztrsv.f		
 lsame.f
+info.c
 	)
 
 add_library (blas_netlib SHARED ${NETLIBSRC})
 if ( PROFILE STREQUAL ON ) 
 	install(TARGETS blas_netlib LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/flexiblas-profile)
 else () 
-	install(TARGETS blas_netlib LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/flexiblas)
+	if (WIN32) 
+		install(TARGETS blas_netlib EXPORT flexiblas-targets LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/flexiblas RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
+	else ()
+		install(TARGETS blas_netlib LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/flexiblas)
+	endif()
 endif()
 

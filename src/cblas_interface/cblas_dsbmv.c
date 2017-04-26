@@ -36,14 +36,13 @@ void cblas_dsbmv(const enum CBLAS_ORDER order,
    #define F77_incX incX
    #define F77_incY incY
 #endif
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_dsbmv[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_dsbmv.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   double te = 0, ts = 0;
+	   if ( __flexiblas_profile ) {
+		   ts = flexiblas_wtime(); 
+	   }
 	   void (*fn)
 		 (const enum CBLAS_ORDER order,
                  const enum CBLAS_UPLO Uplo, const int N, const int K,
@@ -52,10 +51,10 @@ void cblas_dsbmv(const enum CBLAS_ORDER order,
                  double  *Y, const int incY)
 		   = flexiblas_dsbmv.call_cblas;
 		fn(order,Uplo,N,K,alpha,A,lda,X,incX,beta,Y,incY);
-#ifdef FLEXIBLAS_PROFILE
-	   te = flexiblas_wtime(); 
-	   flexiblas_time_dsbmv[POS_CBLAS] += (te - ts); 
-#endif
+	   if ( __flexiblas_profile ){
+	   	te = flexiblas_wtime(); 
+		   flexiblas_time_dsbmv[POS_CBLAS] += (te - ts); 
+	   }
    } else {
 	   extern int CBLAS_CallFromC;
 	   extern int RowMajorStrg;

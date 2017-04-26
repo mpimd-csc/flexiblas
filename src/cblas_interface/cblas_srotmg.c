@@ -22,23 +22,22 @@
 void cblas_srotmg( float *d1, float *d2, float *b1, 
                         const float b2, float *p)
 {
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_srotmg[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_srotmg.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   float te = 0, ts = 0;
+	   if ( __flexiblas_profile ) {
+		   ts = flexiblas_wtime(); 
+	   }
 	   void (*fn)
 		  ( float *d1, float *d2, float *b1, 
                         const float b2, float *p)
 		   = flexiblas_srotmg.call_cblas;
  	   fn(d1,d2,b1,b2,p);
-#ifdef FLEXIBLAS_PROFILE
-	   te = flexiblas_wtime(); 
-	   flexiblas_time_srotmg[POS_CBLAS] += (te - ts); 
-#endif
+	   if ( __flexiblas_profile ){
+	   	te = flexiblas_wtime(); 
+                flexiblas_time_srotmg[POS_CBLAS] += (te - ts); 
+	   }
    } else {
 	F77_srotmg(d1,d2,b1,&b2,p);
    }

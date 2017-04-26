@@ -14,11 +14,12 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "flexiblas_config.h"
 #include "cblas.h"
 #include "cblas_f77.h"
 #include "../hooks.h"
 #include <complex.h>
-
+#include <stdio.h>
 void cblas_zdotc_sub( const int N, const void *X, const int incX,
                     const void *Y, const int incY,void *dotc)
 {
@@ -29,26 +30,29 @@ void cblas_zdotc_sub( const int N, const void *X, const int incX,
    #define F77_incX incX
    #define F77_incY incY
 #endif
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_zdotc[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_zdotc.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   double te = 0, ts = 0;
+	   if ( __flexiblas_profile ){
+	   	ts = flexiblas_wtime(); 
+	   }
 	   void (*fn)
 		  ( const int N, const void *X, const int incX,
                     const void *Y, const int incY,void *dotc)
 		   = flexiblas_zdotc.call_cblas;
 	fn(N,X,incX,Y,incY,dotc);
-#ifdef FLEXIBLAS_PROFILE
+	if ( __flexiblas_profile ){
 	   te = flexiblas_wtime(); 
 	   flexiblas_time_zdotc[POS_CBLAS] += (te - ts); 
-#endif
+	}
    } else {
 	double complex d; 
+#ifdef USE_INTERFACE_INTEL
+	F77_zdotc( &d, &F77_N, X, &F77_incX, Y, &F77_incY);
+#else
 	d = F77_zdotc( &F77_N, X, &F77_incX, Y, &F77_incY);
+#endif
 	*((double complex *) dotc) = d; 
    }
 }

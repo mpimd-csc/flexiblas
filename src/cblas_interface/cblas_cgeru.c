@@ -32,24 +32,24 @@ void cblas_cgeru(const enum CBLAS_ORDER order, const int M, const int N,
    #define F77_incY incY
    #define F77_lda lda
 #endif
-#ifdef FLEXIBLAS_PROFILE
+
    flexiblas_call_cgeru[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_cgeru.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   double te = 0, ts = 0;
+	   if (__flexiblas_profile )  {
+		   ts = flexiblas_wtime(); 
+	   }
 	   void (*fn)
 		  (const enum CBLAS_ORDER order, const int M, const int N,
                  const void *alpha, const void *X, const int incX,
                  const void *Y, const int incY, void *A, const int lda)
 		   = flexiblas_cgeru.call_cblas;
 	fn(order,M,N,alpha,X,incX,Y,incY,A,lda);
-#ifdef FLEXIBLAS_PROFILE
+	if (__flexiblas_profile ){
 	   te = flexiblas_wtime(); 
 	   flexiblas_time_cgeru[POS_CBLAS] += (te - ts); 
-#endif
+	}
    } else {
 
 	   extern int CBLAS_CallFromC;

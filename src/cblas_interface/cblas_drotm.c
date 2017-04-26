@@ -29,22 +29,21 @@ void cblas_drotm( const int N, double *X, const int incX, double *Y,
    #define F77_incX incX
    #define F77_incY incY
 #endif
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_drotm[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_drotm.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   double te = 0, ts = 0;
+	   if ( __flexiblas_profile ) {
+		   ts = flexiblas_wtime(); 
+	   }
 	   void (*fn)( const int N, double *X, const int incX, double *Y, 
                        const int incY, const double *P)
                  	= flexiblas_drotm.call_cblas;
 	   fn(N,X,incX,Y,incY,P);
-#ifdef FLEXIBLAS_PROFILE
-	   te = flexiblas_wtime(); 
-	   flexiblas_time_drotm[POS_CBLAS] += (te - ts); 
-#endif
+	   if ( __flexiblas_profile ){
+		   te = flexiblas_wtime(); 
+		   flexiblas_time_drotm[POS_CBLAS] += (te - ts); 
+	   }
    } else {
 	F77_drotm( &F77_N, X, &F77_incX, Y, &F77_incY, P);
    }

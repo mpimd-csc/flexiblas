@@ -36,14 +36,13 @@ void cblas_ssymv(const enum CBLAS_ORDER order,
    #define F77_incY incY
 #endif
 
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_ssymv[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_ssymv.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   float te = 0, ts = 0;
+	   if ( __flexiblas_profile ) {
+		   ts = flexiblas_wtime(); 
+	   }
 	   void (*fn)
 		 (const enum CBLAS_ORDER order,
                  const enum CBLAS_UPLO Uplo, const int N,
@@ -52,10 +51,10 @@ void cblas_ssymv(const enum CBLAS_ORDER order,
                  float  *Y, const int incY)
 		   = flexiblas_ssymv.call_cblas;
 	fn(order,Uplo,N,alpha,A,lda,X,incX,beta,Y,incY);
-#ifdef FLEXIBLAS_PROFILE
+	if ( __flexiblas_profile ){
 	   te = flexiblas_wtime(); 
 	   flexiblas_time_ssymv[POS_CBLAS] += (te - ts); 
-#endif
+	}
    } else {
 
 	   extern int CBLAS_CallFromC;

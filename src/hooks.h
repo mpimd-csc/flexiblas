@@ -26,10 +26,11 @@
 #define Int 	int64_t
 #endif
 
+/* Get the info strcuture */ 
+#include "flexiblas_info.h" 
+
 #define COLOR_RED "\033[1;2;31m"
 #define COLOR_RESET "\033[0m"
-
-
 #define PRINT_PREFIX "<flexiblas> "
 
 /*-----------------------------------------------------------------------------
@@ -40,17 +41,11 @@ struct flexiblas_blasfn {
 	void *call_cblas; 
 };
 
-struct flexiblas_info {
-	int zdotc_is_intel;
-	int zdotu_is_intel; 
-	int cdotc_is_intel;
-	int cdotu_is_intel; 
-	int scabs1_missing; 
-};
 
 extern  struct flexiblas_info __flexiblas_current_blas; 
 typedef void (*flexiblas_info_function)(struct flexiblas_info *); 
 extern int __flexiblas_verbose; 
+extern int __flexiblas_profile;
 
 #define HOOK_INIT {NULL,NULL} 
 
@@ -239,7 +234,6 @@ int __flexiblas_hook_integer(void *handle);
 int __flexiblas_loadhook(void *handle, const char *symbol, const char *csymbol, struct flexiblas_blasfn * fn); 
 
 
-#ifdef FLEXIBLAS_PROFILE
 /*-----------------------------------------------------------------------------
  *  Variables for Profiling 
  *-----------------------------------------------------------------------------*/
@@ -553,9 +547,6 @@ unsigned long  flexiblas_call_isamax[2];
 unsigned long  flexiblas_call_izamax[2];
 unsigned long  flexiblas_call_xerbla [2];
 
-
-
-#endif 
 /*-----------------------------------------------------------------------------
  *  Preprocessor macros
  *-----------------------------------------------------------------------------*/
@@ -566,59 +557,6 @@ unsigned long  flexiblas_call_xerbla [2];
 	BLAS_NONVOID_FN_(rettype,name,args,call) \
 	BLAS_NONVOID_FN_NO_(rettype,name,args,call) 
 
-
-#ifndef FLEXIBLAS_PROFILE 
-#define BLAS_FN_(rettype, name, args, callseq) \
-	rettype name##_ args { \
-	rettype (*fn) args ;  \
-	fn = flexiblas_##name .call_fblas; \
-	if ( fn == NULL ) { \
-		fprintf(stderr, PRINT_PREFIX #name"_not hooked, abort\n"); \
-		abort(); \
-	}\
-	return fn callseq; \
-}
-
-#define BLAS_FN_NO_(rettype, name, args, callseq) \
-	rettype name args { \
-	rettype (*fn) args ;  \
-	fn = flexiblas_##name.call_fblas; \
-	if ( fn == NULL ) { \
-		fprintf(stderr, PRINT_PREFIX #name"_not hooked, abort\n"); \
-		abort(); \
-	}\
-	return fn callseq; \
-}
-
-#define BLAS_NONVOID_FN_(rettype, name, args, callseq) \
-	rettype name##_ args { \
-	rettype (*fn) args ;  \
-	rettype erg; \
-	fn = flexiblas_##name .call_fblas; \
-	if ( fn == NULL ) { \
-		fprintf(stderr, PRINT_PREFIX #name"_not hooked, abort\n"); \
-		abort(); \
-	}\
-	erg = fn callseq; \
-	return erg;\
-}
-
-#define BLAS_NONVOID_FN_NO_(rettype, name, args, callseq) \
-	rettype name args { \
-	rettype (*fn) args ;  \
-	rettype erg; \
-	fn = flexiblas_##name.call_fblas; \
-	if ( fn == NULL ) { \
-		fprintf(stderr, PRINT_PREFIX #name"_not hooked, abort\n"); \
-		abort(); \
-	}\
-	erg = fn callseq; \
-	return erg;\
-}
-
-
-
-#else 
 double flexiblas_wtime();
 #define BLAS_FN_(rettype, name, args, callseq) \
 	rettype name##_ args { \
@@ -629,28 +567,22 @@ double flexiblas_wtime();
 		fprintf(stderr, PRINT_PREFIX #name"_not hooked, abort\n"); \
 		abort(); \
 	}\
-	ts = flexiblas_wtime(); \
-	fn callseq;\
-	flexiblas_time_##name [0] += (flexiblas_wtime() -ts);\
-	flexiblas_call_##name [0]++;\
+	if ( __flexiblas_profile ) {\
+		ts = flexiblas_wtime(); \
+		fn callseq;\
+		flexiblas_time_##name [0] += (flexiblas_wtime() -ts);\
+		flexiblas_call_##name [0]++;\
+	} else { \
+		fn callseq;\
+	} \
 	return; \
 }
 
 #define BLAS_FN_NO_(rettype, name, args, callseq) \
 	rettype name args { \
-	rettype (*fn) args ;  \
-	double ts; \
-	fn = flexiblas_##name.call_fblas; \
-	if ( fn == NULL ) { \
-		fprintf(stderr, PRINT_PREFIX #name"_not hooked, abort\n"); \
-		abort(); \
-	}\
-	ts = flexiblas_wtime(); \
-	fn callseq; \
-	( flexiblas_time_## name [0]) += (flexiblas_wtime()-ts);\
-	flexiblas_call_##name [0] ++;\
-	return; \
-}
+	name##_ callseq; \
+	return ;\
+	}
 
 #define BLAS_NONVOID_FN_(rettype, name, args, callseq) \
 	rettype name##_ args { \
@@ -661,32 +593,21 @@ double flexiblas_wtime();
 		fprintf(stderr, PRINT_PREFIX #name"_not hooked, abort\n"); \
 		abort(); \
 	}\
-	ts = flexiblas_wtime();\
-	erg = fn callseq; \
-	flexiblas_time_##name [0] += (flexiblas_wtime() - ts);\
-	flexiblas_call_##name [0]++;\
+	if (__flexiblas_profile ) { \
+		ts = flexiblas_wtime();\
+		erg = fn callseq; \
+		flexiblas_time_##name [0] += (flexiblas_wtime() - ts);\
+		flexiblas_call_##name [0]++;\
+	} else { \
+		erg = fn callseq; \
+	} \
 	return erg;\
 }
 
 #define BLAS_NONVOID_FN_NO_(rettype, name, args, callseq) \
 	rettype name args { \
-	rettype (*fn) args ;  \
-	rettype erg; double ts;\
-	fn = flexiblas_##name.call_fblas; \
-	if ( fn == NULL ) { \
-		fprintf(stderr, PRINT_PREFIX #name"_not hooked, abort\n"); \
-		abort(); \
-	}\
-	ts = flexiblas_wtime();\
-	erg = fn callseq; \
-	flexiblas_time_##name [0]+= (flexiblas_wtime()-ts);\
-	flexiblas_call_##name [0]++;\
-	return erg;\
-}
-
-
-
-#endif
+	return name##_ callseq; \
+	}
 
 
 #define LOAD_HOOK(x) if ( LOAD_HOOK_INTERN(x) != 0) {\

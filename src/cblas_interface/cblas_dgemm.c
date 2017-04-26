@@ -40,14 +40,13 @@ void cblas_dgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA
    #define F77_ldb ldb
    #define F77_ldc ldc
 #endif
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_dgemm[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_dgemm.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   double te = 0, ts = 0;
+	   if ( __flexiblas_profile ) {
+		   ts = flexiblas_wtime(); 
+	   }
 	   void (*fn)
 		  (const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA,
                  const enum CBLAS_TRANSPOSE TransB, const int M, const int N,
@@ -56,10 +55,10 @@ void cblas_dgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA
                  const double beta, double  *C, const int ldc) 
 		   = flexiblas_dgemm.call_cblas;
 	   fn(Order, TransA, TransB, M, N, K, alpha, A, lda, B, ldb, beta, C, ldc); 
-#ifdef FLEXIBLAS_PROFILE
-	   te = flexiblas_wtime(); 
-	   flexiblas_time_dgemm[POS_CBLAS] += (te - ts); 
-#endif
+	   if ( __flexiblas_profile ){
+	   	te = flexiblas_wtime(); 
+		   flexiblas_time_dgemm[POS_CBLAS] += (te - ts); 
+	   }
    } else {
 
 	   extern int CBLAS_CallFromC;

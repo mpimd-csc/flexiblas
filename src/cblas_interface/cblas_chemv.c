@@ -34,14 +34,13 @@ void cblas_chemv(const enum CBLAS_ORDER order,
    #define F77_incX incx
    #define F77_incY incY
 #endif
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_chemv[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_chemv.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   double te = 0, ts = 0;
+	   if (__flexiblas_profile ) {
+		   ts = flexiblas_wtime(); 
+	   }
 	   void (*fn)
 		  (const enum CBLAS_ORDER order,
                  const enum CBLAS_UPLO Uplo, const int N,
@@ -50,12 +49,11 @@ void cblas_chemv(const enum CBLAS_ORDER order,
                  void  *Y, const int incY)
 		   = flexiblas_chemv.call_cblas;
 	fn(order,Uplo,N,alpha,A,lda,X,incX,beta,Y,incY);
-#ifdef FLEXIBLAS_PROFILE
+	if ( __flexiblas_profile ){
 	   te = flexiblas_wtime(); 
 	   flexiblas_time_chemv[POS_CBLAS] += (te - ts); 
-#endif
+	}
    } else {
-
 	   int n=0, i=0, incx=incX;
 	   const float *xx= (float *)X, *alp= (float *)alpha, *bet = (float *)beta;
 	   float ALPHA[2],BETA[2];

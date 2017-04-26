@@ -17,8 +17,8 @@
 #ifndef FLEXIBLAS_H
 #define FLEXIBLAS_H
 
-#define FLEXIBLAS_VERSION "1.0.0" 
-#define FLEXIBLAS_YEARS "2013, 2014" 
+#define FLEXIBLAS_VERSION "1.1.0" 
+#define FLEXIBLAS_YEARS "2014" 
 
 #include <stdlib.h>
 #include <stdio.h> 
@@ -26,16 +26,17 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+
+#ifndef __WIN32__ 
 #include <dlfcn.h>
+#endif 
+
 #include <errno.h>
 #include <ctype.h>
 #include <assert.h>
-#ifdef FLEXIBLAS_PROFILE
 #include <sys/time.h>
-#define FLEXIBLAS_RC "flexiblasrc-profile" 
-#else 
 #define FLEXIBLAS_RC "flexiblasrc" 
-#endif 
+
 #include "f77blas_interface.h"
 #include "hooks.h"
 #include "hashtable.h" 
@@ -45,12 +46,12 @@
 #define CMAKE_INSTALL_FULL_SYSCONFDIR "/usr/local/etc" 
 #endif 
 
-#ifdef FLEXIBLAS_PROFILE
-void flexiblas_print_profile(); 
-#endif 
 
-void*  __flexiblas_library = NULL; 
-int __flexiblas_initialized = 0; 
+
+void flexiblas_print_profile(); 
+
+extern void*  __flexiblas_library; 
+extern int __flexiblas_initialized; 
 struct flexiblas_info __flexiblas_current_blas; 
 int __flexiblas_verbose; 
 
@@ -60,11 +61,22 @@ int __flexiblas_verbose;
 #define RTLD_DEEPBIND 0 
 #endif 
 
-#ifdef __APPLE__
-	#define  SO_EXTENSION ".dylib"
-#else 
-	#define SO_EXTENSION ".so" 
-#endif
+#define FLEXIBLAS_ENV_SO_EXTENSION 0x01
+#define FLEXIBLAS_ENV_HOMEDIR      0x02
+#define FLEXIBLAS_ENV_GLOBAL_RC    0x03
+#define FLEXIBLAS_ENV_USER_RC 	   0x04
 
+extern int __flexiblas_count_additional_paths;
+extern char **  __flexiblas_additional_paths;
+
+
+void __flexiblas_print_copyright(int prefix);
+char * __flexiblas_getenv(int what);
+void __flexiblas_insert_fallback_blas(hashtable table);
+void __flexiblas_read_config_file(FILE * fp, hashtable table, char **default_map );
+void __flexiblas_load_config ( const char * path, hashtable table , char **default_map ); 
+void __flexiblas_add_path(const char * path );
+void __flexiblas_free_paths();
+void * __flexiblas_dlopen( const char *libname, int flags );
 
 #endif /* end of include guard: FLEXIBLAS_H */

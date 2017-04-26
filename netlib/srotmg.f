@@ -63,6 +63,12 @@
       DATA GAM,GAMSQ,RGAMSQ/4096.E0,1.67772E7,5.96046E-8/
 *     ..
 
+      SFLAG  = ONE
+      SH11 = ZERO
+      SH12 = ZERO
+      SH21 = ZERO
+      SH22 = ZERO
+
       IF (SD1.LT.ZERO) THEN
 *        GO ZERO-H-D-AND-SX1..
          SFLAG = -ONE
@@ -188,7 +194,7 @@
          SPARAM(5) = SH22
       END IF
 
-  260 CONTINUE
+      CONTINUE
       SPARAM(1) = SFLAG
       RETURN
       END

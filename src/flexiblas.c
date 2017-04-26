@@ -1,6 +1,6 @@
 /* $Id: flexiblas.c 3914 2014-01-08 09:32:15Z komart $ */ 
 /* 
- Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
+ Copyright (C) 2013, 2014  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -16,62 +16,34 @@
 */
 
 #include "flexiblas.h"
-#include "flexiblas_common.h"
 #include <errno.h>
 
-
+#ifndef __WIN32__
 #define DLOPEN_FLAGS (RTLD_NOW|RTLD_GLOBAL)
+#else 
+#define DLOPEN_FLAGS (0) 
+#define strtok_r strtok_s 
+#include <windows.h> 
+#endif 
 
-void * flexiblas_dlopen( const char *libname, int flags ){
+
+/*  Initialize global variables. */
+void*  __flexiblas_library = NULL; 
+int __flexiblas_initialized = 0; 
+int __flexiblas_profile = 0;
+
+static void init_default_search_path() {
 	char searchpath[] = FLEXIBLAS_DEFAULT_LIB_PATH;
 	char *path;
-	char *filepath;
 	char *r;
-	size_t len;
-	void *handle; 
-	int found = 0 ; 
-	struct stat st_buf; 
-	memset (&st_buf, 0, sizeof(struct stat));
 
-
- 	if ( strchr(libname,'/') == NULL ) {
-		path = strtok_r(searchpath,":", &r);
-		while ( path != NULL ) {
-			if (__flexiblas_verbose) fprintf(stderr,PRINT_PREFIX "path: %s\n",path);
-			len = strlen(path) + strlen(libname) + 3;
-			filepath = malloc(len * sizeof ( char ));
-			snprintf(filepath, len -1, "%s/%s", path, libname);
-			stat(filepath, &st_buf);
-		
-			if ( (S_ISREG(st_buf.st_mode) || S_ISLNK (st_buf.st_mode) )){
-				found = 1;
-				dlerror(); 
-				handle = dlopen(filepath, flags); 
-				if (handle == NULL){ 
-					fprintf(stderr, COLOR_RED PRINT_PREFIX "dlopen: %s\n" COLOR_RESET, dlerror());
-				}
-			}
-	
-			free(filepath);
-			if ( found ){
-				return handle; 
-			}
-			path = strtok_r(NULL, ":",&r);
-		}
-	} else {
-		stat(libname, &st_buf); 
-		if ( (S_ISREG(st_buf.st_mode) || S_ISLNK (st_buf.st_mode) )){
-			found = 1;
-			dlerror(); 
-			handle = dlopen(libname, flags); 
-			if ( handle == NULL ){
-				fprintf(stderr, COLOR_RED PRINT_PREFIX "dlopen: %s\n" COLOR_RESET, dlerror());
-			}
-			return handle; 
-		}
+	path = strtok_r(searchpath,":", &r);
+	while ( path != NULL ) {
+		__flexiblas_add_path(path);	
+		path = strtok_r(NULL, ":",&r);
 	}
-	return NULL; 
 }
+
 
 static void flexiblas_load_library (hashtable blas_libary_map, char *blas_default_map ) {
 	kv_pair *blas_pair; 
@@ -86,14 +58,14 @@ static void flexiblas_load_library (hashtable blas_libary_map, char *blas_defaul
 			abort(); 
 		}
 		if (__flexiblas_verbose) fprintf(stderr,PRINT_PREFIX "Use default BLAS: %s - %s\n", blas_pair->key, blas_pair->value);
-		__flexiblas_library = flexiblas_dlopen(blas_pair->value, DLOPEN_FLAGS); 
+		__flexiblas_library = __flexiblas_dlopen(blas_pair->value, DLOPEN_FLAGS); 
 	} else {
 
 		/*-----------------------------------------------------------------------------
 		 *  Try to open env_FLEXIBLAS directly and the get the value from the Hashtable 
 		 *-----------------------------------------------------------------------------*/
 		if (__flexiblas_verbose) fprintf(stderr,PRINT_PREFIX "Trying to use the content of FLEXIBLAS: \"%s\" as shared library.\n", env_FLEXIBLAS);
-		__flexiblas_library = flexiblas_dlopen(env_FLEXIBLAS, DLOPEN_FLAGS );  
+		__flexiblas_library = __flexiblas_dlopen(env_FLEXIBLAS, DLOPEN_FLAGS );  
 		if ( __flexiblas_library == NULL) {
 			blas_pair = flexiblas_hashtable_find(blas_libary_map, env_FLEXIBLAS); 
 			if (blas_pair == NULL ) {
@@ -105,7 +77,15 @@ static void flexiblas_load_library (hashtable blas_libary_map, char *blas_defaul
 				}				
 			}
 			if (__flexiblas_verbose) fprintf(stderr,PRINT_PREFIX "Trying to use the flexiblasrc default: \"%s\" - %s\n", blas_pair->key, blas_pair->value);
-			__flexiblas_library = flexiblas_dlopen(blas_pair->value,DLOPEN_FLAGS);  
+			__flexiblas_library = __flexiblas_dlopen(blas_pair->value,DLOPEN_FLAGS);  
+		}
+	}
+	/* Load FallBack */
+	if ( __flexiblas_library == NULL ) {
+		fprintf(stderr, PRINT_PREFIX "No suitable BLAS backend could be loaded. Tring Fallback instead.\n");
+		blas_pair = flexiblas_hashtable_find(blas_libary_map, "fallback");
+		if ( blas_pair ){
+			__flexiblas_library = __flexiblas_dlopen(blas_pair->value,DLOPEN_FLAGS);  
 		}
 	}
 	if ( __flexiblas_library == NULL ) {
@@ -116,8 +96,12 @@ static void flexiblas_load_library (hashtable blas_libary_map, char *blas_defaul
 	/*-----------------------------------------------------------------------------
 	 *  load info
 	 *-----------------------------------------------------------------------------*/
-	memset(&__flexiblas_current_blas,0,sizeof(struct flexiblas_info)); 
+	memset(&__flexiblas_current_blas,0,sizeof(struct flexiblas_info));
+#ifdef __WIN32__ 
+	flexiblas_info_function h_info = (flexiblas_info_function) GetProcAddress(__flexiblas_library, "__flexiblas_info"); 
+#else 
 	flexiblas_info_function h_info = dlsym(__flexiblas_library, "__flexiblas_info"); 
+#endif 
 	if ( h_info ) {
 		h_info(&__flexiblas_current_blas); 
 		if (__flexiblas_verbose) {
@@ -140,11 +124,11 @@ static void flexiblas_load_library (hashtable blas_libary_map, char *blas_defaul
 	return; 
 }
 
-__attribute__((constructor)) void flexiblas_init() {
-#ifdef FLEXIBLAS_PROFILE
-	int avoid_output = 0;
-	char *env_FLEXIBLAS_NOPROFILE=getenv("FLEXIBLAS_NOPROFILE"); 
+#ifndef __WIN32__ 
+__attribute__((constructor))
 #endif 
+void flexiblas_init() {
+	char *env_FLEXIBLAS_PROFILE=getenv("FLEXIBLAS_PROFILE");
 	hashtable blas_libary_map; 
 	char * blas_default_map= NULL ; 
 	/*-----------------------------------------------------------------------------
@@ -161,21 +145,20 @@ __attribute__((constructor)) void flexiblas_init() {
 	} else {
 		__flexiblas_verbose = 0; 
 	}
-#ifdef FLEXIBLAS_PROFILE
-	if (env_FLEXIBLAS_NOPROFILE != NULL) {
-		if (atoi(env_FLEXIBLAS_NOPROFILE) > 0 ) {
-			avoid_output = 1; 
+	
+	if (env_FLEXIBLAS_PROFILE != NULL) {
+		if (atoi(env_FLEXIBLAS_PROFILE) > 0 ) {
+			__flexiblas_profile = 1;
 		}		
 	} else {
-		avoid_output = 0; 
+		__flexiblas_profile = 0;
 	}
-#endif
 
 	/*-----------------------------------------------------------------------------
 	 *  Display Copyright 
 	 *-----------------------------------------------------------------------------*/
 	if ( __flexiblas_verbose) {
-		print_copyright(1); 
+		__flexiblas_print_copyright(1); 
 	}
 
 
@@ -185,14 +168,24 @@ __attribute__((constructor)) void flexiblas_init() {
 	 *  2. CMAKE_INSTALL_PREFIX/etc/flexiblasrc 
 	 *  3. $HOME/.flexiblasrc 
 	 *-----------------------------------------------------------------------------*/
-	blas_libary_map = flexiblas_hashtable_create(kv_pair_getkey, kv_pair_free,31,kv_hash); 
+	blas_libary_map = flexiblas_hashtable_create(__flexiblas_kv_pair_getkey, __flexiblas_kv_pair_free,31,__flexiblas_kv_hash); 
 	if ( blas_libary_map == NULL) {
 		fprintf(stderr, PRINT_PREFIX "can not create empty hash table for blas libraries. Abort!\n");
 		abort(); 
 	}
 
-	load_systemconfig(blas_libary_map, &blas_default_map); 
-	load_userconfig(blas_libary_map, &blas_default_map); 
+	__flexiblas_insert_fallback_blas(blas_libary_map);
+	{ /* Load System config */
+		char * system_config_file  = __flexiblas_getenv(FLEXIBLAS_ENV_GLOBAL_RC);
+		__flexiblas_load_config(system_config_file,blas_libary_map, &blas_default_map); 
+		free(system_config_file);
+	}
+	{ /* Load User Config */
+		char * user_config_file = __flexiblas_getenv(FLEXIBLAS_ENV_USER_RC);
+		__flexiblas_load_config(user_config_file, blas_libary_map, &blas_default_map);
+		free(user_config_file);
+	}
+	init_default_search_path();
 
 	if (!blas_default_map) {
 		blas_default_map = strdup("netlib"); 
@@ -203,21 +196,35 @@ __attribute__((constructor)) void flexiblas_init() {
 	 *-----------------------------------------------------------------------------*/
 	flexiblas_load_library(blas_libary_map, blas_default_map); 
 
-#ifdef FLEXIBLAS_PROFILE
-	if ( avoid_output != 1 ) {
+	if ( __flexiblas_profile ) {
 		if ( atexit ( flexiblas_print_profile ) != 0 ) {
 			fprintf(stderr, "Cannot setup Profiling Output \n");
 		}
 	}
-#endif 
+	
 	flexiblas_hashtable_freeall(blas_libary_map); 
 	if ( blas_libary_map ) free (blas_default_map); 
+	__flexiblas_free_paths();
 }
 
-__attribute__((destructor)) void flexiblas_exit() {
+
+
+/*-----------------------------------------------------------------------------
+ *  Cleanup 
+ *-----------------------------------------------------------------------------*/
+#ifndef __WIN32__ 
+__attribute__((destructor)) 
+#endif
+void flexiblas_exit() {
 	if (__flexiblas_verbose ) fprintf(stderr, PRINT_PREFIX "cleanup\n"); 
-	if (__flexiblas_library != NULL ) 
+	if (__flexiblas_library != NULL ) {
+#ifdef __WIN32__ 
+		FreeLibrary(__flexiblas_library); 
+#else
 		dlclose(__flexiblas_library); 
+#endif
+	}
+
 	__flexiblas_library = NULL; 
 }
 
@@ -239,13 +246,22 @@ int __flexiblas_loadhook(void *handle, const char *symbol, const char *csymbol, 
 		fprintf(stderr, PRINT_PREFIX " Look up: %s", cfblas); 
 	}
 
-	// fprintf(stderr, "Look for %s\n", cfblas); 
+	// fprintf(stderr, "Look for %s\n", cfblas);
+#ifdef __WIN32__
+	ptr_fsymbol = GetProcAddress(handle,cfblas);
+#else
 	ptr_fsymbol = dlsym(handle,cfblas);
+#endif 
 	if (ptr_fsymbol){
 		fn -> call_fblas = ptr_fsymbol; 
 	} else {
 		// fprintf(stderr, "Look for %s\n",symbol);
+#ifdef __WIN32__
+		ptr_fsymbol = GetProcAddress(handle,symbol);
+#else 
 		ptr_fsymbol = dlsym(handle,symbol);
+#endif
+
 		if (ptr_fsymbol) {
 			fn->call_fblas = ptr_fsymbol; 
 		} 
@@ -260,7 +276,12 @@ int __flexiblas_loadhook(void *handle, const char *symbol, const char *csymbol, 
 	} else {
 		snprintf(ccblas, 19, "cblas_%s", symbol); 
 	}
+#ifdef __WIN32__
+	ptr_csymbol = GetProcAddress(handle, ccblas); 
+#else 
 	ptr_csymbol = dlsym(handle, ccblas); 
+
+#endif
 	if (ptr_csymbol) {
 		fn -> call_cblas = ptr_csymbol; 
 	}
@@ -270,8 +291,6 @@ int __flexiblas_loadhook(void *handle, const char *symbol, const char *csymbol, 
 	else 
 		return 0; 
 }
-
-#ifdef FLEXIBLAS_PROFILE
 
 void  flexiblas_print_profile() {
 	FILE *output = NULL; 
@@ -1030,4 +1049,32 @@ double flexiblas_wtime ()
 	gettimeofday (&tv, NULL);
 	return tv.tv_sec + tv.tv_usec / 1e6;
 }
-#endif 
+
+#ifdef __WIN32__ 
+#include <windows.h>
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
+{
+  switch (fdwReason)
+  {
+    case DLL_PROCESS_ATTACH:
+      /* Code path executed when DLL is loaded into a process's address space. */
+      flexiblas_init(); 
+      break;
+
+    case DLL_THREAD_ATTACH:
+      /* Code path executed when a new thread is created within the process. */
+      break;
+
+    case DLL_THREAD_DETACH:
+      /* Code path executed when a thread within the process has exited *cleanly*. */
+      break;
+
+    case DLL_PROCESS_DETACH:
+      /* Code path executed when DLL is unloaded from a process's address space. */
+      flexiblas_exit(); 
+      break;
+  }
+
+  return TRUE;
+}
+#endif

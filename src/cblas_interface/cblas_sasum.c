@@ -28,21 +28,21 @@ float cblas_sasum( const int N, const float *X, const int incX)
    #define F77_N N
    #define F77_incX incX
 #endif
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_sasum[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_sasum.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   float te = 0, ts = 0;
+	   if ( __flexiblas_profile ) {
+		   ts = flexiblas_wtime(); 
+	   }
+	   
 	   float (*fn)(const int , const float *, const int ) = flexiblas_sasum.call_cblas;
 	   asum = fn(N,X,incX); 
-#ifdef FLEXIBLAS_PROFILE
-	   te = flexiblas_wtime(); 
-	   flexiblas_time_sasum[POS_CBLAS] += (te - ts); 
-	   // printf("%20e \t %20e\t %20e\n", te, ts , te-ts);
-#endif
+
+	   if ( __flexiblas_profile ){
+	   	te = flexiblas_wtime(); 
+	        flexiblas_time_sasum[POS_CBLAS] += (te - ts); 
+	   }
    } else {
 	   asum = F77_sasum( &F77_N, X, &F77_incX);
    }

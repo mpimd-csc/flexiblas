@@ -1,3 +1,12 @@
+flexiblas (1.1.0) unstable; urgency=low
+
+  * Combine flexiblas and fleixblas-profile
+  * internal rewriting
+  * support additional search paths in the config files 
+
+
+ -- Martin Köhler <koehlerm@mpi-magdeburg.mpg.de>  Thu, 04 Sep 2014 15:00:00 +0200
+
 flexiblas (1.0.1) unstable; urgency=low
 
   * Fixed SCABS1 

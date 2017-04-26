@@ -17,7 +17,7 @@
 
 #include <stdio.h>
 #include <stdlib.h> 
-#include "hooks.h" 
+#include "flexiblas_info.h" 
 
 void __flexiblas_info(struct flexiblas_info * info) {
 #ifdef ZDOTC_MKL 
@@ -74,7 +74,6 @@ void	ctrsm_();
 void	ctrsv_();
 void	dasum_();
 void	daxpy_();
-void	dcabs1_();
 void	dcopy_();
 void	ddot_();
 void	dgbmv_();
@@ -117,6 +116,7 @@ void	sasum_();
 void	saxpy_();
 #ifndef SCABS_MISSING
 void	scabs1_();
+void	dcabs1_();
 #endif
 void	scasum_();
 void	scnrm2_();

@@ -15,7 +15,23 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "flexiblas.h"
-#include "flexiblas_common.h"
+#include "string_tools.h"
+#ifdef __WIN32__
+#define strtok_r strtok_s
+#endif 
+
+static void init_default_search_path() {
+	char searchpath[] = FLEXIBLAS_DEFAULT_LIB_PATH;
+	char *path;
+	char *r;
+
+	path = strtok_r(searchpath,":", &r);
+	while ( path != NULL ) {
+		__flexiblas_add_path(path);	
+		path = strtok_r(NULL, ":",&r);
+	}
+}
+
 
 void print_usage(const char *prgmname) {
 	printf("The flexiblas tool helps to set the user default BLAS backend for\n");
@@ -59,6 +75,7 @@ void list_blas() {
 	hashtable blas_libary_map_user; 
 	char * default_map_system = NULL; 
 	char * default_map_user   = NULL; 
+	int i = 0;
 
 	printf("Available FlexiBLAS backends:\n");
 	printf("-----------------------------\n\n");
@@ -66,22 +83,39 @@ void list_blas() {
 	 *  System-Wide BLAS Libraries 
 	 *-----------------------------------------------------------------------------*/
 	printf("System BLAS backends:\n");
-	blas_libary_map_system = flexiblas_hashtable_create(kv_pair_getkey, kv_pair_free, 31, kv_hash); 
+	blas_libary_map_system = flexiblas_hashtable_create(__flexiblas_kv_pair_getkey, __flexiblas_kv_pair_free, 31, __flexiblas_kv_hash); 
 	if ( blas_libary_map_system == NULL) {
 		printf("Can not create hash-table for BLAS entires.\n");
 		abort(); 
 	}
-	load_systemconfig(blas_libary_map_system, &default_map_system); 
+	__flexiblas_insert_fallback_blas(blas_libary_map_system);
+	{ /* Load System config */
+		char * system_config_file  = __flexiblas_getenv(FLEXIBLAS_ENV_GLOBAL_RC);
+		__flexiblas_load_config(system_config_file,blas_libary_map_system, &default_map_system); 
+		free(system_config_file);
+	}
 	flexiblas_hashtable_display(blas_libary_map_system); 
 
 	printf("\nUser BLAS backends:\n"); 
-	blas_libary_map_user = flexiblas_hashtable_create(kv_pair_getkey, kv_pair_free, 31, kv_hash); 
+	blas_libary_map_user = flexiblas_hashtable_create(__flexiblas_kv_pair_getkey, __flexiblas_kv_pair_free, 31, __flexiblas_kv_hash); 
 	if ( blas_libary_map_user == NULL) {
 		printf("Can not create hash-table for BLAS entires.\n");
 		abort(); 
 	}
-	load_userconfig(blas_libary_map_user, &default_map_user); 
+	__flexiblas_insert_fallback_blas(blas_libary_map_user);
+	{ /* Load User Config */
+		char * user_config_file = __flexiblas_getenv(FLEXIBLAS_ENV_USER_RC);
+		__flexiblas_load_config(user_config_file, blas_libary_map_user, &default_map_user);
+		free(user_config_file);
+	}
 	flexiblas_hashtable_display(blas_libary_map_user); 
+
+	init_default_search_path();
+
+	printf("\nAdditional BLAS paths:\n");
+	for ( i = 0; i < __flexiblas_count_additional_paths; i++){
+		printf(" - %s\n", __flexiblas_additional_paths[i]);
+	}
 
 	if ( default_map_system == NULL && default_map_user == NULL ) {
 		printf("\nDefault BLAS backend: netlib  (generic default).\n"); 
@@ -94,6 +128,7 @@ void list_blas() {
 	flexiblas_hashtable_freeall(blas_libary_map_system); 
 	free(default_map_user); 
 	free(default_map_system); 
+	__flexiblas_free_paths();
 	return; 
 }
 
@@ -105,13 +140,22 @@ void set_blas(char *blas ) {
 	hashtable blas_libary_map; 
 	char* default_map = NULL; 
 
-	blas_libary_map = flexiblas_hashtable_create(kv_pair_getkey, kv_pair_free, 31, kv_hash); 
+	blas_libary_map = flexiblas_hashtable_create(__flexiblas_kv_pair_getkey, __flexiblas_kv_pair_free, 31, __flexiblas_kv_hash); 
 	if ( blas_libary_map == NULL) {
 		printf("Can not create hash-table for BLAS entires.\n");
 		abort(); 
 	}
-	load_systemconfig(blas_libary_map, &default_map); 
-	load_userconfig(blas_libary_map,&default_map); 
+	__flexiblas_insert_fallback_blas(blas_libary_map);
+	{ /* Load System config */
+		char * system_config_file  = __flexiblas_getenv(FLEXIBLAS_ENV_GLOBAL_RC);
+		__flexiblas_load_config(system_config_file,blas_libary_map, &default_map); 
+		free(system_config_file);
+	}
+	{ /* Load User Config */
+		char * user_config_file = __flexiblas_getenv(FLEXIBLAS_ENV_USER_RC);
+		__flexiblas_load_config(user_config_file, blas_libary_map, &default_map);
+		free(user_config_file);
+	}
 
 	if ( default_map != NULL && flexiblas_hashtable_find(blas_libary_map, default_map) == NULL ) {
 		printf("Current default backend does not exist: %s\nIt will be replaced.", default_map);
@@ -130,6 +174,7 @@ void set_blas(char *blas ) {
 	}
 	free(default_map); 
 	flexiblas_hashtable_freeall(blas_libary_map); 
+	__flexiblas_free_paths();
 	
 	rcfilename = calloc(sizeof(char), strlen(homedir) + 40); 
 	if ( !rcfilename ) abort(); 
@@ -161,8 +206,11 @@ void set_blas(char *blas ) {
 			nlines++; 
 			lines = realloc(lines, sizeof(char *) * nlines); 
 			lines[nlines-1] = strdup(line); 
-			
+#ifdef __WIN32__	
+			k = strtok_s(line, "|,;\r\n", &save);
+#else 
 			k = strtok_r(line, "|,;\n", &save);
+#endif 
 			if ( k == NULL ) { 
 				if ( line ) free(line); 
 				line = NULL;
@@ -231,8 +279,12 @@ void unset_blas( ) {
 			nlines++; 
 			lines = realloc(lines, sizeof(char *) * nlines); 
 			lines[nlines-1] = strdup(line); 
-			
+#ifdef __WIN32__ 	
+			k = strtok_s(line, "|,;\r\n", &save);
+#else 
 			k = strtok_r(line, "|,;\n", &save);
+#endif 
+
 			if ( k == NULL ) { 
 				if ( line ) free(line); 
 				line = NULL;
@@ -272,7 +324,7 @@ int main(int argc, char **argv)
 {
 	
 	if ( argc == 1 ) {
-		print_copyright(0); 
+		__flexiblas_print_copyright(0); 
 		print_usage(argv[0]); 
 		return 0; 
 	}
@@ -282,7 +334,7 @@ int main(int argc, char **argv)
 		return -1; 
 	}
 	if (strcasecmp(argv[1], "help") == 0) {
-		print_copyright(0); 
+		__flexiblas_print_copyright(0); 
 		print_usage(argv[0]); 
 		return 0; 
 	}

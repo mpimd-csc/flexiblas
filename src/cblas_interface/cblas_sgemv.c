@@ -36,23 +36,24 @@ void cblas_sgemv(const enum CBLAS_ORDER order,
    #define F77_incX incX
    #define F77_incY incY
 #endif
+   flexiblas_call_sgemv[POS_CBLAS] ++;
+
    if ( flexiblas_sgemv.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   float te = 0, ts = 0;
+	   if ( __flexiblas_profile ) {
+		   ts = flexiblas_wtime(); 
+	   }
 	   void (*fn)(const enum CBLAS_ORDER order,
                  const enum CBLAS_TRANSPOSE TransA, const int M, const int N,
                  const float alpha, const float  *A, const int lda,
                  const float  *X, const int incX, const float beta,
                  float  *Y, const int incY) = flexiblas_sgemv.call_cblas;
 	   fn ( order, TransA, M, N, alpha, A, lda, X, incX, beta, Y,incY); 
-#ifdef FLEXIBLAS_PROFILE
-	   te = flexiblas_wtime(); 
-	   flexiblas_time_sgemv[POS_CBLAS] += (te - ts); 
-#endif
+	   if ( __flexiblas_profile ){
+		   te = flexiblas_wtime(); 
+		   flexiblas_time_sgemv[POS_CBLAS] += (te - ts); 
+	   }
    } else {
-
-
 	   extern int CBLAS_CallFromC;
 	   extern int RowMajorStrg;
 	   RowMajorStrg = 0;

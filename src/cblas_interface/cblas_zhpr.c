@@ -31,28 +31,25 @@ void cblas_zhpr(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
    #define F77_N N
    #define F77_incX incx
 #endif
-#ifdef FLEXIBLAS_PROFILE
    flexiblas_call_zhpr[POS_CBLAS] ++;
-#endif 
 
    if ( flexiblas_zhpr.call_cblas != NULL ) {
-#ifdef FLEXIBLAS_PROFILE
-	   double te, ts = flexiblas_wtime(); 
-#endif
+	   double te = 0, ts = 0;
+	   if (__flexiblas_profile) {
+		   ts = flexiblas_wtime(); 
+	   }
 	   void (*fn)
 		 (const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
                 const int N, const double alpha, const void *X,
                 const int incX, void *A)
 		   = flexiblas_zhpr.call_cblas;
 	fn(order,Uplo,N,alpha,X,incX,A);
-; 
-#ifdef FLEXIBLAS_PROFILE
+
+	if ( __flexiblas_profile ){
 	   te = flexiblas_wtime(); 
 	   flexiblas_time_zhpr[POS_CBLAS] += (te - ts); 
-#endif
+	}    
    } else {
-
-	   
 	   int n, i, tincx, incx=incX;
 	   double *x=(double *)X, *xx=(double *)X, *tx, *st;
 

@@ -29,9 +29,8 @@ void cblas_xerbla(int info, const char *rout, const char *form, ...)
    // char empty[1] = "";
    va_list argptr;
 
-#ifdef FLEXIBLAS_PROFILE
-	flexiblas_call_xerbla[POS_CBLAS]++; 
-#endif 
+   flexiblas_call_xerbla[POS_CBLAS]++; 
+   
    va_start(argptr, form);
 
    if (RowMajorStrg)

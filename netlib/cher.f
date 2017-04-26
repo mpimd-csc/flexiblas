@@ -125,6 +125,8 @@
           CALL XERBLA('CHER  ',INFO)
           RETURN
       END IF
+
+      KX = 1
 *
 *     Quick return if possible.
 *

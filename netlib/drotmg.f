@@ -60,6 +60,11 @@
       DATA ZERO,ONE,TWO/0.D0,1.D0,2.D0/
       DATA GAM,GAMSQ,RGAMSQ/4096.D0,16777216.D0,5.9604645D-8/
 *     ..
+      DFLAG = ONE
+      DH11 = ONE
+      DH22 = ONE
+      DH21 = ONE
+      DH12 = ONE
 
       IF (DD1.LT.ZERO) THEN
 *        GO ZERO-H-D-AND-DX1..
@@ -186,7 +191,7 @@
          DPARAM(5) = DH22
       END IF
 
-  260 CONTINUE
+      CONTINUE
       DPARAM(1) = DFLAG
       RETURN
       END

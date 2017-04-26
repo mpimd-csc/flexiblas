@@ -1,4 +1,4 @@
-FlexiBLAS  - Version 1.0.1
+FlexiBLAS  - Version 1.1.0
 --------------------------
 
 Copyright 2013, 2014 by 
@@ -54,29 +54,32 @@ The configuration via cmake can be influenced further by the following options:
   application and the backend libraries must be compiled to support 8 
   byte integers as well. Since most applications and libraries still us the 
   classic 32bit integers the default is OFF.
-- PROFILE=ON/OFF 
-  Enables the profiling capabilities of FlexiBLAS. This does not refer to  
-  profiling in the sense of gprof. Instead the number of BLAS function calls 
-  are counted and their execution time is measured by FlexiBLAS internally. 
-  If the program terminates FlexiBLAS shows how often each BLAS routine was 
-  called and how much time was spent in it. If the option is turned on
-  the name of the shared library changes to libflexiblas-profile.so.
-  This option is set to OFF by default.
 - CBLAS=ON/OFF 
   Enables the CBLAS frontend. If the backend itself contains a CBLAS interface 
   that one is used. Otherwise FlexiBLAS acts like the CBLAS-wrapper from 
   Netlib. 
   This option is set to ON by default.
-- D`BLASNAME`=LIBS
-  Override the automatic search for a BLAS backend. The `BLASNAME` is the name 
-  of the backend in upper case. The libs argument is a semicolon separated list
-  of libraries which are necessary to link against this BLAS library. 
-  Example if we want to compile the OpenBLAS backend out of a static OpenBLAS
-  library we use 
-   -DOPENBLAS="/path/to/libopenblas.a;gfortran;gomp;m"
-  Using this configuration variable the detection of a special BLAS library can
-  be turned off via setting it to "OFF". 
+- DABI=GNU|Intel
+  Selects the ABI of the Fortran Interface. Per default the compiler used
+  determines which ABI is used but it can also be forced using this parameter.
+  The difference between both ABIs is how complex values are returned from 
+  Function. The GNU-style returns them as a normal return value on the stack.
+  The Intel (F2C, GNU F77) style returns them as an additional paramtere in
+  front of the proper function arguments. That means it is a subroutine from the
+  C point of view. 
 
+- D`BLASNAME`=LIBS Override the automatic search for a BLAS backend. The
+`BLASNAME` is the name of the backend in upper case. The libs argument is a
+semicolon separated list of libraries which are necessary to link against this
+BLAS library.  Example if we want to compile the OpenBLAS backend out of a
+static OpenBLAS library we use
+-DOPENBLAS="/path/to/libopenblas.a;gfortran;gomp;m" Using this configuration
+variable the detection of a special BLAS library can be turned off via setting
+it to "OFF". 
+
+Th PROFILE=ON/OFF option was remove due to the fact that the profiling is now
+integrated in the standard configuration. It is enabled at runtime using the 
+FLEXIBLAS_PROFILE environment variable.
 
 Configuration Files 
 -------------------
@@ -98,13 +101,20 @@ inside its default path (CMAKE_INSTALL_PREFIX/lib/flexiblas) for this shared
 object. If the path is absolute it tries to open the library directly. The name 
 of the backend is case-insensitive. 
 
-Additionally a special mapping exists to set the default mapping. The line have
-to look like
+Additionally two  special mappings exist to set the default mapping and to add 
+default search paths for additional BLAS backends. The default BLAS is set 
+using
 	
 	default | Name_Of_The_Default_Backend
 
-This mapping sets the default backend to use. If it is not present in one of 
-the configuration files FlexiBLAS will use the standard Netlib implementation. 
+and the using 
+
+	path | /additional/path/
+
+an additional search path can be added to FlexiBLAS. 
+
+If no default mapping is set in one of  the configuration files FlexiBLAS will 
+use the standard Netlib implementation. 
 
 The user config files can be handle using the "flexiblas" tool. By calling 
  
@@ -177,9 +187,8 @@ Environment variable
   because several implementations are compared for benchmarking purposes. 
   If the variable is not set it is assumed to be 0 and the additional output 
   is turned off.
-- FLEXIBLAS_NOPROFILE=0/1
-  Turns off the final profiling summary if FlexiBLAS was compiled with 
-  profiling support.  
+- FLEXIBLAS_PROFILE=0/1
+  Turns on the profiling. This replaces the FLEXIBLAS_NOPROFILE variable. 
 - FLEXIBLAS_PROFILE_FILE=FILENAME
   Set a filename where to write the profiling output. If the variable is set the
   profiling output will be redirected to the file. Otherwise it is written to
@@ -188,9 +197,9 @@ Environment variable
 
 Profiling 
 --------- 
-If the library is compiled with enabled profiling support, the name of the
-library changes from libflexiblas.so to libflexiblas-profile.so. The same
-renaming is done for the configuration files and the flexiblas tool. 
+The profiling is compiled in the library. It is enabled using the
+FLEXIBLAS_PROFILE environment variable. Since FlexiBLAS 1.1.0 no separate 
+profiling library exists. 
 
 License
 -------
