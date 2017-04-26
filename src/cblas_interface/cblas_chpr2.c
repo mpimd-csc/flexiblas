@@ -52,7 +52,13 @@ void cblas_chpr2(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 	}
    } else {
 
-	   int n, i, j, tincx, tincy, incx=incX, incy=incY;
+	   int n, i, j, tincx, tincy; 
+	#ifdef F77_INT
+	   F77_incY = incY; 
+	   F77_incX = incX; 
+	#else 
+	   int incx=incX, incy=incY;
+	#endif
 	   float *x=(float *)X, *xx=(float *)X, *y=(float *)Y,
 		 *yy=(float *)Y, *tx, *ty, *stx, *sty;
 

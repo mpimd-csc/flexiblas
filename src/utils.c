@@ -114,12 +114,17 @@ void __flexiblas_free_paths() {
 void __flexiblas_insert_fallback_blas(hashtable table)
 {
 	char *SO_EXTENSION = __flexiblas_getenv(FLEXIBLAS_ENV_SO_EXTENSION);
-	size_t len=strlen("libblas_netlib")+strlen(SO_EXTENSION)+2;
+	size_t len=strlen(FALLBACK_NAME)+strlen(SO_EXTENSION)+2;
 	char *tmp = (char *) calloc(len,sizeof(char));
-	snprintf(tmp,len, "libblas_netlib%s", SO_EXTENSION);
-	kv_pair *  default_pair = __flexiblas_kv_new_pair("netlib", tmp); 
+	char *tmp2;
+	snprintf(tmp,len, "%s%s", FALLBACK_NAME,SO_EXTENSION);
+	len = strlen("libblas_netlib")+strlen(SO_EXTENSION)+2;
+	tmp2 = (char*) calloc(len,sizeof(char));
+	snprintf(tmp2,len, "libblas_netlib%s", SO_EXTENSION);
+	kv_pair *  default_pair = __flexiblas_kv_new_pair("netlib", tmp2); 
 	kv_pair *  fallback_pair = __flexiblas_kv_new_pair("fallback", tmp);
 	free(tmp);
+	free(tmp2);
 	free(SO_EXTENSION); 
 	if ( flexiblas_hashtable_insert(table, default_pair) == 0 ) {
 		fprintf(stderr, PRINT_PREFIX "Can not insert Netlib  blas library.\n");

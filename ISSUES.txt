@@ -1,12 +1,13 @@
 Issues using FlexiBLAS 
 ======================
 
-Last Update: Nov 20, 2013 
+Last Update: Oct 07, 2014
 
 Table of Contents 
 -----------------
 
 1. Profiling Numpy/Scipy with linked against FlexiBLAS 
+2. CBLAS Tests with ATLAS and MKL
 
 
 
@@ -21,6 +22,15 @@ sys.setdlopenflags may help in this case but it is not guaranteed.
 
 Solution: Compile and link Numpy/SciPy and all related packages against
 fleixblas-profile and load flexiblas-profile again via LD_PRELOAD. 
+
+
+2. CBLAS Tests with ATLAS and MKL
+---------------------------------
+
+Due to some diffuclt internals of ATLAS and MKL it is not possible to call 
+'make test' for the CBLAS interface if ATLAS or MKL is used as BLAS backend. 
+
+Solution: Select Netlib or OpenBLAS to perform those tests. 
 
 
 

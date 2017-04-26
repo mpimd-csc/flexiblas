@@ -4,9 +4,15 @@
 #include <unistd.h>
 #include <sys/time.h>
 
+#ifdef INTEGER8
+	#define Int long
+#else 
+	#define Int int 
+#endif
 
 #define RUNS 50
-void dgetrf_(int *n , int *m, double *A, int *lda, int *ipiv, int *info); 
+
+void dgetrf_(Int *n , Int *m, double *A, Int *lda, Int *ipiv, Int *info); 
 double wtime()
 {
 	struct timeval tv;
@@ -16,11 +22,11 @@ double wtime()
 
 
 int main (int argc, char **argv) {
-	int n, i,j; 
+	Int n, i,j; 
 	double *A;
 	double *B; 
-	int *ipiv; 
-	int info; 
+	Int *ipiv; 
+	Int info; 
 	double ts,te;
 	double flops; 
 	if ( argc != 2) {
@@ -31,7 +37,7 @@ int main (int argc, char **argv) {
 	A = malloc(sizeof(double) * n *n ); 
 	B = malloc(sizeof(double) *n*n); 
 
-	ipiv = malloc(sizeof(int) * n ); 
+	ipiv = malloc(sizeof(Int) * n ); 
 	for (i = 0; i < n; i++) {
 		for (j = 0; j < n; j++) {
 			A[i+j*n] = 1.0/(i+j+1); 

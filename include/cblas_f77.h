@@ -21,6 +21,9 @@
 /* #ifdef WeirdNEC
    #define F77_INT long
 #endif */
+#ifdef INTEGER8 
+	#define F77_INT long
+#endif
 
 #ifdef  F77_CHAR
    #define FCHAR F77_CHAR
@@ -185,6 +188,22 @@
    #define F77_zsyr2k     zsyr2k_
    #define F77_ztrmm      ztrmm_
    #define F77_ztrsm      ztrsm_
+
+/* BLAS Extension */
+   #define F77_saxpby 	  saxpby_
+   #define F77_daxpby 	  daxpby_
+   #define F77_caxpby 	  caxpby_
+   #define F77_zaxpby 	  zaxpby_
+
+   #define F77_somatcopy  somatcopy_
+   #define F77_domatcopy  domatcopy_
+   #define F77_comatcopy  comatcopy_
+   #define F77_zomatcopy  zomatcopy_
+
+   #define F77_simatcopy  simatcopy_
+   #define F77_dimatcopy  dimatcopy_
+   #define F77_cimatcopy  cimatcopy_
+   #define F77_zimatcopy  zimatcopy_
 
 #ifdef __cplusplus
 extern "C" {
@@ -398,6 +417,24 @@ extern "C" {
    void F77_zher2k(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
    void F77_ztrmm(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, double *, FINT);
    void F77_ztrsm(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, double *, FINT);
+
+
+/* BLAS Extensions  */
+   void F77_saxpby( FINT, const float *, const float *,  FINT, const float *, float *, FINT);
+   void F77_daxpby( FINT, const double*, const double *, FINT, const double *,double*, FINT);
+   void F77_caxpby( FINT, const float *, const void *, FINT, const void *, void*, FINT);
+   void F77_zaxpby( FINT, const float *, const void *, FINT, const void *, void*, FINT);
+
+   void F77_somatcopy(FCHAR, FCHAR, FINT, FINT, const float * , const float*, FINT, float *, FINT); 
+   void F77_domatcopy(FCHAR, FCHAR, FINT, FINT, const double * , const double*, FINT, double *, FINT); 
+   void F77_comatcopy(FCHAR, FCHAR, FINT, FINT, const void * , const void*, FINT, void *, FINT); 
+   void F77_zomatcopy(FCHAR, FCHAR, FINT, FINT, const void * , const void*, FINT, void *, FINT); 
+
+   void F77_simatcopy(FCHAR, FCHAR, FINT, FINT, const float * , float*, FINT, FINT); 
+   void F77_dimatcopy(FCHAR, FCHAR, FINT, FINT, const double * ,double*, FINT, FINT); 
+   void F77_cimatcopy(FCHAR, FCHAR, FINT, FINT, const void * , void*, FINT, FINT); 
+   void F77_zimatcopy(FCHAR, FCHAR, FINT, FINT, const void * , void*, FINT, FINT); 
+
 
 #ifdef __cplusplus
 }

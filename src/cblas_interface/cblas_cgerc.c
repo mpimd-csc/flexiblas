@@ -50,8 +50,12 @@ void cblas_cgerc(const enum CBLAS_ORDER order, const int M, const int N,
 	   flexiblas_time_cgerc[POS_CBLAS] += (te - ts); 
 	}
    } else {
-
-	   int n, i, tincy, incy=incY;
+	   int n, i, tincy; 
+#ifdef F77_INT
+	   F77_incY = incY; 
+#else 
+	   int incy=incY;
+#endif 
 	   float *y=(float *)Y, *yy=(float *)Y, *ty, *st;
 
 	   extern int CBLAS_CallFromC;

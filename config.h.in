@@ -19,6 +19,14 @@
 #cmakedefine FLEXIBLAS_DEFAULT_LIB_PATH "@FLEXIBLAS_DEFAULT_LIB_PATH@"
 #cmakedefine CMAKE_INSTALL_PREFIX "@CMAKE_INSTALL_PREFIX@" 
 #cmakedefine CMAKE_INSTALL_FULL_SYSCONFDIR "@CMAKE_INSTALL_FULL_SYSCONFDIR@"
-#cmakedefine INTEGER8
+#cmakedefine FLEXIBLAS_INTEGER8
 #cmakedefine USE_INTERFACE_INTEL
+#cmakedefine EXTBLAS
+
+#cmakedefine FALLBACK_NAME 
+
+#ifndef FALLBACK_NAME 
+ #define FALLBACK_NAME "libblas_netlib"
+#endif 
+
 #endif 

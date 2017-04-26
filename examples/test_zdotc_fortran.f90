@@ -9,7 +9,7 @@ PROGRAM TEST
     DOUBLE COMPLEX ZDOTC 
 
     A(1) = DCMPLX(1d0,1d0)
-    A(2) = DCMPLX(2d0,2d0) 
+    A(2) = DCMPLX(2d0,1d0) 
     A(3) = DCMPLX(3d0,0)
     A(4) = DCMPLX(4d0,0) 
     B(1) = DCMPLX(1d0,0) 

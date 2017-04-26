@@ -56,7 +56,12 @@ void cblas_zhbmv(const enum CBLAS_ORDER order,
 	}
    } else {
 
-	   int n, i=0, incx=incX;
+	   int n, i=0;
+#ifdef F77_INT
+	   F77_incX=incX;
+#else 
+	   int incx = incX; 
+#endif
 	   const double *xx= (double *)X, *alp= (double *)alpha, *bet = (double *)beta;
 	   double ALPHA[2],BETA[2];
 	   int tincY, tincx;

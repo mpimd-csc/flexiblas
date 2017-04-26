@@ -17,7 +17,7 @@
 #ifndef FLEXIBLAS_H
 #define FLEXIBLAS_H
 
-#define FLEXIBLAS_VERSION "1.1.0" 
+#define FLEXIBLAS_VERSION "1.2.0" 
 #define FLEXIBLAS_YEARS "2014" 
 
 #include <stdlib.h>

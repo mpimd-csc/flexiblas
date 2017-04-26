@@ -1,9 +1,21 @@
+1.2.0 (November, 2014)
+-----------------------
+- add s/d/c/z axpby as BLAS extension (Like in OpenBLAS or MKL) 
+- add s/d/c/z omatcopy as BLAS extension, following both APIs (OpenBLAS and MKL)
+- add s/d/c/z imatcopy as BLAS extension, following both APIs (OpenBLAS and MKL)
+- new configure option: -DDEV=ON/OFF  to enable development builds the run only 
+  in the build directory. Default is OFF. 
+- user supplied XERBLA functions now work with ACML and MKL 
+- add CBLAS tests
+- working 8-byte integer support
+
+
 1.1.1 (October, 2014) 
 -----------------
 - fix DCABS1 
 
 1.1.0 (September, 2014) 
------------------
+-----------------------
 - rewrite internal function for handling the shared objects. 
 - include first parts of the Win32 and Win64 compatability 
 - integrated the profiling in the normal library. 

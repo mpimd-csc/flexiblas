@@ -19,12 +19,15 @@
 
 #include "flexiblas_config.h"
 #include <complex.h> 
+
+#ifndef Int
 #ifndef INTEGER8 
 #define Int 	int
 #else 
 #include <stdint.h>
 #define Int 	int64_t
 #endif
+#endif 
 
 /* Get the info strcuture */ 
 #include "flexiblas_info.h" 
@@ -91,6 +94,13 @@ struct flexiblas_blasfn flexiblas_dtpmv;
 struct flexiblas_blasfn flexiblas_dtrsv;
 struct flexiblas_blasfn flexiblas_dznrm2;
 
+#ifdef EXTBLAS
+struct flexiblas_blasfn flexiblas_daxpby;
+struct flexiblas_blasfn flexiblas_domatcopy; 
+struct flexiblas_blasfn flexiblas_dimatcopy; 
+
+#endif
+
 /*-----------------------------------------------------------------------------
  *  	single precision 
  *-----------------------------------------------------------------------------*/
@@ -132,6 +142,13 @@ struct flexiblas_blasfn flexiblas_strmv;
 struct flexiblas_blasfn flexiblas_strsm;
 struct flexiblas_blasfn flexiblas_strsv;
 
+#ifdef EXTBLAS
+struct flexiblas_blasfn flexiblas_saxpby;
+struct flexiblas_blasfn flexiblas_somatcopy; 
+struct flexiblas_blasfn flexiblas_simatcopy; 
+
+#endif
+
 /*-----------------------------------------------------------------------------
  *  Complex * 8
  *-----------------------------------------------------------------------------*/
@@ -171,6 +188,13 @@ struct flexiblas_blasfn flexiblas_ctrmv;
 struct flexiblas_blasfn flexiblas_ctrsm;
 struct flexiblas_blasfn flexiblas_ctrsv;
 
+#ifdef EXTBLAS
+struct flexiblas_blasfn flexiblas_caxpby;
+struct flexiblas_blasfn flexiblas_comatcopy; 
+struct flexiblas_blasfn flexiblas_cimatcopy; 
+
+#endif
+
 /*-----------------------------------------------------------------------------
  *  Complex * 16
  *-----------------------------------------------------------------------------*/
@@ -209,6 +233,13 @@ struct flexiblas_blasfn flexiblas_ztrmm;
 struct flexiblas_blasfn flexiblas_ztrmv;
 struct flexiblas_blasfn flexiblas_ztrsm;
 struct flexiblas_blasfn flexiblas_ztrsv;
+
+#ifdef EXTBLAS
+struct flexiblas_blasfn flexiblas_zaxpby;
+struct flexiblas_blasfn flexiblas_zomatcopy; 
+struct flexiblas_blasfn flexiblas_zimatcopy; 
+
+#endif
 
 /*-----------------------------------------------------------------------------
  *	Integer code 
@@ -275,6 +306,12 @@ double flexiblas_time_ctrmm [2];
 double flexiblas_time_ctrmv [2];
 double flexiblas_time_ctrsm [2];
 double flexiblas_time_ctrsv [2];
+#ifdef EXTBLAS
+double flexiblas_time_caxpby [2];
+double flexiblas_time_comatcopy[2];
+double flexiblas_time_cimatcopy[2];
+
+#endif 
 unsigned long  flexiblas_call_caxpy [2];
 unsigned long  flexiblas_call_ccopy [2];
 unsigned long  flexiblas_call_cdotc [2];
@@ -310,6 +347,13 @@ unsigned long  flexiblas_call_ctrmm [2];
 unsigned long  flexiblas_call_ctrmv [2];
 unsigned long  flexiblas_call_ctrsm [2];
 unsigned long  flexiblas_call_ctrsv [2];
+#ifdef EXTBLAS
+unsigned long  flexiblas_call_caxpby [2];
+unsigned long  flexiblas_call_comatcopy [2];
+unsigned long  flexiblas_call_cimatcopy [2];
+
+
+#endif
 
 // Complex Double Precission
 double  flexiblas_time_zaxpy [2];
@@ -347,6 +391,13 @@ double  flexiblas_time_ztrmm [2];
 double  flexiblas_time_ztrmv [2];
 double  flexiblas_time_ztrsm [2];
 double  flexiblas_time_ztrsv [2];
+#ifdef EXTBLAS
+double flexiblas_time_zaxpby [2];
+double flexiblas_time_zomatcopy[2];
+double flexiblas_time_zimatcopy[2];
+
+#endif 
+
 unsigned long flexiblas_call_zaxpy [2];
 unsigned long flexiblas_call_zcopy [2];
 unsigned long flexiblas_call_zdotc [2];
@@ -382,6 +433,12 @@ unsigned long flexiblas_call_ztrmm [2];
 unsigned long flexiblas_call_ztrmv [2];
 unsigned long flexiblas_call_ztrsm [2];
 unsigned long flexiblas_call_ztrsv [2];
+#ifdef EXTBLAS
+unsigned long  flexiblas_call_zaxpby [2];
+unsigned long  flexiblas_call_zomatcopy [2];
+unsigned long  flexiblas_call_zimatcopy [2];
+
+#endif
 
 // real double precision
 double flexiblas_time_dasum   [2];
@@ -421,6 +478,13 @@ double flexiblas_time_dtpmv   [2];
 double flexiblas_time_dtrsv   [2];
 double flexiblas_time_dznrm2  [2]; 
 double flexiblas_time_dcabs1  [2]; 
+#ifdef EXTBLAS
+double flexiblas_time_daxpby [2];
+double flexiblas_time_domatcopy[2];
+double flexiblas_time_dimatcopy[2];
+
+#endif 
+
 unsigned long flexiblas_call_dasum   [2];
 unsigned long flexiblas_call_dgbmv   [2];
 unsigned long flexiblas_call_drot    [2];
@@ -458,6 +522,12 @@ unsigned long flexiblas_call_dsyr2k  [2];
 unsigned long flexiblas_call_dtpmv   [2];
 unsigned long flexiblas_call_dtrsv   [2];
 unsigned long flexiblas_call_dcabs1  [2];  
+#ifdef EXTBLAS
+unsigned long  flexiblas_call_daxpby [2];
+unsigned long  flexiblas_call_domatcopy [2];
+unsigned long  flexiblas_call_dimatcopy [2];
+
+#endif
 
 // real single precision
 double  flexiblas_time_sasum  [2];
@@ -497,6 +567,12 @@ double  flexiblas_time_strmm  [2];
 double  flexiblas_time_strmv  [2];
 double  flexiblas_time_strsm  [2];
 double  flexiblas_time_strsv  [2];
+#ifdef EXTBLAS
+double flexiblas_time_saxpby [2];
+double flexiblas_time_somatcopy[2];
+double flexiblas_time_simatcopy[2];
+#endif 
+
 unsigned long  flexiblas_call_sasum  [2];
 unsigned long  flexiblas_call_saxpy  [2];
 unsigned long  flexiblas_call_scabs1 [2];
@@ -534,6 +610,14 @@ unsigned long  flexiblas_call_strmm  [2];
 unsigned long  flexiblas_call_strmv  [2];
 unsigned long  flexiblas_call_strsm  [2];
 unsigned long  flexiblas_call_strsv  [2];
+#ifdef EXTBLAS
+unsigned long  flexiblas_call_saxpby [2];
+unsigned long  flexiblas_call_somatcopy [2];
+unsigned long  flexiblas_call_simatcopy [2];
+
+#endif
+
+
 // integer function
 double  flexiblas_time_icamax[2];
 double  flexiblas_time_idamax[2];

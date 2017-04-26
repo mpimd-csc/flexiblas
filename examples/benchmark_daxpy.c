@@ -6,7 +6,15 @@
 #include "cblas.h"
 
 #define RUNS 20000
-void daxpy_(int *N, double *alpha, double *x, int *incx, double *Y, int *incy); 
+
+#ifdef INTEGER8
+	#define Int long
+#else 
+	#define Int int 
+#endif
+
+
+void daxpy_(Int *N, double *alpha, double *x, Int *incx, double *Y, Int *incy); 
 
 
 double wtime()
@@ -18,12 +26,12 @@ double wtime()
 
 
 int main (int argc, char **argv) {
-	int n, i; 
+	Int n, i; 
 	double *A, *B; 
 	double ts,te;
 	double alpha=1;
 	double flops;
-	int incx = 1, incy = 1; 
+	Int incx = 1, incy = 1; 
 	if ( argc != 2) {
 		printf("Usage: %s dim\n", argv[0]); 
 		exit(1); 

@@ -17,6 +17,7 @@
 
 #include <stdio.h>
 #include <stdlib.h> 
+#include <complex.h>
 #include "flexiblas_info.h" 
 
 void __flexiblas_info(struct flexiblas_info * info) {
@@ -33,6 +34,47 @@ void __flexiblas_info(struct flexiblas_info * info) {
 
 }
 
+
+/* MKL i/omatcopy adjustment  */
+#if defined(MKL) && defined(EXTBLAS_ENABLED)
+void mkl_domatcopy_(void *, void *, void *, void *, void *, void *, void *, void *, void *); 
+void mkl_somatcopy_(void *, void *, void *, void *, void *, void *, void *, void *, void *); 
+void mkl_comatcopy_(void *, void *, void *, void *, void *, void *, void *, void *, void *); 
+void mkl_zomatcopy_(void *, void *, void *, void *, void *, void *, void *, void *, void *); 
+
+void mkl_dimatcopy_(void *, void *, void *, void *, void *, void *, void *, void *); 
+void mkl_simatcopy_(void *, void *, void *, void *, void *, void *, void *, void *); 
+void mkl_cimatcopy_(void *, void *, void *, void *, void *, void *, void *, void *); 
+void mkl_zimatcopy_(void *, void *, void *, void *, void *, void *, void *, void *); 
+
+void domatcopy_( char* ORDER, char* TRANS, int *rows, int *cols, double *alpha, double *A, int *lda, double *B, int *ldb){
+	mkl_domatcopy_(ORDER, TRANS, rows, cols, alpha, A, lda, B, ldb); 
+}
+void somatcopy_( char* ORDER, char* TRANS, int *rows, int *cols, float *alpha, float *A, int *lda, float *B, int *ldb){
+	mkl_somatcopy_(ORDER, TRANS, rows, cols, alpha, A, lda, B, ldb); 
+}
+void comatcopy_( char* ORDER, char* TRANS, int *rows, int *cols,  float complex *alpha,  float complex *A, int *lda,  float complex *B, int *ldb){
+	mkl_comatcopy_(ORDER, TRANS, rows, cols, alpha, A, lda, B, ldb); 
+}
+void zomatcopy_( char* ORDER, char* TRANS, int *rows, int *cols, double complex *alpha, double complex *A, int *lda, double complex *B, int *ldb){
+	mkl_zomatcopy_(ORDER, TRANS, rows, cols, alpha, A, lda, B, ldb); 
+}
+
+void dimatcopy_( char* ORDER, char* TRANS, int *rows, int *cols, double *alpha, double *A, int *lda, int *ldb){
+	mkl_dimatcopy_(ORDER, TRANS, rows, cols, alpha, A, lda, ldb); 
+}
+void simatcopy_( char* ORDER, char* TRANS, int *rows, int *cols, float *alpha, float *A, int *lda, int *ldb){
+	mkl_simatcopy_(ORDER, TRANS, rows, cols, alpha, A, lda, ldb); 
+}
+void cimatcopy_( char* ORDER, char* TRANS, int *rows, int *cols,  float complex *alpha,  float complex *A, int *lda,  int *ldb){
+	mkl_cimatcopy_(ORDER, TRANS, rows, cols, alpha, A, lda,ldb); 
+}
+void zimatcopy_( char* ORDER, char* TRANS, int *rows, int *cols, double complex *alpha, double complex *A, int *lda, int *ldb){
+	mkl_zimatcopy_(ORDER, TRANS, rows, cols, alpha, A, lda,ldb); 
+}
+
+
+#endif
 
 /*-----------------------------------------------------------------------------
  *  Dummy Declaration. 
@@ -227,7 +269,6 @@ void __flexiblas_dummy_function_to_include_all_blas_symbols(int dummy){
 	ctrsv_();
 	dasum_();
 	daxpy_();
-	dcabs1_();
 	dcopy_();
 	ddot_();
 	dgbmv_();
@@ -270,6 +311,7 @@ void __flexiblas_dummy_function_to_include_all_blas_symbols(int dummy){
 	saxpy_();
 #ifndef SCABS_MISSING
 	scabs1_();
+	dcabs1_();
 #endif
 	scasum_();
 	scnrm2_();
@@ -638,4 +680,5 @@ void __flexiblas_dummy_function_to_include_all_cblas_symbols(int dummy){
 }
 #endif 
 
-		   
+
+

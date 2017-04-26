@@ -27,6 +27,12 @@
 #include <complex.h> 
 
 #include "hooks.h"
+
+#ifdef EXTBLAS
+#include "extblas.h"
+#endif 
+
+
 /*-----------------------------------------------------------------------------
  *  Initialize the Hooks
  *-----------------------------------------------------------------------------*/
@@ -67,6 +73,12 @@ struct flexiblas_blasfn flexiblas_strmm  =HOOK_INIT;
 struct flexiblas_blasfn flexiblas_strmv  =HOOK_INIT;
 struct flexiblas_blasfn flexiblas_strsm  =HOOK_INIT;
 struct flexiblas_blasfn flexiblas_strsv  =HOOK_INIT;
+#ifdef EXTBLAS 
+struct flexiblas_blasfn flexiblas_saxpby = HOOK_INIT;
+struct flexiblas_blasfn flexiblas_somatcopy = HOOK_INIT; 
+struct flexiblas_blasfn flexiblas_simatcopy = HOOK_INIT; 
+
+#endif
 
 /*-----------------------------------------------------------------------------
  *  Profile Timing
@@ -108,6 +120,11 @@ double  flexiblas_time_strmm  [2] = {0.0,0.0};
 double  flexiblas_time_strmv  [2] = {0.0,0.0};
 double  flexiblas_time_strsm  [2] = {0.0,0.0};
 double  flexiblas_time_strsv  [2] = {0.0,0.0};
+#ifdef EXTBLAS 
+double flexiblas_time_saxpby [2] = {0.0,0.0};
+double flexiblas_time_somatcopy [2] = {0.0,0.0};
+double flexiblas_time_simatcopy [2] = {0.0,0.0};
+#endif
 
 /*-----------------------------------------------------------------------------
  *  Profile Calls
@@ -149,6 +166,11 @@ unsigned long  flexiblas_call_strmm  [2] = {0,0};
 unsigned long  flexiblas_call_strmv  [2] = {0,0};
 unsigned long  flexiblas_call_strsm  [2] = {0,0};
 unsigned long  flexiblas_call_strsv  [2] = {0,0};
+#ifdef EXTBLAS 
+unsigned long flexiblas_call_saxpby [2] = {0,0};
+unsigned long flexiblas_call_somatcopy [2] = {0,0};
+unsigned long flexiblas_call_simatcopy [2] = {0,0};
+#endif
 
 /*-----------------------------------------------------------------------------
  *  Load the Hooks for every function 
@@ -200,6 +222,36 @@ int __flexiblas_hook_single(void * handle){
 	LOAD_HOOK(strsm);
 	LOAD_HOOK(strsv);
 	
+#ifdef EXTBLAS 
+	/* Load AXPBY  */
+	if ( LOAD_HOOK_INTERN(saxpby) != 0 ) {
+		if ( __flexiblas_verbose > 0 ) {
+			fprintf(stderr,PRINT_PREFIX "Flexiblas SAXPBY loaded.\n");
+		}
+		flexiblas_saxpby.call_fblas = fsaxpby_; 
+		flexiblas_saxpby.call_cblas = NULL; 
+	}
+
+	/* Load OMATCOPY */
+	if ( LOAD_HOOK_INTERN(somatcopy) != 0 ) {
+		if ( __flexiblas_verbose > 0 ) {
+			fprintf(stderr,PRINT_PREFIX "Flexiblas SOMATCOPY loaded.\n");
+		}
+		flexiblas_somatcopy.call_fblas = fsomatcopy_; 
+		flexiblas_somatcopy.call_cblas = NULL; 
+	}
+
+	/* Load IMATCOPY */
+	if ( LOAD_HOOK_INTERN(simatcopy) != 0 ) {
+		if ( __flexiblas_verbose > 0 ) {
+			fprintf(stderr,PRINT_PREFIX "Flexiblas SIMATCOPY loaded.\n");
+		}
+		flexiblas_simatcopy.call_fblas = fsimatcopy_; 
+		flexiblas_simatcopy.call_cblas = NULL; 
+	}
+
+#endif 
+
 	return 0; 
 }
 
@@ -289,4 +341,14 @@ BLAS_FN(void,	strmv,	(char* UPLO,char*TRANS,char *DIAG,Int *N,float *A,Int *LDA,
 BLAS_FN(void,	strsm,	(char *SIDE,char*UPLO,char *TRANSA,char*DIAG,Int *M,Int *N,float *ALPHA,float *A,Int *LDA,float *B,Int *LDB),\
 				(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB));
 BLAS_FN(void,	strsv,	(char *UPLO,char *TRANS,char *DIAG,Int *N,float *A,Int *LDA,float *X,Int *INCX),(UPLO,TRANS,DIAG,N,A,LDA,X,INCX));
+
+#ifdef EXTBLAS 
+BLAS_FN		(void,	saxpby,	(Int *N, float *CA, float *CX,Int *INCX,float *CB, float *CY,Int * INCY),\
+       		 		(N,CA,CX,INCX,CB,CY,INCY)); 
+BLAS_FN         (void,  somatcopy, ( char* ORDER, char* TRANS, Int *rows, Int *cols, float *alpha, float *a, Int *lda, float *b, Int *ldb), \
+				(ORDER, TRANS, rows, cols, alpha, a, lda, b, ldb)); 
+BLAS_FN         (void,  simatcopy, ( char* ORDER, char* TRANS, Int *rows, Int *cols, float *alpha, float *a, Int *lda, Int *ldb), \
+				(ORDER, TRANS, rows, cols, alpha, a, lda, ldb)); 
+
+#endif
 

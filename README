@@ -1,4 +1,4 @@
-FlexiBLAS  - Version 1.1.1
+FlexiBLAS  - Version 1.2.0
 --------------------------
 
 Copyright 2013, 2014 by 
@@ -41,43 +41,48 @@ the end of the configuration step cmake will inform you about the
 additional backends it found on your system.
 
 The configuration via cmake can be influenced further by the following options:
-- CMAKE_INSTALL_PREFIX=/PATH/  
+-DCMAKE_INSTALL_PREFIX=/PATH/  
   Defines an alternative location for the installation of the resulting 
   library. The default installation location is /usr/local. 
   The library called libflexiblas.so is installed in 
   CMAKE_INSTALL_PREFIX/lib and the default search path for backends is 
   CMAKE_INSTALL_PREFIX/lib/flexiblas.
-- DEBUG=ON/OFF 
+-DDEBUG=ON/OFF 
   Turns the inclusion of debugging symbols on or off. The default is off. 
-- INTEGER8=ON/OFF 
+-DINTEGER8=ON/OFF 
   Enables 8-byte integers for the Fortran interface. Be aware that the 
   application and the backend libraries must be compiled to support 8 
   byte integers as well. Since most applications and libraries still us the 
   classic 32bit integers the default is OFF.
-- CBLAS=ON/OFF 
+-DCBLAS=ON/OFF 
   Enables the CBLAS frontend. If the backend itself contains a CBLAS interface 
   that one is used. Otherwise FlexiBLAS acts like the CBLAS-wrapper from 
   Netlib. 
   This option is set to ON by default.
-- DABI=GNU|Intel
+-DABI=GNU|Intel
   Selects the ABI of the Fortran Interface. Per default the compiler used
   determines which ABI is used but it can also be forced using this parameter.
   The difference between both ABIs is how complex values are returned from 
   Function. The GNU-style returns them as a normal return value on the stack.
-  The Intel (F2C, GNU F77) style returns them as an additional paramtere in
+  The Intel (F2C, GNU F77) style returns them as an additional parameters in
   front of the proper function arguments. That means it is a subroutine from the
   C point of view. 
+-D`BLASNAME`=LIBS Override the automatic search for a BLAS backend. The
+  `BLASNAME` is the name of the backend in upper case. The libs argument is a
+  semicolon separated list of libraries which are necessary to link against this
+  BLAS library.  Example if we want to compile the OpenBLAS backend out of a
+  static OpenBLAS library we use
+  -DOPENBLAS="/path/to/libopenblas.a;gfortran;gomp;m" Using this configuration
+  variable the detection of a special BLAS library can be turned off via setting
+  it to "OFF". 
+-DDEV=ON/OFF Configures the build to work only in the build directory. In this 
+  case FlexiBLAS searches in the root of the build directory for its 
+  configuration file and the build directory is added to the default library 
+  search path. Turning on this option is only useful during the development in 
+  order to work independently from an installed FlexiBLAS. If you plan to
+  install FlexiBLAS, set it to OFF which is the default value as well. 
 
-- D`BLASNAME`=LIBS Override the automatic search for a BLAS backend. The
-`BLASNAME` is the name of the backend in upper case. The libs argument is a
-semicolon separated list of libraries which are necessary to link against this
-BLAS library.  Example if we want to compile the OpenBLAS backend out of a
-static OpenBLAS library we use
--DOPENBLAS="/path/to/libopenblas.a;gfortran;gomp;m" Using this configuration
-variable the detection of a special BLAS library can be turned off via setting
-it to "OFF". 
-
-Th PROFILE=ON/OFF option was remove due to the fact that the profiling is now
+The PROFILE=ON/OFF option was remove due to the fact that the profiling is now
 integrated in the standard configuration. It is enabled at runtime using the 
 FLEXIBLAS_PROFILE environment variable.
 

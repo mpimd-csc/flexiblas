@@ -20,7 +20,7 @@ override_dh_auto_configure:
 	
 	# do  sed 's/@DEB_HOST_MULTIARCH@/$(DEB_HOST_MULTIARCH)/g' "$$i" > `basename '$$i' .in`; done )
 
-	mkdir -p build-normal  && cd build-normal  && cmake ../ -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RelWithDebInfo -DTESTS=OFF  -DSYSCONFDIR=/etc -DCBLAS=ON -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_LIBDIR=/usr/lib/$(DEB_HOST_MULTIARCH)
+	mkdir -p build-normal  && cd build-normal  && cmake ../ -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RelWithDebInfo -DTESTS=OFF  -DSYSCONFDIR=/etc -DCBLAS=ON -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_LIBDIR=/usr/lib/$(DEB_HOST_MULTIARCH) -DDEV=OFF -DEXTBLAS=ON
 
 	
 override_dh_auto_build:

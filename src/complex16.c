@@ -25,6 +25,9 @@
 #include <complex.h> 
 #include "hooks.h"
 
+#ifdef EXTBLAS
+#include "extblas.h"
+#endif 
 
 /*-----------------------------------------------------------------------------
  *  Initialize Hooks
@@ -64,6 +67,11 @@ struct flexiblas_blasfn flexiblas_ztrmm =HOOK_INIT;
 struct flexiblas_blasfn flexiblas_ztrmv =HOOK_INIT;
 struct flexiblas_blasfn flexiblas_ztrsm =HOOK_INIT;
 struct flexiblas_blasfn flexiblas_ztrsv =HOOK_INIT;
+#ifdef EXTBLAS 
+struct flexiblas_blasfn flexiblas_zaxpby = HOOK_INIT;
+struct flexiblas_blasfn flexiblas_zomatcopy = HOOK_INIT; 
+struct flexiblas_blasfn flexiblas_zimatcopy = HOOK_INIT; 
+#endif
 
 /*-----------------------------------------------------------------------------
  *  Profile timing
@@ -103,6 +111,11 @@ double  flexiblas_time_ztrmm [2] = {0.0,0.0};
 double  flexiblas_time_ztrmv [2] = {0.0,0.0};
 double  flexiblas_time_ztrsm [2] = {0.0,0.0};
 double  flexiblas_time_ztrsv [2] = {0.0,0.0};
+#ifdef EXTBLAS 
+double flexiblas_time_zaxpby [2] = {0.0,0.0};
+double flexiblas_time_zomatcopy [2] = {0.0,0.0};
+double flexiblas_time_zimatcopy [2] = {0.0,0.0};
+#endif
 
 /*-----------------------------------------------------------------------------
  *  Profile number of calls
@@ -142,6 +155,13 @@ unsigned long flexiblas_call_ztrmm [2] = {0,0};
 unsigned long flexiblas_call_ztrmv [2] = {0,0};
 unsigned long flexiblas_call_ztrsm [2] = {0,0};
 unsigned long flexiblas_call_ztrsv [2] = {0,0};
+#ifdef EXTBLAS 
+unsigned long flexiblas_call_zaxpby [2] = {0,0};
+unsigned long flexiblas_call_zomatcopy [2] = {0,0};
+unsigned long flexiblas_call_zimatcopy [2] = {0,0};
+
+
+#endif
 
 
 /*-----------------------------------------------------------------------------
@@ -183,6 +203,37 @@ int __flexiblas_hook_complex16(void * handle){
 	LOAD_HOOK(ztrmv);
 	LOAD_HOOK(ztrsm);
 	LOAD_HOOK(ztrsv);
+
+#ifdef EXTBLAS 
+	/* AXPBY   */
+	if ( LOAD_HOOK_INTERN(zaxpby) != 0 ) {
+		if ( __flexiblas_verbose > 0 ) {
+			fprintf(stderr,PRINT_PREFIX "Flexiblas ZAXPBY loaded.\n");
+		}
+		flexiblas_zaxpby.call_fblas = fzaxpby_; 
+		flexiblas_zaxpby.call_cblas = NULL; 
+	}
+
+	/* Load OMATCOPY */
+	if ( LOAD_HOOK_INTERN(zomatcopy) != 0 ) {
+		if ( __flexiblas_verbose > 0 ) {
+			fprintf(stderr,PRINT_PREFIX "Flexiblas ZOMATCOPY loaded.\n");
+		}
+		flexiblas_zomatcopy.call_fblas = fzomatcopy_; 
+		flexiblas_zomatcopy.call_cblas = NULL; 
+	}
+
+	/* Load OMATCOPY */
+	if ( LOAD_HOOK_INTERN(zimatcopy) != 0 ) {
+		if ( __flexiblas_verbose > 0 ) {
+			fprintf(stderr,PRINT_PREFIX "Flexiblas ZIMATCOPY loaded.\n");
+		}
+		flexiblas_zimatcopy.call_fblas = fzimatcopy_; 
+		flexiblas_zimatcopy.call_cblas = NULL; 
+	}
+
+#endif 
+
 	return 0; 
 }
 
@@ -260,6 +311,16 @@ BLAS_FN(void,	ztrsm,	(char *SIDE,char*UPLO,char*TRANSA,char*DIAG,Int*M,Int*N,Com
 			(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB));
 BLAS_FN(void,	ztrsv,	(char *UPLO,char*TRANS,char *DIAG,Int *N,Complex *A,Int *LDA,Complex *X,Int *INCX),\
 			(UPLO,TRANS,DIAG,N,A,LDA,X,INCX));
+#ifdef EXTBLAS 
+BLAS_FN		(void,	zaxpby,	(Int *N, Complex *CA, Complex *CX,Int *INCX,Complex *CB, Complex *CY,Int * INCY),\
+       		 		(N,CA,CX,INCX,CB,CY,INCY)); 
+BLAS_FN         (void,  zomatcopy, ( char* ORDER, char* TRANS, Int *rows, Int *cols, double complex *alpha, double complex *a, Int *lda, double complex *b, Int *ldb), \
+				(ORDER, TRANS, rows, cols, alpha, a, lda, b, ldb)); 
+BLAS_FN         (void,  zimatcopy, ( char* ORDER, char* TRANS, Int *rows, Int *cols, double complex *alpha, double complex *a, Int *lda, Int *ldb), \
+				(ORDER, TRANS, rows, cols, alpha, a, lda, ldb)); 
+
+#endif
+
 /*
  BLAS_FN(double complex,	zdotc,	(Int * N,Complex *CX,Int *INCX,Complex *CY,Int *INCY), (N,CX,INCX,CY,INCY));
  BLAS_FN(double complex,	zdotu,	(Int * N,Complex *CX,Int *INCX,Complex *CY,Int *INCY), (N,CX,INCX,CY,INCY));

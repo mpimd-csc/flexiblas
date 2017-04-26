@@ -8,7 +8,7 @@
 #define CBLAS_INDEX size_t  /* this may vary between platforms */
 
 enum CBLAS_ORDER {CblasRowMajor=101, CblasColMajor=102};
-enum CBLAS_TRANSPOSE {CblasNoTrans=111, CblasTrans=112, CblasConjTrans=113};
+enum CBLAS_TRANSPOSE {CblasNoTrans=111, CblasTrans=112, CblasConjTrans=113, CblasConjNoTrans=114}; 
 enum CBLAS_UPLO {CblasUpper=121, CblasLower=122};
 enum CBLAS_DIAG {CblasNonUnit=131, CblasUnit=132};
 enum CBLAS_SIDE {CblasLeft=141, CblasRight=142};
@@ -568,6 +568,45 @@ void cblas_zher2k(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo,
                   void *C, const int ldc);
 
 void cblas_xerbla(int p, const char *rout, const char *form, ...);
+int cblas_errprn(int err, int info,const char *form, ...); 
+/*  
+ *  Routines w.r.t. the BLAS extension 
+ */
+void cblas_caxpby( const int N, const void *alpha, const void *X,
+                       const int incX, const void *beta, void *Y, const int incY); 
+void cblas_zaxpby( const int N, const void *alpha, const void *X,
+                       const int incX, const void *beta, void *Y, const int incY); 
+void cblas_daxpby( const int N, const double alpha, const double *X,
+                       const int incX, const double beta, double *Y, const int incY); 
+void cblas_saxpby( const int N, const float alpha, const float *X,
+                       const int incX, const float beta, float *Y, const int incY); 
+
+void cblas_somatcopy(const enum CBLAS_ORDER CORDER, const enum CBLAS_TRANSPOSE CTRANS, 
+		     const int crows, const int ccols, const float calpha, const float *a, const int clda, 
+		     float *b, const int cldb); 
+void cblas_domatcopy(const enum CBLAS_ORDER CORDER, const enum CBLAS_TRANSPOSE CTRANS, 
+		     const int crows, const int ccols, const double calpha, const double *a, const int clda, 
+		     double *b, const int cldb); 
+void cblas_comatcopy(const enum CBLAS_ORDER CORDER, const enum CBLAS_TRANSPOSE CTRANS, 
+		     const int crows, const int ccols, const void* calpha, const void* a, const int clda, 
+		     void *b, const int cldb); 
+void cblas_zomatcopy(const enum CBLAS_ORDER CORDER, const enum CBLAS_TRANSPOSE CTRANS, 
+		     const int crows, const int ccols, const void* calpha, const void* a, const int clda, 
+		     void *b, const int cldb); 
+
+void cblas_simatcopy(const enum CBLAS_ORDER CORDER, const enum CBLAS_TRANSPOSE CTRANS, 
+	            const int crows, const int ccols, const float calpha, float *a, const int clda, 
+	            const int cldb); 
+void cblas_dimatcopy(const enum CBLAS_ORDER CORDER, const enum CBLAS_TRANSPOSE CTRANS, 
+	            const int crows, const int ccols, const double calpha, double *a, const int clda, 
+	            const int cldb); 
+void cblas_cimatcopy(const enum CBLAS_ORDER CORDER, const enum CBLAS_TRANSPOSE CTRANS, 
+	            const int crows, const int ccols, const void* calpha, void* a, const int clda, 
+	            const int cldb); 
+void cblas_zimatcopy(const enum CBLAS_ORDER CORDER, const enum CBLAS_TRANSPOSE CTRANS, 
+		     const int crows, const int ccols, const void* calpha, void* a, const int clda, 
+		     const int cldb); 
+
 
 #ifdef __cplusplus
 }

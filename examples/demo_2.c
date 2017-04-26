@@ -14,7 +14,7 @@ double wtime()
 
 
 int main (int argc, char **argv) {
-	int n, i; 
+	Int n, i; 
 	double *A, *B, *C; 
 	double ts,te;
 	double alpha=1, beta=1;

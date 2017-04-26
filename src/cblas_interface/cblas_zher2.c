@@ -52,7 +52,15 @@ void cblas_zher2(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 	}
   } else {
 
-	   int n, i, j, tincx, tincy, incx=incX, incy=incY;
+	   int n, i, j, tincx, tincy; 
+#ifdef F77_INT
+	   F77_incX=incX;
+	   F77_incY=incY;
+#else 
+	   int incx = incX; 
+	   int incy = incY; 
+#endif
+
 	   double *x=(double *)X, *xx=(double *)X, *y=(double *)Y, 
 		 *yy=(double *)Y, *tx, *ty, *stx, *sty;
 

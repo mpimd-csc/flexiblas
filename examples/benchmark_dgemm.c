@@ -4,9 +4,14 @@
 #include <unistd.h>
 #include <sys/time.h>
 
+#ifdef INTEGER8
+	#define Int long
+#else 
+	#define Int int 
+#endif
 
 #define RUNS 50
-void dgemm_(const char * TRANSA, const char *TRANSB, int *m, int *n, int *k, double *alpha, double *A, int *lda, double *B, int *ldb, double *beta, double *C, int *ldc); 
+void dgemm_(const char * TRANSA, const char *TRANSB, Int *m, Int *n, Int *k, double *alpha, double *A, Int *lda, double *B, Int *ldb, double *beta, double *C, Int *ldc); 
 
 double wtime()
 {
@@ -17,7 +22,7 @@ double wtime()
 
 
 int main (int argc, char **argv) {
-	int n, i; 
+	Int n, i; 
 	double *A, *B, *C; 
 	double ts,te;
 	double alpha=1, beta=1;

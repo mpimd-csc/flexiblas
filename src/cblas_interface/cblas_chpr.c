@@ -50,7 +50,12 @@ void cblas_chpr(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 	   flexiblas_time_chpr[POS_CBLAS] += (te - ts); 
 	}    
    } else {
-	   int n, i, tincx, incx=incX;
+	   int n, i, tincx; 
+#ifdef F77_INT
+	   F77_incX = incX; 
+#else 
+ 	   int incx=incX;
+#endif
 	   float *x=(float *)X, *xx=(float *)X, *tx, *st;
 
 	   extern int CBLAS_CallFromC;

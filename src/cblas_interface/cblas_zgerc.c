@@ -51,7 +51,12 @@ void cblas_zgerc(const enum CBLAS_ORDER order, const int M, const int N,
 	}
    } else {
 
-	   int n, i, tincy, incy=incY;
+	   int n, i, tincy; 
+#ifdef F77_INT
+	   F77_incY=incY;
+#else 
+	   int incy = incY; 
+#endif
 	   double *y=(double *)Y, *yy=(double *)Y, *ty, *st;
 
 	   extern int CBLAS_CallFromC;

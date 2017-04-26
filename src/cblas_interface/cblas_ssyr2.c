@@ -27,7 +27,7 @@ void cblas_ssyr2(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
    #define F77_UL &UL
 
 #ifdef F77_INT
-   F77_INT F77_N=N, F77_incX=incX, F77_incY=incY, F77__lda=lda;
+   F77_INT F77_N=N, F77_incX=incX, F77_incY=incY, F77_lda=lda;
 #else
    #define F77_N N
    #define F77_incX incX

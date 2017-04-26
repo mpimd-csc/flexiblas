@@ -1,5 +1,5 @@
 Name:           flexiblas
-Version:        1.1.0
+Version:        1.2.0
 Release:        1
 Summary:        The FlexiBLAS is a BLAS wrapper with runtime exchangeable backends. 
 License:        GPLv3
@@ -141,6 +141,8 @@ fi
 
 
 %changelog
+* Mon Nov 11 10 2014 <koehlerm@mpi-magdeburg.mpg.de>
+- Version 1.2.0
 * Sun May 11 08 2014 <koehlerm@mpi-magdeburg.mpg.de>
 - Version 1.1.0
 * Wed Jan 08 2014 <koehlerm@mpi-magdeburg.mpg.de>

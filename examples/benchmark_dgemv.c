@@ -4,9 +4,14 @@
 #include <unistd.h>
 #include <sys/time.h>
 
+#ifdef INTEGER8
+	#define Int long
+#else 
+	#define Int int 
+#endif
 
 #define RUNS 2000
-void dgemv_(const char * TRANSA, int *m, int *n, double *alpha, double *A, int *lda, double *B, int *incb, double *beta, double *C, int *incc); 
+void dgemv_(const char * TRANSA, Int *m, Int *n, double *alpha, double *A, Int *lda, double *B, Int *incb, double *beta, double *C, Int *incc); 
 
 double wtime()
 {
@@ -17,12 +22,12 @@ double wtime()
 
 
 int main (int argc, char **argv) {
-	int n, i; 
+	Int n, i; 
 	double *A, *B, *C; 
 	double ts,te;
 	double alpha=1, beta=1;
 	double flops; 
-	int incb = 1, incc = 1; 
+	Int incb = 1, incc = 1; 
 	if ( argc != 2) {
 		printf("Usage: %s dim\n", argv[0]); 
 		exit(1); 

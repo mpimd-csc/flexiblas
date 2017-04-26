@@ -1,3 +1,23 @@
+flexiblas (1.2.0) unstable; urgency=low
+
+  * Will be copied from CHANGELOG 
+  * add s/d/c/z axpby as BLAS extension (Like in OpenBLAS or MKL) 
+  * add s/d/c/z omatcopy as BLAS extension, following both APIs (OpenBLAS and MKL)
+  * add s/d/c/z imatcopy as BLAS extension, following both APIs (OpenBLAS and MKL)
+    new configure option: -DDEV=ON/OFF  to enable development builds the run only 
+  * in the build directory. Default is OFF. 
+  * user supplied XERBLA functions now work with ACML and MKL 
+  * add CBLAS tests
+  * working 8-byte integer support
+
+ -- Martin Köhler <koehlerm@mpi-magdeburg.mpg.de>  Thu, 06 Nov 2014 15:00:00 +0200
+
+flexiblas (1.1.1) unstable; urgency=low
+
+  * fix DSCABS1
+
+ -- Martin Köhler <koehlerm@mpi-magdeburg.mpg.de>  Thu, 04 Sep 2014 15:00:00 +0200
+
 flexiblas (1.1.0) unstable; urgency=low
 
   * Combine flexiblas and fleixblas-profile

@@ -23,7 +23,7 @@
 static void init_default_search_path() {
 	char searchpath[] = FLEXIBLAS_DEFAULT_LIB_PATH;
 	char *path;
-	char *r;
+	char *r; 
 
 	path = strtok_r(searchpath,":", &r);
 	while ( path != NULL ) {
@@ -63,7 +63,7 @@ void flexiblas_hashtable_display(hashtable s) {
     for( ix = 0; ix < s->size; ix++) {
         for( e = s->hashtable[ix]; e; e = e->next) {
 		kv_pair * pair  = (kv_pair *) e->obj; 
-		printf("%*s \t %s\n", maxlen, pair->key, pair->value);
+		printf("%*s \t %s\n", (int) maxlen, pair->key, pair->value);
 	}
     }
 
@@ -102,7 +102,8 @@ void list_blas() {
 		printf("Can not create hash-table for BLAS entires.\n");
 		abort(); 
 	}
-	__flexiblas_insert_fallback_blas(blas_libary_map_user);
+	/* __flexiblas_insert_fallback_blas(blas_libary_map_user); */ 
+	
 	{ /* Load User Config */
 		char * user_config_file = __flexiblas_getenv(FLEXIBLAS_ENV_USER_RC);
 		__flexiblas_load_config(user_config_file, blas_libary_map_user, &default_map_user);

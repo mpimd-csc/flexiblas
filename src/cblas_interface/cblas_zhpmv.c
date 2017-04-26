@@ -27,7 +27,7 @@ void cblas_zhpmv(const enum CBLAS_ORDER order,
    char UL;
    #define F77_UL &UL   
 #ifdef F77_INT
-   F77_INT F77_N=N, F77_K=K, F77_lda=lda, F77_incX=incX, F77_incY=incY;
+   F77_INT F77_N=N, F77_incX=incX, F77_incY=incY;
 #else
    #define F77_N N
    #define F77_incX incx
@@ -56,7 +56,12 @@ void cblas_zhpmv(const enum CBLAS_ORDER order,
    
      } else {
 
-	   int n, i=0, incx=incX;
+	   int n, i=0; 
+#ifdef F77_INT
+	   F77_incX=incX;
+#else 
+	   int incx = incX; 
+#endif
 	   const double *xx= (double *)X, *alp= (double *)alpha, *bet = (double *)beta;
 	   double ALPHA[2],BETA[2];
 	   int tincY, tincx;

@@ -33,3 +33,7 @@ add_blas_test(xblat3c cblat3.f)
 add_blas_test(xblat1z zblat1.f)
 add_blas_test(xblat2z zblat2.f)
 add_blas_test(xblat3z zblat3.f)
+
+if (CBLAS STREQUAL ON) 
+	add_subdirectory(cblas)
+endif()

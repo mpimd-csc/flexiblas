@@ -16,11 +16,13 @@
 #ifndef FLEXIBLAS_H
 #define FLEXIBLAS_H
 #include <complex.h> 
+#ifndef Int
 #ifndef INTEGER8 
 #define Int 	int
 #else 
 #include <stdint.h>
 #define Int 	int64_t
+#endif
 #endif
 
 #ifdef BLAS_FN

@@ -57,7 +57,14 @@ void cblas_zgemv(const enum CBLAS_ORDER order,
 		   flexiblas_time_zgemv[POS_CBLAS] += (te - ts); 
 	   }
    } else {
-	   int n=0, i=0, incx=incX;
+	   int n=0, i=0; 
+#ifdef F77_INT
+	   F77_incX=incX;
+#else 
+	   int incx = incX; 
+#endif
+   
+		   
 	   const double *xx= (const double *)X;
 	   double ALPHA[2],BETA[2];
 	   int tincY, tincx;

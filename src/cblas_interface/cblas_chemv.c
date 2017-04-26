@@ -31,7 +31,7 @@ void cblas_chemv(const enum CBLAS_ORDER order,
 #else
    #define F77_N N
    #define F77_lda lda
-   #define F77_incX incx
+   #define F77_incX incX
    #define F77_incY incY
 #endif
    flexiblas_call_chemv[POS_CBLAS] ++;
@@ -54,7 +54,10 @@ void cblas_chemv(const enum CBLAS_ORDER order,
 	   flexiblas_time_chemv[POS_CBLAS] += (te - ts); 
 	}
    } else {
-	   int n=0, i=0, incx=incX;
+	   int n=0, i=0; 
+#ifdef F77_INT
+           F77_incX = incX; 
+#endif
 	   const float *xx= (float *)X, *alp= (float *)alpha, *bet = (float *)beta;
 	   float ALPHA[2],BETA[2];
 	   int tincY, tincx;
@@ -115,11 +118,9 @@ void cblas_chemv(const enum CBLAS_ORDER order,
 		 x=tx;
 
 
-		 #ifdef F77_INT
+		 /* #ifdef F77_INT
 		    F77_incX = 1;
-		 #else
-		    incx = 1;
-		 #endif
+		 #endif */
 	 
 		 if(incY > 0)
 		   tincY = incY;

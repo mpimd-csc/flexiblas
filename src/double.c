@@ -28,6 +28,10 @@
 #include "f77blas_interface.h"
 #include "hooks.h"
 
+#ifdef EXTBLAS
+#include "extblas.h"
+#endif 
+
 /*-----------------------------------------------------------------------------
  *  Initialize the Hooks
  *-----------------------------------------------------------------------------*/
@@ -68,6 +72,11 @@ struct flexiblas_blasfn flexiblas_dspr   = HOOK_INIT;
 struct flexiblas_blasfn flexiblas_dsyr2k = HOOK_INIT;
 struct flexiblas_blasfn flexiblas_dtpmv  = HOOK_INIT;
 struct flexiblas_blasfn flexiblas_dtrsv  = HOOK_INIT;
+#ifdef EXTBLAS 
+struct flexiblas_blasfn flexiblas_daxpby = HOOK_INIT;
+struct flexiblas_blasfn flexiblas_domatcopy = HOOK_INIT; 
+struct flexiblas_blasfn flexiblas_dimatcopy = HOOK_INIT; 
+#endif
 
 /*-----------------------------------------------------------------------------
  *  Usecond counters for every function 
@@ -109,6 +118,11 @@ double flexiblas_time_dsyr2k [2] = {0.0,0.0};
 double flexiblas_time_dtpmv  [2] = {0.0,0.0};
 double flexiblas_time_dtrsv  [2] = {0.0,0.0};
 double flexiblas_time_dcabs1 [2] = {0.0,0.0}; 
+#ifdef EXTBLAS 
+double flexiblas_time_daxpby [2] = {0.0,0.0};
+double flexiblas_time_domatcopy [2] = {0.0,0.0};
+double flexiblas_time_dimatcopy [2] = {0.0,0.0};
+#endif
 
 /*-----------------------------------------------------------------------------
  *  Number of calls 
@@ -150,6 +164,12 @@ unsigned long flexiblas_call_dsyr2k [2] = {0,0};
 unsigned long flexiblas_call_dtpmv  [2] = {0,0};
 unsigned long flexiblas_call_dtrsv  [2] = {0,0};
 unsigned long flexiblas_call_dcabs1 [2] = {0,0}; 
+#ifdef EXTBLAS 
+unsigned long flexiblas_call_daxpby [2] = {0,0};
+unsigned long flexiblas_call_domatcopy [2] = {0,0};
+unsigned long flexiblas_call_dimatcopy [2] = {0,0};
+
+#endif
 
 /*-----------------------------------------------------------------------------
  *  Load the Hooks for every function 
@@ -199,6 +219,37 @@ int __flexiblas_hook_double(void *handle)
 	LOAD_HOOK(dtrsv);
 	LOAD_HOOK(dzasum);
 	LOAD_HOOK(dznrm2);
+
+#ifdef EXTBLAS 
+	/* Load OMATCOPY */ 
+	if ( LOAD_HOOK_INTERN(daxpby) != 0 ) {
+		if ( __flexiblas_verbose > 0 ) {
+			fprintf(stderr,PRINT_PREFIX "Flexiblas DAXPBY loaded.\n");
+		}
+		flexiblas_daxpby.call_fblas = fdaxpby_; 
+		flexiblas_daxpby.call_cblas = NULL; 
+	}
+
+	/* Load OMATCOPY */
+	if ( LOAD_HOOK_INTERN(domatcopy) != 0 ) {
+		if ( __flexiblas_verbose > 0 ) {
+			fprintf(stderr,PRINT_PREFIX "Flexiblas DOMATCOPY loaded.\n");
+		}
+		flexiblas_domatcopy.call_fblas = fdomatcopy_; 
+		flexiblas_domatcopy.call_cblas = NULL; 
+	}
+
+	/* Load IMATCOPY */
+	if ( LOAD_HOOK_INTERN(dimatcopy) != 0 ) {
+		if ( __flexiblas_verbose > 0 ) {
+			fprintf(stderr,PRINT_PREFIX "Flexiblas DIMATCOPY loaded.\n");
+		}
+		flexiblas_dimatcopy.call_fblas = fdimatcopy_; 
+		flexiblas_dimatcopy.call_cblas = NULL; 
+	}
+
+#endif 
+
 	return 0; 
 }
 
@@ -286,5 +337,15 @@ BLAS_FN		(void,	dtrsm,	(char *SIDE,char*UPLO,char *TRANSA,char*DIAG,Int *M,Int *
 BLAS_FN		(void,	dtrsv,	(char *UPLO,char *TRANS,char *DIAG,Int *N,double *A,Int *LDA,double *X,Int *INCX),(UPLO,TRANS,DIAG,N,A,LDA,X,INCX));
 BLAS_NONVOID_FN	(double,	dzasum,	(Int *N, double complex *ZX, Int *INCX),(N,ZX,INCX));
 BLAS_NONVOID_FN	(double, dznrm2, (Int *N, double complex *ZX, Int *INCX),(N,ZX,INCX));
+
+#ifdef EXTBLAS 
+BLAS_FN		(void,	daxpby,	(Int *N, double *CA, double *CX,Int *INCX,double *CB, double *CY,Int * INCY),\
+       		 		(N,CA,CX,INCX,CB,CY,INCY)); 
+BLAS_FN         (void,  domatcopy, ( char* ORDER, char* TRANS, Int *rows, Int *cols, double *alpha, double *a, Int *lda, double *b, Int *ldb), \
+				(ORDER, TRANS, rows, cols, alpha, a, lda, b, ldb)); 
+BLAS_FN         (void,  dimatcopy, ( char* ORDER, char* TRANS, Int *rows, Int *cols, double *alpha, double *a, Int *lda, Int *ldb), \
+				(ORDER, TRANS, rows, cols, alpha, a, lda, ldb)); 
+
+#endif
 
 

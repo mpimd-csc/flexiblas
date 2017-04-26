@@ -165,6 +165,49 @@ IF (CBLAS STREQUAL ON)
 	SET (SRC ${SRC} ${CBLAS_SRC}) 
 ENDIF()
 
+IF (EXTBLAS STREQUAL ON ) 
+	ADD_DEFINITIONS(-DEXTBLAS_ENABLED)
+	SET (SRC ${SRC} 
+		ext_blas/daxpby.f
+		ext_blas/saxpby.f
+		ext_blas/caxpby.f
+		ext_blas/zaxpby.f
+		ext_blas/scabs1.f
+		ext_blas/dcabs1.f
+		ext_blas/domatcopy.c
+		ext_blas/somatcopy.c
+		ext_blas/comatcopy.c
+		ext_blas/zomatcopy.c
+		ext_blas/simatcopy.c
+		ext_blas/dimatcopy.c
+		ext_blas/cimatcopy.c
+		ext_blas/zimatcopy.c
+
+	) 
+	IF (CBLAS STREQUAL ON) 
+		SET (SRC ${SRC} 
+			ext_blas/cblas_daxpby.c
+			ext_blas/cblas_saxpby.c
+			ext_blas/cblas_caxpby.c
+			ext_blas/cblas_zaxpby.c
+			ext_blas/cblas_somatcopy.c
+			ext_blas/cblas_domatcopy.c
+			ext_blas/cblas_comatcopy.c
+			ext_blas/cblas_zomatcopy.c
+			ext_blas/cblas_simatcopy.c
+			ext_blas/cblas_dimatcopy.c
+			ext_blas/cblas_cimatcopy.c
+			ext_blas/cblas_zimatcopy.c
+
+
+
+			)
+	ENDIF()
+ENDIF ()
+
+
+
+
 INCLUDE_DIRECTORIES(${INCLUDE_DIR})
 add_library(flexiblas ${SRC})
 TARGET_LINK_LIBRARIES(flexiblas ${LIBS})
@@ -233,10 +276,12 @@ MACRO(Build_Extra_BLAS VENDOR)
 		UNSET(SCABS1_EXIST CACHE)
 		UNSET(ISFLEXIBLAS CACHE)
 		UNSET(DAXPY CACHE) 
+		UNSET(MKL_OMATCOPY CACHE)
 		UNSET(CBLAS_DAXPY CACHE) 
 		Check_Fortran_Function_Exists(SCABS1 SCABS1_EXIST)
 		Check_Function_Exists(flexiblas_exit ISFLEXIBLAS) 
 		Check_Fortran_Function_Exists(DAXPY  DAXPY)
+		Check_Fortran_Function_Exists(MKL_DOMATCOPY MKL_OMATCOPY)
 		Check_Function_Exists(cblas_daxpy  CBLAS_DAXPY)
 		SET(CMAKE_REQUIRED_LIBRARIES ${__CMAKE_REQUIRED_LIBRARIES})
 		IF(NOT DAXPY) 
@@ -261,6 +306,11 @@ MACRO(Build_Extra_BLAS VENDOR)
 					MESSAGE(STATUS "Add CBLAS in dummy library")
 					SET(EXTRA_FLAGS "${EXTRA_FLAGS} -DCBLAS_INTERFACE")
 				ENDIF()
+			ENDIF()
+
+			IF ( MKL_OMATCOPY ) 
+				MESSAGE(STATUS "BLAS ${ivendor}$ seem to be an Intel MKL") 
+				SET_TARGET_PROPERTIES(blas_${ivendor} PROPERTIES COMPILE_DEFINITIONS "MKL")
 			ENDIF()
 
 			SET_TARGET_PROPERTIES(blas_${ivendor} PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS}" LINK_FLAGS "${BLAS_LINKER_FLAGS}") 

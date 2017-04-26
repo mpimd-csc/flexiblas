@@ -8,8 +8,8 @@ int main ( int argc, char **argv ) {
 	printf("zdotc gnu\n");
 	double complex a[]={1+I,2+I,3,4}; 
 	double complex b[]={1,1,1,1}; 
-	int n = 4;
-	int one = 1; 
+	Int n = 4;
+	Int one = 1; 
 	double complex ret = 0, ret2 = 0; 
 
 #ifdef FLEXIBLAS_CBLAS

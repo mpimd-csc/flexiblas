@@ -23,10 +23,16 @@
 #include "cblas_f77.h"
 #include "../hooks.h"
 
+#ifdef __ELF__
+void internal_cblas_xerbla(int info, const char *rout, const char *form, ...); 
+void cblas_xerbla(int info, const char *, const char *, ...) __attribute__ ((weak, alias ("internal_cblas_xerbla")));
+void internal_cblas_xerbla(int info, const char *rout, const char *form, ...)
+#else
 void cblas_xerbla(int info, const char *rout, const char *form, ...)
+#endif
 {
    extern int RowMajorStrg;
-   // char empty[1] = "";
+   char empty[1] = "";
    va_list argptr;
 
    flexiblas_call_xerbla[POS_CBLAS]++; 
@@ -82,7 +88,31 @@ void cblas_xerbla(int info, const char *rout, const char *form, ...)
       fprintf(stderr, "Parameter %d to routine %s was incorrect\n", info, rout);
    vfprintf(stderr, form, argptr);
    va_end(argptr);
-   /* if (info && !info) 
-      F77_xerbla(empty, &info); |+ Force link of our F77 error handler +| */
-   exit(-1);
+   if (info && !info) 
+      xerbla_(empty, &info);
+}
+
+
+#ifdef __ELF__
+int  internal_cblas_errprn(int ierr, int info, const char *form, ...); 
+int  cblas_errprn(int ierr, int info, const char *, ...) __attribute__ ((weak, alias ("internal_cblas_errprn")));
+int  internal_cblas_errprn(int ierr, int info, const char *form, ...)
+#else
+int cblas_errprn(int err, int info,const char *form, ...)
+#endif
+{
+ 
+   va_list argptr;
+
+   va_start(argptr, form);
+#ifdef GCCWIN
+   vprintf(form, argptr);
+#else
+   vfprintf(stderr, form, argptr);
+#endif
+   va_end(argptr);
+   if ( ierr < info ) 
+	   return ierr; 
+   else 
+	   return info; 
 }

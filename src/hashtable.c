@@ -89,7 +89,7 @@ void flexiblas_hashtable_show( hashtable s){
     
     for( ix = 0; ix < s->size; ix++)
         {
-	printf( "%4d:", ix);
+	printf( "%4d:", (int) ix);
         for( e = s->hashtable[ix]; e; e = e->next)
             printf( " %s%c", (s->name)(e->obj), e->next ? ',' : '.');
         printf( "\n");
