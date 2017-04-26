@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -e
+
+if [ "$1" != "upgrade" ]
+then
+    update-alternatives --remove libblas.so.3 /usr/lib/@DEB_HOST_MULTIARCH@/flexiblas-profile/update-alternatives/libblas.so.3
+fi
+
+#DEBHELPER#
+
+exit 0

@@ -1,0 +1,6 @@
+usr/lib/*/libflexiblas.so.*
+usr/lib/*/flexiblas/update-alternatives/libblas.so.*
+usr/lib/*/flexiblas/*.so
+usr/bin/flexiblas
+etc/flexiblasrc 
+

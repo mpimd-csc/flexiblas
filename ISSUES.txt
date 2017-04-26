@@ -1,0 +1,26 @@
+Issues using FlexiBLAS 
+======================
+
+Last Update: Nov 20, 2013 
+
+Table of Contents 
+-----------------
+
+1. Profiling Numpy/Scipy with linked against FlexiBLAS 
+
+
+
+1. Profiling Numpy/Scipy with linked against FlexiBLAS 
+------------------------------------------------------
+Due to the default behaviour of Python to open C-API modules with LAZY and local
+binding, not all FlexiBLAS related symbols are integrated correctly in the
+current address space. The profiling will not count all function calls
+correctly. Many of them will be passed directly to the loaded backend bypassing
+the wrapper interface. Changing Python's default behaviour using
+sys.setdlopenflags may help in this case but it is not guaranteed. 
+
+Solution: Compile and link Numpy/SciPy and all related packages against
+fleixblas-profile and load flexiblas-profile again via LD_PRELOAD. 
+
+
+

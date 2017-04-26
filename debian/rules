@@ -1,0 +1,82 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+export LD_LIBRARY_PATH:=/usr/lib/openblas-base:/usr/lib/atlas-base:$(LD_LIBRARY_PATH) 
+CFLAGS=-g
+FFLAGS=-g
+F77CFLAGS=-g
+
+#override_dh_auto_configure:
+#	dh_auto_configure -- -DCMAKE_BUILD_TYPE=RelWithDebInfo -DTESTS=OFF 
+
+override_dh_auto_configure:
+	(cd debian; \
+	  for i in *.in; do\
+	  o=`basename $$i .in`;\
+	  sed 's/@DEB_HOST_MULTIARCH@/$(DEB_HOST_MULTIARCH)/g' "$$i" > "$$o"; \
+	  done ) 
+	
+	# do  sed 's/@DEB_HOST_MULTIARCH@/$(DEB_HOST_MULTIARCH)/g' "$$i" > `basename '$$i' .in`; done )
+
+	mkdir -p build-normal  && cd build-normal  && cmake ../ -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RelWithDebInfo -DTESTS=OFF  -DSYSCONFDIR=/etc -DCBLAS=ON -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_LIBDIR=/usr/lib/$(DEB_HOST_MULTIARCH)
+	mkdir -p build-profile && cd build-profile && cmake ../ -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RelWithDebInfo -DTESTS=OFF -DPROFILE=ON -DSYSCONFDIR=/etc -DCBLAS=ON -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_LIBDIR=/usr/lib/$(DEB_HOST_MULTIARCH)
+
+	
+override_dh_auto_build:
+	dh_auto_build --builddirectory build-normal
+	(cd build-normal/src \
+		&&  $(CC) -shared -o libflexiblas.so.0.1.0 -Wl,--whole-archive libflexiblas.a -Wl,--no-whole-archive -Wl,-soname,libflexiblas.so.0.1.0 -ldl -lc\
+		&&  ln -sf  libflexiblas.so.0.1.0  libflexiblas.so.1\
+		&&  ln -sf  libflexiblas.so.1  libflexiblas.so )
+	(cd build-normal/src \
+		&&  $(CC) -shared -o libblas.so.3 -Wl,--whole-archive libflexiblas.a -Wl,--no-whole-archive -Wl,-soname,libblas.so.3 -ldl -lc\
+		&& ln -sf libblas.so.3 libblas.so) 
+
+	dh_auto_build --builddirectory build-profile
+	(cd build-profile/src \
+		&&  $(CC) -shared -o libflexiblas-profile.so.0.1.0 -Wl,--whole-archive libflexiblas-profile.a -Wl,--no-whole-archive -Wl,-soname,libflexiblas-profile.so.0.1.0 -ldl -lc\
+		&&  ln -sf  libflexiblas-profile.so.0.1.0  libflexiblas-profile.so.1\
+		&&  ln -sf  libflexiblas-profile.so.1  libflexiblas-profile.so )
+	(cd build-profile/src \
+		&&  $(CC) -shared -o libblas.so.3 -Wl,--whole-archive libflexiblas-profile.a -Wl,--no-whole-archive -Wl,-soname,libblas.so.3 -ldl -lc\
+		&& ln -sf libblas.so.3 libblas.so) 
+
+override_dh_auto_install: debian/libflexiblas-dev.links debian/libflexiblas-profile-dev.links
+	dh_auto_install --builddirectory build-normal --destdir debian/tmp
+	chmod a+rx build-normal/src/libflexiblas.so.0.1.0
+	chmod a+rx build-normal/src/libblas.so.3
+	cp  -av build-normal/src/libflexiblas.so* debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)
+	mkdir -p debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/flexiblas/update-alternatives/
+	cp -av build-normal/src/libblas.so* debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/flexiblas/update-alternatives/
+
+	dh_auto_install --builddirectory build-profile --destdir debian/tmp
+	chmod a+rx build-profile/src/libflexiblas-profile.so.0.1.0
+	chmod a+rx build-profile/src/libblas.so.3
+	cp  -av build-profile/src/libflexiblas-profile.so* debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)
+	mkdir -p debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/flexiblas-profile/update-alternatives/
+	cp -av build-profile/src/libblas.so* debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/flexiblas-profile/update-alternatives/
+
+debian/%.links: debian/%.links.in 
+	sed 's/@DEB_HOST_MULTIARCH@/$(DEB_HOST_MULTIARCH)/g' $< > $@
+
+override_dh_auto_clean:
+	dh_auto_clean --builddirectory build-normal
+	dh_auto_clean --builddirectory build-profile
+	rm -f debian/*.links
+	rm -f debian/*.prerm
+	rm -f debian/*.postinst
+
+
+
+
+.PHONY: override_dh_strip
+
+override_dh_strip:
+	dh_strip -plibflexiblas --dbg-package=libflexiblas-dbg 
+#	dh_strip -plibflexiblas-profile --dbg-package=libflexiblas-profile-dbg
+
+
+%:
+	dh $@ 

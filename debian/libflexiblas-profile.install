@@ -1,0 +1,5 @@
+usr/lib/*/libflexiblas-profile.so.*
+usr/lib/*/flexiblas-profile/*.so
+usr/bin/flexiblas-profile
+usr/lib/*/flexiblas-profile/update-alternatives/libblas.so.* 
+etc/flexiblasrc-profile 

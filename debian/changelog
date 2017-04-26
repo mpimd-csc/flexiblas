@@ -1,0 +1,11 @@
+flexiblas (1.0.0) unstable; urgency=low
+
+  * Lift version to 1.0.0 
+
+ --  Martin Köhler <koehlerm@mpi-magdeburg.mpg.de>  Wed, 08 Jan 2014 10:36:45 +0100
+
+flexiblas (0.1.0) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Martin Köhler <koehlerm@mpi-magdeburg.mpg.de>  Wed, 11 Sep 2013 08:37:42 +0200

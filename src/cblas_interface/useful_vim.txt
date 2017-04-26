@@ -1,0 +1,5 @@
+s/const \|int \|float \|void \|\*\|\n\|enum \|CBLAS_ORDER \|CBLAS_TRANSPOSE \| //g | s/)/);\r/g
+s/flexiblas_time_\([a-z0-9]*\)\[1\]==0\.0/flexiblas_\1.call_cblas==NULL/g
+g/flexiblas_time_[a-z0-9]*\[1\]/ s/^\(.*\)$/#ifdef FLEXIBLAS_CBLAS\r\1\r#endif/g
+
+

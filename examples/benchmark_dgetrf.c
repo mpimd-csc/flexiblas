@@ -1,0 +1,61 @@
+#include <stdlib.h>
+#include <stdio.h>
+// #include "f77blas_interface.h"
+#include <unistd.h>
+#include <sys/time.h>
+
+
+#define RUNS 50
+void dgetrf_(int *n , int *m, double *A, int *lda, int *ipiv, int *info); 
+double wtime()
+{
+	struct timeval tv;
+	gettimeofday (&tv, NULL);
+	return tv.tv_sec + tv.tv_usec / 1e6;
+}
+
+
+int main (int argc, char **argv) {
+	int n, i,j; 
+	double *A;
+	double *B; 
+	int *ipiv; 
+	int info; 
+	double ts,te;
+	double flops; 
+	if ( argc != 2) {
+		printf("Usage: %s dim\n", argv[0]); 
+		exit(1); 
+	}
+	n = atoi(argv[1]); 
+	A = malloc(sizeof(double) * n *n ); 
+	B = malloc(sizeof(double) *n*n); 
+
+	ipiv = malloc(sizeof(int) * n ); 
+	for (i = 0; i < n; i++) {
+		for (j = 0; j < n; j++) {
+			A[i+j*n] = 1.0/(i+j+1); 
+		}
+	}
+		memcpy(B,A,sizeof(double)*n*n); 
+		dgetrf_(&n,&n, B, &n, ipiv, &info); 
+		memcpy(B,A,sizeof(double)*n*n); 
+		dgetrf_(&n,&n, B, &n, ipiv, &info); 
+
+	ts = wtime(); 
+	for (i=0; i < RUNS; i++){
+		memcpy(B,A,sizeof(double)*n*n); 
+		dgetrf_(&n,&n, B, &n, ipiv, &info); 
+	}
+	te = wtime(); 
+	double h = (double) n / 1000.0; 
+	flops = 2.0/3.0 * h *h *h;
+	flops /= (te-ts)/RUNS; 
+	printf("time: %lg\n", (te-ts)/RUNS);
+	printf("flops: %lg GFlop/s\n", flops );
+
+	free(A); 
+	free(ipiv); 
+	return 0; 
+}
+
