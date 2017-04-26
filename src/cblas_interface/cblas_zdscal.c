@@ -43,5 +43,5 @@ void cblas_zdscal( const int N, const double alpha, void *X,
 			   incX) = current_backend->blas.zdscal.call_cblas;
 	   fn(N,alpha,X,incX); if ( __flexiblas_profile ){ te =
 		   flexiblas_wtime(); current_backend->blas.zdscal.timings[POS_CBLAS] += (te -
-				   ts); } } else { F77_zdscal( &F77_N, &alpha,
+				   ts); } } else { FC_GLOBAL(zdscal,ZDSCAL)( &F77_N, &alpha,
 					   X, &F77_incX); } }

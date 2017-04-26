@@ -15,7 +15,7 @@
  * Copyright (C) Martin Koehler, 2015
  */
 
-
+#include <sys/types.h>
 
 #ifndef FLEXIBLAS_API_H
 #define FLEXIBLAS_API_H
@@ -31,14 +31,15 @@ extern "C" {
      *-----------------------------------------------------------------------------*/
     
     /* Print Information  */
+    extern int flexiblas_avail(void);
     extern void flexiblas_get_version(int *major, int *minor, int *patch);  
     extern void flexiblas_print_loaded_backends(FILE *fp); 
     extern void flexiblas_print_avail_backends(FILE *fp); 
     extern void flexiblas_print_current_backend(FILE* fp); 
     
     /* Handle Backends  */
-    extern int flexiblas_list(char *name, size_t len, int pos); 
-    extern int flexiblas_list_loaded(char *name, size_t len, int pos); 
+    extern ssize_t flexiblas_list(char *name, const size_t len, const ssize_t pos); 
+    extern ssize_t flexiblas_list_loaded(char *name, const size_t len, const ssize_t pos); 
     extern int flexiblas_load_backend(const char * name ); 
     extern int flexiblas_load_backend_library(const char *libname); 
     extern int flexiblas_switch(int id); 
@@ -57,16 +58,16 @@ extern "C" {
     extern void acmlsetnumthreads_(int* num); 
 
     /* Get number of threads  */
-    extern int flexiblas_get_num_threads(); 
-    extern int flexiblas_get_num_threads_(); 
-    extern int openblas_get_num_threads(); 
-    extern int openblas_get_num_threads_(); 
-    extern int mkl_get_num_threads(); 
-    extern int mkl_get_num_threads_(); 
-    extern int blas_get_num_threads(); 
-    extern int blas_get_num_threads_(); 
-    extern int acmlgetnumthreads(); 
-    extern int acmlgetnumthreads_(); 
+    extern int flexiblas_get_num_threads(void); 
+    extern int flexiblas_get_num_threads_(void); 
+    extern int openblas_get_num_threads(void); 
+    extern int openblas_get_num_threads_(void); 
+    extern int mkl_get_num_threads(void); 
+    extern int mkl_get_num_threads_(void); 
+    extern int blas_get_num_threads(void); 
+    extern int blas_get_num_threads_(void); 
+    extern int acmlgetnumthreads(void); 
+    extern int acmlgetnumthreads_(void); 
 
 
 #ifdef __cplusplus
@@ -74,3 +75,4 @@ extern "C" {
 #endif 
 
 #endif /* end of include guard: FLEXIBLAS_API_H */
+

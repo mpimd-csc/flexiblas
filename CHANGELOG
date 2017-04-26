@@ -1,3 +1,12 @@
+2.0.0 (March, 2017)
+-----------------
+- Fixed: Bug/Crash if default backend does not exist
+- New Benchmark Tool (AXPY,GEMM,GEMV unified, latency tests) 
+- Rewrite the FlexiBLAS tool to use a common management library. 
+- Include LAPACK Interface (Maximum API Level 3.7.0) 
+- Update CBLAS tests to current versions 
+- Many fixes and code rewrites 
+
 1.3.0 (November, 2015)
 ---------------------
 - Add s/d/c/z geadd function from ATLAS/OpenBLAS

@@ -45,7 +45,7 @@ void cblas_daxpy( const int N, const double alpha, const double *X,
 		   current_backend->blas.daxpy.timings[POS_CBLAS] += (te - ts); 
 	   }
    } else {
-   	F77_daxpy( &F77_N, &alpha, X, &F77_incX, Y, &F77_incY);
+   	FC_GLOBAL(daxpy,DAXPY)( &F77_N, &alpha, X, &F77_incX, Y, &F77_incY);
    }
    current_backend->blas.daxpy.calls[POS_CBLAS] ++;
 

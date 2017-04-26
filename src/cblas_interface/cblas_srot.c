@@ -49,7 +49,7 @@ void cblas_srot(const int N, float *X, const int incX,
 	   current_backend->blas.srot.timings[POS_CBLAS] += (te - ts); 
 	}
    } else {
-   	F77_srot(&F77_N, X, &F77_incX, Y, &F77_incY, &c, &s);
+   	FC_GLOBAL(srot,SROT)(&F77_N, X, &F77_incX, Y, &F77_incY, &c, &s);
    }
    return;
 }

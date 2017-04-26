@@ -41,12 +41,53 @@ struct flexiblas_blasfn {
 
 
 typedef void (*flexiblas_info_function_t)(flexiblas_info_t *); 
-typedef int (*flexiblas_init_function_t)(); 
-typedef void (*flexiblas_exit_function_t)(); 
+typedef int (*flexiblas_init_function_t)(void); 
+typedef void (*flexiblas_exit_function_t)(void); 
 typedef void (*flexiblas_set_num_threads_function_t)(int threads); 
-typedef int (*flexiblas_get_num_threads_function_t)();
-typedef int (*flexiblas_get_num_procs_function_t)();
+typedef int (*flexiblas_get_num_threads_function_t)(void);
+typedef int (*flexiblas_get_num_procs_function_t)(void);			// TODO is this procedure implemented yet, if so where and what EXACTLY does it return?
 
+#ifdef FLEXIBLAS_LAPACK 
+#ifdef FLEXIBLAS_LAPACK_3_7_0
+#include "lapack_interface/structures_lapack_3_7_0.h"
+#endif 
+#ifdef FLEXIBLAS_LAPACK_3_7_0_WODPRC
+#include "lapack_interface/structures_lapack_3_7_0-wodprc.h"
+#endif 
+
+#ifdef FLEXIBLAS_LAPACK_3_6_1
+#include "lapack_interface/structures_lapack_3_6_1.h"
+#endif 
+#ifdef FLEXIBLAS_LAPACK_3_6_1_WODPRC
+#include "lapack_interface/structures_lapack_3_6_1-wodprc.h"
+#endif 
+#ifdef FLEXIBLAS_LAPACK_3_6_0
+#include "lapack_interface/structures_lapack_3_6_0.h"
+#endif 
+#ifdef FLEXIBLAS_LAPACK_3_6_0_WODPRC
+#include "lapack_interface/structures_lapack_3_6_0-wodprc.h"
+#endif 
+#ifdef FLEXIBLAS_LAPACK_3_5_0
+#include "lapack_interface/structures_lapack_3_5_0.h"
+#endif 
+#ifdef FLEXIBLAS_LAPACK_3_4_2
+#include "lapack_interface/structures_lapack_3_4_2.h"
+#endif 
+#ifdef FLEXIBLAS_LAPACK_3_4_1
+#include "lapack_interface/structures_lapack_3_4_1.h"
+#endif 
+#ifdef FLEXIBLAS_LAPACK_3_4_0
+#include "lapack_interface/structures_lapack_3_4_0.h"
+#endif 
+#ifdef FLEXIBLAS_LAPACK_3_3_1
+#include "lapack_interface/structures_lapack_3_3_1.h"
+#endif 
+#ifdef FLEXIBLAS_LAPACK_3_3_0
+#include "lapack_interface/structures_lapack_3_3_0.h"
+#endif 
+
+
+#endif 
 
 typedef struct _flexiblas_blas_backend {
     struct flexiblas_blasfn caxpy;
@@ -238,6 +279,9 @@ typedef struct _flexiblas_backend_t {
     flexiblas_blas_backend_t    blas;
     flexiblas_extblas_backend_t extblas;
     struct flexiblas_blasfn xerbla; 
+#ifdef FLEXIBLAS_LAPACK
+    flexiblas_lapack_backend_t  lapack; 
+#endif 
 } flexiblas_backend_t;
 
 // extern flexiblas_backend_t *current_backend;

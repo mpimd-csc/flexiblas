@@ -49,6 +49,6 @@ void cblas_dswap( const int N, double *X, const int incX, double *Y,
 	   current_backend->blas.dswap.timings[POS_CBLAS] += (te - ts); 
 	}
    } else {
-	F77_dswap( &F77_N, X, &F77_incX, Y, &F77_incY);
+	FC_GLOBAL(dswap,DSWAP)( &F77_N, X, &F77_incX, Y, &F77_incY);
    }
 }

@@ -19,8 +19,8 @@
 #include "../flexiblas.h"
 
 
-void cblas_sgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA,
-		const enum CBLAS_TRANSPOSE TransB, const int M, const int N,
+void cblas_sgemm(const CBLAS_LAYOUT layout, const CBLAS_TRANSPOSE TransA,
+		const CBLAS_TRANSPOSE TransB, const int M, const int N,
 		const int K, const float alpha, const float  *A,
 		const int lda, const float  *B, const int ldb,
 		const float beta, float  *C, const int ldc)
@@ -52,13 +52,13 @@ void cblas_sgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA
 			ts = flexiblas_wtime(); 
 		}
 		void (*fn)
-			(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA,
-			 const enum CBLAS_TRANSPOSE TransB, const int M, const int N,
+			(const CBLAS_LAYOUT layout, const CBLAS_TRANSPOSE TransA,
+			 const CBLAS_TRANSPOSE TransB, const int M, const int N,
 			 const int K, const float alpha, const float  *A,
 			 const int lda, const float  *B, const int ldb,
 			 const float beta, float  *C, const int ldc) 
 			= current_backend->blas.sgemm.call_cblas;
-		fn(Order, TransA, TransB, M, N, K, alpha, A, lda, B, ldb, beta, C, ldc); 
+		fn(layout, TransA, TransB, M, N, K, alpha, A, lda, B, ldb, beta, C, ldc); 
 		if ( __flexiblas_profile ){
 			te = flexiblas_wtime(); 
 			current_backend->blas.sgemm.timings[POS_CBLAS] += (te - ts); 
@@ -70,7 +70,7 @@ void cblas_sgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA
 		RowMajorStrg = 0;
 		CBLAS_CallFromC = 1;
 
-		if( Order == CblasColMajor )
+		if( layout == CblasColMajor )
 		{
 			if(TransA == CblasTrans) TA='T';
 			else if ( TransA == CblasConjTrans ) TA='C';
@@ -95,8 +95,8 @@ void cblas_sgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA
 			}
 			// printf("M: %d N: %d K: %d\n", F77_M, F77_N, F77_K);
 
-			F77_sgemm(F77_TA, F77_TB, &F77_M, &F77_N, &F77_K, &alpha, A,  &F77_lda, B, &F77_ldb, &beta, C, &F77_ldc);
-		} else if (Order == CblasRowMajor)
+			FC_GLOBAL(sgemm,SGEMM)(F77_TA, F77_TB, &F77_M, &F77_N, &F77_K, &alpha, A,  &F77_lda, B, &F77_ldb, &beta, C, &F77_ldc);
+		} else if (layout == CblasRowMajor)
 		{
 			RowMajorStrg = 1;
 			if(TransA == CblasTrans) TB='T';
@@ -120,9 +120,9 @@ void cblas_sgemm(const enum CBLAS_ORDER Order, const enum CBLAS_TRANSPOSE TransA
 				return;
 			}
 			// printf("N: %d M: %d K: %d\n", F77_N, F77_M, F77_K);
-			F77_sgemm(F77_TA, F77_TB, &F77_N, &F77_M, &F77_K, &alpha, B,  &F77_ldb, A, &F77_lda, &beta, C, &F77_ldc);
+			FC_GLOBAL(sgemm,SGEMM)(F77_TA, F77_TB, &F77_N, &F77_M, &F77_K, &alpha, B,  &F77_ldb, A, &F77_lda, &beta, C, &F77_ldc);
 		} 
-		else  cblas_xerbla(1, "cblas_sgemm", "Illegal Order setting, %d\n", Order);
+		else  cblas_xerbla(1, "cblas_sgemm", "Illegal layout setting, %d\n", layout);
 		CBLAS_CallFromC = 0;
 		RowMajorStrg = 0;
 	}

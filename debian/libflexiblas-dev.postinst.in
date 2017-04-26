@@ -3,7 +3,9 @@
 set -e
 
 update-alternatives --install /usr/lib/libblas.so libblas.so /usr/lib/@DEB_HOST_MULTIARCH@/flexiblas/update-alternatives/libblas.so 50 \
-	--slave /usr/lib/libblas.a libblas.a /usr/lib/@DEB_HOST_MULTIARCH@/flexiblas/update-alternatives/libblas.a
+	--slave /usr/lib/libblas.a libblas.a /usr/lib/@DEB_HOST_MULTIARCH@/flexiblas/update-alternatives/libflexiblas.a
+update-alternatives --install /usr/lib/liblapack.so liblapack.so /usr/lib/@DEB_HOST_MULTIARCH@/flexiblas/update-alternatives/liblapack.so 50 \
+	--slave /usr/lib/liblapack.a liblapack.a /usr/lib/@DEB_HOST_MULTIARCH@/flexiblas/update-alternatives/libflexiblas.a
 
 
 # dh_installdeb will replace this with shell code automatically

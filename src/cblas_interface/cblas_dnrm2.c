@@ -46,7 +46,7 @@ double cblas_dnrm2( const int N, const double *X, const int incX)
 		   current_backend->blas.dnrm2.timings[POS_CBLAS] += (te - ts); 
 	   }
    } else {
-	nrm2 = F77_dnrm2( &F77_N, X, &F77_incX);
+	nrm2 = FC_GLOBAL(dnrm2,DNRM2)( &F77_N, X, &F77_incX);
    }
    return nrm2;
 }

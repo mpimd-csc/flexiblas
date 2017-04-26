@@ -19,7 +19,7 @@
 #include "../flexiblas.h"
 #include "../extblas.h"
 
-void cblas_dgeadd(const enum CBLAS_ORDER CORDER,  
+void cblas_dgeadd(const CBLAS_ORDER CORDER,  
 		     const int crows, const int ccols, const double calpha, double *a, const int clda, 
              const double cbeta, double *b, const int cldb)
 {
@@ -39,7 +39,7 @@ void cblas_dgeadd(const enum CBLAS_ORDER CORDER,
 	   if ( __flexiblas_profile ) {
 		   ts = flexiblas_wtime(); 
 	   }
-	   void (*fn)(const enum CBLAS_ORDER, const int, const int, const double, double *, const int, const double, double *, const int) 
+	   void (*fn)(const CBLAS_ORDER, const int, const int, const double, double *, const int, const double, double *, const int) 
             = current_backend->extblas.dgeadd.call_cblas;
 	   fn(CORDER, crows, ccols, calpha, a, clda, cbeta, b, cldb);  
 	   if ( __flexiblas_profile ){
@@ -62,7 +62,7 @@ void cblas_dgeadd(const enum CBLAS_ORDER CORDER,
            rows = cols; 
            cols = t; 
        }
-       F77_dgeadd( &rows, &cols, &calpha, a, &F77_LDA, &cbeta, b, &F77_LDB);
+       FC_GLOBAL(dgeadd,DGEADD)( &rows, &cols, &calpha, a, &F77_LDA, &cbeta, b, &F77_LDB);
    }
    current_backend->extblas.dgeadd.calls[POS_CBLAS] ++;
 } 

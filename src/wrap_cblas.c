@@ -32,7 +32,7 @@
 
 
 
-int __flexiblas_load_cblas(flexiblas_backend_t *backend) 
+HIDDEN int __flexiblas_load_cblas(flexiblas_backend_t *backend) 
 {
 
 	/*-----------------------------------------------------------------------------

@@ -19,8 +19,8 @@
 #include "../flexiblas.h"
 
 
-void cblas_dspmv(const enum CBLAS_ORDER order,
-                 const enum CBLAS_UPLO Uplo, const int N,
+void cblas_dspmv(const CBLAS_LAYOUT layout,
+                 const CBLAS_UPLO Uplo, const int N,
                  const double alpha, const double  *AP,
                  const double  *X, const int incX, const double beta,
                  double  *Y, const int incY)
@@ -50,13 +50,13 @@ void cblas_dspmv(const enum CBLAS_ORDER order,
 		   ts = flexiblas_wtime(); 
 	   }
 	   void (*fn)
-		 (const enum CBLAS_ORDER order,
-                 const enum CBLAS_UPLO Uplo, const int N,
+		 (const CBLAS_LAYOUT layout,
+                 const CBLAS_UPLO Uplo, const int N,
                  const double alpha, const double  *AP,
                  const double  *X, const int incX, const double beta,
                  double  *Y, const int incY)
 		   = current_backend->blas.dspmv.call_cblas;
-	fn(order,Uplo,N,alpha,AP,X,incX,beta,Y,incY);
+	fn(layout,Uplo,N,alpha,AP,X,incX,beta,Y,incY);
 	   if ( __flexiblas_profile ){
 		   te = flexiblas_wtime(); 
 		   current_backend->blas.dspmv.timings[POS_CBLAS] += (te - ts); 
@@ -67,7 +67,7 @@ void cblas_dspmv(const enum CBLAS_ORDER order,
 	   RowMajorStrg = 0;
 
 	   CBLAS_CallFromC = 1;
-	   if (order == CblasColMajor)
+	   if (layout == CblasColMajor)
 	   {
 	      if (Uplo == CblasUpper) UL = 'U';
 	      else if (Uplo == CblasLower) UL = 'L';
@@ -81,10 +81,10 @@ void cblas_dspmv(const enum CBLAS_ORDER order,
 	      #ifdef F77_CHAR
 		 F77_UL = C2F_CHAR(&UL);
 	      #endif
-	      F77_dspmv(F77_UL, &F77_N, &alpha, AP, X,  
+	      FC_GLOBAL(dspmv,DSPMV)(F77_UL, &F77_N, &alpha, AP, X,  
 			     &F77_incX, &beta, Y, &F77_incY);
 	   }
-	   else if (order == CblasRowMajor)
+	   else if (layout == CblasRowMajor)
 	   {
 	      RowMajorStrg = 1;
 	      if (Uplo == CblasUpper) UL = 'L';
@@ -99,10 +99,10 @@ void cblas_dspmv(const enum CBLAS_ORDER order,
 	      #ifdef F77_CHAR
 		 F77_UL = C2F_CHAR(&UL);
 	      #endif
-	      F77_dspmv(F77_UL, &F77_N, &alpha, 
+	      FC_GLOBAL(dspmv,DSPMV)(F77_UL, &F77_N, &alpha, 
 			     AP, X,&F77_incX, &beta, Y, &F77_incY);
 	   }
-	   else cblas_xerbla(1, "cblas_dspmv", "Illegal Order setting, %d\n", order);
+	   else cblas_xerbla(1, "cblas_dspmv", "Illegal layout setting, %d\n", layout);
 	   CBLAS_CallFromC = 0;
 	   RowMajorStrg = 0;
    }

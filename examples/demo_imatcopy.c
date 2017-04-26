@@ -1,16 +1,28 @@
-/* $Id$ */
-/**
- * @file demo_omatcopy.c
- * @brief Demonstrate OMATCOPY
- * @version $Id$ 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright (C) Martin Koehler, 2016
  */
+
+
+
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <complex.h>
-
+#include "fortran_mangle.h"
 #ifdef INTEGER8
 #define Int int64_t
 #define USE_BLAS_64
@@ -48,7 +60,7 @@ int main(int argc, const char *argv[])
 
 		printf("Single\n");
 		/* OMATCOPY_2N */
-		simatcopy_("C", "N", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(simatcopy,SIMATCOPY)("C", "N", &rows, &cols, &alpha, col_A, &lda, &ldb); 
 		printf("IMATCOPY_2N\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -57,7 +69,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2R */
-		simatcopy_("C", "R", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(simatcopy,SIMATCOPY)("C", "R", &rows, &cols, &alpha, col_A, &lda, &ldb); 
 		printf("IMATCOPY_2R\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -66,7 +78,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2T */
-		simatcopy_("C", "T", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(simatcopy,SIMATCOPY)("C", "T", &rows, &cols, &alpha, col_A, &lda, &ldb); 
 		printf("OMATCOPY_2T\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -75,7 +87,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2C */
-		simatcopy_("C", "C", &rows, &cols, &alpha, col_A, &lda,&ldb); 
+		FC_GLOBAL(simatcopy,SIMATCOPY)("C", "C", &rows, &cols, &alpha, col_A, &lda,&ldb); 
 		printf("OMATCOPY_2C\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -100,7 +112,7 @@ int main(int argc, const char *argv[])
 
 		printf("Double\n");
 		/* OMATCOPY_2N */
-		dimatcopy_("C", "N", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(dimatcopy,DIMATCOPY)("C", "N", &rows, &cols, &alpha, col_A, &lda, &ldb); 
 		printf("OMATCOPY_2N\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -109,7 +121,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2R */
-		dimatcopy_("C", "R", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(dimatcopy,DIMATCOPY)("C", "R", &rows, &cols, &alpha, col_A, &lda, &ldb); 
 		printf("OMATCOPY_2R\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -118,7 +130,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2T */
-		dimatcopy_("C", "T", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(dimatcopy,DIMATCOPY)("C", "T", &rows, &cols, &alpha, col_A, &lda, &ldb); 
 		printf("OMATCOPY_2T\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -127,7 +139,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2C */
-		dimatcopy_("C", "C", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(dimatcopy,DIMATCOPY)("C", "C", &rows, &cols, &alpha, col_A, &lda, &ldb); 
 		printf("OMATCOPY_2C\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -153,7 +165,7 @@ int main(int argc, const char *argv[])
 
 		printf("Single\n");
 		/* OMATCOPY_2N */
-		cimatcopy_("C", "N", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(cimatcopy,CIMATCOPY)("C", "N", &rows, &cols, &alpha, col_A, &lda, &ldb); 
 		printf("IMATCOPY_2N\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -162,7 +174,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2R */
-		cimatcopy_("C", "R", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(cimatcopy,CIMATCOPY)("C", "R", &rows, &cols, &alpha, col_A, &lda, &ldb); 
 		printf("IMATCOPY_2R\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -171,7 +183,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2T */
-		cimatcopy_("C", "T", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(cimatcopy,CIMATCOPY)("C", "T", &rows, &cols, &alpha, col_A, &lda, &ldb); 
 		printf("OMATCOPY_2T\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -180,7 +192,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2C */
-		cimatcopy_("C", "C", &rows, &cols, &alpha, col_A, &lda,&ldb); 
+		FC_GLOBAL(cimatcopy,CIMATCOPY)("C", "C", &rows, &cols, &alpha, col_A, &lda,&ldb); 
 		printf("OMATCOPY_2C\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -205,7 +217,7 @@ int main(int argc, const char *argv[])
 
 		printf("Double\n");
 		/* OMATCOPY_2N */
-		zimatcopy_("C", "N", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(zimatcopy,ZIMATCOPY)("C", "N", &rows, &cols, &alpha, col_A, &lda, &ldb); 
 		printf("OMATCOPY_2N\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -214,7 +226,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2R */
-		zimatcopy_("C", "R", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(zimatcopy,ZIMATCOPY)("C", "R", &rows, &cols, &alpha, col_A, &lda, &ldb); 
 		printf("OMATCOPY_2R\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -223,7 +235,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2T */
-		zimatcopy_("C", "T", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(zimatcopy,ZIMATCOPY)("C", "T", &rows, &cols, &alpha, col_A, &lda, &ldb); 
 		printf("OMATCOPY_2T\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -232,7 +244,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2C */
-		zimatcopy_("C", "C", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(zimatcopy,ZIMATCOPY)("C", "C", &rows, &cols, &alpha, col_A, &lda, &ldb); 
 		printf("OMATCOPY_2C\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {

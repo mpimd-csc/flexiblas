@@ -49,6 +49,6 @@ void cblas_caxpy( const int N, const void *alpha, const void *X,
 		current_backend->blas.caxpy.timings[POS_CBLAS] += (te - ts); 
 	   }
    } else {
-	F77_caxpy( &F77_N, alpha, X, &F77_incX, Y, &F77_incY);
+	FC_GLOBAL(caxpy,CAXPY)( &F77_N, alpha, X, &F77_incX, Y, &F77_incY);
    }
 } 

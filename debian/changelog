@@ -1,3 +1,14 @@
+flexiblas (2.0.0) unstable; urgency=medium
+
+  * Fixed: Bug/Crash if default backend does not exist
+  * New Benchmark Tool (AXPY,GEMM,GEMV unified, latency tests) 
+  * Rewrite the FlexiBLAS tool to use a common management library. 
+  * Include LAPACK Interface (Maximum API Level 3.7.0) 
+  * Update CBLAS tests to current versions 
+  * Many fixes and code rewrites 
+
+ -- Martin Köhler <koehlerm@mpi-magdeburg.mpg.de>  Fri, 26 Feb 2016 16:31:56 +0100
+
 flexiblas (1.3.0) unstable; urgency=low
 
   * Add s/d/c/z geadd function from ATLAS/OpenBLAS

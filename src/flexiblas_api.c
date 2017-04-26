@@ -19,9 +19,17 @@
 
 #include "flexiblas.h"
 #include "flexiblas_api.h"
-
+#include "flexiblas_mgmt.h"
 #include <errno.h>
 
+
+/*-----------------------------------------------------------------------------
+ *  Check if flexiblas is available. True in case if built-in is used 
+ *-----------------------------------------------------------------------------*/
+int flexiblas_avail()
+{
+    return 1; 
+}
 
 
 
@@ -43,9 +51,9 @@ void flexiblas_get_version(int *major, int *minor, int *patch)
  *-----------------------------------------------------------------------------*/
 void flexiblas_print_loaded_backends(FILE *fp) 
 {
-    int i; 
+    size_t i; 
     for (i = 0; i < nloaded_backends; i++) {
-        fprintf(fp, "%2d - %s\n", i, loaded_backends[i]->name);
+        fprintf(fp, "%2zu - %s\n", i, loaded_backends[i]->name);
     }
     return; 
 }
@@ -56,21 +64,26 @@ void flexiblas_print_loaded_backends(FILE *fp)
  *-----------------------------------------------------------------------------*/
 void flexiblas_print_avail_backends(FILE *fp) 
 {
-	csc_ini_iterator_t iter = NULL;
-	csc_ini_iterator_t kv_iter = NULL;
-	csc_ini_section_t  *sec;
-	csc_ini_kvstore_t  *kv;
+    void *iter_helper = NULL;
+    char blas_name[FLEXIBLAS_MGMT_MAX_BUFFER_LEN];
+    char library_name[FLEXIBLAS_MGMT_MAX_BUFFER_LEN];
+    char comment[FLEXIBLAS_MGMT_MAX_BUFFER_LEN];
+    int i = 0;
+    flexiblas_mgmt_location_t loc;
 
-	while ((sec = csc_ini_section_iterator(&__flexiblas_config , &iter)) != NULL ){
-        if ( csc_ini_getsectionname(sec) == NULL) continue; 
-		fprintf(fp, "%20s - ", csc_ini_getsectionname(sec));
-		kv_iter = NULL;
-		while ( (kv = csc_ini_kvstore_iterator(sec, &kv_iter)) != NULL) {
-            if (strcmp(csc_ini_getkey(kv), "library") == 0 ) {
-                fprintf(fp, "%s\n", csc_ini_getvalue(kv));
-            }
-		}
-	}
+    for (i = 0; i < 3; i++) {
+        if (i == 0) 
+            loc = FLEXIBLAS_HOST;
+        else if (i == 1) 
+            loc = FLEXIBLAS_USER;
+        else if (i == 2) 
+            loc = FLEXIBLAS_GLOBAL;
+
+        iter_helper = NULL;
+        while ( flexiblas_mgmt_list_blas(__flexiblas_mgmt, loc,  blas_name, library_name, comment, &iter_helper) > 0){
+	    	fprintf(fp, "%20s - %s\n", blas_name, library_name);
+	    }
+    }
     return; 
 }
 
@@ -99,10 +112,12 @@ int flexiblas_current_backend(char *name, size_t len)
  *-----------------------------------------------------------------------------*/
 int flexiblas_switch(int id) 
 {
+    size_t iid;
     if ( id < 0 ) return -1; 
-    if ( id >= nloaded_backends) return -1; 
+    iid = (size_t) id;
+    if ( iid >= nloaded_backends) return -1; 
     
-    current_backend = loaded_backends[id]; 
+    current_backend = loaded_backends[iid]; 
     return 0; 
 }
 
@@ -110,70 +125,54 @@ int flexiblas_switch(int id)
 /*-----------------------------------------------------------------------------
  *  List all available backends 
  *-----------------------------------------------------------------------------*/
-int flexiblas_list(char *name, size_t len, int pos) 
+ssize_t flexiblas_list(char *name, const size_t len, const ssize_t pos) 
 {
-	csc_ini_iterator_t iter = NULL;
-	csc_ini_section_t  *sec;
-
     /* Return number of backends */
     if (name == NULL) {
-        int count = 0; 
-    	while ((sec = csc_ini_section_iterator(&__flexiblas_config , &iter)) != NULL ){
-            if ( csc_ini_getsectionname(sec) == NULL) continue; 
-            count++; 
-        }
-        return count; 
+        return __flexiblas_mgmt->nblas_names;
     }
- 
-    if ( pos == -1 ) {
-        char *dm = NULL; 
+     
+    if (pos == -1) {
+
         /* Return the default name  */
-        if ( csc_ini_getstring(&__flexiblas_config, CSC_INI_DEFAULT_SECTION,"default", &dm) == CSC_INI_SUCCESS){
-            strncpy(name, dm, len); 
-            name[len-1] = '\0'; 
-            len = strlen(name);            
-        } else {
-            strncpy(name, "", len); 
-            name[len-1] = '\0'; 
-            len = strlen(name);            
-        }
+        flexiblas_mgmt_location_t loc;
+        char dm[FLEXIBLAS_MGMT_MAX_BUFFER_LEN]; 
+        flexiblas_mgmt_get_active_default(__flexiblas_mgmt, &loc, dm);
+        strncpy(name, dm, len);
+        name[len-1] = '\0'; 
+        return (ssize_t)strlen(name);
     } else {
-        /* Return the BLAS-Name */
-        int count = 0 ; 
-     	while ((sec = csc_ini_section_iterator(&__flexiblas_config , &iter)) != NULL ){
-            if ( csc_ini_getsectionname(sec) == NULL) continue; 
-            if ( count == pos ) {
-                strncpy(name, csc_ini_getsectionname(sec), len); 
-                name[len-1] = '\0'; 
-                len = strlen(name);         
-                break; 
-            }
-            count ++; 
+        if ((size_t)pos >=  __flexiblas_mgmt->nblas_names) {
+            name[0] = '\0'; 
+            return -1;
         }
-        if ( count > pos ) 
-            len = -1; 
+
+        strncpy(name, __flexiblas_mgmt->blas_names[pos], len);
+        name[len-1] = '\0';
+        return (ssize_t)strlen(name);
     }
-    return len; 
 }
 
-/*-----------------------------------------------------------------------------
+/*----------------------------------------------------------------------------
  *  List all available backends 
- *-----------------------------------------------------------------------------*/
-int flexiblas_list_loaded(char *name, size_t len, int pos) 
+ *----------------------------------------------------------------------------*/
+ssize_t flexiblas_list_loaded(char *name, const size_t len, const ssize_t pos) 
 {
     /* Return number of backends */
     if (name == NULL) {
-        return nloaded_backends; 
+        return (ssize_t)nloaded_backends; 
     }
- 
-    if (pos < 0 ) 
-        return -1; 
-    if (pos >= nloaded_backends) 
-        return -1; 
 
-    strncpy(name, loaded_backends[pos]->name, len); 
-    name[len-1]='\0'; 
-    len = strlen(name); 
-    return len; 
+    if (pos == -1) {
+        return -1;
+    } else {
+        if ((size_t)pos >= nloaded_backends) {
+           return -1;
+        }
+
+        strncpy(name, loaded_backends[pos]->name, len); 
+        name[len-1]='\0'; 
+        return (ssize_t)strlen(name);
+    }
 }
 

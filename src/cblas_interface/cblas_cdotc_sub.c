@@ -53,10 +53,10 @@ void cblas_cdotc_sub( const int N, const void *X, const int incX,
 	   }
    } else {
 	float complex d; 
-#ifdef USE_INTERFACE_INTEL 
-	F77_cdotc( &d, &F77_N, X, &F77_incX, Y, &F77_incY);
+#ifdef FLEXIBLAS_ABI_INTEL
+	FC_GLOBAL(cdotc,CDOTC)( &d, &F77_N, X, &F77_incX, Y, &F77_incY);
 #else 
-	d = F77_cdotc( &F77_N, X, &F77_incX, Y, &F77_incY);
+	d = FC_GLOBAL(cdotc,CDOTC)( &F77_N, X, &F77_incX, Y, &F77_incY);
 #endif
 	*((float complex *) dotc) = d; 
    }

@@ -12,17 +12,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2015
+ * Copyright (C) Martin Koehler, 2013-2016
  */
 
-
-
-
-#include "flexiblas.h"
-#ifdef __WIN32__
-#define strtok_r strtok_s
-#endif 
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <errno.h>
@@ -34,8 +29,9 @@
 
 #include <getopt.h>
 
-#define USER_CONFIG 1 
-#define GLOBAL_CONFIG 2 
+
+
+#include "flexiblas.h"
 
 #define TODO_HELP 1 
 #define TODO_LIST 2 
@@ -52,7 +48,7 @@ typedef enum {
 
 typedef struct _properties_t {
 	char *name;
-	char *def_str; 
+    flexiblas_mgmt_property_t e_prop;
 	prop_type_t type; 
 } properties_t;
 
@@ -76,45 +72,15 @@ static int is_valid_int(const char *str)
 	return 1;
 }
 
-static int is_valid_bool ( const char * str ) {
-	if ( str == NULL ) return 0; 
-	if ( str[0]=='0' || str[0] == '1') return 1; 
-	return 0; 
-}
-
 char **  __flexiblas_additional_paths = NULL;
 int __flexiblas_count_additional_paths = 0; 
 
 properties_t properties[] =  {
-	{ "verbose", "0", PROP_INT }, 
-	{ "profile", "0", PROP_BOOL },
-	{ "profile_file", "stdout", PROP_STRING},
-	{ NULL, NULL,  PROP_INT} 
+	{ "verbose", FLEXIBLAS_PROP_VERBOSE, PROP_INT }, 
+	{ "profile", FLEXIBLAS_PROP_PROFILE, PROP_BOOL },
+	{ "profile_file", FLEXIBLAS_PROP_PROFILE_FILE, PROP_STRING},
+	{ NULL, FLEXIBLAS_PROP_VERBOSE,  PROP_INT} 
 }; 
-
-
-static void init_default_search_path() {
-	char searchpath[] = FLEXIBLAS_DEFAULT_LIB_PATH;
-	char *path;
-	char *r; 
-
-	path = strtok_r(searchpath,":", &r);
-	while ( path != NULL ) {
-		__flexiblas_add_path(path);	
-		path = strtok_r(NULL, ":",&r);
-	}
-}
-
-static char *uppercase(char *str) {
-	char *ret = str; 
-	if ( str == NULL ) return NULL; 
-	while (*str != '\0') {
-		*str = toupper(*str); 
-		str++; 		
-	}
-	return ret; 
-}
-
 
 
 
@@ -133,7 +99,7 @@ static void print_usage(const char *prgmname) {
 	printf("                              or in the system wide config\n");
 	printf("  <options> default           Removes the default setting from ~/.flexiblasrc\n");
 	printf("                              or frome system wide config\n");
-	printf("  <options> add NAME sharedlibrary.so <\"comment string\"> <ILP64>\n");
+	printf("  <options> add NAME sharedlibrary.so <\"comment string\"> \n");
 	printf("                              Add a new BLAS backend called \"NAME\"\n");
     printf("                              to the configuration. \n");
 	printf("  <options> remove NAME       Removes a BLAS backed called \"NAME\" \n");
@@ -148,6 +114,7 @@ static void print_usage(const char *prgmname) {
     printf("                 (default, except of root).\n");
 	printf(" -g, --global    Edit the global flexiblasrc configuration\n"); 
     printf("                 default in case of root).\n");
+    printf(" -H, --host      Edit the host's flexiblasrc configuration\n");
 	printf(" -h, --help      Print this information and exit.\n");
 	printf(" -v, --version   Print the versionformation and exit.\n");
 	printf("\n");
@@ -165,381 +132,211 @@ static void print_usage(const char *prgmname) {
 }
 
 
-static void list_blas(csc_ini_file_t *config) {
-	csc_ini_iterator_t sec_iterator = NULL; 
-	csc_ini_section_t  *sec; 
-	char *sec_name; 
-	char *tmp = NULL;
-	int ilp64 = 0;
+static void list_blas(flexiblas_mgmt_t *config, flexiblas_mgmt_location_t loc) {
+    void *iter_helper;
+    char blas_name[FLEXIBLAS_MGMT_MAX_BUFFER_LEN];
+    char library_name[FLEXIBLAS_MGMT_MAX_BUFFER_LEN];
+    char comment[FLEXIBLAS_MGMT_MAX_BUFFER_LEN];
 
-	while ((sec = csc_ini_section_iterator(config, &sec_iterator)) != NULL ) {
-		if ( (sec_name = csc_ini_getsectionname(sec)) == CSC_INI_DEFAULT_SECTION) continue; 
-		printf(" %s\n", sec_name);
-		if ( (csc_ini_section_getstring(sec, "library", &tmp) != CSC_INI_SUCCESS) ) {
-			printf("   not usable, library not set.\n");
-		} else {
-			printf("   library = %s\n", tmp);
+    if ( config == NULL) return;
+    
+    iter_helper = NULL;
+    while ( flexiblas_mgmt_list_blas(config, loc,  blas_name, library_name, comment, &iter_helper) > 0)
+    {
+		printf(" %s\n", blas_name);
+        if (strlen(library_name) == 0) {
+    			printf("   not usable, library not set.\n");
+        }  else {
+			printf("   library = %s\n", library_name);
 		}
-		if ( csc_ini_section_getstring(sec, "comment", &tmp) == CSC_INI_SUCCESS ) {
-			printf("   comment = %s\n", tmp);
-		}
-#if 0
-        /* Reenable in Version 1.4.   */
-		if ( csc_ini_section_getinteger(sec, "ilp64", &ilp64) == CSC_INI_SUCCESS) {
-			printf("   ilp64   = %d ( %d byte integers )\n", ilp64, (int)(ilp64?sizeof(int64_t):sizeof(int32_t)));
-		} else {
-			printf("   ilp64   = -  Information provided by the backend if not: assuming 4 byte integers.\n");
-		}
-#endif 
-		printf("\n"); 
-	}
+		printf("   comment = %s\n", comment);
+    }
+	
 	return; 
 }
 
-static void list_path(csc_ini_file_t *config) {
-	csc_ini_section_t *sec; 
-	csc_ini_iterator_t iter = NULL; 
-	csc_ini_kvstore_t  *kv; 
+static void list_path(flexiblas_mgmt_t *config, flexiblas_mgmt_location_t loc) {
+    char path[FLEXIBLAS_MGMT_MAX_BUFFER_LEN];
+    void * iter_helper = NULL;
+    memset(path, 0, FLEXIBLAS_MGMT_MAX_BUFFER_LEN);
 
-	sec = csc_ini_getsection(config, CSC_INI_DEFAULT_SECTION); 
-
-	while ( (kv = csc_ini_kvstore_iterator(sec, &iter)) != NULL ) {
-		char *key = csc_ini_getkey(kv); 
-		if ( key[0] == 'p' && key[1]=='a' && key[2]=='t' && key[3] == 'h'){
-			printf("   %s\n", csc_ini_getvalue(kv)); 
-		}
-	}
+    if ( config == NULL) return;
+    
+    iter_helper = NULL;
+    while ( flexiblas_mgmt_list_paths(config, loc, path, &iter_helper) > 0)
+    {
+	    if ( strlen(path) > 0 ) 		printf("   %s\n", path); 
+    }
 }
 
 static void print_config() {
-	int i; 
-	char * system_config_file, *user_config_file; 
-	csc_ini_file_t config_system; 
-	csc_ini_file_t config_user; 
-	char *default_system; 
-	char *default_user; 
-	int pos = 0; 
-
-	__flexiblas_print_copyright(0); 
-	printf("\n");
-	csc_ini_empty(&config_user); 
-	csc_ini_empty(&config_system); 
-
-	init_default_search_path(); 
-
-	/* Load Configs  */
-	system_config_file  = __flexiblas_getenv(FLEXIBLAS_ENV_GLOBAL_RC);
-	user_config_file = __flexiblas_getenv(FLEXIBLAS_ENV_USER_RC);
-
-	if ( csc_ini_load(system_config_file, &config_system, CSC_INI_LOAD_SECTION_UPPERCASE) != CSC_INI_SUCCESS) {
-		printf("Global config  %s does not exists.\n", system_config_file);
-		printf("\n");
-	}
-	if ( csc_ini_load(user_config_file, &config_user, CSC_INI_LOAD_SECTION_UPPERCASE) != CSC_INI_SUCCESS) {
-		printf("User config  %s does not exist\n", user_config_file);
-		printf("\n");
-	}
-
-	printf("System-wide BLAS backends:\n");
-	list_blas(&config_system); 
+	char * system_config_file, *user_config_file, *host_config_file;
+    flexiblas_mgmt_t *config;
+	char default_system[FLEXIBLAS_MGMT_MAX_BUFFER_LEN], default_user[FLEXIBLAS_MGMT_MAX_BUFFER_LEN];
+    char default_host[FLEXIBLAS_MGMT_MAX_BUFFER_LEN];
+    char paths[FLEXIBLAS_MGMT_MAX_BUFFER_LEN];
+    void *path_tmp;
+    flexiblas_mgmt_location_t loc;
+	
+    __flexiblas_print_copyright(0); 
 	printf("\n");
 	
-	printf("User defiled BLAS backends:\n");
-	list_blas(&config_user); 
+
+	/* Load Configs  */
+	system_config_file  = flexiblas_mgmt_location(FLEXIBLAS_GLOBAL);
+	user_config_file = flexiblas_mgmt_location(FLEXIBLAS_USER);
+    host_config_file = flexiblas_mgmt_location(FLEXIBLAS_HOST);
+    config = flexiblas_mgmt_load_config();
+
+
+    /*-----------------------------------------------------------------------------
+     *  List BLAS
+     *-----------------------------------------------------------------------------*/
+
+	printf("System-wide BLAS backends (%s):\n", system_config_file);
+	list_blas(config, FLEXIBLAS_GLOBAL); 
+	printf("\n");
+	
+	printf("User defined BLAS backends (%s):\n", user_config_file);
+	list_blas(config, FLEXIBLAS_USER); 
+	printf("\n");
+
+    printf("User defined BLAS backends per Host (%s):\n", host_config_file);
+	list_blas(config, FLEXIBLAS_HOST); 
 	printf("\n");
 
 	printf("Additional library paths:\n");
-	for ( i = 0; i < __flexiblas_count_additional_paths; i++){
-		printf("   %s\n", __flexiblas_additional_paths[i]);
+    path_tmp = NULL;
+    while (flexiblas_mgmt_list_default_paths(paths, &path_tmp) > 0){
+		printf("   %s\n", paths);
 	}
-	list_path(&config_system); 
-	list_path(&config_user); 
+	list_path(config, FLEXIBLAS_GLOBAL); 
+	list_path(config, FLEXIBLAS_USER); 
+    list_path(config, FLEXIBLAS_HOST);
 
 	printf("\n");
-	csc_ini_getstring(&config_user, CSC_INI_DEFAULT_SECTION, "default", &default_user); 
-	csc_ini_getstring(&config_system, CSC_INI_DEFAULT_SECTION, "default", &default_system); 
+
+    flexiblas_mgmt_get_default(config, FLEXIBLAS_GLOBAL, default_system);
+    flexiblas_mgmt_get_default(config, FLEXIBLAS_USER, default_user);
+    flexiblas_mgmt_get_default(config, FLEXIBLAS_HOST, default_host);
 
 	printf("Default BLAS:\n");
-	if ( default_system == NULL && default_user == NULL ) {
-		printf("   No default BLAS set. Using NETLIB as fallback.\n");
-	} else if ( default_user == NULL ) {
-		printf("   System wide BLAS default: %s\n", default_system);
-	} else if ( default_system == NULL ) {
-		printf("   User BLAS default: %s\n", default_user);
-	} else {
-		printf("   System wide BLAS default: %s\n", default_system);
-		printf("   ... replaced by User BLAS default: %s\n", default_user);
-	}
-	printf("\n");
+    printf("    System: %s\n", default_system);
+    printf("    User:   %s\n", default_user);
+    printf("    Host:   %s\n", default_host);
+
+    flexiblas_mgmt_get_active_default(config, &loc, default_system);
+    printf("    Active Default: %s (%s)\n", default_system, flexiblas_mgmt_location_to_string(loc));
+
+    /* Properties  */
 	printf("Runtime properties:\n");
-	pos = 0; 
-	while ( properties[pos].name != NULL ) {
-		csc_ini_getstring(&config_system, CSC_INI_DEFAULT_SECTION, properties[pos].name, &default_system); 
-		csc_ini_getstring(&config_user,   CSC_INI_DEFAULT_SECTION, properties[pos].name, &default_user); 
+    int prop_verbose, prop_profile;
+    char profile_file[FLEXIBLAS_MGMT_MAX_BUFFER_LEN];
 
-		if ( default_user != NULL ) {
-			printf("   %s = %s\n", properties[pos].name, default_user);
-		} else if ( default_system != NULL ) {
-			printf("   %s = %s\n", properties[pos].name, default_system);
-		} else {
-			printf("   %s = %s\n", properties[pos].name, properties[pos].def_str);
-		}
-		pos ++; 
-	}
-	
+    flexiblas_mgmt_get_active_property(config, &loc, FLEXIBLAS_PROP_VERBOSE, &prop_verbose);
+    printf("   verbose = %d (%s) \n", prop_verbose, flexiblas_mgmt_location_to_string(loc));
+    flexiblas_mgmt_get_active_property(config, &loc, FLEXIBLAS_PROP_PROFILE, &prop_profile);
+    printf("   profile = %d (%s) \n", prop_profile, flexiblas_mgmt_location_to_string(loc));
+    flexiblas_mgmt_get_active_property(config, &loc, FLEXIBLAS_PROP_PROFILE_FILE, &profile_file);
+    printf("   profile_file = %d (%s) \n", prop_profile, flexiblas_mgmt_location_to_string(loc));
 
-	csc_ini_free(&config_system); 
-	csc_ini_free(&config_user); 
+    flexiblas_mgmt_free_config(config);
 	free(user_config_file); 
-	free(system_config_file); 
-	__flexiblas_free_paths();
+	free(system_config_file);
+    free(host_config_file);
 
 	return; 
 }
 
-static void set_blas(int mode, char* name) {
-	char *config_file, *second_file; 
-	csc_ini_file_t config, second_config; 
-	csc_ini_error_t ret; 
-	char *iname = NULL; 
+static void set_blas(flexiblas_mgmt_location_t loc, char* name) {
+    flexiblas_mgmt_t *config;
+    int     ret = 0;
 
+    config = flexiblas_mgmt_load_config();
+    if (config == NULL) {
+        printf("Failed to open configuration files. Abort.\n");
+        return;
+    }
 
-	if (mode == USER_CONFIG) {
-		config_file  = __flexiblas_getenv(FLEXIBLAS_ENV_USER_RC);
-		second_file  = __flexiblas_getenv(FLEXIBLAS_ENV_GLOBAL_RC);
-	} else {
-		config_file  = __flexiblas_getenv(FLEXIBLAS_ENV_GLOBAL_RC);
-	}
-	csc_ini_empty(&config); 
-	csc_ini_empty(&second_config); 
+    if ( flexiblas_mgmt_set_default(config, loc, name)) {
+        printf("Failed to set default BLAS in %s to %s.\n", flexiblas_mgmt_location_to_string(loc), name);
+        flexiblas_mgmt_free_config(config);
+        return;
+    }
+    ret = flexiblas_mgmt_write_config2(config,loc);
+    flexiblas_mgmt_free_config(config);
+    if ( ret ) {
+        printf("Failed to write the configuration to %s.\n", flexiblas_mgmt_location_to_string(loc));
+        exit(-1);
+    }
+    return;
 
-	ret =  csc_ini_load(config_file, &config, CSC_INI_LOAD_SECTION_UPPERCASE); 
-	if ( ret != CSC_INI_SUCCESS && ret != CSC_INI_FILEOPEN){
-		printf("Failed to load %s. Exit\n", config_file);
-		goto failed; 
-	}
-	/* Ignore if readable or not   */
-	if (mode == USER_CONFIG) {
-		ret = csc_ini_load(second_file, &second_config, CSC_INI_LOAD_SECTION_UPPERCASE); 
-		if ( ret != CSC_INI_SUCCESS && ret != CSC_INI_FILEOPEN) {
-			printf("Failed to load %s. Exit\n", config_file);
-			goto failed; 
-		}
-	}
-
-	if (name == NULL ) {
-		ret = csc_ini_key_remove(&config, CSC_INI_DEFAULT_SECTION, "default"); 
-		if ( ret != CSC_INI_NOSECTION && ret != CSC_INI_NOKEY && ret != CSC_INI_SUCCESS){
-			printf("Failed to delete default BLAS from %s. Exit\n", config_file);
-			goto failed; 
-		}
-	} else {
-		iname = strdup(name); 
-		iname = uppercase(iname);
-
-		if ( csc_ini_getsection(&config, iname) == NULL && csc_ini_getsection(&second_config, iname) == NULL ) {
-			printf("Choosen BLAS backend not found. Exit\n");
-			if (iname != NULL) free(iname); 
-			goto failed;
-		}
-
-		if ( csc_ini_setstring(&config, CSC_INI_DEFAULT_SECTION, "default", iname) != CSC_INI_SUCCESS) {
-			printf("Failed to set default to %s. Exit\n", iname);
-			if (iname != NULL) free(iname); 
-			goto failed; 
-		}
-	}
-	ret = csc_ini_write(config_file, &config); 
-
-	if ( ret == CSC_INI_FILEOPEN ) {
-		printf("Cannot open %s for writing. Exit\n", config_file);
-		goto failed; 
-	}
-
-	if ( ret != CSC_INI_SUCCESS) {
-		printf("Undefined error during storing the default in %s. Exit\n", config_file);
-		goto failed; 
-	}
-	
-	csc_ini_free(&config); 
-	csc_ini_free(&second_config); 
-	free(config_file); 
-	return; 
-failed: 
-	free(config_file); 
-	csc_ini_free(&second_config); 
-	csc_ini_free(&config); 
-	exit(-1); 
-	return;
 }
 
-static void add_blas (int mode, const char *name, const char *blas, const char *comment, int ilp64) {
-	char *config_file; 
-	csc_ini_file_t config; 
-	csc_ini_error_t ret;
-	csc_ini_section_t *sec = NULL; 
-	char *iname = NULL; 
+static void add_blas (flexiblas_mgmt_location_t loc, char *name, char *blas, char *comment) {
+    flexiblas_mgmt_t *config;
+    int     ret = 0;
 
-	if ( name == NULL || blas == NULL) {
-		printf("Internal failure. \n");
-		exit(-1); 
-	}
+    config = flexiblas_mgmt_load_config();
+    if (config == NULL) {
+        printf("Failed to open configuration files. Abort.\n");
+        return;
+    }
 
-	if (mode == USER_CONFIG) {
-		config_file  = __flexiblas_getenv(FLEXIBLAS_ENV_USER_RC);
-	} else {
-		config_file  = __flexiblas_getenv(FLEXIBLAS_ENV_GLOBAL_RC);
-	}
-	csc_ini_empty(&config); 
+    if ( flexiblas_mgmt_blas_add(config, loc, name, blas, comment) ) {
+        flexiblas_mgmt_free_config(config);
+        printf("Failed to add BLAS (%s , %s).\n", name, blas);
+        return;
+    }
 
-	ret =  csc_ini_load(config_file, &config, CSC_INI_LOAD_SECTION_UPPERCASE); 
-	if ( ret != CSC_INI_SUCCESS && ret != CSC_INI_FILEOPEN){
-		printf("Failed to load %s. Exit\n", config_file);
-		goto failed; 
-	}
-
-	iname = strdup(name); 
-	iname = uppercase(iname); 
-
-	sec = csc_ini_getsection(&config, iname); 
-	if ( sec != NULL ) {
-		printf("BLAS backend %s exists in %s. Please remove it before adding a new one.\n", iname, config_file);
-		free(iname);
-		csc_ini_free(&config);
-		exit(0);
-	}
-
-	ret = csc_ini_setstring(&config, iname, "library", blas); 
-	if ( ret != CSC_INI_SUCCESS ) {
-		printf("Failed to set the library entry for %s. Exit.\n", iname);
-		goto failed; 
-	}
-	ret = csc_ini_setinteger(&config, iname, "ilp64", ilp64);
-	if ( ret != CSC_INI_SUCCESS) {
-		printf("Failed to set the ilp64 entry for %s. Exit.\n", iname);
-		goto failed; 
-	}
-	if ( comment != NULL) {
-		ret = csc_ini_setstring(&config, iname, "comment", comment); 
-		if ( ret != CSC_INI_SUCCESS) {
-			printf("Failed to set the comment for %s. Exit.\n", iname);
-			goto failed; 
-		}
-	}
-
-	ret = csc_ini_write(config_file, &config); 
-
-	if ( ret == CSC_INI_FILEOPEN ) {
-		printf("Cannot open %s for writing. Exit\n", config_file);
-		goto failed; 
-	}
-
-	if ( ret != CSC_INI_SUCCESS) {
-		printf("Undefined error during storing the default in %s. Exit\n", config_file);
-		goto failed; 
-	}
-
-
-
-	free(iname); 
-	csc_ini_free(&config); 
-	return; 
-
-failed:
-	free(iname); 
-	csc_ini_free(&config); 
-	exit(-1); 
-	return; 
+    ret = flexiblas_mgmt_write_config2(config,loc);
+    flexiblas_mgmt_free_config(config);
+    if ( ret ) {
+        printf("Failed to write the configuration to %s.\n", flexiblas_mgmt_location_to_string(loc));
+        exit(-1);
+    }
+    return;
 }
 
-static void remove_blas (int mode, const char *name) {
-	char *config_file; 
-	csc_ini_file_t config; 
-	csc_ini_error_t ret;
-	char *iname = NULL; 
-	char *def_blas = NULL;
+static void remove_blas (flexiblas_mgmt_location_t loc, char *name) {
+    flexiblas_mgmt_t *config;
+    int     ret = 0;
 
-	if ( name == NULL ) {
-		printf("Internal failure. \n");
-		exit(-1); 
-	}
+    config = flexiblas_mgmt_load_config();
+    if (config == NULL) {
+        printf("Failed to open configuration files. Abort.\n");
+        return;
+    }
 
-	if (mode == USER_CONFIG) {
-		config_file  = __flexiblas_getenv(FLEXIBLAS_ENV_USER_RC);
-	} else {
-		config_file  = __flexiblas_getenv(FLEXIBLAS_ENV_GLOBAL_RC);
-	}
-	csc_ini_empty(&config); 
+    if ( flexiblas_mgmt_blas_remove(config, loc, name) ) {
+        flexiblas_mgmt_free_config(config);
+        printf("Failed to remove BLAS %s from %s.\n", name, flexiblas_mgmt_location_to_string(loc));
+        return;
+    }
 
-	ret =  csc_ini_load(config_file, &config, CSC_INI_LOAD_SECTION_UPPERCASE); 
-	if ( ret != CSC_INI_SUCCESS && ret != CSC_INI_FILEOPEN){
-		printf("Failed to load %s. Exit\n", config_file);
-		goto failed; 
-	}
-
-	
-	iname = strdup(name); 
-	iname = uppercase(iname); 
-
-	if (csc_ini_getstring(&config, CSC_INI_DEFAULT_SECTION, "default", &def_blas ) != CSC_INI_SUCCESS) {
-		def_blas = NULL;
-	}
-
-	ret = csc_ini_section_remove(&config, iname); 
-	if ( ret != CSC_INI_SUCCESS ) {
-		printf("Failed to remove the  entry for %s. Exit.\n", iname);
-		goto failed; 
-	}
-
-	if ( def_blas!= NULL &&  strcasecmp(def_blas, iname) == 0 ){
-		printf("Removed BLAS which is set to be the default. Resetting BLAS to \"NETLIB\"\n");
-		csc_ini_setstring(&config, CSC_INI_DEFAULT_SECTION, "default", "NETLIB");		
-	}
-	
-	ret = csc_ini_write(config_file, &config); 
-
-	if ( ret == CSC_INI_FILEOPEN ) {
-		printf("Cannot open %s for writing. Exit\n", config_file);
-		goto failed; 
-	}
-
-	if ( ret != CSC_INI_SUCCESS) {
-		printf("Undefined error during storing the default in %s. Exit\n", config_file);
-		goto failed; 
-	}
-
-
-
-	free(iname); 
-	csc_ini_free(&config); 
-	return; 
-
-failed:
-	free(iname); 
-	csc_ini_free(&config); 
-	exit(-1); 
-	return; 
+    ret = flexiblas_mgmt_write_config(config);
+    flexiblas_mgmt_free_config(config);
+    if ( ret ) {
+        printf("Failed to write the configuration to %s.\n", flexiblas_mgmt_location_to_string(loc));
+        exit(-1);
+    }
+    return;
 }
 
 
-static void  set_property(int mode, const char *name, char *value) 
+static void  set_property(flexiblas_mgmt_location_t loc, const char *name, char *value) 
 {
-	char *config_file; 
-	csc_ini_file_t config;
-	csc_ini_error_t ret; 
+    flexiblas_mgmt_t *config;
 	size_t pos = 0; 
-	int found = 0 ; 
-	long ivalue = 0; 
+	int found = 0 ;
+    int ivalue = 0;
+    int ret = 0 ;
 
-
-	if (mode == USER_CONFIG) {
-		config_file  = __flexiblas_getenv(FLEXIBLAS_ENV_USER_RC);
-	} else {
-		config_file  = __flexiblas_getenv(FLEXIBLAS_ENV_GLOBAL_RC);
-	}
-	csc_ini_empty(&config); 
-
-
+    config = flexiblas_mgmt_load_config();
+    if (config == NULL) {
+        printf("Failed to open configuration files. Abort.\n");
+        return;
+    }
 	/* Check if the Option is valid    */
 	while (properties[pos].name != NULL ) {
 		if ( strcmp(name, properties[pos].name) == 0) {
@@ -550,73 +347,51 @@ static void  set_property(int mode, const char *name, char *value)
 	}
 	if ( found == 0 ) {
 		printf("Unknown property %s. Exit\n", name);
-		goto failed;  
+        flexiblas_mgmt_free_config(config);
+        exit(-1);
 	}
 
-        /* Reset the default  */
-	if ( value == NULL ) value = properties[pos].def_str; 
-	
+    if ( value == NULL ){
+        flexiblas_mgmt_set_property(config, loc, properties[pos].e_prop, NULL);
+        ret = flexiblas_mgmt_write_config2(config,loc);
+        flexiblas_mgmt_free_config(config);
+
+        if ( ret ) {
+            printf("Failed to write the configuration to %s.\n", flexiblas_mgmt_location_to_string(loc));
+            exit(-1);
+         }
+
+        return;
+    }
+
 	if ( properties[pos].type == PROP_INT ) {
 		errno = 0; 
 		if (!is_valid_int(value)) {
 			printf("The property must be an integer. Exit\n");
-			goto failed; 
+            flexiblas_mgmt_free_config(config);
+            exit(-1);
 		}
 	   	ivalue = atoi(value); 
-	}
-
-	if (properties[pos].type == PROP_BOOL ) {
-		if (!is_valid_bool(value)){
-			printf("The property must be a boolean value. Exit\n");
-			goto failed; 
-		}
-	}
-
-	ret =  csc_ini_load(config_file, &config, CSC_INI_LOAD_SECTION_UPPERCASE); 
-	if ( ret != CSC_INI_SUCCESS && ret != CSC_INI_FILEOPEN){
-		printf("Failed to load %s. Exit\n", config_file);
-		goto failed; 
-	}
-
-	if (properties[pos].type == PROP_INT ) {
-		ret = csc_ini_setinteger(&config, CSC_INI_DEFAULT_SECTION, name, ivalue); 
+        flexiblas_mgmt_set_property(config, loc, properties[pos].e_prop, &ivalue);
 	} else {
-		ret = csc_ini_setstring(&config, CSC_INI_DEFAULT_SECTION, name, value); 
-	}
+        flexiblas_mgmt_set_property(config, loc, properties[pos].e_prop, value);
+    }
+   
+    ret = flexiblas_mgmt_write_config2(config,loc);
+    flexiblas_mgmt_free_config(config);
 
-	if ( ret != CSC_INI_SUCCESS) {
-		printf("Setting property %s failed. Exit.\n", name);
-		goto failed; 
-	}
+    if ( ret ) {
+            printf("Failed to write the configuration to %s.\n", flexiblas_mgmt_location_to_string(loc));
+            exit(-1);
+         }
 
-
-	/* Write Output  */
-	ret = csc_ini_write(config_file, &config); 
-
-	if ( ret == CSC_INI_FILEOPEN ) {
-		printf("Cannot open %s for writing. Exit\n", config_file);
-		goto failed; 
-	}
-
-	if ( ret != CSC_INI_SUCCESS) {
-		printf("Undefined error during storing the default in %s. Exit\n", config_file);
-		goto failed; 
-	}
-	
-	csc_ini_free(&config); 
-	free(config_file); 
-	return; 
-failed: 
-	free(config_file); 
-	csc_ini_free(&config); 
-	exit(-1); 
-	return;
+       return;
 
 }
 
 int main(int argc, char **argv)
 {
-	int config_mode; 
+    flexiblas_mgmt_location_t config_location;
 	int choice;
 	int add_opt =0; 
 	int remaim_opt = 0; 
@@ -626,9 +401,9 @@ int main(int argc, char **argv)
 
 	/* Determine Config mode  */
 	if ( getuid() == 0 ) {
-		config_mode = GLOBAL_CONFIG; 
+        config_location = FLEXIBLAS_GLOBAL;
 	} else {
-		config_mode = USER_CONFIG; 
+        config_location = FLEXIBLAS_USER;
 	}
 
 	while (1)
@@ -642,6 +417,7 @@ int main(int argc, char **argv)
 			{"help",	no_argument,	0,	'h'},
 			{"user", no_argument, 0, 'u'}, 
 			{"global", no_argument, 0, 'g'}, 			
+            {"host", no_argument, 0, 'H'},
 			{0,0,0,0}
 		};
 
@@ -652,7 +428,7 @@ int main(int argc, char **argv)
 			required_argument: ":"
 			optional_argument: "::" */
 
-		choice = getopt_long( argc, argv, "vhgu", long_options, &option_index);
+		choice = getopt_long( argc, argv, "vhguH", long_options, &option_index);
 
 		if (choice == -1)
 			break;
@@ -667,11 +443,14 @@ int main(int argc, char **argv)
 			        print_usage(argv[0]); 	
 				return 0; 
 			case 'g':
-				config_mode = GLOBAL_CONFIG; 
+                config_location = FLEXIBLAS_GLOBAL;
 				break; 
 			case 'u':
-				config_mode = USER_CONFIG; 
+                config_location = FLEXIBLAS_USER;
 				break; 			
+            case 'H':
+                config_location = FLEXIBLAS_HOST;
+                break;
 			default:
 				/* Not sure how to get here... */
 				return EXIT_FAILURE;
@@ -681,7 +460,7 @@ int main(int argc, char **argv)
 	/* Deal with non-option arguments here */
 	if (optind >= argc ) {
 		printf("Missing argument.\n");
-		print_usage(argv[0]); 
+        printf("Please run '%s help' to see a list of possible arguments.\n", argv[0]);
 		return -1; 
 	}
 
@@ -709,7 +488,7 @@ int main(int argc, char **argv)
 
 	if ( todo == 0 ) {
 		printf("Invalid or missing argument.\n");
-		print_usage(argv[0]); 
+        printf("Please run '%s help' to see a list of possible arguments.\n", argv[0]);
 		return -1; 
 	}
 
@@ -723,19 +502,29 @@ int main(int argc, char **argv)
 			return 0;
 		case TODO_DEFAULT: 
 			if ( remaim_opt == 0) {
-				if ( config_mode == USER_CONFIG) {
+				if ( config_location == FLEXIBLAS_USER) {
 					printf("Removing user default BLAS setting.\n");
-				} else {
+                } else if ( config_location == FLEXIBLAS_HOST) {
+					printf("Removing host default BLAS setting.\n");
+                } else if ( config_location == FLEXIBLAS_GLOBAL ){
 					printf("Removing global default BLAS setting.\n");
-				}
-				set_blas(config_mode, NULL); 
-			} else {
-				if ( config_mode == USER_CONFIG) {
-					printf("Setting user default BLAS to %s.\n", argv[add_opt]);
 				} else {
-					printf("Setting global default BLAS to %s.\n", argv[add_opt]);
+                    printf("Unknown configuration location.\n");
+                    exit(-1);
 				}
-				set_blas(config_mode, argv[add_opt]); 
+				set_blas(config_location, NULL); 
+			} else {
+				if ( config_location == FLEXIBLAS_USER) {
+					printf("Setting user default BLAS to %s.\n", argv[add_opt]);
+                } else if ( config_location == FLEXIBLAS_HOST) {
+					printf("Setting host default BLAS to %s.\n", argv[add_opt]);
+                } else if ( config_location == FLEXIBLAS_GLOBAL) {
+					printf("Setting system default BLAS to %s.\n", argv[add_opt]);
+				} else {
+                    printf("Unknown configuration location.\n");
+                    exit(-1);
+				}
+				set_blas(config_location, argv[add_opt]); 
 				return 0; 
 			}
 			break; 
@@ -744,9 +533,8 @@ int main(int argc, char **argv)
 				char *name = NULL; 
 				char *blas = NULL; 
 				char *comment = NULL; 
-				int ilp64=0;
 
-				if ( remaim_opt < 2 || remaim_opt > 4) {
+				if ( remaim_opt < 2 || remaim_opt > 3) {
 					printf("Missing Arguments or too much arguments.\n");
 					print_usage(argv[0]);
 					return -1; 
@@ -757,24 +545,9 @@ int main(int argc, char **argv)
 				} else if (remaim_opt == 3) {
 					name = argv[add_opt]; 
 					blas = argv[add_opt+1]; 
-					if ( strcasecmp(argv[add_opt+2], "ilp64") == 0 ){
-						ilp64 = 1;
-						comment = NULL;
-					} else {
-						ilp64 = 0;
-						comment = argv[add_opt+2]; 
-					}
-				} else {
-					name = argv[add_opt]; 
-					blas = argv[add_opt+1]; 
 					comment = argv[add_opt+2]; 
-                	if ( strcasecmp(argv[add_opt+3], "ilp64") == 0 ){
-                        ilp64 = 1;
-                    } else {
-                        ilp64 = 0;
-                    }
-				}
-				add_blas(config_mode, name, blas, comment, ilp64); 
+				} 
+				add_blas(config_location, name, blas, comment); 
 				return 0; 
 			}
 		case TODO_REMOVE: 
@@ -786,7 +559,7 @@ int main(int argc, char **argv)
 					return -1; 
 				}
 				blas = argv[add_opt]; 
-				remove_blas(config_mode, blas); 
+				remove_blas(config_location, blas); 
 				return 0; 
 			}
 			break; 
@@ -797,14 +570,14 @@ int main(int argc, char **argv)
 				return -1; 
 			}
 			if (remaim_opt == 2) 
-				set_property(config_mode, argv[add_opt], argv[add_opt+1]); 
+				set_property(config_location, argv[add_opt], argv[add_opt+1]); 
 			else 
-				set_property(config_mode, argv[add_opt], NULL); 
+				set_property(config_location, argv[add_opt], NULL); 
 
 			break; 
 		default:
 			 printf("Invalid Command.s\n");
-			 print_usage(argv[0]); 
+			 /* print_usage(argv[0]);  */
 			 return -1; 			
 	}
 

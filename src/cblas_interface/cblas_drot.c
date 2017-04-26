@@ -49,7 +49,7 @@ void cblas_drot(const int N, double *X, const int incX,
 	   current_backend->blas.drot.timings[POS_CBLAS] += (te - ts); 
 	}
    } else {
-   	F77_drot(&F77_N, X, &F77_incX, Y, &F77_incY, &c, &s);
+   	FC_GLOBAL(drot,DROT)(&F77_N, X, &F77_incX, Y, &F77_incY, &c, &s);
    }
    return;
 }

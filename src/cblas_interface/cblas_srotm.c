@@ -49,7 +49,7 @@ void cblas_srotm( const int N, float *X, const int incX, float *Y,
 		   current_backend->blas.srotm.timings[POS_CBLAS] += (te - ts); 
 	   }
    } else {
-	F77_srotm( &F77_N, X, &F77_incX, Y, &F77_incY, P);
+	FC_GLOBAL(srotm,SROTM)( &F77_N, X, &F77_incX, Y, &F77_incY, P);
    }
    return; 
 }   

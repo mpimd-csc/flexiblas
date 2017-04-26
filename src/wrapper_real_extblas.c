@@ -12,17 +12,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015
+ * Copyright (C) Martin Koehler, 2015-2016
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Thu Sep  3 16:30:00 2015 */ 
+ /* Generated: Tue Mar  7 10:13:38 2017 */ 
         
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <complex.h>
 
+#include "fortran_mangle.h"
+
 #include "flexiblas.h"
+
 
 
 #ifdef INTEGER8

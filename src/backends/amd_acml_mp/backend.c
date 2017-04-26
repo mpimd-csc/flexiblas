@@ -20,6 +20,9 @@
 #include <complex.h>
 #include <dlfcn.h>
 #include "flexiblas_backend.h" 
+#include "flexiblas_real_calls.h"
+#include "flexiblas_real_extblas_calls.h"
+
 #include <omp.h>
 
 /* Generic Backends can be loaded without RTLD_GLOBAL  */

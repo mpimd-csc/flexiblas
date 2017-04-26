@@ -18,7 +18,7 @@
 #include "cblas_f77.h"
 #include "../flexiblas.h"
 
-void cblas_ssyr(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
+void cblas_ssyr(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
                 const int N, const float  alpha, const float  *X,
                 const int incX, float  *A, const int lda)
 {
@@ -44,11 +44,11 @@ void cblas_ssyr(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 		   ts = flexiblas_wtime(); 
 	   }
 	   void (*fn)
-		  (const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
+		  (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
                 const int N, const float  alpha, const float  *X,
                 const int incX, float  *A, const int lda)
 		   = current_backend->blas.ssyr.call_cblas;
-	fn(order,Uplo,N,alpha,X,incX,A,lda);
+	fn(layout,Uplo,N,alpha,X,incX,A,lda);
 	if ( __flexiblas_profile ){
 	   te = flexiblas_wtime(); 
 	   current_backend->blas.ssyr.timings[POS_CBLAS] += (te - ts); 
@@ -59,7 +59,7 @@ void cblas_ssyr(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 	   extern int RowMajorStrg;
 	   RowMajorStrg = 0;
 	   CBLAS_CallFromC = 1;
-	   if (order == CblasColMajor)
+	   if (layout == CblasColMajor)
 	   {
 	      if (Uplo == CblasLower) UL = 'L';
 	      else if (Uplo == CblasUpper) UL = 'U';
@@ -74,9 +74,9 @@ void cblas_ssyr(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 		 F77_UL = C2F_CHAR(&UL);
 	      #endif
 
-	      F77_ssyr(F77_UL, &F77_N, &alpha, X, &F77_incX, A, &F77_lda);
+	      FC_GLOBAL(ssyr,SSYR)(F77_UL, &F77_N, &alpha, X, &F77_incX, A, &F77_lda);
 
-	   }  else if (order == CblasRowMajor) 
+	   }  else if (layout == CblasRowMajor) 
 	   {
 	      RowMajorStrg = 1;
 	      if (Uplo == CblasLower) UL = 'U';
@@ -91,8 +91,8 @@ void cblas_ssyr(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 	      #ifdef F77_CHAR
 		 F77_UL = C2F_CHAR(&UL);
 	      #endif  
-	      F77_ssyr(F77_UL, &F77_N, &alpha, X, &F77_incX, A, &F77_lda); 
-	   } else cblas_xerbla(1, "cblas_ssyr", "Illegal Order setting, %d\n", order);
+	      FC_GLOBAL(ssyr,SSYR)(F77_UL, &F77_N, &alpha, X, &F77_incX, A, &F77_lda); 
+	   } else cblas_xerbla(1, "cblas_ssyr", "Illegal layout setting, %d\n", layout);
 	   CBLAS_CallFromC = 0;
 	   RowMajorStrg = 0;
    }

@@ -50,6 +50,6 @@ void cblas_csscal( const int N, const float alpha, void *X,
 	   current_backend->blas.csscal.timings[POS_CBLAS] += (te - ts); 
 	}
    } else {
-	   F77_csscal( &F77_N, &alpha, X, &F77_incX);
+	   FC_GLOBAL(csscal,CSSCAL)( &F77_N, &alpha, X, &F77_incX);
    }
 }

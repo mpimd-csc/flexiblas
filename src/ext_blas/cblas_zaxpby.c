@@ -50,6 +50,6 @@ void cblas_zaxpby( const int N, const void *alpha, const void *X,
 		current_backend->extblas.zaxpby.timings[POS_CBLAS] += (te - ts); 
 	   }
    } else {
-	F77_zaxpby( &F77_N, alpha, X, &F77_incX, beta, Y, &F77_incY);
+	FC_GLOBAL(zaxpby,ZAXPBY)( &F77_N, alpha, X, &F77_incX, beta, Y, &F77_incY);
    }
 } 

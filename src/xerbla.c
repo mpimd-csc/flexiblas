@@ -32,18 +32,38 @@
 #endif
 
 // static int user_xerbla = 0; 
-static void internal_xerbla_(char *SNAME, Int *Info, Int len);  
+void flexiblas_internal_xerbla(char *SNAME, Int *Info, Int len);  
+#ifdef FLEXIBLAS_ABI_IBM 
 #ifdef __ELF__
-void xerbla_(char *, Int *, Int) __attribute__ ((weak, alias ("internal_xerbla_")));
-void xerbla(char *, Int *, Int) __attribute__ ((weak, alias ("internal_xerbla_")));
+#pragma weak xerbla_
+#pragma weak xerbla
+void xerbla_(char *, Int *, Int) __attribute__ (( alias ("flexiblas_internal_xerbla")));
+void xerbla(char *, Int *, Int) __attribute__ (( alias ("flexiblas_internal_xerbla")));
 #else 
 void xerbla_(char *SNAME, Int *Info, Int len) {
-	internal_xerbla_(SNAME, Info, len); 
+	flexiblas_internal_xerbla(SNAME, Info, len); 
 }
 void xerbla(char *SNAME, Int *Info, Int len) {
-	internal_xerbla_(SNAME, Info, len); 
+	flexiblas_internal_xerbla(SNAME, Info, len); 
 }
 #endif
+
+#else 
+#ifdef __ELF__
+void xerbla_(char *, Int *, Int) __attribute__ ((weak, alias ("flexiblas_internal_xerbla")));
+void xerbla(char *, Int *, Int) __attribute__ ((weak, alias ("flexiblas_internal_xerbla")));
+#else 
+#pragma weak xerbla_  
+#pragma weak xerbla
+void xerbla_(char *SNAME, Int *Info, Int len) {
+	flexiblas_internal_xerbla(SNAME, Info, len); 
+}
+void xerbla(char *SNAME, Int *Info, Int len) {
+	flexiblas_internal_xerbla(SNAME, Info, len); 
+}
+#endif
+#endif 
+
 
 int __flexiblas_setup_xerbla(flexiblas_backend_t *backend)
 {
@@ -53,11 +73,11 @@ int __flexiblas_setup_xerbla(flexiblas_backend_t *backend)
         int user_xerbla = 0;
 		void *xerbla_symbol1 = dlsym(backend->library_handle,"xerbla_"); 
 		void *xerbla_symbol2 = dlsym(RTLD_DEFAULT,"xerbla_"); 
-		void *internal = (void*) &internal_xerbla_; 
+		void *internal = (void*) &flexiblas_internal_xerbla; 
 		DPRINTF(1, "Available XERBLA ( backend: 0x%lx, user defined: 0x%lx, FlexiBLAS: 0x%lx )\n", 
 				(unsigned long)((void*)xerbla_symbol1), 
 				(unsigned long)((void*)xerbla_symbol2), 
-				(unsigned long)((void*)&internal_xerbla_));  
+				(unsigned long)((void*)&flexiblas_internal_xerbla));  
 
 		if (internal == xerbla_symbol2) {
 			user_xerbla = 0; 
@@ -82,7 +102,7 @@ int __flexiblas_setup_xerbla(flexiblas_backend_t *backend)
 }
 
 
-static void internal_xerbla_(char *SNAME, Int *Info, Int len)  { 
+void flexiblas_internal_xerbla(char *SNAME, Int *Info, Int len)  { 
 	double ts;
 	void (*fn) (char *SNAME, Int *info, Int len)  ;  
 	fn = current_backend->xerbla.call_fblas; 
@@ -102,6 +122,7 @@ static void internal_xerbla_(char *SNAME, Int *Info, Int len)  {
 		current_backend->xerbla.timings[0] += (flexiblas_wtime() -ts);
 		current_backend->xerbla.calls [0]++;
 	} else { 
+        /* printf("XERBLA fn =%lx\n", (size_t) fn); */
 		fn (SNAME, Info, len); 
 	} 
 	return; 

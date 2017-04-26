@@ -12,15 +12,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Köhler, 2015
+ * Copyright (C) Martin Köhler, 2015 -- 2016
  */
-
-
 
 
 #include <ctype.h>
 #include <stdint.h>
 #include "flexiblas.h"
+#include "fortran_mangle.h"
 
 /* #if defined(__alpha__) || defined(__sparc64__) || defined(__x86_64__) || defined(__ia64__)
 typedef int ftnlen;
@@ -38,58 +37,40 @@ typedef int logical;
 typedef int ftnlen;
 #endif
 
-#ifndef INTEGER8
-int64_t lsame_(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len)
-{
-	/* Local variables */
-	char a, b; 
-	int64_t ret = 0; 
-	int32_t *ret2 = (int32_t *) &ret; 
 
-	a = tolower(ca[0]); 
-	b = tolower(cb[0]); 
-	ret2[0] = (a==b); 
-	ret2[1] = (a==b); 
-
-	return ret; 
-} 
+#ifdef FLEXIBLAS_ABI_IBM 
+logical lsame_(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len) 
+    __attribute__((alias(MTS(FC_GLOBAL(lsame,LSAME))))); 
+logical lsamen_(ftnlen * n, char *ca, char *cb, ftnlen ca_len, ftnlen cb_len)  
+    __attribute__((alias(MTS(FC_GLOBAL(lsamen,LSAMEN))))); 
 #else 
-logical lsame_(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len)
-{
-	/* Local variables */
-	char a, b; 
-
-	a = tolower(ca[0]); 
-	b = tolower(cb[0]); 
-	return (a==b); 
-} 
+logical lsame(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len) 
+    __attribute__((alias(MTS(FC_GLOBAL(lsame,LSAME))))); 
+logical lsamen(ftnlen * n, char *ca, char *cb, ftnlen ca_len, ftnlen cb_len)  
+    __attribute__((alias(MTS(FC_GLOBAL(lsamen,LSAMEN))))); 
 
 #endif 
 
-int64_t lsame64_(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len)
+logical FC_GLOBAL(lsame,LSAME)(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len)
 {
-	/* Local variables */
 	char a, b; 
+    ca_len = ca_len;
+    cb_len = cb_len;
+	a = (char)tolower(ca[0]); 
+	b = (char)tolower(cb[0]); 
+	return (a==b); 
+}
 
-	a = tolower(ca[0]); 
-	b = tolower(cb[0]); 
-	return (int64_t) (a==b); 
-} 
+logical FC_GLOBAL(lsamen,LSAMEN)(ftnlen *len, char *ca, char *cb, ftnlen ca_len, ftnlen cb_len) {
+    ftnlen i  = 0; 
 
-int32_t lsame32_(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len)
-{
-	/* Local variables */
-	char a, b; 
+    ca_len = ca_len;
+    cb_len = cb_len;
 
-	a = tolower(ca[0]); 
-	b = tolower(cb[0]); 
-	return (int32_t) (a==b); 
-} 
-
-
-
-logical lsame(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len) __attribute__((alias("lsame_"))); 
-int32_t lsame32(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len) __attribute__((alias("lsame32_"))); 
-int64_t lsame64(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len) __attribute__((alias("lsame64_"))); 
-
+    for (i = 0; i < *len; i++) {
+        if (!lsame_(&ca[i],&cb[i],1,1))
+            return 0; 
+    }
+    return 1; 
+}
 

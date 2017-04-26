@@ -19,7 +19,7 @@
 #include "../flexiblas.h"
 #include "../extblas.h"
 
-void cblas_comatcopy(const enum CBLAS_ORDER CORDER, const enum CBLAS_TRANSPOSE CTRANS, 
+void cblas_comatcopy(const CBLAS_ORDER CORDER, const CBLAS_TRANSPOSE CTRANS, 
 		     const int crows, const int ccols, const void* calpha, const void* a, const int clda, 
 		     void *b, const int cldb)
 {
@@ -43,7 +43,7 @@ void cblas_comatcopy(const enum CBLAS_ORDER CORDER, const enum CBLAS_TRANSPOSE C
 	   if ( __flexiblas_profile ) {
 		   ts = flexiblas_wtime(); 
 	   }
-	   void (*fn)(const enum CBLAS_ORDER, const enum CBLAS_TRANSPOSE, const int, const int, const void *, const void*, const int, void *, const int) = current_backend->extblas.comatcopy.call_cblas;
+	   void (*fn)(const CBLAS_ORDER, const CBLAS_TRANSPOSE, const int, const int, const void *, const void*, const int, void *, const int) = current_backend->extblas.comatcopy.call_cblas;
 	   fn(CORDER, CTRANS, crows, ccols, calpha, a, clda, b, cldb);  
 	   if ( __flexiblas_profile ){
 		   te = flexiblas_wtime(); 
@@ -78,7 +78,7 @@ void cblas_comatcopy(const enum CBLAS_ORDER CORDER, const enum CBLAS_TRANSPOSE C
 		default: 
 			TRANS[0]='X'; 
 	}
-   	F77_comatcopy( ORDER, TRANS, &F77_ROWS, &F77_COLS, calpha, a, &F77_LDA, b, &F77_LDB);
+   	FC_GLOBAL(comatcopy,COMATCOPY)( ORDER, TRANS, &F77_ROWS, &F77_COLS, calpha, a, &F77_LDA, b, &F77_LDB);
    }
    current_backend->extblas.comatcopy.calls[POS_CBLAS] ++;
 } 

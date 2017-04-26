@@ -43,7 +43,7 @@ void cblas_srotmg( float *d1, float *d2, float *b1,
                 current_backend->blas.srotmg.timings[POS_CBLAS] += (te - ts); 
 	   }
    } else {
-	F77_srotmg(d1,d2,b1,&b2,p);
+	FC_GLOBAL(srotmg,SROTMG)(d1,d2,b1,&b2,p);
    }
    return; 
 }

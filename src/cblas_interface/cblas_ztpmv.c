@@ -19,8 +19,8 @@
 #include "../flexiblas.h"
 
 
-void cblas_ztpmv(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
-                 const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_DIAG Diag,
+void cblas_ztpmv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
+                 const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
                  const int N, const void  *Ap, void  *X, const int incX)
 {
    char TA;
@@ -47,11 +47,11 @@ void cblas_ztpmv(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 		   ts = flexiblas_wtime(); 
 	   }
 	   void (*fn)
-		  (const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
-                 const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_DIAG Diag,
+		  (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
+                 const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
                  const int N, const void  *Ap, void  *X, const int incX)
 		   = current_backend->blas.ztpmv.call_cblas;
-	fn(order,Uplo,TransA,Diag,N,Ap,X,incX);
+	fn(layout,Uplo,TransA,Diag,N,Ap,X,incX);
 	if ( __flexiblas_profile ){
 	   te = flexiblas_wtime(); 
 	   current_backend->blas.ztpmv.timings[POS_CBLAS] += (te - ts);
@@ -66,7 +66,7 @@ void cblas_ztpmv(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 	   RowMajorStrg = 0;
 
 	   CBLAS_CallFromC = 1;
-	   if (order == CblasColMajor)
+	   if (layout == CblasColMajor)
 	   {
 	      if (Uplo == CblasUpper) UL = 'U';
 	      else if (Uplo == CblasLower) UL = 'L';
@@ -96,9 +96,9 @@ void cblas_ztpmv(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 		 RowMajorStrg = 0;
 		 return;
 	      }
-	      F77_ztpmv( F77_UL, F77_TA, F77_DI, &F77_N, Ap, X, &F77_incX);
+	      FC_GLOBAL(ztpmv,ZTPMV)( F77_UL, F77_TA, F77_DI, &F77_N, Ap, X, &F77_incX);
 	   }
-	   else if (order == CblasRowMajor)
+	   else if (layout == CblasRowMajor)
 	   {
 	      RowMajorStrg = 1;
 	      if (Uplo == CblasUpper) UL = 'L';
@@ -153,7 +153,7 @@ void cblas_ztpmv(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 		 return;
 	      }
 
-	      F77_ztpmv( F77_UL, F77_TA, F77_DI, &F77_N, Ap, X,&F77_incX);
+	      FC_GLOBAL(ztpmv,ZTPMV)( F77_UL, F77_TA, F77_DI, &F77_N, Ap, X,&F77_incX);
 	      if (TransA == CblasConjTrans)
 	      {
 		 if (N > 0)
@@ -167,7 +167,7 @@ void cblas_ztpmv(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 		 }
 	      }
 	   }
-	   else cblas_xerbla(1, "cblas_ztpmv", "Illegal Order setting, %d\n", order);
+	   else cblas_xerbla(1, "cblas_ztpmv", "Illegal layout setting, %d\n", layout);
 	   CBLAS_CallFromC = 0;
 	   RowMajorStrg = 0;
    }

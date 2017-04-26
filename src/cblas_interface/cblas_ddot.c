@@ -45,7 +45,7 @@ double cblas_ddot( const int N, const double *X,
 		   current_backend->blas.ddot.timings[POS_CBLAS] += (te - ts); 
 	   }
    } else {
-   	dot =  F77_ddot( &F77_N, X, &F77_incX, Y, &F77_incY);
+   	dot =  FC_GLOBAL(ddot,DDOT)( &F77_N, X, &F77_incX, Y, &F77_incY);
    }
    current_backend->blas.ddot.calls[POS_CBLAS] ++;
 

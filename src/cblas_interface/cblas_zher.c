@@ -18,7 +18,7 @@
 #include "cblas_f77.h"
 #include "../flexiblas.h"
 
-void cblas_zher(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
+void cblas_zher(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
                 const int N, const double alpha, const void *X, const int incX
                 ,void *A, const int lda)
 {
@@ -44,11 +44,11 @@ void cblas_zher(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 		   ts  = flexiblas_wtime(); 
 	   }
 	   void (*fn)
-		  (const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
+		  (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
                 const int N, const double alpha, const void *X, const int incX
                 ,void *A, const int lda)
 		   = current_backend->blas.zher.call_cblas;
-	fn(order,Uplo,N,alpha,X,incX,A,lda);
+	fn(layout,Uplo,N,alpha,X,incX,A,lda);
 	if ( __flexiblas_profile) {
 	   te = flexiblas_wtime(); 
 	   current_backend->blas.zher.timings[POS_CBLAS] += (te - ts); 
@@ -60,14 +60,17 @@ void cblas_zher(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 #else 
 	   int incx = incX; 
 #endif
-	   double *x=(double *)X, *xx=(double *)X, *tx, *st;
+	   double *x, *xx, *tx, *st;
+
 
 	   extern int CBLAS_CallFromC;
 	   extern int RowMajorStrg;
 	   RowMajorStrg = 0;
+       COPY_CONST_PTR(x,X);
+       COPY_CONST_PTR(xx,X);
 	 
 	   CBLAS_CallFromC = 1;
-	   if (order == CblasColMajor)
+	   if (layout == CblasColMajor)
 	   {
 	      if (Uplo == CblasLower) UL = 'L';
 	      else if (Uplo == CblasUpper) UL = 'U';
@@ -79,12 +82,13 @@ void cblas_zher(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 		 return;
 	      }
 
-	      F77_zher(F77_UL, &F77_N, &alpha, X, &F77_incX, A, &F77_lda);
+	      FC_GLOBAL(zher,ZHER)(F77_UL, &F77_N, &alpha, X, &F77_incX, A, &F77_lda);
 
-	   }  else if (order == CblasRowMajor)
+	   }  else if (layout == CblasRowMajor)
 	   {
 	      RowMajorStrg = 1;
-	      if (Uplo == CblasUpper) UL = 'L';
+	      
+          if (Uplo == CblasUpper) UL = 'L';
 	      else if (Uplo == CblasLower) UL = 'U';
 	      else 
 	      {
@@ -124,11 +128,13 @@ void cblas_zher(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 		   incx = 1;
 		 #endif
 	      }
-	      else x = (double *) X;
-	      F77_zher(F77_UL, &F77_N, &alpha, x, &F77_incX, A, &F77_lda);
+	      else {
+            COPY_CONST_PTR(x,X);
+          }
+	      FC_GLOBAL(zher,ZHER)(F77_UL, &F77_N, &alpha, x, &F77_incX, A, &F77_lda);
 	   } else 
 	   {
-	      cblas_xerbla(1, "cblas_zher","Illegal Order setting, %d\n", order);
+	      cblas_xerbla(1, "cblas_zher","Illegal layout setting, %d\n", layout);
 	      CBLAS_CallFromC = 0;
 	      RowMajorStrg = 0;
 	      return;

@@ -21,11 +21,11 @@
 /*-----------------------------------------------------------------------------
  *  Load CBLAS 
  *-----------------------------------------------------------------------------*/
-int __flexiblas_load_cblas_function( void * handle , struct flexiblas_blasfn * fn, const char *name) 
+HIDDEN int __flexiblas_load_cblas_function( void * handle , struct flexiblas_blasfn * fn, const char *name) 
 {
 #ifdef FLEXIBLAS_CBLAS
 	void *ptr_csymbol = NULL;
-    void *ptr_hsymbol = NULL;
+	void *ptr_hsymbol = NULL;
 	char cname[40]; 
 	char hookname[40];
 
@@ -37,7 +37,7 @@ int __flexiblas_load_cblas_function( void * handle , struct flexiblas_blasfn * f
 
 
 	/*  Search for the hook function  */
-    DPRINTF(2, "Look up hook: hook_cblas_%s\n", name);
+	DPRINTF(3, "Look up hook: hook_cblas_%s\n", name);
 	snprintf(hookname, 40, "hook_cblas_%s",name);
 #ifdef __WIN32__
 	ptr_hsymbol = GetProcAddress(handle, hookname); 
@@ -53,33 +53,33 @@ int __flexiblas_load_cblas_function( void * handle , struct flexiblas_blasfn * f
 	ptr_csymbol = dlsym(handle, cname); 
 #endif
 
-    if (ptr_hsymbol) {
-        if ( !ptr_csymbol ) {
-            DPRINTF(0,"Found hook for cblas_%s but not the real implementation.\n", name);
-            abort();
-        }
-        fn->call_cblas = ptr_hsymbol;
-        fn->cblas_real = ptr_csymbol;
-    } else {
+	if (ptr_hsymbol) {
+		if ( !ptr_csymbol ) {
+			DPRINTF(0,"Found hook for cblas_%s but not the real implementation.\n", name);
+			abort();
+		}
+		fn->call_cblas = ptr_hsymbol;
+		fn->cblas_real = ptr_csymbol;
+	} else {
 		fn -> call_cblas = ptr_csymbol; 
-        fn -> cblas_real = ptr_csymbol;
+		fn -> cblas_real = ptr_csymbol;
 	}
 
-    if ( __flexiblas_verbose > 1) {
-        if ( ptr_hsymbol ){ 
-            fprintf(stderr, " %s.\n",(fn->call_cblas == NULL)?"failed":"sucess as hook."); 
-        } else {
-            fprintf(stderr, " %s.\n",(fn->call_cblas == NULL)?"failed":"sucess"); 
-        }
-    }
-	
-    if (fn->call_cblas == NULL) {
+	if ( __flexiblas_verbose > 2) {
+		if ( ptr_hsymbol ){ 
+			fprintf(stderr, " %s.\n",(fn->call_cblas == NULL)?"failed":"sucess as hook."); 
+		} else {
+			fprintf(stderr, " %s.\n",(fn->call_cblas == NULL)?"failed":"sucess"); 
+		}
+	}
+
+	if (fn->call_cblas == NULL) {
 		return 1; 
 	} else {
 		return 0; 
 	}
 #else 
-    fn->cblas_real = NULL;
+	fn->cblas_real = NULL;
 	fn->call_cblas = NULL; 
 	return 0; 
 #endif
@@ -88,92 +88,92 @@ int __flexiblas_load_cblas_function( void * handle , struct flexiblas_blasfn * f
 /*-----------------------------------------------------------------------------
  *  Fortran Loader 
  *-----------------------------------------------------------------------------*/
-int __flexiblas_load_fortran_function( void * handle , struct flexiblas_blasfn * fn, const char *name) 
+HIDDEN int __flexiblas_load_fortran_function( void * handle , struct flexiblas_blasfn * fn, const char *name) 
 {
 	void *ptr_fsymbol = NULL;
-    void *ptr_hsymbol = NULL;
+	void *ptr_hsymbol = NULL;
 	char fname[40]; 
-    int run = 0;
+	int run = 0;
 
 	/* Quick return  */
 	if ( handle == NULL ) {
-        fn ->fblas_real = NULL;
+		fn ->fblas_real = NULL;
 		fn ->call_fblas = NULL; 
 		return 1; 
 	}
 
-    /* Load Hook if available */
-    DPRINTF(2, "Look up hook: "); 
-    for (run = 0; run < 3 ; run++) {
-        if (run == 0) {
-            snprintf(fname, 39, "hook_%s", name);
-        } else if ( run == 1 ){
-            snprintf(fname, 39, "hook_%s_", name);
-        } else if ( run == 2 ){
-            snprintf(fname, 39, "hook_%s__", name);
-        } else {
-            break;
-        }
-        if ( __flexiblas_verbose > 1) {
-            fprintf(stderr, "%s ", fname); 
-        }
+	/* Load Hook if available */
+	DPRINTF(3, "Look up hook: "); 
+	for (run = 0; run < 3 ; run++) {
+		if (run == 0) {
+			snprintf(fname, 39, "hook_%s", name);
+		} else if ( run == 1 ){
+			snprintf(fname, 39, "hook_%s_", name);
+		} else if ( run == 2 ){
+			snprintf(fname, 39, "hook_%s__", name);
+		} else {
+			break;
+		}
+		if ( __flexiblas_verbose > 2) {
+			fprintf(stderr, "%s ", fname); 
+		}
 
 #ifdef __WIN32__
-        ptr_hsymbol = GetProcAddress(handle, fname); 
+		ptr_hsymbol = GetProcAddress(handle, fname); 
 #else 
-        ptr_hsymbol = dlsym(handle, fname); 
+		ptr_hsymbol = dlsym(handle, fname); 
 #endif
-        if (ptr_hsymbol!=NULL) {
-            break;
-        }
-    }
-    if ( __flexiblas_verbose > 1) {
-        fprintf(stderr, "%s\n", (ptr_hsymbol==NULL)?("not found."):("found.")); 
-    }
-
-
-	DPRINTF(2, "Look up: "); 
-    for (run = 0; run < 2 ; run++) {
-        if (run == 0) {
-            snprintf(fname, 39, "%s_", name);
-        } else if ( run == 1 ){
-            snprintf(fname, 39, "%s", name);
-        } else {
-            break;
-        }
-        if ( __flexiblas_verbose > 1) {
-            fprintf(stderr, "%s ", fname); 
-        }
-
-#ifdef __WIN32__
-        ptr_fsymbol = GetProcAddress(handle, fname); 
-#else 
-        ptr_fsymbol = dlsym(handle, fname); 
-#endif
-        if (ptr_fsymbol!=NULL) {
-            break;
-        }
-    }
-
-    /* Found Hook  */
-    if (ptr_hsymbol) {
-        if ( !ptr_fsymbol ) {
-            DPRINTF(0,"Found hook for %s but not the real implementation.\n", name);
-            abort();
-        }
-        fn->call_fblas = ptr_hsymbol;
-        fn->fblas_real = ptr_fsymbol;
-    } else {
-		fn -> call_fblas = ptr_fsymbol; 
-        fn -> fblas_real = ptr_fsymbol;
+		if (ptr_hsymbol!=NULL) {
+			break;
+		}
+	}
+	if ( __flexiblas_verbose > 2) {
+		fprintf(stderr, "%s\n", (ptr_hsymbol==NULL)?("not found."):("found.")); 
 	}
 
-	if ( __flexiblas_verbose > 1 ) {
-        if ( ptr_hsymbol ){ 
-     		fprintf(stderr, " %s.\n",(fn->call_fblas == NULL)?"failed":"sucess as hook."); 
-        } else {
-    		fprintf(stderr, " %s.\n",(fn->call_fblas == NULL)?"failed":"sucess"); 
-        }
+
+	DPRINTF(3, "Look up: "); 
+	for (run = 0; run < 2 ; run++) {
+		if (run == 0) {
+			snprintf(fname, 39, "%s_", name);
+		} else if ( run == 1 ){
+			snprintf(fname, 39, "%s", name);
+		} else {
+			break;
+		}
+		if ( __flexiblas_verbose > 2) {
+			fprintf(stderr, "%s ", fname); 
+		}
+
+#ifdef __WIN32__
+		ptr_fsymbol = GetProcAddress(handle, fname); 
+#else 
+		ptr_fsymbol = dlsym(handle, fname); 
+#endif
+		if (ptr_fsymbol!=NULL) {
+			break;
+		}
+	}
+
+	/* Found Hook  */
+	if (ptr_hsymbol) {
+		if ( !ptr_fsymbol ) {
+			DPRINTF(0,"Found hook for %s but not the real implementation.\n", name);
+			abort();
+		}
+		fn->call_fblas = ptr_hsymbol;
+		fn->fblas_real = ptr_fsymbol;
+	} else {
+		fn -> call_fblas = ptr_fsymbol; 
+		fn -> fblas_real = ptr_fsymbol;
+	}
+
+	if ( __flexiblas_verbose > 2 ) {
+		if ( ptr_hsymbol ){ 
+			fprintf(stderr, " %s.\n",(fn->call_fblas == NULL)?"failed":"sucess as hook."); 
+		} else {
+			fprintf(stderr, " %s.\n",(fn->call_fblas == NULL)?"failed":"sucess"); 
+		}
 	}
 	if (fn->call_fblas == NULL) {
 		return 1; 

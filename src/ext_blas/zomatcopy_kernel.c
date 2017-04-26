@@ -1,9 +1,11 @@
 
-void FNAME( char* ORDER, char* TRANS, int64_t *rows, int64_t *cols, FLOAT *alpha, FLOAT *a, int64_t *lda, FLOAT *b, int64_t *ldb)
+void FC_GLOBAL(xerbla,XERBLA)(char *name, Int *info, Int len); 
+
+void FNAME( char* ORDER, char* TRANS, Int *rows, Int *cols, FLOAT *alpha, FLOAT *a, Int *lda, FLOAT *b, Int *ldb)
 {
 
 	char Order, Trans;
-	int64_t info = -1;
+	Int info = -1;
 	FLOAT ALPHA; 
 
 	Order = toupper(*ORDER);
@@ -34,7 +36,7 @@ void FNAME( char* ORDER, char* TRANS, int64_t *rows, int64_t *cols, FLOAT *alpha
 	}
 
 	if (info >= 0) {
-    		xerbla64_( ENAME , &info, sizeof(ENAME));
+    		FC_GLOBAL(xerbla,XERBLA)( ENAME , &info, strlen(ENAME));
     		return;
   	}
 
@@ -45,7 +47,7 @@ void FNAME( char* ORDER, char* TRANS, int64_t *rows, int64_t *cols, FLOAT *alpha
 
 		if ( Trans == 'N' )
 		{
-			int64_t i,j;
+			Int i,j;
 			FLOAT *aptr,*bptr;
 
 			aptr = a;
@@ -63,7 +65,7 @@ void FNAME( char* ORDER, char* TRANS, int64_t *rows, int64_t *cols, FLOAT *alpha
 		}
 		if ( Trans == 'R' )
 		{
-			int64_t i,j;
+			Int i,j;
 			FLOAT *aptr,*bptr;
 
 			aptr = a;
@@ -81,7 +83,7 @@ void FNAME( char* ORDER, char* TRANS, int64_t *rows, int64_t *cols, FLOAT *alpha
 		}
 		if ( Trans == 'T' )
 		{
-			int64_t i,j;
+			Int i,j;
 			FLOAT *aptr,*bptr;
 			aptr = a;
 			bptr = b;
@@ -99,7 +101,7 @@ void FNAME( char* ORDER, char* TRANS, int64_t *rows, int64_t *cols, FLOAT *alpha
 		}
 		if ( Trans == 'C' )
 		{
-			int64_t i,j;
+			Int i,j;
 			FLOAT *aptr,*bptr;
 			aptr = a;
 			bptr = b;
@@ -120,7 +122,7 @@ void FNAME( char* ORDER, char* TRANS, int64_t *rows, int64_t *cols, FLOAT *alpha
 	}
 	else
 	{
-		int64_t i,j;
+		Int i,j;
 		FLOAT *aptr,*bptr;
 		aptr = a;
 		bptr = b;

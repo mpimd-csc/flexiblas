@@ -52,10 +52,10 @@ void cblas_cdotu_sub( const int N, const void *X,
 	   }
    } else {
 	float complex d; 
-#ifdef USE_INTERFACE_INTEL 
-	F77_cdotu( &d, &F77_N, X, &F77_incX, Y, &F77_incY);
+#ifdef  FLEXIBLAS_ABI_INTEL
+	FC_GLOBAL(cdotu,CDOTU)( &d, &F77_N, X, &F77_incX, Y, &F77_incY);
 #else 
-	d = F77_cdotu( &F77_N, X, &F77_incX, Y, &F77_incY);
+	d = FC_GLOBAL(cdotu,CDOTU)( &F77_N, X, &F77_incX, Y, &F77_incY);
 #endif
 	*((float complex *)dotu) = d;
    }

@@ -1,18 +1,19 @@
 
-void fsomatcopy64_( char* ORDER, char* TRANS, int64_t *rows, int64_t *cols, float *alpha, float *a, int64_t *lda, float *b, int64_t *ldb); 
-void fdomatcopy64_( char* ORDER, char* TRANS, int64_t *rows, int64_t *cols, double *alpha, double *a, int64_t *lda, double *b, int64_t *ldb); 
-void fcomatcopy64_( char* ORDER, char* TRANS, int64_t *rows, int64_t *cols, float complex *alpha, float complex *a, int64_t *lda, float complex *b, int64_t *ldb); 
-void fzomatcopy64_( char* ORDER, char* TRANS, int64_t *rows, int64_t *cols, double complex *alpha, double complex *a, int64_t *lda, double complex *b, int64_t *ldb); 
+void FC_GLOBAL(fsomatcopy,FSOMATCOPY)( char* ORDER, char* TRANS, Int *rows, Int *cols, float *alpha, float *a, Int *lda, float *b, Int *ldb); 
+void FC_GLOBAL(fdomatcopy,FDOMATCOPY)( char* ORDER, char* TRANS, Int *rows, Int *cols, double *alpha, double *a, Int *lda, double *b, Int *ldb); 
+void FC_GLOBAL(fcomatcopy,FCOMATCOPY)( char* ORDER, char* TRANS, Int *rows, Int *cols, float complex *alpha, float complex *a, Int *lda, float complex *b, Int *ldb); 
+void FC_GLOBAL(fzomatcopy,FZOMATCOPY)( char* ORDER, char* TRANS, Int *rows, Int *cols, double complex *alpha, double complex *a, Int *lda, double complex *b, Int *ldb); 
+void FC_GLOBAL(xerbla,XERBLA)(char *name, Int *info, Int len); 
 
-void FNAME( char* ORDER, char* TRANS, int64_t *rows, int64_t *cols, FLOAT *alpha, FLOAT *a, int64_t *lda, int64_t *ldb)
+void FNAME( char* ORDER, char* TRANS, Int *rows, Int *cols, FLOAT *alpha, FLOAT *a, Int *lda, Int *ldb)
 {
 
 	char Order, Trans;
-	int64_t info = -1;
+	Int info = -1;
 	FLOAT *b;
 	size_t msize;
-	int64_t i,j; 
-	int64_t _rows, _cols, _lda, _ldb; 
+	Int i,j; 
+	Int _rows, _cols, _lda, _ldb; 
 	FLOAT _alpha; 
 	FLOAT _temp; 
 
@@ -44,7 +45,7 @@ void FNAME( char* ORDER, char* TRANS, int64_t *rows, int64_t *cols, FLOAT *alpha
 	}
 
 	if (info >= 0) {
-    		xerbla64_( ENAME , &info, sizeof(ENAME));
+    		FC_GLOBAL(xerbla,XERBLA)( ENAME , &info, strlen(ENAME));
     		return;
   	}
 
@@ -160,11 +161,11 @@ void FNAME( char* ORDER, char* TRANS, int64_t *rows, int64_t *cols, FLOAT *alpha
 		{
 			_temp = (FLOAT) 1.0; 
 #ifndef _DOUBLE_PRECISION
-	  		fcomatcopy64_("C","N", rows, cols, alpha, a, lda, b, ldb );
-	  		fcomatcopy64_("C","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(fcomatcopy,FCOMATCOPY)("C","N", rows, cols, alpha, a, lda, b, ldb );
+	  		FC_GLOBAL(fcomatcopy,FCOMATCOPY)("C","N", rows, cols, &_temp , b, ldb, a, ldb );
 #else 
-	  		fzomatcopy64_("C","N", rows, cols, alpha, a, lda, b, ldb );
-	  		fzomatcopy64_("C","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(fzomatcopy,FZOMATCOPY)("C","N", rows, cols, alpha, a, lda, b, ldb );
+	  		FC_GLOBAL(fzomatcopy,FZOMATCOPY)("C","N", rows, cols, &_temp , b, ldb, a, ldb );
 
 #endif
 			free(b);
@@ -174,11 +175,11 @@ void FNAME( char* ORDER, char* TRANS, int64_t *rows, int64_t *cols, FLOAT *alpha
 		{
 			_temp = (FLOAT) 1.0; 
 #ifndef _DOUBLE_PRECISION
-	  		fcomatcopy64_("C","R", rows, cols, alpha, a, lda, b, ldb );
-	  		fcomatcopy64_("C","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(fcomatcopy,FCOMATCOPY)("C","R", rows, cols, alpha, a, lda, b, ldb );
+	  		FC_GLOBAL(fcomatcopy,FCOMATCOPY)("C","N", rows, cols, &_temp , b, ldb, a, ldb );
 #else 
-	  		fzomatcopy64_("C","R", rows, cols, alpha, a, lda, b, ldb );
-	  		fzomatcopy64_("C","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(fzomatcopy,FZOMATCOPY)("C","R", rows, cols, alpha, a, lda, b, ldb );
+	  		FC_GLOBAL(fzomatcopy,FZOMATCOPY)("C","N", rows, cols, &_temp , b, ldb, a, ldb );
 #endif
 			free(b);
 			return;
@@ -187,11 +188,11 @@ void FNAME( char* ORDER, char* TRANS, int64_t *rows, int64_t *cols, FLOAT *alpha
 		{
 			_temp = (FLOAT) 1.0; 
 #ifndef _DOUBLE_PRECISION
-	  		fcomatcopy64_("C","T", rows, cols, alpha, a, lda, b, ldb );
-	  		fcomatcopy64_("C","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(fcomatcopy,FCOMATCOPY)("C","T", rows, cols, alpha, a, lda, b, ldb );
+	  		FC_GLOBAL(fcomatcopy,FCOMATCOPY)("C","N", rows, cols, &_temp , b, ldb, a, ldb );
 #else 
-	  		fzomatcopy64_("C","T", rows, cols, alpha, a, lda, b, ldb );
-	  		fzomatcopy64_("C","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(fzomatcopy,FZOMATCOPY)("C","T", rows, cols, alpha, a, lda, b, ldb );
+	  		FC_GLOBAL(fzomatcopy,FZOMATCOPY)("C","N", rows, cols, &_temp , b, ldb, a, ldb );
 #endif
 			free(b);
 			return;
@@ -200,11 +201,11 @@ void FNAME( char* ORDER, char* TRANS, int64_t *rows, int64_t *cols, FLOAT *alpha
 		{
 			_temp = (FLOAT) 1.0; 
 #ifndef _DOUBLE_PRECISION
-	  		fcomatcopy64_("C","C", rows, cols, alpha, a, lda, b, ldb );
-	  		fcomatcopy64_("C","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(fcomatcopy,FCOMATCOPY)("C","C", rows, cols, alpha, a, lda, b, ldb );
+	  		FC_GLOBAL(fcomatcopy,FCOMATCOPY)("C","N", rows, cols, &_temp , b, ldb, a, ldb );
 #else 
-	  		fzomatcopy64_("C","C", rows, cols, alpha, a, lda, b, ldb );
-	  		fzomatcopy64_("C","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(fzomatcopy,FZOMATCOPY)("C","C", rows, cols, alpha, a, lda, b, ldb );
+	  		FC_GLOBAL(fzomatcopy,FZOMATCOPY)("C","N", rows, cols, &_temp , b, ldb, a, ldb );
 #endif
 
 			free(b);
@@ -219,11 +220,11 @@ void FNAME( char* ORDER, char* TRANS, int64_t *rows, int64_t *cols, FLOAT *alpha
 		{
 			_temp = (FLOAT) 1.0; 
 #ifndef _DOUBLE_PRECISION
-	  		fcomatcopy64_("R","N", rows, cols, alpha, a, lda, b, ldb );
-	  		fcomatcopy64_("R","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(fcomatcopy,FCOMATCOPY)("R","N", rows, cols, alpha, a, lda, b, ldb );
+	  		FC_GLOBAL(fcomatcopy,FCOMATCOPY)("R","N", rows, cols, &_temp , b, ldb, a, ldb );
 #else 
-	  		fzomatcopy64_("R","N", rows, cols, alpha, a, lda, b, ldb );
-	  		fzomatcopy64_("R","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(fzomatcopy,FZOMATCOPY)("R","N", rows, cols, alpha, a, lda, b, ldb );
+	  		FC_GLOBAL(fzomatcopy,FZOMATCOPY)("R","N", rows, cols, &_temp , b, ldb, a, ldb );
 #endif
 			free(b);
 			return;
@@ -232,11 +233,11 @@ void FNAME( char* ORDER, char* TRANS, int64_t *rows, int64_t *cols, FLOAT *alpha
 		{
 			_temp = (FLOAT) 1.0; 
 #ifndef _DOUBLE_PRECISION
-	  		fcomatcopy64_("R","R", rows, cols, alpha, a, lda, b, ldb );
-	  		fcomatcopy64_("R","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(fcomatcopy,FCOMATCOPY)("R","R", rows, cols, alpha, a, lda, b, ldb );
+	  		FC_GLOBAL(fcomatcopy,FCOMATCOPY)("R","N", rows, cols, &_temp , b, ldb, a, ldb );
 #else 
-	  		fzomatcopy64_("R","R", rows, cols, alpha, a, lda, b, ldb );
-	  		fzomatcopy64_("R","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(fzomatcopy,FZOMATCOPY)("R","R", rows, cols, alpha, a, lda, b, ldb );
+	  		FC_GLOBAL(fzomatcopy,FZOMATCOPY)("R","N", rows, cols, &_temp , b, ldb, a, ldb );
 #endif
 			free(b);
 			return;
@@ -245,11 +246,11 @@ void FNAME( char* ORDER, char* TRANS, int64_t *rows, int64_t *cols, FLOAT *alpha
 		{
 			_temp = (FLOAT) 1.0; 
 #ifndef _DOUBLE_PRECISION
-	  		fcomatcopy64_("R","T", rows, cols, alpha, a, lda, b, ldb );
-	  		fcomatcopy64_("R","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(fcomatcopy,FCOMATCOPY)("R","T", rows, cols, alpha, a, lda, b, ldb );
+	  		FC_GLOBAL(fcomatcopy,FCOMATCOPY)("R","N", rows, cols, &_temp , b, ldb, a, ldb );
 #else 
-	  		fzomatcopy64_("R","T", rows, cols, alpha, a, lda, b, ldb );
-	  		fzomatcopy64_("R","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(fzomatcopy,FZOMATCOPY)("R","T", rows, cols, alpha, a, lda, b, ldb );
+	  		FC_GLOBAL(fzomatcopy,FZOMATCOPY)("R","N", rows, cols, &_temp , b, ldb, a, ldb );
 #endif
 			free(b);
 			return;
@@ -258,11 +259,11 @@ void FNAME( char* ORDER, char* TRANS, int64_t *rows, int64_t *cols, FLOAT *alpha
 		{
 			_temp = (FLOAT) 1.0; 
 #ifndef _DOUBLE_PRECISION
-	  		fcomatcopy64_("R","C", rows, cols, alpha, a, lda, b, ldb );
-	  		fcomatcopy64_("R","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(fcomatcopy,FCOMATCOPY)("R","C", rows, cols, alpha, a, lda, b, ldb );
+	  		FC_GLOBAL(fcomatcopy,FCOMATCOPY)("R","N", rows, cols, &_temp , b, ldb, a, ldb );
 #else 
-	  		fzomatcopy64_("R","C", rows, cols, alpha, a, lda, b, ldb );
-	  		fzomatcopy64_("R","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(fzomatcopy,FZOMATCOPY)("R","C", rows, cols, alpha, a, lda, b, ldb );
+	  		FC_GLOBAL(fzomatcopy,FZOMATCOPY)("R","N", rows, cols, &_temp , b, ldb, a, ldb );
 #endif
 			free(b);
 			return;

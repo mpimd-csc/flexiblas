@@ -18,8 +18,8 @@
 #include "cblas_f77.h"
 #include "../flexiblas.h"
 
-void cblas_ztbmv(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
-                 const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_DIAG Diag,
+void cblas_ztbmv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
+                 const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
                  const int N, const int K, const void  *A, const int lda,
                  void  *X, const int incX)
 {
@@ -49,12 +49,12 @@ void cblas_ztbmv(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 		   ts = flexiblas_wtime(); 
 	   }
 	   void (*fn)
-		  (const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
-                 const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_DIAG Diag,
+		  (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
+                 const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
                  const int N, const int K, const void  *A, const int lda,
                  void  *X, const int incX)
 		   = current_backend->blas.ztbmv.call_cblas;
-	fn(order,Uplo,TransA,Diag,N,K,A,lda,X,incX);
+	fn(layout,Uplo,TransA,Diag,N,K,A,lda,X,incX);
 	if ( __flexiblas_profile ){
 	   te = flexiblas_wtime(); 
 	   current_backend->blas.ztbmv.timings[POS_CBLAS] += (te - ts); 
@@ -69,7 +69,7 @@ void cblas_ztbmv(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 	   RowMajorStrg = 0;
 
 	   CBLAS_CallFromC = 1;
-	   if (order == CblasColMajor)
+	   if (layout == CblasColMajor)
 	   {
 	      if (Uplo == CblasUpper) UL = 'U';
 	      else if (Uplo == CblasLower) UL = 'L';
@@ -99,10 +99,10 @@ void cblas_ztbmv(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 		 RowMajorStrg = 0;
 		 return;
 	      }
-	      F77_ztbmv( F77_UL, F77_TA, F77_DI, &F77_N, &F77_K, A, &F77_lda, X,
+	      FC_GLOBAL(ztbmv,ZTBMV)( F77_UL, F77_TA, F77_DI, &F77_N, &F77_K, A, &F77_lda, X,
 			      &F77_incX);
 	   }
-	   else if (order == CblasRowMajor)
+	   else if (layout == CblasRowMajor)
 	   {
 	      RowMajorStrg = 1;
 	      if (Uplo == CblasUpper) UL = 'L';
@@ -156,7 +156,7 @@ void cblas_ztbmv(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 		 RowMajorStrg = 0;
 		 return;
 	      }
-	      F77_ztbmv( F77_UL, F77_TA, F77_DI, &F77_N, &F77_K, A, &F77_lda, X,
+	      FC_GLOBAL(ztbmv,ZTBMV)( F77_UL, F77_TA, F77_DI, &F77_N, &F77_K, A, &F77_lda, X,
 			      &F77_incX);
 
 	      if (TransA == CblasConjTrans)
@@ -172,7 +172,7 @@ void cblas_ztbmv(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 		 }
 	      }
 	   }
-	   else cblas_xerbla(1, "cblas_ztbmv", "Illegal Order setting, %d\n", order);
+	   else cblas_xerbla(1, "cblas_ztbmv", "Illegal layout setting, %d\n", layout);
 	   CBLAS_CallFromC = 0;
 	   RowMajorStrg = 0;
    }

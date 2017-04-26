@@ -35,9 +35,9 @@ void cblas_xerbla(int info, const char *rout, const char *form, ...)
    char empty[1] = "";
    va_list argptr;
 
-   current_backend->xerbla.calls[POS_CBLAS]++; 
-   
    va_start(argptr, form);
+
+   current_backend->xerbla.calls[POS_CBLAS]++; 
 
    if (RowMajorStrg)
    {
@@ -84,12 +84,15 @@ void cblas_xerbla(int info, const char *rout, const char *form, ...)
          else if (info == 6) info = 8;
       }
    }
+
    if (info)
       fprintf(stderr, "Parameter %d to routine %s was incorrect\n", info, rout);
    vfprintf(stderr, form, argptr);
    va_end(argptr);
-   if (info && !info) 
-      xerbla_(empty, &info);
+   if (info) { 
+       if ( !info) 
+           xerbla_(empty, &info);
+   }
 }
 
 
@@ -98,7 +101,7 @@ int  internal_cblas_errprn(int ierr, int info, const char *form, ...);
 int  cblas_errprn(int ierr, int info, const char *, ...) __attribute__ ((weak, alias ("internal_cblas_errprn")));
 int  internal_cblas_errprn(int ierr, int info, const char *form, ...)
 #else
-int cblas_errprn(int err, int info,const char *form, ...)
+int cblas_errprn(int ierr, int info,const char *form, ...)
 #endif
 {
  

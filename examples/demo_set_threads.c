@@ -20,9 +20,10 @@
 #include <math.h>
 #include <unistd.h>
 #include <sys/time.h>
-
-
+#include "fortran_mangle.h"
 #include "flexiblas_api.h"
+
+extern void FC_GLOBAL(sgemm,SGEMM)(char* transa, char* transb, int* m, int* n, int* k, float* alpha, float* a, int* lda, float* b, int* ldb, float* beta, float* c, int* ldc);
 
 double wtime()
 {
@@ -38,7 +39,7 @@ void gemm(int N, float *A, float *B, float *C)
     double flops = pow((N/1000.0),3)*2.0;
 
     tic = wtime();
-    sgemm("N", "N", &N, &N, &N, &fone, A, &N, B, &N , &fone, C, &N);
+    FC_GLOBAL(sgemm,SGEMM)("N", "N", &N, &N, &N, &fone, A, &N, B, &N , &fone, C, &N);
     toc = wtime();
 
     printf("Time: %20lg, \tGFlops = %lg \n", toc-tic, flops/(toc-tic));

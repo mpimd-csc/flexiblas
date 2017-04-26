@@ -1,8 +1,29 @@
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright (C) Martin Koehler, 2016
+ */
+
+
+
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <complex.h>
 #include "cblas.h" 
-
+#include "fortran_mangle.h"
 #ifdef BLAS_INTERFACE_INTEL 
 #include "blas_intel.h"
 #include "extblas_intel.h"
@@ -37,7 +58,7 @@ int main ( int argc, char **argv ) {
 	printf("cblas_zdotc(test) = %lg + %lg\n", creal(ret2), cimag(ret2) ); 
 #endif
 
-	ret = zdotc_(&n, a, &one,b, &one); 
+	ret = FC_GLOBAL(zdotc,ZDOTC)(&n, a, &one,b, &one); 
 	printf("zdotc_(test)      = %lg  + %lg\n", creal(ret), cimag(ret) ); 
 
 	return 0;

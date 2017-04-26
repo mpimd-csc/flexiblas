@@ -5,6 +5,8 @@ set -e
 if [ "$1" != "upgrade" ]
 then
     update-alternatives --remove libblas.so.3 /usr/lib/@DEB_HOST_MULTIARCH@/flexiblas/update-alternatives/libblas.so.3
+    update-alternatives --remove liblapack.so.3 /usr/lib/@DEB_HOST_MULTIARCH@/flexiblas/update-alternatives/liblapack.so.3
+
     flexiblas remove NETLIB
 fi
 

@@ -45,8 +45,8 @@ typedef struct _flexiblas_info_t {
 } flexiblas_info_t;
 
 // #include "flexiblas_structures.h"
-#include "flexiblas_real_calls.h"
-#include "flexiblas_real_extblas_calls.h"
+// #include "flexiblas_real_calls.h"
+// #include "flexiblas_real_extblas_calls.h"
 
 #define FLEXIBLAS_INIT_FUNCTION_NAME "__flexiblas_initialize"
 #define FLEXIBLAS_EXIT_FUNCTION_NAME "__flexiblas_finalize" 

@@ -21,14 +21,16 @@
 #include <complex.h>
 #include <dlfcn.h>
 #include "flexiblas_backend.h" 
+#include "flexiblas_real_calls.h"
+#include "flexiblas_real_extblas_calls.h"
 
 /* Necessary to tell FlexiBLAS that this backend needs to be loaded using RTLD_GLOBAL|RTLD_LOCAL */
 #ifdef MKL_CUSTOM 
-FLEXIBLAS_LAZY_BINDING; 
+	FLEXIBLAS_LAZY_BINDING
 #else 
-FLEXIBLAS_GLOBAL_BINDING; 
-FLEXIBLAS_DEEP_BINDING;
-FLEXIBLAS_LAZY_BINDING; 
+	FLEXIBLAS_GLOBAL_BINDING
+	FLEXIBLAS_DEEP_BINDING
+	FLEXIBLAS_LAZY_BINDING
 #endif 
 
 

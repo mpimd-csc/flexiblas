@@ -50,7 +50,7 @@ void cblas_ccopy( const int N, const void *X,
 	        current_backend->blas.ccopy.timings[POS_CBLAS] += (te - ts); 
 	   } 
    } else {
-	F77_ccopy( &F77_N, X, &F77_incX, Y, &F77_incY);
+	FC_GLOBAL(ccopy,CCOPY)( &F77_N, X, &F77_incX, Y, &F77_incY);
    }
 }
 

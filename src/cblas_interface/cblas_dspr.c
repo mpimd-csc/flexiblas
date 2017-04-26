@@ -21,7 +21,7 @@
 
 
 
-void cblas_dspr(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
+void cblas_dspr(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
                 const int N, const double alpha, const double *X,
                 const int incX, double *Ap)
 {
@@ -46,11 +46,11 @@ void cblas_dspr(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 		   ts = flexiblas_wtime(); 
 	   }
 	   void (*fn)
-		(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
+		(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
                 const int N, const double alpha, const double *X,
                 const int incX, double *Ap)
 		   = current_backend->blas.dspr.call_cblas;
-	fn(order,Uplo,N,alpha,X,incX,Ap);
+	fn(layout,Uplo,N,alpha,X,incX,Ap);
 	if ( __flexiblas_profile ){
 	   te = flexiblas_wtime(); 
 	   current_backend->blas.dspr.timings[POS_CBLAS] += (te - ts); 
@@ -60,7 +60,7 @@ void cblas_dspr(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 	   extern int RowMajorStrg;
 	   RowMajorStrg = 0;
 	   CBLAS_CallFromC = 1;
-	   if (order == CblasColMajor)
+	   if (layout == CblasColMajor)
 	   {
 	      if (Uplo == CblasLower) UL = 'L';
 	      else if (Uplo == CblasUpper) UL = 'U';
@@ -75,9 +75,9 @@ void cblas_dspr(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 		 F77_UL = C2F_CHAR(&UL);
 	      #endif
 
-	      F77_dspr(F77_UL, &F77_N, &alpha, X, &F77_incX, Ap);
+	      FC_GLOBAL(dspr,DSPR)(F77_UL, &F77_N, &alpha, X, &F77_incX, Ap);
 
-	   }  else if (order == CblasRowMajor) 
+	   }  else if (layout == CblasRowMajor) 
 	   {
 	      RowMajorStrg = 1;
 	      if (Uplo == CblasLower) UL = 'U';
@@ -92,8 +92,8 @@ void cblas_dspr(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 	      #ifdef F77_CHAR
 		 F77_UL = C2F_CHAR(&UL);
 	      #endif  
-	      F77_dspr(F77_UL, &F77_N, &alpha, X, &F77_incX, Ap); 
-	   } else cblas_xerbla(1, "cblas_dspr", "Illegal Order setting, %d\n", order);
+	      FC_GLOBAL(dspr,DSPR)(F77_UL, &F77_N, &alpha, X, &F77_incX, Ap); 
+	   } else cblas_xerbla(1, "cblas_dspr", "Illegal layout setting, %d\n", layout);
 	   CBLAS_CallFromC = 0;
 	   RowMajorStrg = 0;
    }

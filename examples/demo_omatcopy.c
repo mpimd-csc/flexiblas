@@ -1,16 +1,28 @@
-/* $Id$ */
-/**
- * @file demo_omatcopy.c
- * @brief Demonstrate OMATCOPY
- * @version $Id$ 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright (C) Martin Koehler, 2016
  */
+
+
+
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <complex.h>
-
+#include "fortran_mangle.h"
 
 #ifdef INTEGER8
 #define USE_BLAS_64
@@ -53,7 +65,7 @@ int main(int argc, const char *argv[])
 
 		printf("Single\n");
 		/* OMATCOPY_2N */
-		somatcopy_("C", "N", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
+		FC_GLOBAL(somatcopy,SOMATCOPY)("C", "N", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
 		printf("OMATCOPY_2N\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -62,7 +74,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2R */
-		somatcopy_("C", "R", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
+		FC_GLOBAL(somatcopy,SOMATCOPY)("C", "R", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
 		printf("OMATCOPY_2R\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -71,7 +83,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2T */
-		somatcopy_("C", "T", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
+		FC_GLOBAL(somatcopy,SOMATCOPY)("C", "T", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
 		printf("OMATCOPY_2T\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -80,7 +92,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2C */
-		somatcopy_("C", "C", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
+		FC_GLOBAL(somatcopy,SOMATCOPY)("C", "C", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
 		printf("OMATCOPY_2C\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -106,7 +118,7 @@ int main(int argc, const char *argv[])
 
 		printf("Double\n");
 		/* OMATCOPY_2N */
-		domatcopy_("C", "N", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
+		FC_GLOBAL(domatcopy,DOMATCOPY)("C", "N", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
 		printf("OMATCOPY_2N\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -115,7 +127,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2R */
-		domatcopy_("C", "R", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
+		FC_GLOBAL(domatcopy,DOMATCOPY)("C", "R", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
 		printf("OMATCOPY_2R\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -124,7 +136,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2T */
-		domatcopy_("C", "T", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
+		FC_GLOBAL(domatcopy,DOMATCOPY)("C", "T", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
 		printf("OMATCOPY_2T\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -133,7 +145,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2C */
-		domatcopy_("C", "C", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
+		FC_GLOBAL(domatcopy,DOMATCOPY)("C", "C", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
 		printf("OMATCOPY_2C\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -159,7 +171,7 @@ int main(int argc, const char *argv[])
 
 		printf("COMPLEX16\n");
 		/* OMATCOPY_2N */
-		zomatcopy_("C", "N", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
+		FC_GLOBAL(zomatcopy,ZOMATCOPY)("C", "N", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
 		printf("OMATCOPY_2N\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -168,7 +180,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2R */
-		zomatcopy_("C", "R", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
+		FC_GLOBAL(zomatcopy,ZOMATCOPY)("C", "R", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
 		printf("OMATCOPY_2R\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -177,7 +189,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2T */
-		zomatcopy_("C", "T", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
+		FC_GLOBAL(zomatcopy,ZOMATCOPY)("C", "T", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
 		printf("OMATCOPY_2T\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -186,7 +198,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2C */
-		zomatcopy_("C", "C", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
+		FC_GLOBAL(zomatcopy,ZOMATCOPY)("C", "C", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
 		printf("OMATCOPY_2C\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -212,7 +224,7 @@ int main(int argc, const char *argv[])
 
 		printf("COMPLEX\n");
 		/* OMATCOPY_2N */
-		comatcopy_("C", "N", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
+		FC_GLOBAL(comatcopy,COMATCOPY)("C", "N", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
 		printf("OMATCOPY_2N\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -221,7 +233,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2R */
-		comatcopy_("C", "R", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
+		FC_GLOBAL(comatcopy,COMATCOPY)("C", "R", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
 		printf("OMATCOPY_2R\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -230,7 +242,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2T */
-		comatcopy_("C", "T", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
+		FC_GLOBAL(comatcopy,COMATCOPY)("C", "T", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
 		printf("OMATCOPY_2T\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -239,7 +251,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2C */
-		comatcopy_("C", "C", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
+		FC_GLOBAL(comatcopy,COMATCOPY)("C", "C", &rows, &cols, &alpha, col_A, &lda, col_B, &ldb); 
 		printf("OMATCOPY_2C\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {

@@ -18,8 +18,8 @@
 #include "cblas_f77.h"
 #include "../flexiblas.h"
 
-void cblas_zherk(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo,
-                 const enum CBLAS_TRANSPOSE Trans, const int N, const int K,
+void cblas_zherk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
+                 const CBLAS_TRANSPOSE Trans, const int N, const int K,
                  const double alpha, const void *A, const int lda,
                  const double beta, void *C, const int ldc)
 {
@@ -50,12 +50,12 @@ void cblas_zherk(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo,
 	   }
 	   
 	   void (*fn)
-		  (const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo,
-                 const enum CBLAS_TRANSPOSE Trans, const int N, const int K,
+		  (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
+                 const CBLAS_TRANSPOSE Trans, const int N, const int K,
                  const double alpha, const void *A, const int lda,
                  const double beta, void *C, const int ldc)
 		   = current_backend->blas.zherk.call_cblas;
-	fn(Order,Uplo,Trans,N,K,alpha,A,lda,beta,C,ldc);
+	fn(layout,Uplo,Trans,N,K,alpha,A,lda,beta,C,ldc);
 	if ( __flexiblas_profile ){
 	   te = flexiblas_wtime(); 
 	   current_backend->blas.zherk.timings[POS_CBLAS] += (te - ts); 
@@ -66,7 +66,7 @@ void cblas_zherk(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo,
 	   RowMajorStrg = 0;
 	   CBLAS_CallFromC = 1;
 
-	   if( Order == CblasColMajor )
+	   if( layout == CblasColMajor )
 	   {
 	      if( Uplo == CblasUpper) UL='U';
 	      else if ( Uplo == CblasLower ) UL='L';
@@ -90,9 +90,9 @@ void cblas_zherk(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo,
 	      }
 
 
-	      F77_zherk(F77_UL, F77_TR, &F77_N, &F77_K, &alpha, A, &F77_lda,
+	      FC_GLOBAL(zherk,ZHERK)(F77_UL, F77_TR, &F77_N, &F77_K, &alpha, A, &F77_lda,
 			     &beta, C, &F77_ldc);
-	   } else if (Order == CblasRowMajor)
+	   } else if (layout == CblasRowMajor)
 	   {
 	      RowMajorStrg = 1;
 	      if( Uplo == CblasUpper) UL='L';
@@ -116,10 +116,10 @@ void cblas_zherk(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo,
 	      }
 
 
-	      F77_zherk(F77_UL, F77_TR, &F77_N, &F77_K, &alpha, A, &F77_lda,
+	      FC_GLOBAL(zherk,ZHERK)(F77_UL, F77_TR, &F77_N, &F77_K, &alpha, A, &F77_lda,
 			&beta, C, &F77_ldc);
 	   } 
-	   else  cblas_xerbla(1, "cblas_zherk", "Illegal Order setting, %d\n", Order);
+	   else  cblas_xerbla(1, "cblas_zherk", "Illegal layout setting, %d\n", layout);
 	   CBLAS_CallFromC = 0;
 	   RowMajorStrg = 0;
    }

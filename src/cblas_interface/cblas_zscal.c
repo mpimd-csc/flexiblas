@@ -48,7 +48,7 @@ void cblas_zscal( const int N, const void *alpha, void *X,
 	   current_backend->blas.zscal.timings[POS_CBLAS] += (te - ts); 
 	}
    } else {
-	F77_zscal( &F77_N, alpha, X, &F77_incX);
+	FC_GLOBAL(zscal,ZSCAL)( &F77_N, alpha, X, &F77_incX);
    }
 }
 

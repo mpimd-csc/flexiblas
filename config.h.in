@@ -24,14 +24,33 @@
 #cmakedefine CMAKE_INSTALL_PREFIX "@CMAKE_INSTALL_PREFIX@" 
 #cmakedefine CMAKE_INSTALL_FULL_SYSCONFDIR "@CMAKE_INSTALL_FULL_SYSCONFDIR@"
 #cmakedefine FLEXIBLAS_INTEGER8
-#cmakedefine USE_INTERFACE_INTEL
 #cmakedefine EXTBLAS
 #cmakedefine HAVE_ATTR_ALIAS 
 #cmakedefine HAVE_ATTR_CONSTRUCTOR 
+#cmakedefine HAVE_ATTR_HIDDEN
 #cmakedefine FALLBACK_NAME 
+#cmakedefine FLEXIBLAS_LAPACK
+#cmakedefine FLEXIBLAS_LAPACK_3_7_0
+#cmakedefine FLEXIBLAS_LAPACK_3_7_0_WODPRC
+#cmakedefine FLEXIBLAS_LAPACK_3_6_1
+#cmakedefine FLEXIBLAS_LAPACK_3_6_1_WODPRC
+#cmakedefine FLEXIBLAS_LAPACK_3_6_0
+#cmakedefine FLEXIBLAS_LAPACK_3_6_0_WODPRC
+#cmakedefine FLEXIBLAS_LAPACK_3_5_0
+#cmakedefine FLEXIBLAS_LAPACK_3_4_2
+#cmakedefine FLEXIBLAS_LAPACK_3_4_1
+#cmakedefine FLEXIBLAS_LAPACK_3_4_0
+#cmakedefine FLEXIBLAS_LAPACK_3_3_1
+#cmakedefine FLEXIBLAS_LAPACK_3_3_0
+
+#cmakedefine FLEXIBLAS_ABI_IBM
+#cmakedefine FLEXIBLAS_ABI_INTEL
+#cmakedefine FLEXIBLAS_ABI_GNU 
 
 #ifndef FALLBACK_NAME 
- #define FALLBACK_NAME "libblas_netlib"
+ #define FALLBACK_NAME "libflexiblas_netlib"
 #endif 
-
+#ifndef LAPACK_FALLBACK_NAME
+ #define LAPACK_FALLBACK_NAME "libflexiblas_fallback_lapack"
+#endif 
 #endif 

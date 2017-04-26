@@ -40,7 +40,7 @@ void cblas_srotg(  float *a, float *b, float *c, float *s)
 		   current_backend->blas.srotg.timings[POS_CBLAS] += (te - ts); 
 	   }
    } else {
-	F77_srotg(a,b,c,s);    
+	FC_GLOBAL(srotg,SROTG)(a,b,c,s);    
    }
    return; 
 }

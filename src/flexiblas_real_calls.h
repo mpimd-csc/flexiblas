@@ -12,15 +12,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015
+ * Copyright (C) Martin Koehler, 2015-2016
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Fri Sep 18 15:46:22 2015 */ 
+ /* Generated: Tue Mar  7 10:13:35 2017 */ 
         
 #ifndef FLEXIBLAS_REAL_CALLS_H
 #define FLEXIBLAS_REAL_CALLS_H
 
 #include <stdint.h>
+
+#include "fortran_mangle.h"
 #include <complex.h>
 
 #ifdef __cplusplus

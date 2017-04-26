@@ -19,8 +19,8 @@
 #include "../flexiblas.h"
 
 
-void cblas_ssbmv(const enum CBLAS_ORDER order,
-                 const enum CBLAS_UPLO Uplo, const int N, const int K,
+void cblas_ssbmv(const CBLAS_LAYOUT layout,
+                 const CBLAS_UPLO Uplo, const int N, const int K,
                  const float alpha, const float  *A, const int lda,
                  const float  *X, const int incX, const float beta,
                  float  *Y, const int incY)
@@ -48,13 +48,13 @@ void cblas_ssbmv(const enum CBLAS_ORDER order,
 		   ts = flexiblas_wtime(); 
 	   }
 	   void (*fn)
-		 (const enum CBLAS_ORDER order,
-                 const enum CBLAS_UPLO Uplo, const int N, const int K,
+		 (const CBLAS_LAYOUT layout,
+                 const CBLAS_UPLO Uplo, const int N, const int K,
                  const float alpha, const float  *A, const int lda,
                  const float  *X, const int incX, const float beta,
                  float  *Y, const int incY)
 		   = current_backend->blas.ssbmv.call_cblas;
-		fn(order,Uplo,N,K,alpha,A,lda,X,incX,beta,Y,incY);
+		fn(layout,Uplo,N,K,alpha,A,lda,X,incX,beta,Y,incY);
 	   if ( __flexiblas_profile ){
 	   	te = flexiblas_wtime(); 
 		   current_backend->blas.ssbmv.timings[POS_CBLAS] += (te - ts); 
@@ -65,7 +65,7 @@ void cblas_ssbmv(const enum CBLAS_ORDER order,
 	   RowMajorStrg = 0;
 
 	   CBLAS_CallFromC = 1;
-	   if (order == CblasColMajor)
+	   if (layout == CblasColMajor)
 	   {
 	      if (Uplo == CblasUpper) UL = 'U';
 	      else if (Uplo == CblasLower) UL = 'L';
@@ -76,10 +76,10 @@ void cblas_ssbmv(const enum CBLAS_ORDER order,
 		 RowMajorStrg = 0;
 		 return;
 	      }
-	      F77_ssbmv(F77_UL, &F77_N, &F77_K, &alpha, A, &F77_lda, X,  
+	      FC_GLOBAL(ssbmv,SSBMV)(F77_UL, &F77_N, &F77_K, &alpha, A, &F77_lda, X,  
 			     &F77_incX, &beta, Y, &F77_incY);
 	   }
-	   else if (order == CblasRowMajor)
+	   else if (layout == CblasRowMajor)
 	   {
 	      RowMajorStrg = 1;
 	      if (Uplo == CblasUpper) UL = 'L';
@@ -91,10 +91,10 @@ void cblas_ssbmv(const enum CBLAS_ORDER order,
 		 RowMajorStrg = 0;
 		 return;
 	      }
-	      F77_ssbmv(F77_UL, &F77_N, &F77_K, &alpha, 
+	      FC_GLOBAL(ssbmv,SSBMV)(F77_UL, &F77_N, &F77_K, &alpha, 
 			     A ,&F77_lda, X,&F77_incX, &beta, Y, &F77_incY);
 	   }
-	   else cblas_xerbla(1, "cblas_ssbmv", "Illegal Order setting, %d\n", order);
+	   else cblas_xerbla(1, "cblas_ssbmv", "Illegal layout setting, %d\n", layout);
 	   CBLAS_CallFromC = 0;
 	   RowMajorStrg = 0;
    }

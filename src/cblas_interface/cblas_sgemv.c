@@ -19,8 +19,8 @@
 #include "../flexiblas.h"
 
 
-void cblas_sgemv(const enum CBLAS_ORDER order,
-                 const enum CBLAS_TRANSPOSE TransA, const int M, const int N,
+void cblas_sgemv(const CBLAS_LAYOUT layout,
+                 const CBLAS_TRANSPOSE TransA, const int M, const int N,
                  const float alpha, const float  *A, const int lda,
                  const float  *X, const int incX, const float beta,
                  float  *Y, const int incY)
@@ -47,12 +47,12 @@ void cblas_sgemv(const enum CBLAS_ORDER order,
 	   if ( __flexiblas_profile ) {
 		   ts = flexiblas_wtime(); 
 	   }
-	   void (*fn)(const enum CBLAS_ORDER order,
-                 const enum CBLAS_TRANSPOSE TransA, const int M, const int N,
+	   void (*fn)(const CBLAS_LAYOUT layout,
+                 const CBLAS_TRANSPOSE TransA, const int M, const int N,
                  const float alpha, const float  *A, const int lda,
                  const float  *X, const int incX, const float beta,
                  float  *Y, const int incY) = current_backend->blas.sgemv.call_cblas;
-	   fn ( order, TransA, M, N, alpha, A, lda, X, incX, beta, Y,incY); 
+	   fn ( layout, TransA, M, N, alpha, A, lda, X, incX, beta, Y,incY); 
 	   if ( __flexiblas_profile ){
 		   te = flexiblas_wtime(); 
 		   current_backend->blas.sgemv.timings[POS_CBLAS] += (te - ts); 
@@ -63,7 +63,7 @@ void cblas_sgemv(const enum CBLAS_ORDER order,
 	   RowMajorStrg = 0;
 
 	   CBLAS_CallFromC = 1;
-	   if (order == CblasColMajor)
+	   if (layout == CblasColMajor)
 	   {
 	      if (TransA == CblasNoTrans) TA = 'N';
 	      else if (TransA == CblasTrans) TA = 'T';
@@ -78,10 +78,10 @@ void cblas_sgemv(const enum CBLAS_ORDER order,
 	      #ifdef F77_CHAR
 		 F77_TA = C2F_CHAR(&TA);
 	      #endif
-	      F77_sgemv(F77_TA, &F77_M, &F77_N, &alpha, A, &F77_lda, X, &F77_incX, 
+	      FC_GLOBAL(sgemv,SGEMV)(F77_TA, &F77_M, &F77_N, &alpha, A, &F77_lda, X, &F77_incX, 
 			&beta, Y, &F77_incY);
 	   }
-	   else if (order == CblasRowMajor)
+	   else if (layout == CblasRowMajor)
 	   {
 	      RowMajorStrg = 1;
 	      if (TransA == CblasNoTrans) TA = 'T';
@@ -97,10 +97,10 @@ void cblas_sgemv(const enum CBLAS_ORDER order,
 	      #ifdef F77_CHAR
 		 F77_TA = C2F_CHAR(&TA);
 	      #endif
-	      F77_sgemv(F77_TA, &F77_N, &F77_M, &alpha, A, &F77_lda, X,
+	      FC_GLOBAL(sgemv,SGEMV)(F77_TA, &F77_N, &F77_M, &alpha, A, &F77_lda, X,
 			&F77_incX, &beta, Y, &F77_incY);
 	   }
-	   else cblas_xerbla(1, "cblas_sgemv", "Illegal Order setting, %d\n", order);
+	   else cblas_xerbla(1, "cblas_sgemv", "Illegal layout setting, %d\n", layout);
 	   CBLAS_CallFromC = 0;
 	   RowMajorStrg = 0;
    }

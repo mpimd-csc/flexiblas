@@ -19,8 +19,8 @@
 #include "../flexiblas.h"
 
 
-void cblas_zsymm(const enum CBLAS_ORDER Order, const enum CBLAS_SIDE Side,
-                 const enum CBLAS_UPLO Uplo, const int M, const int N,
+void cblas_zsymm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
+                 const CBLAS_UPLO Uplo, const int M, const int N,
                  const void *alpha, const void  *A, const int lda,
                  const void  *B, const int ldb, const void *beta,
                  void  *C, const int ldc)
@@ -51,13 +51,13 @@ void cblas_zsymm(const enum CBLAS_ORDER Order, const enum CBLAS_SIDE Side,
 		   ts = flexiblas_wtime(); 
 	   }
 	   void (*fn)
-		 (const enum CBLAS_ORDER Order, const enum CBLAS_SIDE Side,
-                 const enum CBLAS_UPLO Uplo, const int M, const int N,
+		 (const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
+                 const CBLAS_UPLO Uplo, const int M, const int N,
                  const void *alpha, const void  *A, const int lda,
                  const void  *B, const int ldb, const void *beta,
                  void  *C, const int ldc)
 		   = current_backend->blas.zsymm.call_cblas;
-	fn(Order,Side,Uplo,M,N,alpha,A,lda,B,ldb,beta,C,ldc);
+	fn(layout,Side,Uplo,M,N,alpha,A,lda,B,ldb,beta,C,ldc);
 	if (__flexiblas_profile ) {
 	   te = flexiblas_wtime(); 
 	   current_backend->blas.zsymm.timings[POS_CBLAS] += (te - ts); 
@@ -69,7 +69,7 @@ void cblas_zsymm(const enum CBLAS_ORDER Order, const enum CBLAS_SIDE Side,
 	   RowMajorStrg = 0;
 	   CBLAS_CallFromC = 1;
 
-	   if( Order == CblasColMajor )
+	   if( layout == CblasColMajor )
 	   {
 	      if( Side == CblasRight) SD='R';
 	      else if ( Side == CblasLeft ) SD='L';
@@ -91,9 +91,9 @@ void cblas_zsymm(const enum CBLAS_ORDER Order, const enum CBLAS_SIDE Side,
 		 return;
 	      }
 
-	      F77_zsymm(F77_SD, F77_UL, &F77_M, &F77_N, alpha, A, &F77_lda,
+	      FC_GLOBAL(zsymm,ZSYMM)(F77_SD, F77_UL, &F77_M, &F77_N, alpha, A, &F77_lda,
 			      B, &F77_ldb, beta, C, &F77_ldc);
-	   } else if (Order == CblasRowMajor)
+	   } else if (layout == CblasRowMajor)
 	   {
 	      RowMajorStrg = 1;
 	      if( Side == CblasRight) SD='L';
@@ -117,10 +117,10 @@ void cblas_zsymm(const enum CBLAS_ORDER Order, const enum CBLAS_SIDE Side,
 	      }
 
 
-	      F77_zsymm(F77_SD, F77_UL, &F77_N, &F77_M, alpha, A, &F77_lda,
+	      FC_GLOBAL(zsymm,ZSYMM)(F77_SD, F77_UL, &F77_N, &F77_M, alpha, A, &F77_lda,
 			     B, &F77_ldb, beta, C, &F77_ldc);
 	   } 
-	   else cblas_xerbla(1, "cblas_zsymm", "Illegal Order setting, %d\n", Order);
+	   else cblas_xerbla(1, "cblas_zsymm", "Illegal layout setting, %d\n", layout);
 	   CBLAS_CallFromC = 0;
 	   RowMajorStrg = 0;
    }

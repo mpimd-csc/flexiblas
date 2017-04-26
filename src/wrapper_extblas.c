@@ -25,8 +25,8 @@
 #include <complex.h> 
 #include <math.h>
 
+#include "fortran_mangle.h"
 #include "flexiblas.h"
-
 
 /*-----------------------------------------------------------------------------
  *  SCABS / DCABS
@@ -53,8 +53,6 @@ double dcabs1_(double complex *Z){
 }
 
 double dcabs1(double complex *Z) __attribute__((alias("dcabs1_"))); 
-double dcabs132_(double complex *Z) __attribute__((alias("dcabs1_"))); 
-double dcabs164_(double complex *Z) __attribute__((alias("dcabs1_"))); 
 
 float scabs1_(float complex *Z){
 #ifdef __i386__
@@ -80,15 +78,12 @@ float scabs1_(float complex *Z){
 }
 
 float scabs1(float complex *Z) __attribute__((alias("scabs1_"))); 
-float scabs132_(float complex *Z) __attribute__((alias("scabs1_"))); 
-float scabs164_(float complex *Z) __attribute__((alias("scabs1_"))); 
 
 
 #ifdef EXTBLAS_ENABLED
 #include "extblas.h"
-#define INT_SELECT(F4,F8) ((handle->info.backend_integer_size == 4) ? ((void*)F4):((void*)F8)) 
 
-int __flexiblas_load_extblas(flexiblas_backend_t * handle, int *loaded, int *failed) 
+int __flexiblas_load_extblas(flexiblas_backend_t * handle, int *failed) 
 {
 	int ifailed = *failed; 
 
@@ -101,7 +96,7 @@ int __flexiblas_load_extblas(flexiblas_backend_t * handle, int *loaded, int *fai
 		if ( __flexiblas_verbose > 0 ) {
 			fprintf(stderr,PRINT_PREFIX "flexiblas SAXPBY loaded.\n");
 		}
-		handle->extblas.saxpby.call_fblas = INT_SELECT(fsaxpby32_, fsaxpby64_); 
+		handle->extblas.saxpby.call_fblas = FC_GLOBAL(fsaxpby,FSAXPBY); 
 		handle->extblas.saxpby.call_cblas = NULL; 
 	} else {
 		if ( __flexiblas_load_cblas_function(handle->library_handle, &(handle->extblas.saxpby), "saxpby") != 0 ){
@@ -114,7 +109,7 @@ int __flexiblas_load_extblas(flexiblas_backend_t * handle, int *loaded, int *fai
 		if ( __flexiblas_verbose > 0 ) {
 			fprintf(stderr,PRINT_PREFIX "flexiblas SOMATCOPY loaded.\n");
 		}
-		handle->extblas.somatcopy.call_fblas = INT_SELECT(fsomatcopy32_, fsomatcopy64_); 
+		handle->extblas.somatcopy.call_fblas = FC_GLOBAL(fsomatcopy,FSOMATCOPY); 
 		handle->extblas.somatcopy.call_cblas = NULL; 
 	} else {
 		if ( __flexiblas_load_cblas_function(handle->library_handle, &(handle->extblas.somatcopy), "somatcopy") != 0 ){
@@ -128,7 +123,7 @@ int __flexiblas_load_extblas(flexiblas_backend_t * handle, int *loaded, int *fai
 		if ( __flexiblas_verbose > 0 ) {
 			fprintf(stderr,PRINT_PREFIX "flexiblas SIMATCOPY loaded.\n");
 		}
-		handle->extblas.simatcopy.call_fblas = INT_SELECT(fsimatcopy32_, fsimatcopy64_); 
+		handle->extblas.simatcopy.call_fblas = FC_GLOBAL(fsimatcopy,FSIMATCOPY);  
 		handle->extblas.simatcopy.call_cblas = NULL; 
 	} else {
 		if ( __flexiblas_load_cblas_function(handle->library_handle, &(handle->extblas.simatcopy), "simatcopy") != 0 ){
@@ -136,12 +131,12 @@ int __flexiblas_load_extblas(flexiblas_backend_t * handle, int *loaded, int *fai
 		}
 	}
 
-    /* Load SGEADD */
+	/* Load SGEADD */
 	if ( __flexiblas_load_fortran_function(handle->library_handle, &(handle->extblas.sgeadd), "sgeadd") != 0 ) {
 		if ( __flexiblas_verbose > 0 ) {
 			fprintf(stderr,PRINT_PREFIX "flexiblas SGEADD loaded.\n");
 		}
-		handle->extblas.sgeadd.call_fblas = INT_SELECT(fsgeadd32_, fsgeadd64_); 
+		handle->extblas.sgeadd.call_fblas = FC_GLOBAL(fsgeadd,FSGEADD); 
 		handle->extblas.sgeadd.call_cblas = NULL; 
 	} else {
 		if ( __flexiblas_load_cblas_function(handle->library_handle, &(handle->extblas.sgeadd), "sgeadd") != 0 ){
@@ -157,7 +152,7 @@ int __flexiblas_load_extblas(flexiblas_backend_t * handle, int *loaded, int *fai
 		if ( __flexiblas_verbose > 0 ) {
 			fprintf(stderr,PRINT_PREFIX "flexiblas DAXPBY loaded.\n");
 		}
-		handle->extblas.daxpby.call_fblas = INT_SELECT(fdaxpby32_, fdaxpby64_); 
+		handle->extblas.daxpby.call_fblas = FC_GLOBAL(fdaxpby,FDAXPBY); 
 		handle->extblas.daxpby.call_cblas = NULL; 
 	} else {
 		if ( __flexiblas_load_cblas_function(handle->library_handle, &(handle->extblas.daxpby), "daxpby") != 0 ){
@@ -170,7 +165,7 @@ int __flexiblas_load_extblas(flexiblas_backend_t * handle, int *loaded, int *fai
 		if ( __flexiblas_verbose > 0 ) {
 			fprintf(stderr,PRINT_PREFIX "flexiblas DOMATCOPY loaded.\n");
 		}
-		handle->extblas.domatcopy.call_fblas = INT_SELECT(fdomatcopy32_, fdomatcopy64_); 
+		handle->extblas.domatcopy.call_fblas = FC_GLOBAL(fdomatcopy,FDOMATCOPY); 
 		handle->extblas.domatcopy.call_cblas = NULL; 
 	} else {
 		if ( __flexiblas_load_cblas_function(handle->library_handle, &(handle->extblas.domatcopy), "domatcopy") != 0 ){
@@ -184,7 +179,7 @@ int __flexiblas_load_extblas(flexiblas_backend_t * handle, int *loaded, int *fai
 		if ( __flexiblas_verbose > 0 ) {
 			fprintf(stderr,PRINT_PREFIX "flexiblas DIMATCOPY loaded.\n");
 		}
-		handle->extblas.dimatcopy.call_fblas = INT_SELECT(fdimatcopy32_, fdimatcopy64_); 
+		handle->extblas.dimatcopy.call_fblas = FC_GLOBAL(fdimatcopy,FDIMATCOPY);  
 		handle->extblas.dimatcopy.call_cblas = NULL; 
 	} else {
 		if ( __flexiblas_load_cblas_function(handle->library_handle, &(handle->extblas.dimatcopy), "dimatcopy") != 0 ){
@@ -197,7 +192,7 @@ int __flexiblas_load_extblas(flexiblas_backend_t * handle, int *loaded, int *fai
 		if ( __flexiblas_verbose > 0 ) {
 			fprintf(stderr,PRINT_PREFIX "flexiblas DGEADD loaded.\n");
 		}
-		handle->extblas.dgeadd.call_fblas = INT_SELECT(fdgeadd32_, fdgeadd64_); 
+		handle->extblas.dgeadd.call_fblas = FC_GLOBAL(fdgeadd,FGEADD); 
 		handle->extblas.dgeadd.call_cblas = NULL; 
 	} else {
 		if ( __flexiblas_load_cblas_function(handle->library_handle, &(handle->extblas.dgeadd), "dgeadd") != 0 ){
@@ -213,7 +208,7 @@ int __flexiblas_load_extblas(flexiblas_backend_t * handle, int *loaded, int *fai
 		if ( __flexiblas_verbose > 0 ) {
 			fprintf(stderr,PRINT_PREFIX "flexiblas CAXPBY loaded.\n");
 		}
-		handle->extblas.caxpby.call_fblas = INT_SELECT(fcaxpby32_, fcaxpby64_); 
+		handle->extblas.caxpby.call_fblas = FC_GLOBAL(fcaxpby,FCAXPBY); 
 		handle->extblas.caxpby.call_cblas = NULL; 
 	} else {
 		if ( __flexiblas_load_cblas_function(handle->library_handle, &(handle->extblas.caxpby), "caxpby") != 0 ){
@@ -226,7 +221,7 @@ int __flexiblas_load_extblas(flexiblas_backend_t * handle, int *loaded, int *fai
 		if ( __flexiblas_verbose > 0 ) {
 			fprintf(stderr,PRINT_PREFIX "flexiblas COMATCOPY loaded.\n");
 		}
-		handle->extblas.comatcopy.call_fblas = INT_SELECT(fcomatcopy32_, fcomatcopy64_); 
+		handle->extblas.comatcopy.call_fblas = FC_GLOBAL(fcomatcopy,FCOMATCOPY);  
 		handle->extblas.comatcopy.call_cblas = NULL; 
 	} else {
 		if ( __flexiblas_load_cblas_function(handle->library_handle, &(handle->extblas.comatcopy), "comatcopy") != 0 ){
@@ -241,7 +236,7 @@ int __flexiblas_load_extblas(flexiblas_backend_t * handle, int *loaded, int *fai
 		if ( __flexiblas_verbose > 0 ) {
 			fprintf(stderr,PRINT_PREFIX "flexiblas CIMATCOPY loaded.\n");
 		}
-		handle->extblas.cimatcopy.call_fblas = INT_SELECT(fcimatcopy32_, fcimatcopy64_); 
+		handle->extblas.cimatcopy.call_fblas = FC_GLOBAL(fcimatcopy,FCIMATCOPY); 
 		handle->extblas.cimatcopy.call_cblas = NULL; 
 	} else {
 		if ( __flexiblas_load_cblas_function(handle->library_handle, &(handle->extblas.cimatcopy), "cimatcopy") != 0 ){
@@ -254,7 +249,7 @@ int __flexiblas_load_extblas(flexiblas_backend_t * handle, int *loaded, int *fai
 		if ( __flexiblas_verbose > 0 ) {
 			fprintf(stderr,PRINT_PREFIX "flexiblas CGEADD loaded.\n");
 		}
-		handle->extblas.cgeadd.call_fblas = INT_SELECT(fcgeadd32_, fcgeadd64_); 
+		handle->extblas.cgeadd.call_fblas = FC_GLOBAL(fcgeadd,FCGEADD);  
 		handle->extblas.cgeadd.call_cblas = NULL; 
 	} else {
 		if ( __flexiblas_load_cblas_function(handle->library_handle, &(handle->extblas.cgeadd), "cgeadd") != 0 ){
@@ -271,7 +266,7 @@ int __flexiblas_load_extblas(flexiblas_backend_t * handle, int *loaded, int *fai
 		if ( __flexiblas_verbose > 0 ) {
 			fprintf(stderr,PRINT_PREFIX "flexiblas ZAXPBY loaded.\n");
 		}
-		handle->extblas.zaxpby.call_fblas = INT_SELECT(fzaxpby32_, fzaxpby64_); 
+		handle->extblas.zaxpby.call_fblas =  FC_GLOBAL(fdaxpby,FDAXPBY);
 		handle->extblas.zaxpby.call_cblas = NULL; 
 	} else {
 		if ( __flexiblas_load_cblas_function(handle->library_handle, &(handle->extblas.zaxpby), "zaxpby") != 0 ){
@@ -284,7 +279,7 @@ int __flexiblas_load_extblas(flexiblas_backend_t * handle, int *loaded, int *fai
 		if ( __flexiblas_verbose > 0 ) {
 			fprintf(stderr,PRINT_PREFIX "flexiblas ZOMATCOPY loaded.\n");
 		}
-		handle->extblas.zomatcopy.call_fblas = INT_SELECT(fzomatcopy32_, fzomatcopy64_); 
+		handle->extblas.zomatcopy.call_fblas = FC_GLOBAL(fzomatcopy,FZOMATCOPY);  
 		handle->extblas.zomatcopy.call_cblas = NULL; 
 	} else {
 		if ( __flexiblas_load_cblas_function(handle->library_handle, &(handle->extblas.zomatcopy), "zomatcopy") != 0 ){
@@ -298,7 +293,7 @@ int __flexiblas_load_extblas(flexiblas_backend_t * handle, int *loaded, int *fai
 		if ( __flexiblas_verbose > 0 ) {
 			fprintf(stderr,PRINT_PREFIX "flexiblas ZIMATCOPY loaded.\n");
 		}
-		handle->extblas.zimatcopy.call_fblas = INT_SELECT(fzimatcopy32_, fzimatcopy64_); 
+		handle->extblas.zimatcopy.call_fblas =  FC_GLOBAL(fzimatcopy,FZIMATCOPY); 
 		handle->extblas.zimatcopy.call_cblas = NULL; 
 	} else {
 		if ( __flexiblas_load_cblas_function(handle->library_handle, &(handle->extblas.zimatcopy), "zimatcopy") != 0 ){
@@ -311,7 +306,7 @@ int __flexiblas_load_extblas(flexiblas_backend_t * handle, int *loaded, int *fai
 		if ( __flexiblas_verbose > 0 ) {
 			fprintf(stderr,PRINT_PREFIX "flexiblas ZGEADD loaded.\n");
 		}
-		handle->extblas.zgeadd.call_fblas = INT_SELECT(fzgeadd32_, fzgeadd64_); 
+		handle->extblas.zgeadd.call_fblas = FC_GLOBAL(fzgeadd,FZGEADD); 
 		handle->extblas.zgeadd.call_cblas = NULL; 
 	} else {
 		if ( __flexiblas_load_cblas_function(handle->library_handle, &(handle->extblas.zgeadd), "zgeadd") != 0 ){
@@ -329,7 +324,7 @@ int __flexiblas_load_extblas(flexiblas_backend_t * handle, int *loaded, int *fai
 #else 
 
 /* Dummy if we do not use EXT BLAS  */
-int __flexiblas_load_extblas(void * handle, int *loaded, int *failed) 
+int __flexiblas_load_extblas(void * handle, int *failed) 
 {
 	return 0; 
 }

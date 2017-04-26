@@ -48,7 +48,7 @@ float cblas_scasum( const int N, const void *X, const int incX)
 		   current_backend->blas.scasum.timings[POS_CBLAS] += (te - ts); 
 	   }
    } else {
-   	asum = F77_scasum( &F77_N, X, &F77_incX);
+   	asum = FC_GLOBAL(scasum,SCASUM)( &F77_N, X, &F77_incX);
    }
    return asum;
 }

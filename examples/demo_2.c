@@ -1,8 +1,30 @@
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright (C) Martin Koehler, 2016
+ */
+
+
+
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/time.h>
 
+#include "fortran_mangle.h"
 
 #ifdef BLAS_INTERFACE_INTEL 
 #include "blas_intel.h"
@@ -51,7 +73,7 @@ int main (int argc, char **argv) {
 	}
 	ts = wtime(); 
 	for (i=0; i < 10; i++){
-		dgemm_("N","N", &n,&n,&n,&alpha, A, &n, B,&n, &beta, C, &n); 
+		FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &n, B,&n, &beta, C, &n); 
 	}
 	te = wtime(); 
 	printf("time: %lg\n", (te-ts)/10.0);

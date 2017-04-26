@@ -18,7 +18,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
-
+#include "fortran_mangle.h"
 /*-----------------------------------------------------------------------------
  *  Include the right header files 
  *-----------------------------------------------------------------------------*/
@@ -45,23 +45,11 @@ int main ( int argc, char **argv ) {
 	double test1[]={1,2,3,4,5,6,7,8,9,10}; 
 	Int N = 10;
 	Int one = 1; 
-    int N32 = 10;
-    int one32 = 1;
-    int64_t N64 = 10;
-    int64_t one64 = 1;
 	double ret = 0, ret2 = 0;
 
     printf("Generic Interface\n");
-	ret = dasum_(&N, test1, &one); 
+	ret = FC_GLOBAL(dasum,DASUM)(&N, test1, &one); 
 	printf("dasum_(test)      = %lg\n", ret ); 
-
-    printf("Int32 Interface\n");
-	ret = dasum32_(&N32, test1, &one32); 
-	printf("dasum32_(test)      = %lg\n", ret ); 
-
-    printf("Int64 Interface\n");
-	ret = dasum64_(&N64, test1, &one64); 
-	printf("dasum64_(test)      = %lg\n", ret ); 
 
 #ifdef FLEXIBLAS_CBLAS 
 	ret2 = cblas_dasum(N, test1, one); 

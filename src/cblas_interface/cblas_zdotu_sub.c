@@ -53,10 +53,10 @@ void cblas_zdotu_sub( const int N, const void *X,
 	  }
    } else {
 	double complex d; 
-#ifdef USE_INTERFACE_INTEL 
-	F77_zdotu( &d, &F77_N, X, &F77_incX, Y, &F77_incY);
+#ifdef FLEXIBLAS_ABI_INTEL
+	FC_GLOBAL(zdotu,ZDOTU)( &d, &F77_N, X, &F77_incX, Y, &F77_incY);
 #else 
-	d = F77_zdotu( &F77_N, X, &F77_incX, Y, &F77_incY);
+	d = FC_GLOBAL(zdotu,ZDOTU)( &F77_N, X, &F77_incX, Y, &F77_incY);
 #endif
 	*((double complex *)dotu) = d;
    }

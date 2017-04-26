@@ -40,7 +40,7 @@ void cblas_drotg(  double *a, double *b, double *c, double *s)
 		   current_backend->blas.drotg.timings[POS_CBLAS] += (te - ts); 
 	   }
    } else {
-	F77_drotg(a,b,c,s);    
+	FC_GLOBAL(drotg,DROTG)(a,b,c,s);    
    }
    return; 
 }

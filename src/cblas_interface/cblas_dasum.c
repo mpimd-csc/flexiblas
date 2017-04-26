@@ -48,7 +48,7 @@ double cblas_dasum( const int N, const double *X, const int incX)
 	        current_backend->blas.dasum.timings[POS_CBLAS] += (te - ts); 
 	   }
    } else {
-	   asum = F77_dasum( &F77_N, X, &F77_incX);
+	   asum = FC_GLOBAL(dasum,DASUM)( &F77_N, X, &F77_incX);
    }
 
    return asum;

@@ -46,7 +46,7 @@ CBLAS_INDEX cblas_icamax( const int N, const void *X, const int incX)
 	   current_backend->blas.icamax.timings[POS_CBLAS] += (te - ts); 
 	}
    } else {
-	iamax = F77_icamax( &F77_N, X, &F77_incX);
+	iamax = FC_GLOBAL(icamax,ICAMAX)( &F77_N, X, &F77_incX);
 	iamax = iamax ? iamax-1 : 0;
    }
    return iamax; 

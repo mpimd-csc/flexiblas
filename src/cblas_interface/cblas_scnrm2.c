@@ -47,7 +47,7 @@ float cblas_scnrm2( const int N, const void *X, const int incX)
 		current_backend->blas.scnrm2.timings[POS_CBLAS] += (te - ts); 
 	}
    } else {
-	   nrm2 =  F77_scnrm2( &F77_N, X, &F77_incX);
+	   nrm2 =  FC_GLOBAL(scnrm2,SCNRM2)( &F77_N, X, &F77_incX);
    }
    return nrm2;
 }

@@ -19,7 +19,7 @@
 #include "../flexiblas.h"
 #include "../extblas.h"
 
-void cblas_dimatcopy(const enum CBLAS_ORDER CORDER, const enum CBLAS_TRANSPOSE CTRANS, 
+void cblas_dimatcopy(const CBLAS_ORDER CORDER, const CBLAS_TRANSPOSE CTRANS, 
 		     const int crows, const int ccols, const double calpha, double *a, const int clda, 
 		     const int cldb)
 {
@@ -43,7 +43,7 @@ void cblas_dimatcopy(const enum CBLAS_ORDER CORDER, const enum CBLAS_TRANSPOSE C
 	   if ( __flexiblas_profile ) {
 		   ts = flexiblas_wtime(); 
 	   }
-	   void (*fn)(const enum CBLAS_ORDER, const enum CBLAS_TRANSPOSE, const int, const int, const double, double *, const int, const int) = current_backend->extblas.dimatcopy.call_cblas;
+	   void (*fn)(const CBLAS_ORDER, const CBLAS_TRANSPOSE, const int, const int, const double, double *, const int, const int) = current_backend->extblas.dimatcopy.call_cblas;
 	   fn(CORDER, CTRANS, crows, ccols, calpha, a, clda, cldb);  
 	   if ( __flexiblas_profile ){
 		   te = flexiblas_wtime(); 
@@ -74,7 +74,7 @@ void cblas_dimatcopy(const enum CBLAS_ORDER CORDER, const enum CBLAS_TRANSPOSE C
 		default: 
 			TRANS[0]='X'; 
 	}
-   	F77_dimatcopy( ORDER, TRANS, &F77_ROWS, &F77_COLS, &calpha, a, &F77_LDA, &F77_LDB);
+   	FC_GLOBAL(dimatcopy,DIMATCOPY)( ORDER, TRANS, &F77_ROWS, &F77_COLS, &calpha, a, &F77_LDA, &F77_LDB);
    }
    current_backend->extblas.dimatcopy.calls[POS_CBLAS] ++;
 } 

@@ -49,7 +49,7 @@ void cblas_drotm( const int N, double *X, const int incX, double *Y,
 		   current_backend->blas.drotm.timings[POS_CBLAS] += (te - ts); 
 	   }
    } else {
-	F77_drotm( &F77_N, X, &F77_incX, Y, &F77_incY, P);
+	FC_GLOBAL(drotm,DROTM)( &F77_N, X, &F77_incX, Y, &F77_incY, P);
    }
    return; 
 }   

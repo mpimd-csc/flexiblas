@@ -19,7 +19,7 @@
 #include "../flexiblas.h"
 #include "../extblas.h"
 
-void cblas_somatcopy(const enum CBLAS_ORDER CORDER, const enum CBLAS_TRANSPOSE CTRANS, 
+void cblas_somatcopy(const CBLAS_ORDER CORDER, const CBLAS_TRANSPOSE CTRANS, 
 		     const int crows, const int ccols, const float calpha, const float *a, const int clda, 
 		     float *b, const int cldb)
 {
@@ -43,7 +43,7 @@ void cblas_somatcopy(const enum CBLAS_ORDER CORDER, const enum CBLAS_TRANSPOSE C
 	   if ( __flexiblas_profile ) {
 		   ts = flexiblas_wtime(); 
 	   }
-	   void (*fn)(const enum CBLAS_ORDER, const enum CBLAS_TRANSPOSE, const int, const int, const float, const float *, const int, float *, const int) = current_backend->extblas.somatcopy.call_cblas;
+	   void (*fn)(const CBLAS_ORDER, const CBLAS_TRANSPOSE, const int, const int, const float, const float *, const int, float *, const int) = current_backend->extblas.somatcopy.call_cblas;
 	   fn(CORDER, CTRANS, crows, ccols, calpha, a, clda, b, cldb);  
 	   if ( __flexiblas_profile ){
 		   te = flexiblas_wtime(); 
@@ -74,7 +74,7 @@ void cblas_somatcopy(const enum CBLAS_ORDER CORDER, const enum CBLAS_TRANSPOSE C
 		default: 
 			TRANS[0]='X'; 
 	}
-   	F77_somatcopy( ORDER, TRANS, &F77_ROWS, &F77_COLS, &calpha, a, &F77_LDA, b, &F77_LDB);
+   	FC_GLOBAL(somatcopy,SOMATCOPY)( ORDER, TRANS, &F77_ROWS, &F77_COLS, &calpha, a, &F77_LDA, b, &F77_LDB);
    }
    current_backend->extblas.somatcopy.calls[POS_CBLAS] ++;
 } 

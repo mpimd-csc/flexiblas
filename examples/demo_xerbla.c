@@ -1,15 +1,29 @@
-/**
- * @file demo_xerbla.c
- * @brief Demonstrates the usage of XERBLA 
- * @author Martin Köhler
- * @version $Id$ 
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright (C) Martin Koehler, 2016
  */
+
+
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-
+#include "fortran_mangle.h"
 #ifndef Int
 #ifndef INTEGER8 
 #define Int 	int
@@ -19,7 +33,7 @@
 #endif
 #endif
 
-void dgemm_(char *, char *, Int *, Int *, Int *, double *, double *, Int *, double *, Int *, double *, double *, Int *); 
+void FC_GLOBAL(dgemm,DGEMM)(char *, char *, Int *, Int *, Int *, double *, double *, Int *, double *, Int *, double *, double *, Int *); 
 
 
 void xerbla_(char *name, Int *info, Int len){
@@ -47,7 +61,7 @@ int main(int argc, const char *argv[])
 	ldc = 0; 
 	alpha = beta = 1; 
 	// printf("xerbla_: %lx\n", (unsigned long)((void*)&xerbla_));  
-	dgemm_("N", "N", &m, &n, &k, &alpha, A, &lda, B, &ldb, &beta, C, &ldc); 
+	FC_GLOBAL(dgemm,DGEMM)("N", "N", &m, &n, &k, &alpha, A, &lda, B, &ldb, &beta, C, &ldc); 
 	
 
 	return 0;

@@ -1,7 +1,29 @@
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright (C) Martin, 2016
+ */
+
+
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 #include <sys/time.h>
+#include "fortran_mangle.h"
 
 #ifdef INTEGER8
 	#define Int long
@@ -11,7 +33,7 @@
 
 #define RUNS 50
 
-void dgetrf_(Int *n , Int *m, double *A, Int *lda, Int *ipiv, Int *info); 
+void FC_GLOBAL(dgetrf,DGETRF)(Int *n , Int *m, double *A, Int *lda, Int *ipiv, Int *info); 
 double wtime()
 {
 	struct timeval tv;
@@ -43,14 +65,14 @@ int main (int argc, char **argv) {
 		}
 	}
 		memcpy(B,A,sizeof(double)*n*n); 
-		dgetrf_(&n,&n, B, &n, ipiv, &info); 
+		FC_GLOBAL(dgetrf,DGETRF)(&n,&n, B, &n, ipiv, &info); 
 		memcpy(B,A,sizeof(double)*n*n); 
-		dgetrf_(&n,&n, B, &n, ipiv, &info); 
+		FC_GLOBAL(dgetrf,DGETRF)(&n,&n, B, &n, ipiv, &info); 
 
 	ts = wtime(); 
 	for (i=0; i < RUNS; i++){
 		memcpy(B,A,sizeof(double)*n*n); 
-		dgetrf_(&n,&n, B, &n, ipiv, &info); 
+		FC_GLOBAL(dgetrf,DGETRF)(&n,&n, B, &n, ipiv, &info); 
 	}
 	te = wtime(); 
 	double h = (double) n / 1000.0; 

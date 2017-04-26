@@ -45,7 +45,7 @@ void cblas_saxpy( const int N, const float alpha, const float *X,
 		   current_backend->blas.saxpy.timings[POS_CBLAS] += (te - ts); 
 	   }
    } else {
-   	F77_saxpy( &F77_N, &alpha, X, &F77_incX, Y, &F77_incY);
+   	FC_GLOBAL(saxpy,SAXPY)( &F77_N, &alpha, X, &F77_incX, Y, &F77_incY);
    }
    current_backend->blas.saxpy.calls[POS_CBLAS] ++;
 

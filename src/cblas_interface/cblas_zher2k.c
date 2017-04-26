@@ -19,8 +19,8 @@
 #include "../flexiblas.h"
 
 
-void cblas_zher2k(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo,
-                  const enum CBLAS_TRANSPOSE Trans, const int N, const int K,
+void cblas_zher2k(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
+                  const CBLAS_TRANSPOSE Trans, const int N, const int K,
                   const void *alpha, const void *A, const int lda,
                   const void *B, const int ldb, const double beta,
                   void *C, const int ldc)
@@ -51,13 +51,13 @@ void cblas_zher2k(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo,
 		   ts = flexiblas_wtime(); 
 	   }
 	   void (*fn)
-		  (const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo,
-                  const enum CBLAS_TRANSPOSE Trans, const int N, const int K,
+		  (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
+                  const CBLAS_TRANSPOSE Trans, const int N, const int K,
                   const void *alpha, const void *A, const int lda,
                   const void *B, const int ldb, const double beta,
                   void *C, const int ldc)
 		   = current_backend->blas.zher2k.call_cblas;
-	fn(Order,Uplo,Trans,N,K,alpha,A,lda,B,ldb,beta,C,ldc);
+	fn(layout,Uplo,Trans,N,K,alpha,A,lda,B,ldb,beta,C,ldc);
 	if (__flexiblas_profile ){
 	   te = flexiblas_wtime(); 
 	   current_backend->blas.zher2k.timings[POS_CBLAS] += (te - ts); 
@@ -66,12 +66,12 @@ void cblas_zher2k(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo,
 	   extern int CBLAS_CallFromC;
 	   extern int RowMajorStrg;
 	   double ALPHA[2]; 
-	   const double *alp=(double *)alpha;
+	   const double *alp=(const double *)alpha;
 
 	   CBLAS_CallFromC = 1;
 	   RowMajorStrg = 0;
 
-	   if( Order == CblasColMajor )
+	   if( layout == CblasColMajor )
 	   {
 
 	      if( Uplo == CblasUpper) UL='U';
@@ -95,8 +95,8 @@ void cblas_zher2k(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo,
 		 return;
 	      }
 
-	      F77_zher2k(F77_UL, F77_TR, &F77_N, &F77_K, alpha, A, &F77_lda, B, &F77_ldb, &beta, C, &F77_ldc);
-	   } else if (Order == CblasRowMajor)
+	      FC_GLOBAL(zher2k,ZHER2K)(F77_UL, F77_TR, &F77_N, &F77_K, alpha, A, &F77_lda, B, &F77_ldb, &beta, C, &F77_ldc);
+	   } else if (layout == CblasRowMajor)
 	   {
 	      RowMajorStrg = 1;
 	      
@@ -122,9 +122,9 @@ void cblas_zher2k(const enum CBLAS_ORDER Order, const enum CBLAS_UPLO Uplo,
 
 	      ALPHA[0]= *alp;
 	      ALPHA[1]= -alp[1];
-	      F77_zher2k(F77_UL,F77_TR, &F77_N, &F77_K, ALPHA, A, &F77_lda, B, &F77_ldb, &beta, C, &F77_ldc);
+	      FC_GLOBAL(zher2k,ZHER2K)(F77_UL,F77_TR, &F77_N, &F77_K, ALPHA, A, &F77_lda, B, &F77_ldb, &beta, C, &F77_ldc);
 	   } 
-	   else  cblas_xerbla(1, "cblas_zher2k", "Illegal Order setting, %d\n", Order);
+	   else  cblas_xerbla(1, "cblas_zher2k", "Illegal layout setting, %d\n", layout);
 	   CBLAS_CallFromC = 0;
 	   RowMajorStrg = 0;
    }

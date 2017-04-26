@@ -19,13 +19,13 @@
 #include "../flexiblas.h"
 #include "../extblas.h"
 
-void cblas_zgeadd(const enum CBLAS_ORDER CORDER,  
+void cblas_zgeadd(const CBLAS_ORDER CORDER,  
 		     const int crows, const int ccols, const void*  alpha, void *ca, const int clda, 
              const void* beta, void *cb, const int cldb)
 {
 
-   double complex calpha = * ((double complex*) alpha); 
-   double complex cbeta  = * ((double complex*) beta); 
+   const double complex calpha = * ((const double complex*) alpha); 
+   const double complex cbeta  = * ((const double complex*) beta); 
    double complex * a = (double complex *) ca; 
    double complex * b = (double complex *) cb; 
 #ifdef F77_INT
@@ -44,7 +44,7 @@ void cblas_zgeadd(const enum CBLAS_ORDER CORDER,
 	   if ( __flexiblas_profile ) {
 		   ts = flexiblas_wtime(); 
 	   }
-	   void (*fn)(const enum CBLAS_ORDER, const int, const int, const double complex, double complex *, const int, const double complex, double complex *, const int) 
+	   void (*fn)(const CBLAS_ORDER, const int, const int, const double complex, double complex *, const int, const double complex, double complex *, const int) 
             = current_backend->extblas.zgeadd.call_cblas;
 	   fn(CORDER, crows, ccols, calpha, a, clda, cbeta, b, cldb);  
 	   if ( __flexiblas_profile ){
@@ -67,7 +67,7 @@ void cblas_zgeadd(const enum CBLAS_ORDER CORDER,
            rows = cols; 
            cols = t; 
        }
-       F77_zgeadd( &rows, &cols, &calpha, a, &F77_LDA, &cbeta, b, &F77_LDB);
+       FC_GLOBAL(zgeadd,ZGEADD)( &rows, &cols, &calpha, a, &F77_LDA, &cbeta, b, &F77_LDB);
    }
    current_backend->extblas.zgeadd.calls[POS_CBLAS] ++;
 } 

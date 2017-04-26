@@ -18,8 +18,8 @@
 #include "cblas_f77.h"
 #include "../flexiblas.h"
 
-void cblas_dtrmv(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
-                 const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_DIAG Diag,
+void cblas_dtrmv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
+                 const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
                  const int N, const double  *A, const int lda,
                  double  *X, const int incX)
 
@@ -50,12 +50,12 @@ void cblas_dtrmv(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 	   }
 
 	   void (*fn)
-		  (const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
-                 const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_DIAG Diag,
+		  (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
+                 const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
                  const int N, const double  *A, const int lda,
                  double  *X, const int incX)
 		   = current_backend->blas.dtrmv.call_cblas;
-	fn(order,Uplo,TransA,Diag,N,A,lda,X,incX);
+	fn(layout,Uplo,TransA,Diag,N,A,lda,X,incX);
 	   if ( __flexiblas_profile ){
 		   te = flexiblas_wtime(); 
 		   current_backend->blas.dtrmv.timings[POS_CBLAS] += (te - ts); 
@@ -67,7 +67,7 @@ void cblas_dtrmv(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 	   RowMajorStrg = 0;
 
 	   CBLAS_CallFromC = 1;
-	   if (order == CblasColMajor)
+	   if (layout == CblasColMajor)
 	   {
 	      if (Uplo == CblasUpper) UL = 'U';
 	      else if (Uplo == CblasLower) UL = 'L';
@@ -97,10 +97,10 @@ void cblas_dtrmv(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 		 RowMajorStrg = 0;
 		 return;
 	      }
-	      F77_dtrmv( F77_UL, F77_TA, F77_DI, &F77_N, A, &F77_lda, X,
+	      FC_GLOBAL(dtrmv,DTRMV)( F77_UL, F77_TA, F77_DI, &F77_N, A, &F77_lda, X,
 			      &F77_incX);
 	   }
-	   else if (order == CblasRowMajor)
+	   else if (layout == CblasRowMajor)
 	   {
 	      RowMajorStrg = 1;
 	      if (Uplo == CblasUpper) UL = 'L';
@@ -133,9 +133,9 @@ void cblas_dtrmv(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 		 RowMajorStrg = 0;
 		 return;
 	      }
-	      F77_dtrmv( F77_UL, F77_TA, F77_DI, &F77_N, A, &F77_lda, X,
+	      FC_GLOBAL(dtrmv,DTRMV)( F77_UL, F77_TA, F77_DI, &F77_N, A, &F77_lda, X,
 			      &F77_incX);
-	   } else cblas_xerbla(1, "cblas_dtrmv", "Illegal order setting, %d\n", order);
+	   } else cblas_xerbla(1, "cblas_dtrmv", "Illegal layout setting, %d\n", layout);
 	   CBLAS_CallFromC = 0;
 	   RowMajorStrg = 0;
    }

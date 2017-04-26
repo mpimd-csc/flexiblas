@@ -1,26 +1,27 @@
 /*
- * cblas_f77.h
- * Written by Keita Teranishi
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- * Updated by Jeff Horner
- * Merged cblas_f77.h and cblas_fortran_header.h
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright (C) Martin Koehler, 2016
  */
 
 #ifndef CBLAS_F77_H
 #define CBLAS_F77_H
 #include <stdlib.h> 
 #include <complex.h> 
-/* #ifdef CRAY
-   #include <fortran.h>
-   #define F77_CHAR _fcd
-   #define C2F_CHAR(a) ( _cptofcd( (a), 1 ) )
-   #define C2F_STR(a, i) ( _cptofcd( (a), (i) ) )
-   #define F77_STRLEN(a) (_fcdlen)
-#endif */
+#include "fortran_mangle.h"
+#include "flexiblas.h"
 
-/* #ifdef WeirdNEC
-   #define F77_INT long
-#endif */
 #ifdef INTEGER8 
 	#include <stdint.h>
 	#define F77_INT int64_t
@@ -40,261 +41,90 @@
    #define FINT2 int *
 #endif
 
-   #define F77_xerbla xerbla_
-   #define F77_srotg      srotg_
-   #define F77_srotmg     srotmg_
-   #define F77_srot       srot_
-   #define F77_srotm      srotm_
-   #define F77_drotg      drotg_
-   #define F77_drotmg     drotmg_
-   #define F77_drot       drot_
-   #define F77_drotm      drotm_
-   #define F77_sswap      sswap_
-   #define F77_scopy      scopy_
-   #define F77_saxpy      saxpy_
-   #define F77_isamax     isamax_
-   #define F77_dswap      dswap_
-   #define F77_dcopy      dcopy_
-   #define F77_daxpy      daxpy_
-   #define F77_idamax     idamax_
-   #define F77_cswap      cswap_
-   #define F77_ccopy      ccopy_
-   #define F77_caxpy      caxpy_
-   #define F77_icamax icamax_
-   #define F77_zswap      zswap_
-   #define F77_zcopy      zcopy_
-   #define F77_zaxpy      zaxpy_
-   #define F77_izamax izamax_
-   #define F77_sdot       sdot_
-   #define F77_ddot       ddot_
-   #define F77_dsdot      dsdot_
-   #define F77_sscal      sscal_
-   #define F77_dscal      dscal_
-   #define F77_cscal      cscal_
-   #define F77_zscal      zscal_
-   #define F77_csscal      csscal_
-   #define F77_zdscal      zdscal_
-   #define F77_cdotu  cdotu_
-   #define F77_cdotc  cdotc_
-   #define F77_zdotu  zdotu_
-   #define F77_zdotc  zdotc_
-   #define F77_snrm2      snrm2_
-   #define F77_sasum      sasum_
-   #define F77_dnrm2  dnrm2_
-   #define F77_dasum  dasum_
-   #define F77_scnrm2  scnrm2_
-   #define F77_scasum  scasum_
-   #define F77_dznrm2  dznrm2_
-   #define F77_dzasum  dzasum_
-   #define F77_sdsdot   sdsdot_
-/*
- * Level 2 BLAS
- */
-   #define F77_ssymv      ssymv_
-   #define F77_ssbmv      ssbmv_
-   #define F77_sspmv      sspmv_
-   #define F77_sger       sger_
-   #define F77_ssyr       ssyr_
-   #define F77_sspr       sspr_
-   #define F77_ssyr2      ssyr2_
-   #define F77_sspr2      sspr2_
-   #define F77_dsymv      dsymv_
-   #define F77_dsbmv      dsbmv_
-   #define F77_dspmv      dspmv_
-   #define F77_dger       dger_
-   #define F77_dsyr       dsyr_
-   #define F77_dspr       dspr_
-   #define F77_dsyr2      dsyr2_
-   #define F77_dspr2      dspr2_
-   #define F77_chemv      chemv_
-   #define F77_chbmv      chbmv_
-   #define F77_chpmv      chpmv_
-   #define F77_cgeru      cgeru_
-   #define F77_cgerc      cgerc_
-   #define F77_cher       cher_
-   #define F77_chpr       chpr_
-   #define F77_cher2      cher2_
-   #define F77_chpr2      chpr2_
-   #define F77_zhemv      zhemv_
-   #define F77_zhbmv      zhbmv_
-   #define F77_zhpmv      zhpmv_
-   #define F77_zgeru      zgeru_
-   #define F77_zgerc      zgerc_
-   #define F77_zher       zher_
-   #define F77_zhpr       zhpr_
-   #define F77_zher2      zher2_
-   #define F77_zhpr2      zhpr2_
-   #define F77_sgemv      sgemv_
-   #define F77_sgbmv      sgbmv_
-   #define F77_strmv      strmv_
-   #define F77_stbmv      stbmv_
-   #define F77_stpmv      stpmv_
-   #define F77_strsv      strsv_
-   #define F77_stbsv      stbsv_
-   #define F77_stpsv      stpsv_
-   #define F77_dgemv      dgemv_
-   #define F77_dgbmv      dgbmv_
-   #define F77_dtrmv      dtrmv_
-   #define F77_dtbmv      dtbmv_
-   #define F77_dtpmv      dtpmv_
-   #define F77_dtrsv      dtrsv_
-   #define F77_dtbsv      dtbsv_
-   #define F77_dtpsv      dtpsv_
-   #define F77_cgemv      cgemv_
-   #define F77_cgbmv      cgbmv_
-   #define F77_ctrmv      ctrmv_
-   #define F77_ctbmv      ctbmv_
-   #define F77_ctpmv      ctpmv_
-   #define F77_ctrsv      ctrsv_
-   #define F77_ctbsv      ctbsv_
-   #define F77_ctpsv      ctpsv_
-   #define F77_zgemv      zgemv_
-   #define F77_zgbmv      zgbmv_
-   #define F77_ztrmv      ztrmv_
-   #define F77_ztbmv      ztbmv_
-   #define F77_ztpmv      ztpmv_
-   #define F77_ztrsv      ztrsv_
-   #define F77_ztbsv      ztbsv_
-   #define F77_ztpsv      ztpsv_
-/*
- * Level 3 BLAS
- */
-   #define F77_chemm      chemm_
-   #define F77_cherk      cherk_
-   #define F77_cher2k     cher2k_
-   #define F77_zhemm      zhemm_
-   #define F77_zherk      zherk_
-   #define F77_zher2k     zher2k_
-   #define F77_sgemm      sgemm_
-   #define F77_ssymm      ssymm_
-   #define F77_ssyrk      ssyrk_
-   #define F77_ssyr2k     ssyr2k_
-   #define F77_strmm      strmm_
-   #define F77_strsm      strsm_
-   #define F77_dgemm      dgemm_
-   #define F77_dsymm      dsymm_
-   #define F77_dsyrk      dsyrk_
-   #define F77_dsyr2k     dsyr2k_
-   #define F77_dtrmm      dtrmm_
-   #define F77_dtrsm      dtrsm_
-   #define F77_cgemm      cgemm_
-   #define F77_csymm      csymm_
-   #define F77_csyrk      csyrk_
-   #define F77_csyr2k     csyr2k_
-   #define F77_ctrmm      ctrmm_
-   #define F77_ctrsm      ctrsm_
-   #define F77_zgemm      zgemm_
-   #define F77_zsymm      zsymm_
-   #define F77_zsyrk      zsyrk_
-   #define F77_zsyr2k     zsyr2k_
-   #define F77_ztrmm      ztrmm_
-   #define F77_ztrsm      ztrsm_
 
-/* BLAS Extension */
-   #define F77_saxpby 	  saxpby_
-   #define F77_daxpby 	  daxpby_
-   #define F77_caxpby 	  caxpby_
-   #define F77_zaxpby 	  zaxpby_
-
-   #define F77_somatcopy  somatcopy_
-   #define F77_domatcopy  domatcopy_
-   #define F77_comatcopy  comatcopy_
-   #define F77_zomatcopy  zomatcopy_
-
-   #define F77_simatcopy  simatcopy_
-   #define F77_dimatcopy  dimatcopy_
-   #define F77_cimatcopy  cimatcopy_
-   #define F77_zimatcopy  zimatcopy_
-
-   #define F77_sgeadd 	  sgeadd_
-   #define F77_dgeadd 	  dgeadd_
-   #define F77_cgeadd 	  cgeadd_
-   #define F77_zgeadd 	  zgeadd_
+#define COPY_CONST_PTR(a,b) memcpy(&a, &b, sizeof(void*))
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-   extern void F77_xerbla(FCHAR, void *);
+   extern void FC_GLOBAL(xerbla,XERBLA)(FCHAR, void *);
 /*
  * Level 1 Fortran Prototypes
  */
 
 /* Single Precision */
 
-   void F77_srot(FINT, float *, FINT, float *, FINT, const float *, const float *);
-   void F77_srotg(float *,float *,float *,float *);    
-   void F77_srotm( FINT, float *, FINT, float *, FINT, const float *);
-   void F77_srotmg(float *,float *,float *,const float *, float *);
-   void F77_sswap( FINT, float *, FINT, float *, FINT);
-   void F77_scopy( FINT, const float *, FINT, float *, FINT);
-   void F77_saxpy( FINT, const float *, const float *, FINT, float *, FINT);
-   float F77_sdot(FINT, const float *, FINT, const float *, FINT);
-   float F77_sdsdot( FINT, const float *, const float *, FINT, const float *, FINT);
-   void F77_sscal( FINT, const float *, float *, FINT);
-   float F77_snrm2( FINT, const float *, FINT);
-   float F77_sasum( FINT, const float *, FINT);
+   void FC_GLOBAL(srot,SROT)(FINT, float *, FINT, float *, FINT, const float *, const float *);
+   void FC_GLOBAL(srotg,SROTG)(float *,float *,float *,float *);    
+   void FC_GLOBAL(srotm,SROTM)( FINT, float *, FINT, float *, FINT, const float *);
+   void FC_GLOBAL(srotmg,SROTMG)(float *,float *,float *,const float *, float *);
+   void FC_GLOBAL(sswap,SSWAP)( FINT, float *, FINT, float *, FINT);
+   void FC_GLOBAL(scopy,SCOPY)( FINT, const float *, FINT, float *, FINT);
+   void FC_GLOBAL(saxpy,SAXPY)( FINT, const float *, const float *, FINT, float *, FINT);
+   float FC_GLOBAL(sdot,SDOT)(FINT, const float *, FINT, const float *, FINT);
+   float FC_GLOBAL(sdsdot,SDSDOT)( FINT, const float *, const float *, FINT, const float *, FINT);
+   void FC_GLOBAL(sscal,SSCAL)( FINT, const float *, float *, FINT);
+   float FC_GLOBAL(snrm2,SNRM2)( FINT, const float *, FINT);
+   float FC_GLOBAL(sasum,SASUM)( FINT, const float *, FINT);
 
 /* Double Precision */
 
-   void F77_drot(FINT, double *, FINT, double *, FINT, const double *, const double *);
-   void F77_drotg(double *,double *,double *,double *);    
-   void F77_drotm( FINT, double *, FINT, double *, FINT, const double *);
-   void F77_drotmg(double *,double *,double *,const double *, double *);
-   void F77_dswap( FINT, double *, FINT, double *, FINT);
-   void F77_dcopy( FINT, const double *, FINT, double *, FINT);
-   void F77_daxpy( FINT, const double *, const double *, FINT, double *, FINT);
-   void F77_dswap( FINT, double *, FINT, double *, FINT);
-   double F77_dsdot(FINT, const float *, FINT, const float *, FINT);
-   double F77_ddot( FINT, const double *, FINT, const double *, FINT);
-   void F77_dscal( FINT, const double *, double *, FINT);
-   double F77_dnrm2( FINT, const double *, FINT);
-   double F77_dasum( FINT, const double *, FINT);
+   void FC_GLOBAL(drot,DROT)(FINT, double *, FINT, double *, FINT, const double *, const double *);
+   void FC_GLOBAL(drotg,DROTG)(double *,double *,double *,double *);    
+   void FC_GLOBAL(drotm,DROTM)( FINT, double *, FINT, double *, FINT, const double *);
+   void FC_GLOBAL(drotmg,DROTMG)(double *,double *,double *,const double *, double *);
+   void FC_GLOBAL(dswap,DSWAP)( FINT, double *, FINT, double *, FINT);
+   void FC_GLOBAL(dcopy,DCOPY)( FINT, const double *, FINT, double *, FINT);
+   void FC_GLOBAL(daxpy,DAXPY)( FINT, const double *, const double *, FINT, double *, FINT);
+   double FC_GLOBAL(dsdot,DSDOT)(FINT, const float *, FINT, const float *, FINT);
+   double FC_GLOBAL(ddot,DDOT)( FINT, const double *, FINT, const double *, FINT);
+   void FC_GLOBAL(dscal,DSCAL)( FINT, const double *, double *, FINT);
+   double FC_GLOBAL(dnrm2,DNRM2)( FINT, const double *, FINT);
+   double FC_GLOBAL(dasum,DASUM)( FINT, const double *, FINT);
 
 
 /* Single Complex Precision */
 
-   void F77_cswap( FINT, void *, FINT, void *, FINT);
-   void F77_ccopy( FINT, const void *, FINT, void *, FINT);
-   void F77_caxpy( FINT, const void *, const void *, FINT, void *, FINT);
-   void F77_cswap( FINT, void *, FINT, void *, FINT);
-#ifdef USE_INTERFACE_INTEL
-   void  F77_cdotc( void *, FINT, const void *, FINT, const void *, FINT);
-   void  F77_cdotu( void *, FINT, const void *, FINT, const void *, FINT);
+   void FC_GLOBAL(cswap,CSWAP)( FINT, void *, FINT, void *, FINT);
+   void FC_GLOBAL(ccopy,CCOPY)( FINT, const void *, FINT, void *, FINT);
+   void FC_GLOBAL(caxpy,CAXPY)( FINT, const void *, const void *, FINT, void *, FINT);
+#ifdef FLEXIBLAS_ABI_INTEL
+   void  FC_GLOBAL(cdotc,CDOTC)( void *, FINT, const void *, FINT, const void *, FINT);
+   void  FC_GLOBAL(cdotu,CDOTU)( void *, FINT, const void *, FINT, const void *, FINT);
 #else 
-   float complex F77_cdotc( FINT, const void *, FINT, const void *, FINT);
-   float complex F77_cdotu( FINT, const void *, FINT, const void *, FINT);
+   float complex FC_GLOBAL(cdotc,CDOTC)( FINT, const void *, FINT, const void *, FINT);
+   float complex FC_GLOBAL(cdotu,CDOTU)( FINT, const void *, FINT, const void *, FINT);
 #endif
-   void F77_cscal( FINT, const void *, void *, FINT);
-   void F77_csscal( FINT, const float *, void *, FINT);
-   float F77_scnrm2( FINT, const void *, FINT);
-   float F77_scasum( FINT, const void *, FINT);
+   void FC_GLOBAL(cscal,CSCAL)( FINT, const void *, void *, FINT);
+   void FC_GLOBAL(csscal,CSSCAL)( FINT, const float *, void *, FINT);
+   float FC_GLOBAL(scnrm2,SCNRM2)( FINT, const void *, FINT);
+   float FC_GLOBAL(scasum,SCASUM)( FINT, const void *, FINT);
 
 /* Double Complex Precision */
 
-   void F77_zswap( FINT, void *, FINT, void *, FINT);
-   void F77_zcopy( FINT, const void *, FINT, void *, FINT);
-   void F77_zaxpy( FINT, const void *, const void *, FINT, void *, FINT);
-   void F77_zswap( FINT, void *, FINT, void *, FINT);
+   void FC_GLOBAL(zswap,ZSWAP)( FINT, void *, FINT, void *, FINT);
+   void FC_GLOBAL(zcopy,ZCOPY)( FINT, const void *, FINT, void *, FINT);
+   void FC_GLOBAL(zaxpy,ZAXPY)( FINT, const void *, const void *, FINT, void *, FINT);
    
-#ifdef USE_INTERFACE_INTEL 
-   void  F77_zdotc(void * RET, FINT, const void *, FINT, const void *, FINT);
-   void  F77_zdotu(void * RET, FINT, const void *, FINT, const void *, FINT);
+#ifdef FLEXIBLAS_ABI_INTEL
+   void  FC_GLOBAL(zdotc,ZDOTC)(void * RET, FINT, const void *, FINT, const void *, FINT);
+   void  FC_GLOBAL(zdotu,ZDOTU)(void * RET, FINT, const void *, FINT, const void *, FINT);
 #else 
-   double complex  F77_zdotc( FINT, const void *, FINT, const void *, FINT);
-   double complex  F77_zdotu( FINT, const void *, FINT, const void *, FINT);
+   double complex  FC_GLOBAL(zdotc,ZDOTC)( FINT, const void *, FINT, const void *, FINT);
+   double complex  FC_GLOBAL(zdotu,ZDOTU)( FINT, const void *, FINT, const void *, FINT);
 #endif 
    
-   void F77_zdscal( FINT, const double *, void *, FINT);
-   void F77_zscal( FINT, const void *, void *, FINT);
-   double F77_dznrm2( FINT, const void *, FINT);
-   double F77_dzasum( FINT, const void *, FINT);
+   void FC_GLOBAL(zdscal,ZDSCAL)( FINT, const double *, void *, FINT);
+   void FC_GLOBAL(zscal,ZSCAL)( FINT, const void *, void *, FINT);
+   double FC_GLOBAL(dznrm2,DZNRM2)( FINT, const void *, FINT);
+   double FC_GLOBAL(dzasum,DZASUM)( FINT, const void *, FINT);
 
 
-   int F77_isamax( FINT, const float * , FINT);
-   int F77_idamax( FINT, const double * , FINT);
-   int F77_icamax( FINT, const void *, FINT);
-   int F77_izamax( FINT, const void *, FINT);
+   int FC_GLOBAL(isamax,ISAMAX)( FINT, const float * , FINT);
+   int FC_GLOBAL(idamax,IDAMAX)( FINT, const double * , FINT);
+   int FC_GLOBAL(icamax,ICAMAX)( FINT, const void *, FINT);
+   int FC_GLOBAL(izamax,IZAMAX)( FINT, const void *, FINT);
 
 /*
  * Level 2 Fortran Prototypes
@@ -302,81 +132,81 @@ extern "C" {
 
 /* Single Precision */
 
-   void F77_sgemv(FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
-   void F77_sgbmv(FCHAR, FINT, FINT, FINT, FINT, const float *,  const float *, FINT, const float *, FINT, const float *, float *, FINT);
-   void F77_ssymv(FCHAR, FINT, const float *, const float *, FINT, const float *,  FINT, const float *, float *, FINT);
-   void F77_ssbmv(FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
-   void F77_sspmv(FCHAR, FINT, const float *, const float *, const float *, FINT, const float *, float *, FINT);
-   void F77_strmv( FCHAR, FCHAR, FCHAR, FINT, const float *, FINT, float *, FINT);
-   void F77_stbmv( FCHAR, FCHAR, FCHAR, FINT, FINT, const float *, FINT, float *, FINT);
-   void F77_strsv( FCHAR, FCHAR, FCHAR, FINT, const float *, FINT, float *, FINT);
-   void F77_stbsv( FCHAR, FCHAR, FCHAR, FINT, FINT, const float *, FINT, float *, FINT);
-   void F77_stpmv( FCHAR, FCHAR, FCHAR, FINT, const float *, float *, FINT);
-   void F77_stpsv( FCHAR, FCHAR, FCHAR, FINT, const float *, float *, FINT);
-   void F77_sger( FINT, FINT, const float *, const float *, FINT, const float *, FINT, float *, FINT);
-   void F77_ssyr(FCHAR, FINT, const float *, const float *, FINT, float *, FINT);
-   void F77_sspr(FCHAR, FINT, const float *, const float *, FINT, float *); 
-   void F77_sspr2(FCHAR, FINT, const float *, const float *, FINT, const float *, FINT,  float *); 
-   void F77_ssyr2(FCHAR, FINT, const float *, const float *, FINT, const float *, FINT,  float *, FINT);
+   void FC_GLOBAL(sgemv,SGEMV)(FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
+   void FC_GLOBAL(sgbmv,SGBMV)(FCHAR, FINT, FINT, FINT, FINT, const float *,  const float *, FINT, const float *, FINT, const float *, float *, FINT);
+   void FC_GLOBAL(ssymv,SSYMV)(FCHAR, FINT, const float *, const float *, FINT, const float *,  FINT, const float *, float *, FINT);
+   void FC_GLOBAL(ssbmv,SSBMV)(FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
+   void FC_GLOBAL(sspmv,SSPMV)(FCHAR, FINT, const float *, const float *, const float *, FINT, const float *, float *, FINT);
+   void FC_GLOBAL(strmv,STRMV)( FCHAR, FCHAR, FCHAR, FINT, const float *, FINT, float *, FINT);
+   void FC_GLOBAL(stbmv,STBMV)( FCHAR, FCHAR, FCHAR, FINT, FINT, const float *, FINT, float *, FINT);
+   void FC_GLOBAL(strsv,STRSV)( FCHAR, FCHAR, FCHAR, FINT, const float *, FINT, float *, FINT);
+   void FC_GLOBAL(stbsv,STBSV)( FCHAR, FCHAR, FCHAR, FINT, FINT, const float *, FINT, float *, FINT);
+   void FC_GLOBAL(stpmv,STPMV)( FCHAR, FCHAR, FCHAR, FINT, const float *, float *, FINT);
+   void FC_GLOBAL(stpsv,STPSV)( FCHAR, FCHAR, FCHAR, FINT, const float *, float *, FINT);
+   void FC_GLOBAL(sger,SGER)( FINT, FINT, const float *, const float *, FINT, const float *, FINT, float *, FINT);
+   void FC_GLOBAL(ssyr,SSYR)(FCHAR, FINT, const float *, const float *, FINT, float *, FINT);
+   void FC_GLOBAL(sspr,SSPR)(FCHAR, FINT, const float *, const float *, FINT, float *); 
+   void FC_GLOBAL(sspr2,SSPR2)(FCHAR, FINT, const float *, const float *, FINT, const float *, FINT,  float *); 
+   void FC_GLOBAL(ssyr2,SSYR2)(FCHAR, FINT, const float *, const float *, FINT, const float *, FINT,  float *, FINT);
 
 /* Double Precision */
 
-   void F77_dgemv(FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
-   void F77_dgbmv(FCHAR, FINT, FINT, FINT, FINT, const double *,  const double *, FINT, const double *, FINT, const double *, double *, FINT);
-   void F77_dsymv(FCHAR, FINT, const double *, const double *, FINT, const double *,  FINT, const double *, double *, FINT);
-   void F77_dsbmv(FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
-   void F77_dspmv(FCHAR, FINT, const double *, const double *, const double *, FINT, const double *, double *, FINT);
-   void F77_dtrmv( FCHAR, FCHAR, FCHAR, FINT, const double *, FINT, double *, FINT);
-   void F77_dtbmv( FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, FINT, double *, FINT);
-   void F77_dtrsv( FCHAR, FCHAR, FCHAR, FINT, const double *, FINT, double *, FINT);
-   void F77_dtbsv( FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, FINT, double *, FINT);
-   void F77_dtpmv( FCHAR, FCHAR, FCHAR, FINT, const double *, double *, FINT);
-   void F77_dtpsv( FCHAR, FCHAR, FCHAR, FINT, const double *, double *, FINT);
-   void F77_dger( FINT, FINT, const double *, const double *, FINT, const double *, FINT, double *, FINT);
-   void F77_dsyr(FCHAR, FINT, const double *, const double *, FINT, double *, FINT);
-   void F77_dspr(FCHAR, FINT, const double *, const double *, FINT, double *); 
-   void F77_dspr2(FCHAR, FINT, const double *, const double *, FINT, const double *, FINT,  double *); 
-   void F77_dsyr2(FCHAR, FINT, const double *, const double *, FINT, const double *, FINT,  double *, FINT);
+   void FC_GLOBAL(dgemv,DGEMV)(FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
+   void FC_GLOBAL(dgbmv,DGBMV)(FCHAR, FINT, FINT, FINT, FINT, const double *,  const double *, FINT, const double *, FINT, const double *, double *, FINT);
+   void FC_GLOBAL(dsymv,DSYMV)(FCHAR, FINT, const double *, const double *, FINT, const double *,  FINT, const double *, double *, FINT);
+   void FC_GLOBAL(dsbmv,DSBMV)(FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
+   void FC_GLOBAL(dspmv,DSPMV)(FCHAR, FINT, const double *, const double *, const double *, FINT, const double *, double *, FINT);
+   void FC_GLOBAL(dtrmv,DTRMV)( FCHAR, FCHAR, FCHAR, FINT, const double *, FINT, double *, FINT);
+   void FC_GLOBAL(dtbmv,DTBMV)( FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, FINT, double *, FINT);
+   void FC_GLOBAL(dtrsv,DTRSV)( FCHAR, FCHAR, FCHAR, FINT, const double *, FINT, double *, FINT);
+   void FC_GLOBAL(dtbsv,DTBSV)( FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, FINT, double *, FINT);
+   void FC_GLOBAL(dtpmv,DTPMV)( FCHAR, FCHAR, FCHAR, FINT, const double *, double *, FINT);
+   void FC_GLOBAL(dtpsv,DTPSV)( FCHAR, FCHAR, FCHAR, FINT, const double *, double *, FINT);
+   void FC_GLOBAL(dger,DGER)( FINT, FINT, const double *, const double *, FINT, const double *, FINT, double *, FINT);
+   void FC_GLOBAL(dsyr,DSYR)(FCHAR, FINT, const double *, const double *, FINT, double *, FINT);
+   void FC_GLOBAL(dspr,DSPR)(FCHAR, FINT, const double *, const double *, FINT, double *); 
+   void FC_GLOBAL(dspr2,DSPR2)(FCHAR, FINT, const double *, const double *, FINT, const double *, FINT,  double *); 
+   void FC_GLOBAL(dsyr2,DSYR2)(FCHAR, FINT, const double *, const double *, FINT, const double *, FINT,  double *, FINT);
 
 /* Single Complex Precision */
 
-   void F77_cgemv(FCHAR, FINT, FINT, const void *, const void *, FINT, const void *, FINT, const void *, void *, FINT);
-   void F77_cgbmv(FCHAR, FINT, FINT, FINT, FINT, const void *,  const void *, FINT, const void *, FINT, const void *, void *, FINT);
-   void F77_chemv(FCHAR, FINT, const void *, const void *, FINT, const void *, FINT, const void *, void *, FINT);
-   void F77_chbmv(FCHAR, FINT, FINT, const void *, const void *, FINT, const void *, FINT, const void *, void *, FINT);
-   void F77_chpmv(FCHAR, FINT, const void *, const void *, const void *, FINT, const void *, void *, FINT);
-   void F77_ctrmv( FCHAR, FCHAR, FCHAR, FINT, const void *, FINT, void *, FINT);
-   void F77_ctbmv( FCHAR, FCHAR, FCHAR, FINT, FINT, const void *, FINT, void *, FINT);
-   void F77_ctpmv( FCHAR, FCHAR, FCHAR, FINT, const void *, void *, FINT);
-   void F77_ctrsv( FCHAR, FCHAR, FCHAR, FINT, const void *, FINT, void *, FINT);
-   void F77_ctbsv( FCHAR, FCHAR, FCHAR, FINT, FINT, const void *, FINT, void *, FINT);
-   void F77_ctpsv( FCHAR, FCHAR, FCHAR, FINT, const void *, void *,FINT);
-   void F77_cgerc( FINT, FINT, const void *, const void *, FINT, const void *, FINT, void *, FINT);
-   void F77_cgeru( FINT, FINT, const void *, const void *, FINT, const void *, FINT, void *,  FINT);
-   void F77_cher(FCHAR, FINT, const float *, const void *, FINT, void *, FINT);
-   void F77_cher2(FCHAR, FINT, const void *, const void *, FINT, const void *, FINT, void *, FINT);
-   void F77_chpr(FCHAR, FINT, const float *, const void *, FINT, void *);
-   void F77_chpr2(FCHAR, FINT, const float *, const void *, FINT, const void *, FINT, void *);
+   void FC_GLOBAL(cgemv,CGEMV)(FCHAR, FINT, FINT, const void *, const void *, FINT, const void *, FINT, const void *, void *, FINT);
+   void FC_GLOBAL(cgbmv,CGBMV)(FCHAR, FINT, FINT, FINT, FINT, const void *,  const void *, FINT, const void *, FINT, const void *, void *, FINT);
+   void FC_GLOBAL(chemv,CHEMV)(FCHAR, FINT, const void *, const void *, FINT, const void *, FINT, const void *, void *, FINT);
+   void FC_GLOBAL(chbmv,CHBMV)(FCHAR, FINT, FINT, const void *, const void *, FINT, const void *, FINT, const void *, void *, FINT);
+   void FC_GLOBAL(chpmv,CHPMV)(FCHAR, FINT, const void *, const void *, const void *, FINT, const void *, void *, FINT);
+   void FC_GLOBAL(ctrmv,CTRMV)( FCHAR, FCHAR, FCHAR, FINT, const void *, FINT, void *, FINT);
+   void FC_GLOBAL(ctbmv,CTBMV)( FCHAR, FCHAR, FCHAR, FINT, FINT, const void *, FINT, void *, FINT);
+   void FC_GLOBAL(ctpmv,CTPMV)( FCHAR, FCHAR, FCHAR, FINT, const void *, void *, FINT);
+   void FC_GLOBAL(ctrsv,CTRSV)( FCHAR, FCHAR, FCHAR, FINT, const void *, FINT, void *, FINT);
+   void FC_GLOBAL(ctbsv,CTBSV)( FCHAR, FCHAR, FCHAR, FINT, FINT, const void *, FINT, void *, FINT);
+   void FC_GLOBAL(ctpsv,CTPSV)( FCHAR, FCHAR, FCHAR, FINT, const void *, void *,FINT);
+   void FC_GLOBAL(cgerc,CGERC)( FINT, FINT, const void *, const void *, FINT, const void *, FINT, void *, FINT);
+   void FC_GLOBAL(cgeru,CGERU)( FINT, FINT, const void *, const void *, FINT, const void *, FINT, void *,  FINT);
+   void FC_GLOBAL(cher,CHER)(FCHAR, FINT, const float *, const void *, FINT, void *, FINT);
+   void FC_GLOBAL(cher2,CHER2)(FCHAR, FINT, const void *, const void *, FINT, const void *, FINT, void *, FINT);
+   void FC_GLOBAL(chpr,CHPR)(FCHAR, FINT, const float *, const void *, FINT, void *);
+   void FC_GLOBAL(chpr2,CHPR2)(FCHAR, FINT, const float *, const void *, FINT, const void *, FINT, void *);
 
 /* Double Complex Precision */
 
-   void F77_zgemv(FCHAR, FINT, FINT, const void *, const void *, FINT, const void *, FINT, const void *, void *, FINT);
-   void F77_zgbmv(FCHAR, FINT, FINT, FINT, FINT, const void *,  const void *, FINT, const void *, FINT, const void *, void *, FINT);
-   void F77_zhemv(FCHAR, FINT, const void *, const void *, FINT, const void *, FINT, const void *, void *, FINT);
-   void F77_zhbmv(FCHAR, FINT, FINT, const void *, const void *, FINT, const void *, FINT, const void *, void *, FINT);
-   void F77_zhpmv(FCHAR, FINT, const void *, const void *, const void *, FINT, const void *, void *, FINT);
-   void F77_ztrmv( FCHAR, FCHAR, FCHAR, FINT, const void *, FINT, void *, FINT);
-   void F77_ztbmv( FCHAR, FCHAR, FCHAR, FINT, FINT, const void *, FINT, void *, FINT);
-   void F77_ztpmv( FCHAR, FCHAR, FCHAR, FINT, const void *, void *, FINT);
-   void F77_ztrsv( FCHAR, FCHAR, FCHAR, FINT, const void *, FINT, void *, FINT);
-   void F77_ztbsv( FCHAR, FCHAR, FCHAR, FINT, FINT, const void *, FINT, void *, FINT);
-   void F77_ztpsv( FCHAR, FCHAR, FCHAR, FINT, const void *, void *,FINT);
-   void F77_zgerc( FINT, FINT, const void *, const void *, FINT, const void *, FINT, void *, FINT);
-   void F77_zgeru( FINT, FINT, const void *, const void *, FINT, const void *, FINT, void *,  FINT);
-   void F77_zher(FCHAR, FINT, const double *, const void *, FINT, void *, FINT);
-   void F77_zher2(FCHAR, FINT, const void *, const void *, FINT, const void *, FINT, void *, FINT);
-   void F77_zhpr(FCHAR, FINT, const double *, const void *, FINT, void *);
-   void F77_zhpr2(FCHAR, FINT, const double *, const void *, FINT, const void *, FINT, void *);
+   void FC_GLOBAL(zgemv,ZGEMV)(FCHAR, FINT, FINT, const void *, const void *, FINT, const void *, FINT, const void *, void *, FINT);
+   void FC_GLOBAL(zgbmv,ZGBMV)(FCHAR, FINT, FINT, FINT, FINT, const void *,  const void *, FINT, const void *, FINT, const void *, void *, FINT);
+   void FC_GLOBAL(zhemv,ZHEMV)(FCHAR, FINT, const void *, const void *, FINT, const void *, FINT, const void *, void *, FINT);
+   void FC_GLOBAL(zhbmv,ZHBMV)(FCHAR, FINT, FINT, const void *, const void *, FINT, const void *, FINT, const void *, void *, FINT);
+   void FC_GLOBAL(zhpmv,ZHPMV)(FCHAR, FINT, const void *, const void *, const void *, FINT, const void *, void *, FINT);
+   void FC_GLOBAL(ztrmv,ZTRMV)( FCHAR, FCHAR, FCHAR, FINT, const void *, FINT, void *, FINT);
+   void FC_GLOBAL(ztbmv,ZTBMV)( FCHAR, FCHAR, FCHAR, FINT, FINT, const void *, FINT, void *, FINT);
+   void FC_GLOBAL(ztpmv,ZTPMV)( FCHAR, FCHAR, FCHAR, FINT, const void *, void *, FINT);
+   void FC_GLOBAL(ztrsv,ZTRSV)( FCHAR, FCHAR, FCHAR, FINT, const void *, FINT, void *, FINT);
+   void FC_GLOBAL(ztbsv,ZTBSV)( FCHAR, FCHAR, FCHAR, FINT, FINT, const void *, FINT, void *, FINT);
+   void FC_GLOBAL(ztpsv,ZTPSV)( FCHAR, FCHAR, FCHAR, FINT, const void *, void *,FINT);
+   void FC_GLOBAL(zgerc,ZGERC)( FINT, FINT, const void *, const void *, FINT, const void *, FINT, void *, FINT);
+   void FC_GLOBAL(zgeru,ZGERU)( FINT, FINT, const void *, const void *, FINT, const void *, FINT, void *,  FINT);
+   void FC_GLOBAL(zher,ZHER)(FCHAR, FINT, const double *, const void *, FINT, void *, FINT);
+   void FC_GLOBAL(zher2,ZHER2)(FCHAR, FINT, const void *, const void *, FINT, const void *, FINT, void *, FINT);
+   void FC_GLOBAL(zhpr,ZHPR)(FCHAR, FINT, const double *, const void *, FINT, void *);
+   void FC_GLOBAL(zhpr2,ZHPR2)(FCHAR, FINT, const double *, const void *, FINT, const void *, FINT, void *);
 
 /*
  * Level 3 Fortran Prototypes
@@ -384,67 +214,67 @@ extern "C" {
 
 /* Single Precision */
 
-   void F77_sgemm(FCHAR, FCHAR, FINT, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
-   void F77_ssymm(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
-   void F77_ssyrk(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, float *, FINT);
-   void F77_ssyr2k(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
-   void F77_strmm(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, float *, FINT);
-   void F77_strsm(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, float *, FINT);
+   void FC_GLOBAL(sgemm,SGEMM)(FCHAR, FCHAR, FINT, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
+   void FC_GLOBAL(ssymm,SSYMM)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
+   void FC_GLOBAL(ssyrk,SSYRK)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, float *, FINT);
+   void FC_GLOBAL(ssyr2k,SSYR2K)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
+   void FC_GLOBAL(strmm,STRMM)(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, float *, FINT);
+   void FC_GLOBAL(strsm,STRSM)(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, float *, FINT);
 
 /* Double Precision */
 
-   void F77_dgemm(FCHAR, FCHAR, FINT, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
-   void F77_dsymm(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
-   void F77_dsyrk(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, double *, FINT);
-   void F77_dsyr2k(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
-   void F77_dtrmm(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, double *, FINT);
-   void F77_dtrsm(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, double *, FINT);
+   void FC_GLOBAL(dgemm,DGEMM)(FCHAR, FCHAR, FINT, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
+   void FC_GLOBAL(dsymm,DSYMM)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
+   void FC_GLOBAL(dsyrk,DSYRK)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, double *, FINT);
+   void FC_GLOBAL(dsyr2k,DSYR2K)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
+   void FC_GLOBAL(dtrmm,DTRMM)(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, double *, FINT);
+   void FC_GLOBAL(dtrsm,DTRSM)(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, double *, FINT);
 
 /* Single Complex Precision */
 
-   void F77_cgemm(FCHAR, FCHAR, FINT, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
-   void F77_csymm(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
-   void F77_chemm(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
-   void F77_csyrk(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, float *, FINT);
-   void F77_cherk(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, float *, FINT);
-   void F77_csyr2k(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
-   void F77_cher2k(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
-   void F77_ctrmm(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, float *, FINT);
-   void F77_ctrsm(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, float *, FINT);
+   void FC_GLOBAL(cgemm,CGEMM)(FCHAR, FCHAR, FINT, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
+   void FC_GLOBAL(csymm,CSYMM)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
+   void FC_GLOBAL(chemm,CHEMM)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
+   void FC_GLOBAL(csyrk,CSYRK)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, float *, FINT);
+   void FC_GLOBAL(cherk,CHERK)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, float *, FINT);
+   void FC_GLOBAL(csyr2k,CSYR2K)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
+   void FC_GLOBAL(cher2k,CHER2K)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
+   void FC_GLOBAL(ctrmm,CTRMM)(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, float *, FINT);
+   void FC_GLOBAL(ctrsm,CTRSM)(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, float *, FINT);
 
 /* Double Complex Precision */
 
-   void F77_zgemm(FCHAR, FCHAR, FINT, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
-   void F77_zsymm(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
-   void F77_zhemm(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
-   void F77_zsyrk(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, double *, FINT);
-   void F77_zherk(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, double *, FINT);
-   void F77_zsyr2k(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
-   void F77_zher2k(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
-   void F77_ztrmm(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, double *, FINT);
-   void F77_ztrsm(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, double *, FINT);
+   void FC_GLOBAL(zgemm,ZGEMM)(FCHAR, FCHAR, FINT, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
+   void FC_GLOBAL(zsymm,ZSYMM)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
+   void FC_GLOBAL(zhemm,ZHEMM)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
+   void FC_GLOBAL(zsyrk,ZSYRK)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, double *, FINT);
+   void FC_GLOBAL(zherk,ZHERK)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, double *, FINT);
+   void FC_GLOBAL(zsyr2k,ZSYR2K)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
+   void FC_GLOBAL(zher2k,ZHER2K)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
+   void FC_GLOBAL(ztrmm,ZTRMM)(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, double *, FINT);
+   void FC_GLOBAL(ztrsm,ZTRSM)(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, double *, FINT);
 
 
 /* BLAS Extensions  */
-   void F77_saxpby( FINT, const float *, const float *,  FINT, const float *, float *, FINT);
-   void F77_daxpby( FINT, const double*, const double *, FINT, const double *,double*, FINT);
-   void F77_caxpby( FINT, const float *, const void *, FINT, const void *, void*, FINT);
-   void F77_zaxpby( FINT, const float *, const void *, FINT, const void *, void*, FINT);
+   void FC_GLOBAL(saxpby,SAXPBY)( FINT, const float *, const float *,  FINT, const float *, float *, FINT);
+   void FC_GLOBAL(daxpby,DAXPBY)( FINT, const double*, const double *, FINT, const double *,double*, FINT);
+   void FC_GLOBAL(caxpby,CAXPBY)( FINT, const float *, const void *, FINT, const void *, void*, FINT);
+   void FC_GLOBAL(zaxpby,ZAXPBY)( FINT, const float *, const void *, FINT, const void *, void*, FINT);
 
-   void F77_somatcopy(FCHAR, FCHAR, FINT, FINT, const float * , const float*, FINT, float *, FINT); 
-   void F77_domatcopy(FCHAR, FCHAR, FINT, FINT, const double * , const double*, FINT, double *, FINT); 
-   void F77_comatcopy(FCHAR, FCHAR, FINT, FINT, const void * , const void*, FINT, void *, FINT); 
-   void F77_zomatcopy(FCHAR, FCHAR, FINT, FINT, const void * , const void*, FINT, void *, FINT); 
+   void FC_GLOBAL(somatcopy,SOMATCOPY)(FCHAR, FCHAR, FINT, FINT, const float * , const float*, FINT, float *, FINT); 
+   void FC_GLOBAL(domatcopy,DOMATCOPY)(FCHAR, FCHAR, FINT, FINT, const double * , const double*, FINT, double *, FINT); 
+   void FC_GLOBAL(comatcopy,COMATCOPY)(FCHAR, FCHAR, FINT, FINT, const void * , const void*, FINT, void *, FINT); 
+   void FC_GLOBAL(zomatcopy,ZOMATCOPY)(FCHAR, FCHAR, FINT, FINT, const void * , const void*, FINT, void *, FINT); 
 
-   void F77_simatcopy(FCHAR, FCHAR, FINT, FINT, const float * , float*, FINT, FINT); 
-   void F77_dimatcopy(FCHAR, FCHAR, FINT, FINT, const double * ,double*, FINT, FINT); 
-   void F77_cimatcopy(FCHAR, FCHAR, FINT, FINT, const void * , void*, FINT, FINT); 
-   void F77_zimatcopy(FCHAR, FCHAR, FINT, FINT, const void * , void*, FINT, FINT); 
+   void FC_GLOBAL(simatcopy,SIMATCOPY)(FCHAR, FCHAR, FINT, FINT, const float * , float*, FINT, FINT); 
+   void FC_GLOBAL(dimatcopy,DIMATCOPY)(FCHAR, FCHAR, FINT, FINT, const double * ,double*, FINT, FINT); 
+   void FC_GLOBAL(cimatcopy,CIMATCOPY)(FCHAR, FCHAR, FINT, FINT, const void * , void*, FINT, FINT); 
+   void FC_GLOBAL(zimatcopy,ZIMATCOPY)(FCHAR, FCHAR, FINT, FINT, const void * , void*, FINT, FINT); 
 
-   void F77_sgeadd(FINT, FINT, const float *, float *, FINT, const float *, float *, FINT); 
-   void F77_dgeadd(FINT, FINT, const double *, double *, FINT, const double *, double *, FINT); 
-   void F77_cgeadd(FINT, FINT, const float complex *, float complex *, FINT, const float complex *, float complex *, FINT); 
-   void F77_zgeadd(FINT, FINT, const double complex *, double complex *, FINT, const double complex *, double complex *, FINT); 
+   void FC_GLOBAL(sgeadd,SGEADD)(FINT, FINT, const float *, float *, FINT, const float *, float *, FINT); 
+   void FC_GLOBAL(dgeadd,DGEADD)(FINT, FINT, const double *, double *, FINT, const double *, double *, FINT); 
+   void FC_GLOBAL(cgeadd,CGEADD)(FINT, FINT, const float complex *, float complex *, FINT, const float complex *, float complex *, FINT); 
+   void FC_GLOBAL(zgeadd,ZGEADD)(FINT, FINT, const double complex *, double complex *, FINT, const double complex *, double complex *, FINT); 
 
 
 

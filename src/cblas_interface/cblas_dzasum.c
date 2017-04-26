@@ -48,7 +48,7 @@ double cblas_dzasum( const int N, const void *X, const int incX)
 		   current_backend->blas.dzasum.timings[POS_CBLAS] += (te - ts); 
 	   }
    } else {
-   	asum = F77_dzasum( &F77_N, X, &F77_incX);
+   	asum = FC_GLOBAL(dzasum,DZASUM)( &F77_N, X, &F77_incX);
    }
    return asum;
 }

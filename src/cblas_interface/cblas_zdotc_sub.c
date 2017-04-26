@@ -52,10 +52,10 @@ void cblas_zdotc_sub( const int N, const void *X, const int incX,
 	}
    } else {
 	double complex d; 
-#ifdef USE_INTERFACE_INTEL
-	F77_zdotc( &d, &F77_N, X, &F77_incX, Y, &F77_incY);
+#ifdef FLEXIBLAS_ABI_INTEL
+	FC_GLOBAL(zdotc,ZDOTC)( &d, &F77_N, X, &F77_incX, Y, &F77_incY);
 #else
-	d = F77_zdotc( &F77_N, X, &F77_incX, Y, &F77_incY);
+	d = FC_GLOBAL(zdotc,ZDOTC)( &F77_N, X, &F77_incX, Y, &F77_incY);
 #endif
 	*((double complex *) dotc) = d; 
    }

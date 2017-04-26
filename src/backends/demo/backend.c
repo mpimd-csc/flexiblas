@@ -20,6 +20,8 @@
 #include <complex.h>
 #include <dlfcn.h>
 #include "flexiblas_backend.h" 
+#include "flexiblas_real_calls.h"
+#include "flexiblas_real_extblas_calls.h"
 
 /* #ifdef BACKEND_INTEGER8
 #include <stdint.h>

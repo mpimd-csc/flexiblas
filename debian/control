@@ -1,7 +1,7 @@
 Source: flexiblas
 Priority: extra
 Maintainer: Martin Köhler <koehlerm@mpi-magdeburg.mpg.de>
-Build-Depends: debhelper (>= 9.0.0), cmake, gfortran (>= 4.4.0), gcc (>= 4.4.0), libatlas-base-dev (>= 3.8.0), libopenblas-dev, build-essential  
+Build-Depends: debhelper (>= 9.0.0), cmake, gfortran (>= 4.4.0), gcc (>= 4.4.0), libatlas-base-dev (>= 3.8.0), libopenblas-dev,
 Standards-Version: 3.9.4
 Section: libs
 Homepage: http://www.mpi-magdeburg.mpg.de/mess
@@ -32,6 +32,32 @@ Description: Development files for libflexiblas.
  .
  This package contains the development files. 
 
+Package: libflexiblas-api-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Recommends: libflexiblas-dev
+Depends: libflexiblas-api (= ${binary:Version})
+Description: Development files for libflexiblas-api.
+ The FlexiBLAS library is a flexible BLAS wrapper 
+ which allows one to exchange the system wide BLAS 
+ implementation without recompiling or relinking programs. 
+ Even dealing with runtime-loader specific tricks is 
+ not necessary with FlexiBLAS. 
+ .
+ You can select the BLAS implementation which is used behind 
+ FlexiBLAS using a configuration file or a environment variable. 
+ It is integrated in Debian/Ubuntu using the update-alternatives 
+ mechanism.
+ .
+ The package supports OpenBLAS, ATLAS and the reference Netlib 
+ implementation. If you compile FlexiBLAS on your own, other 
+ BLAS implementations like the old GotoBLAS or the Intel MKL 
+ are supported. 
+ .
+ This package contains the development files for the standalone
+ API interface. 
+
 Package: libflexiblas
 Section: libs
 Architecture: any
@@ -56,6 +82,32 @@ Description: Flexible and Exchangeable BLAS library.
  are supported. 
  .
  This package contains the runtime part of FlexiBLAS. 
+
+Package: libflexiblas-api
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Flexible and Exchangeable BLAS library - Non-BLAS API.
+ The FlexiBLAS library is a flexible BLAS wrapper 
+ which allows one to exchange the system wide BLAS 
+ implementation without recompiling or relinking programs. 
+ Even dealing with runtime-loader specific tricks is 
+ not necessary with FlexiBLAS. 
+ .
+ You can select the BLAS implementation which is used behind 
+ FlexiBLAS using a configuration file or a environment variable. 
+ It is integrated in Debian/Ubuntu using the update-alternatives 
+ mechanism.
+ .
+ The package supports OpenBLAS, ATLAS and the reference Netlib 
+ implementation. If you compile FlexiBLAS on your own, other 
+ BLAS implementations like the old GotoBLAS or the Intel MKL 
+ are supported. 
+ .
+ This package contains the non-BLAS API calls as a separate shared
+ library. This library can be used to detect if a program is linked 
+ against FlexiBLAS or not. 
 
 Package: libflexiblas-atlas
 Section: libs
@@ -90,7 +142,7 @@ Architecture: any
 Multi-Arch: same
 Section: debug
 Priority: extra
-Depends: libflexiblas (= ${binary:Version}), ${misc:Depends}
+Depends: libflexiblas (= ${binary:Version}), libflexiblas-api (= ${binary:Version}), ${misc:Depends}
 Description: Debug symbols for FlexiBLAS
  The FlexiBLAS library is a flexible BLAS wrapper 
  which allows one to exchange the system wide BLAS 
