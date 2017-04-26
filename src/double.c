@@ -211,7 +211,7 @@ BLAS_FN		(void, 	daxpy,	(Int *N, double *DA, double *DX, Int * INCX, double *DY,
 // BLAS_NONVOID_FN	(double,	dcabs1,	(double complex *Z),(Z));
 
 double dcabs1_(double complex *Z){
-	float ret = 0.0; 
+	double ret = 0.0; 
 	double te = 0, ts =  0;
 	if (__flexiblas_profile) {
 		ts = flexiblas_wtime(); 
@@ -219,7 +219,7 @@ double dcabs1_(double complex *Z){
 	if (__flexiblas_current_blas.scabs1_missing != 0 ) {
 		ret= fabs(creal(*Z)) + fabs(cimag(*Z)); 
 	} else {
-		float (*fn)  (double complex *Z); 
+		double (*fn)  (double complex *Z); 
 		fn = flexiblas_dcabs1.call_fblas; 
 		if ( fn == NULL ) { 
 			fprintf(stderr, "dcabs1_ not hooked, abort\n"); 
