@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:37 2017 */ 
+ /* Generated: Wed Mar 28 11:20:04 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
-void FC_GLOBAL(zgees,ZGEES)(char* jobvs, char* sort, blasint* select, blasint* n, double complex* a, blasint* lda, blasint* sdim, double complex* w, double complex* vs, blasint* ldvs, double complex* work, blasint* lwork, double* rwork, blasint* bwork, blasint* info)
+static TLS_STORE uint8_t hook_pos_zgees = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
+void FC_GLOBAL(zgees,ZGEES)(char* jobvs, char* sort, blasint* selectfunc, blasint* n, double complex* a, blasint* lda, blasint* sdim, double complex* w, double complex* vs, blasint* ldvs, double complex* work, blasint* lwork, double* rwork, blasint* bwork, blasint* info)
 #else
-void FC_GLOBAL(zgees,ZGEES)(char* jobvs, char* sort, blasint* select, blasint* n, double complex* a, blasint* lda, blasint* sdim, double complex* w, double complex* vs, blasint* ldvs, double complex* work, blasint* lwork, double* rwork, blasint* bwork, blasint* info)
-#endif 
+void FC_GLOBAL(zgees,ZGEES)(char* jobvs, char* sort, blasint* selectfunc, blasint* n, double complex* a, blasint* lda, blasint* sdim, double complex* w, double complex* vs, blasint* ldvs, double complex* work, blasint* lwork, double* rwork, blasint* bwork, blasint* info)
+#endif
 {
-    double ts;
-	void (*fn) (void* jobvs, void* sort, void* select, void* n, void* a, void* lda, void* sdim, void* w, void* vs, void* ldvs, void* work, void* lwork, void* rwork, void* bwork, void* info);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn) (void* jobvs, void* sort, void* selectfunc, void* n, void* a, void* lda, void* sdim, void* w, void* vs, void* ldvs, void* work, void* lwork, void* rwork, void* bwork, void* info);
+	void (*fn_hook) (void* jobvs, void* sort, void* selectfunc, void* n, void* a, void* lda, void* sdim, void* w, void* vs, void* ldvs, void* work, void* lwork, void* rwork, void* bwork, void* info);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.zgees.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->zgees.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) jobvs, (void*) sort, (void*) selectfunc, (void*) n, (void*) a, (void*) lda, (void*) sdim, (void*) w, (void*) vs, (void*) ldvs, (void*) work, (void*) lwork, (void*) rwork, (void*) bwork, (void*) info); 
+		return;
+	} else {
+		hook_pos_zgees = 0;
+		fn_hook((void*) jobvs, (void*) sort, (void*) selectfunc, (void*) n, (void*) a, (void*) lda, (void*) sdim, (void*) w, (void*) vs, (void*) ldvs, (void*) work, (void*) lwork, (void*) rwork, (void*) bwork, (void*) info);
+		return;
 	}
-	fn = current_backend->lapack.zgees.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) jobvs, (void*) sort, (void*) select, (void*) n, (void*) a, (void*) lda, (void*) sdim, (void*) w, (void*) vs, (void*) ldvs, (void*) work, (void*) lwork, (void*) rwork, (void*) bwork, (void*) info); 
-		current_backend->lapack.zgees.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.zgees.calls[0]++;
-	} else { 
-		fn((void*) jobvs, (void*) sort, (void*) select, (void*) n, (void*) a, (void*) lda, (void*) sdim, (void*) w, (void*) vs, (void*) ldvs, (void*) work, (void*) lwork, (void*) rwork, (void*) bwork, (void*) info); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zgees_(char* jobvs, char* sort, blasint* select, blasint* n, double complex* a, blasint* lda, blasint* sdim, double complex* w, double complex* vs, blasint* ldvs, double complex* work, blasint* lwork, double* rwork, blasint* bwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zgees,ZGEES)))));
+void zgees_(char* jobvs, char* sort, blasint* selectfunc, blasint* n, double complex* a, blasint* lda, blasint* sdim, double complex* w, double complex* vs, blasint* ldvs, double complex* work, blasint* lwork, double* rwork, blasint* bwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zgees,ZGEES)))));
 #else
-void zgees(char* jobvs, char* sort, blasint* select, blasint* n, double complex* a, blasint* lda, blasint* sdim, double complex* w, double complex* vs, blasint* ldvs, double complex* work, blasint* lwork, double* rwork, blasint* bwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zgees,ZGEES)))));
+void zgees(char* jobvs, char* sort, blasint* selectfunc, blasint* n, double complex* a, blasint* lda, blasint* sdim, double complex* w, double complex* vs, blasint* ldvs, double complex* work, blasint* lwork, double* rwork, blasint* bwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zgees,ZGEES)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_zgees_(void* jobvs, void* sort, void* selectfunc, void* n, void* a, void* lda, void* sdim, void* w, void* vs, void* ldvs, void* work, void* lwork, void* rwork, void* bwork, void* info)
+{
+	void (*fn) (void* jobvs, void* sort, void* selectfunc, void* n, void* a, void* lda, void* sdim, void* w, void* vs, void* ldvs, void* work, void* lwork, void* rwork, void* bwork, void* info);
+
+	fn = current_backend->lapack.zgees.f77_blas_function; 
+
+		fn((void*) jobvs, (void*) sort, (void*) selectfunc, (void*) n, (void*) a, (void*) lda, (void*) sdim, (void*) w, (void*) vs, (void*) ldvs, (void*) work, (void*) lwork, (void*) rwork, (void*) bwork, (void*) info); 
+
+	return;
+}
+
+void flexiblas_real_zgees(void* jobvs, void* sort, void* selectfunc, void* n, void* a, void* lda, void* sdim, void* w, void* vs, void* ldvs, void* work, void* lwork, void* rwork, void* bwork, void* info)  __attribute__((alias("flexiblas_real_zgees_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_zgees_(void* jobvs, void* sort, void* selectfunc, void* n, void* a, void* lda, void* sdim, void* w, void* vs, void* ldvs, void* work, void* lwork, void* rwork, void* bwork, void* info)
+{
+	void (*fn) (void* jobvs, void* sort, void* selectfunc, void* n, void* a, void* lda, void* sdim, void* w, void* vs, void* ldvs, void* work, void* lwork, void* rwork, void* bwork, void* info);
+	void (*fn_hook) (void* jobvs, void* sort, void* selectfunc, void* n, void* a, void* lda, void* sdim, void* w, void* vs, void* ldvs, void* work, void* lwork, void* rwork, void* bwork, void* info);
+
+	fn      = current_backend->lapack.zgees.f77_blas_function; 
+
+    hook_pos_zgees ++;
+    if( hook_pos_zgees < __flexiblas_hooks->zgees.nhook) {
+        fn_hook = __flexiblas_hooks->zgees.f77_hook_function[hook_pos_zgees];
+        fn_hook((void*) jobvs, (void*) sort, (void*) selectfunc, (void*) n, (void*) a, (void*) lda, (void*) sdim, (void*) w, (void*) vs, (void*) ldvs, (void*) work, (void*) lwork, (void*) rwork, (void*) bwork, (void*) info);
+    } else {
+        hook_pos_zgees = 0;
+		fn((void*) jobvs, (void*) sort, (void*) selectfunc, (void*) n, (void*) a, (void*) lda, (void*) sdim, (void*) w, (void*) vs, (void*) ldvs, (void*) work, (void*) lwork, (void*) rwork, (void*) bwork, (void*) info); 
+	}
+	return;
+}
+
+void flexiblas_chain_zgees(void* jobvs, void* sort, void* selectfunc, void* n, void* a, void* lda, void* sdim, void* w, void* vs, void* ldvs, void* work, void* lwork, void* rwork, void* bwork, void* info)  __attribute__((alias("flexiblas_chain_zgees_")));
+
 
 
 

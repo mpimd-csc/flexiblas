@@ -1,5 +1,5 @@
 /* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
-/* 
+/*
    Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
    This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ void cblas_zgemv(const CBLAS_LAYOUT layout,
         void  *Y, const int incY)
 {
     char TA;
-#define F77_TA &TA   
+#define F77_TA &TA
 #ifdef F77_INT
     F77_INT F77_M=M, F77_N=N, F77_lda=lda, F77_incX=incX, F77_incY=incY;
 #else
@@ -43,10 +43,6 @@ void cblas_zgemv(const CBLAS_LAYOUT layout,
         current_backend->post_init = 0;
     }
     if ( current_backend->blas.zgemv.call_cblas != NULL ) {
-        double te = 0 , ts = 0;
-        if ( __flexiblas_profile ) {
-            ts    = flexiblas_wtime(); 
-        }
 
         void (*fn)
             (const CBLAS_LAYOUT layout,
@@ -56,16 +52,12 @@ void cblas_zgemv(const CBLAS_LAYOUT layout,
              void  *Y, const int incY)
             = current_backend->blas.zgemv.call_cblas;
         fn(layout,TransA,M,N,alpha,A,lda,X,incX,beta,Y,incY);
-        if ( __flexiblas_profile ) {
-            te = flexiblas_wtime(); 
-            current_backend->blas.zgemv.timings[POS_CBLAS] += (te - ts); 
-        }
     } else {
-        int n=0, i=0; 
+        int n=0, i=0;
 #ifdef F77_INT
         F77_incX=incX;
-#else 
-        int incx = incX; 
+#else
+        int incx = incX;
 #endif
 
 
@@ -87,14 +79,14 @@ void cblas_zgemv(const CBLAS_LAYOUT layout,
             if (TransA == CblasNoTrans) TA = 'N';
             else if (TransA == CblasTrans) TA = 'T';
             else if (TransA == CblasConjTrans) TA = 'C';
-            else 
+            else
             {
                 cblas_xerbla(2, "cblas_zgemv","Illegal TransA setting, %d\n", TransA);
                 CBLAS_CallFromC = 0;
                 RowMajorStrg = 0;
                 return;
             }
-            FC_GLOBAL(zgemv,ZGEMV)(F77_TA, &F77_M, &F77_N, alpha, A, &F77_lda, X, &F77_incX, 
+            FC_GLOBAL(zgemv,ZGEMV)(F77_TA, &F77_M, &F77_N, alpha, A, &F77_lda, X, &F77_incX,
                     beta, Y, &F77_incY);
         }
         else if (layout == CblasRowMajor)
@@ -119,11 +111,11 @@ void cblas_zgemv(const CBLAS_LAYOUT layout,
                         i = incX << 1 ;
                         tincx = 2;
                         st= x+n;
-                    } else { 
+                    } else {
                         i = incX *(-2);
                         tincx = -2;
-                        st = x-2; 
-                        x +=(n-2); 
+                        st = x-2;
+                        x +=(n-2);
                     }
 
                     do
@@ -139,9 +131,9 @@ void cblas_zgemv(const CBLAS_LAYOUT layout,
                     F77_incX = 1;
 
                     if(incY > 0)
-                        tincY = incY; 
+                        tincY = incY;
                     else
-                        tincY = -incY; 
+                        tincY = -incY;
 
                     y++;
 
@@ -153,14 +145,14 @@ void cblas_zgemv(const CBLAS_LAYOUT layout,
                         do {
                             *y = -(*y);
                             y += i;
-                        } while(y != st); 
+                        } while(y != st);
                         y -= n;
                     }
                     stx = x;
                 }
                 else stx = (const double *)X;
             }
-            else 
+            else
             {
                 cblas_xerbla(2, "cblas_zgemv","Illegal TransA setting, %d\n", TransA);
                 CBLAS_CallFromC = 0;

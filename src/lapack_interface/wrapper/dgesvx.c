@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:34 2017 */ 
+ /* Generated: Wed Mar 28 11:20:03 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_dgesvx = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 void FC_GLOBAL(dgesvx,DGESVX)(char* fact, char* trans, blasint* n, blasint* nrhs, double* a, blasint* lda, double* af, blasint* ldaf, blasint* ipiv, char* equed, double* r, double* c, double* b, blasint* ldb, double* x, blasint* ldx, double* rcond, double* ferr, double* berr, double* work, blasint* iwork, blasint* info)
 #else
 void FC_GLOBAL(dgesvx,DGESVX)(char* fact, char* trans, blasint* n, blasint* nrhs, double* a, blasint* lda, double* af, blasint* ldaf, blasint* ipiv, char* equed, double* r, double* c, double* b, blasint* ldb, double* x, blasint* ldx, double* rcond, double* ferr, double* berr, double* work, blasint* iwork, blasint* info)
-#endif 
+#endif
 {
-    double ts;
 	void (*fn) (void* fact, void* trans, void* n, void* nrhs, void* a, void* lda, void* af, void* ldaf, void* ipiv, void* equed, void* r, void* c, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* iwork, void* info);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn_hook) (void* fact, void* trans, void* n, void* nrhs, void* a, void* lda, void* af, void* ldaf, void* ipiv, void* equed, void* r, void* c, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* iwork, void* info);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.dgesvx.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->dgesvx.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) fact, (void*) trans, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) af, (void*) ldaf, (void*) ipiv, (void*) equed, (void*) r, (void*) c, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) rcond, (void*) ferr, (void*) berr, (void*) work, (void*) iwork, (void*) info); 
+		return;
+	} else {
+		hook_pos_dgesvx = 0;
+		fn_hook((void*) fact, (void*) trans, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) af, (void*) ldaf, (void*) ipiv, (void*) equed, (void*) r, (void*) c, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) rcond, (void*) ferr, (void*) berr, (void*) work, (void*) iwork, (void*) info);
+		return;
 	}
-	fn = current_backend->lapack.dgesvx.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) fact, (void*) trans, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) af, (void*) ldaf, (void*) ipiv, (void*) equed, (void*) r, (void*) c, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) rcond, (void*) ferr, (void*) berr, (void*) work, (void*) iwork, (void*) info); 
-		current_backend->lapack.dgesvx.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.dgesvx.calls[0]++;
-	} else { 
-		fn((void*) fact, (void*) trans, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) af, (void*) ldaf, (void*) ipiv, (void*) equed, (void*) r, (void*) c, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) rcond, (void*) ferr, (void*) berr, (void*) work, (void*) iwork, (void*) info); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void dgesvx_(char* fact, char* trans, blasint* n, blasint* nrhs, double* a, blasint* lda, double* af, blasint* ldaf, blasint* ipiv, char* equed, double* r, double* c, double* b, blasint* ldb, double* x, blasint* ldx, double* rcond, double* ferr, double* berr, double* work, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dgesvx,DGESVX)))));
 #else
 void dgesvx(char* fact, char* trans, blasint* n, blasint* nrhs, double* a, blasint* lda, double* af, blasint* ldaf, blasint* ipiv, char* equed, double* r, double* c, double* b, blasint* ldb, double* x, blasint* ldx, double* rcond, double* ferr, double* berr, double* work, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dgesvx,DGESVX)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_dgesvx_(void* fact, void* trans, void* n, void* nrhs, void* a, void* lda, void* af, void* ldaf, void* ipiv, void* equed, void* r, void* c, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* iwork, void* info)
+{
+	void (*fn) (void* fact, void* trans, void* n, void* nrhs, void* a, void* lda, void* af, void* ldaf, void* ipiv, void* equed, void* r, void* c, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* iwork, void* info);
+
+	fn = current_backend->lapack.dgesvx.f77_blas_function; 
+
+		fn((void*) fact, (void*) trans, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) af, (void*) ldaf, (void*) ipiv, (void*) equed, (void*) r, (void*) c, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) rcond, (void*) ferr, (void*) berr, (void*) work, (void*) iwork, (void*) info); 
+
+	return;
+}
+
+void flexiblas_real_dgesvx(void* fact, void* trans, void* n, void* nrhs, void* a, void* lda, void* af, void* ldaf, void* ipiv, void* equed, void* r, void* c, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* iwork, void* info)  __attribute__((alias("flexiblas_real_dgesvx_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_dgesvx_(void* fact, void* trans, void* n, void* nrhs, void* a, void* lda, void* af, void* ldaf, void* ipiv, void* equed, void* r, void* c, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* iwork, void* info)
+{
+	void (*fn) (void* fact, void* trans, void* n, void* nrhs, void* a, void* lda, void* af, void* ldaf, void* ipiv, void* equed, void* r, void* c, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* iwork, void* info);
+	void (*fn_hook) (void* fact, void* trans, void* n, void* nrhs, void* a, void* lda, void* af, void* ldaf, void* ipiv, void* equed, void* r, void* c, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* iwork, void* info);
+
+	fn      = current_backend->lapack.dgesvx.f77_blas_function; 
+
+    hook_pos_dgesvx ++;
+    if( hook_pos_dgesvx < __flexiblas_hooks->dgesvx.nhook) {
+        fn_hook = __flexiblas_hooks->dgesvx.f77_hook_function[hook_pos_dgesvx];
+        fn_hook((void*) fact, (void*) trans, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) af, (void*) ldaf, (void*) ipiv, (void*) equed, (void*) r, (void*) c, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) rcond, (void*) ferr, (void*) berr, (void*) work, (void*) iwork, (void*) info);
+    } else {
+        hook_pos_dgesvx = 0;
+		fn((void*) fact, (void*) trans, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) af, (void*) ldaf, (void*) ipiv, (void*) equed, (void*) r, (void*) c, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) rcond, (void*) ferr, (void*) berr, (void*) work, (void*) iwork, (void*) info); 
+	}
+	return;
+}
+
+void flexiblas_chain_dgesvx(void* fact, void* trans, void* n, void* nrhs, void* a, void* lda, void* af, void* ldaf, void* ipiv, void* equed, void* r, void* c, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* iwork, void* info)  __attribute__((alias("flexiblas_chain_dgesvx_")));
+
 
 
 

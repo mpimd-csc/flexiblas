@@ -1,0 +1,29 @@
+#! /bin/sh
+#!/bin/sh
+set -e
+
+update-alternatives --install /usr/lib/x86_64-linux-gnu/libblas64.so \
+	libblas64.so-x86_64-linux-gnu \
+	/usr/lib/x86_64-linux-gnu/libflexiblas64.so \
+	120 \
+	--slave /usr/include/x86_64-linux-gnu/cblas64.h \
+	cblas64.h-x86_64-linux-gnu \
+	/usr/include/flexiblas64/cblas.h \
+	--slave /usr/lib/x86_64-linux-gnu/pkgconfig/blas64.pc \
+	blas64.pc-x86_64-linux-gnu \
+	/usr/lib/x86_64-linux-gnu/pkgconfig/flexiblas64.pc
+
+update-alternatives --install /usr/lib/x86_64-linux-gnu/liblapack64.so \
+	liblapack64.so-x86_64-linux-gnu \
+	/usr/lib/x86_64-linux-gnu/libflexiblas64.so \
+	120 \
+	--slave /usr/lib/x86_64-linux-gnu/pkgconfig/lapack64.pc \
+	lapack64.pc-x86_64-linux-gnu \
+	/usr/lib/x86_64-linux-gnu/pkgconfig/flexiblas64.pc
+
+
+#DEBHELPER#
+
+exit 0
+
+

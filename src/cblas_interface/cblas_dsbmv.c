@@ -1,11 +1,11 @@
 /* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
-/* 
+/*
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License.
- 
+
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -26,7 +26,7 @@ void cblas_dsbmv(const CBLAS_LAYOUT layout,
                  double  *Y, const int incY)
 {
    char UL;
-   #define F77_UL &UL   
+   #define F77_UL &UL
 #ifdef F77_INT
    F77_INT F77_N=N, F77_K=K, F77_lda=lda, F77_incX=incX, F77_incY=incY;
 #else
@@ -43,10 +43,6 @@ void cblas_dsbmv(const CBLAS_LAYOUT layout,
    	current_backend->post_init = 0;
    }
    if ( current_backend->blas.dsbmv.call_cblas != NULL ) {
-	   double te = 0, ts = 0;
-	   if ( __flexiblas_profile ) {
-		   ts = flexiblas_wtime(); 
-	   }
 	   void (*fn)
 		 (const CBLAS_LAYOUT layout,
                  const CBLAS_UPLO Uplo, const int N, const int K,
@@ -55,10 +51,6 @@ void cblas_dsbmv(const CBLAS_LAYOUT layout,
                  double  *Y, const int incY)
 		   = current_backend->blas.dsbmv.call_cblas;
 		fn(layout,Uplo,N,K,alpha,A,lda,X,incX,beta,Y,incY);
-	   if ( __flexiblas_profile ){
-	   	te = flexiblas_wtime(); 
-		   current_backend->blas.dsbmv.timings[POS_CBLAS] += (te - ts); 
-	   }
    } else {
 	   extern int CBLAS_CallFromC;
 	   extern int RowMajorStrg;
@@ -69,14 +61,14 @@ void cblas_dsbmv(const CBLAS_LAYOUT layout,
 	   {
 	      if (Uplo == CblasUpper) UL = 'U';
 	      else if (Uplo == CblasLower) UL = 'L';
-	      else 
+	      else
 	      {
 		 cblas_xerbla(2, "cblas_dsbmv","Illegal Uplo setting, %d\n",Uplo );
 		 CBLAS_CallFromC = 0;
 		 RowMajorStrg = 0;
 		 return;
 	      }
-	      FC_GLOBAL(dsbmv,DSBMV)(F77_UL, &F77_N, &F77_K, &alpha, A, &F77_lda, X,  
+	      FC_GLOBAL(dsbmv,DSBMV)(F77_UL, &F77_N, &F77_K, &alpha, A, &F77_lda, X,
 			     &F77_incX, &beta, Y, &F77_incY);
 	   }
 	   else if (layout == CblasRowMajor)
@@ -84,14 +76,14 @@ void cblas_dsbmv(const CBLAS_LAYOUT layout,
 	      RowMajorStrg = 1;
 	      if (Uplo == CblasUpper) UL = 'L';
 	      else if (Uplo == CblasLower) UL = 'U';
-	      else 
+	      else
 	      {
 		 cblas_xerbla(2, "cblas_dsbmv","Illegal Uplo setting, %d\n", Uplo);
 		 CBLAS_CallFromC = 0;
 		 RowMajorStrg = 0;
 		 return;
 	      }
-	      FC_GLOBAL(dsbmv,DSBMV)(F77_UL, &F77_N, &F77_K, &alpha, 
+	      FC_GLOBAL(dsbmv,DSBMV)(F77_UL, &F77_N, &F77_K, &alpha,
 			     A ,&F77_lda, X,&F77_incX, &beta, Y, &F77_incY);
 	   }
 	   else cblas_xerbla(1, "cblas_dsbmv", "Illegal layout setting, %d\n", layout);

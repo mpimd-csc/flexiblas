@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:34 2017 */ 
+ /* Generated: Wed Mar 28 11:20:03 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_dlapmr = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 void FC_GLOBAL(dlapmr,DLAPMR)(blasint* forwrd, blasint* m, blasint* n, double* x, blasint* ldx, blasint* k)
 #else
 void FC_GLOBAL(dlapmr,DLAPMR)(blasint* forwrd, blasint* m, blasint* n, double* x, blasint* ldx, blasint* k)
-#endif 
+#endif
 {
-    double ts;
 	void (*fn) (void* forwrd, void* m, void* n, void* x, void* ldx, void* k);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn_hook) (void* forwrd, void* m, void* n, void* x, void* ldx, void* k);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.dlapmr.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->dlapmr.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) forwrd, (void*) m, (void*) n, (void*) x, (void*) ldx, (void*) k); 
+		return;
+	} else {
+		hook_pos_dlapmr = 0;
+		fn_hook((void*) forwrd, (void*) m, (void*) n, (void*) x, (void*) ldx, (void*) k);
+		return;
 	}
-	fn = current_backend->lapack.dlapmr.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) forwrd, (void*) m, (void*) n, (void*) x, (void*) ldx, (void*) k); 
-		current_backend->lapack.dlapmr.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.dlapmr.calls[0]++;
-	} else { 
-		fn((void*) forwrd, (void*) m, (void*) n, (void*) x, (void*) ldx, (void*) k); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void dlapmr_(blasint* forwrd, blasint* m, blasint* n, double* x, blasint* ldx, blasint* k) __attribute__((alias(MTS(FC_GLOBAL(dlapmr,DLAPMR)))));
 #else
 void dlapmr(blasint* forwrd, blasint* m, blasint* n, double* x, blasint* ldx, blasint* k) __attribute__((alias(MTS(FC_GLOBAL(dlapmr,DLAPMR)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_dlapmr_(void* forwrd, void* m, void* n, void* x, void* ldx, void* k)
+{
+	void (*fn) (void* forwrd, void* m, void* n, void* x, void* ldx, void* k);
+
+	fn = current_backend->lapack.dlapmr.f77_blas_function; 
+
+		fn((void*) forwrd, (void*) m, (void*) n, (void*) x, (void*) ldx, (void*) k); 
+
+	return;
+}
+
+void flexiblas_real_dlapmr(void* forwrd, void* m, void* n, void* x, void* ldx, void* k)  __attribute__((alias("flexiblas_real_dlapmr_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_dlapmr_(void* forwrd, void* m, void* n, void* x, void* ldx, void* k)
+{
+	void (*fn) (void* forwrd, void* m, void* n, void* x, void* ldx, void* k);
+	void (*fn_hook) (void* forwrd, void* m, void* n, void* x, void* ldx, void* k);
+
+	fn      = current_backend->lapack.dlapmr.f77_blas_function; 
+
+    hook_pos_dlapmr ++;
+    if( hook_pos_dlapmr < __flexiblas_hooks->dlapmr.nhook) {
+        fn_hook = __flexiblas_hooks->dlapmr.f77_hook_function[hook_pos_dlapmr];
+        fn_hook((void*) forwrd, (void*) m, (void*) n, (void*) x, (void*) ldx, (void*) k);
+    } else {
+        hook_pos_dlapmr = 0;
+		fn((void*) forwrd, (void*) m, (void*) n, (void*) x, (void*) ldx, (void*) k); 
+	}
+	return;
+}
+
+void flexiblas_chain_dlapmr(void* forwrd, void* m, void* n, void* x, void* ldx, void* k)  __attribute__((alias("flexiblas_chain_dlapmr_")));
+
 
 
 

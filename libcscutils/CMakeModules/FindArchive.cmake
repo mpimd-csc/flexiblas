@@ -3,7 +3,7 @@
 # This module defines
 #  ARCHIVE_LIBRARIES, the libraries to link against to use libsqlite3.
 #  ARCHIVE_FOUND, If false, do not try to use libsqlite3.
-#  ARCHIVE_INCLUDE_DIR, include directories for libsqlite3. 
+#  ARCHIVE_INCLUDE_DIR, include directories for libsqlite3.
 
 #=============================================================================
 # Copyright 2014, Martin Koehler
@@ -16,46 +16,46 @@
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 # See the License for more information.
 #=============================================================================
-INCLUDE(CheckFunctionExists) 
+INCLUDE(CheckFunctionExists)
 
-if (NOT _incdir)
-  if (WIN32)
-	  set(_incdir ENV INCLUDE)
-  elseif (APPLE)
-	  set(_incdir ENV INCLUDE CPATH)
-  else ()
-	  set(_incdir ENV INCLUDE CPATH)
-  endif ()
-endif ()
+IF(NOT _incdir)
+    IF(WIN32)
+        SET(_incdir ENV INCLUDE)
+    ELSEIF(APPLE)
+        SET(_incdir ENV INCLUDE CPATH)
+    ELSE()
+        SET(_incdir ENV INCLUDE CPATH)
+    ENDIF()
+ENDIF()
 
-if (NOT _libdir)
-  if (WIN32)
-    set(_libdir ENV LIB)
-  elseif (APPLE)
-    set(_libdir ENV DYLD_LIBRARY_PATH)
-  else ()
-    set(_libdir ENV LD_LIBRARY_PATH)
-  endif ()
-endif ()
+IF(NOT _libdir)
+    IF(WIN32)
+        SET(_libdir ENV LIB)
+    ELSEIF(APPLE)
+        SET(_libdir ENV DYLD_LIBRARY_PATH)
+    ELSE()
+        SET(_libdir ENV LD_LIBRARY_PATH)
+    ENDIF()
+ENDIF()
 
-find_path(ARCHIVE_INCLUDE_DIR NAMES archive.h
-	PATHS
-	${_incdir}
-	/usr/include
-	/usr/local/include
-	/opt/local/include	#Macports
-  )
-set(ARCHIVE_NAMES archive libarchive)
-find_library(ARCHIVE_LIBRARIES NAMES ${ARCHIVE_NAMES} PATHS ${_libdir} /usr/lib /usr/lib32 /usr/lib64)
+FIND_PATH(ARCHIVE_INCLUDE_DIR NAMES archive.h
+    PATHS
+    ${_incdir}
+    /usr/include
+    /usr/local/include
+    /opt/local/include  #Macports
+    )
+SET(ARCHIVE_NAMES archive libarchive)
+FIND_LIBRARY(ARCHIVE_LIBRARIES NAMES ${ARCHIVE_NAMES} PATHS ${_libdir} /usr/lib /usr/lib32 /usr/lib64)
 
 IF(ARCHIVE_INCLUDE_DIR AND ARCHIVE_LIBRARIES)
-	MESSAGE(STATUS "Found ARCHIVE header: ${ARCHIVE_INCLUDE_DIR}")
-	MESSAGE(STATUS "Found ARCHIVE library: ${ARCHIVE_LIBRARIES}")
-	SET(ARCHIVE_FOUND TRUE) 
+    MESSAGE(STATUS "Found ARCHIVE header: ${ARCHIVE_INCLUDE_DIR}")
+    MESSAGE(STATUS "Found ARCHIVE library: ${ARCHIVE_LIBRARIES}")
+    SET(ARCHIVE_FOUND TRUE)
 ELSE()
-	SET(ARCHIVE_FOUND FALSE) 
+    SET(ARCHIVE_FOUND FALSE)
 ENDIF()
 
 # all listed variables are TRUE
-include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(ARCHIVE DEFAULT_MSG ARCHIVE_LIBRARIES ARCHIVE_INCLUDE_DIR )
+INCLUDE(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(ARCHIVE DEFAULT_MSG ARCHIVE_LIBRARIES ARCHIVE_INCLUDE_DIR)

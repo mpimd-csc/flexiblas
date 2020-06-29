@@ -48,17 +48,17 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \date December 2016
+*> \date June 2017
 *
 *> \ingroup single_lin
 *
 *  =====================================================================
       SUBROUTINE SERRSY( PATH, NUNIT )
 *
-*  -- LAPACK test routine (version 3.7.0) --
+*  -- LAPACK test routine (version 3.7.1) --
 *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
 *  -- Univ. of California Berkeley, Univ. of Colorado Denver and NAG Ltd..--
-*     December 2016
+*     June 2017
 *
 *     .. Scalar Arguments ..
       CHARACTER*3        PATH
@@ -92,7 +92,7 @@
      $                   SSYTF2_RK, SSYTF2_ROOK, SSYTRF, SSYTRF_RK,
      $                   SSYTRF_ROOK, SSYTRI, SSYTF2, SSYTRI_3,
      $                   SSYTRI_3X, SSYTRI_ROOK, SSYTRF_AA, SSYTRI2, 
-     $                   SYTRI2X, SSYTRS, SSYTRS_3, SSYTRS_ROOK,
+     $                   SSYTRI2X, SSYTRS, SSYTRS_3, SSYTRS_ROOK,
      $                   SSYTRS_AA
 *     ..
 *     .. Scalars in Common ..

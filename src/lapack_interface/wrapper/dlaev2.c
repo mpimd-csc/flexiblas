@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:34 2017 */ 
+ /* Generated: Wed Mar 28 11:20:03 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_dlaev2 = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 void FC_GLOBAL(dlaev2,DLAEV2)(double* a, double* b, double* c, double* rt1, double* rt2, double* cs1, double* sn1)
 #else
 void FC_GLOBAL(dlaev2,DLAEV2)(double* a, double* b, double* c, double* rt1, double* rt2, double* cs1, double* sn1)
-#endif 
+#endif
 {
-    double ts;
 	void (*fn) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn_hook) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.dlaev2.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->dlaev2.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1); 
+		return;
+	} else {
+		hook_pos_dlaev2 = 0;
+		fn_hook((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1);
+		return;
 	}
-	fn = current_backend->lapack.dlaev2.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1); 
-		current_backend->lapack.dlaev2.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.dlaev2.calls[0]++;
-	} else { 
-		fn((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void dlaev2_(double* a, double* b, double* c, double* rt1, double* rt2, double* cs1, double* sn1) __attribute__((alias(MTS(FC_GLOBAL(dlaev2,DLAEV2)))));
 #else
 void dlaev2(double* a, double* b, double* c, double* rt1, double* rt2, double* cs1, double* sn1) __attribute__((alias(MTS(FC_GLOBAL(dlaev2,DLAEV2)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_dlaev2_(void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1)
+{
+	void (*fn) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
+
+	fn = current_backend->lapack.dlaev2.f77_blas_function; 
+
+		fn((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1); 
+
+	return;
+}
+
+void flexiblas_real_dlaev2(void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1)  __attribute__((alias("flexiblas_real_dlaev2_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_dlaev2_(void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1)
+{
+	void (*fn) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
+	void (*fn_hook) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
+
+	fn      = current_backend->lapack.dlaev2.f77_blas_function; 
+
+    hook_pos_dlaev2 ++;
+    if( hook_pos_dlaev2 < __flexiblas_hooks->dlaev2.nhook) {
+        fn_hook = __flexiblas_hooks->dlaev2.f77_hook_function[hook_pos_dlaev2];
+        fn_hook((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1);
+    } else {
+        hook_pos_dlaev2 = 0;
+		fn((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1); 
+	}
+	return;
+}
+
+void flexiblas_chain_dlaev2(void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1)  __attribute__((alias("flexiblas_chain_dlaev2_")));
+
 
 
 

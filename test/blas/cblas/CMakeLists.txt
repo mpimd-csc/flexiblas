@@ -22,6 +22,16 @@ macro(add_cblas_test output input target)
       -DINTDIR=${CMAKE_CFG_INTDIR}
       -P "${PROJECT_SOURCE_DIR}/test/blas/cblas/runtest.cmake")
   endif()
+
+  if ( INTEGER8 )
+      set_property(TEST CBLAS-${testName} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS64_LIBRARY_PATH="${PROJECT_BINARY_DIR}/lib")
+      set_property(TEST CBLAS-${testName} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS64=NETLIB)
+      set_property(TEST CBLAS-${testName} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS64_CONFIG=${PROJECT_BINARY_DIR}/${FLEXIBLAS64_RC})
+  else()
+      set_property(TEST CBLAS-${testName} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS_LIBRARY_PATH="${PROJECT_BINARY_DIR}/lib")
+      set_property(TEST CBLAS-${testName} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS=NETLIB)
+      set_property(TEST CBLAS-${testName} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS_CONFIG=${PROJECT_BINARY_DIR}/${FLEXIBLAS_RC})
+  endif()
 endmacro()
 
 
@@ -45,9 +55,9 @@ set(ZTESTL1O c_zblas1.c)
 set(ZTESTL2O c_zblas2.c c_z2chke.c auxiliary.c c_xerbla.c)
 set(ZTESTL3O c_zblas3.c c_z3chke.c auxiliary.c c_xerbla.c)
 
-SET(BLAS_LIBRARIES flexiblas) 
-INCLUDE_DIRECTORIES(${PROJECT_BINARY_DIR}/include) 
-INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include) 
+SET(BLAS_LIBRARIES flexiblas)
+INCLUDE_DIRECTORIES(${PROJECT_BINARY_DIR}/include)
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include)
 
 
 add_executable(xscblat1 c_sblat1.f ${STESTL1O} ${CMAKE_CURRENT_SOURCE_DIR}/cblas_test.h)

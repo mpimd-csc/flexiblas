@@ -1,11 +1,11 @@
 /* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
-/* 
+/*
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License.
- 
+
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -40,20 +40,12 @@ void cblas_zgeru(const CBLAS_LAYOUT layout, const int M, const int N,
    	current_backend->post_init = 0;
    }
    if ( current_backend->blas.zgeru.call_cblas != NULL ) {
-	   double te = 0, ts = 0;
-	   if (__flexiblas_profile )  {
-		   ts = flexiblas_wtime(); 
-	   }
 	   void (*fn)
 		  (const CBLAS_LAYOUT layout, const int M, const int N,
                  const void *alpha, const void *X, const int incX,
                  const void *Y, const int incY, void *A, const int lda)
 		   = current_backend->blas.zgeru.call_cblas;
 	fn(layout,M,N,alpha,X,incX,Y,incY,A,lda);
-	if (__flexiblas_profile ){
-	   te = flexiblas_wtime(); 
-	   current_backend->blas.zgeru.timings[POS_CBLAS] += (te - ts); 
-	}
    } else {
 
 	   extern int CBLAS_CallFromC;
@@ -70,7 +62,7 @@ void cblas_zgeru(const CBLAS_LAYOUT layout, const int M, const int N,
 	   else if (layout == CblasRowMajor)
 	   {
 	      RowMajorStrg = 1;
-	      FC_GLOBAL(zgeru,ZGERU)( &F77_N, &F77_M, alpha, Y, &F77_incY, X, &F77_incX, A, 
+	      FC_GLOBAL(zgeru,ZGERU)( &F77_N, &F77_M, alpha, Y, &F77_incY, X, &F77_incX, A,
 			      &F77_lda);
 	   }
 	   else cblas_xerbla(1, "cblas_zgeru","Illegal layout setting, %d\n", layout);

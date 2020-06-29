@@ -1,5 +1,5 @@
 /* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
-/* 
+/*
    Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
    This program is free software: you can redistribute it and/or modify
@@ -23,9 +23,9 @@ void cblas_cherk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
         const float alpha, const void *A, const int lda,
         const float beta, void *C, const int ldc)
 {
-    char UL, TR;   
-#define F77_TR &TR  
-#define F77_UL &UL  
+    char UL, TR;
+#define F77_TR &TR
+#define F77_UL &UL
 
 #ifdef F77_INT
     F77_INT F77_N=N, F77_K=K, F77_lda=lda;
@@ -44,11 +44,6 @@ void cblas_cherk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
         current_backend->post_init = 0;
     }
     if ( current_backend->blas.cherk.call_cblas != NULL ) {
-        double te = 0, ts = 0;
-        if (__flexiblas_profile ) {
-            ts = flexiblas_wtime(); 
-        }
-
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
              const CBLAS_TRANSPOSE Trans, const int N, const int K,
@@ -56,10 +51,6 @@ void cblas_cherk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
              const float beta, void *C, const int ldc)
             = current_backend->blas.cherk.call_cblas;
         fn(layout,Uplo,Trans,N,K,alpha,A,lda,beta,C,ldc);
-        if ( __flexiblas_profile ){
-            te = flexiblas_wtime(); 
-            current_backend->blas.cherk.timings[POS_CBLAS] += (te - ts); 
-        }
     } else {
         extern int CBLAS_CallFromC;
         extern int RowMajorStrg;

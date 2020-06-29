@@ -4,11 +4,15 @@ set -e
 
 if [ "$1" != "upgrade" ]
 then
-    update-alternatives --remove libblas.so /usr/lib/@DEB_HOST_MULTIARCH@/flexiblas/update-alternatives/libblas.so
-    update-alternatives --remove liblapack.so /usr/lib/@DEB_HOST_MULTIARCH@/flexiblas/update-alternatives/liblapack.so
+	update-alternatives --remove libblas.so-@DEB_HOST_MULTIARCH@ \
+		/usr/lib/@DEB_HOST_MULTIARCH@/libflexiblas.so
+
+	update-alternatives --remove liblapack.so-@DEB_HOST_MULTIARCH@ \
+		/usr/lib/@DEB_HOST_MULTIARCH@/libflexiblas.so
 
 fi
 
 #DEBHELPER#
+
 
 exit 0

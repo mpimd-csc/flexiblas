@@ -75,6 +75,7 @@ icamax.f
 idamax.f
 isamax.f
 izamax.f
+lsame.f
 sasum.f
 saxpy.f
 scabs1.f
@@ -112,8 +113,8 @@ strmm.f
 strmv.f
 strsm.f
 strsv.f
-xerbla.f
 xerbla_array.f
+xerbla.f
 zaxpy.f
 zcopy.f
 zdotc.f
@@ -148,11 +149,8 @@ ztpsv.f
 ztrmm.f
 ztrmv.f
 ztrsm.f
-ztrsv.f		
-lsame.f
-info.c
-lsame.f
-	)
+ztrsv.f
+    )
 
 
 if( (CMAKE_Fortran_COMPILER_ID STREQUAL "VisualAge" ) OR  # CMake 2.6
@@ -163,23 +161,18 @@ if( (CMAKE_Fortran_COMPILER_ID STREQUAL "VisualAge" ) OR  # CMake 2.6
 
 	if( NOT ("${CMAKE_Fortran_FLAGS}" MATCHES "-qfixed") )
 		message( STATUS "BLAS -- Enabling fixed format F90/F95 with -qfixed" )
-		set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -qfixed") 
+		set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -qfixed")
 		#         CACHE STRING "Flags for Fortran compiler." FORCE )
 	endif()
 endif()
 
 
-# Disable Warings for BLAS 
-if ( CMAKE_Fortran_COMPILER_ID STREQUAL "GNU" ) 
-	SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Wno-conversion -Wno-maybe-uninitialized") 
+# Disable Warings for BLAS
+if ( CMAKE_Fortran_COMPILER_ID STREQUAL "GNU" )
+	SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Wno-conversion -Wno-maybe-uninitialized")
 endif()
 
+INCLUDE_DIRECTORIES(${PROJECT_BINARY_DIR}/include)
+add_library (flexiblas_netlib_objs OBJECT ${NETLIBSRC})
 
-add_library (flexiblas_netlib SHARED ${NETLIBSRC})
-
-if (WIN32) 
-	install(TARGETS flexiblas_netlib EXPORT flexiblas-targets LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR} RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
-else ()
-	install(TARGETS flexiblas_netlib LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR})
-endif()
 

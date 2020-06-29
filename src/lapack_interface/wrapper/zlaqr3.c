@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:38 2017 */ 
+ /* Generated: Wed Mar 28 11:20:05 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_zlaqr3 = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 void FC_GLOBAL(zlaqr3,ZLAQR3)(blasint* wantt, blasint* wantz, blasint* n, blasint* ktop, blasint* kbot, blasint* nw, double complex* h, blasint* ldh, blasint* iloz, blasint* ihiz, double complex* z, blasint* ldz, blasint* ns, blasint* nd, double complex* sh, double complex* v, blasint* ldv, blasint* nh, double complex* t, blasint* ldt, blasint* nv, double complex* wv, blasint* ldwv, double complex* work, blasint* lwork)
 #else
 void FC_GLOBAL(zlaqr3,ZLAQR3)(blasint* wantt, blasint* wantz, blasint* n, blasint* ktop, blasint* kbot, blasint* nw, double complex* h, blasint* ldh, blasint* iloz, blasint* ihiz, double complex* z, blasint* ldz, blasint* ns, blasint* nd, double complex* sh, double complex* v, blasint* ldv, blasint* nh, double complex* t, blasint* ldt, blasint* nv, double complex* wv, blasint* ldwv, double complex* work, blasint* lwork)
-#endif 
+#endif
 {
-    double ts;
 	void (*fn) (void* wantt, void* wantz, void* n, void* ktop, void* kbot, void* nw, void* h, void* ldh, void* iloz, void* ihiz, void* z, void* ldz, void* ns, void* nd, void* sh, void* v, void* ldv, void* nh, void* t, void* ldt, void* nv, void* wv, void* ldwv, void* work, void* lwork);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn_hook) (void* wantt, void* wantz, void* n, void* ktop, void* kbot, void* nw, void* h, void* ldh, void* iloz, void* ihiz, void* z, void* ldz, void* ns, void* nd, void* sh, void* v, void* ldv, void* nh, void* t, void* ldt, void* nv, void* wv, void* ldwv, void* work, void* lwork);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.zlaqr3.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->zlaqr3.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) wantt, (void*) wantz, (void*) n, (void*) ktop, (void*) kbot, (void*) nw, (void*) h, (void*) ldh, (void*) iloz, (void*) ihiz, (void*) z, (void*) ldz, (void*) ns, (void*) nd, (void*) sh, (void*) v, (void*) ldv, (void*) nh, (void*) t, (void*) ldt, (void*) nv, (void*) wv, (void*) ldwv, (void*) work, (void*) lwork); 
+		return;
+	} else {
+		hook_pos_zlaqr3 = 0;
+		fn_hook((void*) wantt, (void*) wantz, (void*) n, (void*) ktop, (void*) kbot, (void*) nw, (void*) h, (void*) ldh, (void*) iloz, (void*) ihiz, (void*) z, (void*) ldz, (void*) ns, (void*) nd, (void*) sh, (void*) v, (void*) ldv, (void*) nh, (void*) t, (void*) ldt, (void*) nv, (void*) wv, (void*) ldwv, (void*) work, (void*) lwork);
+		return;
 	}
-	fn = current_backend->lapack.zlaqr3.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) wantt, (void*) wantz, (void*) n, (void*) ktop, (void*) kbot, (void*) nw, (void*) h, (void*) ldh, (void*) iloz, (void*) ihiz, (void*) z, (void*) ldz, (void*) ns, (void*) nd, (void*) sh, (void*) v, (void*) ldv, (void*) nh, (void*) t, (void*) ldt, (void*) nv, (void*) wv, (void*) ldwv, (void*) work, (void*) lwork); 
-		current_backend->lapack.zlaqr3.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.zlaqr3.calls[0]++;
-	} else { 
-		fn((void*) wantt, (void*) wantz, (void*) n, (void*) ktop, (void*) kbot, (void*) nw, (void*) h, (void*) ldh, (void*) iloz, (void*) ihiz, (void*) z, (void*) ldz, (void*) ns, (void*) nd, (void*) sh, (void*) v, (void*) ldv, (void*) nh, (void*) t, (void*) ldt, (void*) nv, (void*) wv, (void*) ldwv, (void*) work, (void*) lwork); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void zlaqr3_(blasint* wantt, blasint* wantz, blasint* n, blasint* ktop, blasint* kbot, blasint* nw, double complex* h, blasint* ldh, blasint* iloz, blasint* ihiz, double complex* z, blasint* ldz, blasint* ns, blasint* nd, double complex* sh, double complex* v, blasint* ldv, blasint* nh, double complex* t, blasint* ldt, blasint* nv, double complex* wv, blasint* ldwv, double complex* work, blasint* lwork) __attribute__((alias(MTS(FC_GLOBAL(zlaqr3,ZLAQR3)))));
 #else
 void zlaqr3(blasint* wantt, blasint* wantz, blasint* n, blasint* ktop, blasint* kbot, blasint* nw, double complex* h, blasint* ldh, blasint* iloz, blasint* ihiz, double complex* z, blasint* ldz, blasint* ns, blasint* nd, double complex* sh, double complex* v, blasint* ldv, blasint* nh, double complex* t, blasint* ldt, blasint* nv, double complex* wv, blasint* ldwv, double complex* work, blasint* lwork) __attribute__((alias(MTS(FC_GLOBAL(zlaqr3,ZLAQR3)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_zlaqr3_(void* wantt, void* wantz, void* n, void* ktop, void* kbot, void* nw, void* h, void* ldh, void* iloz, void* ihiz, void* z, void* ldz, void* ns, void* nd, void* sh, void* v, void* ldv, void* nh, void* t, void* ldt, void* nv, void* wv, void* ldwv, void* work, void* lwork)
+{
+	void (*fn) (void* wantt, void* wantz, void* n, void* ktop, void* kbot, void* nw, void* h, void* ldh, void* iloz, void* ihiz, void* z, void* ldz, void* ns, void* nd, void* sh, void* v, void* ldv, void* nh, void* t, void* ldt, void* nv, void* wv, void* ldwv, void* work, void* lwork);
+
+	fn = current_backend->lapack.zlaqr3.f77_blas_function; 
+
+		fn((void*) wantt, (void*) wantz, (void*) n, (void*) ktop, (void*) kbot, (void*) nw, (void*) h, (void*) ldh, (void*) iloz, (void*) ihiz, (void*) z, (void*) ldz, (void*) ns, (void*) nd, (void*) sh, (void*) v, (void*) ldv, (void*) nh, (void*) t, (void*) ldt, (void*) nv, (void*) wv, (void*) ldwv, (void*) work, (void*) lwork); 
+
+	return;
+}
+
+void flexiblas_real_zlaqr3(void* wantt, void* wantz, void* n, void* ktop, void* kbot, void* nw, void* h, void* ldh, void* iloz, void* ihiz, void* z, void* ldz, void* ns, void* nd, void* sh, void* v, void* ldv, void* nh, void* t, void* ldt, void* nv, void* wv, void* ldwv, void* work, void* lwork)  __attribute__((alias("flexiblas_real_zlaqr3_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_zlaqr3_(void* wantt, void* wantz, void* n, void* ktop, void* kbot, void* nw, void* h, void* ldh, void* iloz, void* ihiz, void* z, void* ldz, void* ns, void* nd, void* sh, void* v, void* ldv, void* nh, void* t, void* ldt, void* nv, void* wv, void* ldwv, void* work, void* lwork)
+{
+	void (*fn) (void* wantt, void* wantz, void* n, void* ktop, void* kbot, void* nw, void* h, void* ldh, void* iloz, void* ihiz, void* z, void* ldz, void* ns, void* nd, void* sh, void* v, void* ldv, void* nh, void* t, void* ldt, void* nv, void* wv, void* ldwv, void* work, void* lwork);
+	void (*fn_hook) (void* wantt, void* wantz, void* n, void* ktop, void* kbot, void* nw, void* h, void* ldh, void* iloz, void* ihiz, void* z, void* ldz, void* ns, void* nd, void* sh, void* v, void* ldv, void* nh, void* t, void* ldt, void* nv, void* wv, void* ldwv, void* work, void* lwork);
+
+	fn      = current_backend->lapack.zlaqr3.f77_blas_function; 
+
+    hook_pos_zlaqr3 ++;
+    if( hook_pos_zlaqr3 < __flexiblas_hooks->zlaqr3.nhook) {
+        fn_hook = __flexiblas_hooks->zlaqr3.f77_hook_function[hook_pos_zlaqr3];
+        fn_hook((void*) wantt, (void*) wantz, (void*) n, (void*) ktop, (void*) kbot, (void*) nw, (void*) h, (void*) ldh, (void*) iloz, (void*) ihiz, (void*) z, (void*) ldz, (void*) ns, (void*) nd, (void*) sh, (void*) v, (void*) ldv, (void*) nh, (void*) t, (void*) ldt, (void*) nv, (void*) wv, (void*) ldwv, (void*) work, (void*) lwork);
+    } else {
+        hook_pos_zlaqr3 = 0;
+		fn((void*) wantt, (void*) wantz, (void*) n, (void*) ktop, (void*) kbot, (void*) nw, (void*) h, (void*) ldh, (void*) iloz, (void*) ihiz, (void*) z, (void*) ldz, (void*) ns, (void*) nd, (void*) sh, (void*) v, (void*) ldv, (void*) nh, (void*) t, (void*) ldt, (void*) nv, (void*) wv, (void*) ldwv, (void*) work, (void*) lwork); 
+	}
+	return;
+}
+
+void flexiblas_chain_zlaqr3(void* wantt, void* wantz, void* n, void* ktop, void* kbot, void* nw, void* h, void* ldh, void* iloz, void* ihiz, void* z, void* ldz, void* ns, void* nd, void* sh, void* v, void* ldv, void* nh, void* t, void* ldt, void* nv, void* wv, void* ldwv, void* work, void* lwork)  __attribute__((alias("flexiblas_chain_zlaqr3_")));
+
 
 
 

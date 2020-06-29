@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:32 2017 */ 
+ /* Generated: Wed Mar 28 11:20:03 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
-void FC_GLOBAL(cgees,CGEES)(char* jobvs, char* sort, blasint* select, blasint* n, float complex* a, blasint* lda, blasint* sdim, float complex* w, float complex* vs, blasint* ldvs, float complex* work, blasint* lwork, float* rwork, blasint* bwork, blasint* info)
+static TLS_STORE uint8_t hook_pos_cgees = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
+void FC_GLOBAL(cgees,CGEES)(char* jobvs, char* sort, blasint* selectfunc, blasint* n, float complex* a, blasint* lda, blasint* sdim, float complex* w, float complex* vs, blasint* ldvs, float complex* work, blasint* lwork, float* rwork, blasint* bwork, blasint* info)
 #else
-void FC_GLOBAL(cgees,CGEES)(char* jobvs, char* sort, blasint* select, blasint* n, float complex* a, blasint* lda, blasint* sdim, float complex* w, float complex* vs, blasint* ldvs, float complex* work, blasint* lwork, float* rwork, blasint* bwork, blasint* info)
-#endif 
+void FC_GLOBAL(cgees,CGEES)(char* jobvs, char* sort, blasint* selectfunc, blasint* n, float complex* a, blasint* lda, blasint* sdim, float complex* w, float complex* vs, blasint* ldvs, float complex* work, blasint* lwork, float* rwork, blasint* bwork, blasint* info)
+#endif
 {
-    double ts;
-	void (*fn) (void* jobvs, void* sort, void* select, void* n, void* a, void* lda, void* sdim, void* w, void* vs, void* ldvs, void* work, void* lwork, void* rwork, void* bwork, void* info);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn) (void* jobvs, void* sort, void* selectfunc, void* n, void* a, void* lda, void* sdim, void* w, void* vs, void* ldvs, void* work, void* lwork, void* rwork, void* bwork, void* info);
+	void (*fn_hook) (void* jobvs, void* sort, void* selectfunc, void* n, void* a, void* lda, void* sdim, void* w, void* vs, void* ldvs, void* work, void* lwork, void* rwork, void* bwork, void* info);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.cgees.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->cgees.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) jobvs, (void*) sort, (void*) selectfunc, (void*) n, (void*) a, (void*) lda, (void*) sdim, (void*) w, (void*) vs, (void*) ldvs, (void*) work, (void*) lwork, (void*) rwork, (void*) bwork, (void*) info); 
+		return;
+	} else {
+		hook_pos_cgees = 0;
+		fn_hook((void*) jobvs, (void*) sort, (void*) selectfunc, (void*) n, (void*) a, (void*) lda, (void*) sdim, (void*) w, (void*) vs, (void*) ldvs, (void*) work, (void*) lwork, (void*) rwork, (void*) bwork, (void*) info);
+		return;
 	}
-	fn = current_backend->lapack.cgees.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) jobvs, (void*) sort, (void*) select, (void*) n, (void*) a, (void*) lda, (void*) sdim, (void*) w, (void*) vs, (void*) ldvs, (void*) work, (void*) lwork, (void*) rwork, (void*) bwork, (void*) info); 
-		current_backend->lapack.cgees.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.cgees.calls[0]++;
-	} else { 
-		fn((void*) jobvs, (void*) sort, (void*) select, (void*) n, (void*) a, (void*) lda, (void*) sdim, (void*) w, (void*) vs, (void*) ldvs, (void*) work, (void*) lwork, (void*) rwork, (void*) bwork, (void*) info); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void cgees_(char* jobvs, char* sort, blasint* select, blasint* n, float complex* a, blasint* lda, blasint* sdim, float complex* w, float complex* vs, blasint* ldvs, float complex* work, blasint* lwork, float* rwork, blasint* bwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cgees,CGEES)))));
+void cgees_(char* jobvs, char* sort, blasint* selectfunc, blasint* n, float complex* a, blasint* lda, blasint* sdim, float complex* w, float complex* vs, blasint* ldvs, float complex* work, blasint* lwork, float* rwork, blasint* bwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cgees,CGEES)))));
 #else
-void cgees(char* jobvs, char* sort, blasint* select, blasint* n, float complex* a, blasint* lda, blasint* sdim, float complex* w, float complex* vs, blasint* ldvs, float complex* work, blasint* lwork, float* rwork, blasint* bwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cgees,CGEES)))));
+void cgees(char* jobvs, char* sort, blasint* selectfunc, blasint* n, float complex* a, blasint* lda, blasint* sdim, float complex* w, float complex* vs, blasint* ldvs, float complex* work, blasint* lwork, float* rwork, blasint* bwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cgees,CGEES)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_cgees_(void* jobvs, void* sort, void* selectfunc, void* n, void* a, void* lda, void* sdim, void* w, void* vs, void* ldvs, void* work, void* lwork, void* rwork, void* bwork, void* info)
+{
+	void (*fn) (void* jobvs, void* sort, void* selectfunc, void* n, void* a, void* lda, void* sdim, void* w, void* vs, void* ldvs, void* work, void* lwork, void* rwork, void* bwork, void* info);
+
+	fn = current_backend->lapack.cgees.f77_blas_function; 
+
+		fn((void*) jobvs, (void*) sort, (void*) selectfunc, (void*) n, (void*) a, (void*) lda, (void*) sdim, (void*) w, (void*) vs, (void*) ldvs, (void*) work, (void*) lwork, (void*) rwork, (void*) bwork, (void*) info); 
+
+	return;
+}
+
+void flexiblas_real_cgees(void* jobvs, void* sort, void* selectfunc, void* n, void* a, void* lda, void* sdim, void* w, void* vs, void* ldvs, void* work, void* lwork, void* rwork, void* bwork, void* info)  __attribute__((alias("flexiblas_real_cgees_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_cgees_(void* jobvs, void* sort, void* selectfunc, void* n, void* a, void* lda, void* sdim, void* w, void* vs, void* ldvs, void* work, void* lwork, void* rwork, void* bwork, void* info)
+{
+	void (*fn) (void* jobvs, void* sort, void* selectfunc, void* n, void* a, void* lda, void* sdim, void* w, void* vs, void* ldvs, void* work, void* lwork, void* rwork, void* bwork, void* info);
+	void (*fn_hook) (void* jobvs, void* sort, void* selectfunc, void* n, void* a, void* lda, void* sdim, void* w, void* vs, void* ldvs, void* work, void* lwork, void* rwork, void* bwork, void* info);
+
+	fn      = current_backend->lapack.cgees.f77_blas_function; 
+
+    hook_pos_cgees ++;
+    if( hook_pos_cgees < __flexiblas_hooks->cgees.nhook) {
+        fn_hook = __flexiblas_hooks->cgees.f77_hook_function[hook_pos_cgees];
+        fn_hook((void*) jobvs, (void*) sort, (void*) selectfunc, (void*) n, (void*) a, (void*) lda, (void*) sdim, (void*) w, (void*) vs, (void*) ldvs, (void*) work, (void*) lwork, (void*) rwork, (void*) bwork, (void*) info);
+    } else {
+        hook_pos_cgees = 0;
+		fn((void*) jobvs, (void*) sort, (void*) selectfunc, (void*) n, (void*) a, (void*) lda, (void*) sdim, (void*) w, (void*) vs, (void*) ldvs, (void*) work, (void*) lwork, (void*) rwork, (void*) bwork, (void*) info); 
+	}
+	return;
+}
+
+void flexiblas_chain_cgees(void* jobvs, void* sort, void* selectfunc, void* n, void* a, void* lda, void* sdim, void* w, void* vs, void* ldvs, void* work, void* lwork, void* rwork, void* bwork, void* info)  __attribute__((alias("flexiblas_chain_cgees_")));
+
 
 
 

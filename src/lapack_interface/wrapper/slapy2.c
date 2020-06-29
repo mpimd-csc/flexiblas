@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:36 2017 */ 
+ /* Generated: Wed Mar 28 11:20:04 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,41 +29,92 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_slapy2 = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 float FC_GLOBAL(slapy2,SLAPY2)(float* x, float* y)
 #else
 float FC_GLOBAL(slapy2,SLAPY2)(float* x, float* y)
-#endif 
+#endif
 {
-    double ts;
 	float (*fn) (void* x, void* y);
+	float (*fn_hook) (void* x, void* y);
 	float ret;
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.slapy2.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->slapy2.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		ret = fn((void*) x, (void*) y); 
+		return ret; 
+	} else {
+		hook_pos_slapy2 = 0;
+		ret=fn_hook((void*) x, (void*) y);
+		return ret;
 	}
-	fn = current_backend->lapack.slapy2.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		ret = fn((void*) x, (void*) y); 
-		current_backend->lapack.slapy2.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.slapy2.calls[0]++;
-	} else { 
-		ret = fn((void*) x, (void*) y); 
-	} 
-	return ret; 
 }
 #ifdef FLEXIBLAS_ABI_IBM
 float slapy2_(float* x, float* y) __attribute__((alias(MTS(FC_GLOBAL(slapy2,SLAPY2)))));
 #else
 float slapy2(float* x, float* y) __attribute__((alias(MTS(FC_GLOBAL(slapy2,SLAPY2)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+float flexiblas_real_slapy2_(void* x, void* y)
+{
+	float (*fn) (void* x, void* y);
+	float ret;
+
+	fn = current_backend->lapack.slapy2.f77_blas_function; 
+
+		ret = fn((void*) x, (void*) y); 
+
+	return ret ;
+}
+
+float flexiblas_real_slapy2(void* x, void* y)  __attribute__((alias("flexiblas_real_slapy2_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+float flexiblas_chain_slapy2_(void* x, void* y)
+{
+	float (*fn) (void* x, void* y);
+	float (*fn_hook) (void* x, void* y);
+	float ret;
+
+	fn      = current_backend->lapack.slapy2.f77_blas_function; 
+
+    hook_pos_slapy2 ++;
+    if( hook_pos_slapy2 < __flexiblas_hooks->slapy2.nhook) {
+        fn_hook = __flexiblas_hooks->slapy2.f77_hook_function[hook_pos_slapy2];
+        ret = fn_hook((void*) x, (void*) y);
+    } else {
+        hook_pos_slapy2 = 0;
+		ret = fn((void*) x, (void*) y); 
+	}
+	return ret ;
+}
+
+float flexiblas_chain_slapy2(void* x, void* y)  __attribute__((alias("flexiblas_chain_slapy2_")));
+
 
 
 

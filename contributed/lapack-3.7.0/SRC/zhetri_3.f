@@ -102,7 +102,7 @@
 *>          On entry, contains the superdiagonal (or subdiagonal)
 *>          elements of the Hermitian block diagonal matrix D
 *>          with 1-by-1 or 2-by-2 diagonal blocks, where
-*>          If UPLO = 'U': E(i) = D(i-1,i),i=2:N, E(1) not refernced;
+*>          If UPLO = 'U': E(i) = D(i-1,i),i=2:N, E(1) not referenced;
 *>          If UPLO = 'L': E(i) = D(i+1,i),i=1:N-1, E(N) not referenced.
 *>
 *>          NOTE: For 1-by-1 diagonal block D(k), where
@@ -152,7 +152,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \date December 2016
+*> \date June 2017
 *
 *> \ingroup complex16HEcomputational
 *
@@ -160,7 +160,7 @@
 *  ==================
 *> \verbatim
 *>
-*>  December 2016,  Igor Kozachenko,
+*>  June 2017,  Igor Kozachenko,
 *>                  Computer Science Division,
 *>                  University of California, Berkeley
 *>
@@ -170,10 +170,10 @@
       SUBROUTINE ZHETRI_3( UPLO, N, A, LDA, E, IPIV, WORK, LWORK,
      $                     INFO )
 *
-*  -- LAPACK computational routine (version 3.7.0) --
+*  -- LAPACK computational routine (version 3.7.1) --
 *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
 *  -- Univ. of California Berkeley, Univ. of Colorado Denver and NAG Ltd..--
-*     December 2016
+*     June 2017
 *
 *     .. Scalar Arguments ..
       CHARACTER          UPLO

@@ -1,74 +1,40 @@
+# Find the ARPACK includes and library
+#
+# This module defines:
+#   ARPACK_LIBRARIES       -   libraries to link against to use ARPACK
+#   ARPACK_FOUND           -   If false, do not try to use ARPACK.
+#
+#
+#=============================================================================
+# Copyright 2010, Maximilian Behr
+#
+# Distributed under the OSI-approved BSD License (the "License");
+# see accompanying file Copyright.txt for details.
+#
+# This software is distributed WITHOUT ANY WARRANTY; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the License for more information.
+#=============================================================================
+# Changelog:
+#
+#
 
-include(CheckFortranFunctionExists)
+FIND_LIBRARY(ARPACK_LIBRARIES
+    NAMES
+    arpack
+    PATHS
+    ${ARPACK}
+    /usr/
+    /usr/local/
+    /opt/
+    /opt/local/
+    PATH_SUFFIXES
+    lib
+    lib64
+    )
 
-set(_blas_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES})
 
+INCLUDE(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(ARPACK DEFAULT_MSG ARPACK_LIBRARIES)
+MARK_AS_ADVANCED(ARPACK_LIBRARIES)
 
-if (NOT LAPACK_FOUND)
-	if(ARAPACK_FIND_QUIETLY OR NOT ARAPACK_FIND_REQUIRED)
-		find_package(LAPACK)
-	else()
-		find_package(LAPACK REQUIRED)
-	endif()
-endif(NOT LAPACK_FOUND) 
-
-if (NOT LAPACK_FOUND) 
-	message(STATUS "ARPACK requires BLAS/LAPACK")
-else()
-	set(ARPACK_LINKER_FLAGS ${BLAS_LINKER_FLAGS})
-	if (NOT _libdir)
-		if (WIN32)
-			set(_libdir ENV LIB ${ARGN} )
-		elseif (APPLE)
-			set(_libdir ENV DYLD_LIBRARY_PATH ${ARGN} )
-		else ()
-			set(_libdir ENV LD_LIBRARY_PATH ${ARGN})
-		endif ()
-	endif ()
-
-	if (WIN32)
-		set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES} .lib)
-	endif ()
-	if (APPLE)
-		set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES} .lib)
-	else ()
-		set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES} .a)
-	endif ()
-	if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-		# for ubuntu's libblas3gf and liblapack3gf packages
-		set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES} .so.3gf .so.0)
-	endif ()
-
-	find_library(ARPACK_LIBRARY
-			NAMES arpack 
-			HINTS ${_libdir}
-			PATHS ${_libdir}  )
-	IF (ARPACK_LIBRARY) 
-		MESSAGE(STATUS "Check if ARPACK Found ARPACK: ${ARPACK_LIBRARY}") 
-		SET(CMAKE_REQUIRED_LIBRARIES ${BLAS_LINKER_FLAGS} ${ARPACK_LIBRARY} ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
-    		check_fortran_function_exists("dnaupd" ARPACK_WORKS)
-		mark_as_advanced(ARPACK_WORKS)
-  		set(CMAKE_REQUIRED_LIBRARIES)
-		IF ( ARPACK_WORKS) 
-			MESSAGE(STATUS "ARPACK works.") 
-			SET (ARPACK_FOUND TRUE) 
-		ELSE()
-			MESSAGE(STATUS "ARPACK does not compile")
-			SET (ARPACK_FOUND FALSE) 
-		ENDIF()
-
-	ELSE (ARPACK_LIBRARY) 
-		SET (ARPACK_FOUND FALSE) 
-	ENDIF()
-
-endif()
-IF (ARPACK_FOUND) 
-	SET(ARPACK_LIBRARIES ${ARPACK_LIBRARY} ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
-ENDIF()
-
-set(CMAKE_FIND_LIBRARY_SUFFIXES ${_blas_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES})
-
-include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(ARPACK  DEFAULT_MSG ARPACK_LIBRARY)
-
-mark_as_advanced(ARPACK_LIBRARY )

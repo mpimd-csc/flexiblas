@@ -21,15 +21,19 @@
 #define FLEXIBLAS_CONFIG_H
 
 #cmakedefine FLEXIBLAS_DEFAULT_LIB_PATH "@FLEXIBLAS_DEFAULT_LIB_PATH@"
-#cmakedefine CMAKE_INSTALL_PREFIX "@CMAKE_INSTALL_PREFIX@" 
+#cmakedefine CMAKE_INSTALL_PREFIX "@CMAKE_INSTALL_PREFIX@"
 #cmakedefine CMAKE_INSTALL_FULL_SYSCONFDIR "@CMAKE_INSTALL_FULL_SYSCONFDIR@"
 #cmakedefine FLEXIBLAS_INTEGER8
 #cmakedefine EXTBLAS
-#cmakedefine HAVE_ATTR_ALIAS 
-#cmakedefine HAVE_ATTR_CONSTRUCTOR 
+#cmakedefine HAVE_ATTR_ALIAS
+#cmakedefine HAVE_ATTR_CONSTRUCTOR
 #cmakedefine HAVE_ATTR_HIDDEN
-#cmakedefine FALLBACK_NAME 
+#cmakedefine FALLBACK_NAME
 #cmakedefine FLEXIBLAS_LAPACK
+#cmakedefine FLEXIBLAS_LAPACK_3_9_0
+#cmakedefine FLEXIBLAS_LAPACK_3_9_0_WODPRC
+#cmakedefine FLEXIBLAS_LAPACK_3_8_0
+#cmakedefine FLEXIBLAS_LAPACK_3_8_0_WODPRC
 #cmakedefine FLEXIBLAS_LAPACK_3_7_0
 #cmakedefine FLEXIBLAS_LAPACK_3_7_0_WODPRC
 #cmakedefine FLEXIBLAS_LAPACK_3_6_1
@@ -43,14 +47,64 @@
 #cmakedefine FLEXIBLAS_LAPACK_3_3_1
 #cmakedefine FLEXIBLAS_LAPACK_3_3_0
 
+
+
+#cmakedefine FLEXIBLAS_RC "@FLEXIBLAS_RC@"
+#cmakedefine FLEXIBLAS_RC_DIR "@FLEXIBLAS_RC_DIR@"
+#cmakedefine FLEXIBLAS_PREFIX "@FLEXIBLAS_PREFIX@"
+
 #cmakedefine FLEXIBLAS_ABI_IBM
 #cmakedefine FLEXIBLAS_ABI_INTEL
-#cmakedefine FLEXIBLAS_ABI_GNU 
+#cmakedefine FLEXIBLAS_ABI_GNU
 
-#ifndef FALLBACK_NAME 
+#cmakedefine HAVE_THREAD_LOCAL
+#cmakedefine HAVE__THREAD_LOCAL
+#cmakedefine HAVE_GNU_THREAD_LOCAL
+
+
+#define FLEXIBLAS_DEFAULT_BLAS "NETLIB"
+
+#if defined(HAVE_GNU_THREAD_LOCAL)
+ #define TLS_STORE __thread
+#elif defined(HAVE__THREAD_LOCAL)
+ #define TLS_STORE _Thread_local
+#elif defined(HAVE_THREAD_LOCAL)
+ #define TLS_STORE thread_local
+#else
+ #define TLS_STORE
+ #warning Thread Local Storage not aviable. FlexiBLAS might cause problems in multithreaded applications.
+#endif
+
+#ifndef FALLBACK_NAME
  #define FALLBACK_NAME "libflexiblas_netlib"
-#endif 
+#endif
 #ifndef LAPACK_FALLBACK_NAME
  #define LAPACK_FALLBACK_NAME "libflexiblas_fallback_lapack"
-#endif 
-#endif 
+#endif
+
+
+// Hidden function
+#ifdef HAVE_ATTR_HIDDEN
+#define HIDDEN __attribute__((visibility ("hidden")))
+#else
+#define HIDDEN
+#endif
+
+
+#ifdef FLEXIBLAS_INTEGER8
+    #define     ENV_FLEXIBLAS "FLEXIBLAS64"
+    #define     ENV_FLEXIBLAS_VERBOSE "FLEXIBLAS64_VERBOSE"
+    #define     ENV_FLEXIBLAS_COLOR_OUTPUT "FLEXIBLAS64_COLOR_OUTPUT"
+    #define     ENV_FLEXIBLAS_HOOK "FLEXIBLAS64_HOOK"
+    #define     ENV_FLEXIBLAS_LIBRARY_PATH "FLEXIBLAS64_LIBRARY_PATH"
+    #define     ENV_FLEXIBLAS_NOLAPACK "FLEXIBLAS64_NOLAPACK"
+#else
+    #define     ENV_FLEXIBLAS "FLEXIBLAS"
+    #define     ENV_FLEXIBLAS_VERBOSE "FLEXIBLAS_VERBOSE"
+    #define     ENV_FLEXIBLAS_COLOR_OUTPUT "FLEXIBLAS_COLOR_OUTPUT"
+    #define     ENV_FLEXIBLAS_HOOK "FLEXIBLAS_HOOK"
+    #define     ENV_FLEXIBLAS_LIBRARY_PATH "FLEXIBLAS_LIBRARY_PATH"
+    #define     ENV_FLEXIBLAS_NOLAPACK "FLEXIBLAS_NOLAPACK"
+#endif
+
+#endif   // Include guard

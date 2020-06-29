@@ -10,31 +10,42 @@ if( (CMAKE_Fortran_COMPILER_ID STREQUAL "VisualAge" ) OR  # CMake 2.6
 	(CMAKE_Fortran_COMPILER_ID STREQUAL "XL" ) )          # CMake 2.8
 	if( NOT ("${CMAKE_Fortran_FLAGS}" MATCHES "-qfixed") )
 		message( STATUS "BLAS -- Enabling fixed format F90/F95 with -qfixed" )
-		set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -qfixed") 
+		set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -qfixed")
 	endif()
 endif()
 
 
-if ( CMAKE_Fortran_COMPILER_ID STREQUAL "GNU" ) 
-	SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Wno-conversion -Wno-maybe-uninitialized -Wno-unused-dummy-argument -Wno-unused-variable -Wno-intrinsic-shadow -Wno-surprising") 
+if ( CMAKE_Fortran_COMPILER_ID STREQUAL "GNU" )
+	SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Wno-conversion -Wno-maybe-uninitialized -Wno-unused-dummy-argument -Wno-unused-variable -Wno-intrinsic-shadow -Wno-surprising")
 endif()
 
 add_subdirectory(MATGEN)
 add_subdirectory(LIN)
 add_subdirectory(EIG)
 macro(add_lapack_test output input target)
-	set(TEST_INPUT  "${PROJECT_SOURCE_DIR}/test/lapack-3.6.1/${input}")
-	set(TEST_OUTPUT "${PROJECT_BINARY_DIR}/test/lapack-3.6.1/${output}")
-  string(REPLACE "." "_" input_name ${input})
-  set(testName "${target}_${input_name}")
-  if(EXISTS "${TEST_INPUT}")
-    add_test(NAME LAPACK-${testName} COMMAND "${CMAKE_COMMAND}"
-      -DTEST=$<TARGET_FILE:${target}>
-      -DINPUT=${TEST_INPUT} 
-      -DOUTPUT=${TEST_OUTPUT} 
-      -DINTDIR=${CMAKE_CFG_INTDIR}
-      -P "${PROJECT_SOURCE_DIR}/test/lapack-3.6.1/runtest.cmake")
-  endif()
+    set(TEST_INPUT  "${PROJECT_SOURCE_DIR}/test/lapack-3.6.1/${input}")
+    set(TEST_OUTPUT "${PROJECT_BINARY_DIR}/test/lapack-3.6.1/${output}")
+    string(REPLACE "." "_" input_name ${input})
+    set(testName "${target}_${input_name}")
+    if(EXISTS "${TEST_INPUT}")
+        add_test(NAME LAPACK-${testName} COMMAND "${CMAKE_COMMAND}"
+            -DTEST=$<TARGET_FILE:${target}>
+            -DINPUT=${TEST_INPUT}
+            -DOUTPUT=${TEST_OUTPUT}
+            -DINTDIR=${CMAKE_CFG_INTDIR}
+            -P "${PROJECT_SOURCE_DIR}/test/lapack-3.6.1/runtest.cmake")
+
+
+        if ( INTEGER8 )
+            set_property(TEST LAPACK-${testName} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS64_LIBRARY_PATH="${PROJECT_BINARY_DIR}/lib")
+            set_property(TEST LAPACK-${testName} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS64=NETLIB)
+            set_property(TEST LAPACK-${testName} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS64_CONFIG=${PROJECT_BINARY_DIR}/${FLEXIBLAS64_RC})
+        else()
+            set_property(TEST LAPACK-${testName} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS_LIBRARY_PATH="${PROJECT_BINARY_DIR}/lib")
+            set_property(TEST LAPACK-${testName} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS=NETLIB)
+            set_property(TEST LAPACK-${testName} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS_CONFIG=${PROJECT_BINARY_DIR}/${FLEXIBLAS_RC})
+        endif()
+    endif()
 endmacro(add_lapack_test)
 
 add_lapack_test(stest.out stest.in xlintsts)
@@ -303,7 +314,7 @@ add_lapack_test(zlse.out lse.in xeigtstz)
         add_lapack_test(dstest.out dstest.in xlintstds)
 #     endif()
 # endif()
-# 
+#
 
 # if (BUILD_COMPLEX)
 #     if (BUILD_COMPLEX16)

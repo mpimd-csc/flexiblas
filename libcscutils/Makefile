@@ -1,10 +1,10 @@
-ifndef OUTFILE 
+ifndef OUTFILE
 OUTFILE=libcscutils.a
-endif 
+endif
 
 ifdef INC
-include $(INC) 
-endif 
+include $(INC)
+endif
 
 CC?=gcc
 CFLAGS?= -O2 -Wall -fPIC -DNO_BZ2 -DNO_XZ
@@ -12,9 +12,9 @@ CFLAGS?= -O2 -Wall -fPIC -DNO_BZ2 -DNO_XZ
 
 
 .SUFFIXES: .c .o
-.PHONY: clean distclean 
+.PHONY: clean distclean
 
-CFLAGS+=-I$(shell pwd)/include 
+CFLAGS+=-I$(shell pwd)/include
 
 SRCS=  common/error_message.c\
        common/backtrace.c\
@@ -34,23 +34,23 @@ SRCS=  common/error_message.c\
        hdf5/datatypes.c \
        hdf5/matrix.c \
        hdf5/sparse_matrix.c \
-       hdf5/vector.c 
+       hdf5/vector.c
 
 OBJS=$(addprefix objs/,$(SRCS:%.c=%.o))
 
-$(OUTFILE): objs $(OBJS) 
-	ar r $(OUTFILE) $(OBJS)
+$(OUTFILE): objs $(OBJS)
+  ar r $(OUTFILE) $(OBJS)
 
 objs/%.o: src/%.c
-	mkdir -p $(dir $@)
-	$(CC) -fopenmp $(CFLAGS) -c -o $@ $< 
+  mkdir -p $(dir $@)
+  $(CC) -fopenmp $(CFLAGS) -c -o $@ $<
 objs:
-	mkdir objs 
+  mkdir objs
 
-clean: 
-	rm -rf objs
+clean:
+  rm -rf objs
 
-distclean: clean 
-	rm -f $(OUTFILE) 
+distclean: clean
+  rm -f $(OUTFILE)
 
 

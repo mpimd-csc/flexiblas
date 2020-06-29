@@ -36,6 +36,7 @@
 #include "lapack-3.6.0.h"
 #include "lapack-3.6.1.h"
 #include "lapack-3.7.0.h"
+#include "lapack-3.8.0.h"
 
 #define LAPACK_3_0_0 0x01
 #define LAPACK_3_1_0 0x02
@@ -52,9 +53,11 @@
 #define LAPACK_3_6_0 0x0D
 #define LAPACK_3_6_0_DPRC 0x0E
 #define LAPACK_3_6_1 0x0F
-#define LAPACK_3_6_1_DPRC 0x10  
+#define LAPACK_3_6_1_DPRC 0x10
 #define LAPACK_3_7_0 0x11
 #define LAPACK_3_7_0_DPRC 0x12
+#define LAPACK_3_8_0 0x13
+#define LAPACK_3_8_0_DPRC 0x14
 
 char * lapack_name(int ver) {
     switch (ver) {
@@ -94,6 +97,10 @@ char * lapack_name(int ver) {
             return "3.7.0";
         case LAPACK_3_7_0_DPRC:
             return "3.7.0-DPRC";
+        case LAPACK_3_8_0:
+            return "3.8.0";
+        case LAPACK_3_8_0_DPRC:
+            return "3.8.0-DPRC";
 
         default:
             return "X.X.X";
@@ -104,22 +111,22 @@ char * lapack_name(int ver) {
 
 
 char *ignore_list [] = {
-    "dlamc1", 
-    "dlamc2", 
-    "dlamc3", 
-    "dlamc4", 
-    "dlamc5", 
-    "slamc1", 
+    "dlamc1",
+    "dlamc2",
+    "dlamc3",
+    "dlamc4",
+    "dlamc5",
+    "slamc1",
     "slamc2",
-    "slamc3", 
-    "slamc4", 
-    "slamc5", 
+    "slamc3",
+    "slamc4",
+    "slamc5",
     "dlasd9",    /* Old relict from LAPACK < 3.0 but existing in 3.0  although not needed. */
-    "slasd9", 
+    "slasd9",
     NULL
 };
 
-int is_in_list(char **haystack, char *needle) 
+int is_in_list(char **haystack, char *needle)
 {
     int i = 0;
     while(haystack[i] != NULL) {
@@ -129,7 +136,7 @@ int is_in_list(char **haystack, char *needle)
     return 0;
 }
 
-void check_symbols(char **list, void *lib, int *found, int *missing, int *ignore) 
+void check_symbols(char **list, void *lib, int *found, int *missing, int *ignore)
 {
     int i;
     char name[128];
@@ -172,7 +179,7 @@ int main(int argc, char **argv)
     int lapack_save = -1;
 
 
-    if ( argc != 2 ) 
+    if ( argc != 2 )
     {
         printf("Usage: %s <sofile>\n", argv[0]);
         return -1;
@@ -232,13 +239,19 @@ int main(int argc, char **argv)
                 break;
             case LAPACK_3_6_1:
                 symbolset = lapack_3_6_1;
-                break; 
+                break;
             case LAPACK_3_7_0_DPRC:
                 symbolset = lapack_3_7_0_full;
                 break;
             case LAPACK_3_7_0:
                 symbolset = lapack_3_7_0;
-                break; 
+                break;
+            case LAPACK_3_8_0_DPRC:
+                symbolset = lapack_3_8_0_full;
+                break;
+            case LAPACK_3_8_0:
+                symbolset = lapack_3_8_0;
+                break;
 
             default:
                 symbolset = NULL;
@@ -249,7 +262,7 @@ int main(int argc, char **argv)
         check_symbols(symbolset, ptr, &f, &m, &ign);
 
         if ( m == 0 ) {
-            lapack_save = lapack_number; 
+            lapack_save = lapack_number;
         }
 
         printf("%s - f = %d \t m = %d\n", argv[1], f, m );

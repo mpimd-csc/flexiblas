@@ -1,12 +1,12 @@
-# - Find the UFconfig include
+# Find the UFconfig include
 #
 # This module defines
-#  UFCONFIG_INCLUDE_DIR, where to find UFconfig.h, etc.
-#  UFCONFIG_FOUND, If false, do not try to use UFconfig.
-
+#
+#   UFCONFIG_INCLUDE_DIR
+#   UFCONFIG_FOUND
+#
 #=============================================================================
 # Copyright 2010, Martin Koehler
-# http://www-user.tu-chemnitz.de/~komart/
 #
 # Distributed under the OSI-approved BSD License (the "License");
 # see accompanying file Copyright.txt for details.
@@ -15,61 +15,23 @@
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 # See the License for more information.
 #=============================================================================
-# Changelog: 
-# 	- Jan 28, 2011 	Yoann Le Bars
-# 	- Feb 21, 2011  Martin Koehler
-#       - June 25, 2013 	Martin Koehler, add _libdir and _incdir 
-  if (WIN32)
-    set(_libdir ENV LIB)
-    set(_liblist $ENV{LIB})
-    set(_incdir) 
-    foreach ( dir ${_liblist}) 
-    	set(_incdir ${_incdir} "${dir}/../include")
-    endforeach() 
-    set(_incdir "${_incdir}" ENV INC ENV INCLUDE ENV CPATH)
-  elseif (APPLE)
-    set(_libdir ENV DYLD_LIBRARY_PATH)
-    string(REPLACE ":" ";" _liblist $ENV{DYLD_LIBRARY_PATH} "")
-    set(_incdir) 
-    foreach ( dir ${_liblist}) 
-    	set(_incdir ${_incdir} "${dir}/../include")
-    endforeach() 
-    set(_incdir "${_incdir}" ENV INC ENV INCLUDE ENV CPATH)
+# Changelog:
+#   - Jan 28, 2011   Yoann Le Bars
+#   - Feb 21, 2011  Martin Koehler
+#       - June 25, 2013   Martin Koehler, add _libdir and _incdir
 
-else ()
-    set(_libdir ENV LD_LIBRARY_PATH)
-    string(REPLACE ":" ";" _liblist $ENV{LD_LIBRARY_PATH} "")
-    set(_incdir) 
-    foreach ( dir ${_liblist}) 
-    	set(_incdir ${_incdir} "${dir}/../include")
-    endforeach() 
-    set(_incdir "${_incdir}" ENV INC ENV INCLUDE ENV CPATH)
-  endif ()
+INCLUDE(FindPackageHandleStandardArgs)
 
+# GET_INC_LIB_DIR MACRO
+INCLUDE(CMakeHelpers)
+GET_INC_LIB_DIR(_incdir _libdir)
 
+# search in user given directories
+FIND_PATH(UFCONFIG_INCLUDE_DIR   NAMES UFconfig.h    PATHS ${SUITESPARSE} PATH_SUFFIXES include   NO_DEFAULT_PATH)
 
+# search in other directories
+FIND_PATH(UFCONFIG_INCLUDE_DIR   NAMES UFconfig.h    PATHS ${_incdir} /usr /opt PATH_SUFFIXES include local/include include/suitesparse local/include/suitesparse)
 
-find_path(UFCONFIG_UFCONFIG_INCLUDE_DIR UFconfig.h
-	${SUITESPARSE}/UFconfig  	# Local Setup
-	${SUITESPARSE}/include		# 
-	${_incdir}
-	/usr/include
-	/usr/local/include
-	/opt/local/include/ufsparse	# MacOS X - MacPorts
-	/usr/local/include/suitesparse 	# FreeBSD
-	/usr/include/suitesparse	# Debian
-	NO_DEFAULT_PATH
-  )
-find_path(UFCONFIG_UFCONFIG_INCLUDE_DIR UFConfig.h) 
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(UFCONFIG  DEFAULT_MSG  UFCONFIG_INCLUDE_DIR)
+MARK_AS_ADVANCED(UFCONFIG_INCLUDE_DIR)
 
-if (UFCONFIG_UFCONFIG_INCLUDE_DIR )
-      SET(UFCONFIG_INCLUDE_DIR ${UFCONFIG_UFCONFIG_INCLUDE_DIR} )
-endif (UFCONFIG_UFCONFIG_INCLUDE_DIR)
-
-
-# handle the QUIETLY and REQUIRED arguments and set UFconfig_FOUND to TRUE if
-# all listed variables are TRUE
-include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(UFCONFIG  DEFAULT_MSG  UFCONFIG_UFCONFIG_INCLUDE_DIR)
-
-mark_as_advanced(UFCONFIG_UFCONFIG_INCLUDE_DIR )

@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:36 2017 */ 
+ /* Generated: Wed Mar 28 11:20:04 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_ssbevx_2stage = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 void FC_GLOBAL_(ssbevx_2stage,SSBEVX_2STAGE)(char* jobz, char* range, char* uplo, blasint* n, blasint* kd, float* ab, blasint* ldab, float* q, blasint* ldq, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, blasint* m, float* w, float* z, blasint* ldz, float* work, blasint* lwork, blasint* iwork, blasint* ifail, blasint* info)
 #else
 void FC_GLOBAL_(ssbevx_2stage,SSBEVX_2STAGE)(char* jobz, char* range, char* uplo, blasint* n, blasint* kd, float* ab, blasint* ldab, float* q, blasint* ldq, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, blasint* m, float* w, float* z, blasint* ldz, float* work, blasint* lwork, blasint* iwork, blasint* ifail, blasint* info)
-#endif 
+#endif
 {
-    double ts;
 	void (*fn) (void* jobz, void* range, void* uplo, void* n, void* kd, void* ab, void* ldab, void* q, void* ldq, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* lwork, void* iwork, void* ifail, void* info);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn_hook) (void* jobz, void* range, void* uplo, void* n, void* kd, void* ab, void* ldab, void* q, void* ldq, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* lwork, void* iwork, void* ifail, void* info);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.ssbevx_2stage.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->ssbevx_2stage.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) q, (void*) ldq, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) iwork, (void*) ifail, (void*) info); 
+		return;
+	} else {
+		hook_pos_ssbevx_2stage = 0;
+		fn_hook((void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) q, (void*) ldq, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) iwork, (void*) ifail, (void*) info);
+		return;
 	}
-	fn = current_backend->lapack.ssbevx_2stage.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) q, (void*) ldq, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) iwork, (void*) ifail, (void*) info); 
-		current_backend->lapack.ssbevx_2stage.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.ssbevx_2stage.calls[0]++;
-	} else { 
-		fn((void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) q, (void*) ldq, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) iwork, (void*) ifail, (void*) info); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void ssbevx_2stage_(char* jobz, char* range, char* uplo, blasint* n, blasint* kd, float* ab, blasint* ldab, float* q, blasint* ldq, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, blasint* m, float* w, float* z, blasint* ldz, float* work, blasint* lwork, blasint* iwork, blasint* ifail, blasint* info) __attribute__((alias(MTS(FC_GLOBAL_(ssbevx_2stage,SSBEVX_2STAGE)))));
 #else
 void ssbevx_2stage(char* jobz, char* range, char* uplo, blasint* n, blasint* kd, float* ab, blasint* ldab, float* q, blasint* ldq, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, blasint* m, float* w, float* z, blasint* ldz, float* work, blasint* lwork, blasint* iwork, blasint* ifail, blasint* info) __attribute__((alias(MTS(FC_GLOBAL_(ssbevx_2stage,SSBEVX_2STAGE)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_ssbevx_2stage_(void* jobz, void* range, void* uplo, void* n, void* kd, void* ab, void* ldab, void* q, void* ldq, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* lwork, void* iwork, void* ifail, void* info)
+{
+	void (*fn) (void* jobz, void* range, void* uplo, void* n, void* kd, void* ab, void* ldab, void* q, void* ldq, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* lwork, void* iwork, void* ifail, void* info);
+
+	fn = current_backend->lapack.ssbevx_2stage.f77_blas_function; 
+
+		fn((void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) q, (void*) ldq, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) iwork, (void*) ifail, (void*) info); 
+
+	return;
+}
+
+void flexiblas_real_ssbevx_2stage(void* jobz, void* range, void* uplo, void* n, void* kd, void* ab, void* ldab, void* q, void* ldq, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* lwork, void* iwork, void* ifail, void* info)  __attribute__((alias("flexiblas_real_ssbevx_2stage_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_ssbevx_2stage_(void* jobz, void* range, void* uplo, void* n, void* kd, void* ab, void* ldab, void* q, void* ldq, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* lwork, void* iwork, void* ifail, void* info)
+{
+	void (*fn) (void* jobz, void* range, void* uplo, void* n, void* kd, void* ab, void* ldab, void* q, void* ldq, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* lwork, void* iwork, void* ifail, void* info);
+	void (*fn_hook) (void* jobz, void* range, void* uplo, void* n, void* kd, void* ab, void* ldab, void* q, void* ldq, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* lwork, void* iwork, void* ifail, void* info);
+
+	fn      = current_backend->lapack.ssbevx_2stage.f77_blas_function; 
+
+    hook_pos_ssbevx_2stage ++;
+    if( hook_pos_ssbevx_2stage < __flexiblas_hooks->ssbevx_2stage.nhook) {
+        fn_hook = __flexiblas_hooks->ssbevx_2stage.f77_hook_function[hook_pos_ssbevx_2stage];
+        fn_hook((void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) q, (void*) ldq, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) iwork, (void*) ifail, (void*) info);
+    } else {
+        hook_pos_ssbevx_2stage = 0;
+		fn((void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) q, (void*) ldq, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) iwork, (void*) ifail, (void*) info); 
+	}
+	return;
+}
+
+void flexiblas_chain_ssbevx_2stage(void* jobz, void* range, void* uplo, void* n, void* kd, void* ab, void* ldab, void* q, void* ldq, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* lwork, void* iwork, void* ifail, void* info)  __attribute__((alias("flexiblas_chain_ssbevx_2stage_")));
+
 
 
 

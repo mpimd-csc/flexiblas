@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:34 2017 */ 
+ /* Generated: Wed Mar 28 11:20:03 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_dlaexc = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 void FC_GLOBAL(dlaexc,DLAEXC)(blasint* wantq, blasint* n, double* t, blasint* ldt, double* q, blasint* ldq, blasint* j1, blasint* n1, blasint* n2, double* work, blasint* info)
 #else
 void FC_GLOBAL(dlaexc,DLAEXC)(blasint* wantq, blasint* n, double* t, blasint* ldt, double* q, blasint* ldq, blasint* j1, blasint* n1, blasint* n2, double* work, blasint* info)
-#endif 
+#endif
 {
-    double ts;
 	void (*fn) (void* wantq, void* n, void* t, void* ldt, void* q, void* ldq, void* j1, void* n1, void* n2, void* work, void* info);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn_hook) (void* wantq, void* n, void* t, void* ldt, void* q, void* ldq, void* j1, void* n1, void* n2, void* work, void* info);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.dlaexc.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->dlaexc.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) wantq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) j1, (void*) n1, (void*) n2, (void*) work, (void*) info); 
+		return;
+	} else {
+		hook_pos_dlaexc = 0;
+		fn_hook((void*) wantq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) j1, (void*) n1, (void*) n2, (void*) work, (void*) info);
+		return;
 	}
-	fn = current_backend->lapack.dlaexc.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) wantq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) j1, (void*) n1, (void*) n2, (void*) work, (void*) info); 
-		current_backend->lapack.dlaexc.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.dlaexc.calls[0]++;
-	} else { 
-		fn((void*) wantq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) j1, (void*) n1, (void*) n2, (void*) work, (void*) info); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void dlaexc_(blasint* wantq, blasint* n, double* t, blasint* ldt, double* q, blasint* ldq, blasint* j1, blasint* n1, blasint* n2, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlaexc,DLAEXC)))));
 #else
 void dlaexc(blasint* wantq, blasint* n, double* t, blasint* ldt, double* q, blasint* ldq, blasint* j1, blasint* n1, blasint* n2, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlaexc,DLAEXC)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_dlaexc_(void* wantq, void* n, void* t, void* ldt, void* q, void* ldq, void* j1, void* n1, void* n2, void* work, void* info)
+{
+	void (*fn) (void* wantq, void* n, void* t, void* ldt, void* q, void* ldq, void* j1, void* n1, void* n2, void* work, void* info);
+
+	fn = current_backend->lapack.dlaexc.f77_blas_function; 
+
+		fn((void*) wantq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) j1, (void*) n1, (void*) n2, (void*) work, (void*) info); 
+
+	return;
+}
+
+void flexiblas_real_dlaexc(void* wantq, void* n, void* t, void* ldt, void* q, void* ldq, void* j1, void* n1, void* n2, void* work, void* info)  __attribute__((alias("flexiblas_real_dlaexc_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_dlaexc_(void* wantq, void* n, void* t, void* ldt, void* q, void* ldq, void* j1, void* n1, void* n2, void* work, void* info)
+{
+	void (*fn) (void* wantq, void* n, void* t, void* ldt, void* q, void* ldq, void* j1, void* n1, void* n2, void* work, void* info);
+	void (*fn_hook) (void* wantq, void* n, void* t, void* ldt, void* q, void* ldq, void* j1, void* n1, void* n2, void* work, void* info);
+
+	fn      = current_backend->lapack.dlaexc.f77_blas_function; 
+
+    hook_pos_dlaexc ++;
+    if( hook_pos_dlaexc < __flexiblas_hooks->dlaexc.nhook) {
+        fn_hook = __flexiblas_hooks->dlaexc.f77_hook_function[hook_pos_dlaexc];
+        fn_hook((void*) wantq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) j1, (void*) n1, (void*) n2, (void*) work, (void*) info);
+    } else {
+        hook_pos_dlaexc = 0;
+		fn((void*) wantq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) j1, (void*) n1, (void*) n2, (void*) work, (void*) info); 
+	}
+	return;
+}
+
+void flexiblas_chain_dlaexc(void* wantq, void* n, void* t, void* ldt, void* q, void* ldq, void* j1, void* n1, void* n2, void* work, void* info)  __attribute__((alias("flexiblas_chain_dlaexc_")));
+
 
 
 

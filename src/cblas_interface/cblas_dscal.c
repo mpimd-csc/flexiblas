@@ -1,11 +1,11 @@
 /* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
-/* 
+/*
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License.
- 
+
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -18,12 +18,12 @@
 #include "cblas_f77.h"
 #include "../flexiblas.h"
 
-void cblas_dscal( const int N, const double alpha, double *X, 
+void cblas_dscal( const int N, const double alpha, double *X,
                        const int incX)
 {
 #ifdef F77_INT
    F77_INT F77_N=N, F77_incX=incX;
-#else 
+#else
    #define F77_N N
    #define F77_incX incX
 #endif
@@ -35,19 +35,11 @@ void cblas_dscal( const int N, const double alpha, double *X,
    	current_backend->post_init = 0;
    }
    if ( current_backend->blas.dscal.call_cblas != NULL ) {
-	   double te = 0, ts = 0;
-	   if ( __flexiblas_profile ) {
-		   ts = flexiblas_wtime(); 
-	   }
 	   void (*fn)
-		 ( const int N, const double alpha, double *X, 
+		 ( const int N, const double alpha, double *X,
                        const int incX)
 		   = current_backend->blas.dscal.call_cblas;
 	   fn(N,alpha,X,incX);
-	   if ( __flexiblas_profile ){
-		   te = flexiblas_wtime(); 
-		   current_backend->blas.dscal.timings[POS_CBLAS] += (te - ts); 
-	   }
    } else {
 	FC_GLOBAL(dscal,DSCAL)( &F77_N, &alpha, X, &F77_incX);
    }

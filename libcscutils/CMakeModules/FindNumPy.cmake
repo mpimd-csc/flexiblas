@@ -38,6 +38,20 @@
 #
 #============================================================================
 
+# lint_cmake: -package/consistency
+
+# reset variables
+unset(NUMPY_FOUND           CACHE)
+unset(NUMPY_VERSION         CACHE)
+unset(NUMPY_VERSION_MAJOR   CACHE)
+unset(NUMPY_VERSION_MINOR   CACHE)
+unset(NUMPY_VERSION_PATCH   CACHE)
+unset(NUMPY_VERSION_DECIMAL CACHE)
+unset(NUMPY_INCLUDE_DIRS    CACHE)
+
+
+
+
 # Finding NumPy involves calling the Python interpreter
 if(NumPy_FIND_REQUIRED)
     find_package(PythonInterp REQUIRED)
@@ -50,12 +64,20 @@ if(NOT PYTHONINTERP_FOUND)
     return()
 endif()
 
+#execute_process(COMMAND "${PYTHON_EXECUTABLE}" "-c"
+#    "import numpy as n; print(n.__version__); print(n.__file__);"
+#    RESULT_VARIABLE _NUMPY_SEARCH_SUCCESS
+#    OUTPUT_VARIABLE _NUMPY_VALUES_OUTPUT
+#    ERROR_VARIABLE _NUMPY_ERROR_VALUE
+#    OUTPUT_STRIP_TRAILING_WHITESPACE)
+
 execute_process(COMMAND "${PYTHON_EXECUTABLE}" "-c"
     "import numpy as n; print(n.__version__); print(n.get_include());"
     RESULT_VARIABLE _NUMPY_SEARCH_SUCCESS
     OUTPUT_VARIABLE _NUMPY_VALUES_OUTPUT
     ERROR_VARIABLE _NUMPY_ERROR_VALUE
     OUTPUT_STRIP_TRAILING_WHITESPACE)
+
 
 if(NOT _NUMPY_SEARCH_SUCCESS MATCHES 0)
     if(NumPy_FIND_REQUIRED)
@@ -84,6 +106,7 @@ endif()
 
 # Make sure all directory separators are '/'
 string(REGEX REPLACE "\\\\" "/" NUMPY_INCLUDE_DIRS ${NUMPY_INCLUDE_DIRS})
+string(REGEX REPLACE "__init__.py[c]*" "" NUMPY_INCLUDE_DIRS ${NUMPY_INCLUDE_DIRS})
 
 # Get the major and minor version numbers
 string(REGEX REPLACE "\\." ";" _NUMPY_VERSION_LIST ${NUMPY_VERSION})
@@ -99,4 +122,7 @@ find_package_message(NUMPY
     "${NUMPY_INCLUDE_DIRS}${NUMPY_VERSION}")
 
 set(NUMPY_FOUND TRUE)
+
+
+
 

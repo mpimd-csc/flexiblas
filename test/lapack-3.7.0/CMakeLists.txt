@@ -9,12 +9,12 @@ if( (CMAKE_Fortran_COMPILER_ID STREQUAL "VisualAge" ) OR  # CMake 2.6
 	(CMAKE_Fortran_COMPILER_ID STREQUAL "XL" ) )          # CMake 2.8
 	if( NOT ("${CMAKE_Fortran_FLAGS}" MATCHES "-qfixed") )
 		message( STATUS "BLAS -- Enabling fixed format F90/F95 with -qfixed" )
-		set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -qfixed") 
+		set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -qfixed")
 	endif()
 endif()
 
-if ( CMAKE_Fortran_COMPILER_ID STREQUAL "GNU" ) 
-	SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Wno-conversion -Wno-maybe-uninitialized -Wno-unused-dummy-argument -Wno-unused-variable -Wno-intrinsic-shadow -Wno-surprising -Wno-tabs") 
+if ( CMAKE_Fortran_COMPILER_ID STREQUAL "GNU" )
+	SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Wno-conversion -Wno-maybe-uninitialized -Wno-unused-dummy-argument -Wno-unused-variable -Wno-intrinsic-shadow -Wno-surprising -Wno-tabs")
 endif()
 
 add_subdirectory(MATGEN)
@@ -35,7 +35,18 @@ macro(add_lapack_test output input target)
       -DOUTPUT=${TEST_OUTPUT}
       -DINTDIR=${CMAKE_CFG_INTDIR}
       -P "${PROJECT_SOURCE_DIR}/test/lapack-3.7.0/runtest.cmake")
+
+  if ( INTEGER8 )
+      set_property(TEST LAPACK-${testName} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS64_LIBRARY_PATH="${PROJECT_BINARY_DIR}/lib")
+      set_property(TEST LAPACK-${testName} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS64=NETLIB)
+      set_property(TEST LAPACK-${testName} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS64_CONFIG=${PROJECT_BINARY_DIR}/${FLEXIBLAS64_RC})
+  else()
+      set_property(TEST LAPACK-${testName} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS_LIBRARY_PATH="${PROJECT_BINARY_DIR}/lib")
+      set_property(TEST LAPACK-${testName} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS=NETLIB)
+      set_property(TEST LAPACK-${testName} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS_CONFIG=${PROJECT_BINARY_DIR}/${FLEXIBLAS_RC})
   endif()
+
+endif()
 endmacro()
 
 add_lapack_test(stest.out stest.in xlintsts)

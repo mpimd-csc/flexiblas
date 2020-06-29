@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:34 2017 */ 
+ /* Generated: Wed Mar 28 11:20:04 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_dlarfy = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 void FC_GLOBAL(dlarfy,DLARFY)(char* uplo, blasint* n, double* v, blasint* incv, double* tau, double* c, blasint* ldc, double* work)
 #else
 void FC_GLOBAL(dlarfy,DLARFY)(char* uplo, blasint* n, double* v, blasint* incv, double* tau, double* c, blasint* ldc, double* work)
-#endif 
+#endif
 {
-    double ts;
 	void (*fn) (void* uplo, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn_hook) (void* uplo, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.dlarfy.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->dlarfy.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) uplo, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c, (void*) ldc, (void*) work); 
+		return;
+	} else {
+		hook_pos_dlarfy = 0;
+		fn_hook((void*) uplo, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c, (void*) ldc, (void*) work);
+		return;
 	}
-	fn = current_backend->lapack.dlarfy.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) uplo, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c, (void*) ldc, (void*) work); 
-		current_backend->lapack.dlarfy.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.dlarfy.calls[0]++;
-	} else { 
-		fn((void*) uplo, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c, (void*) ldc, (void*) work); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void dlarfy_(char* uplo, blasint* n, double* v, blasint* incv, double* tau, double* c, blasint* ldc, double* work) __attribute__((alias(MTS(FC_GLOBAL(dlarfy,DLARFY)))));
 #else
 void dlarfy(char* uplo, blasint* n, double* v, blasint* incv, double* tau, double* c, blasint* ldc, double* work) __attribute__((alias(MTS(FC_GLOBAL(dlarfy,DLARFY)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_dlarfy_(void* uplo, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work)
+{
+	void (*fn) (void* uplo, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work);
+
+	fn = current_backend->lapack.dlarfy.f77_blas_function; 
+
+		fn((void*) uplo, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c, (void*) ldc, (void*) work); 
+
+	return;
+}
+
+void flexiblas_real_dlarfy(void* uplo, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work)  __attribute__((alias("flexiblas_real_dlarfy_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_dlarfy_(void* uplo, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work)
+{
+	void (*fn) (void* uplo, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work);
+	void (*fn_hook) (void* uplo, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work);
+
+	fn      = current_backend->lapack.dlarfy.f77_blas_function; 
+
+    hook_pos_dlarfy ++;
+    if( hook_pos_dlarfy < __flexiblas_hooks->dlarfy.nhook) {
+        fn_hook = __flexiblas_hooks->dlarfy.f77_hook_function[hook_pos_dlarfy];
+        fn_hook((void*) uplo, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c, (void*) ldc, (void*) work);
+    } else {
+        hook_pos_dlarfy = 0;
+		fn((void*) uplo, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c, (void*) ldc, (void*) work); 
+	}
+	return;
+}
+
+void flexiblas_chain_dlarfy(void* uplo, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work)  __attribute__((alias("flexiblas_chain_dlarfy_")));
+
 
 
 

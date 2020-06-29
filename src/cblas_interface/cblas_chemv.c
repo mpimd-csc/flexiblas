@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
    This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@ void cblas_chemv(const CBLAS_LAYOUT layout,
         void  *Y, const int incY)
 {
     char UL;
-#define F77_UL &UL   
+#define F77_UL &UL
 #ifdef F77_INT
     F77_INT F77_N=N, F77_lda=lda, F77_incX=incX, F77_incY=incY;
 #else
@@ -40,10 +40,6 @@ void cblas_chemv(const CBLAS_LAYOUT layout,
         current_backend->post_init = 0;
     }
     if ( current_backend->blas.chemv.call_cblas != NULL ) {
-        double te = 0, ts = 0;
-        if (__flexiblas_profile ) {
-            ts = flexiblas_wtime(); 
-        }
         void (*fn)
             (const CBLAS_LAYOUT layout,
              const CBLAS_UPLO Uplo, const int N,
@@ -52,16 +48,12 @@ void cblas_chemv(const CBLAS_LAYOUT layout,
              void  *Y, const int incY)
             = current_backend->blas.chemv.call_cblas;
         fn(layout,Uplo,N,alpha,A,lda,X,incX,beta,Y,incY);
-        if ( __flexiblas_profile ){
-            te = flexiblas_wtime(); 
-            current_backend->blas.chemv.timings[POS_CBLAS] += (te - ts); 
-        }
     } else {
-        int n=0, i=0; 
+        int n=0, i=0;
 #ifdef F77_INT
-        F77_INT _incX = incX;  
-#else 
-        int _incX = incX; 
+        F77_INT _incX = incX;
+#else
+        int _incX = incX;
 #endif
         const float *alp= (const float *)alpha, *bet = (const float *)beta;
         float *xx;
@@ -153,7 +145,7 @@ void cblas_chemv(const CBLAS_LAYOUT layout,
 
             if (Uplo == CblasUpper) UL = 'L';
             else if (Uplo == CblasLower) UL = 'U';
-            else 
+            else
             {
                 cblas_xerbla(2, "cblas_chemv","Illegal Uplo setting, %d\n", Uplo);
                 CBLAS_CallFromC = 0;
@@ -161,10 +153,10 @@ void cblas_chemv(const CBLAS_LAYOUT layout,
                 return;
             }
 
-            FC_GLOBAL(chemv,CHEMV)(F77_UL, &F77_N, ALPHA, A, &F77_lda, x, &_incX, 
+            FC_GLOBAL(chemv,CHEMV)(F77_UL, &F77_N, ALPHA, A, &F77_lda, x, &_incX,
                     BETA, Y, &F77_incY);
         }
-        else 
+        else
         {
             cblas_xerbla(1, "cblas_chemv","Illegal Order setting, %d\n", layout);
             CBLAS_CallFromC = 0;

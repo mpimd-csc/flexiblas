@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:38 2017 */ 
+ /* Generated: Wed Mar 28 11:20:05 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,41 +29,92 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_zlanhf = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 double FC_GLOBAL(zlanhf,ZLANHF)(char* norm, char* transr, char* uplo, blasint* n, double complex* a, double* work)
 #else
 double FC_GLOBAL(zlanhf,ZLANHF)(char* norm, char* transr, char* uplo, blasint* n, double complex* a, double* work)
-#endif 
+#endif
 {
-    double ts;
 	double (*fn) (void* norm, void* transr, void* uplo, void* n, void* a, void* work);
+	double (*fn_hook) (void* norm, void* transr, void* uplo, void* n, void* a, void* work);
 	double ret;
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.zlanhf.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->zlanhf.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		ret = fn((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work); 
+		return ret; 
+	} else {
+		hook_pos_zlanhf = 0;
+		ret=fn_hook((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work);
+		return ret;
 	}
-	fn = current_backend->lapack.zlanhf.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		ret = fn((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work); 
-		current_backend->lapack.zlanhf.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.zlanhf.calls[0]++;
-	} else { 
-		ret = fn((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work); 
-	} 
-	return ret; 
 }
 #ifdef FLEXIBLAS_ABI_IBM
 double zlanhf_(char* norm, char* transr, char* uplo, blasint* n, double complex* a, double* work) __attribute__((alias(MTS(FC_GLOBAL(zlanhf,ZLANHF)))));
 #else
 double zlanhf(char* norm, char* transr, char* uplo, blasint* n, double complex* a, double* work) __attribute__((alias(MTS(FC_GLOBAL(zlanhf,ZLANHF)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+double flexiblas_real_zlanhf_(void* norm, void* transr, void* uplo, void* n, void* a, void* work)
+{
+	double (*fn) (void* norm, void* transr, void* uplo, void* n, void* a, void* work);
+	double ret;
+
+	fn = current_backend->lapack.zlanhf.f77_blas_function; 
+
+		ret = fn((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work); 
+
+	return ret ;
+}
+
+double flexiblas_real_zlanhf(void* norm, void* transr, void* uplo, void* n, void* a, void* work)  __attribute__((alias("flexiblas_real_zlanhf_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+double flexiblas_chain_zlanhf_(void* norm, void* transr, void* uplo, void* n, void* a, void* work)
+{
+	double (*fn) (void* norm, void* transr, void* uplo, void* n, void* a, void* work);
+	double (*fn_hook) (void* norm, void* transr, void* uplo, void* n, void* a, void* work);
+	double ret;
+
+	fn      = current_backend->lapack.zlanhf.f77_blas_function; 
+
+    hook_pos_zlanhf ++;
+    if( hook_pos_zlanhf < __flexiblas_hooks->zlanhf.nhook) {
+        fn_hook = __flexiblas_hooks->zlanhf.f77_hook_function[hook_pos_zlanhf];
+        ret = fn_hook((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work);
+    } else {
+        hook_pos_zlanhf = 0;
+		ret = fn((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work); 
+	}
+	return ret ;
+}
+
+double flexiblas_chain_zlanhf(void* norm, void* transr, void* uplo, void* n, void* a, void* work)  __attribute__((alias("flexiblas_chain_zlanhf_")));
+
 
 
 

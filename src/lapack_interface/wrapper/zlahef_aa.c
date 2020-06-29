@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:38 2017 */ 
+ /* Generated: Wed Mar 28 11:20:05 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
-void FC_GLOBAL_(zlahef_aa,ZLAHEF_AA)(char* uplo, blasint* j1, blasint* m, blasint* nb, double complex* a, blasint* lda, blasint* ipiv, double complex* h, blasint* ldh, double complex* work, blasint* info)
+static TLS_STORE uint8_t hook_pos_zlahef_aa = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
+void FC_GLOBAL_(zlahef_aa,ZLAHEF_AA)(char* uplo, blasint* j1, blasint* m, blasint* nb, double complex* a, blasint* lda, blasint* ipiv, double complex* h, blasint* ldh, double complex* work)
 #else
-void FC_GLOBAL_(zlahef_aa,ZLAHEF_AA)(char* uplo, blasint* j1, blasint* m, blasint* nb, double complex* a, blasint* lda, blasint* ipiv, double complex* h, blasint* ldh, double complex* work, blasint* info)
-#endif 
+void FC_GLOBAL_(zlahef_aa,ZLAHEF_AA)(char* uplo, blasint* j1, blasint* m, blasint* nb, double complex* a, blasint* lda, blasint* ipiv, double complex* h, blasint* ldh, double complex* work)
+#endif
 {
-    double ts;
-	void (*fn) (void* uplo, void* j1, void* m, void* nb, void* a, void* lda, void* ipiv, void* h, void* ldh, void* work, void* info);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn) (void* uplo, void* j1, void* m, void* nb, void* a, void* lda, void* ipiv, void* h, void* ldh, void* work);
+	void (*fn_hook) (void* uplo, void* j1, void* m, void* nb, void* a, void* lda, void* ipiv, void* h, void* ldh, void* work);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.zlahef_aa.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->zlahef_aa.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) uplo, (void*) j1, (void*) m, (void*) nb, (void*) a, (void*) lda, (void*) ipiv, (void*) h, (void*) ldh, (void*) work); 
+		return;
+	} else {
+		hook_pos_zlahef_aa = 0;
+		fn_hook((void*) uplo, (void*) j1, (void*) m, (void*) nb, (void*) a, (void*) lda, (void*) ipiv, (void*) h, (void*) ldh, (void*) work);
+		return;
 	}
-	fn = current_backend->lapack.zlahef_aa.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) uplo, (void*) j1, (void*) m, (void*) nb, (void*) a, (void*) lda, (void*) ipiv, (void*) h, (void*) ldh, (void*) work, (void*) info); 
-		current_backend->lapack.zlahef_aa.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.zlahef_aa.calls[0]++;
-	} else { 
-		fn((void*) uplo, (void*) j1, (void*) m, (void*) nb, (void*) a, (void*) lda, (void*) ipiv, (void*) h, (void*) ldh, (void*) work, (void*) info); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zlahef_aa_(char* uplo, blasint* j1, blasint* m, blasint* nb, double complex* a, blasint* lda, blasint* ipiv, double complex* h, blasint* ldh, double complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL_(zlahef_aa,ZLAHEF_AA)))));
+void zlahef_aa_(char* uplo, blasint* j1, blasint* m, blasint* nb, double complex* a, blasint* lda, blasint* ipiv, double complex* h, blasint* ldh, double complex* work) __attribute__((alias(MTS(FC_GLOBAL_(zlahef_aa,ZLAHEF_AA)))));
 #else
-void zlahef_aa(char* uplo, blasint* j1, blasint* m, blasint* nb, double complex* a, blasint* lda, blasint* ipiv, double complex* h, blasint* ldh, double complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL_(zlahef_aa,ZLAHEF_AA)))));
+void zlahef_aa(char* uplo, blasint* j1, blasint* m, blasint* nb, double complex* a, blasint* lda, blasint* ipiv, double complex* h, blasint* ldh, double complex* work) __attribute__((alias(MTS(FC_GLOBAL_(zlahef_aa,ZLAHEF_AA)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_zlahef_aa_(void* uplo, void* j1, void* m, void* nb, void* a, void* lda, void* ipiv, void* h, void* ldh, void* work)
+{
+	void (*fn) (void* uplo, void* j1, void* m, void* nb, void* a, void* lda, void* ipiv, void* h, void* ldh, void* work);
+
+	fn = current_backend->lapack.zlahef_aa.f77_blas_function; 
+
+		fn((void*) uplo, (void*) j1, (void*) m, (void*) nb, (void*) a, (void*) lda, (void*) ipiv, (void*) h, (void*) ldh, (void*) work); 
+
+	return;
+}
+
+void flexiblas_real_zlahef_aa(void* uplo, void* j1, void* m, void* nb, void* a, void* lda, void* ipiv, void* h, void* ldh, void* work)  __attribute__((alias("flexiblas_real_zlahef_aa_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_zlahef_aa_(void* uplo, void* j1, void* m, void* nb, void* a, void* lda, void* ipiv, void* h, void* ldh, void* work)
+{
+	void (*fn) (void* uplo, void* j1, void* m, void* nb, void* a, void* lda, void* ipiv, void* h, void* ldh, void* work);
+	void (*fn_hook) (void* uplo, void* j1, void* m, void* nb, void* a, void* lda, void* ipiv, void* h, void* ldh, void* work);
+
+	fn      = current_backend->lapack.zlahef_aa.f77_blas_function; 
+
+    hook_pos_zlahef_aa ++;
+    if( hook_pos_zlahef_aa < __flexiblas_hooks->zlahef_aa.nhook) {
+        fn_hook = __flexiblas_hooks->zlahef_aa.f77_hook_function[hook_pos_zlahef_aa];
+        fn_hook((void*) uplo, (void*) j1, (void*) m, (void*) nb, (void*) a, (void*) lda, (void*) ipiv, (void*) h, (void*) ldh, (void*) work);
+    } else {
+        hook_pos_zlahef_aa = 0;
+		fn((void*) uplo, (void*) j1, (void*) m, (void*) nb, (void*) a, (void*) lda, (void*) ipiv, (void*) h, (void*) ldh, (void*) work); 
+	}
+	return;
+}
+
+void flexiblas_chain_zlahef_aa(void* uplo, void* j1, void* m, void* nb, void* a, void* lda, void* ipiv, void* h, void* ldh, void* work)  __attribute__((alias("flexiblas_chain_zlahef_aa_")));
+
 
 
 

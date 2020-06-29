@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:34 2017 */ 
+ /* Generated: Wed Mar 28 11:20:03 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_cunbdb5 = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 void FC_GLOBAL(cunbdb5,CUNBDB5)(blasint* m1, blasint* m2, blasint* n, float complex* x1, blasint* incx1, float complex* x2, blasint* incx2, float complex* q1, blasint* ldq1, float complex* q2, blasint* ldq2, float complex* work, blasint* lwork, blasint* info)
 #else
 void FC_GLOBAL(cunbdb5,CUNBDB5)(blasint* m1, blasint* m2, blasint* n, float complex* x1, blasint* incx1, float complex* x2, blasint* incx2, float complex* q1, blasint* ldq1, float complex* q2, blasint* ldq2, float complex* work, blasint* lwork, blasint* info)
-#endif 
+#endif
 {
-    double ts;
 	void (*fn) (void* m1, void* m2, void* n, void* x1, void* incx1, void* x2, void* incx2, void* q1, void* ldq1, void* q2, void* ldq2, void* work, void* lwork, void* info);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn_hook) (void* m1, void* m2, void* n, void* x1, void* incx1, void* x2, void* incx2, void* q1, void* ldq1, void* q2, void* ldq2, void* work, void* lwork, void* info);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.cunbdb5.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->cunbdb5.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) m1, (void*) m2, (void*) n, (void*) x1, (void*) incx1, (void*) x2, (void*) incx2, (void*) q1, (void*) ldq1, (void*) q2, (void*) ldq2, (void*) work, (void*) lwork, (void*) info); 
+		return;
+	} else {
+		hook_pos_cunbdb5 = 0;
+		fn_hook((void*) m1, (void*) m2, (void*) n, (void*) x1, (void*) incx1, (void*) x2, (void*) incx2, (void*) q1, (void*) ldq1, (void*) q2, (void*) ldq2, (void*) work, (void*) lwork, (void*) info);
+		return;
 	}
-	fn = current_backend->lapack.cunbdb5.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) m1, (void*) m2, (void*) n, (void*) x1, (void*) incx1, (void*) x2, (void*) incx2, (void*) q1, (void*) ldq1, (void*) q2, (void*) ldq2, (void*) work, (void*) lwork, (void*) info); 
-		current_backend->lapack.cunbdb5.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.cunbdb5.calls[0]++;
-	} else { 
-		fn((void*) m1, (void*) m2, (void*) n, (void*) x1, (void*) incx1, (void*) x2, (void*) incx2, (void*) q1, (void*) ldq1, (void*) q2, (void*) ldq2, (void*) work, (void*) lwork, (void*) info); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void cunbdb5_(blasint* m1, blasint* m2, blasint* n, float complex* x1, blasint* incx1, float complex* x2, blasint* incx2, float complex* q1, blasint* ldq1, float complex* q2, blasint* ldq2, float complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cunbdb5,CUNBDB5)))));
 #else
 void cunbdb5(blasint* m1, blasint* m2, blasint* n, float complex* x1, blasint* incx1, float complex* x2, blasint* incx2, float complex* q1, blasint* ldq1, float complex* q2, blasint* ldq2, float complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cunbdb5,CUNBDB5)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_cunbdb5_(void* m1, void* m2, void* n, void* x1, void* incx1, void* x2, void* incx2, void* q1, void* ldq1, void* q2, void* ldq2, void* work, void* lwork, void* info)
+{
+	void (*fn) (void* m1, void* m2, void* n, void* x1, void* incx1, void* x2, void* incx2, void* q1, void* ldq1, void* q2, void* ldq2, void* work, void* lwork, void* info);
+
+	fn = current_backend->lapack.cunbdb5.f77_blas_function; 
+
+		fn((void*) m1, (void*) m2, (void*) n, (void*) x1, (void*) incx1, (void*) x2, (void*) incx2, (void*) q1, (void*) ldq1, (void*) q2, (void*) ldq2, (void*) work, (void*) lwork, (void*) info); 
+
+	return;
+}
+
+void flexiblas_real_cunbdb5(void* m1, void* m2, void* n, void* x1, void* incx1, void* x2, void* incx2, void* q1, void* ldq1, void* q2, void* ldq2, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_real_cunbdb5_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_cunbdb5_(void* m1, void* m2, void* n, void* x1, void* incx1, void* x2, void* incx2, void* q1, void* ldq1, void* q2, void* ldq2, void* work, void* lwork, void* info)
+{
+	void (*fn) (void* m1, void* m2, void* n, void* x1, void* incx1, void* x2, void* incx2, void* q1, void* ldq1, void* q2, void* ldq2, void* work, void* lwork, void* info);
+	void (*fn_hook) (void* m1, void* m2, void* n, void* x1, void* incx1, void* x2, void* incx2, void* q1, void* ldq1, void* q2, void* ldq2, void* work, void* lwork, void* info);
+
+	fn      = current_backend->lapack.cunbdb5.f77_blas_function; 
+
+    hook_pos_cunbdb5 ++;
+    if( hook_pos_cunbdb5 < __flexiblas_hooks->cunbdb5.nhook) {
+        fn_hook = __flexiblas_hooks->cunbdb5.f77_hook_function[hook_pos_cunbdb5];
+        fn_hook((void*) m1, (void*) m2, (void*) n, (void*) x1, (void*) incx1, (void*) x2, (void*) incx2, (void*) q1, (void*) ldq1, (void*) q2, (void*) ldq2, (void*) work, (void*) lwork, (void*) info);
+    } else {
+        hook_pos_cunbdb5 = 0;
+		fn((void*) m1, (void*) m2, (void*) n, (void*) x1, (void*) incx1, (void*) x2, (void*) incx2, (void*) q1, (void*) ldq1, (void*) q2, (void*) ldq2, (void*) work, (void*) lwork, (void*) info); 
+	}
+	return;
+}
+
+void flexiblas_chain_cunbdb5(void* m1, void* m2, void* n, void* x1, void* incx1, void* x2, void* incx2, void* q1, void* ldq1, void* q2, void* ldq2, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_chain_cunbdb5_")));
+
 
 
 

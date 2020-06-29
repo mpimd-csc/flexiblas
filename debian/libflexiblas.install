@@ -1,8 +1,6 @@
 usr/lib/*/libflexiblas.so.*
 usr/lib/*/libflexiblas_mgmt.so.*
-usr/lib/*/flexiblas/update-alternatives/libblas.so.*
-usr/lib/*/flexiblas/update-alternatives/liblapack.so.*
 usr/lib/*/flexiblas/libflexiblas_netlib.so
-usr/lib/*/flexiblas/libflexiblas_fallback_lapack.so 
-usr/bin/flexiblas
-
+usr/lib/*/flexiblas/libflexiblas_fallback_lapack.so
+etc/flexiblasrc
+etc/flexiblasrc.d/NETLIB.conf

@@ -44,7 +44,7 @@
 *> If parameter WAY = 'R':
 *> CSYCONVF_ROOK performs the conversion in reverse direction, i.e.
 *> converts the factorization output format used in CSYTRF_RK
-*> (or CSYTRF_BK) provided on entry in parametes A and E into
+*> (or CSYTRF_BK) provided on entry in parameters A and E into
 *> the factorization output format used in CSYTRF_ROOK that is stored
 *> on exit in parameter A. IPIV format for CSYTRF_ROOK and
 *> CSYTRF_RK (or CSYTRF_BK) is the same and is not converted.
@@ -183,7 +183,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \date December 2016
+*> \date June 2017
 *
 *> \ingroup complexSYcomputational
 *
@@ -192,7 +192,7 @@
 *>
 *> \verbatim
 *>
-*>  December 2016,  Igor Kozachenko,
+*>  June 2017,  Igor Kozachenko,
 *>                  Computer Science Division,
 *>                  University of California, Berkeley
 *>
@@ -200,10 +200,10 @@
 *  =====================================================================
       SUBROUTINE CSYCONVF_ROOK( UPLO, WAY, N, A, LDA, E, IPIV, INFO )
 *
-*  -- LAPACK computational routine (version 3.7.0) --
+*  -- LAPACK computational routine (version 3.7.1) --
 *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
 *  -- Univ. of California Berkeley, Univ. of Colorado Denver and NAG Ltd..--
-*     December 2016
+*     June 2017
 *
 *     .. Scalar Arguments ..
       CHARACTER          UPLO, WAY

@@ -171,7 +171,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \date December 2016
+*> \date June 2017
 *
 *> \ingroup complex16OTHEReigen
 *
@@ -213,10 +213,10 @@
 *
       IMPLICIT NONE
 *
-*  -- LAPACK driver routine (version 3.7.0) --
+*  -- LAPACK driver routine (version 3.7.1) --
 *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
 *  -- Univ. of California Berkeley, Univ. of Colorado Denver and NAG Ltd..--
-*     December 2016
+*     June 2017
 *
 *     .. Scalar Arguments ..
       CHARACTER          JOBZ, UPLO
@@ -247,7 +247,7 @@
       EXTERNAL           LSAME, DLAMCH, ZLANHB, ILAENV
 *     ..
 *     .. External Subroutines ..
-      EXTERNAL           DSCAL, DSTERF, XERBLA, ZLASCL, ZSTEQR
+      EXTERNAL           DSCAL, DSTERF, XERBLA, ZLASCL, ZSTEQR,
      $                   ZHETRD_2STAGE
 *     ..
 *     .. Intrinsic Functions ..

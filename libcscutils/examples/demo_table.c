@@ -11,6 +11,8 @@ int main(int argc, char **argv)
 {
     int cm, cn, cmb, cnb, ctime;
     csc_table_t *t;
+    (void) argc;
+    (void) argv;
 
     /* Create table */
     t = csc_table_new(0);
@@ -22,7 +24,7 @@ int main(int argc, char **argv)
     ctime =csc_table_add_column(t, "Time", CSC_TABLE_FLOAT, CSC_TABLE_LEFT);
 
     /* Fill data  */
-    csc_table_new_row(t); 
+    csc_table_new_row(t);
     csc_table_set_entry(t, cm, (long) 1);
     csc_table_set_entry(t, cn, (long) 13424);
     csc_table_set_entry(t, cmb, (long) 64);
@@ -36,16 +38,15 @@ int main(int argc, char **argv)
     csc_table_set_entry(t, cnb, (long) 128);
     csc_table_set_entry(t, ctime, (double) 2.234);
 
-
-
+    csc_table_comment_sysinfo(t);
 
 
 
     csc_table_print_ascii(stdout, t,"  ");
 
     /* Change format  */
-    csc_table_column_set_format(t, ctime, "%10.2e"); 
-    csc_table_column_set_formater(t, cn, csc_table_formater_integer); 
+    csc_table_column_set_format(t, ctime, "%10.2e");
+    csc_table_column_set_formater(t, cn, csc_table_formater_integer);
     csc_table_print_ascii(stdout, t,"  ");
 
     csc_table_destroy(t);

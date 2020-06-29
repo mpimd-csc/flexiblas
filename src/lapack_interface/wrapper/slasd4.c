@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:36 2017 */ 
+ /* Generated: Wed Mar 28 11:20:04 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_slasd4 = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 void FC_GLOBAL(slasd4,SLASD4)(blasint* n, blasint* i, float* d, float* z, float* delta, float* rho, float* sigma, float* work, blasint* info)
 #else
 void FC_GLOBAL(slasd4,SLASD4)(blasint* n, blasint* i, float* d, float* z, float* delta, float* rho, float* sigma, float* work, blasint* info)
-#endif 
+#endif
 {
-    double ts;
 	void (*fn) (void* n, void* i, void* d, void* z, void* delta, void* rho, void* sigma, void* work, void* info);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn_hook) (void* n, void* i, void* d, void* z, void* delta, void* rho, void* sigma, void* work, void* info);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.slasd4.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->slasd4.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) n, (void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) sigma, (void*) work, (void*) info); 
+		return;
+	} else {
+		hook_pos_slasd4 = 0;
+		fn_hook((void*) n, (void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) sigma, (void*) work, (void*) info);
+		return;
 	}
-	fn = current_backend->lapack.slasd4.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) n, (void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) sigma, (void*) work, (void*) info); 
-		current_backend->lapack.slasd4.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.slasd4.calls[0]++;
-	} else { 
-		fn((void*) n, (void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) sigma, (void*) work, (void*) info); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void slasd4_(blasint* n, blasint* i, float* d, float* z, float* delta, float* rho, float* sigma, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(slasd4,SLASD4)))));
 #else
 void slasd4(blasint* n, blasint* i, float* d, float* z, float* delta, float* rho, float* sigma, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(slasd4,SLASD4)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_slasd4_(void* n, void* i, void* d, void* z, void* delta, void* rho, void* sigma, void* work, void* info)
+{
+	void (*fn) (void* n, void* i, void* d, void* z, void* delta, void* rho, void* sigma, void* work, void* info);
+
+	fn = current_backend->lapack.slasd4.f77_blas_function; 
+
+		fn((void*) n, (void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) sigma, (void*) work, (void*) info); 
+
+	return;
+}
+
+void flexiblas_real_slasd4(void* n, void* i, void* d, void* z, void* delta, void* rho, void* sigma, void* work, void* info)  __attribute__((alias("flexiblas_real_slasd4_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_slasd4_(void* n, void* i, void* d, void* z, void* delta, void* rho, void* sigma, void* work, void* info)
+{
+	void (*fn) (void* n, void* i, void* d, void* z, void* delta, void* rho, void* sigma, void* work, void* info);
+	void (*fn_hook) (void* n, void* i, void* d, void* z, void* delta, void* rho, void* sigma, void* work, void* info);
+
+	fn      = current_backend->lapack.slasd4.f77_blas_function; 
+
+    hook_pos_slasd4 ++;
+    if( hook_pos_slasd4 < __flexiblas_hooks->slasd4.nhook) {
+        fn_hook = __flexiblas_hooks->slasd4.f77_hook_function[hook_pos_slasd4];
+        fn_hook((void*) n, (void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) sigma, (void*) work, (void*) info);
+    } else {
+        hook_pos_slasd4 = 0;
+		fn((void*) n, (void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) sigma, (void*) work, (void*) info); 
+	}
+	return;
+}
+
+void flexiblas_chain_slasd4(void* n, void* i, void* d, void* z, void* delta, void* rho, void* sigma, void* work, void* info)  __attribute__((alias("flexiblas_chain_slasd4_")));
+
 
 
 

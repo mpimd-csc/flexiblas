@@ -1,11 +1,11 @@
 /* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
-/* 
+/*
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License.
- 
+
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -18,12 +18,12 @@
 #include "cblas_f77.h"
 #include "../flexiblas.h"
 
-float cblas_scnrm2( const int N, const void *X, const int incX) 
+float cblas_scnrm2( const int N, const void *X, const int incX)
 {
    float nrm2;
 #ifdef F77_INT
    F77_INT F77_N=N, F77_incX=incX;
-#else 
+#else
    #define F77_N N
    #define F77_incX incX
 #endif
@@ -34,18 +34,10 @@ float cblas_scnrm2( const int N, const void *X, const int incX)
    	current_backend->post_init = 0;
    }
    if ( current_backend->blas.scnrm2.call_cblas != NULL ) {
-	   double te = 0, ts = 0;
-	   if ( __flexiblas_profile) {
-		   ts = flexiblas_wtime(); 
-	   }
 	   float (*fn)
 		  ( const int N, const void *X, const int incX)
 		   = current_backend->blas.scnrm2.call_cblas;
 	nrm2 = fn(N,X,incX);
-	if (__flexiblas_profile) {   
-		te = flexiblas_wtime(); 
-		current_backend->blas.scnrm2.timings[POS_CBLAS] += (te - ts); 
-	}
    } else {
 	   nrm2 =  FC_GLOBAL(scnrm2,SCNRM2)( &F77_N, X, &F77_incX);
    }

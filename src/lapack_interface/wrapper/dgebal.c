@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:34 2017 */ 
+ /* Generated: Wed Mar 28 11:20:03 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_dgebal = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 void FC_GLOBAL(dgebal,DGEBAL)(char* job, blasint* n, double* a, blasint* lda, blasint* ilo, blasint* ihi, double* scale, blasint* info)
 #else
 void FC_GLOBAL(dgebal,DGEBAL)(char* job, blasint* n, double* a, blasint* lda, blasint* ilo, blasint* ihi, double* scale, blasint* info)
-#endif 
+#endif
 {
-    double ts;
 	void (*fn) (void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn_hook) (void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.dgebal.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->dgebal.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) job, (void*) n, (void*) a, (void*) lda, (void*) ilo, (void*) ihi, (void*) scale, (void*) info); 
+		return;
+	} else {
+		hook_pos_dgebal = 0;
+		fn_hook((void*) job, (void*) n, (void*) a, (void*) lda, (void*) ilo, (void*) ihi, (void*) scale, (void*) info);
+		return;
 	}
-	fn = current_backend->lapack.dgebal.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) job, (void*) n, (void*) a, (void*) lda, (void*) ilo, (void*) ihi, (void*) scale, (void*) info); 
-		current_backend->lapack.dgebal.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.dgebal.calls[0]++;
-	} else { 
-		fn((void*) job, (void*) n, (void*) a, (void*) lda, (void*) ilo, (void*) ihi, (void*) scale, (void*) info); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void dgebal_(char* job, blasint* n, double* a, blasint* lda, blasint* ilo, blasint* ihi, double* scale, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dgebal,DGEBAL)))));
 #else
 void dgebal(char* job, blasint* n, double* a, blasint* lda, blasint* ilo, blasint* ihi, double* scale, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dgebal,DGEBAL)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_dgebal_(void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info)
+{
+	void (*fn) (void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info);
+
+	fn = current_backend->lapack.dgebal.f77_blas_function; 
+
+		fn((void*) job, (void*) n, (void*) a, (void*) lda, (void*) ilo, (void*) ihi, (void*) scale, (void*) info); 
+
+	return;
+}
+
+void flexiblas_real_dgebal(void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info)  __attribute__((alias("flexiblas_real_dgebal_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_dgebal_(void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info)
+{
+	void (*fn) (void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info);
+	void (*fn_hook) (void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info);
+
+	fn      = current_backend->lapack.dgebal.f77_blas_function; 
+
+    hook_pos_dgebal ++;
+    if( hook_pos_dgebal < __flexiblas_hooks->dgebal.nhook) {
+        fn_hook = __flexiblas_hooks->dgebal.f77_hook_function[hook_pos_dgebal];
+        fn_hook((void*) job, (void*) n, (void*) a, (void*) lda, (void*) ilo, (void*) ihi, (void*) scale, (void*) info);
+    } else {
+        hook_pos_dgebal = 0;
+		fn((void*) job, (void*) n, (void*) a, (void*) lda, (void*) ilo, (void*) ihi, (void*) scale, (void*) info); 
+	}
+	return;
+}
+
+void flexiblas_chain_dgebal(void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info)  __attribute__((alias("flexiblas_chain_dgebal_")));
+
 
 
 

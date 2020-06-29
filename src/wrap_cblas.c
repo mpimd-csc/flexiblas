@@ -12,41 +12,43 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015
+ * Copyright (C) Martin Koehler, 2013-2020
  */
 
 #include <stdlib.h>
-#include <stdio.h> 
+#include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <math.h>
-#include <complex.h> 
+#include <complex.h>
 
 #include "flexiblas.h"
 
 #ifdef EXTBLAS_ENABLED
-#include "extblas.h"
-#endif 
+#endif
 
 
 
-HIDDEN int __flexiblas_load_cblas(flexiblas_backend_t *backend) 
+HIDDEN int __flexiblas_load_cblas(flexiblas_backend_t *backend)
 {
-
+    void * cblas_in_blis = dlsym(backend->library_handle, "bli_info_get_enable_cblas");
+    if ( cblas_in_blis ) {
+        DPRINTF_WARN(1, "The desired BLAS library is BLIS. We do not load their CBLAS wrapper since it might alter the behavior of your programs.");
+        return 0;
+    }
 	/*-----------------------------------------------------------------------------
-	 *  Integer and XERBLA routine 
+	 *  Integer and XERBLA routine
 	 *-----------------------------------------------------------------------------*/
 	LOAD_CBLAS(backend,blas.icamax,icamax);
 	LOAD_CBLAS(backend,blas.idamax,idamax);
 	LOAD_CBLAS(backend,blas.isamax,isamax);
 	LOAD_CBLAS(backend,blas.izamax,izamax);
-	LOAD_CBLAS(backend,xerbla,xerbla); 	
-
+    LOAD_CBLAS(backend,xerbla,xerbla);
 
 	/*-----------------------------------------------------------------------------
-	 *  Single Precision Routines 
+	 *  Single Precision Routines
 	 *-----------------------------------------------------------------------------*/
 	LOAD_CBLAS(backend,blas.sasum,sasum );
 	LOAD_CBLAS(backend,blas.saxpy,saxpy);
@@ -87,7 +89,7 @@ HIDDEN int __flexiblas_load_cblas(flexiblas_backend_t *backend)
 
 
 	/*-----------------------------------------------------------------------------
-	 *  Double Precision Routines 
+	 *  Double Precision Routines
 	 *-----------------------------------------------------------------------------*/
 	LOAD_CBLAS(backend,blas.dasum,dasum);
 	LOAD_CBLAS(backend,blas.daxpy,daxpy);
@@ -128,7 +130,7 @@ HIDDEN int __flexiblas_load_cblas(flexiblas_backend_t *backend)
 
 
 	/*-----------------------------------------------------------------------------
-	 *  Complex Routines 
+	 *  Complex Routines
 	 *-----------------------------------------------------------------------------*/
 	LOAD_CBLAS(backend,blas.caxpy,caxpy);
 	LOAD_CBLAS(backend,blas.ccopy,ccopy);
@@ -168,7 +170,7 @@ HIDDEN int __flexiblas_load_cblas(flexiblas_backend_t *backend)
 
 
 	/*-----------------------------------------------------------------------------
-	 *  Complex*16 Routines 
+	 *  Complex*16 Routines
 	 *-----------------------------------------------------------------------------*/
 	LOAD_CBLAS(backend,blas.zaxpy,zaxpy);
 	LOAD_CBLAS(backend,blas.zcopy,zcopy);
@@ -206,6 +208,6 @@ HIDDEN int __flexiblas_load_cblas(flexiblas_backend_t *backend)
 	LOAD_CBLAS(backend,blas.ztrsm,ztrsm);
 	LOAD_CBLAS(backend,blas.ztrsv,ztrsv);
 
-	return 0; 
+	return 0;
 }
 

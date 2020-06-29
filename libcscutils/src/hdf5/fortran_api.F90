@@ -1,0 +1,1401 @@
+!
+! THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+! IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+! THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+! (AT YOUR OPTION) ANY LATER VERSION.
+!
+! THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
+! BUT WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+! MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  SEE THE
+! GNU GENERAL PUBLIC LICENSE FOR MORE DETAILS.
+!
+! YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+! ALONG WITH THIS PROGRAM; IF NOT, SEE <HTTP://WWW.GNU.ORG/LICENSES/>.
+!
+! COPYRIGHT (C) Martin Koehler,
+!
+
+
+MODULE CSC_HDF5
+    USE ISO_C_BINDING
+    IMPLICIT NONE
+
+    ! HDF5 Type
+#ifdef HDF5_HID_SIZE
+#if HDF5_HID_SIZE == 4
+    INTEGER, PARAMETER :: CSC_HDF5_T = C_INT32_T
+#elif HDF5_HID_SIZE == 8
+    INTEGER, PARAMETER :: CSC_HDF5_T = C_INT64_T
+#else
+#error hid_t size not supported.
+#endif
+#else
+#error hid_t size not given.
+#endif
+
+    INTEGER, SAVE :: CSC_HDF5_COMPRESSION = 0
+
+    INTEGER(C_INT), PARAMETER :: CSC_HDF5_FIELD_REAL = 0
+    INTEGER(C_INT), PARAMETER :: CSC_HDF5_FIELD_INTEGER32 = 4
+
+    INTEGER, PARAMETER :: CSC_HDF5_COMPRESS_NONE    = 0
+    INTEGER, PARAMETER :: CSC_HDF5_COMPRESS_DEFLATE = 1
+    INTEGER, PARAMETER :: CSC_HDF5_COMPRESS_BZIP2   = 2
+    INTEGER, PARAMETER :: CSC_HDF5_COMPRESS_XZ      = 3
+    INTEGER, PARAMETER :: CSC_HDF5_COMPRESS_ZSTD    = 4
+
+    INTERFACE
+        ! HDF5 Open
+        FUNCTION CSC_HDF5_OPEN_C(FILENAME, MODE ) BIND(C, name="csc_hdf5_open")
+            IMPORT
+            CHARACTER(KIND=C_CHAR), INTENT(IN) :: FILENAME(*)
+            CHARACTER(KIND=C_CHAR), INTENT(IN) :: MODE(*)
+            INTEGER(KIND=CSC_HDF5_T) :: CSC_HDF5_OPEN_C
+        END FUNCTION CSC_HDF5_OPEN_C
+
+        FUNCTION CSC_HDF5_OPEN_MATLAB_C(FILENAME, MODE ) BIND(C, name="csc_hdf5_open_matlab")
+            IMPORT
+            CHARACTER(KIND=C_CHAR), INTENT(IN) :: FILENAME(*)
+            CHARACTER(KIND=C_CHAR), INTENT(IN) :: MODE(*)
+            INTEGER(KIND=CSC_HDF5_T) :: CSC_HDF5_OPEN_MATLAB_C
+        END FUNCTION CSC_HDF5_OPEN_MATLAB_C
+
+        ! HDF5 Close
+        INTEGER(KIND=CSC_HDF5_T) FUNCTION &
+         & CSC_HDF5_CLOSE_C(ID) BIND(C, name="csc_hdf5_close")
+            USE, INTRINSIC :: ISO_C_BINDING
+            IMPORT
+            INTEGER(KIND=CSC_HDF5_T), INTENT(IN), VALUE :: ID
+        END FUNCTION CSC_HDF5_CLOSE_C
+
+        ! HDF5 Group Open
+        INTEGER(KIND=CSC_HDF5_T) FUNCTION &
+         & CSC_HDF5_GROUP_OPEN_C(ID, GNAME) BIND(C,name="csc_hdf5_group_open")
+            USE, INTRINSIC :: ISO_C_BINDING
+            IMPORT
+            INTEGER(KIND=CSC_HDF5_T), INTENT(IN), VALUE :: ID
+            CHARACTER(KIND=C_CHAR), INTENT(IN) :: GNAME
+        END FUNCTION CSC_HDF5_GROUP_OPEN_C
+
+        ! HDF5 GROUP Close
+        INTEGER(KIND=CSC_HDF5_T) FUNCTION &
+         & CSC_HDF5_GROUP_CLOSE_C(ID) BIND(C, name="csc_hdf5_group_close")
+            USE, INTRINSIC :: ISO_C_BINDING
+            IMPORT
+            INTEGER(KIND=CSC_HDF5_T), INTENT(IN), VALUE :: ID
+        END FUNCTION CSC_HDF5_GROUP_CLOSE_C
+
+        ! HDF5 Compression
+        SUBROUTINE CSC_HDF5_SET_COMPRESSION_C(COMPRESSS_LEVEL) BIND(C, name="csc_hdf5_set_compression")
+            USE, INTRINSIC :: ISO_C_BINDING
+            IMPORT
+            INTEGER(C_INT), INTENT(IN), VALUE :: COMPRESSS_LEVEL
+        END SUBROUTINE CSC_HDF5_SET_COMPRESSION_C
+
+        ! Write real matrix
+        FUNCTION &
+         & CSC_HDF5_MATRIX_WRITE_REAL_C( ROOT, DNAME, ROWS, COLS, LD, A) BIND(C,name="csc_hdf5_matrix_write_real")
+            USE, INTRINSIC :: ISO_C_BINDING
+            IMPORT
+            INTEGER(CSC_HDF5_T), INTENT(IN), VALUE :: ROOT
+            CHARACTER(KIND=C_CHAR), INTENT(IN)     :: DNAME
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: ROWS
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: COLS
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: LD
+            REAL(C_DOUBLE), INTENT(IN)             :: A(*)
+            INTEGER(KIND=C_INT) :: CSC_HDF5_MATRIX_WRITE_REAL_C
+        END FUNCTION CSC_HDF5_MATRIX_WRITE_REAL_C
+
+        ! Matrix size information
+        FUNCTION CSC_HDF5_MATRIX_SIZE_C(ROOT, DNAME, ROWS, COLS) BIND(C, name="csc_hdf5_matrix_size")
+            USE, INTRINSIC :: ISO_C_BINDING
+            IMPORT
+            INTEGER(CSC_HDF5_T), INTENT(IN), VALUE :: ROOT
+            CHARACTER(C_CHAR), INTENT(IN)   :: DNAME
+            INTEGER(C_SIZE_T), INTENT(OUT)  :: ROWS
+            INTEGER(C_SIZE_T), INTENT(OUT)  :: COLS
+            INTEGER(C_INT) :: CSC_HDF5_MATRIX_SIZE_C
+        END FUNCTION
+
+        ! Read a real matrix
+        FUNCTION CSC_HDF5_MATRIX_READ_REAL_C(ROOT, DNAME, ROWS, COLS, LD, A) BIND(C, name="csc_hdf5_matrix_read_real")
+            USE, INTRINSIC :: ISO_C_BINDING
+            IMPORT
+            INTEGER(CSC_HDF5_T), INTENT(IN), VALUE :: ROOT
+            CHARACTER(KIND=C_CHAR), INTENT(IN)     :: DNAME
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: ROWS
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: COLS
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: LD
+            REAL(C_DOUBLE), INTENT(OUT)             :: A(*)
+            INTEGER(KIND=C_INT) :: CSC_HDF5_MATRIX_READ_REAL_C
+       END FUNCTION
+
+       ! Write a vector
+       FUNCTION CSC_HDF5_VECTOR_WRITE_C(FIELD, ROOT, DNAME, N, VECTOR) BIND(C, name = "csc_hdf5_vector_write")
+            USE,INTRINSIC :: ISO_C_BINDING
+            IMPORT
+            INTEGER(C_INT), INTENT(IN), VALUE      :: FIELD
+            INTEGER(CSC_HDF5_T), INTENT(IN), VALUE :: ROOT
+            CHARACTER(KIND=C_CHAR), INTENT(IN)     :: DNAME
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: N
+            TYPE(C_PTR), VALUE, INTENT(IN)             :: VECTOR
+            INTEGER(KIND=C_INT) :: CSC_HDF5_VECTOR_WRITE_C
+
+       END FUNCTION
+
+       FUNCTION CSC_HDF5_VECTOR_READ_C(FIELD, ROOT, DNAME, VECTOR) BIND(C, name = "csc_hdf5_vector_read")
+            USE,INTRINSIC :: ISO_C_BINDING
+            IMPORT
+            INTEGER(C_INT), INTENT(IN), VALUE      :: FIELD
+            INTEGER(CSC_HDF5_T), INTENT(IN), VALUE :: ROOT
+            CHARACTER(KIND=C_CHAR), INTENT(IN)     :: DNAME
+            TYPE(C_PTR), VALUE, INTENT(IN)             :: VECTOR
+            INTEGER(KIND=C_INT) :: CSC_HDF5_VECTOR_READ_C
+
+       END FUNCTION
+
+       FUNCTION CSC_HDF5_VECTOR_LEN_C(ROOT, DNAME) BIND(C, name = "csc_hdf5_vector_len")
+           USE, INTRINSIC :: ISO_C_BINDING
+           IMPORT
+           INTEGER(CSC_HDF5_T), INTENT(IN), VALUE :: ROOT
+           CHARACTER(KIND=C_CHAR), INTENT(IN)     :: DNAME
+           INTEGER(KIND = C_LONG) :: CSC_HDF5_VECTOR_LEN_C
+       END FUNCTION
+
+
+       FUNCTION CSC_HDF5_GET_COMPRESSION_C() BIND(C, name="csc_hdf5_get_compression_int")
+           USE,INTRINSIC :: ISO_C_BINDING
+           IMPORT
+           INTEGER(KIND=C_INT) :: CSC_HDF5_GET_COMPRESSION_C
+       END FUNCTION
+
+       FUNCTION CSC_HDF5_EXISTS_C(ROOT, DNAME) BIND(C, name = "csc_hdf5_exist")
+           USE, INTRINSIC :: ISO_C_BINDING
+           IMPORT
+           INTEGER(CSC_HDF5_T), INTENT(IN), VALUE :: ROOT
+           CHARACTER(KIND=C_CHAR), INTENT(IN) :: DNAME
+           INTEGER(KIND = C_INT) :: CSC_HDF5_EXISTS_C
+       END FUNCTION
+
+       ! New routines
+       FUNCTION &
+         & CSC_HDF5_WRITE_DOUBLE_MATRIX_F( ROOT, DNAME, ROWS, COLS, A, LD, COMP) BIND(C,name="csc_hdf5_write_double_matrix_f")
+            USE, INTRINSIC :: ISO_C_BINDING
+            IMPORT
+            INTEGER(CSC_HDF5_T), INTENT(IN), VALUE :: ROOT
+            CHARACTER(KIND=C_CHAR), INTENT(IN)     :: DNAME
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: ROWS
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: COLS
+            TYPE(C_PTR), VALUE,  INTENT(IN)          :: A
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: LD
+            INTEGER(KIND=C_INT),VALUE, INTENT(IN)  :: COMP
+            INTEGER(KIND=C_INT) :: CSC_HDF5_WRITE_DOUBLE_MATRIX_F
+        END FUNCTION CSC_HDF5_WRITE_DOUBLE_MATRIX_F
+
+        FUNCTION &
+         & CSC_HDF5_WRITE_FLOAT_MATRIX_F( ROOT, DNAME, ROWS, COLS, A, LD, COMP ) BIND(C,name="csc_hdf5_write_float_matrix_f")
+            USE, INTRINSIC :: ISO_C_BINDING
+            IMPORT
+            INTEGER(CSC_HDF5_T), INTENT(IN), VALUE :: ROOT
+            CHARACTER(KIND=C_CHAR), INTENT(IN)     :: DNAME
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: ROWS
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: COLS
+            TYPE(C_PTR), VALUE,  INTENT(IN)          :: A
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: LD
+            INTEGER(KIND=C_INT),VALUE, INTENT(IN)  :: COMP
+
+            INTEGER(KIND=C_INT) :: CSC_HDF5_WRITE_FLOAT_MATRIX_F
+        END FUNCTION CSC_HDF5_WRITE_FLOAT_MATRIX_F
+
+        FUNCTION &
+         & CSC_HDF5_WRITE_DOUBLE_COMPLEX_MATRIX_F( ROOT, DNAME, ROWS, COLS, A, LD, COMP) &
+         & BIND(C,name="csc_hdf5_write_double_complex_matrix_f")
+            USE, INTRINSIC :: ISO_C_BINDING
+            IMPORT
+            INTEGER(CSC_HDF5_T), INTENT(IN), VALUE :: ROOT
+            CHARACTER(KIND=C_CHAR), INTENT(IN)     :: DNAME
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: ROWS
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: COLS
+            TYPE(C_PTR), VALUE,  INTENT(IN)          :: A
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: LD
+            INTEGER(KIND=C_INT),VALUE, INTENT(IN)  :: COMP
+            INTEGER(KIND=C_INT) :: CSC_HDF5_WRITE_DOUBLE_COMPLEX_MATRIX_F
+        END FUNCTION CSC_HDF5_WRITE_DOUBLE_COMPLEX_MATRIX_F
+
+        FUNCTION &
+         & CSC_HDF5_WRITE_FLOAT_COMPLEX_MATRIX_F( ROOT, DNAME, ROWS, COLS, A, LD, COMP) &
+         & BIND(C,name="csc_hdf5_write_float_complex_matrix_f")
+            USE, INTRINSIC :: ISO_C_BINDING
+            IMPORT
+            INTEGER(CSC_HDF5_T), INTENT(IN), VALUE :: ROOT
+            CHARACTER(KIND=C_CHAR), INTENT(IN)     :: DNAME
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: ROWS
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: COLS
+            TYPE(C_PTR), VALUE,  INTENT(IN)          :: A
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: LD
+            INTEGER(KIND=C_INT),VALUE, INTENT(IN)  :: COMP
+            INTEGER(KIND=C_INT) :: CSC_HDF5_WRITE_FLOAT_COMPLEX_MATRIX_F
+        END FUNCTION CSC_HDF5_WRITE_FLOAT_COMPLEX_MATRIX_F
+
+       ! New routines
+       FUNCTION &
+         & CSC_HDF5_READ_DOUBLE_MATRIX_F( ROOT, DNAME, ROWS, COLS, A, LD) BIND(C,name="csc_hdf5_read_double_matrix_f")
+            USE, INTRINSIC :: ISO_C_BINDING
+            IMPORT
+            INTEGER(CSC_HDF5_T), INTENT(IN), VALUE :: ROOT
+            CHARACTER(KIND=C_CHAR), INTENT(IN)     :: DNAME
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: ROWS
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: COLS
+            TYPE(C_PTR), VALUE,  INTENT(IN)          :: A
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: LD
+            INTEGER(KIND=C_INT) :: CSC_HDF5_READ_DOUBLE_MATRIX_F
+        END FUNCTION CSC_HDF5_READ_DOUBLE_MATRIX_F
+
+        FUNCTION &
+         & CSC_HDF5_READ_FLOAT_MATRIX_F( ROOT, DNAME, ROWS, COLS, A, LD) BIND(C,name="csc_hdf5_read_float_matrix_f")
+            USE, INTRINSIC :: ISO_C_BINDING
+            IMPORT
+            INTEGER(CSC_HDF5_T), INTENT(IN), VALUE :: ROOT
+            CHARACTER(KIND=C_CHAR), INTENT(IN)     :: DNAME
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: ROWS
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: COLS
+            TYPE(C_PTR), VALUE,  INTENT(IN)          :: A
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: LD
+            INTEGER(KIND=C_INT) :: CSC_HDF5_READ_FLOAT_MATRIX_F
+        END FUNCTION CSC_HDF5_READ_FLOAT_MATRIX_F
+
+        FUNCTION &
+         & CSC_HDF5_READ_DOUBLE_COMPLEX_MATRIX_F( ROOT, DNAME, ROWS, COLS, A, LD) &
+         & BIND(C,name="csc_hdf5_read_double_complex_matrix_f")
+            USE, INTRINSIC :: ISO_C_BINDING
+            IMPORT
+            INTEGER(CSC_HDF5_T), INTENT(IN), VALUE :: ROOT
+            CHARACTER(KIND=C_CHAR), INTENT(IN)     :: DNAME
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: ROWS
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: COLS
+            TYPE(C_PTR), VALUE,  INTENT(IN)          :: A
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: LD
+            INTEGER(KIND=C_INT) :: CSC_HDF5_READ_DOUBLE_COMPLEX_MATRIX_F
+        END FUNCTION CSC_HDF5_READ_DOUBLE_COMPLEX_MATRIX_F
+
+        FUNCTION &
+         & CSC_HDF5_READ_FLOAT_COMPLEX_MATRIX_F( ROOT, DNAME, ROWS, COLS, A, LD) &
+         & BIND(C,name="csc_hdf5_read_float_complex_matrix_f")
+            USE, INTRINSIC :: ISO_C_BINDING
+            IMPORT
+            INTEGER(CSC_HDF5_T), INTENT(IN), VALUE :: ROOT
+            CHARACTER(KIND=C_CHAR), INTENT(IN)     :: DNAME
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: ROWS
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: COLS
+            TYPE(C_PTR), VALUE,  INTENT(IN)          :: A
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: LD
+            INTEGER(KIND=C_INT) :: CSC_HDF5_READ_FLOAT_COMPLEX_MATRIX_F
+        END FUNCTION CSC_HDF5_READ_FLOAT_COMPLEX_MATRIX_F
+
+        FUNCTION &
+         & CSC_HDF5_READ_DOUBLE_VECTOR_F( ROOT, DNAME, ROWS, A) BIND(C,name="csc_hdf5_read_double_vector_f")
+            USE, INTRINSIC :: ISO_C_BINDING
+            IMPORT
+            INTEGER(CSC_HDF5_T), INTENT(IN), VALUE :: ROOT
+            CHARACTER(KIND=C_CHAR), INTENT(IN)     :: DNAME
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: ROWS
+            TYPE(C_PTR), VALUE,  INTENT(IN)          :: A
+            INTEGER(KIND=C_INT) :: CSC_HDF5_READ_DOUBLE_VECTOR_F
+        END FUNCTION CSC_HDF5_READ_DOUBLE_VECTOR_F
+
+        FUNCTION &
+         & CSC_HDF5_READ_FLOAT_VECTOR_F( ROOT, DNAME, ROWS, A) BIND(C,name="csc_hdf5_read_float_vector_f")
+            USE, INTRINSIC :: ISO_C_BINDING
+            IMPORT
+            INTEGER(CSC_HDF5_T), INTENT(IN), VALUE :: ROOT
+            CHARACTER(KIND=C_CHAR), INTENT(IN)     :: DNAME
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: ROWS
+            TYPE(C_PTR), VALUE,  INTENT(IN)          :: A
+            INTEGER(KIND=C_INT) :: CSC_HDF5_READ_FLOAT_VECTOR_F
+        END FUNCTION CSC_HDF5_READ_FLOAT_VECTOR_F
+
+        FUNCTION &
+         & CSC_HDF5_READ_DOUBLE_COMPLEX_VECTOR_F( ROOT, DNAME, ROWS, A) &
+         & BIND(C,name="csc_hdf5_read_double_complex_vector_f")
+            USE, INTRINSIC :: ISO_C_BINDING
+            IMPORT
+            INTEGER(CSC_HDF5_T), INTENT(IN), VALUE :: ROOT
+            CHARACTER(KIND=C_CHAR), INTENT(IN)     :: DNAME
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: ROWS
+            TYPE(C_PTR), VALUE,  INTENT(IN)          :: A
+            INTEGER(KIND=C_INT) :: CSC_HDF5_READ_DOUBLE_COMPLEX_VECTOR_F
+        END FUNCTION CSC_HDF5_READ_DOUBLE_COMPLEX_VECTOR_F
+
+        FUNCTION &
+         & CSC_HDF5_READ_FLOAT_COMPLEX_VECTOR_F( ROOT, DNAME, ROWS, A) &
+         & BIND(C,name="csc_hdf5_read_float_complex_vector_f")
+            USE, INTRINSIC :: ISO_C_BINDING
+            IMPORT
+            INTEGER(CSC_HDF5_T), INTENT(IN), VALUE :: ROOT
+            CHARACTER(KIND=C_CHAR), INTENT(IN)     :: DNAME
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: ROWS
+            TYPE(C_PTR), VALUE,  INTENT(IN)          :: A
+            INTEGER(KIND=C_INT) :: CSC_HDF5_READ_FLOAT_COMPLEX_VECTOR_F
+        END FUNCTION CSC_HDF5_READ_FLOAT_COMPLEX_VECTOR_F
+
+        FUNCTION &
+         & CSC_HDF5_WRITE_DOUBLE_VECTOR_F( ROOT, DNAME, ROWS, A, COMP) BIND(C,name="csc_hdf5_write_double_vector_f")
+            USE, INTRINSIC :: ISO_C_BINDING
+            IMPORT
+            INTEGER(CSC_HDF5_T), INTENT(IN), VALUE :: ROOT
+            CHARACTER(KIND=C_CHAR), INTENT(IN)     :: DNAME
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: ROWS
+            TYPE(C_PTR), VALUE,  INTENT(IN)          :: A
+            INTEGER(KIND=C_INT),VALUE, INTENT(IN)  :: COMP
+            INTEGER(KIND=C_INT) :: CSC_HDF5_WRITE_DOUBLE_VECTOR_F
+        END FUNCTION CSC_HDF5_WRITE_DOUBLE_VECTOR_F
+
+        FUNCTION &
+         & CSC_HDF5_WRITE_FLOAT_VECTOR_F( ROOT, DNAME, ROWS, A, COMP ) BIND(C,name="csc_hdf5_write_float_vector_f")
+            USE, INTRINSIC :: ISO_C_BINDING
+            IMPORT
+            INTEGER(CSC_HDF5_T), INTENT(IN), VALUE :: ROOT
+            CHARACTER(KIND=C_CHAR), INTENT(IN)     :: DNAME
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: ROWS
+            TYPE(C_PTR), VALUE,  INTENT(IN)          :: A
+            INTEGER(KIND=C_INT),VALUE, INTENT(IN)  :: COMP
+            INTEGER(KIND=C_INT) :: CSC_HDF5_WRITE_FLOAT_VECTOR_F
+        END FUNCTION CSC_HDF5_WRITE_FLOAT_VECTOR_F
+
+        FUNCTION &
+         & CSC_HDF5_WRITE_DOUBLE_COMPLEX_VECTOR_F( ROOT, DNAME, ROWS, A, COMP) &
+         & BIND(C,name="csc_hdf5_write_double_complex_vector_f")
+            USE, INTRINSIC :: ISO_C_BINDING
+            IMPORT
+            INTEGER(CSC_HDF5_T), INTENT(IN), VALUE :: ROOT
+            CHARACTER(KIND=C_CHAR), INTENT(IN)     :: DNAME
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: ROWS
+            TYPE(C_PTR), VALUE,  INTENT(IN)          :: A
+            INTEGER(KIND=C_INT),VALUE, INTENT(IN)  :: COMP
+            INTEGER(KIND=C_INT) :: CSC_HDF5_WRITE_DOUBLE_COMPLEX_VECTOR_F
+        END FUNCTION CSC_HDF5_WRITE_DOUBLE_COMPLEX_VECTOR_F
+
+        FUNCTION &
+         & CSC_HDF5_WRITE_FLOAT_COMPLEX_VECTOR_F( ROOT, DNAME, ROWS, A, COMP) &
+         & BIND(C,name="csc_hdf5_write_float_complex_vector_f")
+            USE, INTRINSIC :: ISO_C_BINDING
+            IMPORT
+            INTEGER(CSC_HDF5_T), INTENT(IN), VALUE :: ROOT
+            CHARACTER(KIND=C_CHAR), INTENT(IN)     :: DNAME
+            INTEGER(C_SIZE_T), INTENT(IN), VALUE   :: ROWS
+            TYPE(C_PTR), VALUE,  INTENT(IN)          :: A
+            INTEGER(KIND=C_INT),VALUE, INTENT(IN)  :: COMP
+            INTEGER(KIND=C_INT) :: CSC_HDF5_WRITE_FLOAT_COMPLEX_VECTOR_F
+        END FUNCTION CSC_HDF5_WRITE_FLOAT_COMPLEX_VECTOR_F
+
+
+    END INTERFACE
+
+    INTERFACE CSC_HDF5_WRITE_MATRIX
+        MODULE PROCEDURE CSC_HDF5_WRITE_DOUBLE_MATRIX_RANK2
+        MODULE PROCEDURE CSC_HDF5_WRITE_DOUBLE_MATRIX_RANK1
+        MODULE PROCEDURE CSC_HDF5_WRITE_FLOAT_MATRIX_RANK2
+        MODULE PROCEDURE CSC_HDF5_WRITE_FLOAT_MATRIX_RANK1
+        MODULE PROCEDURE CSC_HDF5_WRITE_DOUBLE_COMPLEX_MATRIX_RANK2
+        MODULE PROCEDURE CSC_HDF5_WRITE_DOUBLE_COMPLEX_MATRIX_RANK1
+        MODULE PROCEDURE CSC_HDF5_WRITE_FLOAT_COMPLEX_MATRIX_RANK2
+        MODULE PROCEDURE CSC_HDF5_WRITE_FLOAT_COMPLEX_MATRIX_RANK1
+    END INTERFACE
+
+    INTERFACE CSC_HDF5_READ_MATRIX
+        MODULE PROCEDURE CSC_HDF5_READ_DOUBLE_MATRIX_RANK2
+        MODULE PROCEDURE CSC_HDF5_READ_DOUBLE_MATRIX_RANK1
+        MODULE PROCEDURE CSC_HDF5_READ_FLOAT_MATRIX_RANK2
+        MODULE PROCEDURE CSC_HDF5_READ_FLOAT_MATRIX_RANK1
+        MODULE PROCEDURE CSC_HDF5_READ_DOUBLE_COMPLEX_MATRIX_RANK2
+        MODULE PROCEDURE CSC_HDF5_READ_DOUBLE_COMPLEX_MATRIX_RANK1
+        MODULE PROCEDURE CSC_HDF5_READ_FLOAT_COMPLEX_MATRIX_RANK2
+        MODULE PROCEDURE CSC_HDF5_READ_FLOAT_COMPLEX_MATRIX_RANK1
+    END INTERFACE
+
+    INTERFACE CSC_HDF5_READ_VECTOR
+        MODULE PROCEDURE CSC_HDF5_READ_DOUBLE_VECTOR
+        MODULE PROCEDURE CSC_HDF5_READ_FLOAT_VECTOR
+        MODULE PROCEDURE CSC_HDF5_READ_DOUBLE_COMPLEX_VECTOR
+        MODULE PROCEDURE CSC_HDF5_READ_FLOAT_COMPLEX_VECTOR
+    END INTERFACE
+
+    INTERFACE CSC_HDF5_WRITE_VECTOR
+        MODULE PROCEDURE CSC_HDF5_WRITE_DOUBLE_VECTOR
+        MODULE PROCEDURE CSC_HDF5_WRITE_FLOAT_VECTOR
+        MODULE PROCEDURE CSC_HDF5_WRITE_DOUBLE_COMPLEX_VECTOR
+        MODULE PROCEDURE CSC_HDF5_WRITE_FLOAT_COMPLEX_VECTOR
+    END INTERFACE
+
+CONTAINS
+    !
+    !
+    ! Write vectors
+    !
+    !
+    SUBROUTINE CSC_HDF5_WRITE_DOUBLE_VECTOR(ROOT, DNAME, ROWS, A, INFO)
+        USE, INTRINSIC :: ISO_C_BINDING
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS
+        DOUBLE PRECISION, TARGET, INTENT(INOUT)     :: A(*)
+        INTEGER, INTENT(OUT)             :: INFO
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW
+        TYPE(C_PTR) :: APTR
+        INTEGER(C_INT) :: COMP
+
+        LROW = ROWS
+        APTR = C_LOC(A)
+        COMP = INT(CSC_HDF5_COMPRESSION, KIND = C_INT)
+
+        INFO = 0
+        RET = CSC_HDF5_WRITE_DOUBLE_VECTOR_F(ROOT, DNAME//C_NULL_CHAR, LROW, APTR, COMP)
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to write vector to ", ROOT
+            INFO = 1
+        END IF
+        RETURN
+    END SUBROUTINE
+
+    SUBROUTINE CSC_HDF5_WRITE_FLOAT_VECTOR(ROOT, DNAME, ROWS, A, INFO)
+        USE, INTRINSIC :: ISO_C_BINDING
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS
+        REAL, TARGET, INTENT(INOUT)     :: A(*)
+        INTEGER, INTENT(OUT)             :: INFO
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW
+        TYPE(C_PTR) :: APTR
+        INTEGER(C_INT) :: COMP
+
+
+        LROW = ROWS
+        APTR = C_LOC(A)
+        COMP = INT(CSC_HDF5_COMPRESSION, KIND = C_INT)
+
+        INFO = 0
+        RET = CSC_HDF5_WRITE_FLOAT_VECTOR_F(ROOT, DNAME//C_NULL_CHAR, LROW, APTR, COMP )
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to write vector to ", ROOT
+            INFO = 1
+        END IF
+        RETURN
+    END SUBROUTINE
+
+    SUBROUTINE CSC_HDF5_WRITE_DOUBLE_COMPLEX_VECTOR(ROOT, DNAME, ROWS, A, INFO)
+        USE, INTRINSIC :: ISO_C_BINDING
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS
+        COMPLEX*16, TARGET, INTENT(INOUT)     :: A(*)
+        INTEGER, INTENT(OUT)             :: INFO
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW
+        TYPE(C_PTR) :: APTR
+        INTEGER(C_INT) :: COMP
+
+        LROW = ROWS
+        APTR = C_LOC(A)
+        COMP = INT(CSC_HDF5_COMPRESSION, KIND = C_INT)
+
+        INFO = 0
+        RET = CSC_HDF5_WRITE_DOUBLE_COMPLEX_VECTOR_F(ROOT, DNAME//C_NULL_CHAR, LROW, APTR, COMP )
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to write vector to ", ROOT
+            INFO = 1
+        END IF
+        RETURN
+    END SUBROUTINE
+
+    SUBROUTINE CSC_HDF5_WRITE_FLOAT_COMPLEX_VECTOR(ROOT, DNAME, ROWS, A, INFO)
+        USE, INTRINSIC :: ISO_C_BINDING
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS
+        COMPLEX, TARGET, INTENT(INOUT)     :: A(*)
+        INTEGER, INTENT(OUT)             :: INFO
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW
+        INTEGER(C_INT) :: COMP
+        TYPE(C_PTR) :: APTR
+
+        LROW = ROWS
+        APTR = C_LOC(A)
+        COMP = INT(CSC_HDF5_COMPRESSION, KIND = C_INT)
+
+        INFO = 0
+        RET = CSC_HDF5_WRITE_FLOAT_COMPLEX_VECTOR_F(ROOT, DNAME//C_NULL_CHAR, LROW, APTR, COMP )
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to write vector to ", ROOT
+            INFO = 1
+        END IF
+        RETURN
+    END SUBROUTINE
+
+    SUBROUTINE CSC_HDF5_READ_DOUBLE_VECTOR(ROOT, DNAME, ROWS, A, INFO)
+        USE, INTRINSIC :: ISO_C_BINDING
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS
+        DOUBLE PRECISION, TARGET, INTENT(INOUT)     :: A(*)
+        INTEGER, INTENT(OUT)             :: INFO
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW
+        TYPE(C_PTR) :: APTR
+
+        LROW = ROWS
+        APTR = C_LOC(A)
+
+        INFO = 0
+        RET = CSC_HDF5_READ_DOUBLE_VECTOR_F(ROOT, DNAME//C_NULL_CHAR, LROW, APTR )
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to read vector to ", ROOT
+            INFO = 1
+        END IF
+        RETURN
+    END SUBROUTINE
+
+    SUBROUTINE CSC_HDF5_READ_FLOAT_VECTOR(ROOT, DNAME, ROWS, A, INFO)
+        USE, INTRINSIC :: ISO_C_BINDING
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS
+        REAL, TARGET, INTENT(INOUT)     :: A(*)
+        INTEGER, INTENT(OUT)             :: INFO
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW
+        TYPE(C_PTR) :: APTR
+
+        LROW = ROWS
+        APTR = C_LOC(A)
+
+        INFO = 0
+        RET = CSC_HDF5_READ_FLOAT_VECTOR_F(ROOT, DNAME//C_NULL_CHAR, LROW, APTR )
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to read vector to ", ROOT
+            INFO = 1
+        END IF
+        RETURN
+    END SUBROUTINE
+
+    SUBROUTINE CSC_HDF5_READ_DOUBLE_COMPLEX_VECTOR(ROOT, DNAME, ROWS, A, INFO)
+        USE, INTRINSIC :: ISO_C_BINDING
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS
+        COMPLEX*16, TARGET, INTENT(INOUT)     :: A(*)
+        INTEGER, INTENT(OUT)             :: INFO
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW
+        TYPE(C_PTR) :: APTR
+
+        LROW = ROWS
+        APTR = C_LOC(A)
+
+        INFO = 0
+        RET = CSC_HDF5_READ_DOUBLE_COMPLEX_VECTOR_F(ROOT, DNAME//C_NULL_CHAR, LROW, APTR )
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to read vector to ", ROOT
+            INFO = 1
+        END IF
+        RETURN
+    END SUBROUTINE
+
+    SUBROUTINE CSC_HDF5_READ_FLOAT_COMPLEX_VECTOR(ROOT, DNAME, ROWS, A, INFO)
+        USE, INTRINSIC :: ISO_C_BINDING
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS
+        COMPLEX, TARGET, INTENT(INOUT)     :: A(*)
+        INTEGER, INTENT(OUT)             :: INFO
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW
+        TYPE(C_PTR) :: APTR
+
+        LROW = ROWS
+        APTR = C_LOC(A)
+
+        INFO = 0
+        RET = CSC_HDF5_READ_FLOAT_COMPLEX_VECTOR_F(ROOT, DNAME//C_NULL_CHAR, LROW, APTR )
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to read vector to ", ROOT
+            INFO = 1
+        END IF
+        RETURN
+    END SUBROUTINE
+
+    !
+    !
+    ! Read Matrices
+    !
+    !
+    SUBROUTINE CSC_HDF5_READ_DOUBLE_MATRIX_RANK1(ROOT, DNAME, ROWS, COLS, A, LDA, INFO)
+        USE, INTRINSIC :: ISO_C_BINDING
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS, COLS, LDA
+        DOUBLE PRECISION, TARGET, INTENT(INOUT)     :: A(*)
+        INTEGER, INTENT(OUT)             :: INFO
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW, LCOL, LLDA
+        TYPE(C_PTR) :: APTR
+
+        LROW = ROWS
+        LCOL = COLS
+        LLDA = LDA
+        APTR = C_LOC(A)
+
+        INFO = 0
+        RET = CSC_HDF5_READ_DOUBLE_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA )
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to write matrix to ", ROOT
+            INFO = 1
+        END IF
+        RETURN
+    END SUBROUTINE
+
+    SUBROUTINE CSC_HDF5_READ_DOUBLE_MATRIX_RANK2(ROOT, DNAME, ROWS, COLS, A, LDA, INFO)
+        USE, INTRINSIC :: ISO_C_BINDING
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS, COLS, LDA
+        DOUBLE PRECISION, TARGET, INTENT(INOUT)     :: A(1,*)
+        INTEGER, INTENT(OUT)             :: INFO
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW, LCOL, LLDA
+        TYPE(C_PTR) :: APTR
+
+        LROW = ROWS
+        LCOL = COLS
+        LLDA = LDA
+        APTR = C_LOC(A)
+
+        INFO = 0
+        RET = CSC_HDF5_READ_DOUBLE_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA )
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to read matrix from ", ROOT
+            INFO = 1
+        END IF
+        RETURN
+    END SUBROUTINE
+
+    SUBROUTINE CSC_HDF5_READ_FLOAT_MATRIX_RANK1(ROOT, DNAME, ROWS, COLS, A, LDA, INFO)
+        USE, INTRINSIC :: ISO_C_BINDING
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS, COLS, LDA
+        REAL, TARGET, INTENT(INOUT)     :: A(*)
+        INTEGER, INTENT(OUT)             :: INFO
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW, LCOL, LLDA
+        TYPE(C_PTR) :: APTR
+
+        LROW = ROWS
+        LCOL = COLS
+        LLDA = LDA
+        APTR = C_LOC(A)
+
+        INFO = 0
+        RET = CSC_HDF5_READ_FLOAT_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA )
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to read matrix from ", ROOT
+            INFO = 1
+        END IF
+        RETURN
+    END SUBROUTINE
+
+    SUBROUTINE CSC_HDF5_READ_FLOAT_MATRIX_RANK2(ROOT, DNAME, ROWS, COLS, A, LDA, INFO)
+        USE, INTRINSIC :: ISO_C_BINDING
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS, COLS, LDA
+        REAL, TARGET, INTENT(INOUT)     :: A(1,*)
+        INTEGER, INTENT(OUT)             :: INFO
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW, LCOL, LLDA
+        TYPE(C_PTR) :: APTR
+
+        LROW = ROWS
+        LCOL = COLS
+        LLDA = LDA
+        APTR = C_LOC(A)
+
+        INFO = 0
+        RET = CSC_HDF5_READ_FLOAT_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA )
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to read matrix from ", ROOT
+            INFO = 1
+        END IF
+        RETURN
+    END SUBROUTINE
+
+    SUBROUTINE CSC_HDF5_READ_DOUBLE_COMPLEX_MATRIX_RANK1(ROOT, DNAME, ROWS, COLS, A, LDA, INFO)
+        USE, INTRINSIC :: ISO_C_BINDING
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS, COLS, LDA
+        COMPLEX*16, TARGET, INTENT(INOUT)     :: A(*)
+        INTEGER, INTENT(OUT)             :: INFO
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW, LCOL, LLDA
+        TYPE(C_PTR) :: APTR
+
+        LROW = ROWS
+        LCOL = COLS
+        LLDA = LDA
+        APTR = C_LOC(A)
+
+        INFO = 0
+        RET = CSC_HDF5_READ_DOUBLE_COMPLEX_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA )
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to read matrix from ", ROOT
+            INFO = 1
+        END IF
+        RETURN
+    END SUBROUTINE
+
+    SUBROUTINE CSC_HDF5_READ_DOUBLE_COMPLEX_MATRIX_RANK2(ROOT, DNAME, ROWS, COLS, A, LDA, INFO)
+        USE, INTRINSIC :: ISO_C_BINDING
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS, COLS, LDA
+        COMPLEX*16, TARGET, INTENT(INOUT)     :: A(1,*)
+        INTEGER, INTENT(OUT)             :: INFO
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW, LCOL, LLDA
+        TYPE(C_PTR) :: APTR
+
+        LROW = ROWS
+        LCOL = COLS
+        LLDA = LDA
+        APTR = C_LOC(A)
+
+        INFO = 0
+        RET = CSC_HDF5_READ_DOUBLE_COMPLEX_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA )
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to read matrix from ", ROOT
+            INFO = 1
+        END IF
+        RETURN
+    END SUBROUTINE
+
+    SUBROUTINE CSC_HDF5_READ_FLOAT_COMPLEX_MATRIX_RANK1(ROOT, DNAME, ROWS, COLS, A, LDA, INFO)
+        USE, INTRINSIC :: ISO_C_BINDING
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS, COLS, LDA
+        COMPLEX, TARGET, INTENT(INOUT)     :: A(*)
+        INTEGER, INTENT(OUT)             :: INFO
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW, LCOL, LLDA
+        TYPE(C_PTR) :: APTR
+
+        LROW = ROWS
+        LCOL = COLS
+        LLDA = LDA
+        APTR = C_LOC(A)
+
+        INFO = 0
+        RET = CSC_HDF5_READ_FLOAT_COMPLEX_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA )
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to read matrix from ", ROOT
+            INFO = 1
+        END IF
+        RETURN
+    END SUBROUTINE
+
+    SUBROUTINE CSC_HDF5_READ_FLOAT_COMPLEX_MATRIX_RANK2(ROOT, DNAME, ROWS, COLS, A, LDA, INFO)
+        USE, INTRINSIC :: ISO_C_BINDING
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS, COLS, LDA
+        COMPLEX, TARGET, INTENT(INOUT)     :: A(1,*)
+        INTEGER, INTENT(OUT)             :: INFO
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW, LCOL, LLDA
+        TYPE(C_PTR) :: APTR
+
+        LROW = ROWS
+        LCOL = COLS
+        LLDA = LDA
+        APTR = C_LOC(A)
+
+        INFO = 0
+        RET = CSC_HDF5_READ_FLOAT_COMPLEX_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA )
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to read matrix from ", ROOT
+            INFO = 1
+        END IF
+        RETURN
+    END SUBROUTINE
+
+
+
+    !
+    !
+    ! Write Matrices
+    !
+    !
+    SUBROUTINE CSC_HDF5_WRITE_DOUBLE_MATRIX_RANK1(ROOT, DNAME, ROWS, COLS, A, LDA, INFO)
+        USE, INTRINSIC :: ISO_C_BINDING
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS, COLS, LDA
+        DOUBLE PRECISION, TARGET, INTENT(IN)     :: A(*)
+        INTEGER, INTENT(OUT)             :: INFO
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW, LCOL, LLDA
+        INTEGER(C_INT) :: COMP
+        TYPE(C_PTR) :: APTR
+
+        LROW = ROWS
+        LCOL = COLS
+        LLDA = LDA
+        APTR = C_LOC(A)
+        COMP = INT(CSC_HDF5_COMPRESSION, KIND = C_INT)
+
+        INFO = 0
+        RET = CSC_HDF5_WRITE_DOUBLE_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA, COMP )
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to write matrix to ", ROOT
+            INFO = 1
+        END IF
+        RETURN
+    END SUBROUTINE
+
+    SUBROUTINE CSC_HDF5_WRITE_DOUBLE_MATRIX_RANK2(ROOT, DNAME, ROWS, COLS, A, LDA, INFO)
+        USE, INTRINSIC :: ISO_C_BINDING
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS, COLS, LDA
+        DOUBLE PRECISION, TARGET, INTENT(IN)     :: A(1,*)
+        INTEGER, INTENT(OUT)             :: INFO
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW, LCOL, LLDA
+        TYPE(C_PTR) :: APTR
+        INTEGER(C_INT) :: COMP
+
+        LROW = ROWS
+        LCOL = COLS
+        LLDA = LDA
+        APTR = C_LOC(A)
+        COMP = INT(CSC_HDF5_COMPRESSION, KIND = C_INT)
+
+        INFO = 0
+        RET = CSC_HDF5_WRITE_DOUBLE_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA, COMP )
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to write matrix to ", ROOT
+            INFO = 1
+        END IF
+        RETURN
+    END SUBROUTINE
+
+    SUBROUTINE CSC_HDF5_WRITE_FLOAT_MATRIX_RANK1(ROOT, DNAME, ROWS, COLS, A, LDA, INFO)
+        USE, INTRINSIC :: ISO_C_BINDING
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS, COLS, LDA
+        REAL, TARGET, INTENT(IN)     :: A(*)
+        INTEGER, INTENT(OUT)             :: INFO
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW, LCOL, LLDA
+        TYPE(C_PTR) :: APTR
+        INTEGER(C_INT) :: COMP
+
+        LROW = ROWS
+        LCOL = COLS
+        LLDA = LDA
+        APTR = C_LOC(A)
+        COMP = INT(CSC_HDF5_COMPRESSION, KIND = C_INT)
+
+        INFO = 0
+        RET = CSC_HDF5_WRITE_FLOAT_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA, COMP )
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to write matrix to ", ROOT
+            INFO = 1
+        END IF
+        RETURN
+    END SUBROUTINE
+
+    SUBROUTINE CSC_HDF5_WRITE_FLOAT_MATRIX_RANK2(ROOT, DNAME, ROWS, COLS, A, LDA, INFO)
+        USE, INTRINSIC :: ISO_C_BINDING
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS, COLS, LDA
+        REAL, TARGET, INTENT(IN)     :: A(1,*)
+        INTEGER, INTENT(OUT)             :: INFO
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW, LCOL, LLDA
+        TYPE(C_PTR) :: APTR
+        INTEGER(C_INT) :: COMP
+
+        LROW = ROWS
+        LCOL = COLS
+        LLDA = LDA
+        APTR = C_LOC(A)
+        COMP = INT(CSC_HDF5_COMPRESSION, KIND = C_INT)
+
+        INFO = 0
+        RET = CSC_HDF5_WRITE_FLOAT_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA, COMP )
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to write matrix to ", ROOT
+            INFO = 1
+        END IF
+        RETURN
+    END SUBROUTINE
+
+    SUBROUTINE CSC_HDF5_WRITE_DOUBLE_COMPLEX_MATRIX_RANK1(ROOT, DNAME, ROWS, COLS, A, LDA, INFO)
+        USE, INTRINSIC :: ISO_C_BINDING
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS, COLS, LDA
+        COMPLEX*16, TARGET, INTENT(IN)     :: A(*)
+        INTEGER, INTENT(OUT)             :: INFO
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW, LCOL, LLDA
+        TYPE(C_PTR) :: APTR
+        INTEGER(C_INT) :: COMP
+
+        LROW = ROWS
+        LCOL = COLS
+        LLDA = LDA
+        APTR = C_LOC(A)
+        COMP = INT(CSC_HDF5_COMPRESSION, KIND = C_INT)
+
+        INFO = 0
+        RET = CSC_HDF5_WRITE_DOUBLE_COMPLEX_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA, COMP )
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to write matrix to ", ROOT
+            INFO = 1
+        END IF
+        RETURN
+    END SUBROUTINE
+
+    SUBROUTINE CSC_HDF5_WRITE_DOUBLE_COMPLEX_MATRIX_RANK2(ROOT, DNAME, ROWS, COLS, A, LDA, INFO)
+        USE, INTRINSIC :: ISO_C_BINDING
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS, COLS, LDA
+        COMPLEX*16, TARGET, INTENT(IN)     :: A(1,*)
+        INTEGER, INTENT(OUT)             :: INFO
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW, LCOL, LLDA
+        TYPE(C_PTR) :: APTR
+        INTEGER(C_INT) :: COMP
+
+        LROW = ROWS
+        LCOL = COLS
+        LLDA = LDA
+        APTR = C_LOC(A)
+        COMP = INT(CSC_HDF5_COMPRESSION, KIND = C_INT)
+
+        INFO = 0
+        RET = CSC_HDF5_WRITE_DOUBLE_COMPLEX_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA, COMP )
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to write matrix to ", ROOT
+            INFO = 1
+        END IF
+        RETURN
+    END SUBROUTINE
+
+    SUBROUTINE CSC_HDF5_WRITE_FLOAT_COMPLEX_MATRIX_RANK1(ROOT, DNAME, ROWS, COLS, A, LDA, INFO)
+        USE, INTRINSIC :: ISO_C_BINDING
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS, COLS, LDA
+        COMPLEX, TARGET, INTENT(IN)     :: A(*)
+        INTEGER, INTENT(OUT)             :: INFO
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW, LCOL, LLDA
+        TYPE(C_PTR) :: APTR
+        INTEGER(C_INT) :: COMP
+
+        LROW = ROWS
+        LCOL = COLS
+        LLDA = LDA
+        APTR = C_LOC(A)
+        COMP = INT(CSC_HDF5_COMPRESSION, KIND = C_INT)
+
+        INFO = 0
+        RET = CSC_HDF5_WRITE_FLOAT_COMPLEX_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA, COMP )
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to write matrix to ", ROOT
+            INFO = 1
+        END IF
+        RETURN
+    END SUBROUTINE
+
+    SUBROUTINE CSC_HDF5_WRITE_FLOAT_COMPLEX_MATRIX_RANK2(ROOT, DNAME, ROWS, COLS, A, LDA, INFO)
+        USE, INTRINSIC :: ISO_C_BINDING
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS, COLS, LDA
+        COMPLEX, TARGET, INTENT(IN)     :: A(1,*)
+        INTEGER, INTENT(OUT)             :: INFO
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW, LCOL, LLDA
+        TYPE(C_PTR) :: APTR
+        INTEGER(C_INT) :: COMP
+
+        LROW = ROWS
+        LCOL = COLS
+        LLDA = LDA
+        APTR = C_LOC(A)
+        COMP = INT(CSC_HDF5_COMPRESSION, KIND = C_INT)
+
+        INFO = 0
+        RET = CSC_HDF5_WRITE_FLOAT_COMPLEX_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA, COMP )
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to write matrix to ", ROOT
+            INFO = 1
+        END IF
+        RETURN
+    END SUBROUTINE
+
+    ! Open Wrapper
+    SUBROUTINE CSC_HDF5_OPEN(FP, FILENAME, MODE)
+        INTEGER(CSC_HDF5_T), INTENT(OUT) :: FP
+        CHARACTER(LEN=*), INTENT(IN) :: FILENAME
+        CHARACTER(LEN=*), INTENT(IN) :: MODE
+
+        INTEGER(CSC_HDF5_T) :: FPINTERN
+
+        FPINTERN = CSC_HDF5_OPEN_C(TRIM(FILENAME)//C_NULL_CHAR, MODE//C_NULL_CHAR)
+        IF ( FPINTERN .LT. 0 ) THEN
+            WRITE(*,*) "Failed to open ", FILENAME, " with mode: ", MODE
+        END IF
+        FP = FPINTERN
+
+    END SUBROUTINE CSC_HDF5_OPEN
+
+    ! Open Wrapper
+    SUBROUTINE CSC_HDF5_OPEN_F(FP, FILENAME, MODE)
+        INTEGER(CSC_HDF5_T), INTENT(OUT) :: FP
+        CHARACTER(LEN=*), INTENT(IN) :: FILENAME
+        CHARACTER(LEN=*), INTENT(IN) :: MODE
+
+        INTEGER(CSC_HDF5_T) :: FPINTERN
+
+        FPINTERN = CSC_HDF5_OPEN_C(TRIM(FILENAME)//C_NULL_CHAR, MODE//C_NULL_CHAR)
+        IF ( FPINTERN .LT. 0 ) THEN
+            WRITE(*,*) "Failed to open ", FILENAME, " with mode: ", MODE
+        END IF
+        FP = FPINTERN
+
+    END SUBROUTINE CSC_HDF5_OPEN_F
+
+    ! Open Wrapper
+    SUBROUTINE CSC_HDF5_OPEN_MATLAB(FP, FILENAME, MODE)
+        INTEGER(CSC_HDF5_T), INTENT(OUT) :: FP
+        CHARACTER(LEN=*), INTENT(IN) :: FILENAME
+        CHARACTER(LEN=*), INTENT(IN) :: MODE
+
+        INTEGER(CSC_HDF5_T) :: FPINTERN
+
+        FPINTERN = CSC_HDF5_OPEN_MATLAB_C(TRIM(FILENAME)//C_NULL_CHAR, MODE//C_NULL_CHAR)
+        IF ( FPINTERN .LT. 0 ) THEN
+            WRITE(*,*) "Failed to open ", FILENAME, " with mode: ", MODE
+        END IF
+        FP = FPINTERN
+
+    END SUBROUTINE CSC_HDF5_OPEN_MATLAB
+
+    ! Close Wrapper
+    SUBROUTINE CSC_HDF5_CLOSE_F(ID)
+        INTEGER(KIND=CSC_HDF5_T), INTENT(INOUT) :: ID
+
+        INTEGER(KIND=CSC_HDF5_T) :: RET
+
+        RET = CSC_HDF5_CLOSE_C(ID)
+
+        IF (RET .NE. 0) THEN
+            ID = -1
+        ELSE
+            ID = 0
+        END IF
+    END SUBROUTINE CSC_HDF5_CLOSE_F
+
+    ! Close Wrapper
+    SUBROUTINE CSC_HDF5_CLOSE(ID)
+        INTEGER(KIND=CSC_HDF5_T), INTENT(INOUT) :: ID
+
+        INTEGER(KIND=CSC_HDF5_T) :: RET
+
+        RET = CSC_HDF5_CLOSE_C(ID)
+
+        IF (RET .NE. 0) THEN
+            ID = -1
+        ELSE
+            ID = 0
+        END IF
+    END SUBROUTINE CSC_HDF5_CLOSE
+
+    ! Group Open
+    SUBROUTINE CSC_HDF5_GROUP_OPEN_F(GID, ROOT, GNAME)
+        INTEGER(CSC_HDF5_T), INTENT(OUT) :: GID
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: GNAME
+
+        INTEGER(KIND=CSC_HDF5_T) :: LOCAL_GID
+
+        LOCAL_GID = CSC_HDF5_GROUP_OPEN_C(ROOT, GNAME // C_NULL_CHAR)
+        IF ( LOCAL_GID .LT. 0) THEN
+            WRITE(*,*) "Failed to create group ", GNAME , " in ", ROOT
+            GID = -1
+        ELSE
+            GID = LOCAL_GID
+        END IF
+    END SUBROUTINE CSC_HDF5_GROUP_OPEN_F
+
+    ! Group Close Wrapper
+    SUBROUTINE CSC_HDF5_GROUP_CLOSE_F(ID)
+        INTEGER(KIND=CSC_HDF5_T), INTENT(INOUT) :: ID
+
+        INTEGER(KIND=CSC_HDF5_T) :: RET
+
+        RET = CSC_HDF5_GROUP_CLOSE_C(ID)
+
+        IF (RET .NE. 0) THEN
+            ID = -1
+        ELSE
+            ID = 0
+        END IF
+    END SUBROUTINE CSC_HDF5_GROUP_CLOSE_F
+
+    ! Set compression wrapper
+    SUBROUTINE CSC_HDF5_SET_COMPRESSION_F( COMPRESSS_LEVEL )
+        INTEGER, INTENT(IN) :: COMPRESSS_LEVEL
+        INTEGER(KIND=C_INT) :: LOCAL_LEVEL
+
+        LOCAL_LEVEL = COMPRESSS_LEVEL
+
+        CALL CSC_HDF5_SET_COMPRESSION_C(LOCAL_LEVEL)
+
+    END SUBROUTINE CSC_HDF5_SET_COMPRESSION_F
+
+    ! Set compression wrapper
+    SUBROUTINE CSC_HDF5_SET_COMPRESSION( COMPRESSS_LEVEL )
+        INTEGER, INTENT(IN) :: COMPRESSS_LEVEL
+        IF ( COMPRESSS_LEVEL .GE. 0 .AND. COMPRESSS_LEVEL .LE. 9) THEN
+            CSC_HDF5_COMPRESSION = COMPRESSS_LEVEL
+        END IF
+    END SUBROUTINE CSC_HDF5_SET_COMPRESSION
+
+    ! Write Matrix (REAL)
+    SUBROUTINE CSC_HDF5_MATRIX_WRITE_REAL_F(ROOT, DNAME, ROWS, COLS, A, LDA)
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS, COLS, LDA
+        DOUBLE PRECISION, DIMENSION(LDA,COLS), INTENT(IN) :: A
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW, LCOL, LLDA
+
+        LROW = ROWS
+        LCOL = COLS
+        LLDA = LDA
+
+        RET = 0
+        RET = CSC_HDF5_MATRIX_WRITE_REAL_C(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, LLDA, A)
+        IF ( RET .LT. 0 ) THEN
+            WRITE(*,*) "Failed to write matrix to ", ROOT
+        END IF
+    END SUBROUTINE CSC_HDF5_MATRIX_WRITE_REAL_F
+
+    ! Read meta information
+    SUBROUTINE CSC_HDF5_MATRIX_SIZE_F(ROOT, DNAME, ROWS, COLS)
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(OUT)              :: ROWS, COLS
+
+        INTEGER(C_SIZE_T) :: LROWS, LCOLS
+        INTEGER(C_INT)    :: RET
+
+        RET  =  0
+        RET = CSC_HDF5_MATRIX_SIZE_C(ROOT, DNAME//C_NULL_CHAR, LROWS, LCOLS)
+        ROWS = INT(LROWS)
+        COLS = INT(LCOLS)
+
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to read matrix information from ", DNAME
+        END IF
+    END SUBROUTINE CSC_HDF5_MATRIX_SIZE_F
+
+    ! Read Matrix (REAL)
+    SUBROUTINE CSC_HDF5_MATRIX_READ_REAL_F(ROOT, DNAME, ROWS, COLS, A, LDA)
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS, COLS, LDA
+        DOUBLE PRECISION, DIMENSION(LDA,COLS), INTENT(OUT) :: A
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW, LCOL, LLDA
+
+        LROW = ROWS
+        LCOL = COLS
+        LLDA = LDA
+
+        RET = 0
+        RET = CSC_HDF5_MATRIX_READ_REAL_C(ROOT, DNAME // C_NULL_CHAR , LROW, LCOL, LLDA, A)
+        IF ( RET .LT. 0 ) THEN
+            WRITE(*,*) "Failed to read matrix from ", ROOT
+        END IF
+    END SUBROUTINE CSC_HDF5_MATRIX_READ_REAL_F
+
+    ! Vector Len
+    SUBROUTINE CSC_HDF5_VECTOR_LEN_F( ROOT, DNAME, LEN)
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(OUT) :: LEN
+
+        LEN = INT(CSC_HDF5_VECTOR_LEN_C(ROOT, DNAME // C_NULL_CHAR))
+        RETURN
+    END SUBROUTINE
+
+    ! Read Vector
+    SUBROUTINE CSC_HDF5_VECTOR_READ_REAL_F(ROOT, DNAME, N, VECTOR)
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: N
+        DOUBLE PRECISION, DIMENSION(N), INTENT(IN), TARGET :: VECTOR
+        TYPE(C_PTR) :: VC
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LLEN
+
+        LLEN = N
+        RET = 0
+        VC = C_LOC(VECTOR)
+        RET = CSC_HDF5_VECTOR_READ_C(CSC_HDF5_FIELD_REAL, ROOT, DNAME//C_NULL_CHAR, VC)
+    END SUBROUTINE CSC_HDF5_VECTOR_READ_REAL_F
+
+
+    ! Write Vector (REAL)
+    SUBROUTINE CSC_HDF5_VECTOR_WRITE_REAL_F(ROOT, DNAME, N, VECTOR)
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: N
+        DOUBLE PRECISION, DIMENSION(N), INTENT(IN), TARGET :: VECTOR
+        TYPE(C_PTR) :: VC
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LLEN
+
+        LLEN = N
+        RET = 0
+        VC = C_LOC(VECTOR)
+        RET = CSC_HDF5_VECTOR_WRITE_C(CSC_HDF5_FIELD_REAL, ROOT, DNAME//C_NULL_CHAR, LLEN, VC)
+        IF ( RET .LT. 0 ) THEN
+            WRITE(*,*) "Failed to write vector to ", ROOT
+        END IF
+    END SUBROUTINE CSC_HDF5_VECTOR_WRITE_REAL_F
+
+    ! Write Vector (REAL)
+    SUBROUTINE CSC_HDF5_VECTOR_WRITE_INTEGER_F(ROOT, DNAME, N, VECTOR)
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: N
+        INTEGER, DIMENSION(N), INTENT(IN), TARGET :: VECTOR
+
+
+        INTEGER :: RET, L
+        INTEGER(C_SIZE_T) :: LLEN
+        INTEGER(KIND = C_INT32_T), ALLOCATABLE, TARGET :: VIN(:)
+        TYPE(C_PTR) :: VC
+
+        LLEN = N
+        RET = 0
+        ALLOCATE(VIN(N))
+        DO L = 1, N
+            VIN(L) = INT(VECTOR(L), KIND = C_INT32_T)
+        END DO
+        VC = C_LOC(VIN)
+        RET = CSC_HDF5_VECTOR_WRITE_C(CSC_HDF5_FIELD_INTEGER32, ROOT, DNAME//C_NULL_CHAR, LLEN, VC)
+        DEALLOCATE(VIN)
+        IF ( RET .LT. 0 ) THEN
+            WRITE(*,*) "Failed to write vector to ", ROOT
+        END IF
+    END SUBROUTINE CSC_HDF5_VECTOR_WRITE_INTEGER_F
+
+    FUNCTION CSC_HDF5_GET_COMPRESSION_F ()
+        IMPLICIT NONE
+        INTEGER :: CSC_HDF5_GET_COMPRESSION_F
+
+        CSC_HDF5_GET_COMPRESSION_F = INT(CSC_HDF5_GET_COMPRESSION_C())
+    END FUNCTION CSC_HDF5_GET_COMPRESSION_F
+
+    FUNCTION CSC_HDF5_EXISTS_F(ROOT, DNAME)
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        LOGICAL :: CSC_HDF5_EXISTS_F
+
+        INTEGER( KIND = C_INT ) :: R
+
+        R = INT(CSC_HDF5_EXISTS_C(ROOT, DNAME // C_NULL_CHAR))
+        IF ( R .NE. 0 ) THEN
+            CSC_HDF5_EXISTS_F = .TRUE.
+        ELSE
+            CSC_HDF5_EXISTS_F = .FALSE.
+        END IF
+    END FUNCTION
+
+END MODULE
+

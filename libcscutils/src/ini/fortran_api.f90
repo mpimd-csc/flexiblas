@@ -1,0 +1,83 @@
+MODULE CSC_INIFILE
+    USE ISO_C_BINDING
+    IMPLICIT NONE
+
+    INTERFACE
+        FUNCTION CSC_INI_EASY_GET_INT_C( FILENAME, SECTION, KEY, VALUE ) BIND(C,name="csc_ini_easy_get_int")
+            IMPORT
+            CHARACTER(KIND = C_CHAR) :: FILENAME
+            CHARACTER(KIND = C_CHAR) :: SECTION
+            CHARACTER(KIND = C_CHAR) :: KEY
+            INTEGER(KIND = C_INT) :: VALUE
+            INTEGER(KIND = C_INT) :: CSC_INI_EASY_GET_INT_C
+        END FUNCTION CSC_INI_EASY_GET_INT_C
+
+        FUNCTION CSC_INI_EASY_GET_DOUBLE_C( FILENAME, SECTION, KEY, VALUE ) BIND(C,name="csc_ini_easy_get_double")
+            IMPORT
+            CHARACTER(KIND = C_CHAR) :: FILENAME
+            CHARACTER(KIND = C_CHAR) :: SECTION
+            CHARACTER(KIND = C_CHAR) :: KEY
+            REAL(KIND = C_DOUBLE) :: VALUE
+            INTEGER(KIND = C_INT) :: CSC_INI_EASY_GET_DOUBLE_C
+        END FUNCTION CSC_INI_EASY_GET_DOUBLE_C
+    END INTERFACE
+CONTAINS
+
+    SUBROUTINE CSC_INI_EASY_GET_INT( FILENAME, SECTION, KEY, VALUE, DEFAULT_VAL )
+        IMPLICIT NONE
+        CHARACTER(LEN=*):: FILENAME
+        CHARACTER(LEN=*):: SECTION
+        CHARACTER(LEN=*):: KEY
+        INTEGER :: VALUE, DEFAULT_VAL
+        INTEGER(KIND = C_INT) :: RET
+        INTEGER(KIND = C_INT) :: RVAL
+
+        IF (LEN(TRIM(SECTION)) == 0) THEN
+            RET = CSC_INI_EASY_GET_INT_C(TRIM(FILENAME) // C_NULL_CHAR, C_NULL_CHAR, TRIM(KEY) // C_NULL_CHAR, RVAL)
+            IF ( RET .EQ. 0 ) THEN
+                VALUE = INT(RVAL)
+            ELSE
+                VALUE = DEFAULT_VAL
+            END IF
+        ELSE
+            RET = CSC_INI_EASY_GET_INT_C(TRIM(FILENAME) // C_NULL_CHAR, TRIM(SECTION) // C_NULL_CHAR, &
+                & TRIM(KEY) // C_NULL_CHAR, RVAL)
+            IF ( RET .EQ. 0 ) THEN
+                VALUE = INT(RVAL)
+            ELSE
+                VALUE = DEFAULT_VAL
+            END IF
+        END IF
+    END SUBROUTINE CSC_INI_EASY_GET_INT
+
+    SUBROUTINE CSC_INI_EASY_GET_DOUBLE( FILENAME, SECTION, KEY, VALUE, DEFAULT_VAL )
+        IMPLICIT NONE
+        CHARACTER(LEN=*):: FILENAME
+        CHARACTER(LEN=*):: SECTION
+        CHARACTER(LEN=*):: KEY
+        DOUBLE PRECISION :: DEFAULT_VAL
+        DOUBLE PRECISION :: VALUE
+        DOUBLE PRECISION :: RVAL
+        INTEGER(KIND = C_INT) :: RET
+
+        IF (LEN(TRIM(SECTION)) == 0) THEN
+            RET = CSC_INI_EASY_GET_DOUBLE_C(TRIM(FILENAME) // C_NULL_CHAR, C_NULL_CHAR, TRIM(KEY) // C_NULL_CHAR, RVAL)
+
+            IF ( RET .EQ. 0 ) THEN
+                VALUE = RVAL
+            ELSE
+                VALUE = DEFAULT_VAL
+            END IF
+        ELSE
+            RET = CSC_INI_EASY_GET_DOUBLE_C(TRIM(FILENAME) // C_NULL_CHAR, TRIM(SECTION) // C_NULL_CHAR, &
+                 & TRIM(KEY) // C_NULL_CHAR, RVAL)
+            IF ( RET .EQ. 0 ) THEN
+                VALUE = RVAL
+            ELSE
+                VALUE = DEFAULT_VAL
+            END IF
+        END IF
+    END SUBROUTINE CSC_INI_EASY_GET_DOUBLE
+
+END MODULE
+

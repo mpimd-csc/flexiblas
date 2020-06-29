@@ -35,38 +35,40 @@
 # (To distribute this file outside of CMake, substitute the full
 #  License text for the above reference.)
 
-if (NOT _incdir)
-  if (WIN32)
-	  set(_incdir ENV INCLUDE)
-  elseif (APPLE)
-	  set(_incdir ENV CPATH)
-  else ()
-	  set(_incdir ENV CPATH)
-  endif ()
-endif ()
+include(FindPackageHandleStandardArgs)
 
-if (WIN32)
-	  set(_libdir ENV LIB ${ARGN} )
-elseif (APPLE)
-  set(_libdir ENV DYLD_LIBRARY_PATH ${ARGN} )
-else ()
-	  set(_libdir ENV LD_LIBRARY_PATH ${ARGN})
-endif ()
+if(NOT _incdir)
+    if(WIN32)
+        set(_incdir ENV INCLUDE)
+    elseif(APPLE)
+        set(_incdir ENV CPATH)
+    else()
+        set(_incdir ENV CPATH)
+    endif()
+endif()
+
+if(WIN32)
+    set(_libdir ENV LIB ${ARGN})
+elseif(APPLE)
+    set(_libdir ENV DYLD_LIBRARY_PATH ${ARGN})
+else()
+    set(_libdir ENV LD_LIBRARY_PATH ${ARGN})
+endif()
 
 
-find_path(LIBLZMA_INCLUDE_DIR lzma.h PATHS 
-	${_incdir}
-	/usr/local/include 
-	/usr/include 
-	)
+find_path(LIBLZMA_INCLUDE_DIR lzma.h PATHS
+    ${_incdir}
+    /usr/local/include
+    /usr/include
+    )
 
 find_library(LIBLZMA_LIBRARY lzma PATHS
-	${_libdir}
-	/usr/local/lib64
-	/usr/local/lib
-	/usr/lib64
-	/usr/lib
-	)
+    ${_libdir}
+    /usr/local/lib64
+    /usr/local/lib
+    /usr/lib64
+    /usr/lib
+    )
 
 if(LIBLZMA_INCLUDE_DIR AND EXISTS "${LIBLZMA_INCLUDE_DIR}/lzma/version.h")
     file(STRINGS "${LIBLZMA_INCLUDE_DIR}/lzma/version.h" LIBLZMA_HEADER_CONTENTS REGEX "#define LZMA_VERSION_[A-Z]+ [0-9]+")
@@ -82,28 +84,27 @@ endif()
 # We're using new code known now as XZ, even library still been called LZMA
 # it can be found in http://tukaani.org/xz/
 # Avoid using old codebase
-if (LIBLZMA_LIBRARY)
-   include(CheckLibraryExists)
-   set(CMAKE_REQUIRED_QUIET_SAVE ${CMAKE_REQUIRED_QUIET})
-   set(CMAKE_REQUIRED_QUIET ${LibLZMA_FIND_QUIETLY})
-   CHECK_LIBRARY_EXISTS(${LIBLZMA_LIBRARY} lzma_auto_decoder "" LIBLZMA_HAS_AUTO_DECODER)
-   CHECK_LIBRARY_EXISTS(${LIBLZMA_LIBRARY} lzma_easy_encoder "" LIBLZMA_HAS_EASY_ENCODER)
-   CHECK_LIBRARY_EXISTS(${LIBLZMA_LIBRARY} lzma_lzma_preset "" LIBLZMA_HAS_LZMA_PRESET)
-   set(CMAKE_REQUIRED_QUIET ${CMAKE_REQUIRED_QUIET_SAVE})
-endif ()
+if(LIBLZMA_LIBRARY)
+    include(CheckLibraryExists)
+    set(CMAKE_REQUIRED_QUIET_SAVE ${CMAKE_REQUIRED_QUIET})
+    set(CMAKE_REQUIRED_QUIET ${LibLZMA_FIND_QUIETLY})
+    check_library_exists(${LIBLZMA_LIBRARY} lzma_auto_decoder "" LIBLZMA_HAS_AUTO_DECODER)
+    check_library_exists(${LIBLZMA_LIBRARY} lzma_easy_encoder "" LIBLZMA_HAS_EASY_ENCODER)
+    check_library_exists(${LIBLZMA_LIBRARY} lzma_lzma_preset "" LIBLZMA_HAS_LZMA_PRESET)
+    set(CMAKE_REQUIRED_QUIET ${CMAKE_REQUIRED_QUIET_SAVE})
+endif()
 
-include(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(LibLZMA  REQUIRED_VARS  LIBLZMA_INCLUDE_DIR
-                                                          LIBLZMA_LIBRARY
-                                                          LIBLZMA_HAS_AUTO_DECODER
-                                                          LIBLZMA_HAS_EASY_ENCODER
-                                                          LIBLZMA_HAS_LZMA_PRESET
-                                           VERSION_VAR    LIBLZMA_VERSION_STRING
-                                 )
+find_package_handle_standard_args(LIBLZMA  REQUIRED_VARS  LIBLZMA_INCLUDE_DIR
+    LIBLZMA_LIBRARY
+    LIBLZMA_HAS_AUTO_DECODER
+    LIBLZMA_HAS_EASY_ENCODER
+    LIBLZMA_HAS_LZMA_PRESET
+    VERSION_VAR    LIBLZMA_VERSION_STRING
+    )
 
-if (LIBLZMA_FOUND)
+if(LIBLZMA_FOUND)
     set(LIBLZMA_LIBRARIES ${LIBLZMA_LIBRARY})
     set(LIBLZMA_INCLUDE_DIRS ${LIBLZMA_INCLUDE_DIR})
-endif ()
+endif()
 
 mark_as_advanced( LIBLZMA_INCLUDE_DIR LIBLZMA_LIBRARY )

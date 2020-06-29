@@ -1,11 +1,11 @@
 /* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
-/* 
+/*
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License.
- 
+
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -19,7 +19,7 @@
 #include "../flexiblas.h"
 
 
-void cblas_drotmg( double *d1, double *d2, double *b1, 
+void cblas_drotmg( double *d1, double *d2, double *b1,
                         const double b2, double *p)
 {
    current_backend->blas.drotmg.calls[POS_CBLAS] ++;
@@ -29,21 +29,13 @@ void cblas_drotmg( double *d1, double *d2, double *b1,
    	current_backend->post_init = 0;
    }
    if ( current_backend->blas.drotmg.call_cblas != NULL ) {
-	   double te = 0, ts = 0;
-	   if ( __flexiblas_profile ) {
-		   ts = flexiblas_wtime(); 
-	   }
 	   void (*fn)
-		  ( double *d1, double *d2, double *b1, 
+		  ( double *d1, double *d2, double *b1,
                         const double b2, double *p)
 		   = current_backend->blas.drotmg.call_cblas;
  	   fn(d1,d2,b1,b2,p);
-	   if ( __flexiblas_profile ){
-	   	te = flexiblas_wtime(); 
-                current_backend->blas.drotmg.timings[POS_CBLAS] += (te - ts); 
-	   }
    } else {
 	FC_GLOBAL(drotmg,DROTMG)(d1,d2,b1,&b2,p);
    }
-   return; 
+   return;
 }

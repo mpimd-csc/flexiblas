@@ -1,12 +1,12 @@
 # - Finds OpenMP support
 # This module can be used to detect OpenMP support in a compiler.
 # If the compiler supports OpenMP, the flags required to compile with
-# openmp support are set.  
+# openmp support are set.
 #
 # The following variables are set:
 #   OpenMP_C_FLAGS - flags to add to the C compiler for OpenMP support
 #   OpenMP_CXX_FLAGS - flags to add to the CXX compiler for OpenMP support
-#   OpenMP_LD_FLAGS - flags for the linker 
+#   OpenMP_LD_FLAGS - flags for the linker
 #   OPENMP_FOUND - true if openmp is detected
 #
 # Supported compilers can be found at http://openmp.org/wp/openmp-compilers/
@@ -25,42 +25,36 @@
 # (To distribute this file outside of CMake, substitute the full
 #  License text for the above reference.)
 
-include(CheckCSourceCompiles)
-include(CheckCXXSourceCompiles)
-include(FindPackageHandleStandardArgs)
+INCLUDE(checkCSourceCompiles)
+INCLUDE(CheckCXXSourceCompiles)
+INCLUDE(FindPackageHandleStandardArgs)
 
-SET (CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} cilkrts)
+SET(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} cilkrts)
 # sample openmp source code to test
-set(CILK_C_TEST_SOURCE 
-"
-#include <cilk/cilk.h>
-int f() {
-return 0; 
-}
-int main() { 
- cilk_spawn f(); 
- cilk_sync; 
- return 0; 
-}
-")
+SET(CILK_C_TEST_SOURCE
+    "
+    #include <cilk/cilk.h>
+    int f() {
+    return 0;
+    }
+    int main() {
+    cilk_spawn f();
+    cilk_sync;
+    return 0;
+    }
+    "
+    )
 # use the same source for CXX as C for now
-set(CILK_CXX_TEST_SOURCE ${CILK_C_TEST_SOURCE})
-# if these are set then do not try to find them again,
-# by avoiding any try_compiles for the flags
+SET(CILK_CXX_TEST_SOURCE ${CILK_C_TEST_SOURCE})
 
-check_c_source_compiles("${CILK_C_TEST_SOURCE}" CILK_C_DETECTED)
+CHECK_C_SOURCE_COMPILES("${CILK_C_TEST_SOURCE}" CILK_C_DETECTED)
 
-check_cxx_source_compiles("${CILK_CXX_TEST_SOURCE}" CILK_CXX_DETECTED)
+CHECK_CXX_SOURCE_COMPILES("${CILK_CXX_TEST_SOURCE}" CILK_CXX_DETECTED)
 
-SET (CILK_FOUND FALSE) 
-if ( ${CILK_C_DETECTED} ) 
-	MESSAGE(STATUS "-> C Compiler understand Intel Cilk++")
-	SET ( CILK_FOUND TRUE)
-endif ( ${CILK_C_DETECTED}) 
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(CILK DEFAULT_MSG CILK_CXX_DETECTED CILK_C_DETECTED)
 
-if ( ${CILK_CXX_DETECTED} ) 
-	MESSAGE(STATUS "-> C++ Compiler understand Intel Cilk++")
-	SET ( CILK_CXX_FOUND TRUE)
-endif ( ${CILK_CXX_DETECTED}) 
+MARK_AS_ADVANCED(CILK_C_DETECTED CILK_CXX_DETECTED)
+
+
 
 

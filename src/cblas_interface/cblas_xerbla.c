@@ -1,11 +1,11 @@
 /* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
-/* 
+/*
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License.
- 
+
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -24,7 +24,7 @@
 #include "../flexiblas.h"
 
 #ifdef __ELF__
-void internal_cblas_xerbla(int info, const char *rout, const char *form, ...); 
+void internal_cblas_xerbla(int info, const char *rout, const char *form, ...);
 void cblas_xerbla(int info, const char *, const char *, ...) __attribute__ ((weak, alias ("internal_cblas_xerbla")));
 void internal_cblas_xerbla(int info, const char *rout, const char *form, ...)
 #else
@@ -37,7 +37,6 @@ void cblas_xerbla(int info, const char *rout, const char *form, ...)
 
    va_start(argptr, form);
 
-   current_backend->xerbla.calls[POS_CBLAS]++; 
 
    if (RowMajorStrg)
    {
@@ -89,22 +88,22 @@ void cblas_xerbla(int info, const char *rout, const char *form, ...)
       fprintf(stderr, "Parameter %d to routine %s was incorrect\n", info, rout);
    vfprintf(stderr, form, argptr);
    va_end(argptr);
-   if (info) { 
-       if ( !info) 
+   if (info) {
+       if ( !info)
            xerbla_(empty, &info);
    }
 }
 
 
 #ifdef __ELF__
-int  internal_cblas_errprn(int ierr, int info, const char *form, ...); 
+int  internal_cblas_errprn(int ierr, int info, const char *form, ...);
 int  cblas_errprn(int ierr, int info, const char *, ...) __attribute__ ((weak, alias ("internal_cblas_errprn")));
 int  internal_cblas_errprn(int ierr, int info, const char *form, ...)
 #else
 int cblas_errprn(int ierr, int info,const char *form, ...)
 #endif
 {
- 
+
    va_list argptr;
 
    va_start(argptr, form);
@@ -114,8 +113,8 @@ int cblas_errprn(int ierr, int info,const char *form, ...)
    vfprintf(stderr, form, argptr);
 #endif
    va_end(argptr);
-   if ( ierr < info ) 
-	   return ierr; 
-   else 
-	   return info; 
+   if ( ierr < info )
+	   return ierr;
+   else
+	   return info;
 }

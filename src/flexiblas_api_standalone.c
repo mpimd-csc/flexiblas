@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler , 2016
+ * Copyright (C) Martin Koehler, 2013-2020
  */
 
 #include <stdio.h>
@@ -24,7 +24,7 @@
 #endif
 #ifndef RTLD_DEFAULT
 #define  RTLD_DEFAULT   ((void *) 0)
-#endif 
+#endif
 
 #include "flexiblas_api.h"
 
@@ -51,6 +51,47 @@ int flexiblas_avail()
         return 0;
     }
     return fnptr();
+}
+
+int flexiblas_get_color_output() {
+    int (*fnptr)();
+    void *ptr_next    = dlsym(RTLD_NEXT, "flexiblas_get_color_output");
+    void *ptr_default = dlsym(RTLD_DEFAULT, "flexiblas_get_color_output");
+    void *ptr_self = &flexiblas_get_color_output;
+
+    /*  -lflexiblas_api -lflexiblas */
+    if ( ptr_next != NULL && ptr_next != ptr_self) {
+        fnptr = ptr_next;
+    }
+    /*   -lflexiblas -lflexiblas_api */
+    else if ( ptr_default != NULL && ptr_default != ptr_self) {
+        fnptr = ptr_default;
+    }
+    else {
+        return 0;
+    }
+    return fnptr();
+}
+
+void flexiblas_set_color_output(int s) {
+    void (*fnptr)(int);
+    void *ptr_next    = dlsym(RTLD_NEXT, "flexiblas_set_color_output");
+    void *ptr_default = dlsym(RTLD_DEFAULT, "flexiblas_set_color_output");
+    void *ptr_self = &flexiblas_get_color_output;
+
+    /*  -lflexiblas_api -lflexiblas */
+    if ( ptr_next != NULL && ptr_next != ptr_self) {
+        fnptr = ptr_next;
+    }
+    /*   -lflexiblas -lflexiblas_api */
+    else if ( ptr_default != NULL && ptr_default != ptr_self) {
+        fnptr = ptr_default;
+    }
+    else {
+        return ;
+    }
+    fnptr(s);
+    return;
 }
 
 void flexiblas_get_version(int *major, int *minor, int *patch)
@@ -326,48 +367,48 @@ void flexiblas_set_num_threads(int num)
 
 void flexiblas_set_num_threads_(int* num)
 {
-    flexiblas_set_num_threads(*num); 
+    flexiblas_set_num_threads(*num);
 }
 
 void openblas_set_num_threads(int num)
 {
-    flexiblas_set_num_threads(num); 
+    flexiblas_set_num_threads(num);
 }
 
 void openblas_set_num_threads_(int* num)
 {
-    flexiblas_set_num_threads(*num); 
+    flexiblas_set_num_threads(*num);
 }
 
 void mkl_set_num_threads(int num)
 {
-    flexiblas_set_num_threads(num); 
+    flexiblas_set_num_threads(num);
 }
 
 void mkl_set_num_threads_(int* num)
 {
-    flexiblas_set_num_threads(*num); 
+    flexiblas_set_num_threads(*num);
 }
 
 void blas_set_num_threads(int num)
 {
-    flexiblas_set_num_threads(num); 
+    flexiblas_set_num_threads(num);
 }
 
 void blas_set_num_threads_(int* num)
 {
-    flexiblas_set_num_threads(*num); 
+    flexiblas_set_num_threads(*num);
 
 }
 
 void acmlsetnumthreads(int num)
 {
-    flexiblas_set_num_threads(num); 
+    flexiblas_set_num_threads(num);
 }
 
 void acmlsetnumthreads_(int* num)
 {
-    flexiblas_set_num_threads(*num); 
+    flexiblas_set_num_threads(*num);
 }
 
 /* Get number of threads  */

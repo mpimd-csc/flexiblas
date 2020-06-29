@@ -1,9 +1,9 @@
-# - Find sqlite
+# Find sqlite.
 
 # This module defines
-#  SQLITE3_LIBRARIES, the libraries to link against to use libsqlite3.
-#  SQLITE3_FOUND, If false, do not try to use libsqlite3.
-#  SQLITE3_INCLUDE_DIR, include directories for libsqlite3. 
+#  SQLITE3_LIBRARIES    - the libraries to link against to use libsqlite3.
+#  SQLITE3_FOUND        - If false, do not try to use libsqlite3.
+#  SQLITE3_INCLUDE_DIR  - include directories for libsqlite3.
 
 #=============================================================================
 # Copyright 2014, Martin Koehler
@@ -16,46 +16,40 @@
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 # See the License for more information.
 #=============================================================================
-INCLUDE(CheckFunctionExists) 
 
-if (NOT _incdir)
-  if (WIN32)
-	  set(_incdir ENV INCLUDE)
-  elseif (APPLE)
-	  set(_incdir ENV INCLUDE CPATH)
-  else ()
-	  set(_incdir ENV INCLUDE CPATH)
-  endif ()
-endif ()
+INCLUDE(FindPackageHandleStandardArgs)
 
-if (NOT _libdir)
-  if (WIN32)
-    set(_libdir ENV LIB)
-  elseif (APPLE)
-    set(_libdir ENV DYLD_LIBRARY_PATH)
-  else ()
-    set(_libdir ENV LD_LIBRARY_PATH)
-  endif ()
-endif ()
+FIND_PATH(SQLITE3_INCLUDE_DIR
+    NAMES
+    sqlite3.h
+    PATHS
+    /usr/
+    /usr/local/
+    /opt/
+    /opt/local/
+    PATH_SUFFIXES
+    include
+    include/suitesparse
+    )
 
-find_path(SQLITE3_INCLUDE_DIR NAMES sqlite3.h
-	PATHS
-	${_incdir}
-	/usr/include
-	/usr/local/include
-	/opt/local/include	#Macports
-  )
-set(SQLITE3_NAMES sqlite3)
-find_library(SQLITE3_LIBRARIES NAMES ${SQLITE3_NAMES} PATHS ${_libdir} /usr/lib /usr/lib32 /usr/lib64)
 
-IF(SQLITE3_INCLUDE_DIR AND SQLITE3_LIBRARIES)
-	MESSAGE(STATUS "Found SQLITE3 header: ${SQLITE3_INCLUDE_DIR}")
-	MESSAGE(STATUS "Found SQLITE3 library: ${SQLITE3_LIBRARIES}")
-	SET(SQLITE3_FOUND TRUE) 
-ELSE()
-	SET(SQLITE3_FOUND FALSE) 
-ENDIF()
+FIND_LIBRARY(SQLITE3_LIBRARIES
+    NAMES
+    sqlite3
+    PATHS
+    /usr/
+    /usr/
+    /usr/local/
+    /opt/
+    /opt/local/
+    PATH_SUFFIXES
+    lib/
+    lib64
+    )
 
-# all listed variables are TRUE
-include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(SQLITE3 DEFAULT_MSG SQLITE3_LIBRARIES SQLITE3_INCLUDE_DIR )
+
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(SQLITE3 DEFAULT_MSG SQLITE3_LIBRARIES SQLITE3_INCLUDE_DIR)
+MARK_AS_ADVANCED(SQLITE3_LIBRARIES SQLITE3_INCLUDE_DIR)
+
+
+

@@ -14,9 +14,9 @@
  *
  * Copyright (C) Martin Koehler, 2016
  */
-#if defined(FLEXIBLAS_CBLAS) && !defined(STANDALONE) 
+#if defined(FLEXIBLAS_CBLAS) && !defined(STANDALONE)
  #define USE_CBLAS
-#endif 
+#endif
 
 
 
@@ -36,29 +36,29 @@
 
 #define RUNS 20000
 
-#ifndef BACKEND 
+#ifndef BACKEND
 #define BACKEND "NONAME"
-#endif 
+#endif
 
 
 #ifdef INTEGER8
 	#define Int long
-#else 
-	#define Int int 
+#else
+	#define Int int
 #endif
 
 #ifndef STANDALONE
 #include "../src/flexiblas_api.h"
-#endif 
+#endif
 
 #include "fortran_mangle.h"
 #include "cscutils/counter.h"
 
 typedef void (*benchmark_func_t) (Int n, Int runs, double *rtime, double *gflops);
 
-void FC_GLOBAL(daxpy,DAXPY)(Int *N, double *alpha, double *x, Int *incx, double *Y, Int *incy); 
-void FC_GLOBAL(dgemm,DGEMM)(const char * TRANSA, const char *TRANSB, Int *m, Int *n, Int *k, double *alpha, double *A, Int *lda, double *B, Int *ldb, double *beta, double *C, Int *ldc); 
-void FC_GLOBAL(dgemv,DGEMV)(const char * TRANSA, Int *m, Int *n, double *alpha, double *A, Int *lda, double *B, Int *incb, double *beta, double *C, Int *incc); 
+void FC_GLOBAL(daxpy,DAXPY)(Int *N, double *alpha, double *x, Int *incx, double *Y, Int *incy);
+void FC_GLOBAL(dgemm,DGEMM)(const char * TRANSA, const char *TRANSB, Int *m, Int *n, Int *k, double *alpha, double *A, Int *lda, double *B, Int *ldb, double *beta, double *C, Int *ldc);
+void FC_GLOBAL(dgemv,DGEMV)(const char * TRANSA, Int *m, Int *n, double *alpha, double *A, Int *lda, double *B, Int *incb, double *beta, double *C, Int *incc);
 
 
 double wtime()
@@ -71,52 +71,52 @@ double wtime()
 /*-----------------------------------------------------------------------------
  *  DGEMV Benchmark
  *-----------------------------------------------------------------------------*/
-void benchmark_dgemv(Int n, Int Runs, double *rtime, double *gflops) 
+void benchmark_dgemv(Int n, Int Runs, double *rtime, double *gflops)
 {
     Int i;
-	double *A, *B, *C; 
+	double *A, *B, *C;
 	double ts,te;
 	double alpha=1, beta=1;
-	double flops; 
-	Int incb = 1, incc = 1; 
+	double flops;
+	Int incb = 1, incc = 1;
 
-    A = malloc(sizeof(double) * n *n ); 
-	B = malloc(sizeof(double) * n ); 
-	C = malloc(sizeof(double) * n ); 
+    A = malloc(sizeof(double) * n *n );
+	B = malloc(sizeof(double) * n );
+	C = malloc(sizeof(double) * n );
 
 	for ( i = 0; i < n * n; i++){
-		A[i]=i+1; 
+		A[i]=i+1;
 	}
 	for (i = 0; i < n; i++) {
-		B[i]=i*2+1; 
-		C[i]=1; 
+		B[i]=i*2+1;
+		C[i]=1;
 	}
-    
+
     /*-----------------------------------------------------------------------------
      *  Warmup
      *-----------------------------------------------------------------------------*/
-    FC_GLOBAL(dgemv,DGEMV)("N", &n,&n,&alpha, A, &n, B,&incb, &beta, C, &incc); 
-    FC_GLOBAL(dgemv,DGEMV)("N", &n,&n,&alpha, A, &n, B,&incb, &beta, C, &incc); 
-    FC_GLOBAL(dgemv,DGEMV)("N", &n,&n,&alpha, A, &n, B,&incb, &beta, C, &incc); 
+    FC_GLOBAL(dgemv,DGEMV)("N", &n,&n,&alpha, A, &n, B,&incb, &beta, C, &incc);
+    FC_GLOBAL(dgemv,DGEMV)("N", &n,&n,&alpha, A, &n, B,&incb, &beta, C, &incc);
+    FC_GLOBAL(dgemv,DGEMV)("N", &n,&n,&alpha, A, &n, B,&incb, &beta, C, &incc);
 
     /*-----------------------------------------------------------------------------
      *  Benchmark
      *-----------------------------------------------------------------------------*/
-    ts = wtime(); 
+    ts = wtime();
 	for (i=0; i < Runs; i++){
-		FC_GLOBAL(dgemv,DGEMV)("N", &n,&n,&alpha, A, &n, B,&incb, &beta, C, &incc); 
+		FC_GLOBAL(dgemv,DGEMV)("N", &n,&n,&alpha, A, &n, B,&incb, &beta, C, &incc);
 	}
-	te = wtime(); 
+	te = wtime();
 	flops = 2.0 * n *n;
 	flops /=1000*1000*1000;
-	flops /= (te-ts)/Runs; 
+	flops /= (te-ts)/Runs;
 
     *gflops = flops;
     *rtime = (te-ts)/Runs;
 
-    free(A); 
+    free(A);
 	free(B);
-	free(C); 
+	free(C);
 
 }
 
@@ -124,36 +124,36 @@ void benchmark_dgemv(Int n, Int Runs, double *rtime, double *gflops)
 /*-----------------------------------------------------------------------------
  *  DGEMV Latency Test
  *-----------------------------------------------------------------------------*/
-void benchmark_dgemv_latency(Int n, Int Runs, double *rtime, double *gflops) 
+void benchmark_dgemv_latency(Int n, Int Runs, double *rtime, double *gflops)
 {
     Int i;
-	double *A, *B, *C; 
+	double *A, *B, *C;
 	double ts,te;
 	double alpha=1, beta=1;
-	double flops; 
+	double flops;
 	Int incb = 1, incc = 1;
     Int ld =1;
     uint64_t cy_start, cy_end, cy_sum;
     n = 1;
 
-    A = malloc(sizeof(double) * n *n ); 
-	B = malloc(sizeof(double) * n ); 
-	C = malloc(sizeof(double) * n ); 
+    A = malloc(sizeof(double) * n *n );
+	B = malloc(sizeof(double) * n );
+	C = malloc(sizeof(double) * n );
 
 	for ( i = 0; i < n * n; i++){
-		A[i]=i+1; 
+		A[i]=i+1;
 	}
 	for (i = 0; i < n; i++) {
-		B[i]=i*2+1; 
-		C[i]=1; 
+		B[i]=i*2+1;
+		C[i]=1;
 	}
     n = 0;
     /*-----------------------------------------------------------------------------
      *  Warmup
      *-----------------------------------------------------------------------------*/
-    FC_GLOBAL(dgemv,DGEMV)("N", &n,&n,&alpha, A, &ld, B,&incb, &beta, C, &incc); 
-    FC_GLOBAL(dgemv,DGEMV)("N", &n,&n,&alpha, A, &ld, B,&incb, &beta, C, &incc); 
-    FC_GLOBAL(dgemv,DGEMV)("N", &n,&n,&alpha, A, &ld, B,&incb, &beta, C, &incc); 
+    FC_GLOBAL(dgemv,DGEMV)("N", &n,&n,&alpha, A, &ld, B,&incb, &beta, C, &incc);
+    FC_GLOBAL(dgemv,DGEMV)("N", &n,&n,&alpha, A, &ld, B,&incb, &beta, C, &incc);
+    FC_GLOBAL(dgemv,DGEMV)("N", &n,&n,&alpha, A, &ld, B,&incb, &beta, C, &incc);
 
     /*-----------------------------------------------------------------------------
      *  Benchmark
@@ -161,25 +161,25 @@ void benchmark_dgemv_latency(Int n, Int Runs, double *rtime, double *gflops)
     cy_start = 0;
     cy_end = 0;
     cy_sum = 0;
-    ts = wtime(); 
+    ts = wtime();
 	for (i=0; i < Runs; i++){
         cy_start = csc_cycles();
-		FC_GLOBAL(dgemv,DGEMV)("N", &n,&n,&alpha, A, &ld, B,&incb, &beta, C, &incc); 
+		FC_GLOBAL(dgemv,DGEMV)("N", &n,&n,&alpha, A, &ld, B,&incb, &beta, C, &incc);
         cy_end = csc_cycles();
         cy_sum += (cy_end-cy_start);
 	}
-	te = wtime(); 
+	te = wtime();
     cy_sum = cy_sum/Runs;
 	flops = 2.0 * n *n;
 	flops /=1000*1000*1000;
-	flops /= (te-ts)/Runs; 
+	flops /= (te-ts)/Runs;
 
     *gflops = flops;
     *rtime = (double) cy_sum;
 
-    free(A); 
+    free(A);
 	free(B);
-	free(C); 
+	free(C);
 
 }
 
@@ -187,98 +187,98 @@ void benchmark_dgemv_latency(Int n, Int Runs, double *rtime, double *gflops)
 /*-----------------------------------------------------------------------------
  *  DGEMM Benchmark
  *-----------------------------------------------------------------------------*/
-void benchmark_dgemm(Int n, Int Runs, double *rtime, double *gflops) 
+void benchmark_dgemm(Int n, Int Runs, double *rtime, double *gflops)
 {
     Int i;
-	double *A, *B, *C; 
+	double *A, *B, *C;
 	double ts,te;
 	double alpha=1, beta=1;
-	double flops; 
+	double flops;
 
-    A = malloc(sizeof(double) * n *n ); 
-	B = malloc(sizeof(double) * n *n ); 
-	C = malloc(sizeof(double) * n *n ); 
+    A = malloc(sizeof(double) * n *n );
+	B = malloc(sizeof(double) * n *n );
+	C = malloc(sizeof(double) * n *n );
 
 	for ( i = 0; i < n * n; i++){
-		A[i]=i+1; 
-		B[i]=i+0.5; 
+		A[i]=i+1;
+		B[i]=i+0.5;
 	}
 
 	/*-----------------------------------------------------------------------------
-	 *  Warmup 
+	 *  Warmup
 	 *-----------------------------------------------------------------------------*/
-	FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &n, B,&n, &beta, C, &n); 
-	FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &n, B,&n, &beta, C, &n); 
-	FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &n, B,&n, &beta, C, &n); 
+	FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &n, B,&n, &beta, C, &n);
+	FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &n, B,&n, &beta, C, &n);
+	FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &n, B,&n, &beta, C, &n);
 
-	ts = wtime(); 
+	ts = wtime();
 	for (i=0; i < Runs; i++){
-		FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &n, B,&n, &beta, C, &n); 
+		FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &n, B,&n, &beta, C, &n);
 	}
-	te = wtime(); 
-	double h = (double) n / 1000.0; 
+	te = wtime();
+	double h = (double) n / 1000.0;
 	flops = 2.0 * h *h *h;
-	flops /= ((te-ts)/Runs); 
+	flops /= ((te-ts)/Runs);
     *gflops = flops;
     *rtime = ((te-ts)/Runs);
 
-    free(A); 
+    free(A);
 	free(B);
-	free(C); 
+	free(C);
 
 
 }
 
 /*-----------------------------------------------------------------------------
- *  DGEMM Benchmark (Latency) 
+ *  DGEMM Benchmark (Latency)
  *-----------------------------------------------------------------------------*/
-void benchmark_dgemm_latency(Int n, Int Runs, double *rtime, double *gflops) 
+void benchmark_dgemm_latency(Int n, Int Runs, double *rtime, double *gflops)
 {
     Int i;
-	double *A, *B, *C; 
+	double *A, *B, *C;
 	double ts,te;
 	double alpha=1, beta=1;
-	double flops; 
+	double flops;
     Int ld = 1;
     uint64_t cy_start, cy_end, cy_sum;
 
     n = 1;
-    A = malloc(sizeof(double) * n *n ); 
-	B = malloc(sizeof(double) * n *n ); 
-	C = malloc(sizeof(double) * n *n ); 
+    A = malloc(sizeof(double) * n *n );
+	B = malloc(sizeof(double) * n *n );
+	C = malloc(sizeof(double) * n *n );
 
 	for ( i = 0; i < n * n; i++){
-		A[i]=i+1; 
-		B[i]=i+0.5; 
+		A[i]=i+1;
+		B[i]=i+0.5;
 	}
 
     n = 0;
 	/*-----------------------------------------------------------------------------
-	 *  Warmup 
+	 *  Warmup
 	 *-----------------------------------------------------------------------------*/
-	FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &ld, B,&ld, &beta, C, &ld); 
-	FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &ld, B,&ld, &beta, C, &ld); 
-	FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &ld, B,&ld, &beta, C, &ld); 
+	FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &ld, B,&ld, &beta, C, &ld);
+	FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &ld, B,&ld, &beta, C, &ld);
+	FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &ld, B,&ld, &beta, C, &ld);
 
     cy_sum = 0 ;
-	ts = wtime(); 
+	ts = wtime();
 	for (i=0; i < Runs; i++){
         cy_start = csc_cycles();
-        FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &ld, B,&ld, &beta, C, &ld); 
+        FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &ld, B,&ld, &beta, C, &ld);
         cy_end = csc_cycles();
         cy_sum += (cy_end-cy_start);
 	}
-	te = wtime(); 
+	te = wtime();
     cy_sum /= Runs;
-	double h = (double) n / 1000.0; 
+	double h = (double) n / 1000.0;
 	flops = 2.0 * h *h *h;
-	flops /= ((te-ts)/Runs); 
+	flops /= ((te-ts)/Runs);
     *gflops = flops;
     *rtime = cy_sum;
 
-    free(A); 
+    free(A);
 	free(B);
-	free(C); 
+	free(C);
 
 
 }
@@ -288,36 +288,36 @@ void benchmark_dgemm_latency(Int n, Int Runs, double *rtime, double *gflops)
 /*-----------------------------------------------------------------------------
  *  Daxpy Benchmark
  *-----------------------------------------------------------------------------*/
-void benchmark_daxpy(Int n, Int Runs, double *rtime, double *gflops) 
+void benchmark_daxpy(Int n, Int Runs, double *rtime, double *gflops)
 {
-	double *A, *B; 
+	double *A, *B;
 	double ts,te;
 	double alpha=1;
 	double flops;
 	Int incx = 1, incy = 1;
     Int i;
 
-    A = malloc(sizeof(double) * n ); 
-	B = malloc(sizeof(double) * n ); 
+    A = malloc(sizeof(double) * n );
+	B = malloc(sizeof(double) * n );
 
     for ( i = 0; i < n ; i++){
-		A[i]=i+1; 
-		B[i]=i+0.5; 
+		A[i]=i+1;
+		B[i]=i+0.5;
 	}
     /* Warm up */
-    FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);  
-	FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);  
-	FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);  
+    FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);
+	FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);
+	FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);
 
     /*  Benchmark */
-	ts = wtime(); 
+	ts = wtime();
 	for (i=0; i < Runs; i++){
-		FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);  
+		FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);
 	}
-	te = wtime(); 
+	te = wtime();
 	flops = 2.0 * n;
-	flops /=1000.0*1000.0*1000.0; 
-	flops /= (te-ts)/Runs; 
+	flops /=1000.0*1000.0*1000.0;
+	flops /= (te-ts)/Runs;
     *rtime = (te-ts)/Runs;
     *gflops = flops;
     free(A);
@@ -327,9 +327,9 @@ void benchmark_daxpy(Int n, Int Runs, double *rtime, double *gflops)
 /*-----------------------------------------------------------------------------
  *  Daxpy Benchmark
  *-----------------------------------------------------------------------------*/
-void benchmark_daxpy_latency(Int n, Int Runs, double *rtime, double *gflops) 
+void benchmark_daxpy_latency(Int n, Int Runs, double *rtime, double *gflops)
 {
-	double *A, *B; 
+	double *A, *B;
 	double ts,te;
 	double alpha=1;
 	double flops;
@@ -337,34 +337,34 @@ void benchmark_daxpy_latency(Int n, Int Runs, double *rtime, double *gflops)
     Int i;
     uint64_t cy_start, cy_end, cy_sum;
 
-    A = malloc(sizeof(double) * n ); 
-	B = malloc(sizeof(double) * n ); 
+    A = malloc(sizeof(double) * n );
+	B = malloc(sizeof(double) * n );
 
     for ( i = 0; i < n ; i++){
-		A[i]=i+1; 
-		B[i]=i+0.5; 
+		A[i]=i+1;
+		B[i]=i+0.5;
 	}
     n = 0;
     /* Warm up */
-    FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);  
-	FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);  
-	FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);  
+    FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);
+	FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);
+	FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);
 
     /*  Benchmark */
     cy_sum = 0;
-	ts = wtime(); 
+	ts = wtime();
 	for (i=0; i < Runs; i++){
         cy_start = csc_cycles();
-		FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);  
+		FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);
         cy_end = csc_cycles();
         cy_sum += (cy_end-cy_start);
 
 	}
-	te = wtime(); 
+	te = wtime();
     cy_sum /= Runs;
 	flops = 2.0 * n;
-	flops /=1000.0*1000.0*1000.0; 
-	flops /= (te-ts)/Runs; 
+	flops /=1000.0*1000.0*1000.0;
+	flops /= (te-ts)/Runs;
     *rtime = cy_sum;
     *gflops = flops;
     free(A);
@@ -374,7 +374,7 @@ void benchmark_daxpy_latency(Int n, Int Runs, double *rtime, double *gflops)
 
 
 int main (int argc, char **argv) {
-	Int n=-1, runs=-1; 
+	Int n=-1, runs=-1;
     double rtime = 0, flops =0;
     int choice, skip=0, only=0;
     char *skip_str = NULL;
@@ -383,7 +383,7 @@ int main (int argc, char **argv) {
     benchmark_func_t benchmark = NULL;
     int latency = 0;
 
-    
+
     while (1)
     {
         static struct option long_options[] =
@@ -393,8 +393,8 @@ int main (int argc, char **argv) {
             /* Argument styles: no_argument, required_argument, optional_argument */
 #ifndef STANDALONE
             {"version", no_argument,    0,    'v'},
-            {"skip",    required_argument, 0, 's'}, 
-            {"only",    required_argument, 0, 'o'},            
+            {"skip",    required_argument, 0, 's'},
+            {"only",    required_argument, 0, 'o'},
 #endif
             {"help",    no_argument,    0,    'h'},
             {"runs",    required_argument, 0, 'r'},
@@ -411,7 +411,7 @@ int main (int argc, char **argv) {
 #ifndef STANDALONE
         choice = getopt_long( argc, argv, "vhs:o:r:d:b:",
                     long_options, &option_index);
-#else 
+#else
        choice = getopt_long( argc, argv, "hr:d:b:",
                     long_options, &option_index);
 
@@ -430,7 +430,7 @@ int main (int argc, char **argv) {
                     printf("FlexiBLAS Benchmarik\n");
                     printf("Version %d.%d.%d\n", major, minor, patch);
                     exit(0);
-                }                
+                }
                 break;
             case 's':
                 skip = 1;
@@ -440,7 +440,7 @@ int main (int argc, char **argv) {
                 only = 1;
                 only_str = strdup(optarg);
                 break;
-#endif 
+#endif
             case 'h':
                 {
                     printf("FlexiBLAS Benchmark");
@@ -459,12 +459,12 @@ int main (int argc, char **argv) {
                     printf(" [--version|-v]     Version of the FlexiBLAS library.\n");
                     printf(" [--skip|-s BLAS1,BLAS2, ...]   List of BLAS backends to skip.\n");
                     printf(" [--only|-o BLAS1,BLAS2, ...]   List of BLAS backends to run the benchmark on.\n");
-#endif 
-                    printf("\n");                     
+#endif
+                    printf("\n");
                     exit(0);
 
                 }
-                
+
                 break;
             case 'd':
                 n = atoi(optarg);
@@ -562,17 +562,18 @@ int main (int argc, char **argv) {
     } else {
         printf("%30s \t %10.8e \t %10.8e\n", str, rtime, flops);
     }
-#else 
+#else
     /*-----------------------------------------------------------------------------
-     * FlexiBLAS internal way  
+     * FlexiBLAS internal way
      *-----------------------------------------------------------------------------*/
     int n_blas,i, id;
     char name[1024];
+    char *saveptr;
     if ( only ) {
         char * all = only_str;
         char * tok = NULL;
-       
-        while ((tok = strtok(all,",:;")) != NULL) {
+
+        while ((tok = strtok_r(all,",:;", &saveptr)) != NULL) {
             all = NULL;
             id = flexiblas_load_backend(tok);
             if ( id < 0 ) {
@@ -597,12 +598,12 @@ int main (int argc, char **argv) {
         n_blas = flexiblas_list(NULL, 0, 0);
         for (i = 0; i < n_blas; i++) {
             flexiblas_list(name, 1023, i );
-            if ( strcmp(name, "__FALLBACK__" ) == 0) 
+            if ( strcmp(name, "__FALLBACK__" ) == 0)
                 continue;
             all = skip_str;
             tok = NULL;
             found = 0;
-            while ((tok=strtok(all, ",:;"))!=NULL) {
+            while ((tok=strtok_r(all, ",:;", &saveptr))!=NULL) {
                 all = NULL;
                 if ( strcasecmp(name, tok)==0){
                     found = 1;
@@ -632,7 +633,7 @@ int main (int argc, char **argv) {
         n_blas = flexiblas_list(NULL, 0, 0);
         for (i = 0; i < n_blas; i++) {
             flexiblas_list(name, 1023, i );
-            if ( strcmp(name, "__FALLBACK__" ) == 0) 
+            if ( strcmp(name, "__FALLBACK__" ) == 0)
                 continue;
 
             id = flexiblas_load_backend(name);
@@ -654,9 +655,9 @@ int main (int argc, char **argv) {
 
     }
 
-#endif 
+#endif
     if (skip_str) free(skip_str);
     if (only_str) free(only_str);
-	return 0; 
+	return 0;
 }
 

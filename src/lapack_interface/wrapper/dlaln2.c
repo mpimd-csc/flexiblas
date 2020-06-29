@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:34 2017 */ 
+ /* Generated: Wed Mar 28 11:20:03 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_dlaln2 = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 void FC_GLOBAL(dlaln2,DLALN2)(blasint* ltrans, blasint* na, blasint* nw, double* smin, double* ca, double* a, blasint* lda, double* d1, double* d2, double* b, blasint* ldb, double* wr, double* wi, double* x, blasint* ldx, double* scale, double* xnorm, blasint* info)
 #else
 void FC_GLOBAL(dlaln2,DLALN2)(blasint* ltrans, blasint* na, blasint* nw, double* smin, double* ca, double* a, blasint* lda, double* d1, double* d2, double* b, blasint* ldb, double* wr, double* wi, double* x, blasint* ldx, double* scale, double* xnorm, blasint* info)
-#endif 
+#endif
 {
-    double ts;
 	void (*fn) (void* ltrans, void* na, void* nw, void* smin, void* ca, void* a, void* lda, void* d1, void* d2, void* b, void* ldb, void* wr, void* wi, void* x, void* ldx, void* scale, void* xnorm, void* info);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn_hook) (void* ltrans, void* na, void* nw, void* smin, void* ca, void* a, void* lda, void* d1, void* d2, void* b, void* ldb, void* wr, void* wi, void* x, void* ldx, void* scale, void* xnorm, void* info);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.dlaln2.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->dlaln2.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) ltrans, (void*) na, (void*) nw, (void*) smin, (void*) ca, (void*) a, (void*) lda, (void*) d1, (void*) d2, (void*) b, (void*) ldb, (void*) wr, (void*) wi, (void*) x, (void*) ldx, (void*) scale, (void*) xnorm, (void*) info); 
+		return;
+	} else {
+		hook_pos_dlaln2 = 0;
+		fn_hook((void*) ltrans, (void*) na, (void*) nw, (void*) smin, (void*) ca, (void*) a, (void*) lda, (void*) d1, (void*) d2, (void*) b, (void*) ldb, (void*) wr, (void*) wi, (void*) x, (void*) ldx, (void*) scale, (void*) xnorm, (void*) info);
+		return;
 	}
-	fn = current_backend->lapack.dlaln2.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) ltrans, (void*) na, (void*) nw, (void*) smin, (void*) ca, (void*) a, (void*) lda, (void*) d1, (void*) d2, (void*) b, (void*) ldb, (void*) wr, (void*) wi, (void*) x, (void*) ldx, (void*) scale, (void*) xnorm, (void*) info); 
-		current_backend->lapack.dlaln2.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.dlaln2.calls[0]++;
-	} else { 
-		fn((void*) ltrans, (void*) na, (void*) nw, (void*) smin, (void*) ca, (void*) a, (void*) lda, (void*) d1, (void*) d2, (void*) b, (void*) ldb, (void*) wr, (void*) wi, (void*) x, (void*) ldx, (void*) scale, (void*) xnorm, (void*) info); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void dlaln2_(blasint* ltrans, blasint* na, blasint* nw, double* smin, double* ca, double* a, blasint* lda, double* d1, double* d2, double* b, blasint* ldb, double* wr, double* wi, double* x, blasint* ldx, double* scale, double* xnorm, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlaln2,DLALN2)))));
 #else
 void dlaln2(blasint* ltrans, blasint* na, blasint* nw, double* smin, double* ca, double* a, blasint* lda, double* d1, double* d2, double* b, blasint* ldb, double* wr, double* wi, double* x, blasint* ldx, double* scale, double* xnorm, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlaln2,DLALN2)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_dlaln2_(void* ltrans, void* na, void* nw, void* smin, void* ca, void* a, void* lda, void* d1, void* d2, void* b, void* ldb, void* wr, void* wi, void* x, void* ldx, void* scale, void* xnorm, void* info)
+{
+	void (*fn) (void* ltrans, void* na, void* nw, void* smin, void* ca, void* a, void* lda, void* d1, void* d2, void* b, void* ldb, void* wr, void* wi, void* x, void* ldx, void* scale, void* xnorm, void* info);
+
+	fn = current_backend->lapack.dlaln2.f77_blas_function; 
+
+		fn((void*) ltrans, (void*) na, (void*) nw, (void*) smin, (void*) ca, (void*) a, (void*) lda, (void*) d1, (void*) d2, (void*) b, (void*) ldb, (void*) wr, (void*) wi, (void*) x, (void*) ldx, (void*) scale, (void*) xnorm, (void*) info); 
+
+	return;
+}
+
+void flexiblas_real_dlaln2(void* ltrans, void* na, void* nw, void* smin, void* ca, void* a, void* lda, void* d1, void* d2, void* b, void* ldb, void* wr, void* wi, void* x, void* ldx, void* scale, void* xnorm, void* info)  __attribute__((alias("flexiblas_real_dlaln2_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_dlaln2_(void* ltrans, void* na, void* nw, void* smin, void* ca, void* a, void* lda, void* d1, void* d2, void* b, void* ldb, void* wr, void* wi, void* x, void* ldx, void* scale, void* xnorm, void* info)
+{
+	void (*fn) (void* ltrans, void* na, void* nw, void* smin, void* ca, void* a, void* lda, void* d1, void* d2, void* b, void* ldb, void* wr, void* wi, void* x, void* ldx, void* scale, void* xnorm, void* info);
+	void (*fn_hook) (void* ltrans, void* na, void* nw, void* smin, void* ca, void* a, void* lda, void* d1, void* d2, void* b, void* ldb, void* wr, void* wi, void* x, void* ldx, void* scale, void* xnorm, void* info);
+
+	fn      = current_backend->lapack.dlaln2.f77_blas_function; 
+
+    hook_pos_dlaln2 ++;
+    if( hook_pos_dlaln2 < __flexiblas_hooks->dlaln2.nhook) {
+        fn_hook = __flexiblas_hooks->dlaln2.f77_hook_function[hook_pos_dlaln2];
+        fn_hook((void*) ltrans, (void*) na, (void*) nw, (void*) smin, (void*) ca, (void*) a, (void*) lda, (void*) d1, (void*) d2, (void*) b, (void*) ldb, (void*) wr, (void*) wi, (void*) x, (void*) ldx, (void*) scale, (void*) xnorm, (void*) info);
+    } else {
+        hook_pos_dlaln2 = 0;
+		fn((void*) ltrans, (void*) na, (void*) nw, (void*) smin, (void*) ca, (void*) a, (void*) lda, (void*) d1, (void*) d2, (void*) b, (void*) ldb, (void*) wr, (void*) wi, (void*) x, (void*) ldx, (void*) scale, (void*) xnorm, (void*) info); 
+	}
+	return;
+}
+
+void flexiblas_chain_dlaln2(void* ltrans, void* na, void* nw, void* smin, void* ca, void* a, void* lda, void* d1, void* d2, void* b, void* ldb, void* wr, void* wi, void* x, void* ldx, void* scale, void* xnorm, void* info)  __attribute__((alias("flexiblas_chain_dlaln2_")));
+
 
 
 

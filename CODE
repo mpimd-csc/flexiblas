@@ -1,8 +1,8 @@
-name: FlexiBLAS - A runtime BLAS switch
+name: FlexiBLAS - A BLAS and LAPACK wrapper library with runtime exchangable backends
 shortname: flexiblas
-version: 2.0.0
-release-date: 2017-04-26
-id: 10.5281/zenodo.569102
+version: 3.0.0
+release-date: 2020-06-26
+id: 10.5281/zenodo.3909214
 id-type: doi
 author: Martin Köhler, Jens Saak
 orcid: 0000-0003-2338-9904, 0000-0001-5567-9637

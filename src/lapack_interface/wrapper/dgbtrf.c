@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:34 2017 */ 
+ /* Generated: Wed Mar 28 11:20:03 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_dgbtrf = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 void FC_GLOBAL(dgbtrf,DGBTRF)(blasint* m, blasint* n, blasint* kl, blasint* ku, double* ab, blasint* ldab, blasint* ipiv, blasint* info)
 #else
 void FC_GLOBAL(dgbtrf,DGBTRF)(blasint* m, blasint* n, blasint* kl, blasint* ku, double* ab, blasint* ldab, blasint* ipiv, blasint* info)
-#endif 
+#endif
 {
-    double ts;
 	void (*fn) (void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* ipiv, void* info);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn_hook) (void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* ipiv, void* info);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.dgbtrf.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->dgbtrf.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) m, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) ipiv, (void*) info); 
+		return;
+	} else {
+		hook_pos_dgbtrf = 0;
+		fn_hook((void*) m, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) ipiv, (void*) info);
+		return;
 	}
-	fn = current_backend->lapack.dgbtrf.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) m, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) ipiv, (void*) info); 
-		current_backend->lapack.dgbtrf.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.dgbtrf.calls[0]++;
-	} else { 
-		fn((void*) m, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) ipiv, (void*) info); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void dgbtrf_(blasint* m, blasint* n, blasint* kl, blasint* ku, double* ab, blasint* ldab, blasint* ipiv, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dgbtrf,DGBTRF)))));
 #else
 void dgbtrf(blasint* m, blasint* n, blasint* kl, blasint* ku, double* ab, blasint* ldab, blasint* ipiv, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dgbtrf,DGBTRF)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_dgbtrf_(void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* ipiv, void* info)
+{
+	void (*fn) (void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* ipiv, void* info);
+
+	fn = current_backend->lapack.dgbtrf.f77_blas_function; 
+
+		fn((void*) m, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) ipiv, (void*) info); 
+
+	return;
+}
+
+void flexiblas_real_dgbtrf(void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* ipiv, void* info)  __attribute__((alias("flexiblas_real_dgbtrf_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_dgbtrf_(void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* ipiv, void* info)
+{
+	void (*fn) (void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* ipiv, void* info);
+	void (*fn_hook) (void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* ipiv, void* info);
+
+	fn      = current_backend->lapack.dgbtrf.f77_blas_function; 
+
+    hook_pos_dgbtrf ++;
+    if( hook_pos_dgbtrf < __flexiblas_hooks->dgbtrf.nhook) {
+        fn_hook = __flexiblas_hooks->dgbtrf.f77_hook_function[hook_pos_dgbtrf];
+        fn_hook((void*) m, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) ipiv, (void*) info);
+    } else {
+        hook_pos_dgbtrf = 0;
+		fn((void*) m, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) ipiv, (void*) info); 
+	}
+	return;
+}
+
+void flexiblas_chain_dgbtrf(void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* ipiv, void* info)  __attribute__((alias("flexiblas_chain_dgbtrf_")));
+
 
 
 

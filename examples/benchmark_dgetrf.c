@@ -27,13 +27,13 @@
 
 #ifdef INTEGER8
 	#define Int long
-#else 
-	#define Int int 
+#else
+	#define Int int
 #endif
 
-#define RUNS 50
+#define RUNS 1
 
-void FC_GLOBAL(dgetrf,DGETRF)(Int *n , Int *m, double *A, Int *lda, Int *ipiv, Int *info); 
+void FC_GLOBAL(dgetrf,DGETRF)(Int *n , Int *m, double *A, Int *lda, Int *ipiv, Int *info);
 double wtime()
 {
 	struct timeval tv;
@@ -43,46 +43,46 @@ double wtime()
 
 
 int main (int argc, char **argv) {
-	Int n, i,j; 
+	Int n, i,j;
 	double *A;
-	double *B; 
-	Int *ipiv; 
-	Int info; 
+	double *B;
+	Int *ipiv;
+	Int info;
 	double ts,te;
-	double flops; 
+	double flops;
 	if ( argc != 2) {
-		printf("Usage: %s dim\n", argv[0]); 
-		exit(1); 
+		printf("Usage: %s dim\n", argv[0]);
+		exit(1);
 	}
-	n = atoi(argv[1]); 
-	A = malloc(sizeof(double) * n *n ); 
-	B = malloc(sizeof(double) *n*n); 
+	n = atoi(argv[1]);
+	A = malloc(sizeof(double) * n *n );
+	B = malloc(sizeof(double) *n*n);
 
-	ipiv = malloc(sizeof(Int) * n ); 
+	ipiv = malloc(sizeof(Int) * n );
 	for (i = 0; i < n; i++) {
 		for (j = 0; j < n; j++) {
-			A[i+j*n] = 1.0/(i+j+1); 
+			A[i+j*n] = 1.0/(i+j+1);
 		}
 	}
-		memcpy(B,A,sizeof(double)*n*n); 
-		FC_GLOBAL(dgetrf,DGETRF)(&n,&n, B, &n, ipiv, &info); 
-		memcpy(B,A,sizeof(double)*n*n); 
-		FC_GLOBAL(dgetrf,DGETRF)(&n,&n, B, &n, ipiv, &info); 
+		memcpy(B,A,sizeof(double)*n*n);
+		FC_GLOBAL(dgetrf,DGETRF)(&n,&n, B, &n, ipiv, &info);
+		memcpy(B,A,sizeof(double)*n*n);
+		FC_GLOBAL(dgetrf,DGETRF)(&n,&n, B, &n, ipiv, &info);
 
-	ts = wtime(); 
+	ts = wtime();
 	for (i=0; i < RUNS; i++){
-		memcpy(B,A,sizeof(double)*n*n); 
-		FC_GLOBAL(dgetrf,DGETRF)(&n,&n, B, &n, ipiv, &info); 
+		memcpy(B,A,sizeof(double)*n*n);
+		FC_GLOBAL(dgetrf,DGETRF)(&n,&n, B, &n, ipiv, &info);
 	}
-	te = wtime(); 
-	double h = (double) n / 1000.0; 
+	te = wtime();
+	double h = (double) n / 1000.0;
 	flops = 2.0/3.0 * h *h *h;
-	flops /= (te-ts)/RUNS; 
+	flops /= (te-ts)/RUNS;
 	printf("time: %lg\n", (te-ts)/RUNS);
 	printf("flops: %lg GFlop/s\n", flops );
 
-	free(A); 
-	free(ipiv); 
-	return 0; 
+	free(A);
+	free(ipiv);
+	return 0;
 }
 

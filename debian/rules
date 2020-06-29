@@ -2,96 +2,54 @@
 # -*- makefile -*-
 
 # Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
-FLEXIBLAS_MAJOR_VERSION=2
+export DH_VERBOSE=1
+FLEXIBLAS_MAJOR_VERSION=3
 FLEXIBLAS_MINOR_VERSION=0
 FLEXIBLAS_PATCH_LEVEL=0
 
-export LD_LIBRARY_PATH:=/usr/lib/openblas-base:/usr/lib/atlas-base:$(LD_LIBRARY_PATH) 
+# export LD_LIBRARY_PATH:=/usr/lib/openblas-base:/usr/lib/atlas-base:$(LD_LIBRARY_PATH)
 CFLAGS=-g
 FFLAGS=-g
 F77CFLAGS=-g
 
 #override_dh_auto_configure:
-#	dh_auto_configure -- -DCMAKE_BUILD_TYPE=RelWithDebInfo -DTESTS=OFF 
+#	dh_auto_configure -- -DCMAKE_BUILD_TYPE=RelWithDebInfo -DTESTS=OFF
 
 override_dh_auto_configure:
-	(cd debian; \
-	  for i in *.in; do\
-	  o=`basename $$i .in`;\
-	  sed 's/@DEB_HOST_MULTIARCH@/$(DEB_HOST_MULTIARCH)/g' "$$i" > "$$o"; \
-	  done ) 
-	
-	# do  sed 's/@DEB_HOST_MULTIARCH@/$(DEB_HOST_MULTIARCH)/g' "$$i" > `basename '$$i' .in`; done )
-
-	mkdir -p build-normal  &&\
-	cd build-normal  &&\
+	mkdir -p build-32  &&\
+	cd build-32  &&\
 	cmake ../ -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RelWithDebInfo\
-	          -DTESTS=OFF  -DSYSCONFDIR=/etc -DCBLAS=ON -DBUILD_SHARED_LIBS=OFF\
-		  -DCMAKE_INSTALL_LIBDIR=/usr/lib/$(DEB_HOST_MULTIARCH) -DDEV=OFF -DEXTBLAS=ON -DLAPACK=ON \
-		  -DACML=OFF -DACML_MP=OFF -DEXAMPLES=OFF 
-
-	
-override_dh_auto_build:
-	dh_auto_build --builddirectory build-normal --parallel
-	(cd build-normal/src \
-                && mkdir tmp && cd tmp \
-                && ar x ../../libcscutils/src/libcscutils.a \
-		&& ar x ../libflexiblas.a \
-		&& ar crs ../libflexiblas.a *.o )
-	(cd build-normal/src \
-                && mkdir tmp-mgmt && cd tmp-mgmt \
-                && ar x ../../libcscutils/src/libcscutils.a \
-		&& ar x ../libflexiblas_mgmt.a \
-		&& ar crs ../libflexiblas_mgmt.a *.o )
-	(cd build-normal/src \
-		&&  $(CC) -shared -o libflexiblas.so.${FLEXIBLAS_MAJOR_VERSION}.${FLEXIBLAS_MINOR_VERSION}.${FLEXIBLAS_PATCH_LEVEL} -Wl,--whole-archive libflexiblas.a -Wl,--no-whole-archive -Wl,-soname,libflexiblas.so.${FLEXIBLAS_MAJOR_VERSION}.${FLEXIBLAS_MINOR_VERSION}.${FLEXIBLAS_PATCH_LEVEL} -ldl -lc -lm\
-		&&  ln -sf  libflexiblas.so.${FLEXIBLAS_MAJOR_VERSION}.${FLEXIBLAS_MINOR_VERSION}.${FLEXIBLAS_PATCH_LEVEL}  libflexiblas.so.${FLEXIBLAS_MAJOR_VERSION}\
-		&&  ln -sf  libflexiblas.so.${FLEXIBLAS_MAJOR_VERSION}  libflexiblas.so )
-	(cd build-normal/src \
-		&&  $(CC) -shared -o libblas.so.3 -Wl,--whole-archive libflexiblas.a -Wl,--no-whole-archive -Wl,-soname,libblas.so.3 -ldl -lc -lm\
-		&& ln -sf libblas.so.3 libblas.so \
-	        && ln -sf libblas.so.3 liblapack.so \
-		&& ln -sf libblas.so.3 liblapack.so.3 )
-	(cd build-normal/src \
-		&&  $(CC) -shared -o libflexiblas_mgmt.so.${FLEXIBLAS_MAJOR_VERSION}.${FLEXIBLAS_MINOR_VERSION}.${FLEXIBLAS_PATCH_LEVEL} -Wl,--whole-archive libflexiblas_mgmt.a -Wl,--no-whole-archive -Wl,-soname,libflexiblas_mgmt.${FLEXIBLAS_MAJOR_VERSION}.${FLEXIBLAS_MINOR_VERSION}.${FLEXIBLAS_PATCH_LEVEL} -ldl -lc -lm\
-		&& ln -sf libflexiblas_mgmt.so.${FLEXIBLAS_MAJOR_VERSION}.${FLEXIBLAS_MINOR_VERSION}.${FLEXIBLAS_PATCH_LEVEL} libflexiblas_mgmt.so.${FLEXIBLAS_MAJOR_VERSION} \
-		&& ln -sf libflexiblas_mgmt.so.${FLEXIBLAS_MAJOR_VERSION} libflexiblas_mgmt.so ) 
-	(cd build-normal/src \
-		&&  $(CC) -shared -o libflexiblas_api.so.${FLEXIBLAS_MAJOR_VERSION}.${FLEXIBLAS_MINOR_VERSION}.${FLEXIBLAS_PATCH_LEVEL} -Wl,--whole-archive libflexiblas_api.a -Wl,--no-whole-archive -Wl,-soname,libflexiblas_api.${FLEXIBLAS_MAJOR_VERSION}.${FLEXIBLAS_MINOR_VERSION}.${FLEXIBLAS_PATCH_LEVEL} -ldl -lc -lm\
-		&& ln -sf libflexiblas_api.so.${FLEXIBLAS_MAJOR_VERSION}.${FLEXIBLAS_MINOR_VERSION}.${FLEXIBLAS_PATCH_LEVEL} libflexiblas_api.so.${FLEXIBLAS_MAJOR_VERSION} \
-		&& ln -sf libflexiblas_api.so.${FLEXIBLAS_MAJOR_VERSION} libflexiblas_api.so ) 
+	          -DTESTS=OFF  -DSYSCONFDIR=/etc -DCBLAS=ON -DBUILD_SHARED_LIBS=ON\
+		  -DCMAKE_INSTALL_LIBDIR=/usr/lib/$(DEB_HOST_MULTIARCH) -DDEV=OFF -DLAPACK=ON \
+		  -DIntel=OFF -DACML=OFF -DACML_MP=OFF -DEXAMPLES=OFF -DINTEGER8=OFF
+	mkdir -p build-64  &&\
+	cd build-64  &&\
+	cmake ../ -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RelWithDebInfo\
+	          -DTESTS=OFF  -DSYSCONFDIR=/etc -DCBLAS=ON -DBUILD_SHARED_LIBS=ON\
+		  -DCMAKE_INSTALL_LIBDIR=/usr/lib/$(DEB_HOST_MULTIARCH) -DDEV=OFF -DLAPACK=ON \
+		  -DIntel=OFF -DACML=OFF -DACML_MP=OFF -DEXAMPLES=OFF -DINTEGER8=ON
 
 
-override_dh_auto_install: debian/libflexiblas-dev.links 
-	dh_auto_install --builddirectory build-normal --destdir debian/tmp
-	chmod a+rx build-normal/src/libflexiblas.so.${FLEXIBLAS_MAJOR_VERSION}.${FLEXIBLAS_MINOR_VERSION}.${FLEXIBLAS_PATCH_LEVEL}
-	chmod a+rx build-normal/src/libblas.so.3
-	cp  -av build-normal/src/libflexiblas.so* debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)
-	cp  -av build-normal/src/libflexiblas_mgmt.so* debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)
-	cp  -av build-normal/src/libflexiblas_api.so* debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)
-	mkdir -p debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/flexiblas/update-alternatives/
-	cp -av build-normal/src/libblas.so* debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/flexiblas/update-alternatives/
-	cp -av build-normal/src/liblapack.so* debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/flexiblas/update-alternatives/
+
+GENERATED_MAINTAINER_SCRIPTS := $(patsubst %.in,%,$(wildcard debian/*.postinst.in debian/*.prerm.in debian/*.links.in))
+$(GENERATED_MAINTAINER_SCRIPTS): %: %.in
+	sed 's/@DEB_HOST_MULTIARCH@/$(DEB_HOST_MULTIARCH)/g' < $< > $@
 
 
-debian/%.links: debian/%.links.in 
-	sed 's/@DEB_HOST_MULTIARCH@/$(DEB_HOST_MULTIARCH)/g' $< > $@
+override_dh_auto_build: $(GENERATED_MAINTAINER_SCRIPTS)
+	dh_auto_build --builddirectory build-32 --parallel
+	dh_auto_build --builddirectory build-64 --parallel
+
+
+
+override_dh_auto_install:
+	dh_auto_install --builddirectory build-32 --destdir debian/tmp
+	dh_auto_install --builddirectory build-64 --destdir debian/tmp
 
 override_dh_auto_clean:
-	dh_auto_clean --builddirectory build-normal
-	rm -f debian/*.links
-	rm -f debian/*.prerm
-	rm -f debian/*.postinst
-
-
-
-
-.PHONY: override_dh_strip
-
-override_dh_strip:
-	dh_strip -plibflexiblas -plibflexiblas-api --dbg-package=libflexiblas-dbg 
-
+	dh_auto_clean --builddirectory build-32
+	dh_auto_clean --builddirectory build-64
+	rm -f $(GENERATED_MAINTAINER_SCRIPTS)
 
 %:
-	dh $@ 
+	dh $@

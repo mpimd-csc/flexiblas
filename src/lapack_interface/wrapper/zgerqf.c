@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:37 2017 */ 
+ /* Generated: Wed Mar 28 11:20:04 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_zgerqf = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 void FC_GLOBAL(zgerqf,ZGERQF)(blasint* m, blasint* n, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info)
 #else
 void FC_GLOBAL(zgerqf,ZGERQF)(blasint* m, blasint* n, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info)
-#endif 
+#endif
 {
-    double ts;
 	void (*fn) (void* m, void* n, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn_hook) (void* m, void* n, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.zgerqf.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->zgerqf.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
+		return;
+	} else {
+		hook_pos_zgerqf = 0;
+		fn_hook((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info);
+		return;
 	}
-	fn = current_backend->lapack.zgerqf.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
-		current_backend->lapack.zgerqf.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.zgerqf.calls[0]++;
-	} else { 
-		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void zgerqf_(blasint* m, blasint* n, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zgerqf,ZGERQF)))));
 #else
 void zgerqf(blasint* m, blasint* n, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zgerqf,ZGERQF)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_zgerqf_(void* m, void* n, void* a, void* lda, void* tau, void* work, void* lwork, void* info)
+{
+	void (*fn) (void* m, void* n, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
+
+	fn = current_backend->lapack.zgerqf.f77_blas_function; 
+
+		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
+
+	return;
+}
+
+void flexiblas_real_zgerqf(void* m, void* n, void* a, void* lda, void* tau, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_real_zgerqf_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_zgerqf_(void* m, void* n, void* a, void* lda, void* tau, void* work, void* lwork, void* info)
+{
+	void (*fn) (void* m, void* n, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
+	void (*fn_hook) (void* m, void* n, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
+
+	fn      = current_backend->lapack.zgerqf.f77_blas_function; 
+
+    hook_pos_zgerqf ++;
+    if( hook_pos_zgerqf < __flexiblas_hooks->zgerqf.nhook) {
+        fn_hook = __flexiblas_hooks->zgerqf.f77_hook_function[hook_pos_zgerqf];
+        fn_hook((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info);
+    } else {
+        hook_pos_zgerqf = 0;
+		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
+	}
+	return;
+}
+
+void flexiblas_chain_zgerqf(void* m, void* n, void* a, void* lda, void* tau, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_chain_zgerqf_")));
+
 
 
 

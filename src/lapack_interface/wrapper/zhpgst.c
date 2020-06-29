@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:37 2017 */ 
+ /* Generated: Wed Mar 28 11:20:04 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_zhpgst = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 void FC_GLOBAL(zhpgst,ZHPGST)(blasint* itype, char* uplo, blasint* n, double complex* ap, double complex* bp, blasint* info)
 #else
 void FC_GLOBAL(zhpgst,ZHPGST)(blasint* itype, char* uplo, blasint* n, double complex* ap, double complex* bp, blasint* info)
-#endif 
+#endif
 {
-    double ts;
 	void (*fn) (void* itype, void* uplo, void* n, void* ap, void* bp, void* info);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn_hook) (void* itype, void* uplo, void* n, void* ap, void* bp, void* info);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.zhpgst.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->zhpgst.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) itype, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) info); 
+		return;
+	} else {
+		hook_pos_zhpgst = 0;
+		fn_hook((void*) itype, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) info);
+		return;
 	}
-	fn = current_backend->lapack.zhpgst.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) itype, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) info); 
-		current_backend->lapack.zhpgst.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.zhpgst.calls[0]++;
-	} else { 
-		fn((void*) itype, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) info); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void zhpgst_(blasint* itype, char* uplo, blasint* n, double complex* ap, double complex* bp, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zhpgst,ZHPGST)))));
 #else
 void zhpgst(blasint* itype, char* uplo, blasint* n, double complex* ap, double complex* bp, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zhpgst,ZHPGST)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_zhpgst_(void* itype, void* uplo, void* n, void* ap, void* bp, void* info)
+{
+	void (*fn) (void* itype, void* uplo, void* n, void* ap, void* bp, void* info);
+
+	fn = current_backend->lapack.zhpgst.f77_blas_function; 
+
+		fn((void*) itype, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) info); 
+
+	return;
+}
+
+void flexiblas_real_zhpgst(void* itype, void* uplo, void* n, void* ap, void* bp, void* info)  __attribute__((alias("flexiblas_real_zhpgst_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_zhpgst_(void* itype, void* uplo, void* n, void* ap, void* bp, void* info)
+{
+	void (*fn) (void* itype, void* uplo, void* n, void* ap, void* bp, void* info);
+	void (*fn_hook) (void* itype, void* uplo, void* n, void* ap, void* bp, void* info);
+
+	fn      = current_backend->lapack.zhpgst.f77_blas_function; 
+
+    hook_pos_zhpgst ++;
+    if( hook_pos_zhpgst < __flexiblas_hooks->zhpgst.nhook) {
+        fn_hook = __flexiblas_hooks->zhpgst.f77_hook_function[hook_pos_zhpgst];
+        fn_hook((void*) itype, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) info);
+    } else {
+        hook_pos_zhpgst = 0;
+		fn((void*) itype, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) info); 
+	}
+	return;
+}
+
+void flexiblas_chain_zhpgst(void* itype, void* uplo, void* n, void* ap, void* bp, void* info)  __attribute__((alias("flexiblas_chain_zhpgst_")));
+
 
 
 

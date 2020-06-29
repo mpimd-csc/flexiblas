@@ -1,9 +1,9 @@
 prefix=@prefix@
 libdir=@libdir@
-includedir=${prefix}/include/flexiblas
+includedir=${prefix}/include/${flexiblasname}
 Name: flexiblas
 Description: BLAS wrapper library mimicing Netlib Reference but providing any installed BLAS Implementation
-Version: 2.0.0
+Version: 3.0.0
 URL: http://www.mpi-magdeburg.mpg.de/mpcsc/software/FlexiBLAS/
 Libs: -L${libdir} -l${flexiblasname}
 Libs.private: -lm

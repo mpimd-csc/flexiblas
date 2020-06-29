@@ -120,7 +120,7 @@ set(SLASRC
    slaqtr.f slar1v.f slar2v.f ilaslr.f ilaslc.f
    slarf.f  slarfb.f slarfg.f slarfgp.f slarft.f slarfx.f slarfy.f slargv.f
    slarrv.f slartv.f
-   slarz.f  slarzb.f slarzt.f slaswp.f slasy2.f 
+   slarz.f  slarzb.f slarzt.f slaswp.f slasy2.f
    slasyf.f slasyf_rook.f slasyf_rk.f slasyf_aa.f
    slatbs.f slatdf.f slatps.f slatrd.f slatrs.f slatrz.f
    slauu2.f slauum.f sopgtr.f sopmtr.f sorg2l.f sorg2r.f
@@ -307,7 +307,7 @@ set(DLASRC
    dlaqtr.f dlar1v.f dlar2v.f iladlr.f iladlc.f
    dlarf.f  dlarfb.f dlarfg.f dlarfgp.f dlarft.f dlarfx.f dlarfy.f
    dlargv.f dlarrv.f dlartv.f
-   dlarz.f  dlarzb.f dlarzt.f dlaswp.f dlasy2.f 
+   dlarz.f  dlarzb.f dlarzt.f dlaswp.f dlasy2.f
    dlasyf.f dlasyf_rook.f dlasyf_rk.f dlasyf_aa.f
    dlatbs.f dlatdf.f dlatps.f dlatrd.f dlatrs.f dlatrz.f dlauu2.f
    dlauum.f dopgtr.f dopmtr.f dorg2l.f dorg2r.f
@@ -493,7 +493,4 @@ set(ALLOBJ ${ALLOBJ} ${CLASRC} ${ALLAUX} ${SCLAUX} )
 set(ALLOBJ  ${ALLOBJ} ${ZLASRC} ${ALLAUX} ${DZLAUX} ${ZCLASRC})
 list(REMOVE_DUPLICATES ALLOBJ)
 
-add_library(flexiblas_fallback_lapack SHARED ${ALLOBJ} ${ALLXOBJ})
-
-install(TARGETS flexiblas_fallback_lapack LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR})
-
+add_library(flexiblas_fallback_lapack_objs OBJECT ${ALLOBJ} ${ALLXOBJ})

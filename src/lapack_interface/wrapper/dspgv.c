@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:35 2017 */ 
+ /* Generated: Wed Mar 28 11:20:04 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_dspgv = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 void FC_GLOBAL(dspgv,DSPGV)(blasint* itype, char* jobz, char* uplo, blasint* n, double* ap, double* bp, double* w, double* z, blasint* ldz, double* work, blasint* info)
 #else
 void FC_GLOBAL(dspgv,DSPGV)(blasint* itype, char* jobz, char* uplo, blasint* n, double* ap, double* bp, double* w, double* z, blasint* ldz, double* work, blasint* info)
-#endif 
+#endif
 {
-    double ts;
 	void (*fn) (void* itype, void* jobz, void* uplo, void* n, void* ap, void* bp, void* w, void* z, void* ldz, void* work, void* info);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn_hook) (void* itype, void* jobz, void* uplo, void* n, void* ap, void* bp, void* w, void* z, void* ldz, void* work, void* info);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.dspgv.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->dspgv.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) itype, (void*) jobz, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) info); 
+		return;
+	} else {
+		hook_pos_dspgv = 0;
+		fn_hook((void*) itype, (void*) jobz, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) info);
+		return;
 	}
-	fn = current_backend->lapack.dspgv.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) itype, (void*) jobz, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) info); 
-		current_backend->lapack.dspgv.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.dspgv.calls[0]++;
-	} else { 
-		fn((void*) itype, (void*) jobz, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) info); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void dspgv_(blasint* itype, char* jobz, char* uplo, blasint* n, double* ap, double* bp, double* w, double* z, blasint* ldz, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dspgv,DSPGV)))));
 #else
 void dspgv(blasint* itype, char* jobz, char* uplo, blasint* n, double* ap, double* bp, double* w, double* z, blasint* ldz, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dspgv,DSPGV)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_dspgv_(void* itype, void* jobz, void* uplo, void* n, void* ap, void* bp, void* w, void* z, void* ldz, void* work, void* info)
+{
+	void (*fn) (void* itype, void* jobz, void* uplo, void* n, void* ap, void* bp, void* w, void* z, void* ldz, void* work, void* info);
+
+	fn = current_backend->lapack.dspgv.f77_blas_function; 
+
+		fn((void*) itype, (void*) jobz, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) info); 
+
+	return;
+}
+
+void flexiblas_real_dspgv(void* itype, void* jobz, void* uplo, void* n, void* ap, void* bp, void* w, void* z, void* ldz, void* work, void* info)  __attribute__((alias("flexiblas_real_dspgv_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_dspgv_(void* itype, void* jobz, void* uplo, void* n, void* ap, void* bp, void* w, void* z, void* ldz, void* work, void* info)
+{
+	void (*fn) (void* itype, void* jobz, void* uplo, void* n, void* ap, void* bp, void* w, void* z, void* ldz, void* work, void* info);
+	void (*fn_hook) (void* itype, void* jobz, void* uplo, void* n, void* ap, void* bp, void* w, void* z, void* ldz, void* work, void* info);
+
+	fn      = current_backend->lapack.dspgv.f77_blas_function; 
+
+    hook_pos_dspgv ++;
+    if( hook_pos_dspgv < __flexiblas_hooks->dspgv.nhook) {
+        fn_hook = __flexiblas_hooks->dspgv.f77_hook_function[hook_pos_dspgv];
+        fn_hook((void*) itype, (void*) jobz, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) info);
+    } else {
+        hook_pos_dspgv = 0;
+		fn((void*) itype, (void*) jobz, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) info); 
+	}
+	return;
+}
+
+void flexiblas_chain_dspgv(void* itype, void* jobz, void* uplo, void* n, void* ap, void* bp, void* w, void* z, void* ldz, void* work, void* info)  __attribute__((alias("flexiblas_chain_dspgv_")));
+
 
 
 

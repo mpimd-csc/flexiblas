@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:33 2017 */ 
+ /* Generated: Wed Mar 28 11:20:03 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_ctzrqf = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 void FC_GLOBAL(ctzrqf,CTZRQF)(blasint* m, blasint* n, float complex* a, blasint* lda, float complex* tau, blasint* info)
 #else
 void FC_GLOBAL(ctzrqf,CTZRQF)(blasint* m, blasint* n, float complex* a, blasint* lda, float complex* tau, blasint* info)
-#endif 
+#endif
 {
-    double ts;
 	void (*fn) (void* m, void* n, void* a, void* lda, void* tau, void* info);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn_hook) (void* m, void* n, void* a, void* lda, void* tau, void* info);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.ctzrqf.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->ctzrqf.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) info); 
+		return;
+	} else {
+		hook_pos_ctzrqf = 0;
+		fn_hook((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) info);
+		return;
 	}
-	fn = current_backend->lapack.ctzrqf.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) info); 
-		current_backend->lapack.ctzrqf.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.ctzrqf.calls[0]++;
-	} else { 
-		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) info); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void ctzrqf_(blasint* m, blasint* n, float complex* a, blasint* lda, float complex* tau, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ctzrqf,CTZRQF)))));
 #else
 void ctzrqf(blasint* m, blasint* n, float complex* a, blasint* lda, float complex* tau, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ctzrqf,CTZRQF)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_ctzrqf_(void* m, void* n, void* a, void* lda, void* tau, void* info)
+{
+	void (*fn) (void* m, void* n, void* a, void* lda, void* tau, void* info);
+
+	fn = current_backend->lapack.ctzrqf.f77_blas_function; 
+
+		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) info); 
+
+	return;
+}
+
+void flexiblas_real_ctzrqf(void* m, void* n, void* a, void* lda, void* tau, void* info)  __attribute__((alias("flexiblas_real_ctzrqf_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_ctzrqf_(void* m, void* n, void* a, void* lda, void* tau, void* info)
+{
+	void (*fn) (void* m, void* n, void* a, void* lda, void* tau, void* info);
+	void (*fn_hook) (void* m, void* n, void* a, void* lda, void* tau, void* info);
+
+	fn      = current_backend->lapack.ctzrqf.f77_blas_function; 
+
+    hook_pos_ctzrqf ++;
+    if( hook_pos_ctzrqf < __flexiblas_hooks->ctzrqf.nhook) {
+        fn_hook = __flexiblas_hooks->ctzrqf.f77_hook_function[hook_pos_ctzrqf];
+        fn_hook((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) info);
+    } else {
+        hook_pos_ctzrqf = 0;
+		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) info); 
+	}
+	return;
+}
+
+void flexiblas_chain_ctzrqf(void* m, void* n, void* a, void* lda, void* tau, void* info)  __attribute__((alias("flexiblas_chain_ctzrqf_")));
+
 
 
 

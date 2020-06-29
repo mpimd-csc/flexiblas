@@ -1,9 +1,9 @@
 # - Find the PMLIB includes and library
 #
 # This module defines
-#  PMLIB_INCLUDE_DIR, where to find pmlib.h, etc.
-#  PMLIB_LIBRARIES, the libraries to link against to use PMLIB.
-#  AMD_FOUND, If false, do not try to use PMLIB.
+#  PMLIB_INCLUDE_DIR    - where to find pmlib.h, etc.
+#  PMLIB_LIBRARIES      - the libraries to link against to use PMLIB.
+#  PMLIB_FOUND          - If false, do not try to use PMLIB.
 
 #=============================================================================
 # Copyright 2014, Martin Koehler
@@ -18,36 +18,43 @@
 # Changelog:
 
 
-find_path(PMLIB_INC_DIR pmlib.h  )
+INCLUDE(FindPackageHandleStandardArgs)
 
-set(PMLIB_NAMES ${PMLIB_NAMES} libpmlib pmlib)
-
-if (WIN32)
-	  set(_libdir ENV LIB ${ARGN} )
-elseif (APPLE)
-  set(_libdir ENV DYLD_LIBRARY_PATH ${ARGN} )
-else ()
-	  set(_libdir ENV LD_LIBRARY_PATH ${ARGN})
-endif ()
-set(PMLIB_PATH
-	${_libdir}
-	/usr/local/lib64 
- 	/usr/local/lib 
-	/usr/lib64
-	/usr/lib
-)
-find_library(PMLIB_LIBRARY NAMES ${PMLIB_NAMES} HINTS ${PMLIB_PATH} PATHS ${PMLIB_PATH} )
+# GET_INC_LIB_DIR MACRO
+INCLUDE(CMakeHelpers)
+GET_INC_LIB_DIR(_INCDIR _LIBDIR)
 
 
-if (PMLIB_LIBRARY AND PMLIB_INC_DIR)
-      SET(PMLIB_INCLUDE_DIR ${PMLIB_INC_DIR} )
-      SET(PMLIB_LIBRARIES  ${PMLIB_LIBRARY} )
-endif (PMLIB_LIBRARY AND PMLIB_INC_DIR )
+FIND_PATH(PMLIB_INCLUDE_DIR
+    NAMES
+    pmlib.h
+    PATHS
+    /usr/
+    /usr/local/
+    /opt/
+    /opt/local/
+    ${_INCDIR}
+    PATH_SUFFIXES
+    include
+    )
 
 
-# handle the QUIETLY and REQUIRED arguments and set AMD_FOUND to TRUE if
-# all listed variables are TRUE
-include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(PMLIB  DEFAULT_MSG PMLIB_LIBRARIES PMLIB_INC_DIR)
+FIND_LIBRARY(PMLIB_LIBRARIES
+    NAMES
+    libpmlib
+    pmlib
+    PATHS
+    /usr/
+    /usr/
+    /usr/local/
+    /opt/
+    /opt/local/
+    ${_LIBDIR}
+    PATH_SUFFIXES
+    lib/
+    lib64
+    )
 
-mark_as_advanced(PMLIB_LIBRARY PMLIB_INC_DIR )
+
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(PMLIB DEFAULT_MSG PMLIB_LIBRARIES PMLIB_INCLUDE_DIR)
+MARK_AS_ADVANCED(PMLIB_LIBRARIES PMLIB_INCLUDE_DIR)

@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2016
+ * Copyright (C) Martin Koehler, 2013-2020
  */
 
 
@@ -21,7 +21,7 @@
 
 #define FLEXIBLAS_LAPACK_MAJOR 3
 #define FLEXIBLAS_LAPACK_MINOR 7 
-#define FLEXIBLAS_LAPACK_PATCH 0 
+#define FLEXIBLAS_LAPACK_PATCH 1 
 #define FLEXIBLAS_LAPACK_EXTRA "with deprecated" 
 
 typedef struct _flexiblas_lapack_backend {

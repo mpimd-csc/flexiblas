@@ -1,14 +1,32 @@
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright (C) Martin Koehler, 2013-2020
+ */
+
+
 #ifndef FLEXIBLAS_DUMMY_FORTRAN_H
 #define FLEXIBLAS_DUMMY_FORTRAN_H
 
 
 
 #ifdef __cplusplus
-extern "C" { 
+extern "C" {
 #endif
 
 /*-----------------------------------------------------------------------------
- *  Dummy Declaration. 
+ *  Dummy Declaration.
  *----------------------------------------------------------------------------*/
 void	caxpy_(void);
 void	ccopy_(void);
@@ -163,7 +181,7 @@ void	ztrsv_(void);
 
 
 void __flexiblas_dummy_function_to_include_all_blas_symbols(int dummy){
-    dummy = dummy; 
+    dummy = dummy;
 	caxpy_();
 	ccopy_();
 	cdotc_();
@@ -322,7 +340,7 @@ void __flexiblas_dummy_function_to_include_all_blas_symbols(int dummy){
 
 
 #ifdef __cplusplus
-} 
+}
 #endif
 
 #endif /* end of include guard: FLEXIBLAS_DUMMY_FORTRAN_H */

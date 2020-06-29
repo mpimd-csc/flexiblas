@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:36 2017 */ 
+ /* Generated: Wed Mar 28 11:20:04 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_slaic1 = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 void FC_GLOBAL(slaic1,SLAIC1)(blasint* job, blasint* j, float* x, float* sest, float* w, float* gamma, float* sestpr, float* s, float* c)
 #else
 void FC_GLOBAL(slaic1,SLAIC1)(blasint* job, blasint* j, float* x, float* sest, float* w, float* gamma, float* sestpr, float* s, float* c)
-#endif 
+#endif
 {
-    double ts;
 	void (*fn) (void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn_hook) (void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.slaic1.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->slaic1.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) job, (void*) j, (void*) x, (void*) sest, (void*) w, (void*) gamma, (void*) sestpr, (void*) s, (void*) c); 
+		return;
+	} else {
+		hook_pos_slaic1 = 0;
+		fn_hook((void*) job, (void*) j, (void*) x, (void*) sest, (void*) w, (void*) gamma, (void*) sestpr, (void*) s, (void*) c);
+		return;
 	}
-	fn = current_backend->lapack.slaic1.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) job, (void*) j, (void*) x, (void*) sest, (void*) w, (void*) gamma, (void*) sestpr, (void*) s, (void*) c); 
-		current_backend->lapack.slaic1.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.slaic1.calls[0]++;
-	} else { 
-		fn((void*) job, (void*) j, (void*) x, (void*) sest, (void*) w, (void*) gamma, (void*) sestpr, (void*) s, (void*) c); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void slaic1_(blasint* job, blasint* j, float* x, float* sest, float* w, float* gamma, float* sestpr, float* s, float* c) __attribute__((alias(MTS(FC_GLOBAL(slaic1,SLAIC1)))));
 #else
 void slaic1(blasint* job, blasint* j, float* x, float* sest, float* w, float* gamma, float* sestpr, float* s, float* c) __attribute__((alias(MTS(FC_GLOBAL(slaic1,SLAIC1)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_slaic1_(void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c)
+{
+	void (*fn) (void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c);
+
+	fn = current_backend->lapack.slaic1.f77_blas_function; 
+
+		fn((void*) job, (void*) j, (void*) x, (void*) sest, (void*) w, (void*) gamma, (void*) sestpr, (void*) s, (void*) c); 
+
+	return;
+}
+
+void flexiblas_real_slaic1(void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c)  __attribute__((alias("flexiblas_real_slaic1_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_slaic1_(void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c)
+{
+	void (*fn) (void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c);
+	void (*fn_hook) (void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c);
+
+	fn      = current_backend->lapack.slaic1.f77_blas_function; 
+
+    hook_pos_slaic1 ++;
+    if( hook_pos_slaic1 < __flexiblas_hooks->slaic1.nhook) {
+        fn_hook = __flexiblas_hooks->slaic1.f77_hook_function[hook_pos_slaic1];
+        fn_hook((void*) job, (void*) j, (void*) x, (void*) sest, (void*) w, (void*) gamma, (void*) sestpr, (void*) s, (void*) c);
+    } else {
+        hook_pos_slaic1 = 0;
+		fn((void*) job, (void*) j, (void*) x, (void*) sest, (void*) w, (void*) gamma, (void*) sestpr, (void*) s, (void*) c); 
+	}
+	return;
+}
+
+void flexiblas_chain_slaic1(void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c)  __attribute__((alias("flexiblas_chain_slaic1_")));
+
 
 
 

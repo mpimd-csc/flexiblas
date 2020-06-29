@@ -1,11 +1,11 @@
 /* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
-/* 
+/*
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License.
- 
+
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -27,7 +27,7 @@ void cblas_cgbmv(const CBLAS_LAYOUT layout,
 
 {
    char TA;
-   #define F77_TA &TA   
+   #define F77_TA &TA
 #ifdef F77_INT
    F77_INT F77_M=M, F77_N=N, F77_lda=lda, F77_incX=incX, F77_incY=incY;
    F77_INT F77_KL=KL,F77_KU=KU;
@@ -40,7 +40,7 @@ void cblas_cgbmv(const CBLAS_LAYOUT layout,
    #define F77_incX incx
    #define F77_incY incY
 #endif
-   
+
    current_backend->blas.cgbmv.calls[POS_CBLAS] ++;
 
    if ( current_backend->post_init != 0 ) {
@@ -48,11 +48,7 @@ void cblas_cgbmv(const CBLAS_LAYOUT layout,
    	current_backend->post_init = 0;
    }
    if ( current_backend->blas.cgbmv.call_cblas != NULL ) {
-	   double ts = 0, te = 0;
-	   if ( __flexiblas_profile ) {  
-	   	ts = flexiblas_wtime(); 
-	   }
-	   
+
 	   void (*fn)
 		  (const CBLAS_LAYOUT layout,
                  const CBLAS_TRANSPOSE TransA, const int M, const int N,
@@ -62,10 +58,6 @@ void cblas_cgbmv(const CBLAS_LAYOUT layout,
                  void  *Y, const int incY)
 		   = current_backend->blas.cgbmv.call_cblas;
 	fn(layout,TransA,M,N,KL,KU,alpha,A,lda,X,incX,beta,Y,incY);
-	if (__flexiblas_profile ) {
-	   te = flexiblas_wtime(); 
-	   current_backend->blas.cgbmv.timings[POS_CBLAS] += (te - ts); 
-	}
     return;
    }
 
@@ -203,5 +195,5 @@ void cblas_cgbmv(const CBLAS_LAYOUT layout,
    CBLAS_CallFromC = 0;
    RowMajorStrg = 0;
 
-   return; 
+   return;
 }

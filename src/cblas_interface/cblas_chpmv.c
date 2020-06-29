@@ -1,5 +1,5 @@
 /* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
-/* 
+/*
    Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
    This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ void cblas_chpmv(const CBLAS_LAYOUT layout,
         void  *Y, const int incY)
 {
     char UL;
-#define F77_UL &UL   
+#define F77_UL &UL
 #ifdef F77_INT
     F77_INT F77_N=N, F77_incX=incX, F77_incY=incY;
 #else
@@ -41,10 +41,6 @@ void cblas_chpmv(const CBLAS_LAYOUT layout,
         current_backend->post_init = 0;
     }
     if ( current_backend->blas.chpmv.call_cblas != NULL ) {
-        double te = 0, ts = 0;
-        if (__flexiblas_profile) {
-            ts = flexiblas_wtime(); 
-        }
         void (*fn)
             (const CBLAS_LAYOUT layout,
              const CBLAS_UPLO Uplo,const int N,
@@ -53,11 +49,6 @@ void cblas_chpmv(const CBLAS_LAYOUT layout,
              void  *Y, const int incY)
             = current_backend->blas.chpmv.call_cblas;
         fn(layout,Uplo,N,alpha,AP,X,incX,beta,Y,incY);
-        if (__flexiblas_profile ){
-            te = flexiblas_wtime(); 
-            current_backend->blas.chpmv.timings[POS_CBLAS] += (te - ts); 
-        }
-
     } else {
         int n, i=0, incx=incX;
         const float *alp= (const float *)alpha, *bet = (const float *)beta;

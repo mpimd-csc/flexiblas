@@ -9,7 +9,7 @@
 #   clBLAS_FOUND          - True if clBLAS was found
 #   clBLAS_INCLUDE_DIRS   - include directories for clBLAS
 #   clBLAS_LIBRARIES      - link against this library to use clBLAS
-#   clBLAS_VERSION_STRING - clBLAS version as string (e.g. "2.10.0") 
+#   clBLAS_VERSION_STRING - clBLAS version as string (e.g. "2.10.0")
 #   clBLAS_VERSION_MAJOR  - The major version of the clBLAS implementation
 #   clBLAS_VERSION_MINOR  - The minor version of the clBLAS implementation
 #   clBLAS_VERSION_PATCH  - The patch version of the clBLAS implementation
@@ -33,104 +33,95 @@
 # (To distribute this file outside of CMake, substitute the full
 #  License text for the above reference.)
 
-FIND_PACKAGE(OpenCL REQUIRED) 
+FIND_PACKAGE(OpenCL REQUIRED)
 
-function(_FIND_CLBLAS_VERSION)
-	include(CheckSymbolExists)
-	include(CMakePushCheckState)
+INCLUDE(CheckSymbolExists)
+INCLUDE(CMakePushCheckState)
+INCLUDE(FindPackageHandleStandardArgs)
 
-	# CMAKE_PUSH_CHECK_STATE()
+FUNCTION(_FIND_CLBLAS_VERSION)
 
-	file(WRITE "${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeTmp/clblas_version.c"
-		"#include <stdio.h>
-		#include <clBLAS.h> 
-		int main() {
-		cl_uint major, minor,patch; 
-		clblasGetVersion(&major, &minor, &patch);
-		printf(\"%u.%u.%u\", major, minor, patch);
-		return 0; }\n")
-	try_run(VERSION_EXITCODE VERSION_COMPILED
-			${CMAKE_BINARY_DIR}
-			${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeTmp/clblas_version.c
-			LINK_LIBRARIES ${clBLAS_LIBRARIES}
-			CMAKE_FLAGS 
-			-DCMAKE_SKIP_RPATH:BOOL=${CMAKE_SKIP_RPATH}
-			"-DINCLUDE_DIRECTORIES:STRING=${clBLAS_INCLUDE_DIRS}"
-			COMPILE_OUTPUT_VARIABLE OUTPUT
-			RUN_OUTPUT_VARIABLE RUN_OUTPUT)
+    # CMAKE_PUSH_CHECK_STATE()
 
-	IF ( VERSION_COMPILED) 
-		SET(clBLAS_VERSION_STRING "${RUN_OUTPUT}" PARENT_SCOPE) 
-		string(REGEX MATCHALL "[0-9]+" version_components "${RUN_OUTPUT}")
-		list(GET version_components 0 major_version)
- 		list(GET version_components 1 minor_version)
-		list(GET version_components 2 patch_version)
-		SET(clBLAS_VERSION_MAJOR ${major_version} PARENT_SCOPE)
-		SET(clBLAS_VERSION_MINOR ${minor_version} PARENT_SCOPE)
-		SET(clBLAS_VERSION_PATCH ${patch_version} PARENT_SCOPE)
-	ELSE () 
-		SET(clBLAS_VERSION_STRING "Unknown" PARENT_SCOPE)
-		SET(clBLAS_VERSION_MAJOR 0 PARENT_SCOPE)
-		SET(clBLAS_VERSION_MINOR 0 PARENT_SCOPE)
-		SET(clBLAS_VERSION_PATCH 0 PARENT_SCOPE)
+    FILE(WRITE "${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeTmp/clblas_version.c"
+        "#include <stdio.h>
+        #include <clBLAS.h>
+        int main() {
+        cl_uint major, minor,patch;
+        clblasGetVersion(&major, &minor, &patch);
+        printf(\"%u.%u.%u\", major, minor, patch);
+        return 0; }\n")
+        TRY_RUN(VERSION_EXITCODE VERSION_COMPILED
+            ${CMAKE_BINARY_DIR}
+            ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeTmp/clblas_version.c
+            LINK_LIBRARIES ${clBLAS_LIBRARIES}
+            CMAKE_FLAGS
+            -DCMAKE_SKIP_RPATH:BOOL=${CMAKE_SKIP_RPATH}
+            "-DINCLUDE_DIRECTORIES:STRING=${clBLAS_INCLUDE_DIRS}"
+            COMPILE_OUTPUT_VARIABLE OUTPUT
+            RUN_OUTPUT_VARIABLE RUN_OUTPUT)
 
-	ENDIF()
+        IF(VERSION_COMPILED)
+            SET(clBLAS_VERSION_STRING "${RUN_OUTPUT}" PARENT_SCOPE)
+            STRING(REGEX MATCHALL "[0-9]+" version_components "${RUN_OUTPUT}")
+            LIST(GET version_components 0 major_version)
+            LIST(GET version_components 1 minor_version)
+            LIST(GET version_components 2 patch_version)
+            SET(clBLAS_VERSION_MAJOR ${major_version} PARENT_SCOPE)
+            SET(clBLAS_VERSION_MINOR ${minor_version} PARENT_SCOPE)
+            SET(clBLAS_VERSION_PATCH ${patch_version} PARENT_SCOPE)
+        ELSE()
+            SET(clBLAS_VERSION_STRING "Unknown" PARENT_SCOPE)
+            SET(clBLAS_VERSION_MAJOR 0 PARENT_SCOPE)
+            SET(clBLAS_VERSION_MINOR 0 PARENT_SCOPE)
+            SET(clBLAS_VERSION_PATCH 0 PARENT_SCOPE)
+        ENDIF()
 
-endfunction()
+    ENDFUNCTION()
 
-if (NOT _incdir)
-  if (WIN32)
-	  set(_incdir ENV INCLUDE)
-  elseif (APPLE)
-	  set(_incdir ENV INCLUDE CPATH)
-  else ()
-	  set(_incdir ENV INCLUDE CPATH)
-  endif ()
-endif ()
+    IF(NOT _incdir)
+        IF(WIN32)
+            SET(_incdir ENV INCLUDE)
+        ELSEIF(APPLE)
+            SET(_incdir ENV INCLUDE CPATH)
+        ELSE()
+            SET(_incdir ENV INCLUDE CPATH)
+        ENDIF()
+    ENDIF()
 
-if (NOT _libdir)
-  if (WIN32)
-    set(_libdir ENV LIB)
-  elseif (APPLE)
-    set(_libdir ENV DYLD_LIBRARY_PATH)
-  else ()
-    set(_libdir ENV LD_LIBRARY_PATH)
-  endif ()
-endif ()
+    IF(NOT _libdir)
+        IF(WIN32)
+            SET(_libdir ENV LIB)
+        ELSEIF(APPLE)
+            SET(_libdir ENV DYLD_LIBRARY_PATH)
+        ELSE()
+            SET(_libdir ENV LD_LIBRARY_PATH)
+        ENDIF()
+    ENDIF()
 
-find_path(clBLAS_INCLUDE_DIR
-  NAMES
-	clBLAS.h
-  PATHS
-    ${_incdir}
-	/usr/include
-	/usr/local/include
-	/opt/local/include	#Macports
+    FIND_PATH(clBLAS_INCLUDE_DIR
+        NAMES
+        clBLAS.h
+        PATHS
+        /usr/include
+        /usr/local/include
+        /opt/local/include  #Macports
+        )
+    # _FIND_OPENCL_VERSION()
 
-    )
-# _FIND_OPENCL_VERSION()
+    FIND_LIBRARY(clBLAS_LIBRARY
+        NAMES clBLAS
+        PATHS
+        /usr/lib
+        /usr/lib32
+        /usr/lib64
+        )
 
-find_library(clBLAS_LIBRARY
-	NAMES clBLAS
-	PATHS 	${_libdir} 
-	 	/usr/lib
-		/usr/lib32
-		/usr/lib64
-	 )
+    SET(clBLAS_LIBRARIES ${clBLAS_LIBRARY} ${OpenCL_LIBRARIES})
+    SET(clBLAS_INCLUDE_DIRS ${clBLAS_INCLUDE_DIR} ${OpenCL_INCLUDE_DIR})
 
-set(clBLAS_LIBRARIES ${clBLAS_LIBRARY} ${OpenCL_LIBRARIES})
-set(clBLAS_INCLUDE_DIRS ${clBLAS_INCLUDE_DIR} ${OpenCL_INCLUDE_DIR})
+    _FIND_CLBLAS_VERSION()
 
-_FIND_CLBLAS_VERSION()
+    FIND_PACKAGE_HANDLE_STANDARD_ARGS(CLBLAS FOUND_VAR clBLAS_FOUND REQUIRED_VARS clBLAS_LIBRARY clBLAS_INCLUDE_DIR VERSION_VAR clBLAS_VERSION_STRING)
 
-include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(
-  clBLAS
-  FOUND_VAR clBLAS_FOUND
-  REQUIRED_VARS clBLAS_LIBRARY clBLAS_INCLUDE_DIR
-  VERSION_VAR clBLAS_VERSION_STRING)
-# MESSAGE("${clBLAS_VERSION_MAJOR} - ${clBLAS_VERSION_MINOR} - ${clBLAS_VERSION_PATCH}")
-
-mark_as_advanced(
-  clBLAS_INCLUDE_DIR
-  clBLAS_LIBRARY)
+    MARK_AS_ADVANCED(clBLAS_INCLUDE_DIR clBLAS_LIBRARY)

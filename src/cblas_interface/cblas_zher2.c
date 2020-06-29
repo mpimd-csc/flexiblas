@@ -1,5 +1,5 @@
 /* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
-/* 
+/*
    Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
    This program is free software: you can redistribute it and/or modify
@@ -40,29 +40,21 @@ void cblas_zher2(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
         current_backend->post_init = 0;
     }
     if ( current_backend->blas.zher2.call_cblas != NULL ) {
-        double te = 0, ts = 0;
-        if ( __flexiblas_profile) {
-            ts =   flexiblas_wtime(); 
-        }
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
              const int N, const void *alpha, const void *X, const int incX,
              const void *Y, const int incY, void *A, const int lda)
             = current_backend->blas.zher2.call_cblas;
         fn(layout,Uplo,N,alpha,X,incX,Y,incY,A,lda);
-        if ( __flexiblas_profile) {
-            te = flexiblas_wtime(); 
-            current_backend->blas.zher2.timings[POS_CBLAS] += (te - ts); 
-        }
     } else {
 
-        int n, i, j, tincx, tincy; 
+        int n, i, j, tincx, tincy;
 #ifdef F77_INT
         F77_incX=incX;
         F77_incY=incY;
-#else 
-        int incx = incX; 
-        int incy = incY; 
+#else
+        int incx = incX;
+        int incy = incY;
 #endif
 
         double *x, *xx,*y,*yy,*tx, *ty, *stx, *sty;
@@ -81,14 +73,14 @@ void cblas_zher2(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
         {
             if (Uplo == CblasLower) UL = 'L';
             else if (Uplo == CblasUpper) UL = 'U';
-            else 
+            else
             {
                 cblas_xerbla(2, "cblas_zher2","Illegal Uplo setting, %d\n",Uplo );
                 CBLAS_CallFromC = 0;
                 RowMajorStrg = 0;
                 return;
             }
-            FC_GLOBAL(zher2,ZHER2)(F77_UL, &F77_N, alpha, X, &F77_incX, 
+            FC_GLOBAL(zher2,ZHER2)(F77_UL, &F77_N, alpha, X, &F77_incX,
                     Y, &F77_incY, A, &F77_lda);
 
         }  else if (layout == CblasRowMajor)
@@ -96,7 +88,7 @@ void cblas_zher2(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
             RowMajorStrg = 1;
             if (Uplo == CblasUpper) UL = 'L';
             else if (Uplo == CblasLower) UL = 'U';
-            else 
+            else
             {
                 cblas_xerbla(2, "cblas_zher2","Illegal Uplo setting, %d\n", Uplo);
                 CBLAS_CallFromC = 0;
@@ -107,29 +99,29 @@ void cblas_zher2(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
             {
                 n = N << 1;
                 x = malloc(n*sizeof(double));
-                y = malloc(n*sizeof(double));         
+                y = malloc(n*sizeof(double));
                 tx = x;
                 ty = y;
                 if( incX > 0 ) {
                     i = incX << 1 ;
                     tincx = 2;
                     stx= x+n;
-                } else { 
+                } else {
                     i = incX *(-2);
                     tincx = -2;
-                    stx = x-2; 
-                    x +=(n-2); 
+                    stx = x-2;
+                    x +=(n-2);
                 }
 
                 if( incY > 0 ) {
                     j = incY << 1;
                     tincy = 2;
                     sty= y+n;
-                } else { 
+                } else {
                     j = incY *(-2);
                     tincy = -2;
-                    sty = y-2; 
-                    y +=(n-2); 
+                    sty = y-2;
+                    y +=(n-2);
                 }
 
                 do
@@ -160,14 +152,14 @@ void cblas_zher2(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
                 incx = 1;
                 incy = 1;
 #endif
-            }  else 
+            }  else
             {
                 COPY_CONST_PTR(x,X);
                 COPY_CONST_PTR(y,Y);
             }
-            FC_GLOBAL(zher2,ZHER2)(F77_UL, &F77_N, alpha, y, &F77_incY, x, 
+            FC_GLOBAL(zher2,ZHER2)(F77_UL, &F77_N, alpha, y, &F77_incY, x,
                     &F77_incX, A, &F77_lda);
-        } else 
+        } else
         {
             cblas_xerbla(1, "cblas_zher2","Illegal layout setting, %d\n", layout);
             CBLAS_CallFromC = 0;

@@ -1,19 +1,18 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: flexiblas
-Source: http://www.mpi-magdeburg.mpg.de	
+Source: http://www.mpi-magdeburg.mpg.de
 
 Files: *
-Copyright: 2013 Martin Köhler <koehlerm@mpi-magdeburg.mpg.de>
-           2013 Jens Saak <saak@mpi-magdeburg.mpg.de>
+Copyright: 2013-2020 Martin Köhler <koehlerm@mpi-magdeburg.mpg.de>
 License: GPL-3.0+
 
 Files: debian/*
-Copyright: 2013 Martin Köhler <koehlerm@mpi-magdeburg.mpg.de>
+Copyright: 2013-2020 Martin Köhler <koehlerm@mpi-magdeburg.mpg.de>
 License: GPL-3.0+
 
-Files: netlib/*
-License: BSD
-Copyright: 1992-2011 The University of Tennessee and The University of Tennessee Research Foundation. All rights reserved.
+Files: contributed/*
+License: BSD-3-clause
+Copyright: 1992-2019 The University of Tennessee and The University of Tennessee Research Foundation. All rights reserved.
 	   2000-2011 The University of California Berkeley. All rights reserved.
 	   2006-2012 The University of Colorado Denver.  All rights reserved.
 
@@ -35,7 +34,7 @@ License: GPL-3.0+
  On Debian systems, the complete text of the GNU General
  Public License version 3 can be found in "/usr/share/common-licenses/GPL-3".
 
-License: BSD
+License: BSD-3-clause
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are
  met:

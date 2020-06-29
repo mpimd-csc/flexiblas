@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:38 2017 */ 
+ /* Generated: Wed Mar 28 11:20:05 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_zlahrd = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 void FC_GLOBAL(zlahrd,ZLAHRD)(blasint* n, blasint* k, blasint* nb, double complex* a, blasint* lda, double complex* tau, double complex* t, blasint* ldt, double complex* y, blasint* ldy)
 #else
 void FC_GLOBAL(zlahrd,ZLAHRD)(blasint* n, blasint* k, blasint* nb, double complex* a, blasint* lda, double complex* tau, double complex* t, blasint* ldt, double complex* y, blasint* ldy)
-#endif 
+#endif
 {
-    double ts;
 	void (*fn) (void* n, void* k, void* nb, void* a, void* lda, void* tau, void* t, void* ldt, void* y, void* ldy);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn_hook) (void* n, void* k, void* nb, void* a, void* lda, void* tau, void* t, void* ldt, void* y, void* ldy);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.zlahrd.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->zlahrd.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) n, (void*) k, (void*) nb, (void*) a, (void*) lda, (void*) tau, (void*) t, (void*) ldt, (void*) y, (void*) ldy); 
+		return;
+	} else {
+		hook_pos_zlahrd = 0;
+		fn_hook((void*) n, (void*) k, (void*) nb, (void*) a, (void*) lda, (void*) tau, (void*) t, (void*) ldt, (void*) y, (void*) ldy);
+		return;
 	}
-	fn = current_backend->lapack.zlahrd.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) n, (void*) k, (void*) nb, (void*) a, (void*) lda, (void*) tau, (void*) t, (void*) ldt, (void*) y, (void*) ldy); 
-		current_backend->lapack.zlahrd.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.zlahrd.calls[0]++;
-	} else { 
-		fn((void*) n, (void*) k, (void*) nb, (void*) a, (void*) lda, (void*) tau, (void*) t, (void*) ldt, (void*) y, (void*) ldy); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void zlahrd_(blasint* n, blasint* k, blasint* nb, double complex* a, blasint* lda, double complex* tau, double complex* t, blasint* ldt, double complex* y, blasint* ldy) __attribute__((alias(MTS(FC_GLOBAL(zlahrd,ZLAHRD)))));
 #else
 void zlahrd(blasint* n, blasint* k, blasint* nb, double complex* a, blasint* lda, double complex* tau, double complex* t, blasint* ldt, double complex* y, blasint* ldy) __attribute__((alias(MTS(FC_GLOBAL(zlahrd,ZLAHRD)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_zlahrd_(void* n, void* k, void* nb, void* a, void* lda, void* tau, void* t, void* ldt, void* y, void* ldy)
+{
+	void (*fn) (void* n, void* k, void* nb, void* a, void* lda, void* tau, void* t, void* ldt, void* y, void* ldy);
+
+	fn = current_backend->lapack.zlahrd.f77_blas_function; 
+
+		fn((void*) n, (void*) k, (void*) nb, (void*) a, (void*) lda, (void*) tau, (void*) t, (void*) ldt, (void*) y, (void*) ldy); 
+
+	return;
+}
+
+void flexiblas_real_zlahrd(void* n, void* k, void* nb, void* a, void* lda, void* tau, void* t, void* ldt, void* y, void* ldy)  __attribute__((alias("flexiblas_real_zlahrd_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_zlahrd_(void* n, void* k, void* nb, void* a, void* lda, void* tau, void* t, void* ldt, void* y, void* ldy)
+{
+	void (*fn) (void* n, void* k, void* nb, void* a, void* lda, void* tau, void* t, void* ldt, void* y, void* ldy);
+	void (*fn_hook) (void* n, void* k, void* nb, void* a, void* lda, void* tau, void* t, void* ldt, void* y, void* ldy);
+
+	fn      = current_backend->lapack.zlahrd.f77_blas_function; 
+
+    hook_pos_zlahrd ++;
+    if( hook_pos_zlahrd < __flexiblas_hooks->zlahrd.nhook) {
+        fn_hook = __flexiblas_hooks->zlahrd.f77_hook_function[hook_pos_zlahrd];
+        fn_hook((void*) n, (void*) k, (void*) nb, (void*) a, (void*) lda, (void*) tau, (void*) t, (void*) ldt, (void*) y, (void*) ldy);
+    } else {
+        hook_pos_zlahrd = 0;
+		fn((void*) n, (void*) k, (void*) nb, (void*) a, (void*) lda, (void*) tau, (void*) t, (void*) ldt, (void*) y, (void*) ldy); 
+	}
+	return;
+}
+
+void flexiblas_chain_zlahrd(void* n, void* k, void* nb, void* a, void* lda, void* tau, void* t, void* ldt, void* y, void* ldy)  __attribute__((alias("flexiblas_chain_zlahrd_")));
+
 
 
 

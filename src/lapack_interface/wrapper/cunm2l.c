@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:34 2017 */ 
+ /* Generated: Wed Mar 28 11:20:03 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_cunm2l = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 void FC_GLOBAL(cunm2l,CUNM2L)(char* side, char* trans, blasint* m, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* tau, float complex* c, blasint* ldc, float complex* work, blasint* info)
 #else
 void FC_GLOBAL(cunm2l,CUNM2L)(char* side, char* trans, blasint* m, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* tau, float complex* c, blasint* ldc, float complex* work, blasint* info)
-#endif 
+#endif
 {
-    double ts;
 	void (*fn) (void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* info);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn_hook) (void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* info);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.cunm2l.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->cunm2l.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) info); 
+		return;
+	} else {
+		hook_pos_cunm2l = 0;
+		fn_hook((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) info);
+		return;
 	}
-	fn = current_backend->lapack.cunm2l.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) info); 
-		current_backend->lapack.cunm2l.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.cunm2l.calls[0]++;
-	} else { 
-		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) info); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void cunm2l_(char* side, char* trans, blasint* m, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* tau, float complex* c, blasint* ldc, float complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cunm2l,CUNM2L)))));
 #else
 void cunm2l(char* side, char* trans, blasint* m, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* tau, float complex* c, blasint* ldc, float complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cunm2l,CUNM2L)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_cunm2l_(void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* info)
+{
+	void (*fn) (void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* info);
+
+	fn = current_backend->lapack.cunm2l.f77_blas_function; 
+
+		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) info); 
+
+	return;
+}
+
+void flexiblas_real_cunm2l(void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* info)  __attribute__((alias("flexiblas_real_cunm2l_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_cunm2l_(void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* info)
+{
+	void (*fn) (void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* info);
+	void (*fn_hook) (void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* info);
+
+	fn      = current_backend->lapack.cunm2l.f77_blas_function; 
+
+    hook_pos_cunm2l ++;
+    if( hook_pos_cunm2l < __flexiblas_hooks->cunm2l.nhook) {
+        fn_hook = __flexiblas_hooks->cunm2l.f77_hook_function[hook_pos_cunm2l];
+        fn_hook((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) info);
+    } else {
+        hook_pos_cunm2l = 0;
+		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) info); 
+	}
+	return;
+}
+
+void flexiblas_chain_cunm2l(void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* info)  __attribute__((alias("flexiblas_chain_cunm2l_")));
+
 
 
 

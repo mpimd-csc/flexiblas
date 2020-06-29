@@ -26,22 +26,22 @@
 
 #include "fortran_mangle.h"
 
-#ifdef BLAS_INTERFACE_INTEL 
+#ifdef BLAS_INTERFACE_INTEL
 #include "blas_intel.h"
 #include "extblas_intel.h"
-#else 
+#else
 #include "blas_gnu.h"
 #include "extblas_gnu.h"
-#endif 
+#endif
 #ifdef FLEXIBLAS_CBLAS
-#include "cblas.h" 
-#endif 
+#include "cblas.h"
+#endif
 
 #ifdef INTEGER8
 #define Int int64_t
-#else 
+#else
 #define Int int
-#endif 
+#endif
 
 
 
@@ -54,33 +54,34 @@ double wtime()
 
 
 int main (int argc, char **argv) {
-	Int n, i; 
-	double *A, *B, *C; 
+	Int n, i;
+	double *A, *B, *C;
 	double ts,te;
 	double alpha=1, beta=1;
 	if ( argc != 2) {
-		printf("Usage: %s dim\n", argv[0]); 
-		exit(1); 
+		printf("Usage: %s dim\n", argv[0]);
+		exit(1);
 	}
-	n = atoi(argv[1]); 
-	A = malloc(sizeof(double) * n *n ); 
-	B = malloc(sizeof(double) * n *n ); 
-	C = malloc(sizeof(double) * n *n ); 
+	n = atoi(argv[1]);
+	A = malloc(sizeof(double) * n *n );
+	B = malloc(sizeof(double) * n *n );
+	C = malloc(sizeof(double) * n *n );
+
 
 	for ( i = 0; i < n * n; i++){
-		A[i]=i+1; 
-		B[i]=i+0.5; 
+		A[i]=i+1;
+		B[i]=i+0.5;
 	}
-	ts = wtime(); 
+	ts = wtime();
 	for (i=0; i < 10; i++){
-		FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &n, B,&n, &beta, C, &n); 
+		FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &n, B,&n, &beta, C, &n);
 	}
-	te = wtime(); 
+	te = wtime();
 	printf("time: %lg\n", (te-ts)/10.0);
 
 
-	free(A); 
+	free(A);
 	free(B);
-	free(C); 
-	return 0; 
+	free(C);
+	return 0;
 }

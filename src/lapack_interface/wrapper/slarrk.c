@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:36 2017 */ 
+ /* Generated: Wed Mar 28 11:20:04 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_slarrk = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 void FC_GLOBAL(slarrk,SLARRK)(blasint* n, blasint* iw, float* gl, float* gu, float* d, float* e2, float* pivmin, float* reltol, float* w, float* werr, blasint* info)
 #else
 void FC_GLOBAL(slarrk,SLARRK)(blasint* n, blasint* iw, float* gl, float* gu, float* d, float* e2, float* pivmin, float* reltol, float* w, float* werr, blasint* info)
-#endif 
+#endif
 {
-    double ts;
 	void (*fn) (void* n, void* iw, void* gl, void* gu, void* d, void* e2, void* pivmin, void* reltol, void* w, void* werr, void* info);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn_hook) (void* n, void* iw, void* gl, void* gu, void* d, void* e2, void* pivmin, void* reltol, void* w, void* werr, void* info);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.slarrk.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->slarrk.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) n, (void*) iw, (void*) gl, (void*) gu, (void*) d, (void*) e2, (void*) pivmin, (void*) reltol, (void*) w, (void*) werr, (void*) info); 
+		return;
+	} else {
+		hook_pos_slarrk = 0;
+		fn_hook((void*) n, (void*) iw, (void*) gl, (void*) gu, (void*) d, (void*) e2, (void*) pivmin, (void*) reltol, (void*) w, (void*) werr, (void*) info);
+		return;
 	}
-	fn = current_backend->lapack.slarrk.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) n, (void*) iw, (void*) gl, (void*) gu, (void*) d, (void*) e2, (void*) pivmin, (void*) reltol, (void*) w, (void*) werr, (void*) info); 
-		current_backend->lapack.slarrk.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.slarrk.calls[0]++;
-	} else { 
-		fn((void*) n, (void*) iw, (void*) gl, (void*) gu, (void*) d, (void*) e2, (void*) pivmin, (void*) reltol, (void*) w, (void*) werr, (void*) info); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void slarrk_(blasint* n, blasint* iw, float* gl, float* gu, float* d, float* e2, float* pivmin, float* reltol, float* w, float* werr, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(slarrk,SLARRK)))));
 #else
 void slarrk(blasint* n, blasint* iw, float* gl, float* gu, float* d, float* e2, float* pivmin, float* reltol, float* w, float* werr, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(slarrk,SLARRK)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_slarrk_(void* n, void* iw, void* gl, void* gu, void* d, void* e2, void* pivmin, void* reltol, void* w, void* werr, void* info)
+{
+	void (*fn) (void* n, void* iw, void* gl, void* gu, void* d, void* e2, void* pivmin, void* reltol, void* w, void* werr, void* info);
+
+	fn = current_backend->lapack.slarrk.f77_blas_function; 
+
+		fn((void*) n, (void*) iw, (void*) gl, (void*) gu, (void*) d, (void*) e2, (void*) pivmin, (void*) reltol, (void*) w, (void*) werr, (void*) info); 
+
+	return;
+}
+
+void flexiblas_real_slarrk(void* n, void* iw, void* gl, void* gu, void* d, void* e2, void* pivmin, void* reltol, void* w, void* werr, void* info)  __attribute__((alias("flexiblas_real_slarrk_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_slarrk_(void* n, void* iw, void* gl, void* gu, void* d, void* e2, void* pivmin, void* reltol, void* w, void* werr, void* info)
+{
+	void (*fn) (void* n, void* iw, void* gl, void* gu, void* d, void* e2, void* pivmin, void* reltol, void* w, void* werr, void* info);
+	void (*fn_hook) (void* n, void* iw, void* gl, void* gu, void* d, void* e2, void* pivmin, void* reltol, void* w, void* werr, void* info);
+
+	fn      = current_backend->lapack.slarrk.f77_blas_function; 
+
+    hook_pos_slarrk ++;
+    if( hook_pos_slarrk < __flexiblas_hooks->slarrk.nhook) {
+        fn_hook = __flexiblas_hooks->slarrk.f77_hook_function[hook_pos_slarrk];
+        fn_hook((void*) n, (void*) iw, (void*) gl, (void*) gu, (void*) d, (void*) e2, (void*) pivmin, (void*) reltol, (void*) w, (void*) werr, (void*) info);
+    } else {
+        hook_pos_slarrk = 0;
+		fn((void*) n, (void*) iw, (void*) gl, (void*) gu, (void*) d, (void*) e2, (void*) pivmin, (void*) reltol, (void*) w, (void*) werr, (void*) info); 
+	}
+	return;
+}
+
+void flexiblas_chain_slarrk(void* n, void* iw, void* gl, void* gu, void* d, void* e2, void* pivmin, void* reltol, void* w, void* werr, void* info)  __attribute__((alias("flexiblas_chain_slarrk_")));
+
 
 
 

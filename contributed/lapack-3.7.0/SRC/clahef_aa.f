@@ -19,11 +19,11 @@
 *  ===========
 *
 *       SUBROUTINE CLAHEF_AA( UPLO, J1, M, NB, A, LDA, IPIV,
-*                             H, LDH, WORK, INFO )
+*                             H, LDH, WORK )
 *
 *       .. Scalar Arguments ..
 *       CHARACTER    UPLO
-*       INTEGER      J1, M, NB, LDA, LDH, INFO
+*       INTEGER      J1, M, NB, LDA, LDH
 *       ..
 *       .. Array Arguments ..
 *       INTEGER      IPIV( * )
@@ -127,16 +127,6 @@
 *>          WORK is COMPLEX workspace, dimension (M).
 *> \endverbatim
 *>
-*> \param[out] INFO
-*> \verbatim
-*>          INFO is INTEGER
-*>          = 0:  successful exit
-*>          < 0:  if INFO = -i, the i-th argument had an illegal value
-*>          > 0:  if INFO = i, D(i,i) is exactly zero.  The factorization
-*>                has been completed, but the block diagonal matrix D is
-*>                exactly singular, and division by zero will occur if it
-*>                is used to solve a system of equations.
-*> \endverbatim
 *
 *  Authors:
 *  ========
@@ -146,24 +136,24 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \date December 2016
+*> \date June 2017
 *
 *> \ingroup complexSYcomputational
 *
 *  =====================================================================
       SUBROUTINE CLAHEF_AA( UPLO, J1, M, NB, A, LDA, IPIV,
-     $                      H, LDH, WORK, INFO )
+     $                      H, LDH, WORK )
 *
-*  -- LAPACK computational routine (version 3.7.0) --
+*  -- LAPACK computational routine (version 3.7.1) --
 *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
 *  -- Univ. of California Berkeley, Univ. of Colorado Denver and NAG Ltd..--
-*     December 2016
+*     June 2017
 *
       IMPLICIT NONE
 *
 *     .. Scalar Arguments ..
       CHARACTER    UPLO
-      INTEGER      M, NB, J1, LDA, LDH, INFO
+      INTEGER      M, NB, J1, LDA, LDH
 *     ..
 *     .. Array Arguments ..
       INTEGER      IPIV( * )
@@ -192,7 +182,6 @@
 *     ..
 *     .. Executable Statements ..
 *
-      INFO = 0
       J = 1
 *
 *     K1 is the first column of the panel to be factorized
@@ -319,12 +308,6 @@
 *           Set A(J, J+1) = T(J, J+1)
 *
             A( K, J+1 ) = WORK( 2 )
-            IF( (A( K, J ).EQ.ZERO ) .AND.
-     $        ( (J.EQ.M) .OR. (A( K, J+1 ).EQ.ZERO))) THEN
-                IF(INFO .EQ. 0) THEN
-                    INFO = J
-                END IF
-            END IF
 *
             IF( J.LT.NB ) THEN
 *
@@ -344,10 +327,6 @@
             ELSE
                CALL CLASET( 'Full', 1, M-J-1, ZERO, ZERO,
      $                      A( K, J+2 ), LDA)
-            END IF
-         ELSE
-            IF( (A( K, J ).EQ.ZERO) .AND. (INFO.EQ.0) ) THEN
-               INFO = J
             END IF
          END IF
          J = J + 1
@@ -473,11 +452,6 @@
 *           Set A(J+1, J) = T(J+1, J)
 *
             A( J+1, K ) = WORK( 2 )
-            IF( (A( J, K ).EQ.ZERO) .AND.
-     $        ( (J.EQ.M) .OR. (A( J+1, K ).EQ.ZERO)) ) THEN
-                IF (INFO .EQ. 0)
-     $              INFO = J
-            END IF
 *
             IF( J.LT.NB ) THEN
 *
@@ -498,9 +472,6 @@
                CALL CLASET( 'Full', M-J-1, 1, ZERO, ZERO,
      $                      A( J+2, K ), LDA )
             END IF
-         ELSE
-            IF( (A( J, K ).EQ.ZERO) .AND. (J.EQ.M)
-     $          .AND. (INFO.EQ.0) ) INFO = J
          END IF
          J = J + 1
          GO TO 30

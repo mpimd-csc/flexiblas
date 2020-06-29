@@ -1,0 +1,18 @@
+#!/bin/sh
+
+set -e
+
+if [ "$1" != "upgrade" ]
+then
+	update-alternatives --remove libblas64.so-x86_64-linux-gnu \
+		/usr/lib/x86_64-linux-gnu/libflexiblas64.so
+
+	update-alternatives --remove liblapack64.so-x86_64-linux-gnu \
+		/usr/lib/x86_64-linux-gnu/libflexiblas64.so
+
+fi
+
+#DEBHELPER#
+
+
+exit 0

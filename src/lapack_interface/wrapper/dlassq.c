@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:34 2017 */ 
+ /* Generated: Wed Mar 28 11:20:04 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_dlassq = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 void FC_GLOBAL(dlassq,DLASSQ)(blasint* n, double* x, blasint* incx, double* scale, double* sumsq)
 #else
 void FC_GLOBAL(dlassq,DLASSQ)(blasint* n, double* x, blasint* incx, double* scale, double* sumsq)
-#endif 
+#endif
 {
-    double ts;
 	void (*fn) (void* n, void* x, void* incx, void* scale, void* sumsq);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn_hook) (void* n, void* x, void* incx, void* scale, void* sumsq);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.dlassq.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->dlassq.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq); 
+		return;
+	} else {
+		hook_pos_dlassq = 0;
+		fn_hook((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq);
+		return;
 	}
-	fn = current_backend->lapack.dlassq.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq); 
-		current_backend->lapack.dlassq.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.dlassq.calls[0]++;
-	} else { 
-		fn((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void dlassq_(blasint* n, double* x, blasint* incx, double* scale, double* sumsq) __attribute__((alias(MTS(FC_GLOBAL(dlassq,DLASSQ)))));
 #else
 void dlassq(blasint* n, double* x, blasint* incx, double* scale, double* sumsq) __attribute__((alias(MTS(FC_GLOBAL(dlassq,DLASSQ)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_dlassq_(void* n, void* x, void* incx, void* scale, void* sumsq)
+{
+	void (*fn) (void* n, void* x, void* incx, void* scale, void* sumsq);
+
+	fn = current_backend->lapack.dlassq.f77_blas_function; 
+
+		fn((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq); 
+
+	return;
+}
+
+void flexiblas_real_dlassq(void* n, void* x, void* incx, void* scale, void* sumsq)  __attribute__((alias("flexiblas_real_dlassq_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_dlassq_(void* n, void* x, void* incx, void* scale, void* sumsq)
+{
+	void (*fn) (void* n, void* x, void* incx, void* scale, void* sumsq);
+	void (*fn_hook) (void* n, void* x, void* incx, void* scale, void* sumsq);
+
+	fn      = current_backend->lapack.dlassq.f77_blas_function; 
+
+    hook_pos_dlassq ++;
+    if( hook_pos_dlassq < __flexiblas_hooks->dlassq.nhook) {
+        fn_hook = __flexiblas_hooks->dlassq.f77_hook_function[hook_pos_dlassq];
+        fn_hook((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq);
+    } else {
+        hook_pos_dlassq = 0;
+		fn((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq); 
+	}
+	return;
+}
+
+void flexiblas_chain_dlassq(void* n, void* x, void* incx, void* scale, void* sumsq)  __attribute__((alias("flexiblas_chain_dlassq_")));
+
 
 
 

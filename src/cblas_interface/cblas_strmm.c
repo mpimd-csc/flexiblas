@@ -1,11 +1,11 @@
 /* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
-/* 
+/*
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License.
- 
+
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -24,9 +24,9 @@ void cblas_strmm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
                  const float alpha, const float  *A, const int lda,
                  float  *B, const int ldb)
 {
-   char UL, TA, SD, DI;   
-   #define F77_TA &TA  
-   #define F77_UL &UL  
+   char UL, TA, SD, DI;
+   #define F77_TA &TA
+   #define F77_UL &UL
    #define F77_SD &SD
    #define F77_DI &DI
 
@@ -45,10 +45,6 @@ void cblas_strmm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
    	current_backend->post_init = 0;
    }
    if ( current_backend->blas.strmm.call_cblas != NULL ) {
-	   float te = 0, ts = 0;
-	   if ( __flexiblas_profile ) {
-		   ts = flexiblas_wtime(); 
-	   }
 	   void (*fn)
 		  (const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
                  const CBLAS_UPLO Uplo, const  CBLAS_TRANSPOSE TransA,
@@ -57,10 +53,6 @@ void cblas_strmm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
                  float  *B, const int ldb)
 		   = current_backend->blas.strmm.call_cblas;
 	fn(layout,Side,Uplo,TransA,Diag,M,N,alpha,A,lda,B,ldb);
-	if ( __flexiblas_profile ){
-	   te = flexiblas_wtime(); 
-	   current_backend->blas.strmm.timings[POS_CBLAS] += (te - ts); 
-	}
    } else {
 
 	   extern int CBLAS_CallFromC;
@@ -72,7 +64,7 @@ void cblas_strmm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
 	   {
 	      if( Side == CblasRight) SD='R';
 	      else if ( Side == CblasLeft ) SD='L';
-	      else 
+	      else
 	      {
 		 cblas_xerbla(2, "cblas_strmm","Illegal Side setting, %d\n", Side);
 		 CBLAS_CallFromC = 0;
@@ -81,7 +73,7 @@ void cblas_strmm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
 	      }
 	      if( Uplo == CblasUpper) UL='U';
 	      else if ( Uplo == CblasLower ) UL='L';
-	      else 
+	      else
 	      {
 		 cblas_xerbla(3, "cblas_strmm","Illegal Uplo setting, %d\n", Uplo);
 		 CBLAS_CallFromC = 0;
@@ -92,7 +84,7 @@ void cblas_strmm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
 	      if( TransA == CblasTrans) TA ='T';
 	      else if ( TransA == CblasConjTrans ) TA='C';
 	      else if ( TransA == CblasNoTrans )   TA='N';
-	      else 
+	      else
 	      {
 		 cblas_xerbla(4, "cblas_strmm","Illegal Trans setting, %d\n", TransA);
 		 CBLAS_CallFromC = 0;
@@ -102,7 +94,7 @@ void cblas_strmm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
 
 	      if( Diag == CblasUnit ) DI='U';
 	      else if ( Diag == CblasNonUnit ) DI='N';
-	      else 
+	      else
 	      {
 		 cblas_xerbla(5, "cblas_strmm","Illegal Diag setting, %d\n", Diag);
 		 CBLAS_CallFromC = 0;
@@ -115,7 +107,7 @@ void cblas_strmm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
 	      RowMajorStrg = 1;
 	      if( Side == CblasRight) SD='L';
 	      else if ( Side == CblasLeft ) SD='R';
-	      else 
+	      else
 	      {
 		 cblas_xerbla(2, "cblas_strmm","Illegal Side setting, %d\n", Side);
 		 CBLAS_CallFromC = 0;
@@ -125,7 +117,7 @@ void cblas_strmm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
 
 	      if( Uplo == CblasUpper) UL='L';
 	      else if ( Uplo == CblasLower ) UL='U';
-	      else 
+	      else
 	      {
 		 cblas_xerbla(3, "cblas_strmm","Illegal Uplo setting, %d\n", Uplo);
 		 CBLAS_CallFromC = 0;
@@ -136,7 +128,7 @@ void cblas_strmm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
 	      if( TransA == CblasTrans) TA ='T';
 	      else if ( TransA == CblasConjTrans ) TA='C';
 	      else if ( TransA == CblasNoTrans )   TA='N';
-	      else 
+	      else
 	      {
 		 cblas_xerbla(4, "cblas_strmm","Illegal Trans setting, %d\n", TransA);
 		 CBLAS_CallFromC = 0;
@@ -146,7 +138,7 @@ void cblas_strmm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
 
 	      if( Diag == CblasUnit ) DI='U';
 	      else if ( Diag == CblasNonUnit ) DI='N';
-	      else 
+	      else
 	      {
 		 cblas_xerbla(5, "cblas_strmm","Illegal Diag setting, %d\n", Diag);
 		 CBLAS_CallFromC = 0;
@@ -155,7 +147,7 @@ void cblas_strmm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
 	      }
 
 	      FC_GLOBAL(strmm,STRMM)(F77_SD, F77_UL, F77_TA, F77_DI, &F77_N, &F77_M, &alpha, A, &F77_lda, B, &F77_ldb);
-	   } 
+	   }
 	   else cblas_xerbla(1, "cblas_strmm", "Illegal layout setting, %d\n", layout);
 	   CBLAS_CallFromC = 0;
 	   RowMajorStrg = 0;

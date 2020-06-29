@@ -1,11 +1,11 @@
 /* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
-/* 
+/*
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License.
- 
+
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -17,59 +17,50 @@
 #include "cblas.h"
 #include "cblas_f77.h"
 #include "../flexiblas.h"
-#include "../extblas.h"
 
-void cblas_cgeadd(const CBLAS_ORDER CORDER,  
-		     const int crows, const int ccols, const void *alpha, void *ca, const int clda, 
+void cblas_cgeadd(const CBLAS_ORDER CORDER,
+		     const int crows, const int ccols, const void *alpha, void *ca, const int clda,
              const void *beta, void *cb, const int cldb)
 {
-   const float complex calpha = * ((const float complex*) alpha); 
-   const float complex cbeta  = * ((const float complex*) beta); 
-   float complex * a = (float complex *) ca; 
-   float complex * b = (float complex *) cb; 
+   const float complex calpha = * ((const float complex*) alpha);
+   const float complex cbeta  = * ((const float complex*) beta);
+   float complex * a = (float complex *) ca;
+   float complex * b = (float complex *) cb;
 
 
 #ifdef F77_INT
-   F77_INT F77_LDA =clda; 
-   F77_INT F77_LDB =cldb; 
-#else 
-   #define F77_LDA  clda 
-   #define F77_LDB  cldb 
+   F77_INT F77_LDA =clda;
+   F77_INT F77_LDB =cldb;
+#else
+   #define F77_LDA  clda
+   #define F77_LDB  cldb
 #endif
    if ( current_backend->post_init != 0 ) {
    	__flexiblas_backend_init(current_backend);
    	current_backend->post_init = 0;
    }
-   if ( current_backend->extblas.cgeadd.call_cblas != NULL ) {
-	   float te = 0, ts = 0;
-	   if ( __flexiblas_profile ) {
-		   ts = flexiblas_wtime(); 
-	   }
-	   void (*fn)(const CBLAS_ORDER, const int, const int, const float complex, float complex *, const int, const float complex, float complex *, const int) 
-            = current_backend->extblas.cgeadd.call_cblas;
-	   fn(CORDER, crows, ccols, calpha, a, clda, cbeta, b, cldb);  
-	   if ( __flexiblas_profile ){
-		   te = flexiblas_wtime(); 
-		   current_backend->extblas.cgeadd.timings[POS_CBLAS] += (te - ts); 
-	   }
+   if ( current_backend->blas.cgeadd.call_cblas != NULL ) {
+	   void (*fn)(const CBLAS_ORDER, const int, const int, const float complex, float complex *, const int, const float complex, float complex *, const int)
+            = current_backend->blas.cgeadd.call_cblas;
+	   fn(CORDER, crows, ccols, calpha, a, clda, cbeta, b, cldb);
    } else {
 #ifdef F77_INT
-       F77_INT t = 0; 
-       F77_INT rows = crows; 
-       F77_INT cols = ccols; 
-#else 
-       int t = 0; 
-       int rows = crows; 
-       int cols = ccols; 
-#endif 
+       F77_INT t = 0;
+       F77_INT rows = crows;
+       F77_INT cols = ccols;
+#else
+       int t = 0;
+       int rows = crows;
+       int cols = ccols;
+#endif
 
        if ( CORDER == CblasRowMajor ) {
-           t = rows; 
-           rows = cols; 
-           cols = t; 
+           t = rows;
+           rows = cols;
+           cols = t;
        }
        FC_GLOBAL(cgeadd,CGEADD)( &rows, &cols, &calpha, a, &F77_LDA, &cbeta, b, &F77_LDB);
    }
-   current_backend->extblas.cgeadd.calls[POS_CBLAS] ++;
-} 
+   current_backend->blas.cgeadd.calls[POS_CBLAS] ++;
+}
 

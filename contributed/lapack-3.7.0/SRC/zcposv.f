@@ -150,7 +150,7 @@
 *>
 *> \param[out] WORK
 *> \verbatim
-*>          WORK is COMPLEX*16 array, dimension (N*NRHS)
+*>          WORK is COMPLEX*16 array, dimension (N,NRHS)
 *>          This array is used to hold the residual vectors.
 *> \endverbatim
 *>
@@ -209,7 +209,7 @@
       SUBROUTINE ZCPOSV( UPLO, N, NRHS, A, LDA, B, LDB, X, LDX, WORK,
      $                   SWORK, RWORK, ITER, INFO )
 *
-*  -- LAPACK driver routine (version 3.7.0) --
+*  -- LAPACK driver routine (version 3.7.1) --
 *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
 *  -- Univ. of California Berkeley, Univ. of Colorado Denver and NAG Ltd..--
 *     June 2016

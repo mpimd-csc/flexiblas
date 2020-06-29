@@ -1,0 +1,2 @@
+libflexiblas-blis-serial: binary-or-shlib-defines-rpath
+libflexiblas-blis-serial: library-not-linked-against-libc

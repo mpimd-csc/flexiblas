@@ -1567,9 +1567,9 @@ void FC_GLOBAL(cgeequ,CGEEQU)(blasint* m, blasint* n, float complex* a, blasint*
 
 void FC_GLOBAL(cgeequb,CGEEQUB)(blasint* m, blasint* n, float complex* a, blasint* lda, float* r, float* c, float* rowcnd, float* colcnd, float* amax, blasint* info);
 
-void FC_GLOBAL(cgees,CGEES)(char* jobvs, char* sort, blasint* select, blasint* n, float complex* a, blasint* lda, blasint* sdim, float complex* w, float complex* vs, blasint* ldvs, float complex* work, blasint* lwork, float* rwork, blasint* bwork, blasint* info);
+void FC_GLOBAL(cgees,CGEES)(char* jobvs, char* sort, blasint* selectfunc, blasint* n, float complex* a, blasint* lda, blasint* sdim, float complex* w, float complex* vs, blasint* ldvs, float complex* work, blasint* lwork, float* rwork, blasint* bwork, blasint* info);
 
-void FC_GLOBAL(cgeesx,CGEESX)(char* jobvs, char* sort, blasint* select, char* sense, blasint* n, float complex* a, blasint* lda, blasint* sdim, float complex* w, float complex* vs, blasint* ldvs, float* rconde, float* rcondv, float complex* work, blasint* lwork, float* rwork, blasint* bwork, blasint* info);
+void FC_GLOBAL(cgeesx,CGEESX)(char* jobvs, char* sort, blasint* selectfunc, char* sense, blasint* n, float complex* a, blasint* lda, blasint* sdim, float complex* w, float complex* vs, blasint* ldvs, float* rconde, float* rcondv, float complex* work, blasint* lwork, float* rwork, blasint* bwork, blasint* info);
 
 void FC_GLOBAL(cgeev,CGEEV)(char* jobvl, char* jobvr, blasint* n, float complex* a, blasint* lda, float complex* w, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, float complex* work, blasint* lwork, float* rwork, blasint* info);
 
@@ -1779,7 +1779,7 @@ void FC_GLOBAL(chptri,CHPTRI)(char* uplo, blasint* n, float complex* ap, blasint
 
 void FC_GLOBAL(chptrs,CHPTRS)(char* uplo, blasint* n, blasint* nrhs, float complex* ap, blasint* ipiv, float complex* b, blasint* ldb, blasint* info);
 
-void FC_GLOBAL(chsein,CHSEIN)(char* side, char* eigsrc, char* initv, blasint* select, blasint* n, float complex* h, blasint* ldh, float complex* w, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, blasint* mm, blasint* m, float complex* work, float* rwork, blasint* ifaill, blasint* ifailr, blasint* info);
+void FC_GLOBAL(chsein,CHSEIN)(char* side, char* eigsrc, char* initv, blasint* selectfunc, blasint* n, float complex* h, blasint* ldh, float complex* w, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, blasint* mm, blasint* m, float complex* work, float* rwork, blasint* ifaill, blasint* ifailr, blasint* info);
 
 void FC_GLOBAL(chseqr,CHSEQR)(char* job, char* compz, blasint* n, blasint* ilo, blasint* ihi, float complex* h, blasint* ldh, float complex* w, float complex* z, blasint* ldz, float complex* work, blasint* lwork, blasint* info);
 
@@ -2125,17 +2125,17 @@ void FC_GLOBAL(ctfttp,CTFTTP)(char* transr, char* uplo, blasint* n, float comple
 
 void FC_GLOBAL(ctfttr,CTFTTR)(char* transr, char* uplo, blasint* n, float complex* arf, float complex* a, blasint* lda, blasint* info);
 
-void FC_GLOBAL(ctgevc,CTGEVC)(char* side, char* howmny, blasint* select, blasint* n, float complex* s, blasint* lds, float complex* p, blasint* ldp, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, blasint* mm, blasint* m, float complex* work, float* rwork, blasint* info);
+void FC_GLOBAL(ctgevc,CTGEVC)(char* side, char* howmny, blasint* selectfunc, blasint* n, float complex* s, blasint* lds, float complex* p, blasint* ldp, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, blasint* mm, blasint* m, float complex* work, float* rwork, blasint* info);
 
 void FC_GLOBAL(ctgex2,CTGEX2)(blasint* wantq, blasint* wantz, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* q, blasint* ldq, float complex* z, blasint* ldz, blasint* j1, blasint* info);
 
 void FC_GLOBAL(ctgexc,CTGEXC)(blasint* wantq, blasint* wantz, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* q, blasint* ldq, float complex* z, blasint* ldz, blasint* ifst, blasint* ilst, blasint* info);
 
-void FC_GLOBAL(ctgsen,CTGSEN)(blasint* ijob, blasint* wantq, blasint* wantz, blasint* select, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* alpha, float complex* beta, float complex* q, blasint* ldq, float complex* z, blasint* ldz, blasint* m, float* pl, float* pr, float* dif, float complex* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* info);
+void FC_GLOBAL(ctgsen,CTGSEN)(blasint* ijob, blasint* wantq, blasint* wantz, blasint* selectfunc, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* alpha, float complex* beta, float complex* q, blasint* ldq, float complex* z, blasint* ldz, blasint* m, float* pl, float* pr, float* dif, float complex* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* info);
 
 void FC_GLOBAL(ctgsja,CTGSJA)(char* jobu, char* jobv, char* jobq, blasint* m, blasint* p, blasint* n, blasint* k, blasint* l, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* tola, float* tolb, float* alpha, float* beta, float complex* u, blasint* ldu, float complex* v, blasint* ldv, float complex* q, blasint* ldq, float complex* work, blasint* ncycle, blasint* info);
 
-void FC_GLOBAL(ctgsna,CTGSNA)(char* job, char* howmny, blasint* select, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, float* s, float* dif, blasint* mm, blasint* m, float complex* work, blasint* lwork, blasint* iwork, blasint* info);
+void FC_GLOBAL(ctgsna,CTGSNA)(char* job, char* howmny, blasint* selectfunc, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, float* s, float* dif, blasint* mm, blasint* m, float complex* work, blasint* lwork, blasint* iwork, blasint* info);
 
 void FC_GLOBAL(ctgsy2,CTGSY2)(char* trans, blasint* ijob, blasint* m, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* c, blasint* ldc, float complex* d, blasint* ldd, float complex* e, blasint* lde, float complex* f, blasint* ldf, float* scale, float* rdsum, float* rdscal, blasint* info);
 
@@ -2155,15 +2155,15 @@ void FC_GLOBAL(ctpttr,CTPTTR)(char* uplo, blasint* n, float complex* ap, float c
 
 void FC_GLOBAL(ctrcon,CTRCON)(char* norm, char* uplo, char* diag, blasint* n, float complex* a, blasint* lda, float* rcond, float complex* work, float* rwork, blasint* info);
 
-void FC_GLOBAL(ctrevc,CTREVC)(char* side, char* howmny, blasint* select, blasint* n, float complex* t, blasint* ldt, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, blasint* mm, blasint* m, float complex* work, float* rwork, blasint* info);
+void FC_GLOBAL(ctrevc,CTREVC)(char* side, char* howmny, blasint* selectfunc, blasint* n, float complex* t, blasint* ldt, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, blasint* mm, blasint* m, float complex* work, float* rwork, blasint* info);
 
 void FC_GLOBAL(ctrexc,CTREXC)(char* compq, blasint* n, float complex* t, blasint* ldt, float complex* q, blasint* ldq, blasint* ifst, blasint* ilst, blasint* info);
 
 void FC_GLOBAL(ctrrfs,CTRRFS)(char* uplo, char* trans, char* diag, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* ferr, float* berr, float complex* work, float* rwork, blasint* info);
 
-void FC_GLOBAL(ctrsen,CTRSEN)(char* job, char* compq, blasint* select, blasint* n, float complex* t, blasint* ldt, float complex* q, blasint* ldq, float complex* w, blasint* m, float* s, float* sep, float complex* work, blasint* lwork, blasint* info);
+void FC_GLOBAL(ctrsen,CTRSEN)(char* job, char* compq, blasint* selectfunc, blasint* n, float complex* t, blasint* ldt, float complex* q, blasint* ldq, float complex* w, blasint* m, float* s, float* sep, float complex* work, blasint* lwork, blasint* info);
 
-void FC_GLOBAL(ctrsna,CTRSNA)(char* job, char* howmny, blasint* select, blasint* n, float complex* t, blasint* ldt, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, float* s, float* sep, blasint* mm, blasint* m, float complex* work, blasint* ldwork, float* rwork, blasint* info);
+void FC_GLOBAL(ctrsna,CTRSNA)(char* job, char* howmny, blasint* selectfunc, blasint* n, float complex* t, blasint* ldt, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, float* s, float* sep, blasint* mm, blasint* m, float complex* work, blasint* ldwork, float* rwork, blasint* info);
 
 void FC_GLOBAL(ctrsyl,CTRSYL)(char* trana, char* tranb, blasint* isgn, blasint* m, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* c, blasint* ldc, float* scale, blasint* info);
 
@@ -2279,9 +2279,9 @@ void FC_GLOBAL(dgeequ,DGEEQU)(blasint* m, blasint* n, double* a, blasint* lda, d
 
 void FC_GLOBAL(dgeequb,DGEEQUB)(blasint* m, blasint* n, double* a, blasint* lda, double* r, double* c, double* rowcnd, double* colcnd, double* amax, blasint* info);
 
-void FC_GLOBAL(dgees,DGEES)(char* jobvs, char* sort, blasint* select, blasint* n, double* a, blasint* lda, blasint* sdim, double* wr, double* wi, double* vs, blasint* ldvs, double* work, blasint* lwork, blasint* bwork, blasint* info);
+void FC_GLOBAL(dgees,DGEES)(char* jobvs, char* sort, blasint* selectfunc, blasint* n, double* a, blasint* lda, blasint* sdim, double* wr, double* wi, double* vs, blasint* ldvs, double* work, blasint* lwork, blasint* bwork, blasint* info);
 
-void FC_GLOBAL(dgeesx,DGEESX)(char* jobvs, char* sort, blasint* select, char* sense, blasint* n, double* a, blasint* lda, blasint* sdim, double* wr, double* wi, double* vs, blasint* ldvs, double* rconde, double* rcondv, double* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* bwork, blasint* info);
+void FC_GLOBAL(dgeesx,DGEESX)(char* jobvs, char* sort, blasint* selectfunc, char* sense, blasint* n, double* a, blasint* lda, blasint* sdim, double* wr, double* wi, double* vs, blasint* ldvs, double* rconde, double* rcondv, double* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* bwork, blasint* info);
 
 void FC_GLOBAL(dgeev,DGEEV)(char* jobvl, char* jobvr, blasint* n, double* a, blasint* lda, double* wr, double* wi, double* vl, blasint* ldvl, double* vr, blasint* ldvr, double* work, blasint* lwork, blasint* info);
 
@@ -2401,7 +2401,7 @@ void FC_GLOBAL(dgtts2,DGTTS2)(blasint* itrans, blasint* n, blasint* nrhs, double
 
 void FC_GLOBAL(dhgeqz,DHGEQZ)(char* job, char* compq, char* compz, blasint* n, blasint* ilo, blasint* ihi, double* h, blasint* ldh, double* t, blasint* ldt, double* alphar, double* alphai, double* beta, double* q, blasint* ldq, double* z, blasint* ldz, double* work, blasint* lwork, blasint* info);
 
-void FC_GLOBAL(dhsein,DHSEIN)(char* side, char* eigsrc, char* initv, blasint* select, blasint* n, double* h, blasint* ldh, double* wr, double* wi, double* vl, blasint* ldvl, double* vr, blasint* ldvr, blasint* mm, blasint* m, double* work, blasint* ifaill, blasint* ifailr, blasint* info);
+void FC_GLOBAL(dhsein,DHSEIN)(char* side, char* eigsrc, char* initv, blasint* selectfunc, blasint* n, double* h, blasint* ldh, double* wr, double* wi, double* vl, blasint* ldvl, double* vr, blasint* ldvr, blasint* mm, blasint* m, double* work, blasint* ifaill, blasint* ifailr, blasint* info);
 
 void FC_GLOBAL(dhseqr,DHSEQR)(char* job, char* compz, blasint* n, blasint* ilo, blasint* ihi, double* h, blasint* ldh, double* wr, double* wi, double* z, blasint* ldz, double* work, blasint* lwork, blasint* info);
 
@@ -2965,17 +2965,17 @@ void FC_GLOBAL(dtfttp,DTFTTP)(char* transr, char* uplo, blasint* n, double* arf,
 
 void FC_GLOBAL(dtfttr,DTFTTR)(char* transr, char* uplo, blasint* n, double* arf, double* a, blasint* lda, blasint* info);
 
-void FC_GLOBAL(dtgevc,DTGEVC)(char* side, char* howmny, blasint* select, blasint* n, double* s, blasint* lds, double* p, blasint* ldp, double* vl, blasint* ldvl, double* vr, blasint* ldvr, blasint* mm, blasint* m, double* work, blasint* info);
+void FC_GLOBAL(dtgevc,DTGEVC)(char* side, char* howmny, blasint* selectfunc, blasint* n, double* s, blasint* lds, double* p, blasint* ldp, double* vl, blasint* ldvl, double* vr, blasint* ldvr, blasint* mm, blasint* m, double* work, blasint* info);
 
 void FC_GLOBAL(dtgex2,DTGEX2)(blasint* wantq, blasint* wantz, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, double* q, blasint* ldq, double* z, blasint* ldz, blasint* j1, blasint* n1, blasint* n2, double* work, blasint* lwork, blasint* info);
 
 void FC_GLOBAL(dtgexc,DTGEXC)(blasint* wantq, blasint* wantz, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, double* q, blasint* ldq, double* z, blasint* ldz, blasint* ifst, blasint* ilst, double* work, blasint* lwork, blasint* info);
 
-void FC_GLOBAL(dtgsen,DTGSEN)(blasint* ijob, blasint* wantq, blasint* wantz, blasint* select, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, double* alphar, double* alphai, double* beta, double* q, blasint* ldq, double* z, blasint* ldz, blasint* m, double* pl, double* pr, double* dif, double* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* info);
+void FC_GLOBAL(dtgsen,DTGSEN)(blasint* ijob, blasint* wantq, blasint* wantz, blasint* selectfunc, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, double* alphar, double* alphai, double* beta, double* q, blasint* ldq, double* z, blasint* ldz, blasint* m, double* pl, double* pr, double* dif, double* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* info);
 
 void FC_GLOBAL(dtgsja,DTGSJA)(char* jobu, char* jobv, char* jobq, blasint* m, blasint* p, blasint* n, blasint* k, blasint* l, double* a, blasint* lda, double* b, blasint* ldb, double* tola, double* tolb, double* alpha, double* beta, double* u, blasint* ldu, double* v, blasint* ldv, double* q, blasint* ldq, double* work, blasint* ncycle, blasint* info);
 
-void FC_GLOBAL(dtgsna,DTGSNA)(char* job, char* howmny, blasint* select, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, double* vl, blasint* ldvl, double* vr, blasint* ldvr, double* s, double* dif, blasint* mm, blasint* m, double* work, blasint* lwork, blasint* iwork, blasint* info);
+void FC_GLOBAL(dtgsna,DTGSNA)(char* job, char* howmny, blasint* selectfunc, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, double* vl, blasint* ldvl, double* vr, blasint* ldvr, double* s, double* dif, blasint* mm, blasint* m, double* work, blasint* lwork, blasint* iwork, blasint* info);
 
 void FC_GLOBAL(dtgsy2,DTGSY2)(char* trans, blasint* ijob, blasint* m, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, double* c, blasint* ldc, double* d, blasint* ldd, double* e, blasint* lde, double* f, blasint* ldf, double* scale, double* rdsum, double* rdscal, blasint* iwork, blasint* pq, blasint* info);
 
@@ -2995,15 +2995,15 @@ void FC_GLOBAL(dtpttr,DTPTTR)(char* uplo, blasint* n, double* ap, double* a, bla
 
 void FC_GLOBAL(dtrcon,DTRCON)(char* norm, char* uplo, char* diag, blasint* n, double* a, blasint* lda, double* rcond, double* work, blasint* iwork, blasint* info);
 
-void FC_GLOBAL(dtrevc,DTREVC)(char* side, char* howmny, blasint* select, blasint* n, double* t, blasint* ldt, double* vl, blasint* ldvl, double* vr, blasint* ldvr, blasint* mm, blasint* m, double* work, blasint* info);
+void FC_GLOBAL(dtrevc,DTREVC)(char* side, char* howmny, blasint* selectfunc, blasint* n, double* t, blasint* ldt, double* vl, blasint* ldvl, double* vr, blasint* ldvr, blasint* mm, blasint* m, double* work, blasint* info);
 
 void FC_GLOBAL(dtrexc,DTREXC)(char* compq, blasint* n, double* t, blasint* ldt, double* q, blasint* ldq, blasint* ifst, blasint* ilst, double* work, blasint* info);
 
 void FC_GLOBAL(dtrrfs,DTRRFS)(char* uplo, char* trans, char* diag, blasint* n, blasint* nrhs, double* a, blasint* lda, double* b, blasint* ldb, double* x, blasint* ldx, double* ferr, double* berr, double* work, blasint* iwork, blasint* info);
 
-void FC_GLOBAL(dtrsen,DTRSEN)(char* job, char* compq, blasint* select, blasint* n, double* t, blasint* ldt, double* q, blasint* ldq, double* wr, double* wi, blasint* m, double* s, double* sep, double* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* info);
+void FC_GLOBAL(dtrsen,DTRSEN)(char* job, char* compq, blasint* selectfunc, blasint* n, double* t, blasint* ldt, double* q, blasint* ldq, double* wr, double* wi, blasint* m, double* s, double* sep, double* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* info);
 
-void FC_GLOBAL(dtrsna,DTRSNA)(char* job, char* howmny, blasint* select, blasint* n, double* t, blasint* ldt, double* vl, blasint* ldvl, double* vr, blasint* ldvr, double* s, double* sep, blasint* mm, blasint* m, double* work, blasint* ldwork, blasint* iwork, blasint* info);
+void FC_GLOBAL(dtrsna,DTRSNA)(char* job, char* howmny, blasint* selectfunc, blasint* n, double* t, blasint* ldt, double* vl, blasint* ldvl, double* vr, blasint* ldvr, double* s, double* sep, blasint* mm, blasint* m, double* work, blasint* ldwork, blasint* iwork, blasint* info);
 
 void FC_GLOBAL(dtrsyl,DTRSYL)(char* trana, char* tranb, blasint* isgn, blasint* m, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, double* c, blasint* ldc, double* scale, blasint* info);
 
@@ -3103,9 +3103,9 @@ void FC_GLOBAL(sgeequ,SGEEQU)(blasint* m, blasint* n, float* a, blasint* lda, fl
 
 void FC_GLOBAL(sgeequb,SGEEQUB)(blasint* m, blasint* n, float* a, blasint* lda, float* r, float* c, float* rowcnd, float* colcnd, float* amax, blasint* info);
 
-void FC_GLOBAL(sgees,SGEES)(char* jobvs, char* sort, blasint* select, blasint* n, float* a, blasint* lda, blasint* sdim, float* wr, float* wi, float* vs, blasint* ldvs, float* work, blasint* lwork, blasint* bwork, blasint* info);
+void FC_GLOBAL(sgees,SGEES)(char* jobvs, char* sort, blasint* selectfunc, blasint* n, float* a, blasint* lda, blasint* sdim, float* wr, float* wi, float* vs, blasint* ldvs, float* work, blasint* lwork, blasint* bwork, blasint* info);
 
-void FC_GLOBAL(sgeesx,SGEESX)(char* jobvs, char* sort, blasint* select, char* sense, blasint* n, float* a, blasint* lda, blasint* sdim, float* wr, float* wi, float* vs, blasint* ldvs, float* rconde, float* rcondv, float* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* bwork, blasint* info);
+void FC_GLOBAL(sgeesx,SGEESX)(char* jobvs, char* sort, blasint* selectfunc, char* sense, blasint* n, float* a, blasint* lda, blasint* sdim, float* wr, float* wi, float* vs, blasint* ldvs, float* rconde, float* rcondv, float* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* bwork, blasint* info);
 
 void FC_GLOBAL(sgeev,SGEEV)(char* jobvl, char* jobvr, blasint* n, float* a, blasint* lda, float* wr, float* wi, float* vl, blasint* ldvl, float* vr, blasint* ldvr, float* work, blasint* lwork, blasint* info);
 
@@ -3225,7 +3225,7 @@ void FC_GLOBAL(sgtts2,SGTTS2)(blasint* itrans, blasint* n, blasint* nrhs, float*
 
 void FC_GLOBAL(shgeqz,SHGEQZ)(char* job, char* compq, char* compz, blasint* n, blasint* ilo, blasint* ihi, float* h, blasint* ldh, float* t, blasint* ldt, float* alphar, float* alphai, float* beta, float* q, blasint* ldq, float* z, blasint* ldz, float* work, blasint* lwork, blasint* info);
 
-void FC_GLOBAL(shsein,SHSEIN)(char* side, char* eigsrc, char* initv, blasint* select, blasint* n, float* h, blasint* ldh, float* wr, float* wi, float* vl, blasint* ldvl, float* vr, blasint* ldvr, blasint* mm, blasint* m, float* work, blasint* ifaill, blasint* ifailr, blasint* info);
+void FC_GLOBAL(shsein,SHSEIN)(char* side, char* eigsrc, char* initv, blasint* selectfunc, blasint* n, float* h, blasint* ldh, float* wr, float* wi, float* vl, blasint* ldvl, float* vr, blasint* ldvr, blasint* mm, blasint* m, float* work, blasint* ifaill, blasint* ifailr, blasint* info);
 
 void FC_GLOBAL(shseqr,SHSEQR)(char* job, char* compz, blasint* n, blasint* ilo, blasint* ihi, float* h, blasint* ldh, float* wr, float* wi, float* z, blasint* ldz, float* work, blasint* lwork, blasint* info);
 
@@ -3781,17 +3781,17 @@ void FC_GLOBAL(stfttp,STFTTP)(char* transr, char* uplo, blasint* n, float* arf, 
 
 void FC_GLOBAL(stfttr,STFTTR)(char* transr, char* uplo, blasint* n, float* arf, float* a, blasint* lda, blasint* info);
 
-void FC_GLOBAL(stgevc,STGEVC)(char* side, char* howmny, blasint* select, blasint* n, float* s, blasint* lds, float* p, blasint* ldp, float* vl, blasint* ldvl, float* vr, blasint* ldvr, blasint* mm, blasint* m, float* work, blasint* info);
+void FC_GLOBAL(stgevc,STGEVC)(char* side, char* howmny, blasint* selectfunc, blasint* n, float* s, blasint* lds, float* p, blasint* ldp, float* vl, blasint* ldvl, float* vr, blasint* ldvr, blasint* mm, blasint* m, float* work, blasint* info);
 
 void FC_GLOBAL(stgex2,STGEX2)(blasint* wantq, blasint* wantz, blasint* n, float* a, blasint* lda, float* b, blasint* ldb, float* q, blasint* ldq, float* z, blasint* ldz, blasint* j1, blasint* n1, blasint* n2, float* work, blasint* lwork, blasint* info);
 
 void FC_GLOBAL(stgexc,STGEXC)(blasint* wantq, blasint* wantz, blasint* n, float* a, blasint* lda, float* b, blasint* ldb, float* q, blasint* ldq, float* z, blasint* ldz, blasint* ifst, blasint* ilst, float* work, blasint* lwork, blasint* info);
 
-void FC_GLOBAL(stgsen,STGSEN)(blasint* ijob, blasint* wantq, blasint* wantz, blasint* select, blasint* n, float* a, blasint* lda, float* b, blasint* ldb, float* alphar, float* alphai, float* beta, float* q, blasint* ldq, float* z, blasint* ldz, blasint* m, float* pl, float* pr, float* dif, float* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* info);
+void FC_GLOBAL(stgsen,STGSEN)(blasint* ijob, blasint* wantq, blasint* wantz, blasint* selectfunc, blasint* n, float* a, blasint* lda, float* b, blasint* ldb, float* alphar, float* alphai, float* beta, float* q, blasint* ldq, float* z, blasint* ldz, blasint* m, float* pl, float* pr, float* dif, float* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* info);
 
 void FC_GLOBAL(stgsja,STGSJA)(char* jobu, char* jobv, char* jobq, blasint* m, blasint* p, blasint* n, blasint* k, blasint* l, float* a, blasint* lda, float* b, blasint* ldb, float* tola, float* tolb, float* alpha, float* beta, float* u, blasint* ldu, float* v, blasint* ldv, float* q, blasint* ldq, float* work, blasint* ncycle, blasint* info);
 
-void FC_GLOBAL(stgsna,STGSNA)(char* job, char* howmny, blasint* select, blasint* n, float* a, blasint* lda, float* b, blasint* ldb, float* vl, blasint* ldvl, float* vr, blasint* ldvr, float* s, float* dif, blasint* mm, blasint* m, float* work, blasint* lwork, blasint* iwork, blasint* info);
+void FC_GLOBAL(stgsna,STGSNA)(char* job, char* howmny, blasint* selectfunc, blasint* n, float* a, blasint* lda, float* b, blasint* ldb, float* vl, blasint* ldvl, float* vr, blasint* ldvr, float* s, float* dif, blasint* mm, blasint* m, float* work, blasint* lwork, blasint* iwork, blasint* info);
 
 void FC_GLOBAL(stgsy2,STGSY2)(char* trans, blasint* ijob, blasint* m, blasint* n, float* a, blasint* lda, float* b, blasint* ldb, float* c, blasint* ldc, float* d, blasint* ldd, float* e, blasint* lde, float* f, blasint* ldf, float* scale, float* rdsum, float* rdscal, blasint* iwork, blasint* pq, blasint* info);
 
@@ -3811,15 +3811,15 @@ void FC_GLOBAL(stpttr,STPTTR)(char* uplo, blasint* n, float* ap, float* a, blasi
 
 void FC_GLOBAL(strcon,STRCON)(char* norm, char* uplo, char* diag, blasint* n, float* a, blasint* lda, float* rcond, float* work, blasint* iwork, blasint* info);
 
-void FC_GLOBAL(strevc,STREVC)(char* side, char* howmny, blasint* select, blasint* n, float* t, blasint* ldt, float* vl, blasint* ldvl, float* vr, blasint* ldvr, blasint* mm, blasint* m, float* work, blasint* info);
+void FC_GLOBAL(strevc,STREVC)(char* side, char* howmny, blasint* selectfunc, blasint* n, float* t, blasint* ldt, float* vl, blasint* ldvl, float* vr, blasint* ldvr, blasint* mm, blasint* m, float* work, blasint* info);
 
 void FC_GLOBAL(strexc,STREXC)(char* compq, blasint* n, float* t, blasint* ldt, float* q, blasint* ldq, blasint* ifst, blasint* ilst, float* work, blasint* info);
 
 void FC_GLOBAL(strrfs,STRRFS)(char* uplo, char* trans, char* diag, blasint* n, blasint* nrhs, float* a, blasint* lda, float* b, blasint* ldb, float* x, blasint* ldx, float* ferr, float* berr, float* work, blasint* iwork, blasint* info);
 
-void FC_GLOBAL(strsen,STRSEN)(char* job, char* compq, blasint* select, blasint* n, float* t, blasint* ldt, float* q, blasint* ldq, float* wr, float* wi, blasint* m, float* s, float* sep, float* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* info);
+void FC_GLOBAL(strsen,STRSEN)(char* job, char* compq, blasint* selectfunc, blasint* n, float* t, blasint* ldt, float* q, blasint* ldq, float* wr, float* wi, blasint* m, float* s, float* sep, float* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* info);
 
-void FC_GLOBAL(strsna,STRSNA)(char* job, char* howmny, blasint* select, blasint* n, float* t, blasint* ldt, float* vl, blasint* ldvl, float* vr, blasint* ldvr, float* s, float* sep, blasint* mm, blasint* m, float* work, blasint* ldwork, blasint* iwork, blasint* info);
+void FC_GLOBAL(strsna,STRSNA)(char* job, char* howmny, blasint* selectfunc, blasint* n, float* t, blasint* ldt, float* vl, blasint* ldvl, float* vr, blasint* ldvr, float* s, float* sep, blasint* mm, blasint* m, float* work, blasint* ldwork, blasint* iwork, blasint* info);
 
 void FC_GLOBAL(strsyl,STRSYL)(char* trana, char* tranb, blasint* isgn, blasint* m, blasint* n, float* a, blasint* lda, float* b, blasint* ldb, float* c, blasint* ldc, float* scale, blasint* info);
 
@@ -3883,9 +3883,9 @@ void FC_GLOBAL(zgeequ,ZGEEQU)(blasint* m, blasint* n, double complex* a, blasint
 
 void FC_GLOBAL(zgeequb,ZGEEQUB)(blasint* m, blasint* n, double complex* a, blasint* lda, double* r, double* c, double* rowcnd, double* colcnd, double* amax, blasint* info);
 
-void FC_GLOBAL(zgees,ZGEES)(char* jobvs, char* sort, blasint* select, blasint* n, double complex* a, blasint* lda, blasint* sdim, double complex* w, double complex* vs, blasint* ldvs, double complex* work, blasint* lwork, double* rwork, blasint* bwork, blasint* info);
+void FC_GLOBAL(zgees,ZGEES)(char* jobvs, char* sort, blasint* selectfunc, blasint* n, double complex* a, blasint* lda, blasint* sdim, double complex* w, double complex* vs, blasint* ldvs, double complex* work, blasint* lwork, double* rwork, blasint* bwork, blasint* info);
 
-void FC_GLOBAL(zgeesx,ZGEESX)(char* jobvs, char* sort, blasint* select, char* sense, blasint* n, double complex* a, blasint* lda, blasint* sdim, double complex* w, double complex* vs, blasint* ldvs, double* rconde, double* rcondv, double complex* work, blasint* lwork, double* rwork, blasint* bwork, blasint* info);
+void FC_GLOBAL(zgeesx,ZGEESX)(char* jobvs, char* sort, blasint* selectfunc, char* sense, blasint* n, double complex* a, blasint* lda, blasint* sdim, double complex* w, double complex* vs, blasint* ldvs, double* rconde, double* rcondv, double complex* work, blasint* lwork, double* rwork, blasint* bwork, blasint* info);
 
 void FC_GLOBAL(zgeev,ZGEEV)(char* jobvl, char* jobvr, blasint* n, double complex* a, blasint* lda, double complex* w, double complex* vl, blasint* ldvl, double complex* vr, blasint* ldvr, double complex* work, blasint* lwork, double* rwork, blasint* info);
 
@@ -4093,7 +4093,7 @@ void FC_GLOBAL(zhptri,ZHPTRI)(char* uplo, blasint* n, double complex* ap, blasin
 
 void FC_GLOBAL(zhptrs,ZHPTRS)(char* uplo, blasint* n, blasint* nrhs, double complex* ap, blasint* ipiv, double complex* b, blasint* ldb, blasint* info);
 
-void FC_GLOBAL(zhsein,ZHSEIN)(char* side, char* eigsrc, char* initv, blasint* select, blasint* n, double complex* h, blasint* ldh, double complex* w, double complex* vl, blasint* ldvl, double complex* vr, blasint* ldvr, blasint* mm, blasint* m, double complex* work, double* rwork, blasint* ifaill, blasint* ifailr, blasint* info);
+void FC_GLOBAL(zhsein,ZHSEIN)(char* side, char* eigsrc, char* initv, blasint* selectfunc, blasint* n, double complex* h, blasint* ldh, double complex* w, double complex* vl, blasint* ldvl, double complex* vr, blasint* ldvr, blasint* mm, blasint* m, double complex* work, double* rwork, blasint* ifaill, blasint* ifailr, blasint* info);
 
 void FC_GLOBAL(zhseqr,ZHSEQR)(char* job, char* compz, blasint* n, blasint* ilo, blasint* ihi, double complex* h, blasint* ldh, double complex* w, double complex* z, blasint* ldz, double complex* work, blasint* lwork, blasint* info);
 
@@ -4439,17 +4439,17 @@ void FC_GLOBAL(ztfttp,ZTFTTP)(char* transr, char* uplo, blasint* n, double compl
 
 void FC_GLOBAL(ztfttr,ZTFTTR)(char* transr, char* uplo, blasint* n, double complex* arf, double complex* a, blasint* lda, blasint* info);
 
-void FC_GLOBAL(ztgevc,ZTGEVC)(char* side, char* howmny, blasint* select, blasint* n, double complex* s, blasint* lds, double complex* p, blasint* ldp, double complex* vl, blasint* ldvl, double complex* vr, blasint* ldvr, blasint* mm, blasint* m, double complex* work, double* rwork, blasint* info);
+void FC_GLOBAL(ztgevc,ZTGEVC)(char* side, char* howmny, blasint* selectfunc, blasint* n, double complex* s, blasint* lds, double complex* p, blasint* ldp, double complex* vl, blasint* ldvl, double complex* vr, blasint* ldvr, blasint* mm, blasint* m, double complex* work, double* rwork, blasint* info);
 
 void FC_GLOBAL(ztgex2,ZTGEX2)(blasint* wantq, blasint* wantz, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* q, blasint* ldq, double complex* z, blasint* ldz, blasint* j1, blasint* info);
 
 void FC_GLOBAL(ztgexc,ZTGEXC)(blasint* wantq, blasint* wantz, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* q, blasint* ldq, double complex* z, blasint* ldz, blasint* ifst, blasint* ilst, blasint* info);
 
-void FC_GLOBAL(ztgsen,ZTGSEN)(blasint* ijob, blasint* wantq, blasint* wantz, blasint* select, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* alpha, double complex* beta, double complex* q, blasint* ldq, double complex* z, blasint* ldz, blasint* m, double* pl, double* pr, double* dif, double complex* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* info);
+void FC_GLOBAL(ztgsen,ZTGSEN)(blasint* ijob, blasint* wantq, blasint* wantz, blasint* selectfunc, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* alpha, double complex* beta, double complex* q, blasint* ldq, double complex* z, blasint* ldz, blasint* m, double* pl, double* pr, double* dif, double complex* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* info);
 
 void FC_GLOBAL(ztgsja,ZTGSJA)(char* jobu, char* jobv, char* jobq, blasint* m, blasint* p, blasint* n, blasint* k, blasint* l, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* tola, double* tolb, double* alpha, double* beta, double complex* u, blasint* ldu, double complex* v, blasint* ldv, double complex* q, blasint* ldq, double complex* work, blasint* ncycle, blasint* info);
 
-void FC_GLOBAL(ztgsna,ZTGSNA)(char* job, char* howmny, blasint* select, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* vl, blasint* ldvl, double complex* vr, blasint* ldvr, double* s, double* dif, blasint* mm, blasint* m, double complex* work, blasint* lwork, blasint* iwork, blasint* info);
+void FC_GLOBAL(ztgsna,ZTGSNA)(char* job, char* howmny, blasint* selectfunc, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* vl, blasint* ldvl, double complex* vr, blasint* ldvr, double* s, double* dif, blasint* mm, blasint* m, double complex* work, blasint* lwork, blasint* iwork, blasint* info);
 
 void FC_GLOBAL(ztgsy2,ZTGSY2)(char* trans, blasint* ijob, blasint* m, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* c, blasint* ldc, double complex* d, blasint* ldd, double complex* e, blasint* lde, double complex* f, blasint* ldf, double* scale, double* rdsum, double* rdscal, blasint* info);
 
@@ -4469,15 +4469,15 @@ void FC_GLOBAL(ztpttr,ZTPTTR)(char* uplo, blasint* n, double complex* ap, double
 
 void FC_GLOBAL(ztrcon,ZTRCON)(char* norm, char* uplo, char* diag, blasint* n, double complex* a, blasint* lda, double* rcond, double complex* work, double* rwork, blasint* info);
 
-void FC_GLOBAL(ztrevc,ZTREVC)(char* side, char* howmny, blasint* select, blasint* n, double complex* t, blasint* ldt, double complex* vl, blasint* ldvl, double complex* vr, blasint* ldvr, blasint* mm, blasint* m, double complex* work, double* rwork, blasint* info);
+void FC_GLOBAL(ztrevc,ZTREVC)(char* side, char* howmny, blasint* selectfunc, blasint* n, double complex* t, blasint* ldt, double complex* vl, blasint* ldvl, double complex* vr, blasint* ldvr, blasint* mm, blasint* m, double complex* work, double* rwork, blasint* info);
 
 void FC_GLOBAL(ztrexc,ZTREXC)(char* compq, blasint* n, double complex* t, blasint* ldt, double complex* q, blasint* ldq, blasint* ifst, blasint* ilst, blasint* info);
 
 void FC_GLOBAL(ztrrfs,ZTRRFS)(char* uplo, char* trans, char* diag, blasint* n, blasint* nrhs, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* ferr, double* berr, double complex* work, double* rwork, blasint* info);
 
-void FC_GLOBAL(ztrsen,ZTRSEN)(char* job, char* compq, blasint* select, blasint* n, double complex* t, blasint* ldt, double complex* q, blasint* ldq, double complex* w, blasint* m, double* s, double* sep, double complex* work, blasint* lwork, blasint* info);
+void FC_GLOBAL(ztrsen,ZTRSEN)(char* job, char* compq, blasint* selectfunc, blasint* n, double complex* t, blasint* ldt, double complex* q, blasint* ldq, double complex* w, blasint* m, double* s, double* sep, double complex* work, blasint* lwork, blasint* info);
 
-void FC_GLOBAL(ztrsna,ZTRSNA)(char* job, char* howmny, blasint* select, blasint* n, double complex* t, blasint* ldt, double complex* vl, blasint* ldvl, double complex* vr, blasint* ldvr, double* s, double* sep, blasint* mm, blasint* m, double complex* work, blasint* ldwork, double* rwork, blasint* info);
+void FC_GLOBAL(ztrsna,ZTRSNA)(char* job, char* howmny, blasint* selectfunc, blasint* n, double complex* t, blasint* ldt, double complex* vl, blasint* ldvl, double complex* vr, blasint* ldvr, double* s, double* sep, blasint* mm, blasint* m, double complex* work, blasint* ldwork, double* rwork, blasint* info);
 
 void FC_GLOBAL(ztrsyl,ZTRSYL)(char* trana, char* tranb, blasint* isgn, blasint* m, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* c, blasint* ldc, double* scale, blasint* info);
 

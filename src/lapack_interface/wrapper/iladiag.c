@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:35 2017 */ 
+ /* Generated: Wed Mar 28 11:20:04 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,41 +29,92 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_iladiag = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 int FC_GLOBAL(iladiag,ILADIAG)(char* diag)
 #else
 int FC_GLOBAL(iladiag,ILADIAG)(char* diag)
-#endif 
+#endif
 {
-    double ts;
 	blasint (*fn) (void* diag);
+	blasint (*fn_hook) (void* diag);
 	blasint ret;
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.iladiag.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->iladiag.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		ret = fn((void*) diag); 
+		return ret; 
+	} else {
+		hook_pos_iladiag = 0;
+		ret=fn_hook((void*) diag);
+		return ret;
 	}
-	fn = current_backend->lapack.iladiag.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		ret = fn((void*) diag); 
-		current_backend->lapack.iladiag.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.iladiag.calls[0]++;
-	} else { 
-		ret = fn((void*) diag); 
-	} 
-	return ret; 
 }
 #ifdef FLEXIBLAS_ABI_IBM
 int iladiag_(char* diag) __attribute__((alias(MTS(FC_GLOBAL(iladiag,ILADIAG)))));
 #else
 int iladiag(char* diag) __attribute__((alias(MTS(FC_GLOBAL(iladiag,ILADIAG)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+blasint flexiblas_real_iladiag_(void* diag)
+{
+	blasint (*fn) (void* diag);
+	blasint ret;
+
+	fn = current_backend->lapack.iladiag.f77_blas_function; 
+
+		ret = fn((void*) diag); 
+
+	return ret ;
+}
+
+blasint flexiblas_real_iladiag(void* diag)  __attribute__((alias("flexiblas_real_iladiag_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+blasint flexiblas_chain_iladiag_(void* diag)
+{
+	blasint (*fn) (void* diag);
+	blasint (*fn_hook) (void* diag);
+	blasint ret;
+
+	fn      = current_backend->lapack.iladiag.f77_blas_function; 
+
+    hook_pos_iladiag ++;
+    if( hook_pos_iladiag < __flexiblas_hooks->iladiag.nhook) {
+        fn_hook = __flexiblas_hooks->iladiag.f77_hook_function[hook_pos_iladiag];
+        ret = fn_hook((void*) diag);
+    } else {
+        hook_pos_iladiag = 0;
+		ret = fn((void*) diag); 
+	}
+	return ret ;
+}
+
+blasint flexiblas_chain_iladiag(void* diag)  __attribute__((alias("flexiblas_chain_iladiag_")));
+
 
 
 

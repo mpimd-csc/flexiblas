@@ -1,5 +1,5 @@
 /* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
-/* 
+/*
    Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
    This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ void cblas_zhemv(const CBLAS_LAYOUT layout,
         void  *Y, const int incY)
 {
     char UL;
-#define F77_UL &UL   
+#define F77_UL &UL
 #ifdef F77_INT
     F77_INT F77_N=N, F77_lda=lda, F77_incX=incX, F77_incY=incY;
 #else
@@ -41,10 +41,6 @@ void cblas_zhemv(const CBLAS_LAYOUT layout,
         current_backend->post_init = 0;
     }
     if ( current_backend->blas.zhemv.call_cblas != NULL ) {
-        double te = 0, ts = 0;
-        if (__flexiblas_profile ) {
-            ts = flexiblas_wtime(); 
-        }
         void (*fn)
             (const CBLAS_LAYOUT layout,
              const CBLAS_UPLO Uplo, const int N,
@@ -53,16 +49,12 @@ void cblas_zhemv(const CBLAS_LAYOUT layout,
              void  *Y, const int incY)
             = current_backend->blas.zhemv.call_cblas;
         fn(layout,Uplo,N,alpha,A,lda,X,incX,beta,Y,incY);
-        if ( __flexiblas_profile ){
-            te = flexiblas_wtime(); 
-            current_backend->blas.zhemv.timings[POS_CBLAS] += (te - ts); 
-        }
     } else {
-        int n=0, i=0; 
+        int n=0, i=0;
 #ifdef F77_INT
         F77_incX=incX;
-#else 
-        int incx = incX; 
+#else
+        int incx = incX;
 #endif
         const double *alp= (const double *)alpha, *bet = (const double *)beta;
         double ALPHA[2],BETA[2];
@@ -80,14 +72,14 @@ void cblas_zhemv(const CBLAS_LAYOUT layout,
         {
             if (Uplo == CblasUpper) UL = 'U';
             else if (Uplo == CblasLower) UL = 'L';
-            else 
+            else
             {
                 cblas_xerbla(2, "cblas_zhemv","Illegal Uplo setting, %d\n",Uplo );
                 CBLAS_CallFromC = 0;
                 RowMajorStrg = 0;
                 return;
             }
-            FC_GLOBAL(zhemv,ZHEMV)(F77_UL, &F77_N, alpha, A, &F77_lda, X, &F77_incX, 
+            FC_GLOBAL(zhemv,ZHEMV)(F77_UL, &F77_N, alpha, A, &F77_lda, X, &F77_incX,
                     beta, Y, &F77_incY);
         }
         else if (layout == CblasRowMajor)
@@ -153,17 +145,17 @@ void cblas_zhemv(const CBLAS_LAYOUT layout,
 
             if (Uplo == CblasUpper) UL = 'L';
             else if (Uplo == CblasLower) UL = 'U';
-            else 
+            else
             {
                 cblas_xerbla(2, "cblas_zhemv","Illegal Uplo setting, %d\n", Uplo);
                 CBLAS_CallFromC = 0;
                 RowMajorStrg = 0;
                 return;
             }
-            FC_GLOBAL(zhemv,ZHEMV)(F77_UL, &F77_N, ALPHA, A, &F77_lda, x, &F77_incX, 
+            FC_GLOBAL(zhemv,ZHEMV)(F77_UL, &F77_N, ALPHA, A, &F77_lda, x, &F77_incX,
                     BETA, Y, &F77_incY);
         }
-        else 
+        else
         {
             cblas_xerbla(1, "cblas_zhemv","Illegal layout setting, %d\n", layout);
             CBLAS_CallFromC = 0;

@@ -19,6 +19,13 @@ endif()
 if(DEFINED INPUT)
   list(APPEND ARGS INPUT_FILE "${INPUT}")
 endif()
+
+if (NOT $ENV{FLEXIBLAS_TEST} STREQUAL "")
+    MESSAGE(STATUS "Set TEST BLAS to $ENV{FLEXIBLAS_TEST}")
+    SET(ENV{FLEXIBLAS} "$ENV{FLEXIBLAS_TEST}")
+endif()
+
+
 message("Running: ${TEST}")
 message("ARGS= ${ARGS}")
 execute_process(COMMAND "${TEST}"

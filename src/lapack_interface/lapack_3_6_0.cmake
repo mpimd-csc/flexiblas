@@ -1,3328 +1,1665 @@
 SET(LAPACK_SRC 
      lapack_interface/wrapper/cbbcsd.c
-     lapack_interface/wrapper/cbbcsd_real.c
      lapack_interface/wrapper/cbdsqr.c
-     lapack_interface/wrapper/cbdsqr_real.c
      lapack_interface/wrapper/cgbbrd.c
-     lapack_interface/wrapper/cgbbrd_real.c
      lapack_interface/wrapper/cgbcon.c
-     lapack_interface/wrapper/cgbcon_real.c
      lapack_interface/wrapper/cgbequ.c
-     lapack_interface/wrapper/cgbequ_real.c
      lapack_interface/wrapper/cgbequb.c
-     lapack_interface/wrapper/cgbequb_real.c
      lapack_interface/wrapper/cgbrfs.c
-     lapack_interface/wrapper/cgbrfs_real.c
      lapack_interface/wrapper/cgbsv.c
-     lapack_interface/wrapper/cgbsv_real.c
      lapack_interface/wrapper/cgbsvx.c
-     lapack_interface/wrapper/cgbsvx_real.c
      lapack_interface/wrapper/cgbtf2.c
-     lapack_interface/wrapper/cgbtf2_real.c
      lapack_interface/wrapper/cgbtrf.c
-     lapack_interface/wrapper/cgbtrf_real.c
      lapack_interface/wrapper/cgbtrs.c
-     lapack_interface/wrapper/cgbtrs_real.c
      lapack_interface/wrapper/cgebak.c
-     lapack_interface/wrapper/cgebak_real.c
      lapack_interface/wrapper/cgebal.c
-     lapack_interface/wrapper/cgebal_real.c
      lapack_interface/wrapper/cgebd2.c
-     lapack_interface/wrapper/cgebd2_real.c
      lapack_interface/wrapper/cgebrd.c
-     lapack_interface/wrapper/cgebrd_real.c
      lapack_interface/wrapper/cgecon.c
-     lapack_interface/wrapper/cgecon_real.c
      lapack_interface/wrapper/cgeequ.c
-     lapack_interface/wrapper/cgeequ_real.c
      lapack_interface/wrapper/cgeequb.c
-     lapack_interface/wrapper/cgeequb_real.c
      lapack_interface/wrapper/cgees.c
-     lapack_interface/wrapper/cgees_real.c
      lapack_interface/wrapper/cgeesx.c
-     lapack_interface/wrapper/cgeesx_real.c
      lapack_interface/wrapper/cgeev.c
-     lapack_interface/wrapper/cgeev_real.c
      lapack_interface/wrapper/cgeevx.c
-     lapack_interface/wrapper/cgeevx_real.c
      lapack_interface/wrapper/cgegs.c
-     lapack_interface/wrapper/cgegs_real.c
      lapack_interface/wrapper/cgegv.c
-     lapack_interface/wrapper/cgegv_real.c
      lapack_interface/wrapper/cgehd2.c
-     lapack_interface/wrapper/cgehd2_real.c
      lapack_interface/wrapper/cgehrd.c
-     lapack_interface/wrapper/cgehrd_real.c
      lapack_interface/wrapper/cgejsv.c
-     lapack_interface/wrapper/cgejsv_real.c
      lapack_interface/wrapper/cgelq2.c
-     lapack_interface/wrapper/cgelq2_real.c
      lapack_interface/wrapper/cgelqf.c
-     lapack_interface/wrapper/cgelqf_real.c
      lapack_interface/wrapper/cgels.c
-     lapack_interface/wrapper/cgels_real.c
      lapack_interface/wrapper/cgelsd.c
-     lapack_interface/wrapper/cgelsd_real.c
      lapack_interface/wrapper/cgelss.c
-     lapack_interface/wrapper/cgelss_real.c
      lapack_interface/wrapper/cgelsx.c
-     lapack_interface/wrapper/cgelsx_real.c
      lapack_interface/wrapper/cgelsy.c
-     lapack_interface/wrapper/cgelsy_real.c
      lapack_interface/wrapper/cgemqrt.c
-     lapack_interface/wrapper/cgemqrt_real.c
      lapack_interface/wrapper/cgeql2.c
-     lapack_interface/wrapper/cgeql2_real.c
      lapack_interface/wrapper/cgeqlf.c
-     lapack_interface/wrapper/cgeqlf_real.c
      lapack_interface/wrapper/cgeqp3.c
-     lapack_interface/wrapper/cgeqp3_real.c
      lapack_interface/wrapper/cgeqpf.c
-     lapack_interface/wrapper/cgeqpf_real.c
      lapack_interface/wrapper/cgeqr2.c
-     lapack_interface/wrapper/cgeqr2_real.c
      lapack_interface/wrapper/cgeqr2p.c
-     lapack_interface/wrapper/cgeqr2p_real.c
      lapack_interface/wrapper/cgeqrf.c
-     lapack_interface/wrapper/cgeqrf_real.c
      lapack_interface/wrapper/cgeqrfp.c
-     lapack_interface/wrapper/cgeqrfp_real.c
      lapack_interface/wrapper/cgeqrt.c
-     lapack_interface/wrapper/cgeqrt_real.c
      lapack_interface/wrapper/cgeqrt2.c
-     lapack_interface/wrapper/cgeqrt2_real.c
      lapack_interface/wrapper/cgeqrt3.c
-     lapack_interface/wrapper/cgeqrt3_real.c
      lapack_interface/wrapper/cgerfs.c
-     lapack_interface/wrapper/cgerfs_real.c
      lapack_interface/wrapper/cgerq2.c
-     lapack_interface/wrapper/cgerq2_real.c
      lapack_interface/wrapper/cgerqf.c
-     lapack_interface/wrapper/cgerqf_real.c
      lapack_interface/wrapper/cgesc2.c
-     lapack_interface/wrapper/cgesc2_real.c
      lapack_interface/wrapper/cgesdd.c
-     lapack_interface/wrapper/cgesdd_real.c
      lapack_interface/wrapper/cgesv.c
-     lapack_interface/wrapper/cgesv_real.c
      lapack_interface/wrapper/cgesvd.c
-     lapack_interface/wrapper/cgesvd_real.c
      lapack_interface/wrapper/cgesvdx.c
-     lapack_interface/wrapper/cgesvdx_real.c
      lapack_interface/wrapper/cgesvj.c
-     lapack_interface/wrapper/cgesvj_real.c
      lapack_interface/wrapper/cgesvx.c
-     lapack_interface/wrapper/cgesvx_real.c
      lapack_interface/wrapper/cgetc2.c
-     lapack_interface/wrapper/cgetc2_real.c
      lapack_interface/wrapper/cgetf2.c
-     lapack_interface/wrapper/cgetf2_real.c
      lapack_interface/wrapper/cgetrf.c
-     lapack_interface/wrapper/cgetrf_real.c
      lapack_interface/wrapper/cgetrf2.c
-     lapack_interface/wrapper/cgetrf2_real.c
      lapack_interface/wrapper/cgetri.c
-     lapack_interface/wrapper/cgetri_real.c
      lapack_interface/wrapper/cgetrs.c
-     lapack_interface/wrapper/cgetrs_real.c
      lapack_interface/wrapper/cggbak.c
-     lapack_interface/wrapper/cggbak_real.c
      lapack_interface/wrapper/cggbal.c
-     lapack_interface/wrapper/cggbal_real.c
      lapack_interface/wrapper/cgges.c
-     lapack_interface/wrapper/cgges_real.c
      lapack_interface/wrapper/cgges3.c
-     lapack_interface/wrapper/cgges3_real.c
      lapack_interface/wrapper/cggesx.c
-     lapack_interface/wrapper/cggesx_real.c
      lapack_interface/wrapper/cggev.c
-     lapack_interface/wrapper/cggev_real.c
      lapack_interface/wrapper/cggev3.c
-     lapack_interface/wrapper/cggev3_real.c
      lapack_interface/wrapper/cggevx.c
-     lapack_interface/wrapper/cggevx_real.c
      lapack_interface/wrapper/cggglm.c
-     lapack_interface/wrapper/cggglm_real.c
      lapack_interface/wrapper/cgghd3.c
-     lapack_interface/wrapper/cgghd3_real.c
      lapack_interface/wrapper/cgghrd.c
-     lapack_interface/wrapper/cgghrd_real.c
      lapack_interface/wrapper/cgglse.c
-     lapack_interface/wrapper/cgglse_real.c
      lapack_interface/wrapper/cggqrf.c
-     lapack_interface/wrapper/cggqrf_real.c
      lapack_interface/wrapper/cggrqf.c
-     lapack_interface/wrapper/cggrqf_real.c
      lapack_interface/wrapper/cggsvd.c
-     lapack_interface/wrapper/cggsvd_real.c
      lapack_interface/wrapper/cggsvd3.c
-     lapack_interface/wrapper/cggsvd3_real.c
      lapack_interface/wrapper/cggsvp.c
-     lapack_interface/wrapper/cggsvp_real.c
      lapack_interface/wrapper/cggsvp3.c
-     lapack_interface/wrapper/cggsvp3_real.c
      lapack_interface/wrapper/cgsvj0.c
-     lapack_interface/wrapper/cgsvj0_real.c
      lapack_interface/wrapper/cgsvj1.c
-     lapack_interface/wrapper/cgsvj1_real.c
      lapack_interface/wrapper/cgtcon.c
-     lapack_interface/wrapper/cgtcon_real.c
      lapack_interface/wrapper/cgtrfs.c
-     lapack_interface/wrapper/cgtrfs_real.c
      lapack_interface/wrapper/cgtsv.c
-     lapack_interface/wrapper/cgtsv_real.c
      lapack_interface/wrapper/cgtsvx.c
-     lapack_interface/wrapper/cgtsvx_real.c
      lapack_interface/wrapper/cgttrf.c
-     lapack_interface/wrapper/cgttrf_real.c
      lapack_interface/wrapper/cgttrs.c
-     lapack_interface/wrapper/cgttrs_real.c
      lapack_interface/wrapper/cgtts2.c
-     lapack_interface/wrapper/cgtts2_real.c
      lapack_interface/wrapper/chbev.c
-     lapack_interface/wrapper/chbev_real.c
      lapack_interface/wrapper/chbevd.c
-     lapack_interface/wrapper/chbevd_real.c
      lapack_interface/wrapper/chbevx.c
-     lapack_interface/wrapper/chbevx_real.c
      lapack_interface/wrapper/chbgst.c
-     lapack_interface/wrapper/chbgst_real.c
      lapack_interface/wrapper/chbgv.c
-     lapack_interface/wrapper/chbgv_real.c
      lapack_interface/wrapper/chbgvd.c
-     lapack_interface/wrapper/chbgvd_real.c
      lapack_interface/wrapper/chbgvx.c
-     lapack_interface/wrapper/chbgvx_real.c
      lapack_interface/wrapper/chbtrd.c
-     lapack_interface/wrapper/chbtrd_real.c
      lapack_interface/wrapper/checon.c
-     lapack_interface/wrapper/checon_real.c
      lapack_interface/wrapper/checon_rook.c
-     lapack_interface/wrapper/checon_rook_real.c
      lapack_interface/wrapper/cheequb.c
-     lapack_interface/wrapper/cheequb_real.c
      lapack_interface/wrapper/cheev.c
-     lapack_interface/wrapper/cheev_real.c
      lapack_interface/wrapper/cheevd.c
-     lapack_interface/wrapper/cheevd_real.c
      lapack_interface/wrapper/cheevr.c
-     lapack_interface/wrapper/cheevr_real.c
      lapack_interface/wrapper/cheevx.c
-     lapack_interface/wrapper/cheevx_real.c
      lapack_interface/wrapper/chegs2.c
-     lapack_interface/wrapper/chegs2_real.c
      lapack_interface/wrapper/chegst.c
-     lapack_interface/wrapper/chegst_real.c
      lapack_interface/wrapper/chegv.c
-     lapack_interface/wrapper/chegv_real.c
      lapack_interface/wrapper/chegvd.c
-     lapack_interface/wrapper/chegvd_real.c
      lapack_interface/wrapper/chegvx.c
-     lapack_interface/wrapper/chegvx_real.c
      lapack_interface/wrapper/cherfs.c
-     lapack_interface/wrapper/cherfs_real.c
      lapack_interface/wrapper/chesv.c
-     lapack_interface/wrapper/chesv_real.c
      lapack_interface/wrapper/chesv_rook.c
-     lapack_interface/wrapper/chesv_rook_real.c
      lapack_interface/wrapper/chesvx.c
-     lapack_interface/wrapper/chesvx_real.c
      lapack_interface/wrapper/cheswapr.c
-     lapack_interface/wrapper/cheswapr_real.c
      lapack_interface/wrapper/chetd2.c
-     lapack_interface/wrapper/chetd2_real.c
      lapack_interface/wrapper/chetf2.c
-     lapack_interface/wrapper/chetf2_real.c
      lapack_interface/wrapper/chetf2_rook.c
-     lapack_interface/wrapper/chetf2_rook_real.c
      lapack_interface/wrapper/chetrd.c
-     lapack_interface/wrapper/chetrd_real.c
      lapack_interface/wrapper/chetrf.c
-     lapack_interface/wrapper/chetrf_real.c
      lapack_interface/wrapper/chetrf_rook.c
-     lapack_interface/wrapper/chetrf_rook_real.c
      lapack_interface/wrapper/chetri.c
-     lapack_interface/wrapper/chetri_real.c
      lapack_interface/wrapper/chetri2.c
-     lapack_interface/wrapper/chetri2_real.c
      lapack_interface/wrapper/chetri2x.c
-     lapack_interface/wrapper/chetri2x_real.c
      lapack_interface/wrapper/chetri_rook.c
-     lapack_interface/wrapper/chetri_rook_real.c
      lapack_interface/wrapper/chetrs.c
-     lapack_interface/wrapper/chetrs_real.c
      lapack_interface/wrapper/chetrs2.c
-     lapack_interface/wrapper/chetrs2_real.c
      lapack_interface/wrapper/chetrs_rook.c
-     lapack_interface/wrapper/chetrs_rook_real.c
      lapack_interface/wrapper/chfrk.c
-     lapack_interface/wrapper/chfrk_real.c
      lapack_interface/wrapper/chgeqz.c
-     lapack_interface/wrapper/chgeqz_real.c
      lapack_interface/wrapper/chla_transtype.c
-     lapack_interface/wrapper/chla_transtype_real.c
      lapack_interface/wrapper/chpcon.c
-     lapack_interface/wrapper/chpcon_real.c
      lapack_interface/wrapper/chpev.c
-     lapack_interface/wrapper/chpev_real.c
      lapack_interface/wrapper/chpevd.c
-     lapack_interface/wrapper/chpevd_real.c
      lapack_interface/wrapper/chpevx.c
-     lapack_interface/wrapper/chpevx_real.c
      lapack_interface/wrapper/chpgst.c
-     lapack_interface/wrapper/chpgst_real.c
      lapack_interface/wrapper/chpgv.c
-     lapack_interface/wrapper/chpgv_real.c
      lapack_interface/wrapper/chpgvd.c
-     lapack_interface/wrapper/chpgvd_real.c
      lapack_interface/wrapper/chpgvx.c
-     lapack_interface/wrapper/chpgvx_real.c
      lapack_interface/wrapper/chprfs.c
-     lapack_interface/wrapper/chprfs_real.c
      lapack_interface/wrapper/chpsv.c
-     lapack_interface/wrapper/chpsv_real.c
      lapack_interface/wrapper/chpsvx.c
-     lapack_interface/wrapper/chpsvx_real.c
      lapack_interface/wrapper/chptrd.c
-     lapack_interface/wrapper/chptrd_real.c
      lapack_interface/wrapper/chptrf.c
-     lapack_interface/wrapper/chptrf_real.c
      lapack_interface/wrapper/chptri.c
-     lapack_interface/wrapper/chptri_real.c
      lapack_interface/wrapper/chptrs.c
-     lapack_interface/wrapper/chptrs_real.c
      lapack_interface/wrapper/chsein.c
-     lapack_interface/wrapper/chsein_real.c
      lapack_interface/wrapper/chseqr.c
-     lapack_interface/wrapper/chseqr_real.c
      lapack_interface/wrapper/clabrd.c
-     lapack_interface/wrapper/clabrd_real.c
      lapack_interface/wrapper/clacgv.c
-     lapack_interface/wrapper/clacgv_real.c
      lapack_interface/wrapper/clacn2.c
-     lapack_interface/wrapper/clacn2_real.c
      lapack_interface/wrapper/clacon.c
-     lapack_interface/wrapper/clacon_real.c
      lapack_interface/wrapper/clacp2.c
-     lapack_interface/wrapper/clacp2_real.c
      lapack_interface/wrapper/clacpy.c
-     lapack_interface/wrapper/clacpy_real.c
      lapack_interface/wrapper/clacrm.c
-     lapack_interface/wrapper/clacrm_real.c
      lapack_interface/wrapper/clacrt.c
-     lapack_interface/wrapper/clacrt_real.c
      lapack_interface/wrapper/cladiv.c
-     lapack_interface/wrapper/cladiv_real.c
      lapack_interface/wrapper/claed0.c
-     lapack_interface/wrapper/claed0_real.c
      lapack_interface/wrapper/claed7.c
-     lapack_interface/wrapper/claed7_real.c
      lapack_interface/wrapper/claed8.c
-     lapack_interface/wrapper/claed8_real.c
      lapack_interface/wrapper/claein.c
-     lapack_interface/wrapper/claein_real.c
      lapack_interface/wrapper/claesy.c
-     lapack_interface/wrapper/claesy_real.c
      lapack_interface/wrapper/claev2.c
-     lapack_interface/wrapper/claev2_real.c
      lapack_interface/wrapper/clag2z.c
-     lapack_interface/wrapper/clag2z_real.c
      lapack_interface/wrapper/clags2.c
-     lapack_interface/wrapper/clags2_real.c
      lapack_interface/wrapper/clagtm.c
-     lapack_interface/wrapper/clagtm_real.c
      lapack_interface/wrapper/clahef.c
-     lapack_interface/wrapper/clahef_real.c
      lapack_interface/wrapper/clahef_rook.c
-     lapack_interface/wrapper/clahef_rook_real.c
      lapack_interface/wrapper/clahqr.c
-     lapack_interface/wrapper/clahqr_real.c
      lapack_interface/wrapper/clahr2.c
-     lapack_interface/wrapper/clahr2_real.c
      lapack_interface/wrapper/clahrd.c
-     lapack_interface/wrapper/clahrd_real.c
      lapack_interface/wrapper/claic1.c
-     lapack_interface/wrapper/claic1_real.c
      lapack_interface/wrapper/clals0.c
-     lapack_interface/wrapper/clals0_real.c
      lapack_interface/wrapper/clalsa.c
-     lapack_interface/wrapper/clalsa_real.c
      lapack_interface/wrapper/clalsd.c
-     lapack_interface/wrapper/clalsd_real.c
      lapack_interface/wrapper/clangb.c
-     lapack_interface/wrapper/clangb_real.c
      lapack_interface/wrapper/clange.c
-     lapack_interface/wrapper/clange_real.c
      lapack_interface/wrapper/clangt.c
-     lapack_interface/wrapper/clangt_real.c
      lapack_interface/wrapper/clanhb.c
-     lapack_interface/wrapper/clanhb_real.c
      lapack_interface/wrapper/clanhe.c
-     lapack_interface/wrapper/clanhe_real.c
      lapack_interface/wrapper/clanhf.c
-     lapack_interface/wrapper/clanhf_real.c
      lapack_interface/wrapper/clanhp.c
-     lapack_interface/wrapper/clanhp_real.c
      lapack_interface/wrapper/clanhs.c
-     lapack_interface/wrapper/clanhs_real.c
      lapack_interface/wrapper/clanht.c
-     lapack_interface/wrapper/clanht_real.c
      lapack_interface/wrapper/clansb.c
-     lapack_interface/wrapper/clansb_real.c
      lapack_interface/wrapper/clansp.c
-     lapack_interface/wrapper/clansp_real.c
      lapack_interface/wrapper/clansy.c
-     lapack_interface/wrapper/clansy_real.c
      lapack_interface/wrapper/clantb.c
-     lapack_interface/wrapper/clantb_real.c
      lapack_interface/wrapper/clantp.c
-     lapack_interface/wrapper/clantp_real.c
      lapack_interface/wrapper/clantr.c
-     lapack_interface/wrapper/clantr_real.c
      lapack_interface/wrapper/clapll.c
-     lapack_interface/wrapper/clapll_real.c
      lapack_interface/wrapper/clapmr.c
-     lapack_interface/wrapper/clapmr_real.c
      lapack_interface/wrapper/clapmt.c
-     lapack_interface/wrapper/clapmt_real.c
      lapack_interface/wrapper/claqgb.c
-     lapack_interface/wrapper/claqgb_real.c
      lapack_interface/wrapper/claqge.c
-     lapack_interface/wrapper/claqge_real.c
      lapack_interface/wrapper/claqhb.c
-     lapack_interface/wrapper/claqhb_real.c
      lapack_interface/wrapper/claqhe.c
-     lapack_interface/wrapper/claqhe_real.c
      lapack_interface/wrapper/claqhp.c
-     lapack_interface/wrapper/claqhp_real.c
      lapack_interface/wrapper/claqp2.c
-     lapack_interface/wrapper/claqp2_real.c
      lapack_interface/wrapper/claqps.c
-     lapack_interface/wrapper/claqps_real.c
      lapack_interface/wrapper/claqr0.c
-     lapack_interface/wrapper/claqr0_real.c
      lapack_interface/wrapper/claqr1.c
-     lapack_interface/wrapper/claqr1_real.c
      lapack_interface/wrapper/claqr2.c
-     lapack_interface/wrapper/claqr2_real.c
      lapack_interface/wrapper/claqr3.c
-     lapack_interface/wrapper/claqr3_real.c
      lapack_interface/wrapper/claqr4.c
-     lapack_interface/wrapper/claqr4_real.c
      lapack_interface/wrapper/claqr5.c
-     lapack_interface/wrapper/claqr5_real.c
      lapack_interface/wrapper/claqsb.c
-     lapack_interface/wrapper/claqsb_real.c
      lapack_interface/wrapper/claqsp.c
-     lapack_interface/wrapper/claqsp_real.c
      lapack_interface/wrapper/claqsy.c
-     lapack_interface/wrapper/claqsy_real.c
      lapack_interface/wrapper/clar1v.c
-     lapack_interface/wrapper/clar1v_real.c
      lapack_interface/wrapper/clar2v.c
-     lapack_interface/wrapper/clar2v_real.c
      lapack_interface/wrapper/clarcm.c
-     lapack_interface/wrapper/clarcm_real.c
      lapack_interface/wrapper/clarf.c
-     lapack_interface/wrapper/clarf_real.c
      lapack_interface/wrapper/clarfb.c
-     lapack_interface/wrapper/clarfb_real.c
      lapack_interface/wrapper/clarfg.c
-     lapack_interface/wrapper/clarfg_real.c
      lapack_interface/wrapper/clarfgp.c
-     lapack_interface/wrapper/clarfgp_real.c
      lapack_interface/wrapper/clarft.c
-     lapack_interface/wrapper/clarft_real.c
      lapack_interface/wrapper/clarfx.c
-     lapack_interface/wrapper/clarfx_real.c
      lapack_interface/wrapper/clargv.c
-     lapack_interface/wrapper/clargv_real.c
      lapack_interface/wrapper/clarnv.c
-     lapack_interface/wrapper/clarnv_real.c
      lapack_interface/wrapper/clarrv.c
-     lapack_interface/wrapper/clarrv_real.c
      lapack_interface/wrapper/clartg.c
-     lapack_interface/wrapper/clartg_real.c
      lapack_interface/wrapper/clartv.c
-     lapack_interface/wrapper/clartv_real.c
      lapack_interface/wrapper/clarz.c
-     lapack_interface/wrapper/clarz_real.c
      lapack_interface/wrapper/clarzb.c
-     lapack_interface/wrapper/clarzb_real.c
      lapack_interface/wrapper/clarzt.c
-     lapack_interface/wrapper/clarzt_real.c
      lapack_interface/wrapper/clascl.c
-     lapack_interface/wrapper/clascl_real.c
      lapack_interface/wrapper/claset.c
-     lapack_interface/wrapper/claset_real.c
      lapack_interface/wrapper/clasr.c
-     lapack_interface/wrapper/clasr_real.c
      lapack_interface/wrapper/classq.c
-     lapack_interface/wrapper/classq_real.c
      lapack_interface/wrapper/claswp.c
-     lapack_interface/wrapper/claswp_real.c
      lapack_interface/wrapper/clasyf.c
-     lapack_interface/wrapper/clasyf_real.c
      lapack_interface/wrapper/clasyf_rook.c
-     lapack_interface/wrapper/clasyf_rook_real.c
      lapack_interface/wrapper/clatbs.c
-     lapack_interface/wrapper/clatbs_real.c
      lapack_interface/wrapper/clatdf.c
-     lapack_interface/wrapper/clatdf_real.c
      lapack_interface/wrapper/clatps.c
-     lapack_interface/wrapper/clatps_real.c
      lapack_interface/wrapper/clatrd.c
-     lapack_interface/wrapper/clatrd_real.c
      lapack_interface/wrapper/clatrs.c
-     lapack_interface/wrapper/clatrs_real.c
      lapack_interface/wrapper/clatrz.c
-     lapack_interface/wrapper/clatrz_real.c
      lapack_interface/wrapper/clatzm.c
-     lapack_interface/wrapper/clatzm_real.c
      lapack_interface/wrapper/clauu2.c
-     lapack_interface/wrapper/clauu2_real.c
      lapack_interface/wrapper/clauum.c
-     lapack_interface/wrapper/clauum_real.c
      lapack_interface/wrapper/cpbcon.c
-     lapack_interface/wrapper/cpbcon_real.c
      lapack_interface/wrapper/cpbequ.c
-     lapack_interface/wrapper/cpbequ_real.c
      lapack_interface/wrapper/cpbrfs.c
-     lapack_interface/wrapper/cpbrfs_real.c
      lapack_interface/wrapper/cpbstf.c
-     lapack_interface/wrapper/cpbstf_real.c
      lapack_interface/wrapper/cpbsv.c
-     lapack_interface/wrapper/cpbsv_real.c
      lapack_interface/wrapper/cpbsvx.c
-     lapack_interface/wrapper/cpbsvx_real.c
      lapack_interface/wrapper/cpbtf2.c
-     lapack_interface/wrapper/cpbtf2_real.c
      lapack_interface/wrapper/cpbtrf.c
-     lapack_interface/wrapper/cpbtrf_real.c
      lapack_interface/wrapper/cpbtrs.c
-     lapack_interface/wrapper/cpbtrs_real.c
      lapack_interface/wrapper/cpftrf.c
-     lapack_interface/wrapper/cpftrf_real.c
      lapack_interface/wrapper/cpftri.c
-     lapack_interface/wrapper/cpftri_real.c
      lapack_interface/wrapper/cpftrs.c
-     lapack_interface/wrapper/cpftrs_real.c
      lapack_interface/wrapper/cpocon.c
-     lapack_interface/wrapper/cpocon_real.c
      lapack_interface/wrapper/cpoequ.c
-     lapack_interface/wrapper/cpoequ_real.c
      lapack_interface/wrapper/cpoequb.c
-     lapack_interface/wrapper/cpoequb_real.c
      lapack_interface/wrapper/cporfs.c
-     lapack_interface/wrapper/cporfs_real.c
      lapack_interface/wrapper/cposv.c
-     lapack_interface/wrapper/cposv_real.c
      lapack_interface/wrapper/cposvx.c
-     lapack_interface/wrapper/cposvx_real.c
      lapack_interface/wrapper/cpotf2.c
-     lapack_interface/wrapper/cpotf2_real.c
      lapack_interface/wrapper/cpotrf.c
-     lapack_interface/wrapper/cpotrf_real.c
      lapack_interface/wrapper/cpotrf2.c
-     lapack_interface/wrapper/cpotrf2_real.c
      lapack_interface/wrapper/cpotri.c
-     lapack_interface/wrapper/cpotri_real.c
      lapack_interface/wrapper/cpotrs.c
-     lapack_interface/wrapper/cpotrs_real.c
      lapack_interface/wrapper/cppcon.c
-     lapack_interface/wrapper/cppcon_real.c
      lapack_interface/wrapper/cppequ.c
-     lapack_interface/wrapper/cppequ_real.c
      lapack_interface/wrapper/cpprfs.c
-     lapack_interface/wrapper/cpprfs_real.c
      lapack_interface/wrapper/cppsv.c
-     lapack_interface/wrapper/cppsv_real.c
      lapack_interface/wrapper/cppsvx.c
-     lapack_interface/wrapper/cppsvx_real.c
      lapack_interface/wrapper/cpptrf.c
-     lapack_interface/wrapper/cpptrf_real.c
      lapack_interface/wrapper/cpptri.c
-     lapack_interface/wrapper/cpptri_real.c
      lapack_interface/wrapper/cpptrs.c
-     lapack_interface/wrapper/cpptrs_real.c
      lapack_interface/wrapper/cpstf2.c
-     lapack_interface/wrapper/cpstf2_real.c
      lapack_interface/wrapper/cpstrf.c
-     lapack_interface/wrapper/cpstrf_real.c
      lapack_interface/wrapper/cptcon.c
-     lapack_interface/wrapper/cptcon_real.c
      lapack_interface/wrapper/cpteqr.c
-     lapack_interface/wrapper/cpteqr_real.c
      lapack_interface/wrapper/cptrfs.c
-     lapack_interface/wrapper/cptrfs_real.c
      lapack_interface/wrapper/cptsv.c
-     lapack_interface/wrapper/cptsv_real.c
      lapack_interface/wrapper/cptsvx.c
-     lapack_interface/wrapper/cptsvx_real.c
      lapack_interface/wrapper/cpttrf.c
-     lapack_interface/wrapper/cpttrf_real.c
      lapack_interface/wrapper/cpttrs.c
-     lapack_interface/wrapper/cpttrs_real.c
      lapack_interface/wrapper/cptts2.c
-     lapack_interface/wrapper/cptts2_real.c
      lapack_interface/wrapper/crot.c
-     lapack_interface/wrapper/crot_real.c
      lapack_interface/wrapper/cspcon.c
-     lapack_interface/wrapper/cspcon_real.c
      lapack_interface/wrapper/cspmv.c
-     lapack_interface/wrapper/cspmv_real.c
      lapack_interface/wrapper/cspr.c
-     lapack_interface/wrapper/cspr_real.c
      lapack_interface/wrapper/csprfs.c
-     lapack_interface/wrapper/csprfs_real.c
      lapack_interface/wrapper/cspsv.c
-     lapack_interface/wrapper/cspsv_real.c
      lapack_interface/wrapper/cspsvx.c
-     lapack_interface/wrapper/cspsvx_real.c
      lapack_interface/wrapper/csptrf.c
-     lapack_interface/wrapper/csptrf_real.c
      lapack_interface/wrapper/csptri.c
-     lapack_interface/wrapper/csptri_real.c
      lapack_interface/wrapper/csptrs.c
-     lapack_interface/wrapper/csptrs_real.c
      lapack_interface/wrapper/csrscl.c
-     lapack_interface/wrapper/csrscl_real.c
      lapack_interface/wrapper/cstedc.c
-     lapack_interface/wrapper/cstedc_real.c
      lapack_interface/wrapper/cstegr.c
-     lapack_interface/wrapper/cstegr_real.c
      lapack_interface/wrapper/cstein.c
-     lapack_interface/wrapper/cstein_real.c
      lapack_interface/wrapper/cstemr.c
-     lapack_interface/wrapper/cstemr_real.c
      lapack_interface/wrapper/csteqr.c
-     lapack_interface/wrapper/csteqr_real.c
      lapack_interface/wrapper/csycon.c
-     lapack_interface/wrapper/csycon_real.c
      lapack_interface/wrapper/csycon_rook.c
-     lapack_interface/wrapper/csycon_rook_real.c
      lapack_interface/wrapper/csyconv.c
-     lapack_interface/wrapper/csyconv_real.c
      lapack_interface/wrapper/csyequb.c
-     lapack_interface/wrapper/csyequb_real.c
      lapack_interface/wrapper/csymv.c
-     lapack_interface/wrapper/csymv_real.c
      lapack_interface/wrapper/csyr.c
-     lapack_interface/wrapper/csyr_real.c
      lapack_interface/wrapper/csyrfs.c
-     lapack_interface/wrapper/csyrfs_real.c
      lapack_interface/wrapper/csysv.c
-     lapack_interface/wrapper/csysv_real.c
      lapack_interface/wrapper/csysv_rook.c
-     lapack_interface/wrapper/csysv_rook_real.c
      lapack_interface/wrapper/csysvx.c
-     lapack_interface/wrapper/csysvx_real.c
      lapack_interface/wrapper/csyswapr.c
-     lapack_interface/wrapper/csyswapr_real.c
      lapack_interface/wrapper/csytf2.c
-     lapack_interface/wrapper/csytf2_real.c
      lapack_interface/wrapper/csytf2_rook.c
-     lapack_interface/wrapper/csytf2_rook_real.c
      lapack_interface/wrapper/csytrf.c
-     lapack_interface/wrapper/csytrf_real.c
      lapack_interface/wrapper/csytrf_rook.c
-     lapack_interface/wrapper/csytrf_rook_real.c
      lapack_interface/wrapper/csytri.c
-     lapack_interface/wrapper/csytri_real.c
      lapack_interface/wrapper/csytri2.c
-     lapack_interface/wrapper/csytri2_real.c
      lapack_interface/wrapper/csytri2x.c
-     lapack_interface/wrapper/csytri2x_real.c
      lapack_interface/wrapper/csytri_rook.c
-     lapack_interface/wrapper/csytri_rook_real.c
      lapack_interface/wrapper/csytrs.c
-     lapack_interface/wrapper/csytrs_real.c
      lapack_interface/wrapper/csytrs2.c
-     lapack_interface/wrapper/csytrs2_real.c
      lapack_interface/wrapper/csytrs_rook.c
-     lapack_interface/wrapper/csytrs_rook_real.c
      lapack_interface/wrapper/ctbcon.c
-     lapack_interface/wrapper/ctbcon_real.c
      lapack_interface/wrapper/ctbrfs.c
-     lapack_interface/wrapper/ctbrfs_real.c
      lapack_interface/wrapper/ctbtrs.c
-     lapack_interface/wrapper/ctbtrs_real.c
      lapack_interface/wrapper/ctfsm.c
-     lapack_interface/wrapper/ctfsm_real.c
      lapack_interface/wrapper/ctftri.c
-     lapack_interface/wrapper/ctftri_real.c
      lapack_interface/wrapper/ctfttp.c
-     lapack_interface/wrapper/ctfttp_real.c
      lapack_interface/wrapper/ctfttr.c
-     lapack_interface/wrapper/ctfttr_real.c
      lapack_interface/wrapper/ctgevc.c
-     lapack_interface/wrapper/ctgevc_real.c
      lapack_interface/wrapper/ctgex2.c
-     lapack_interface/wrapper/ctgex2_real.c
      lapack_interface/wrapper/ctgexc.c
-     lapack_interface/wrapper/ctgexc_real.c
      lapack_interface/wrapper/ctgsen.c
-     lapack_interface/wrapper/ctgsen_real.c
      lapack_interface/wrapper/ctgsja.c
-     lapack_interface/wrapper/ctgsja_real.c
      lapack_interface/wrapper/ctgsna.c
-     lapack_interface/wrapper/ctgsna_real.c
      lapack_interface/wrapper/ctgsy2.c
-     lapack_interface/wrapper/ctgsy2_real.c
      lapack_interface/wrapper/ctgsyl.c
-     lapack_interface/wrapper/ctgsyl_real.c
      lapack_interface/wrapper/ctpcon.c
-     lapack_interface/wrapper/ctpcon_real.c
      lapack_interface/wrapper/ctpmqrt.c
-     lapack_interface/wrapper/ctpmqrt_real.c
      lapack_interface/wrapper/ctpqrt.c
-     lapack_interface/wrapper/ctpqrt_real.c
      lapack_interface/wrapper/ctpqrt2.c
-     lapack_interface/wrapper/ctpqrt2_real.c
      lapack_interface/wrapper/ctprfb.c
-     lapack_interface/wrapper/ctprfb_real.c
      lapack_interface/wrapper/ctprfs.c
-     lapack_interface/wrapper/ctprfs_real.c
      lapack_interface/wrapper/ctptri.c
-     lapack_interface/wrapper/ctptri_real.c
      lapack_interface/wrapper/ctptrs.c
-     lapack_interface/wrapper/ctptrs_real.c
      lapack_interface/wrapper/ctpttf.c
-     lapack_interface/wrapper/ctpttf_real.c
      lapack_interface/wrapper/ctpttr.c
-     lapack_interface/wrapper/ctpttr_real.c
      lapack_interface/wrapper/ctrcon.c
-     lapack_interface/wrapper/ctrcon_real.c
      lapack_interface/wrapper/ctrevc.c
-     lapack_interface/wrapper/ctrevc_real.c
      lapack_interface/wrapper/ctrexc.c
-     lapack_interface/wrapper/ctrexc_real.c
      lapack_interface/wrapper/ctrrfs.c
-     lapack_interface/wrapper/ctrrfs_real.c
      lapack_interface/wrapper/ctrsen.c
-     lapack_interface/wrapper/ctrsen_real.c
      lapack_interface/wrapper/ctrsna.c
-     lapack_interface/wrapper/ctrsna_real.c
      lapack_interface/wrapper/ctrsyl.c
-     lapack_interface/wrapper/ctrsyl_real.c
      lapack_interface/wrapper/ctrti2.c
-     lapack_interface/wrapper/ctrti2_real.c
      lapack_interface/wrapper/ctrtri.c
-     lapack_interface/wrapper/ctrtri_real.c
      lapack_interface/wrapper/ctrtrs.c
-     lapack_interface/wrapper/ctrtrs_real.c
      lapack_interface/wrapper/ctrttf.c
-     lapack_interface/wrapper/ctrttf_real.c
      lapack_interface/wrapper/ctrttp.c
-     lapack_interface/wrapper/ctrttp_real.c
      lapack_interface/wrapper/ctzrqf.c
-     lapack_interface/wrapper/ctzrqf_real.c
      lapack_interface/wrapper/ctzrzf.c
-     lapack_interface/wrapper/ctzrzf_real.c
      lapack_interface/wrapper/cunbdb.c
-     lapack_interface/wrapper/cunbdb_real.c
      lapack_interface/wrapper/cunbdb1.c
-     lapack_interface/wrapper/cunbdb1_real.c
      lapack_interface/wrapper/cunbdb2.c
-     lapack_interface/wrapper/cunbdb2_real.c
      lapack_interface/wrapper/cunbdb3.c
-     lapack_interface/wrapper/cunbdb3_real.c
      lapack_interface/wrapper/cunbdb4.c
-     lapack_interface/wrapper/cunbdb4_real.c
      lapack_interface/wrapper/cunbdb5.c
-     lapack_interface/wrapper/cunbdb5_real.c
      lapack_interface/wrapper/cunbdb6.c
-     lapack_interface/wrapper/cunbdb6_real.c
      lapack_interface/wrapper/cuncsd.c
-     lapack_interface/wrapper/cuncsd_real.c
      lapack_interface/wrapper/cuncsd2by1.c
-     lapack_interface/wrapper/cuncsd2by1_real.c
      lapack_interface/wrapper/cung2l.c
-     lapack_interface/wrapper/cung2l_real.c
      lapack_interface/wrapper/cung2r.c
-     lapack_interface/wrapper/cung2r_real.c
      lapack_interface/wrapper/cungbr.c
-     lapack_interface/wrapper/cungbr_real.c
      lapack_interface/wrapper/cunghr.c
-     lapack_interface/wrapper/cunghr_real.c
      lapack_interface/wrapper/cungl2.c
-     lapack_interface/wrapper/cungl2_real.c
      lapack_interface/wrapper/cunglq.c
-     lapack_interface/wrapper/cunglq_real.c
      lapack_interface/wrapper/cungql.c
-     lapack_interface/wrapper/cungql_real.c
      lapack_interface/wrapper/cungqr.c
-     lapack_interface/wrapper/cungqr_real.c
      lapack_interface/wrapper/cungr2.c
-     lapack_interface/wrapper/cungr2_real.c
      lapack_interface/wrapper/cungrq.c
-     lapack_interface/wrapper/cungrq_real.c
      lapack_interface/wrapper/cungtr.c
-     lapack_interface/wrapper/cungtr_real.c
      lapack_interface/wrapper/cunm22.c
-     lapack_interface/wrapper/cunm22_real.c
      lapack_interface/wrapper/cunm2l.c
-     lapack_interface/wrapper/cunm2l_real.c
      lapack_interface/wrapper/cunm2r.c
-     lapack_interface/wrapper/cunm2r_real.c
      lapack_interface/wrapper/cunmbr.c
-     lapack_interface/wrapper/cunmbr_real.c
      lapack_interface/wrapper/cunmhr.c
-     lapack_interface/wrapper/cunmhr_real.c
      lapack_interface/wrapper/cunml2.c
-     lapack_interface/wrapper/cunml2_real.c
      lapack_interface/wrapper/cunmlq.c
-     lapack_interface/wrapper/cunmlq_real.c
      lapack_interface/wrapper/cunmql.c
-     lapack_interface/wrapper/cunmql_real.c
      lapack_interface/wrapper/cunmqr.c
-     lapack_interface/wrapper/cunmqr_real.c
      lapack_interface/wrapper/cunmr2.c
-     lapack_interface/wrapper/cunmr2_real.c
      lapack_interface/wrapper/cunmr3.c
-     lapack_interface/wrapper/cunmr3_real.c
      lapack_interface/wrapper/cunmrq.c
-     lapack_interface/wrapper/cunmrq_real.c
      lapack_interface/wrapper/cunmrz.c
-     lapack_interface/wrapper/cunmrz_real.c
      lapack_interface/wrapper/cunmtr.c
-     lapack_interface/wrapper/cunmtr_real.c
      lapack_interface/wrapper/cupgtr.c
-     lapack_interface/wrapper/cupgtr_real.c
      lapack_interface/wrapper/cupmtr.c
-     lapack_interface/wrapper/cupmtr_real.c
      lapack_interface/wrapper/dbbcsd.c
-     lapack_interface/wrapper/dbbcsd_real.c
      lapack_interface/wrapper/dbdsdc.c
-     lapack_interface/wrapper/dbdsdc_real.c
      lapack_interface/wrapper/dbdsqr.c
-     lapack_interface/wrapper/dbdsqr_real.c
      lapack_interface/wrapper/dbdsvdx.c
-     lapack_interface/wrapper/dbdsvdx_real.c
      lapack_interface/wrapper/ddisna.c
-     lapack_interface/wrapper/ddisna_real.c
      lapack_interface/wrapper/dgbbrd.c
-     lapack_interface/wrapper/dgbbrd_real.c
      lapack_interface/wrapper/dgbcon.c
-     lapack_interface/wrapper/dgbcon_real.c
      lapack_interface/wrapper/dgbequ.c
-     lapack_interface/wrapper/dgbequ_real.c
      lapack_interface/wrapper/dgbequb.c
-     lapack_interface/wrapper/dgbequb_real.c
      lapack_interface/wrapper/dgbrfs.c
-     lapack_interface/wrapper/dgbrfs_real.c
      lapack_interface/wrapper/dgbsv.c
-     lapack_interface/wrapper/dgbsv_real.c
      lapack_interface/wrapper/dgbsvx.c
-     lapack_interface/wrapper/dgbsvx_real.c
      lapack_interface/wrapper/dgbtf2.c
-     lapack_interface/wrapper/dgbtf2_real.c
      lapack_interface/wrapper/dgbtrf.c
-     lapack_interface/wrapper/dgbtrf_real.c
      lapack_interface/wrapper/dgbtrs.c
-     lapack_interface/wrapper/dgbtrs_real.c
      lapack_interface/wrapper/dgebak.c
-     lapack_interface/wrapper/dgebak_real.c
      lapack_interface/wrapper/dgebal.c
-     lapack_interface/wrapper/dgebal_real.c
      lapack_interface/wrapper/dgebd2.c
-     lapack_interface/wrapper/dgebd2_real.c
      lapack_interface/wrapper/dgebrd.c
-     lapack_interface/wrapper/dgebrd_real.c
      lapack_interface/wrapper/dgecon.c
-     lapack_interface/wrapper/dgecon_real.c
      lapack_interface/wrapper/dgeequ.c
-     lapack_interface/wrapper/dgeequ_real.c
      lapack_interface/wrapper/dgeequb.c
-     lapack_interface/wrapper/dgeequb_real.c
      lapack_interface/wrapper/dgees.c
-     lapack_interface/wrapper/dgees_real.c
      lapack_interface/wrapper/dgeesx.c
-     lapack_interface/wrapper/dgeesx_real.c
      lapack_interface/wrapper/dgeev.c
-     lapack_interface/wrapper/dgeev_real.c
      lapack_interface/wrapper/dgeevx.c
-     lapack_interface/wrapper/dgeevx_real.c
      lapack_interface/wrapper/dgegs.c
-     lapack_interface/wrapper/dgegs_real.c
      lapack_interface/wrapper/dgegv.c
-     lapack_interface/wrapper/dgegv_real.c
      lapack_interface/wrapper/dgehd2.c
-     lapack_interface/wrapper/dgehd2_real.c
      lapack_interface/wrapper/dgehrd.c
-     lapack_interface/wrapper/dgehrd_real.c
      lapack_interface/wrapper/dgejsv.c
-     lapack_interface/wrapper/dgejsv_real.c
      lapack_interface/wrapper/dgelq2.c
-     lapack_interface/wrapper/dgelq2_real.c
      lapack_interface/wrapper/dgelqf.c
-     lapack_interface/wrapper/dgelqf_real.c
      lapack_interface/wrapper/dgels.c
-     lapack_interface/wrapper/dgels_real.c
      lapack_interface/wrapper/dgelsd.c
-     lapack_interface/wrapper/dgelsd_real.c
      lapack_interface/wrapper/dgelss.c
-     lapack_interface/wrapper/dgelss_real.c
      lapack_interface/wrapper/dgelsx.c
-     lapack_interface/wrapper/dgelsx_real.c
      lapack_interface/wrapper/dgelsy.c
-     lapack_interface/wrapper/dgelsy_real.c
      lapack_interface/wrapper/dgemqrt.c
-     lapack_interface/wrapper/dgemqrt_real.c
      lapack_interface/wrapper/dgeql2.c
-     lapack_interface/wrapper/dgeql2_real.c
      lapack_interface/wrapper/dgeqlf.c
-     lapack_interface/wrapper/dgeqlf_real.c
      lapack_interface/wrapper/dgeqp3.c
-     lapack_interface/wrapper/dgeqp3_real.c
      lapack_interface/wrapper/dgeqpf.c
-     lapack_interface/wrapper/dgeqpf_real.c
      lapack_interface/wrapper/dgeqr2.c
-     lapack_interface/wrapper/dgeqr2_real.c
      lapack_interface/wrapper/dgeqr2p.c
-     lapack_interface/wrapper/dgeqr2p_real.c
      lapack_interface/wrapper/dgeqrf.c
-     lapack_interface/wrapper/dgeqrf_real.c
      lapack_interface/wrapper/dgeqrfp.c
-     lapack_interface/wrapper/dgeqrfp_real.c
      lapack_interface/wrapper/dgeqrt.c
-     lapack_interface/wrapper/dgeqrt_real.c
      lapack_interface/wrapper/dgeqrt2.c
-     lapack_interface/wrapper/dgeqrt2_real.c
      lapack_interface/wrapper/dgeqrt3.c
-     lapack_interface/wrapper/dgeqrt3_real.c
      lapack_interface/wrapper/dgerfs.c
-     lapack_interface/wrapper/dgerfs_real.c
      lapack_interface/wrapper/dgerq2.c
-     lapack_interface/wrapper/dgerq2_real.c
      lapack_interface/wrapper/dgerqf.c
-     lapack_interface/wrapper/dgerqf_real.c
      lapack_interface/wrapper/dgesc2.c
-     lapack_interface/wrapper/dgesc2_real.c
      lapack_interface/wrapper/dgesdd.c
-     lapack_interface/wrapper/dgesdd_real.c
      lapack_interface/wrapper/dgesv.c
-     lapack_interface/wrapper/dgesv_real.c
      lapack_interface/wrapper/dgesvd.c
-     lapack_interface/wrapper/dgesvd_real.c
      lapack_interface/wrapper/dgesvdx.c
-     lapack_interface/wrapper/dgesvdx_real.c
      lapack_interface/wrapper/dgesvj.c
-     lapack_interface/wrapper/dgesvj_real.c
      lapack_interface/wrapper/dgesvx.c
-     lapack_interface/wrapper/dgesvx_real.c
      lapack_interface/wrapper/dgetc2.c
-     lapack_interface/wrapper/dgetc2_real.c
      lapack_interface/wrapper/dgetf2.c
-     lapack_interface/wrapper/dgetf2_real.c
      lapack_interface/wrapper/dgetrf.c
-     lapack_interface/wrapper/dgetrf_real.c
      lapack_interface/wrapper/dgetrf2.c
-     lapack_interface/wrapper/dgetrf2_real.c
      lapack_interface/wrapper/dgetri.c
-     lapack_interface/wrapper/dgetri_real.c
      lapack_interface/wrapper/dgetrs.c
-     lapack_interface/wrapper/dgetrs_real.c
      lapack_interface/wrapper/dggbak.c
-     lapack_interface/wrapper/dggbak_real.c
      lapack_interface/wrapper/dggbal.c
-     lapack_interface/wrapper/dggbal_real.c
      lapack_interface/wrapper/dgges.c
-     lapack_interface/wrapper/dgges_real.c
      lapack_interface/wrapper/dgges3.c
-     lapack_interface/wrapper/dgges3_real.c
      lapack_interface/wrapper/dggesx.c
-     lapack_interface/wrapper/dggesx_real.c
      lapack_interface/wrapper/dggev.c
-     lapack_interface/wrapper/dggev_real.c
      lapack_interface/wrapper/dggev3.c
-     lapack_interface/wrapper/dggev3_real.c
      lapack_interface/wrapper/dggevx.c
-     lapack_interface/wrapper/dggevx_real.c
      lapack_interface/wrapper/dggglm.c
-     lapack_interface/wrapper/dggglm_real.c
      lapack_interface/wrapper/dgghd3.c
-     lapack_interface/wrapper/dgghd3_real.c
      lapack_interface/wrapper/dgghrd.c
-     lapack_interface/wrapper/dgghrd_real.c
      lapack_interface/wrapper/dgglse.c
-     lapack_interface/wrapper/dgglse_real.c
      lapack_interface/wrapper/dggqrf.c
-     lapack_interface/wrapper/dggqrf_real.c
      lapack_interface/wrapper/dggrqf.c
-     lapack_interface/wrapper/dggrqf_real.c
      lapack_interface/wrapper/dggsvd.c
-     lapack_interface/wrapper/dggsvd_real.c
      lapack_interface/wrapper/dggsvd3.c
-     lapack_interface/wrapper/dggsvd3_real.c
      lapack_interface/wrapper/dggsvp.c
-     lapack_interface/wrapper/dggsvp_real.c
      lapack_interface/wrapper/dggsvp3.c
-     lapack_interface/wrapper/dggsvp3_real.c
      lapack_interface/wrapper/dgsvj0.c
-     lapack_interface/wrapper/dgsvj0_real.c
      lapack_interface/wrapper/dgsvj1.c
-     lapack_interface/wrapper/dgsvj1_real.c
      lapack_interface/wrapper/dgtcon.c
-     lapack_interface/wrapper/dgtcon_real.c
      lapack_interface/wrapper/dgtrfs.c
-     lapack_interface/wrapper/dgtrfs_real.c
      lapack_interface/wrapper/dgtsv.c
-     lapack_interface/wrapper/dgtsv_real.c
      lapack_interface/wrapper/dgtsvx.c
-     lapack_interface/wrapper/dgtsvx_real.c
      lapack_interface/wrapper/dgttrf.c
-     lapack_interface/wrapper/dgttrf_real.c
      lapack_interface/wrapper/dgttrs.c
-     lapack_interface/wrapper/dgttrs_real.c
      lapack_interface/wrapper/dgtts2.c
-     lapack_interface/wrapper/dgtts2_real.c
      lapack_interface/wrapper/dhgeqz.c
-     lapack_interface/wrapper/dhgeqz_real.c
      lapack_interface/wrapper/dhsein.c
-     lapack_interface/wrapper/dhsein_real.c
      lapack_interface/wrapper/dhseqr.c
-     lapack_interface/wrapper/dhseqr_real.c
      lapack_interface/wrapper/disnan.c
-     lapack_interface/wrapper/disnan_real.c
      lapack_interface/wrapper/dlabad.c
-     lapack_interface/wrapper/dlabad_real.c
      lapack_interface/wrapper/dlabrd.c
-     lapack_interface/wrapper/dlabrd_real.c
      lapack_interface/wrapper/dlacn2.c
-     lapack_interface/wrapper/dlacn2_real.c
      lapack_interface/wrapper/dlacon.c
-     lapack_interface/wrapper/dlacon_real.c
      lapack_interface/wrapper/dlacpy.c
-     lapack_interface/wrapper/dlacpy_real.c
      lapack_interface/wrapper/dladiv.c
-     lapack_interface/wrapper/dladiv_real.c
      lapack_interface/wrapper/dladiv1.c
-     lapack_interface/wrapper/dladiv1_real.c
      lapack_interface/wrapper/dladiv2.c
-     lapack_interface/wrapper/dladiv2_real.c
      lapack_interface/wrapper/dlae2.c
-     lapack_interface/wrapper/dlae2_real.c
      lapack_interface/wrapper/dlaebz.c
-     lapack_interface/wrapper/dlaebz_real.c
      lapack_interface/wrapper/dlaed0.c
-     lapack_interface/wrapper/dlaed0_real.c
      lapack_interface/wrapper/dlaed1.c
-     lapack_interface/wrapper/dlaed1_real.c
      lapack_interface/wrapper/dlaed2.c
-     lapack_interface/wrapper/dlaed2_real.c
      lapack_interface/wrapper/dlaed3.c
-     lapack_interface/wrapper/dlaed3_real.c
      lapack_interface/wrapper/dlaed4.c
-     lapack_interface/wrapper/dlaed4_real.c
      lapack_interface/wrapper/dlaed5.c
-     lapack_interface/wrapper/dlaed5_real.c
      lapack_interface/wrapper/dlaed6.c
-     lapack_interface/wrapper/dlaed6_real.c
      lapack_interface/wrapper/dlaed7.c
-     lapack_interface/wrapper/dlaed7_real.c
      lapack_interface/wrapper/dlaed8.c
-     lapack_interface/wrapper/dlaed8_real.c
      lapack_interface/wrapper/dlaed9.c
-     lapack_interface/wrapper/dlaed9_real.c
      lapack_interface/wrapper/dlaeda.c
-     lapack_interface/wrapper/dlaeda_real.c
      lapack_interface/wrapper/dlaein.c
-     lapack_interface/wrapper/dlaein_real.c
      lapack_interface/wrapper/dlaev2.c
-     lapack_interface/wrapper/dlaev2_real.c
      lapack_interface/wrapper/dlaexc.c
-     lapack_interface/wrapper/dlaexc_real.c
      lapack_interface/wrapper/dlag2.c
-     lapack_interface/wrapper/dlag2_real.c
      lapack_interface/wrapper/dlag2s.c
-     lapack_interface/wrapper/dlag2s_real.c
      lapack_interface/wrapper/dlags2.c
-     lapack_interface/wrapper/dlags2_real.c
      lapack_interface/wrapper/dlagtf.c
-     lapack_interface/wrapper/dlagtf_real.c
      lapack_interface/wrapper/dlagtm.c
-     lapack_interface/wrapper/dlagtm_real.c
      lapack_interface/wrapper/dlagts.c
-     lapack_interface/wrapper/dlagts_real.c
      lapack_interface/wrapper/dlagv2.c
-     lapack_interface/wrapper/dlagv2_real.c
      lapack_interface/wrapper/dlahqr.c
-     lapack_interface/wrapper/dlahqr_real.c
      lapack_interface/wrapper/dlahr2.c
-     lapack_interface/wrapper/dlahr2_real.c
      lapack_interface/wrapper/dlahrd.c
-     lapack_interface/wrapper/dlahrd_real.c
      lapack_interface/wrapper/dlaic1.c
-     lapack_interface/wrapper/dlaic1_real.c
      lapack_interface/wrapper/dlaisnan.c
-     lapack_interface/wrapper/dlaisnan_real.c
      lapack_interface/wrapper/dlaln2.c
-     lapack_interface/wrapper/dlaln2_real.c
      lapack_interface/wrapper/dlals0.c
-     lapack_interface/wrapper/dlals0_real.c
      lapack_interface/wrapper/dlalsa.c
-     lapack_interface/wrapper/dlalsa_real.c
      lapack_interface/wrapper/dlalsd.c
-     lapack_interface/wrapper/dlalsd_real.c
      lapack_interface/wrapper/dlamc3.c
-     lapack_interface/wrapper/dlamc3_real.c
      lapack_interface/wrapper/dlamch.c
-     lapack_interface/wrapper/dlamch_real.c
      lapack_interface/wrapper/dlamrg.c
-     lapack_interface/wrapper/dlamrg_real.c
      lapack_interface/wrapper/dlaneg.c
-     lapack_interface/wrapper/dlaneg_real.c
      lapack_interface/wrapper/dlangb.c
-     lapack_interface/wrapper/dlangb_real.c
      lapack_interface/wrapper/dlange.c
-     lapack_interface/wrapper/dlange_real.c
      lapack_interface/wrapper/dlangt.c
-     lapack_interface/wrapper/dlangt_real.c
      lapack_interface/wrapper/dlanhs.c
-     lapack_interface/wrapper/dlanhs_real.c
      lapack_interface/wrapper/dlansb.c
-     lapack_interface/wrapper/dlansb_real.c
      lapack_interface/wrapper/dlansf.c
-     lapack_interface/wrapper/dlansf_real.c
      lapack_interface/wrapper/dlansp.c
-     lapack_interface/wrapper/dlansp_real.c
      lapack_interface/wrapper/dlanst.c
-     lapack_interface/wrapper/dlanst_real.c
      lapack_interface/wrapper/dlansy.c
-     lapack_interface/wrapper/dlansy_real.c
      lapack_interface/wrapper/dlantb.c
-     lapack_interface/wrapper/dlantb_real.c
      lapack_interface/wrapper/dlantp.c
-     lapack_interface/wrapper/dlantp_real.c
      lapack_interface/wrapper/dlantr.c
-     lapack_interface/wrapper/dlantr_real.c
      lapack_interface/wrapper/dlanv2.c
-     lapack_interface/wrapper/dlanv2_real.c
      lapack_interface/wrapper/dlapll.c
-     lapack_interface/wrapper/dlapll_real.c
      lapack_interface/wrapper/dlapmr.c
-     lapack_interface/wrapper/dlapmr_real.c
      lapack_interface/wrapper/dlapmt.c
-     lapack_interface/wrapper/dlapmt_real.c
      lapack_interface/wrapper/dlapy2.c
-     lapack_interface/wrapper/dlapy2_real.c
      lapack_interface/wrapper/dlapy3.c
-     lapack_interface/wrapper/dlapy3_real.c
      lapack_interface/wrapper/dlaqgb.c
-     lapack_interface/wrapper/dlaqgb_real.c
      lapack_interface/wrapper/dlaqge.c
-     lapack_interface/wrapper/dlaqge_real.c
      lapack_interface/wrapper/dlaqp2.c
-     lapack_interface/wrapper/dlaqp2_real.c
      lapack_interface/wrapper/dlaqps.c
-     lapack_interface/wrapper/dlaqps_real.c
      lapack_interface/wrapper/dlaqr0.c
-     lapack_interface/wrapper/dlaqr0_real.c
      lapack_interface/wrapper/dlaqr1.c
-     lapack_interface/wrapper/dlaqr1_real.c
      lapack_interface/wrapper/dlaqr2.c
-     lapack_interface/wrapper/dlaqr2_real.c
      lapack_interface/wrapper/dlaqr3.c
-     lapack_interface/wrapper/dlaqr3_real.c
      lapack_interface/wrapper/dlaqr4.c
-     lapack_interface/wrapper/dlaqr4_real.c
      lapack_interface/wrapper/dlaqr5.c
-     lapack_interface/wrapper/dlaqr5_real.c
      lapack_interface/wrapper/dlaqsb.c
-     lapack_interface/wrapper/dlaqsb_real.c
      lapack_interface/wrapper/dlaqsp.c
-     lapack_interface/wrapper/dlaqsp_real.c
      lapack_interface/wrapper/dlaqsy.c
-     lapack_interface/wrapper/dlaqsy_real.c
      lapack_interface/wrapper/dlaqtr.c
-     lapack_interface/wrapper/dlaqtr_real.c
      lapack_interface/wrapper/dlar1v.c
-     lapack_interface/wrapper/dlar1v_real.c
      lapack_interface/wrapper/dlar2v.c
-     lapack_interface/wrapper/dlar2v_real.c
      lapack_interface/wrapper/dlarf.c
-     lapack_interface/wrapper/dlarf_real.c
      lapack_interface/wrapper/dlarfb.c
-     lapack_interface/wrapper/dlarfb_real.c
      lapack_interface/wrapper/dlarfg.c
-     lapack_interface/wrapper/dlarfg_real.c
      lapack_interface/wrapper/dlarfgp.c
-     lapack_interface/wrapper/dlarfgp_real.c
      lapack_interface/wrapper/dlarft.c
-     lapack_interface/wrapper/dlarft_real.c
      lapack_interface/wrapper/dlarfx.c
-     lapack_interface/wrapper/dlarfx_real.c
      lapack_interface/wrapper/dlargv.c
-     lapack_interface/wrapper/dlargv_real.c
      lapack_interface/wrapper/dlarnv.c
-     lapack_interface/wrapper/dlarnv_real.c
      lapack_interface/wrapper/dlarra.c
-     lapack_interface/wrapper/dlarra_real.c
      lapack_interface/wrapper/dlarrb.c
-     lapack_interface/wrapper/dlarrb_real.c
      lapack_interface/wrapper/dlarrc.c
-     lapack_interface/wrapper/dlarrc_real.c
      lapack_interface/wrapper/dlarrd.c
-     lapack_interface/wrapper/dlarrd_real.c
      lapack_interface/wrapper/dlarre.c
-     lapack_interface/wrapper/dlarre_real.c
      lapack_interface/wrapper/dlarrf.c
-     lapack_interface/wrapper/dlarrf_real.c
      lapack_interface/wrapper/dlarrj.c
-     lapack_interface/wrapper/dlarrj_real.c
      lapack_interface/wrapper/dlarrk.c
-     lapack_interface/wrapper/dlarrk_real.c
      lapack_interface/wrapper/dlarrr.c
-     lapack_interface/wrapper/dlarrr_real.c
      lapack_interface/wrapper/dlarrv.c
-     lapack_interface/wrapper/dlarrv_real.c
      lapack_interface/wrapper/dlartg.c
-     lapack_interface/wrapper/dlartg_real.c
      lapack_interface/wrapper/dlartgp.c
-     lapack_interface/wrapper/dlartgp_real.c
      lapack_interface/wrapper/dlartgs.c
-     lapack_interface/wrapper/dlartgs_real.c
      lapack_interface/wrapper/dlartv.c
-     lapack_interface/wrapper/dlartv_real.c
      lapack_interface/wrapper/dlaruv.c
-     lapack_interface/wrapper/dlaruv_real.c
      lapack_interface/wrapper/dlarz.c
-     lapack_interface/wrapper/dlarz_real.c
      lapack_interface/wrapper/dlarzb.c
-     lapack_interface/wrapper/dlarzb_real.c
      lapack_interface/wrapper/dlarzt.c
-     lapack_interface/wrapper/dlarzt_real.c
      lapack_interface/wrapper/dlas2.c
-     lapack_interface/wrapper/dlas2_real.c
      lapack_interface/wrapper/dlascl.c
-     lapack_interface/wrapper/dlascl_real.c
      lapack_interface/wrapper/dlasd0.c
-     lapack_interface/wrapper/dlasd0_real.c
      lapack_interface/wrapper/dlasd1.c
-     lapack_interface/wrapper/dlasd1_real.c
      lapack_interface/wrapper/dlasd2.c
-     lapack_interface/wrapper/dlasd2_real.c
      lapack_interface/wrapper/dlasd3.c
-     lapack_interface/wrapper/dlasd3_real.c
      lapack_interface/wrapper/dlasd4.c
-     lapack_interface/wrapper/dlasd4_real.c
      lapack_interface/wrapper/dlasd5.c
-     lapack_interface/wrapper/dlasd5_real.c
      lapack_interface/wrapper/dlasd6.c
-     lapack_interface/wrapper/dlasd6_real.c
      lapack_interface/wrapper/dlasd7.c
-     lapack_interface/wrapper/dlasd7_real.c
      lapack_interface/wrapper/dlasd8.c
-     lapack_interface/wrapper/dlasd8_real.c
      lapack_interface/wrapper/dlasda.c
-     lapack_interface/wrapper/dlasda_real.c
      lapack_interface/wrapper/dlasdq.c
-     lapack_interface/wrapper/dlasdq_real.c
      lapack_interface/wrapper/dlasdt.c
-     lapack_interface/wrapper/dlasdt_real.c
      lapack_interface/wrapper/dlaset.c
-     lapack_interface/wrapper/dlaset_real.c
      lapack_interface/wrapper/dlasq1.c
-     lapack_interface/wrapper/dlasq1_real.c
      lapack_interface/wrapper/dlasq2.c
-     lapack_interface/wrapper/dlasq2_real.c
      lapack_interface/wrapper/dlasq3.c
-     lapack_interface/wrapper/dlasq3_real.c
      lapack_interface/wrapper/dlasq4.c
-     lapack_interface/wrapper/dlasq4_real.c
      lapack_interface/wrapper/dlasq5.c
-     lapack_interface/wrapper/dlasq5_real.c
      lapack_interface/wrapper/dlasq6.c
-     lapack_interface/wrapper/dlasq6_real.c
      lapack_interface/wrapper/dlasr.c
-     lapack_interface/wrapper/dlasr_real.c
      lapack_interface/wrapper/dlasrt.c
-     lapack_interface/wrapper/dlasrt_real.c
      lapack_interface/wrapper/dlassq.c
-     lapack_interface/wrapper/dlassq_real.c
      lapack_interface/wrapper/dlasv2.c
-     lapack_interface/wrapper/dlasv2_real.c
      lapack_interface/wrapper/dlaswp.c
-     lapack_interface/wrapper/dlaswp_real.c
      lapack_interface/wrapper/dlasy2.c
-     lapack_interface/wrapper/dlasy2_real.c
      lapack_interface/wrapper/dlasyf.c
-     lapack_interface/wrapper/dlasyf_real.c
      lapack_interface/wrapper/dlasyf_rook.c
-     lapack_interface/wrapper/dlasyf_rook_real.c
      lapack_interface/wrapper/dlat2s.c
-     lapack_interface/wrapper/dlat2s_real.c
      lapack_interface/wrapper/dlatbs.c
-     lapack_interface/wrapper/dlatbs_real.c
      lapack_interface/wrapper/dlatdf.c
-     lapack_interface/wrapper/dlatdf_real.c
      lapack_interface/wrapper/dlatps.c
-     lapack_interface/wrapper/dlatps_real.c
      lapack_interface/wrapper/dlatrd.c
-     lapack_interface/wrapper/dlatrd_real.c
      lapack_interface/wrapper/dlatrs.c
-     lapack_interface/wrapper/dlatrs_real.c
      lapack_interface/wrapper/dlatrz.c
-     lapack_interface/wrapper/dlatrz_real.c
      lapack_interface/wrapper/dlatzm.c
-     lapack_interface/wrapper/dlatzm_real.c
      lapack_interface/wrapper/dlauu2.c
-     lapack_interface/wrapper/dlauu2_real.c
      lapack_interface/wrapper/dlauum.c
-     lapack_interface/wrapper/dlauum_real.c
      lapack_interface/wrapper/dopgtr.c
-     lapack_interface/wrapper/dopgtr_real.c
      lapack_interface/wrapper/dopmtr.c
-     lapack_interface/wrapper/dopmtr_real.c
      lapack_interface/wrapper/dorbdb.c
-     lapack_interface/wrapper/dorbdb_real.c
      lapack_interface/wrapper/dorbdb1.c
-     lapack_interface/wrapper/dorbdb1_real.c
      lapack_interface/wrapper/dorbdb2.c
-     lapack_interface/wrapper/dorbdb2_real.c
      lapack_interface/wrapper/dorbdb3.c
-     lapack_interface/wrapper/dorbdb3_real.c
      lapack_interface/wrapper/dorbdb4.c
-     lapack_interface/wrapper/dorbdb4_real.c
      lapack_interface/wrapper/dorbdb5.c
-     lapack_interface/wrapper/dorbdb5_real.c
      lapack_interface/wrapper/dorbdb6.c
-     lapack_interface/wrapper/dorbdb6_real.c
      lapack_interface/wrapper/dorcsd.c
-     lapack_interface/wrapper/dorcsd_real.c
      lapack_interface/wrapper/dorcsd2by1.c
-     lapack_interface/wrapper/dorcsd2by1_real.c
      lapack_interface/wrapper/dorg2l.c
-     lapack_interface/wrapper/dorg2l_real.c
      lapack_interface/wrapper/dorg2r.c
-     lapack_interface/wrapper/dorg2r_real.c
      lapack_interface/wrapper/dorgbr.c
-     lapack_interface/wrapper/dorgbr_real.c
      lapack_interface/wrapper/dorghr.c
-     lapack_interface/wrapper/dorghr_real.c
      lapack_interface/wrapper/dorgl2.c
-     lapack_interface/wrapper/dorgl2_real.c
      lapack_interface/wrapper/dorglq.c
-     lapack_interface/wrapper/dorglq_real.c
      lapack_interface/wrapper/dorgql.c
-     lapack_interface/wrapper/dorgql_real.c
      lapack_interface/wrapper/dorgqr.c
-     lapack_interface/wrapper/dorgqr_real.c
      lapack_interface/wrapper/dorgr2.c
-     lapack_interface/wrapper/dorgr2_real.c
      lapack_interface/wrapper/dorgrq.c
-     lapack_interface/wrapper/dorgrq_real.c
      lapack_interface/wrapper/dorgtr.c
-     lapack_interface/wrapper/dorgtr_real.c
      lapack_interface/wrapper/dorm22.c
-     lapack_interface/wrapper/dorm22_real.c
      lapack_interface/wrapper/dorm2l.c
-     lapack_interface/wrapper/dorm2l_real.c
      lapack_interface/wrapper/dorm2r.c
-     lapack_interface/wrapper/dorm2r_real.c
      lapack_interface/wrapper/dormbr.c
-     lapack_interface/wrapper/dormbr_real.c
      lapack_interface/wrapper/dormhr.c
-     lapack_interface/wrapper/dormhr_real.c
      lapack_interface/wrapper/dorml2.c
-     lapack_interface/wrapper/dorml2_real.c
      lapack_interface/wrapper/dormlq.c
-     lapack_interface/wrapper/dormlq_real.c
      lapack_interface/wrapper/dormql.c
-     lapack_interface/wrapper/dormql_real.c
      lapack_interface/wrapper/dormqr.c
-     lapack_interface/wrapper/dormqr_real.c
      lapack_interface/wrapper/dormr2.c
-     lapack_interface/wrapper/dormr2_real.c
      lapack_interface/wrapper/dormr3.c
-     lapack_interface/wrapper/dormr3_real.c
      lapack_interface/wrapper/dormrq.c
-     lapack_interface/wrapper/dormrq_real.c
      lapack_interface/wrapper/dormrz.c
-     lapack_interface/wrapper/dormrz_real.c
      lapack_interface/wrapper/dormtr.c
-     lapack_interface/wrapper/dormtr_real.c
      lapack_interface/wrapper/dpbcon.c
-     lapack_interface/wrapper/dpbcon_real.c
      lapack_interface/wrapper/dpbequ.c
-     lapack_interface/wrapper/dpbequ_real.c
      lapack_interface/wrapper/dpbrfs.c
-     lapack_interface/wrapper/dpbrfs_real.c
      lapack_interface/wrapper/dpbstf.c
-     lapack_interface/wrapper/dpbstf_real.c
      lapack_interface/wrapper/dpbsv.c
-     lapack_interface/wrapper/dpbsv_real.c
      lapack_interface/wrapper/dpbsvx.c
-     lapack_interface/wrapper/dpbsvx_real.c
      lapack_interface/wrapper/dpbtf2.c
-     lapack_interface/wrapper/dpbtf2_real.c
      lapack_interface/wrapper/dpbtrf.c
-     lapack_interface/wrapper/dpbtrf_real.c
      lapack_interface/wrapper/dpbtrs.c
-     lapack_interface/wrapper/dpbtrs_real.c
      lapack_interface/wrapper/dpftrf.c
-     lapack_interface/wrapper/dpftrf_real.c
      lapack_interface/wrapper/dpftri.c
-     lapack_interface/wrapper/dpftri_real.c
      lapack_interface/wrapper/dpftrs.c
-     lapack_interface/wrapper/dpftrs_real.c
      lapack_interface/wrapper/dpocon.c
-     lapack_interface/wrapper/dpocon_real.c
      lapack_interface/wrapper/dpoequ.c
-     lapack_interface/wrapper/dpoequ_real.c
      lapack_interface/wrapper/dpoequb.c
-     lapack_interface/wrapper/dpoequb_real.c
      lapack_interface/wrapper/dporfs.c
-     lapack_interface/wrapper/dporfs_real.c
      lapack_interface/wrapper/dposv.c
-     lapack_interface/wrapper/dposv_real.c
      lapack_interface/wrapper/dposvx.c
-     lapack_interface/wrapper/dposvx_real.c
      lapack_interface/wrapper/dpotf2.c
-     lapack_interface/wrapper/dpotf2_real.c
      lapack_interface/wrapper/dpotrf.c
-     lapack_interface/wrapper/dpotrf_real.c
      lapack_interface/wrapper/dpotrf2.c
-     lapack_interface/wrapper/dpotrf2_real.c
      lapack_interface/wrapper/dpotri.c
-     lapack_interface/wrapper/dpotri_real.c
      lapack_interface/wrapper/dpotrs.c
-     lapack_interface/wrapper/dpotrs_real.c
      lapack_interface/wrapper/dppcon.c
-     lapack_interface/wrapper/dppcon_real.c
      lapack_interface/wrapper/dppequ.c
-     lapack_interface/wrapper/dppequ_real.c
      lapack_interface/wrapper/dpprfs.c
-     lapack_interface/wrapper/dpprfs_real.c
      lapack_interface/wrapper/dppsv.c
-     lapack_interface/wrapper/dppsv_real.c
      lapack_interface/wrapper/dppsvx.c
-     lapack_interface/wrapper/dppsvx_real.c
      lapack_interface/wrapper/dpptrf.c
-     lapack_interface/wrapper/dpptrf_real.c
      lapack_interface/wrapper/dpptri.c
-     lapack_interface/wrapper/dpptri_real.c
      lapack_interface/wrapper/dpptrs.c
-     lapack_interface/wrapper/dpptrs_real.c
      lapack_interface/wrapper/dpstf2.c
-     lapack_interface/wrapper/dpstf2_real.c
      lapack_interface/wrapper/dpstrf.c
-     lapack_interface/wrapper/dpstrf_real.c
      lapack_interface/wrapper/dptcon.c
-     lapack_interface/wrapper/dptcon_real.c
      lapack_interface/wrapper/dpteqr.c
-     lapack_interface/wrapper/dpteqr_real.c
      lapack_interface/wrapper/dptrfs.c
-     lapack_interface/wrapper/dptrfs_real.c
      lapack_interface/wrapper/dptsv.c
-     lapack_interface/wrapper/dptsv_real.c
      lapack_interface/wrapper/dptsvx.c
-     lapack_interface/wrapper/dptsvx_real.c
      lapack_interface/wrapper/dpttrf.c
-     lapack_interface/wrapper/dpttrf_real.c
      lapack_interface/wrapper/dpttrs.c
-     lapack_interface/wrapper/dpttrs_real.c
      lapack_interface/wrapper/dptts2.c
-     lapack_interface/wrapper/dptts2_real.c
      lapack_interface/wrapper/drscl.c
-     lapack_interface/wrapper/drscl_real.c
      lapack_interface/wrapper/dsbev.c
-     lapack_interface/wrapper/dsbev_real.c
      lapack_interface/wrapper/dsbevd.c
-     lapack_interface/wrapper/dsbevd_real.c
      lapack_interface/wrapper/dsbevx.c
-     lapack_interface/wrapper/dsbevx_real.c
      lapack_interface/wrapper/dsbgst.c
-     lapack_interface/wrapper/dsbgst_real.c
      lapack_interface/wrapper/dsbgv.c
-     lapack_interface/wrapper/dsbgv_real.c
      lapack_interface/wrapper/dsbgvd.c
-     lapack_interface/wrapper/dsbgvd_real.c
      lapack_interface/wrapper/dsbgvx.c
-     lapack_interface/wrapper/dsbgvx_real.c
      lapack_interface/wrapper/dsbtrd.c
-     lapack_interface/wrapper/dsbtrd_real.c
      lapack_interface/wrapper/dsecnd.c
-     lapack_interface/wrapper/dsecnd_real.c
      lapack_interface/wrapper/dsfrk.c
-     lapack_interface/wrapper/dsfrk_real.c
      lapack_interface/wrapper/dsgesv.c
-     lapack_interface/wrapper/dsgesv_real.c
      lapack_interface/wrapper/dspcon.c
-     lapack_interface/wrapper/dspcon_real.c
      lapack_interface/wrapper/dspev.c
-     lapack_interface/wrapper/dspev_real.c
      lapack_interface/wrapper/dspevd.c
-     lapack_interface/wrapper/dspevd_real.c
      lapack_interface/wrapper/dspevx.c
-     lapack_interface/wrapper/dspevx_real.c
      lapack_interface/wrapper/dspgst.c
-     lapack_interface/wrapper/dspgst_real.c
      lapack_interface/wrapper/dspgv.c
-     lapack_interface/wrapper/dspgv_real.c
      lapack_interface/wrapper/dspgvd.c
-     lapack_interface/wrapper/dspgvd_real.c
      lapack_interface/wrapper/dspgvx.c
-     lapack_interface/wrapper/dspgvx_real.c
      lapack_interface/wrapper/dsposv.c
-     lapack_interface/wrapper/dsposv_real.c
      lapack_interface/wrapper/dsprfs.c
-     lapack_interface/wrapper/dsprfs_real.c
      lapack_interface/wrapper/dspsv.c
-     lapack_interface/wrapper/dspsv_real.c
      lapack_interface/wrapper/dspsvx.c
-     lapack_interface/wrapper/dspsvx_real.c
      lapack_interface/wrapper/dsptrd.c
-     lapack_interface/wrapper/dsptrd_real.c
      lapack_interface/wrapper/dsptrf.c
-     lapack_interface/wrapper/dsptrf_real.c
      lapack_interface/wrapper/dsptri.c
-     lapack_interface/wrapper/dsptri_real.c
      lapack_interface/wrapper/dsptrs.c
-     lapack_interface/wrapper/dsptrs_real.c
      lapack_interface/wrapper/dstebz.c
-     lapack_interface/wrapper/dstebz_real.c
      lapack_interface/wrapper/dstedc.c
-     lapack_interface/wrapper/dstedc_real.c
      lapack_interface/wrapper/dstegr.c
-     lapack_interface/wrapper/dstegr_real.c
      lapack_interface/wrapper/dstein.c
-     lapack_interface/wrapper/dstein_real.c
      lapack_interface/wrapper/dstemr.c
-     lapack_interface/wrapper/dstemr_real.c
      lapack_interface/wrapper/dsteqr.c
-     lapack_interface/wrapper/dsteqr_real.c
      lapack_interface/wrapper/dsterf.c
-     lapack_interface/wrapper/dsterf_real.c
      lapack_interface/wrapper/dstev.c
-     lapack_interface/wrapper/dstev_real.c
      lapack_interface/wrapper/dstevd.c
-     lapack_interface/wrapper/dstevd_real.c
      lapack_interface/wrapper/dstevr.c
-     lapack_interface/wrapper/dstevr_real.c
      lapack_interface/wrapper/dstevx.c
-     lapack_interface/wrapper/dstevx_real.c
      lapack_interface/wrapper/dsycon.c
-     lapack_interface/wrapper/dsycon_real.c
      lapack_interface/wrapper/dsycon_rook.c
-     lapack_interface/wrapper/dsycon_rook_real.c
      lapack_interface/wrapper/dsyconv.c
-     lapack_interface/wrapper/dsyconv_real.c
      lapack_interface/wrapper/dsyequb.c
-     lapack_interface/wrapper/dsyequb_real.c
      lapack_interface/wrapper/dsyev.c
-     lapack_interface/wrapper/dsyev_real.c
      lapack_interface/wrapper/dsyevd.c
-     lapack_interface/wrapper/dsyevd_real.c
      lapack_interface/wrapper/dsyevr.c
-     lapack_interface/wrapper/dsyevr_real.c
      lapack_interface/wrapper/dsyevx.c
-     lapack_interface/wrapper/dsyevx_real.c
      lapack_interface/wrapper/dsygs2.c
-     lapack_interface/wrapper/dsygs2_real.c
      lapack_interface/wrapper/dsygst.c
-     lapack_interface/wrapper/dsygst_real.c
      lapack_interface/wrapper/dsygv.c
-     lapack_interface/wrapper/dsygv_real.c
      lapack_interface/wrapper/dsygvd.c
-     lapack_interface/wrapper/dsygvd_real.c
      lapack_interface/wrapper/dsygvx.c
-     lapack_interface/wrapper/dsygvx_real.c
      lapack_interface/wrapper/dsyrfs.c
-     lapack_interface/wrapper/dsyrfs_real.c
      lapack_interface/wrapper/dsysv.c
-     lapack_interface/wrapper/dsysv_real.c
      lapack_interface/wrapper/dsysv_rook.c
-     lapack_interface/wrapper/dsysv_rook_real.c
      lapack_interface/wrapper/dsysvx.c
-     lapack_interface/wrapper/dsysvx_real.c
      lapack_interface/wrapper/dsyswapr.c
-     lapack_interface/wrapper/dsyswapr_real.c
      lapack_interface/wrapper/dsytd2.c
-     lapack_interface/wrapper/dsytd2_real.c
      lapack_interface/wrapper/dsytf2.c
-     lapack_interface/wrapper/dsytf2_real.c
      lapack_interface/wrapper/dsytf2_rook.c
-     lapack_interface/wrapper/dsytf2_rook_real.c
      lapack_interface/wrapper/dsytrd.c
-     lapack_interface/wrapper/dsytrd_real.c
      lapack_interface/wrapper/dsytrf.c
-     lapack_interface/wrapper/dsytrf_real.c
      lapack_interface/wrapper/dsytrf_rook.c
-     lapack_interface/wrapper/dsytrf_rook_real.c
      lapack_interface/wrapper/dsytri.c
-     lapack_interface/wrapper/dsytri_real.c
      lapack_interface/wrapper/dsytri2.c
-     lapack_interface/wrapper/dsytri2_real.c
      lapack_interface/wrapper/dsytri2x.c
-     lapack_interface/wrapper/dsytri2x_real.c
      lapack_interface/wrapper/dsytri_rook.c
-     lapack_interface/wrapper/dsytri_rook_real.c
      lapack_interface/wrapper/dsytrs.c
-     lapack_interface/wrapper/dsytrs_real.c
      lapack_interface/wrapper/dsytrs2.c
-     lapack_interface/wrapper/dsytrs2_real.c
      lapack_interface/wrapper/dsytrs_rook.c
-     lapack_interface/wrapper/dsytrs_rook_real.c
      lapack_interface/wrapper/dtbcon.c
-     lapack_interface/wrapper/dtbcon_real.c
      lapack_interface/wrapper/dtbrfs.c
-     lapack_interface/wrapper/dtbrfs_real.c
      lapack_interface/wrapper/dtbtrs.c
-     lapack_interface/wrapper/dtbtrs_real.c
      lapack_interface/wrapper/dtfsm.c
-     lapack_interface/wrapper/dtfsm_real.c
      lapack_interface/wrapper/dtftri.c
-     lapack_interface/wrapper/dtftri_real.c
      lapack_interface/wrapper/dtfttp.c
-     lapack_interface/wrapper/dtfttp_real.c
      lapack_interface/wrapper/dtfttr.c
-     lapack_interface/wrapper/dtfttr_real.c
      lapack_interface/wrapper/dtgevc.c
-     lapack_interface/wrapper/dtgevc_real.c
      lapack_interface/wrapper/dtgex2.c
-     lapack_interface/wrapper/dtgex2_real.c
      lapack_interface/wrapper/dtgexc.c
-     lapack_interface/wrapper/dtgexc_real.c
      lapack_interface/wrapper/dtgsen.c
-     lapack_interface/wrapper/dtgsen_real.c
      lapack_interface/wrapper/dtgsja.c
-     lapack_interface/wrapper/dtgsja_real.c
      lapack_interface/wrapper/dtgsna.c
-     lapack_interface/wrapper/dtgsna_real.c
      lapack_interface/wrapper/dtgsy2.c
-     lapack_interface/wrapper/dtgsy2_real.c
      lapack_interface/wrapper/dtgsyl.c
-     lapack_interface/wrapper/dtgsyl_real.c
      lapack_interface/wrapper/dtpcon.c
-     lapack_interface/wrapper/dtpcon_real.c
      lapack_interface/wrapper/dtpmqrt.c
-     lapack_interface/wrapper/dtpmqrt_real.c
      lapack_interface/wrapper/dtpqrt.c
-     lapack_interface/wrapper/dtpqrt_real.c
      lapack_interface/wrapper/dtpqrt2.c
-     lapack_interface/wrapper/dtpqrt2_real.c
      lapack_interface/wrapper/dtprfb.c
-     lapack_interface/wrapper/dtprfb_real.c
      lapack_interface/wrapper/dtprfs.c
-     lapack_interface/wrapper/dtprfs_real.c
      lapack_interface/wrapper/dtptri.c
-     lapack_interface/wrapper/dtptri_real.c
      lapack_interface/wrapper/dtptrs.c
-     lapack_interface/wrapper/dtptrs_real.c
      lapack_interface/wrapper/dtpttf.c
-     lapack_interface/wrapper/dtpttf_real.c
      lapack_interface/wrapper/dtpttr.c
-     lapack_interface/wrapper/dtpttr_real.c
      lapack_interface/wrapper/dtrcon.c
-     lapack_interface/wrapper/dtrcon_real.c
      lapack_interface/wrapper/dtrevc.c
-     lapack_interface/wrapper/dtrevc_real.c
      lapack_interface/wrapper/dtrexc.c
-     lapack_interface/wrapper/dtrexc_real.c
      lapack_interface/wrapper/dtrrfs.c
-     lapack_interface/wrapper/dtrrfs_real.c
      lapack_interface/wrapper/dtrsen.c
-     lapack_interface/wrapper/dtrsen_real.c
      lapack_interface/wrapper/dtrsna.c
-     lapack_interface/wrapper/dtrsna_real.c
      lapack_interface/wrapper/dtrsyl.c
-     lapack_interface/wrapper/dtrsyl_real.c
      lapack_interface/wrapper/dtrti2.c
-     lapack_interface/wrapper/dtrti2_real.c
      lapack_interface/wrapper/dtrtri.c
-     lapack_interface/wrapper/dtrtri_real.c
      lapack_interface/wrapper/dtrtrs.c
-     lapack_interface/wrapper/dtrtrs_real.c
      lapack_interface/wrapper/dtrttf.c
-     lapack_interface/wrapper/dtrttf_real.c
      lapack_interface/wrapper/dtrttp.c
-     lapack_interface/wrapper/dtrttp_real.c
      lapack_interface/wrapper/dtzrqf.c
-     lapack_interface/wrapper/dtzrqf_real.c
      lapack_interface/wrapper/dtzrzf.c
-     lapack_interface/wrapper/dtzrzf_real.c
      lapack_interface/wrapper/dzsum1.c
-     lapack_interface/wrapper/dzsum1_real.c
      lapack_interface/wrapper/icmax1.c
-     lapack_interface/wrapper/icmax1_real.c
      lapack_interface/wrapper/ieeeck.c
-     lapack_interface/wrapper/ieeeck_real.c
      lapack_interface/wrapper/ilaclc.c
-     lapack_interface/wrapper/ilaclc_real.c
      lapack_interface/wrapper/ilaclr.c
-     lapack_interface/wrapper/ilaclr_real.c
      lapack_interface/wrapper/iladiag.c
-     lapack_interface/wrapper/iladiag_real.c
      lapack_interface/wrapper/iladlc.c
-     lapack_interface/wrapper/iladlc_real.c
      lapack_interface/wrapper/iladlr.c
-     lapack_interface/wrapper/iladlr_real.c
      lapack_interface/wrapper/ilaenv.c
-     lapack_interface/wrapper/ilaenv_real.c
      lapack_interface/wrapper/ilaprec.c
-     lapack_interface/wrapper/ilaprec_real.c
      lapack_interface/wrapper/ilaslc.c
-     lapack_interface/wrapper/ilaslc_real.c
      lapack_interface/wrapper/ilaslr.c
-     lapack_interface/wrapper/ilaslr_real.c
      lapack_interface/wrapper/ilatrans.c
-     lapack_interface/wrapper/ilatrans_real.c
      lapack_interface/wrapper/ilauplo.c
-     lapack_interface/wrapper/ilauplo_real.c
      lapack_interface/wrapper/ilazlc.c
-     lapack_interface/wrapper/ilazlc_real.c
      lapack_interface/wrapper/ilazlr.c
-     lapack_interface/wrapper/ilazlr_real.c
      lapack_interface/wrapper/iparmq.c
-     lapack_interface/wrapper/iparmq_real.c
      lapack_interface/wrapper/izmax1.c
-     lapack_interface/wrapper/izmax1_real.c
      lapack_interface/wrapper/sbbcsd.c
-     lapack_interface/wrapper/sbbcsd_real.c
      lapack_interface/wrapper/sbdsdc.c
-     lapack_interface/wrapper/sbdsdc_real.c
      lapack_interface/wrapper/sbdsqr.c
-     lapack_interface/wrapper/sbdsqr_real.c
      lapack_interface/wrapper/sbdsvdx.c
-     lapack_interface/wrapper/sbdsvdx_real.c
      lapack_interface/wrapper/scsum1.c
-     lapack_interface/wrapper/scsum1_real.c
      lapack_interface/wrapper/sdisna.c
-     lapack_interface/wrapper/sdisna_real.c
      lapack_interface/wrapper/second.c
-     lapack_interface/wrapper/second_real.c
      lapack_interface/wrapper/sgbbrd.c
-     lapack_interface/wrapper/sgbbrd_real.c
      lapack_interface/wrapper/sgbcon.c
-     lapack_interface/wrapper/sgbcon_real.c
      lapack_interface/wrapper/sgbequ.c
-     lapack_interface/wrapper/sgbequ_real.c
      lapack_interface/wrapper/sgbequb.c
-     lapack_interface/wrapper/sgbequb_real.c
      lapack_interface/wrapper/sgbrfs.c
-     lapack_interface/wrapper/sgbrfs_real.c
      lapack_interface/wrapper/sgbsv.c
-     lapack_interface/wrapper/sgbsv_real.c
      lapack_interface/wrapper/sgbsvx.c
-     lapack_interface/wrapper/sgbsvx_real.c
      lapack_interface/wrapper/sgbtf2.c
-     lapack_interface/wrapper/sgbtf2_real.c
      lapack_interface/wrapper/sgbtrf.c
-     lapack_interface/wrapper/sgbtrf_real.c
      lapack_interface/wrapper/sgbtrs.c
-     lapack_interface/wrapper/sgbtrs_real.c
      lapack_interface/wrapper/sgebak.c
-     lapack_interface/wrapper/sgebak_real.c
      lapack_interface/wrapper/sgebal.c
-     lapack_interface/wrapper/sgebal_real.c
      lapack_interface/wrapper/sgebd2.c
-     lapack_interface/wrapper/sgebd2_real.c
      lapack_interface/wrapper/sgebrd.c
-     lapack_interface/wrapper/sgebrd_real.c
      lapack_interface/wrapper/sgecon.c
-     lapack_interface/wrapper/sgecon_real.c
      lapack_interface/wrapper/sgeequ.c
-     lapack_interface/wrapper/sgeequ_real.c
      lapack_interface/wrapper/sgeequb.c
-     lapack_interface/wrapper/sgeequb_real.c
      lapack_interface/wrapper/sgees.c
-     lapack_interface/wrapper/sgees_real.c
      lapack_interface/wrapper/sgeesx.c
-     lapack_interface/wrapper/sgeesx_real.c
      lapack_interface/wrapper/sgeev.c
-     lapack_interface/wrapper/sgeev_real.c
      lapack_interface/wrapper/sgeevx.c
-     lapack_interface/wrapper/sgeevx_real.c
      lapack_interface/wrapper/sgegs.c
-     lapack_interface/wrapper/sgegs_real.c
      lapack_interface/wrapper/sgegv.c
-     lapack_interface/wrapper/sgegv_real.c
      lapack_interface/wrapper/sgehd2.c
-     lapack_interface/wrapper/sgehd2_real.c
      lapack_interface/wrapper/sgehrd.c
-     lapack_interface/wrapper/sgehrd_real.c
      lapack_interface/wrapper/sgejsv.c
-     lapack_interface/wrapper/sgejsv_real.c
      lapack_interface/wrapper/sgelq2.c
-     lapack_interface/wrapper/sgelq2_real.c
      lapack_interface/wrapper/sgelqf.c
-     lapack_interface/wrapper/sgelqf_real.c
      lapack_interface/wrapper/sgels.c
-     lapack_interface/wrapper/sgels_real.c
      lapack_interface/wrapper/sgelsd.c
-     lapack_interface/wrapper/sgelsd_real.c
      lapack_interface/wrapper/sgelss.c
-     lapack_interface/wrapper/sgelss_real.c
      lapack_interface/wrapper/sgelsx.c
-     lapack_interface/wrapper/sgelsx_real.c
      lapack_interface/wrapper/sgelsy.c
-     lapack_interface/wrapper/sgelsy_real.c
      lapack_interface/wrapper/sgemqrt.c
-     lapack_interface/wrapper/sgemqrt_real.c
      lapack_interface/wrapper/sgeql2.c
-     lapack_interface/wrapper/sgeql2_real.c
      lapack_interface/wrapper/sgeqlf.c
-     lapack_interface/wrapper/sgeqlf_real.c
      lapack_interface/wrapper/sgeqp3.c
-     lapack_interface/wrapper/sgeqp3_real.c
      lapack_interface/wrapper/sgeqpf.c
-     lapack_interface/wrapper/sgeqpf_real.c
      lapack_interface/wrapper/sgeqr2.c
-     lapack_interface/wrapper/sgeqr2_real.c
      lapack_interface/wrapper/sgeqr2p.c
-     lapack_interface/wrapper/sgeqr2p_real.c
      lapack_interface/wrapper/sgeqrf.c
-     lapack_interface/wrapper/sgeqrf_real.c
      lapack_interface/wrapper/sgeqrfp.c
-     lapack_interface/wrapper/sgeqrfp_real.c
      lapack_interface/wrapper/sgeqrt.c
-     lapack_interface/wrapper/sgeqrt_real.c
      lapack_interface/wrapper/sgeqrt2.c
-     lapack_interface/wrapper/sgeqrt2_real.c
      lapack_interface/wrapper/sgeqrt3.c
-     lapack_interface/wrapper/sgeqrt3_real.c
      lapack_interface/wrapper/sgerfs.c
-     lapack_interface/wrapper/sgerfs_real.c
      lapack_interface/wrapper/sgerq2.c
-     lapack_interface/wrapper/sgerq2_real.c
      lapack_interface/wrapper/sgerqf.c
-     lapack_interface/wrapper/sgerqf_real.c
      lapack_interface/wrapper/sgesc2.c
-     lapack_interface/wrapper/sgesc2_real.c
      lapack_interface/wrapper/sgesdd.c
-     lapack_interface/wrapper/sgesdd_real.c
      lapack_interface/wrapper/sgesv.c
-     lapack_interface/wrapper/sgesv_real.c
      lapack_interface/wrapper/sgesvd.c
-     lapack_interface/wrapper/sgesvd_real.c
      lapack_interface/wrapper/sgesvdx.c
-     lapack_interface/wrapper/sgesvdx_real.c
      lapack_interface/wrapper/sgesvj.c
-     lapack_interface/wrapper/sgesvj_real.c
      lapack_interface/wrapper/sgesvx.c
-     lapack_interface/wrapper/sgesvx_real.c
      lapack_interface/wrapper/sgetc2.c
-     lapack_interface/wrapper/sgetc2_real.c
      lapack_interface/wrapper/sgetf2.c
-     lapack_interface/wrapper/sgetf2_real.c
      lapack_interface/wrapper/sgetrf.c
-     lapack_interface/wrapper/sgetrf_real.c
      lapack_interface/wrapper/sgetrf2.c
-     lapack_interface/wrapper/sgetrf2_real.c
      lapack_interface/wrapper/sgetri.c
-     lapack_interface/wrapper/sgetri_real.c
      lapack_interface/wrapper/sgetrs.c
-     lapack_interface/wrapper/sgetrs_real.c
      lapack_interface/wrapper/sggbak.c
-     lapack_interface/wrapper/sggbak_real.c
      lapack_interface/wrapper/sggbal.c
-     lapack_interface/wrapper/sggbal_real.c
      lapack_interface/wrapper/sgges.c
-     lapack_interface/wrapper/sgges_real.c
      lapack_interface/wrapper/sgges3.c
-     lapack_interface/wrapper/sgges3_real.c
      lapack_interface/wrapper/sggesx.c
-     lapack_interface/wrapper/sggesx_real.c
      lapack_interface/wrapper/sggev.c
-     lapack_interface/wrapper/sggev_real.c
      lapack_interface/wrapper/sggev3.c
-     lapack_interface/wrapper/sggev3_real.c
      lapack_interface/wrapper/sggevx.c
-     lapack_interface/wrapper/sggevx_real.c
      lapack_interface/wrapper/sggglm.c
-     lapack_interface/wrapper/sggglm_real.c
      lapack_interface/wrapper/sgghd3.c
-     lapack_interface/wrapper/sgghd3_real.c
      lapack_interface/wrapper/sgghrd.c
-     lapack_interface/wrapper/sgghrd_real.c
      lapack_interface/wrapper/sgglse.c
-     lapack_interface/wrapper/sgglse_real.c
      lapack_interface/wrapper/sggqrf.c
-     lapack_interface/wrapper/sggqrf_real.c
      lapack_interface/wrapper/sggrqf.c
-     lapack_interface/wrapper/sggrqf_real.c
      lapack_interface/wrapper/sggsvd.c
-     lapack_interface/wrapper/sggsvd_real.c
      lapack_interface/wrapper/sggsvd3.c
-     lapack_interface/wrapper/sggsvd3_real.c
      lapack_interface/wrapper/sggsvp.c
-     lapack_interface/wrapper/sggsvp_real.c
      lapack_interface/wrapper/sggsvp3.c
-     lapack_interface/wrapper/sggsvp3_real.c
      lapack_interface/wrapper/sgsvj0.c
-     lapack_interface/wrapper/sgsvj0_real.c
      lapack_interface/wrapper/sgsvj1.c
-     lapack_interface/wrapper/sgsvj1_real.c
      lapack_interface/wrapper/sgtcon.c
-     lapack_interface/wrapper/sgtcon_real.c
      lapack_interface/wrapper/sgtrfs.c
-     lapack_interface/wrapper/sgtrfs_real.c
      lapack_interface/wrapper/sgtsv.c
-     lapack_interface/wrapper/sgtsv_real.c
      lapack_interface/wrapper/sgtsvx.c
-     lapack_interface/wrapper/sgtsvx_real.c
      lapack_interface/wrapper/sgttrf.c
-     lapack_interface/wrapper/sgttrf_real.c
      lapack_interface/wrapper/sgttrs.c
-     lapack_interface/wrapper/sgttrs_real.c
      lapack_interface/wrapper/sgtts2.c
-     lapack_interface/wrapper/sgtts2_real.c
      lapack_interface/wrapper/shgeqz.c
-     lapack_interface/wrapper/shgeqz_real.c
      lapack_interface/wrapper/shsein.c
-     lapack_interface/wrapper/shsein_real.c
      lapack_interface/wrapper/shseqr.c
-     lapack_interface/wrapper/shseqr_real.c
      lapack_interface/wrapper/sisnan.c
-     lapack_interface/wrapper/sisnan_real.c
      lapack_interface/wrapper/slabad.c
-     lapack_interface/wrapper/slabad_real.c
      lapack_interface/wrapper/slabrd.c
-     lapack_interface/wrapper/slabrd_real.c
      lapack_interface/wrapper/slacn2.c
-     lapack_interface/wrapper/slacn2_real.c
      lapack_interface/wrapper/slacon.c
-     lapack_interface/wrapper/slacon_real.c
      lapack_interface/wrapper/slacpy.c
-     lapack_interface/wrapper/slacpy_real.c
      lapack_interface/wrapper/sladiv.c
-     lapack_interface/wrapper/sladiv_real.c
      lapack_interface/wrapper/sladiv1.c
-     lapack_interface/wrapper/sladiv1_real.c
      lapack_interface/wrapper/sladiv2.c
-     lapack_interface/wrapper/sladiv2_real.c
      lapack_interface/wrapper/slae2.c
-     lapack_interface/wrapper/slae2_real.c
      lapack_interface/wrapper/slaebz.c
-     lapack_interface/wrapper/slaebz_real.c
      lapack_interface/wrapper/slaed0.c
-     lapack_interface/wrapper/slaed0_real.c
      lapack_interface/wrapper/slaed1.c
-     lapack_interface/wrapper/slaed1_real.c
      lapack_interface/wrapper/slaed2.c
-     lapack_interface/wrapper/slaed2_real.c
      lapack_interface/wrapper/slaed3.c
-     lapack_interface/wrapper/slaed3_real.c
      lapack_interface/wrapper/slaed4.c
-     lapack_interface/wrapper/slaed4_real.c
      lapack_interface/wrapper/slaed5.c
-     lapack_interface/wrapper/slaed5_real.c
      lapack_interface/wrapper/slaed6.c
-     lapack_interface/wrapper/slaed6_real.c
      lapack_interface/wrapper/slaed7.c
-     lapack_interface/wrapper/slaed7_real.c
      lapack_interface/wrapper/slaed8.c
-     lapack_interface/wrapper/slaed8_real.c
      lapack_interface/wrapper/slaed9.c
-     lapack_interface/wrapper/slaed9_real.c
      lapack_interface/wrapper/slaeda.c
-     lapack_interface/wrapper/slaeda_real.c
      lapack_interface/wrapper/slaein.c
-     lapack_interface/wrapper/slaein_real.c
      lapack_interface/wrapper/slaev2.c
-     lapack_interface/wrapper/slaev2_real.c
      lapack_interface/wrapper/slaexc.c
-     lapack_interface/wrapper/slaexc_real.c
      lapack_interface/wrapper/slag2.c
-     lapack_interface/wrapper/slag2_real.c
      lapack_interface/wrapper/slag2d.c
-     lapack_interface/wrapper/slag2d_real.c
      lapack_interface/wrapper/slags2.c
-     lapack_interface/wrapper/slags2_real.c
      lapack_interface/wrapper/slagtf.c
-     lapack_interface/wrapper/slagtf_real.c
      lapack_interface/wrapper/slagtm.c
-     lapack_interface/wrapper/slagtm_real.c
      lapack_interface/wrapper/slagts.c
-     lapack_interface/wrapper/slagts_real.c
      lapack_interface/wrapper/slagv2.c
-     lapack_interface/wrapper/slagv2_real.c
      lapack_interface/wrapper/slahqr.c
-     lapack_interface/wrapper/slahqr_real.c
      lapack_interface/wrapper/slahr2.c
-     lapack_interface/wrapper/slahr2_real.c
      lapack_interface/wrapper/slahrd.c
-     lapack_interface/wrapper/slahrd_real.c
      lapack_interface/wrapper/slaic1.c
-     lapack_interface/wrapper/slaic1_real.c
      lapack_interface/wrapper/slaisnan.c
-     lapack_interface/wrapper/slaisnan_real.c
      lapack_interface/wrapper/slaln2.c
-     lapack_interface/wrapper/slaln2_real.c
      lapack_interface/wrapper/slals0.c
-     lapack_interface/wrapper/slals0_real.c
      lapack_interface/wrapper/slalsa.c
-     lapack_interface/wrapper/slalsa_real.c
      lapack_interface/wrapper/slalsd.c
-     lapack_interface/wrapper/slalsd_real.c
      lapack_interface/wrapper/slamc3.c
-     lapack_interface/wrapper/slamc3_real.c
      lapack_interface/wrapper/slamch.c
-     lapack_interface/wrapper/slamch_real.c
      lapack_interface/wrapper/slamrg.c
-     lapack_interface/wrapper/slamrg_real.c
      lapack_interface/wrapper/slaneg.c
-     lapack_interface/wrapper/slaneg_real.c
      lapack_interface/wrapper/slangb.c
-     lapack_interface/wrapper/slangb_real.c
      lapack_interface/wrapper/slange.c
-     lapack_interface/wrapper/slange_real.c
      lapack_interface/wrapper/slangt.c
-     lapack_interface/wrapper/slangt_real.c
      lapack_interface/wrapper/slanhs.c
-     lapack_interface/wrapper/slanhs_real.c
      lapack_interface/wrapper/slansb.c
-     lapack_interface/wrapper/slansb_real.c
      lapack_interface/wrapper/slansf.c
-     lapack_interface/wrapper/slansf_real.c
      lapack_interface/wrapper/slansp.c
-     lapack_interface/wrapper/slansp_real.c
      lapack_interface/wrapper/slanst.c
-     lapack_interface/wrapper/slanst_real.c
      lapack_interface/wrapper/slansy.c
-     lapack_interface/wrapper/slansy_real.c
      lapack_interface/wrapper/slantb.c
-     lapack_interface/wrapper/slantb_real.c
      lapack_interface/wrapper/slantp.c
-     lapack_interface/wrapper/slantp_real.c
      lapack_interface/wrapper/slantr.c
-     lapack_interface/wrapper/slantr_real.c
      lapack_interface/wrapper/slanv2.c
-     lapack_interface/wrapper/slanv2_real.c
      lapack_interface/wrapper/slapll.c
-     lapack_interface/wrapper/slapll_real.c
      lapack_interface/wrapper/slapmr.c
-     lapack_interface/wrapper/slapmr_real.c
      lapack_interface/wrapper/slapmt.c
-     lapack_interface/wrapper/slapmt_real.c
      lapack_interface/wrapper/slapy2.c
-     lapack_interface/wrapper/slapy2_real.c
      lapack_interface/wrapper/slapy3.c
-     lapack_interface/wrapper/slapy3_real.c
      lapack_interface/wrapper/slaqgb.c
-     lapack_interface/wrapper/slaqgb_real.c
      lapack_interface/wrapper/slaqge.c
-     lapack_interface/wrapper/slaqge_real.c
      lapack_interface/wrapper/slaqp2.c
-     lapack_interface/wrapper/slaqp2_real.c
      lapack_interface/wrapper/slaqps.c
-     lapack_interface/wrapper/slaqps_real.c
      lapack_interface/wrapper/slaqr0.c
-     lapack_interface/wrapper/slaqr0_real.c
      lapack_interface/wrapper/slaqr1.c
-     lapack_interface/wrapper/slaqr1_real.c
      lapack_interface/wrapper/slaqr2.c
-     lapack_interface/wrapper/slaqr2_real.c
      lapack_interface/wrapper/slaqr3.c
-     lapack_interface/wrapper/slaqr3_real.c
      lapack_interface/wrapper/slaqr4.c
-     lapack_interface/wrapper/slaqr4_real.c
      lapack_interface/wrapper/slaqr5.c
-     lapack_interface/wrapper/slaqr5_real.c
      lapack_interface/wrapper/slaqsb.c
-     lapack_interface/wrapper/slaqsb_real.c
      lapack_interface/wrapper/slaqsp.c
-     lapack_interface/wrapper/slaqsp_real.c
      lapack_interface/wrapper/slaqsy.c
-     lapack_interface/wrapper/slaqsy_real.c
      lapack_interface/wrapper/slaqtr.c
-     lapack_interface/wrapper/slaqtr_real.c
      lapack_interface/wrapper/slar1v.c
-     lapack_interface/wrapper/slar1v_real.c
      lapack_interface/wrapper/slar2v.c
-     lapack_interface/wrapper/slar2v_real.c
      lapack_interface/wrapper/slarf.c
-     lapack_interface/wrapper/slarf_real.c
      lapack_interface/wrapper/slarfb.c
-     lapack_interface/wrapper/slarfb_real.c
      lapack_interface/wrapper/slarfg.c
-     lapack_interface/wrapper/slarfg_real.c
      lapack_interface/wrapper/slarfgp.c
-     lapack_interface/wrapper/slarfgp_real.c
      lapack_interface/wrapper/slarft.c
-     lapack_interface/wrapper/slarft_real.c
      lapack_interface/wrapper/slarfx.c
-     lapack_interface/wrapper/slarfx_real.c
      lapack_interface/wrapper/slargv.c
-     lapack_interface/wrapper/slargv_real.c
      lapack_interface/wrapper/slarnv.c
-     lapack_interface/wrapper/slarnv_real.c
      lapack_interface/wrapper/slarra.c
-     lapack_interface/wrapper/slarra_real.c
      lapack_interface/wrapper/slarrb.c
-     lapack_interface/wrapper/slarrb_real.c
      lapack_interface/wrapper/slarrc.c
-     lapack_interface/wrapper/slarrc_real.c
      lapack_interface/wrapper/slarrd.c
-     lapack_interface/wrapper/slarrd_real.c
      lapack_interface/wrapper/slarre.c
-     lapack_interface/wrapper/slarre_real.c
      lapack_interface/wrapper/slarrf.c
-     lapack_interface/wrapper/slarrf_real.c
      lapack_interface/wrapper/slarrj.c
-     lapack_interface/wrapper/slarrj_real.c
      lapack_interface/wrapper/slarrk.c
-     lapack_interface/wrapper/slarrk_real.c
      lapack_interface/wrapper/slarrr.c
-     lapack_interface/wrapper/slarrr_real.c
      lapack_interface/wrapper/slarrv.c
-     lapack_interface/wrapper/slarrv_real.c
      lapack_interface/wrapper/slartg.c
-     lapack_interface/wrapper/slartg_real.c
      lapack_interface/wrapper/slartgp.c
-     lapack_interface/wrapper/slartgp_real.c
      lapack_interface/wrapper/slartgs.c
-     lapack_interface/wrapper/slartgs_real.c
      lapack_interface/wrapper/slartv.c
-     lapack_interface/wrapper/slartv_real.c
      lapack_interface/wrapper/slaruv.c
-     lapack_interface/wrapper/slaruv_real.c
      lapack_interface/wrapper/slarz.c
-     lapack_interface/wrapper/slarz_real.c
      lapack_interface/wrapper/slarzb.c
-     lapack_interface/wrapper/slarzb_real.c
      lapack_interface/wrapper/slarzt.c
-     lapack_interface/wrapper/slarzt_real.c
      lapack_interface/wrapper/slas2.c
-     lapack_interface/wrapper/slas2_real.c
      lapack_interface/wrapper/slascl.c
-     lapack_interface/wrapper/slascl_real.c
      lapack_interface/wrapper/slasd0.c
-     lapack_interface/wrapper/slasd0_real.c
      lapack_interface/wrapper/slasd1.c
-     lapack_interface/wrapper/slasd1_real.c
      lapack_interface/wrapper/slasd2.c
-     lapack_interface/wrapper/slasd2_real.c
      lapack_interface/wrapper/slasd3.c
-     lapack_interface/wrapper/slasd3_real.c
      lapack_interface/wrapper/slasd4.c
-     lapack_interface/wrapper/slasd4_real.c
      lapack_interface/wrapper/slasd5.c
-     lapack_interface/wrapper/slasd5_real.c
      lapack_interface/wrapper/slasd6.c
-     lapack_interface/wrapper/slasd6_real.c
      lapack_interface/wrapper/slasd7.c
-     lapack_interface/wrapper/slasd7_real.c
      lapack_interface/wrapper/slasd8.c
-     lapack_interface/wrapper/slasd8_real.c
      lapack_interface/wrapper/slasda.c
-     lapack_interface/wrapper/slasda_real.c
      lapack_interface/wrapper/slasdq.c
-     lapack_interface/wrapper/slasdq_real.c
      lapack_interface/wrapper/slasdt.c
-     lapack_interface/wrapper/slasdt_real.c
      lapack_interface/wrapper/slaset.c
-     lapack_interface/wrapper/slaset_real.c
      lapack_interface/wrapper/slasq1.c
-     lapack_interface/wrapper/slasq1_real.c
      lapack_interface/wrapper/slasq2.c
-     lapack_interface/wrapper/slasq2_real.c
      lapack_interface/wrapper/slasq3.c
-     lapack_interface/wrapper/slasq3_real.c
      lapack_interface/wrapper/slasq4.c
-     lapack_interface/wrapper/slasq4_real.c
      lapack_interface/wrapper/slasq5.c
-     lapack_interface/wrapper/slasq5_real.c
      lapack_interface/wrapper/slasq6.c
-     lapack_interface/wrapper/slasq6_real.c
      lapack_interface/wrapper/slasr.c
-     lapack_interface/wrapper/slasr_real.c
      lapack_interface/wrapper/slasrt.c
-     lapack_interface/wrapper/slasrt_real.c
      lapack_interface/wrapper/slassq.c
-     lapack_interface/wrapper/slassq_real.c
      lapack_interface/wrapper/slasv2.c
-     lapack_interface/wrapper/slasv2_real.c
      lapack_interface/wrapper/slaswp.c
-     lapack_interface/wrapper/slaswp_real.c
      lapack_interface/wrapper/slasy2.c
-     lapack_interface/wrapper/slasy2_real.c
      lapack_interface/wrapper/slasyf.c
-     lapack_interface/wrapper/slasyf_real.c
      lapack_interface/wrapper/slasyf_rook.c
-     lapack_interface/wrapper/slasyf_rook_real.c
      lapack_interface/wrapper/slatbs.c
-     lapack_interface/wrapper/slatbs_real.c
      lapack_interface/wrapper/slatdf.c
-     lapack_interface/wrapper/slatdf_real.c
      lapack_interface/wrapper/slatps.c
-     lapack_interface/wrapper/slatps_real.c
      lapack_interface/wrapper/slatrd.c
-     lapack_interface/wrapper/slatrd_real.c
      lapack_interface/wrapper/slatrs.c
-     lapack_interface/wrapper/slatrs_real.c
      lapack_interface/wrapper/slatrz.c
-     lapack_interface/wrapper/slatrz_real.c
      lapack_interface/wrapper/slatzm.c
-     lapack_interface/wrapper/slatzm_real.c
      lapack_interface/wrapper/slauu2.c
-     lapack_interface/wrapper/slauu2_real.c
      lapack_interface/wrapper/slauum.c
-     lapack_interface/wrapper/slauum_real.c
      lapack_interface/wrapper/sopgtr.c
-     lapack_interface/wrapper/sopgtr_real.c
      lapack_interface/wrapper/sopmtr.c
-     lapack_interface/wrapper/sopmtr_real.c
      lapack_interface/wrapper/sorbdb.c
-     lapack_interface/wrapper/sorbdb_real.c
      lapack_interface/wrapper/sorbdb1.c
-     lapack_interface/wrapper/sorbdb1_real.c
      lapack_interface/wrapper/sorbdb2.c
-     lapack_interface/wrapper/sorbdb2_real.c
      lapack_interface/wrapper/sorbdb3.c
-     lapack_interface/wrapper/sorbdb3_real.c
      lapack_interface/wrapper/sorbdb4.c
-     lapack_interface/wrapper/sorbdb4_real.c
      lapack_interface/wrapper/sorbdb5.c
-     lapack_interface/wrapper/sorbdb5_real.c
      lapack_interface/wrapper/sorbdb6.c
-     lapack_interface/wrapper/sorbdb6_real.c
      lapack_interface/wrapper/sorcsd.c
-     lapack_interface/wrapper/sorcsd_real.c
      lapack_interface/wrapper/sorcsd2by1.c
-     lapack_interface/wrapper/sorcsd2by1_real.c
      lapack_interface/wrapper/sorg2l.c
-     lapack_interface/wrapper/sorg2l_real.c
      lapack_interface/wrapper/sorg2r.c
-     lapack_interface/wrapper/sorg2r_real.c
      lapack_interface/wrapper/sorgbr.c
-     lapack_interface/wrapper/sorgbr_real.c
      lapack_interface/wrapper/sorghr.c
-     lapack_interface/wrapper/sorghr_real.c
      lapack_interface/wrapper/sorgl2.c
-     lapack_interface/wrapper/sorgl2_real.c
      lapack_interface/wrapper/sorglq.c
-     lapack_interface/wrapper/sorglq_real.c
      lapack_interface/wrapper/sorgql.c
-     lapack_interface/wrapper/sorgql_real.c
      lapack_interface/wrapper/sorgqr.c
-     lapack_interface/wrapper/sorgqr_real.c
      lapack_interface/wrapper/sorgr2.c
-     lapack_interface/wrapper/sorgr2_real.c
      lapack_interface/wrapper/sorgrq.c
-     lapack_interface/wrapper/sorgrq_real.c
      lapack_interface/wrapper/sorgtr.c
-     lapack_interface/wrapper/sorgtr_real.c
      lapack_interface/wrapper/sorm22.c
-     lapack_interface/wrapper/sorm22_real.c
      lapack_interface/wrapper/sorm2l.c
-     lapack_interface/wrapper/sorm2l_real.c
      lapack_interface/wrapper/sorm2r.c
-     lapack_interface/wrapper/sorm2r_real.c
      lapack_interface/wrapper/sormbr.c
-     lapack_interface/wrapper/sormbr_real.c
      lapack_interface/wrapper/sormhr.c
-     lapack_interface/wrapper/sormhr_real.c
      lapack_interface/wrapper/sorml2.c
-     lapack_interface/wrapper/sorml2_real.c
      lapack_interface/wrapper/sormlq.c
-     lapack_interface/wrapper/sormlq_real.c
      lapack_interface/wrapper/sormql.c
-     lapack_interface/wrapper/sormql_real.c
      lapack_interface/wrapper/sormqr.c
-     lapack_interface/wrapper/sormqr_real.c
      lapack_interface/wrapper/sormr2.c
-     lapack_interface/wrapper/sormr2_real.c
      lapack_interface/wrapper/sormr3.c
-     lapack_interface/wrapper/sormr3_real.c
      lapack_interface/wrapper/sormrq.c
-     lapack_interface/wrapper/sormrq_real.c
      lapack_interface/wrapper/sormrz.c
-     lapack_interface/wrapper/sormrz_real.c
      lapack_interface/wrapper/sormtr.c
-     lapack_interface/wrapper/sormtr_real.c
      lapack_interface/wrapper/spbcon.c
-     lapack_interface/wrapper/spbcon_real.c
      lapack_interface/wrapper/spbequ.c
-     lapack_interface/wrapper/spbequ_real.c
      lapack_interface/wrapper/spbrfs.c
-     lapack_interface/wrapper/spbrfs_real.c
      lapack_interface/wrapper/spbstf.c
-     lapack_interface/wrapper/spbstf_real.c
      lapack_interface/wrapper/spbsv.c
-     lapack_interface/wrapper/spbsv_real.c
      lapack_interface/wrapper/spbsvx.c
-     lapack_interface/wrapper/spbsvx_real.c
      lapack_interface/wrapper/spbtf2.c
-     lapack_interface/wrapper/spbtf2_real.c
      lapack_interface/wrapper/spbtrf.c
-     lapack_interface/wrapper/spbtrf_real.c
      lapack_interface/wrapper/spbtrs.c
-     lapack_interface/wrapper/spbtrs_real.c
      lapack_interface/wrapper/spftrf.c
-     lapack_interface/wrapper/spftrf_real.c
      lapack_interface/wrapper/spftri.c
-     lapack_interface/wrapper/spftri_real.c
      lapack_interface/wrapper/spftrs.c
-     lapack_interface/wrapper/spftrs_real.c
      lapack_interface/wrapper/spocon.c
-     lapack_interface/wrapper/spocon_real.c
      lapack_interface/wrapper/spoequ.c
-     lapack_interface/wrapper/spoequ_real.c
      lapack_interface/wrapper/spoequb.c
-     lapack_interface/wrapper/spoequb_real.c
      lapack_interface/wrapper/sporfs.c
-     lapack_interface/wrapper/sporfs_real.c
      lapack_interface/wrapper/sposv.c
-     lapack_interface/wrapper/sposv_real.c
      lapack_interface/wrapper/sposvx.c
-     lapack_interface/wrapper/sposvx_real.c
      lapack_interface/wrapper/spotf2.c
-     lapack_interface/wrapper/spotf2_real.c
      lapack_interface/wrapper/spotrf.c
-     lapack_interface/wrapper/spotrf_real.c
      lapack_interface/wrapper/spotrf2.c
-     lapack_interface/wrapper/spotrf2_real.c
      lapack_interface/wrapper/spotri.c
-     lapack_interface/wrapper/spotri_real.c
      lapack_interface/wrapper/spotrs.c
-     lapack_interface/wrapper/spotrs_real.c
      lapack_interface/wrapper/sppcon.c
-     lapack_interface/wrapper/sppcon_real.c
      lapack_interface/wrapper/sppequ.c
-     lapack_interface/wrapper/sppequ_real.c
      lapack_interface/wrapper/spprfs.c
-     lapack_interface/wrapper/spprfs_real.c
      lapack_interface/wrapper/sppsv.c
-     lapack_interface/wrapper/sppsv_real.c
      lapack_interface/wrapper/sppsvx.c
-     lapack_interface/wrapper/sppsvx_real.c
      lapack_interface/wrapper/spptrf.c
-     lapack_interface/wrapper/spptrf_real.c
      lapack_interface/wrapper/spptri.c
-     lapack_interface/wrapper/spptri_real.c
      lapack_interface/wrapper/spptrs.c
-     lapack_interface/wrapper/spptrs_real.c
      lapack_interface/wrapper/spstf2.c
-     lapack_interface/wrapper/spstf2_real.c
      lapack_interface/wrapper/spstrf.c
-     lapack_interface/wrapper/spstrf_real.c
      lapack_interface/wrapper/sptcon.c
-     lapack_interface/wrapper/sptcon_real.c
      lapack_interface/wrapper/spteqr.c
-     lapack_interface/wrapper/spteqr_real.c
      lapack_interface/wrapper/sptrfs.c
-     lapack_interface/wrapper/sptrfs_real.c
      lapack_interface/wrapper/sptsv.c
-     lapack_interface/wrapper/sptsv_real.c
      lapack_interface/wrapper/sptsvx.c
-     lapack_interface/wrapper/sptsvx_real.c
      lapack_interface/wrapper/spttrf.c
-     lapack_interface/wrapper/spttrf_real.c
      lapack_interface/wrapper/spttrs.c
-     lapack_interface/wrapper/spttrs_real.c
      lapack_interface/wrapper/sptts2.c
-     lapack_interface/wrapper/sptts2_real.c
      lapack_interface/wrapper/srscl.c
-     lapack_interface/wrapper/srscl_real.c
      lapack_interface/wrapper/ssbev.c
-     lapack_interface/wrapper/ssbev_real.c
      lapack_interface/wrapper/ssbevd.c
-     lapack_interface/wrapper/ssbevd_real.c
      lapack_interface/wrapper/ssbevx.c
-     lapack_interface/wrapper/ssbevx_real.c
      lapack_interface/wrapper/ssbgst.c
-     lapack_interface/wrapper/ssbgst_real.c
      lapack_interface/wrapper/ssbgv.c
-     lapack_interface/wrapper/ssbgv_real.c
      lapack_interface/wrapper/ssbgvd.c
-     lapack_interface/wrapper/ssbgvd_real.c
      lapack_interface/wrapper/ssbgvx.c
-     lapack_interface/wrapper/ssbgvx_real.c
      lapack_interface/wrapper/ssbtrd.c
-     lapack_interface/wrapper/ssbtrd_real.c
      lapack_interface/wrapper/ssfrk.c
-     lapack_interface/wrapper/ssfrk_real.c
      lapack_interface/wrapper/sspcon.c
-     lapack_interface/wrapper/sspcon_real.c
      lapack_interface/wrapper/sspev.c
-     lapack_interface/wrapper/sspev_real.c
      lapack_interface/wrapper/sspevd.c
-     lapack_interface/wrapper/sspevd_real.c
      lapack_interface/wrapper/sspevx.c
-     lapack_interface/wrapper/sspevx_real.c
      lapack_interface/wrapper/sspgst.c
-     lapack_interface/wrapper/sspgst_real.c
      lapack_interface/wrapper/sspgv.c
-     lapack_interface/wrapper/sspgv_real.c
      lapack_interface/wrapper/sspgvd.c
-     lapack_interface/wrapper/sspgvd_real.c
      lapack_interface/wrapper/sspgvx.c
-     lapack_interface/wrapper/sspgvx_real.c
      lapack_interface/wrapper/ssprfs.c
-     lapack_interface/wrapper/ssprfs_real.c
      lapack_interface/wrapper/sspsv.c
-     lapack_interface/wrapper/sspsv_real.c
      lapack_interface/wrapper/sspsvx.c
-     lapack_interface/wrapper/sspsvx_real.c
      lapack_interface/wrapper/ssptrd.c
-     lapack_interface/wrapper/ssptrd_real.c
      lapack_interface/wrapper/ssptrf.c
-     lapack_interface/wrapper/ssptrf_real.c
      lapack_interface/wrapper/ssptri.c
-     lapack_interface/wrapper/ssptri_real.c
      lapack_interface/wrapper/ssptrs.c
-     lapack_interface/wrapper/ssptrs_real.c
      lapack_interface/wrapper/sstebz.c
-     lapack_interface/wrapper/sstebz_real.c
      lapack_interface/wrapper/sstedc.c
-     lapack_interface/wrapper/sstedc_real.c
      lapack_interface/wrapper/sstegr.c
-     lapack_interface/wrapper/sstegr_real.c
      lapack_interface/wrapper/sstein.c
-     lapack_interface/wrapper/sstein_real.c
      lapack_interface/wrapper/sstemr.c
-     lapack_interface/wrapper/sstemr_real.c
      lapack_interface/wrapper/ssteqr.c
-     lapack_interface/wrapper/ssteqr_real.c
      lapack_interface/wrapper/ssterf.c
-     lapack_interface/wrapper/ssterf_real.c
      lapack_interface/wrapper/sstev.c
-     lapack_interface/wrapper/sstev_real.c
      lapack_interface/wrapper/sstevd.c
-     lapack_interface/wrapper/sstevd_real.c
      lapack_interface/wrapper/sstevr.c
-     lapack_interface/wrapper/sstevr_real.c
      lapack_interface/wrapper/sstevx.c
-     lapack_interface/wrapper/sstevx_real.c
      lapack_interface/wrapper/ssycon.c
-     lapack_interface/wrapper/ssycon_real.c
      lapack_interface/wrapper/ssycon_rook.c
-     lapack_interface/wrapper/ssycon_rook_real.c
      lapack_interface/wrapper/ssyconv.c
-     lapack_interface/wrapper/ssyconv_real.c
      lapack_interface/wrapper/ssyequb.c
-     lapack_interface/wrapper/ssyequb_real.c
      lapack_interface/wrapper/ssyev.c
-     lapack_interface/wrapper/ssyev_real.c
      lapack_interface/wrapper/ssyevd.c
-     lapack_interface/wrapper/ssyevd_real.c
      lapack_interface/wrapper/ssyevr.c
-     lapack_interface/wrapper/ssyevr_real.c
      lapack_interface/wrapper/ssyevx.c
-     lapack_interface/wrapper/ssyevx_real.c
      lapack_interface/wrapper/ssygs2.c
-     lapack_interface/wrapper/ssygs2_real.c
      lapack_interface/wrapper/ssygst.c
-     lapack_interface/wrapper/ssygst_real.c
      lapack_interface/wrapper/ssygv.c
-     lapack_interface/wrapper/ssygv_real.c
      lapack_interface/wrapper/ssygvd.c
-     lapack_interface/wrapper/ssygvd_real.c
      lapack_interface/wrapper/ssygvx.c
-     lapack_interface/wrapper/ssygvx_real.c
      lapack_interface/wrapper/ssyrfs.c
-     lapack_interface/wrapper/ssyrfs_real.c
      lapack_interface/wrapper/ssysv.c
-     lapack_interface/wrapper/ssysv_real.c
      lapack_interface/wrapper/ssysv_rook.c
-     lapack_interface/wrapper/ssysv_rook_real.c
      lapack_interface/wrapper/ssysvx.c
-     lapack_interface/wrapper/ssysvx_real.c
      lapack_interface/wrapper/ssyswapr.c
-     lapack_interface/wrapper/ssyswapr_real.c
      lapack_interface/wrapper/ssytd2.c
-     lapack_interface/wrapper/ssytd2_real.c
      lapack_interface/wrapper/ssytf2.c
-     lapack_interface/wrapper/ssytf2_real.c
      lapack_interface/wrapper/ssytf2_rook.c
-     lapack_interface/wrapper/ssytf2_rook_real.c
      lapack_interface/wrapper/ssytrd.c
-     lapack_interface/wrapper/ssytrd_real.c
      lapack_interface/wrapper/ssytrf.c
-     lapack_interface/wrapper/ssytrf_real.c
      lapack_interface/wrapper/ssytrf_rook.c
-     lapack_interface/wrapper/ssytrf_rook_real.c
      lapack_interface/wrapper/ssytri.c
-     lapack_interface/wrapper/ssytri_real.c
      lapack_interface/wrapper/ssytri2.c
-     lapack_interface/wrapper/ssytri2_real.c
      lapack_interface/wrapper/ssytri2x.c
-     lapack_interface/wrapper/ssytri2x_real.c
      lapack_interface/wrapper/ssytri_rook.c
-     lapack_interface/wrapper/ssytri_rook_real.c
      lapack_interface/wrapper/ssytrs.c
-     lapack_interface/wrapper/ssytrs_real.c
      lapack_interface/wrapper/ssytrs2.c
-     lapack_interface/wrapper/ssytrs2_real.c
      lapack_interface/wrapper/ssytrs_rook.c
-     lapack_interface/wrapper/ssytrs_rook_real.c
      lapack_interface/wrapper/stbcon.c
-     lapack_interface/wrapper/stbcon_real.c
      lapack_interface/wrapper/stbrfs.c
-     lapack_interface/wrapper/stbrfs_real.c
      lapack_interface/wrapper/stbtrs.c
-     lapack_interface/wrapper/stbtrs_real.c
      lapack_interface/wrapper/stfsm.c
-     lapack_interface/wrapper/stfsm_real.c
      lapack_interface/wrapper/stftri.c
-     lapack_interface/wrapper/stftri_real.c
      lapack_interface/wrapper/stfttp.c
-     lapack_interface/wrapper/stfttp_real.c
      lapack_interface/wrapper/stfttr.c
-     lapack_interface/wrapper/stfttr_real.c
      lapack_interface/wrapper/stgevc.c
-     lapack_interface/wrapper/stgevc_real.c
      lapack_interface/wrapper/stgex2.c
-     lapack_interface/wrapper/stgex2_real.c
      lapack_interface/wrapper/stgexc.c
-     lapack_interface/wrapper/stgexc_real.c
      lapack_interface/wrapper/stgsen.c
-     lapack_interface/wrapper/stgsen_real.c
      lapack_interface/wrapper/stgsja.c
-     lapack_interface/wrapper/stgsja_real.c
      lapack_interface/wrapper/stgsna.c
-     lapack_interface/wrapper/stgsna_real.c
      lapack_interface/wrapper/stgsy2.c
-     lapack_interface/wrapper/stgsy2_real.c
      lapack_interface/wrapper/stgsyl.c
-     lapack_interface/wrapper/stgsyl_real.c
      lapack_interface/wrapper/stpcon.c
-     lapack_interface/wrapper/stpcon_real.c
      lapack_interface/wrapper/stpmqrt.c
-     lapack_interface/wrapper/stpmqrt_real.c
      lapack_interface/wrapper/stpqrt.c
-     lapack_interface/wrapper/stpqrt_real.c
      lapack_interface/wrapper/stpqrt2.c
-     lapack_interface/wrapper/stpqrt2_real.c
      lapack_interface/wrapper/stprfb.c
-     lapack_interface/wrapper/stprfb_real.c
      lapack_interface/wrapper/stprfs.c
-     lapack_interface/wrapper/stprfs_real.c
      lapack_interface/wrapper/stptri.c
-     lapack_interface/wrapper/stptri_real.c
      lapack_interface/wrapper/stptrs.c
-     lapack_interface/wrapper/stptrs_real.c
      lapack_interface/wrapper/stpttf.c
-     lapack_interface/wrapper/stpttf_real.c
      lapack_interface/wrapper/stpttr.c
-     lapack_interface/wrapper/stpttr_real.c
      lapack_interface/wrapper/strcon.c
-     lapack_interface/wrapper/strcon_real.c
      lapack_interface/wrapper/strevc.c
-     lapack_interface/wrapper/strevc_real.c
      lapack_interface/wrapper/strexc.c
-     lapack_interface/wrapper/strexc_real.c
      lapack_interface/wrapper/strrfs.c
-     lapack_interface/wrapper/strrfs_real.c
      lapack_interface/wrapper/strsen.c
-     lapack_interface/wrapper/strsen_real.c
      lapack_interface/wrapper/strsna.c
-     lapack_interface/wrapper/strsna_real.c
      lapack_interface/wrapper/strsyl.c
-     lapack_interface/wrapper/strsyl_real.c
      lapack_interface/wrapper/strti2.c
-     lapack_interface/wrapper/strti2_real.c
      lapack_interface/wrapper/strtri.c
-     lapack_interface/wrapper/strtri_real.c
      lapack_interface/wrapper/strtrs.c
-     lapack_interface/wrapper/strtrs_real.c
      lapack_interface/wrapper/strttf.c
-     lapack_interface/wrapper/strttf_real.c
      lapack_interface/wrapper/strttp.c
-     lapack_interface/wrapper/strttp_real.c
      lapack_interface/wrapper/stzrqf.c
-     lapack_interface/wrapper/stzrqf_real.c
      lapack_interface/wrapper/stzrzf.c
-     lapack_interface/wrapper/stzrzf_real.c
      lapack_interface/wrapper/xerbla_array.c
-     lapack_interface/wrapper/xerbla_array_real.c
      lapack_interface/wrapper/zbbcsd.c
-     lapack_interface/wrapper/zbbcsd_real.c
      lapack_interface/wrapper/zbdsqr.c
-     lapack_interface/wrapper/zbdsqr_real.c
      lapack_interface/wrapper/zcgesv.c
-     lapack_interface/wrapper/zcgesv_real.c
      lapack_interface/wrapper/zcposv.c
-     lapack_interface/wrapper/zcposv_real.c
      lapack_interface/wrapper/zdrscl.c
-     lapack_interface/wrapper/zdrscl_real.c
      lapack_interface/wrapper/zgbbrd.c
-     lapack_interface/wrapper/zgbbrd_real.c
      lapack_interface/wrapper/zgbcon.c
-     lapack_interface/wrapper/zgbcon_real.c
      lapack_interface/wrapper/zgbequ.c
-     lapack_interface/wrapper/zgbequ_real.c
      lapack_interface/wrapper/zgbequb.c
-     lapack_interface/wrapper/zgbequb_real.c
      lapack_interface/wrapper/zgbrfs.c
-     lapack_interface/wrapper/zgbrfs_real.c
      lapack_interface/wrapper/zgbsv.c
-     lapack_interface/wrapper/zgbsv_real.c
      lapack_interface/wrapper/zgbsvx.c
-     lapack_interface/wrapper/zgbsvx_real.c
      lapack_interface/wrapper/zgbtf2.c
-     lapack_interface/wrapper/zgbtf2_real.c
      lapack_interface/wrapper/zgbtrf.c
-     lapack_interface/wrapper/zgbtrf_real.c
      lapack_interface/wrapper/zgbtrs.c
-     lapack_interface/wrapper/zgbtrs_real.c
      lapack_interface/wrapper/zgebak.c
-     lapack_interface/wrapper/zgebak_real.c
      lapack_interface/wrapper/zgebal.c
-     lapack_interface/wrapper/zgebal_real.c
      lapack_interface/wrapper/zgebd2.c
-     lapack_interface/wrapper/zgebd2_real.c
      lapack_interface/wrapper/zgebrd.c
-     lapack_interface/wrapper/zgebrd_real.c
      lapack_interface/wrapper/zgecon.c
-     lapack_interface/wrapper/zgecon_real.c
      lapack_interface/wrapper/zgeequ.c
-     lapack_interface/wrapper/zgeequ_real.c
      lapack_interface/wrapper/zgeequb.c
-     lapack_interface/wrapper/zgeequb_real.c
      lapack_interface/wrapper/zgees.c
-     lapack_interface/wrapper/zgees_real.c
      lapack_interface/wrapper/zgeesx.c
-     lapack_interface/wrapper/zgeesx_real.c
      lapack_interface/wrapper/zgeev.c
-     lapack_interface/wrapper/zgeev_real.c
      lapack_interface/wrapper/zgeevx.c
-     lapack_interface/wrapper/zgeevx_real.c
      lapack_interface/wrapper/zgegs.c
-     lapack_interface/wrapper/zgegs_real.c
      lapack_interface/wrapper/zgegv.c
-     lapack_interface/wrapper/zgegv_real.c
      lapack_interface/wrapper/zgehd2.c
-     lapack_interface/wrapper/zgehd2_real.c
      lapack_interface/wrapper/zgehrd.c
-     lapack_interface/wrapper/zgehrd_real.c
      lapack_interface/wrapper/zgejsv.c
-     lapack_interface/wrapper/zgejsv_real.c
      lapack_interface/wrapper/zgelq2.c
-     lapack_interface/wrapper/zgelq2_real.c
      lapack_interface/wrapper/zgelqf.c
-     lapack_interface/wrapper/zgelqf_real.c
      lapack_interface/wrapper/zgels.c
-     lapack_interface/wrapper/zgels_real.c
      lapack_interface/wrapper/zgelsd.c
-     lapack_interface/wrapper/zgelsd_real.c
      lapack_interface/wrapper/zgelss.c
-     lapack_interface/wrapper/zgelss_real.c
      lapack_interface/wrapper/zgelsx.c
-     lapack_interface/wrapper/zgelsx_real.c
      lapack_interface/wrapper/zgelsy.c
-     lapack_interface/wrapper/zgelsy_real.c
      lapack_interface/wrapper/zgemqrt.c
-     lapack_interface/wrapper/zgemqrt_real.c
      lapack_interface/wrapper/zgeql2.c
-     lapack_interface/wrapper/zgeql2_real.c
      lapack_interface/wrapper/zgeqlf.c
-     lapack_interface/wrapper/zgeqlf_real.c
      lapack_interface/wrapper/zgeqp3.c
-     lapack_interface/wrapper/zgeqp3_real.c
      lapack_interface/wrapper/zgeqpf.c
-     lapack_interface/wrapper/zgeqpf_real.c
      lapack_interface/wrapper/zgeqr2.c
-     lapack_interface/wrapper/zgeqr2_real.c
      lapack_interface/wrapper/zgeqr2p.c
-     lapack_interface/wrapper/zgeqr2p_real.c
      lapack_interface/wrapper/zgeqrf.c
-     lapack_interface/wrapper/zgeqrf_real.c
      lapack_interface/wrapper/zgeqrfp.c
-     lapack_interface/wrapper/zgeqrfp_real.c
      lapack_interface/wrapper/zgeqrt.c
-     lapack_interface/wrapper/zgeqrt_real.c
      lapack_interface/wrapper/zgeqrt2.c
-     lapack_interface/wrapper/zgeqrt2_real.c
      lapack_interface/wrapper/zgeqrt3.c
-     lapack_interface/wrapper/zgeqrt3_real.c
      lapack_interface/wrapper/zgerfs.c
-     lapack_interface/wrapper/zgerfs_real.c
      lapack_interface/wrapper/zgerq2.c
-     lapack_interface/wrapper/zgerq2_real.c
      lapack_interface/wrapper/zgerqf.c
-     lapack_interface/wrapper/zgerqf_real.c
      lapack_interface/wrapper/zgesc2.c
-     lapack_interface/wrapper/zgesc2_real.c
      lapack_interface/wrapper/zgesdd.c
-     lapack_interface/wrapper/zgesdd_real.c
      lapack_interface/wrapper/zgesv.c
-     lapack_interface/wrapper/zgesv_real.c
      lapack_interface/wrapper/zgesvd.c
-     lapack_interface/wrapper/zgesvd_real.c
      lapack_interface/wrapper/zgesvdx.c
-     lapack_interface/wrapper/zgesvdx_real.c
      lapack_interface/wrapper/zgesvj.c
-     lapack_interface/wrapper/zgesvj_real.c
      lapack_interface/wrapper/zgesvx.c
-     lapack_interface/wrapper/zgesvx_real.c
      lapack_interface/wrapper/zgetc2.c
-     lapack_interface/wrapper/zgetc2_real.c
      lapack_interface/wrapper/zgetf2.c
-     lapack_interface/wrapper/zgetf2_real.c
      lapack_interface/wrapper/zgetrf.c
-     lapack_interface/wrapper/zgetrf_real.c
      lapack_interface/wrapper/zgetrf2.c
-     lapack_interface/wrapper/zgetrf2_real.c
      lapack_interface/wrapper/zgetri.c
-     lapack_interface/wrapper/zgetri_real.c
      lapack_interface/wrapper/zgetrs.c
-     lapack_interface/wrapper/zgetrs_real.c
      lapack_interface/wrapper/zggbak.c
-     lapack_interface/wrapper/zggbak_real.c
      lapack_interface/wrapper/zggbal.c
-     lapack_interface/wrapper/zggbal_real.c
      lapack_interface/wrapper/zgges.c
-     lapack_interface/wrapper/zgges_real.c
      lapack_interface/wrapper/zgges3.c
-     lapack_interface/wrapper/zgges3_real.c
      lapack_interface/wrapper/zggesx.c
-     lapack_interface/wrapper/zggesx_real.c
      lapack_interface/wrapper/zggev.c
-     lapack_interface/wrapper/zggev_real.c
      lapack_interface/wrapper/zggev3.c
-     lapack_interface/wrapper/zggev3_real.c
      lapack_interface/wrapper/zggevx.c
-     lapack_interface/wrapper/zggevx_real.c
      lapack_interface/wrapper/zggglm.c
-     lapack_interface/wrapper/zggglm_real.c
      lapack_interface/wrapper/zgghd3.c
-     lapack_interface/wrapper/zgghd3_real.c
      lapack_interface/wrapper/zgghrd.c
-     lapack_interface/wrapper/zgghrd_real.c
      lapack_interface/wrapper/zgglse.c
-     lapack_interface/wrapper/zgglse_real.c
      lapack_interface/wrapper/zggqrf.c
-     lapack_interface/wrapper/zggqrf_real.c
      lapack_interface/wrapper/zggrqf.c
-     lapack_interface/wrapper/zggrqf_real.c
      lapack_interface/wrapper/zggsvd.c
-     lapack_interface/wrapper/zggsvd_real.c
      lapack_interface/wrapper/zggsvd3.c
-     lapack_interface/wrapper/zggsvd3_real.c
      lapack_interface/wrapper/zggsvp.c
-     lapack_interface/wrapper/zggsvp_real.c
      lapack_interface/wrapper/zggsvp3.c
-     lapack_interface/wrapper/zggsvp3_real.c
      lapack_interface/wrapper/zgsvj0.c
-     lapack_interface/wrapper/zgsvj0_real.c
      lapack_interface/wrapper/zgsvj1.c
-     lapack_interface/wrapper/zgsvj1_real.c
      lapack_interface/wrapper/zgtcon.c
-     lapack_interface/wrapper/zgtcon_real.c
      lapack_interface/wrapper/zgtrfs.c
-     lapack_interface/wrapper/zgtrfs_real.c
      lapack_interface/wrapper/zgtsv.c
-     lapack_interface/wrapper/zgtsv_real.c
      lapack_interface/wrapper/zgtsvx.c
-     lapack_interface/wrapper/zgtsvx_real.c
      lapack_interface/wrapper/zgttrf.c
-     lapack_interface/wrapper/zgttrf_real.c
      lapack_interface/wrapper/zgttrs.c
-     lapack_interface/wrapper/zgttrs_real.c
      lapack_interface/wrapper/zgtts2.c
-     lapack_interface/wrapper/zgtts2_real.c
      lapack_interface/wrapper/zhbev.c
-     lapack_interface/wrapper/zhbev_real.c
      lapack_interface/wrapper/zhbevd.c
-     lapack_interface/wrapper/zhbevd_real.c
      lapack_interface/wrapper/zhbevx.c
-     lapack_interface/wrapper/zhbevx_real.c
      lapack_interface/wrapper/zhbgst.c
-     lapack_interface/wrapper/zhbgst_real.c
      lapack_interface/wrapper/zhbgv.c
-     lapack_interface/wrapper/zhbgv_real.c
      lapack_interface/wrapper/zhbgvd.c
-     lapack_interface/wrapper/zhbgvd_real.c
      lapack_interface/wrapper/zhbgvx.c
-     lapack_interface/wrapper/zhbgvx_real.c
      lapack_interface/wrapper/zhbtrd.c
-     lapack_interface/wrapper/zhbtrd_real.c
      lapack_interface/wrapper/zhecon.c
-     lapack_interface/wrapper/zhecon_real.c
      lapack_interface/wrapper/zhecon_rook.c
-     lapack_interface/wrapper/zhecon_rook_real.c
      lapack_interface/wrapper/zheequb.c
-     lapack_interface/wrapper/zheequb_real.c
      lapack_interface/wrapper/zheev.c
-     lapack_interface/wrapper/zheev_real.c
      lapack_interface/wrapper/zheevd.c
-     lapack_interface/wrapper/zheevd_real.c
      lapack_interface/wrapper/zheevr.c
-     lapack_interface/wrapper/zheevr_real.c
      lapack_interface/wrapper/zheevx.c
-     lapack_interface/wrapper/zheevx_real.c
      lapack_interface/wrapper/zhegs2.c
-     lapack_interface/wrapper/zhegs2_real.c
      lapack_interface/wrapper/zhegst.c
-     lapack_interface/wrapper/zhegst_real.c
      lapack_interface/wrapper/zhegv.c
-     lapack_interface/wrapper/zhegv_real.c
      lapack_interface/wrapper/zhegvd.c
-     lapack_interface/wrapper/zhegvd_real.c
      lapack_interface/wrapper/zhegvx.c
-     lapack_interface/wrapper/zhegvx_real.c
      lapack_interface/wrapper/zherfs.c
-     lapack_interface/wrapper/zherfs_real.c
      lapack_interface/wrapper/zhesv.c
-     lapack_interface/wrapper/zhesv_real.c
      lapack_interface/wrapper/zhesv_rook.c
-     lapack_interface/wrapper/zhesv_rook_real.c
      lapack_interface/wrapper/zhesvx.c
-     lapack_interface/wrapper/zhesvx_real.c
      lapack_interface/wrapper/zheswapr.c
-     lapack_interface/wrapper/zheswapr_real.c
      lapack_interface/wrapper/zhetd2.c
-     lapack_interface/wrapper/zhetd2_real.c
      lapack_interface/wrapper/zhetf2.c
-     lapack_interface/wrapper/zhetf2_real.c
      lapack_interface/wrapper/zhetf2_rook.c
-     lapack_interface/wrapper/zhetf2_rook_real.c
      lapack_interface/wrapper/zhetrd.c
-     lapack_interface/wrapper/zhetrd_real.c
      lapack_interface/wrapper/zhetrf.c
-     lapack_interface/wrapper/zhetrf_real.c
      lapack_interface/wrapper/zhetrf_rook.c
-     lapack_interface/wrapper/zhetrf_rook_real.c
      lapack_interface/wrapper/zhetri.c
-     lapack_interface/wrapper/zhetri_real.c
      lapack_interface/wrapper/zhetri2.c
-     lapack_interface/wrapper/zhetri2_real.c
      lapack_interface/wrapper/zhetri2x.c
-     lapack_interface/wrapper/zhetri2x_real.c
      lapack_interface/wrapper/zhetri_rook.c
-     lapack_interface/wrapper/zhetri_rook_real.c
      lapack_interface/wrapper/zhetrs.c
-     lapack_interface/wrapper/zhetrs_real.c
      lapack_interface/wrapper/zhetrs2.c
-     lapack_interface/wrapper/zhetrs2_real.c
      lapack_interface/wrapper/zhetrs_rook.c
-     lapack_interface/wrapper/zhetrs_rook_real.c
      lapack_interface/wrapper/zhfrk.c
-     lapack_interface/wrapper/zhfrk_real.c
      lapack_interface/wrapper/zhgeqz.c
-     lapack_interface/wrapper/zhgeqz_real.c
      lapack_interface/wrapper/zhpcon.c
-     lapack_interface/wrapper/zhpcon_real.c
      lapack_interface/wrapper/zhpev.c
-     lapack_interface/wrapper/zhpev_real.c
      lapack_interface/wrapper/zhpevd.c
-     lapack_interface/wrapper/zhpevd_real.c
      lapack_interface/wrapper/zhpevx.c
-     lapack_interface/wrapper/zhpevx_real.c
      lapack_interface/wrapper/zhpgst.c
-     lapack_interface/wrapper/zhpgst_real.c
      lapack_interface/wrapper/zhpgv.c
-     lapack_interface/wrapper/zhpgv_real.c
      lapack_interface/wrapper/zhpgvd.c
-     lapack_interface/wrapper/zhpgvd_real.c
      lapack_interface/wrapper/zhpgvx.c
-     lapack_interface/wrapper/zhpgvx_real.c
      lapack_interface/wrapper/zhprfs.c
-     lapack_interface/wrapper/zhprfs_real.c
      lapack_interface/wrapper/zhpsv.c
-     lapack_interface/wrapper/zhpsv_real.c
      lapack_interface/wrapper/zhpsvx.c
-     lapack_interface/wrapper/zhpsvx_real.c
      lapack_interface/wrapper/zhptrd.c
-     lapack_interface/wrapper/zhptrd_real.c
      lapack_interface/wrapper/zhptrf.c
-     lapack_interface/wrapper/zhptrf_real.c
      lapack_interface/wrapper/zhptri.c
-     lapack_interface/wrapper/zhptri_real.c
      lapack_interface/wrapper/zhptrs.c
-     lapack_interface/wrapper/zhptrs_real.c
      lapack_interface/wrapper/zhsein.c
-     lapack_interface/wrapper/zhsein_real.c
      lapack_interface/wrapper/zhseqr.c
-     lapack_interface/wrapper/zhseqr_real.c
      lapack_interface/wrapper/zlabrd.c
-     lapack_interface/wrapper/zlabrd_real.c
      lapack_interface/wrapper/zlacgv.c
-     lapack_interface/wrapper/zlacgv_real.c
      lapack_interface/wrapper/zlacn2.c
-     lapack_interface/wrapper/zlacn2_real.c
      lapack_interface/wrapper/zlacon.c
-     lapack_interface/wrapper/zlacon_real.c
      lapack_interface/wrapper/zlacp2.c
-     lapack_interface/wrapper/zlacp2_real.c
      lapack_interface/wrapper/zlacpy.c
-     lapack_interface/wrapper/zlacpy_real.c
      lapack_interface/wrapper/zlacrm.c
-     lapack_interface/wrapper/zlacrm_real.c
      lapack_interface/wrapper/zlacrt.c
-     lapack_interface/wrapper/zlacrt_real.c
      lapack_interface/wrapper/zladiv.c
-     lapack_interface/wrapper/zladiv_real.c
      lapack_interface/wrapper/zlaed0.c
-     lapack_interface/wrapper/zlaed0_real.c
      lapack_interface/wrapper/zlaed7.c
-     lapack_interface/wrapper/zlaed7_real.c
      lapack_interface/wrapper/zlaed8.c
-     lapack_interface/wrapper/zlaed8_real.c
      lapack_interface/wrapper/zlaein.c
-     lapack_interface/wrapper/zlaein_real.c
      lapack_interface/wrapper/zlaesy.c
-     lapack_interface/wrapper/zlaesy_real.c
      lapack_interface/wrapper/zlaev2.c
-     lapack_interface/wrapper/zlaev2_real.c
      lapack_interface/wrapper/zlag2c.c
-     lapack_interface/wrapper/zlag2c_real.c
      lapack_interface/wrapper/zlags2.c
-     lapack_interface/wrapper/zlags2_real.c
      lapack_interface/wrapper/zlagtm.c
-     lapack_interface/wrapper/zlagtm_real.c
      lapack_interface/wrapper/zlahef.c
-     lapack_interface/wrapper/zlahef_real.c
      lapack_interface/wrapper/zlahef_rook.c
-     lapack_interface/wrapper/zlahef_rook_real.c
      lapack_interface/wrapper/zlahqr.c
-     lapack_interface/wrapper/zlahqr_real.c
      lapack_interface/wrapper/zlahr2.c
-     lapack_interface/wrapper/zlahr2_real.c
      lapack_interface/wrapper/zlahrd.c
-     lapack_interface/wrapper/zlahrd_real.c
      lapack_interface/wrapper/zlaic1.c
-     lapack_interface/wrapper/zlaic1_real.c
      lapack_interface/wrapper/zlals0.c
-     lapack_interface/wrapper/zlals0_real.c
      lapack_interface/wrapper/zlalsa.c
-     lapack_interface/wrapper/zlalsa_real.c
      lapack_interface/wrapper/zlalsd.c
-     lapack_interface/wrapper/zlalsd_real.c
      lapack_interface/wrapper/zlangb.c
-     lapack_interface/wrapper/zlangb_real.c
      lapack_interface/wrapper/zlange.c
-     lapack_interface/wrapper/zlange_real.c
      lapack_interface/wrapper/zlangt.c
-     lapack_interface/wrapper/zlangt_real.c
      lapack_interface/wrapper/zlanhb.c
-     lapack_interface/wrapper/zlanhb_real.c
      lapack_interface/wrapper/zlanhe.c
-     lapack_interface/wrapper/zlanhe_real.c
      lapack_interface/wrapper/zlanhf.c
-     lapack_interface/wrapper/zlanhf_real.c
      lapack_interface/wrapper/zlanhp.c
-     lapack_interface/wrapper/zlanhp_real.c
      lapack_interface/wrapper/zlanhs.c
-     lapack_interface/wrapper/zlanhs_real.c
      lapack_interface/wrapper/zlanht.c
-     lapack_interface/wrapper/zlanht_real.c
      lapack_interface/wrapper/zlansb.c
-     lapack_interface/wrapper/zlansb_real.c
      lapack_interface/wrapper/zlansp.c
-     lapack_interface/wrapper/zlansp_real.c
      lapack_interface/wrapper/zlansy.c
-     lapack_interface/wrapper/zlansy_real.c
      lapack_interface/wrapper/zlantb.c
-     lapack_interface/wrapper/zlantb_real.c
      lapack_interface/wrapper/zlantp.c
-     lapack_interface/wrapper/zlantp_real.c
      lapack_interface/wrapper/zlantr.c
-     lapack_interface/wrapper/zlantr_real.c
      lapack_interface/wrapper/zlapll.c
-     lapack_interface/wrapper/zlapll_real.c
      lapack_interface/wrapper/zlapmr.c
-     lapack_interface/wrapper/zlapmr_real.c
      lapack_interface/wrapper/zlapmt.c
-     lapack_interface/wrapper/zlapmt_real.c
      lapack_interface/wrapper/zlaqgb.c
-     lapack_interface/wrapper/zlaqgb_real.c
      lapack_interface/wrapper/zlaqge.c
-     lapack_interface/wrapper/zlaqge_real.c
      lapack_interface/wrapper/zlaqhb.c
-     lapack_interface/wrapper/zlaqhb_real.c
      lapack_interface/wrapper/zlaqhe.c
-     lapack_interface/wrapper/zlaqhe_real.c
      lapack_interface/wrapper/zlaqhp.c
-     lapack_interface/wrapper/zlaqhp_real.c
      lapack_interface/wrapper/zlaqp2.c
-     lapack_interface/wrapper/zlaqp2_real.c
      lapack_interface/wrapper/zlaqps.c
-     lapack_interface/wrapper/zlaqps_real.c
      lapack_interface/wrapper/zlaqr0.c
-     lapack_interface/wrapper/zlaqr0_real.c
      lapack_interface/wrapper/zlaqr1.c
-     lapack_interface/wrapper/zlaqr1_real.c
      lapack_interface/wrapper/zlaqr2.c
-     lapack_interface/wrapper/zlaqr2_real.c
      lapack_interface/wrapper/zlaqr3.c
-     lapack_interface/wrapper/zlaqr3_real.c
      lapack_interface/wrapper/zlaqr4.c
-     lapack_interface/wrapper/zlaqr4_real.c
      lapack_interface/wrapper/zlaqr5.c
-     lapack_interface/wrapper/zlaqr5_real.c
      lapack_interface/wrapper/zlaqsb.c
-     lapack_interface/wrapper/zlaqsb_real.c
      lapack_interface/wrapper/zlaqsp.c
-     lapack_interface/wrapper/zlaqsp_real.c
      lapack_interface/wrapper/zlaqsy.c
-     lapack_interface/wrapper/zlaqsy_real.c
      lapack_interface/wrapper/zlar1v.c
-     lapack_interface/wrapper/zlar1v_real.c
      lapack_interface/wrapper/zlar2v.c
-     lapack_interface/wrapper/zlar2v_real.c
      lapack_interface/wrapper/zlarcm.c
-     lapack_interface/wrapper/zlarcm_real.c
      lapack_interface/wrapper/zlarf.c
-     lapack_interface/wrapper/zlarf_real.c
      lapack_interface/wrapper/zlarfb.c
-     lapack_interface/wrapper/zlarfb_real.c
      lapack_interface/wrapper/zlarfg.c
-     lapack_interface/wrapper/zlarfg_real.c
      lapack_interface/wrapper/zlarfgp.c
-     lapack_interface/wrapper/zlarfgp_real.c
      lapack_interface/wrapper/zlarft.c
-     lapack_interface/wrapper/zlarft_real.c
      lapack_interface/wrapper/zlarfx.c
-     lapack_interface/wrapper/zlarfx_real.c
      lapack_interface/wrapper/zlargv.c
-     lapack_interface/wrapper/zlargv_real.c
      lapack_interface/wrapper/zlarnv.c
-     lapack_interface/wrapper/zlarnv_real.c
      lapack_interface/wrapper/zlarrv.c
-     lapack_interface/wrapper/zlarrv_real.c
      lapack_interface/wrapper/zlartg.c
-     lapack_interface/wrapper/zlartg_real.c
      lapack_interface/wrapper/zlartv.c
-     lapack_interface/wrapper/zlartv_real.c
      lapack_interface/wrapper/zlarz.c
-     lapack_interface/wrapper/zlarz_real.c
      lapack_interface/wrapper/zlarzb.c
-     lapack_interface/wrapper/zlarzb_real.c
      lapack_interface/wrapper/zlarzt.c
-     lapack_interface/wrapper/zlarzt_real.c
      lapack_interface/wrapper/zlascl.c
-     lapack_interface/wrapper/zlascl_real.c
      lapack_interface/wrapper/zlaset.c
-     lapack_interface/wrapper/zlaset_real.c
      lapack_interface/wrapper/zlasr.c
-     lapack_interface/wrapper/zlasr_real.c
      lapack_interface/wrapper/zlassq.c
-     lapack_interface/wrapper/zlassq_real.c
      lapack_interface/wrapper/zlaswp.c
-     lapack_interface/wrapper/zlaswp_real.c
      lapack_interface/wrapper/zlasyf.c
-     lapack_interface/wrapper/zlasyf_real.c
      lapack_interface/wrapper/zlasyf_rook.c
-     lapack_interface/wrapper/zlasyf_rook_real.c
      lapack_interface/wrapper/zlat2c.c
-     lapack_interface/wrapper/zlat2c_real.c
      lapack_interface/wrapper/zlatbs.c
-     lapack_interface/wrapper/zlatbs_real.c
      lapack_interface/wrapper/zlatdf.c
-     lapack_interface/wrapper/zlatdf_real.c
      lapack_interface/wrapper/zlatps.c
-     lapack_interface/wrapper/zlatps_real.c
      lapack_interface/wrapper/zlatrd.c
-     lapack_interface/wrapper/zlatrd_real.c
      lapack_interface/wrapper/zlatrs.c
-     lapack_interface/wrapper/zlatrs_real.c
      lapack_interface/wrapper/zlatrz.c
-     lapack_interface/wrapper/zlatrz_real.c
      lapack_interface/wrapper/zlatzm.c
-     lapack_interface/wrapper/zlatzm_real.c
      lapack_interface/wrapper/zlauu2.c
-     lapack_interface/wrapper/zlauu2_real.c
      lapack_interface/wrapper/zlauum.c
-     lapack_interface/wrapper/zlauum_real.c
      lapack_interface/wrapper/zpbcon.c
-     lapack_interface/wrapper/zpbcon_real.c
      lapack_interface/wrapper/zpbequ.c
-     lapack_interface/wrapper/zpbequ_real.c
      lapack_interface/wrapper/zpbrfs.c
-     lapack_interface/wrapper/zpbrfs_real.c
      lapack_interface/wrapper/zpbstf.c
-     lapack_interface/wrapper/zpbstf_real.c
      lapack_interface/wrapper/zpbsv.c
-     lapack_interface/wrapper/zpbsv_real.c
      lapack_interface/wrapper/zpbsvx.c
-     lapack_interface/wrapper/zpbsvx_real.c
      lapack_interface/wrapper/zpbtf2.c
-     lapack_interface/wrapper/zpbtf2_real.c
      lapack_interface/wrapper/zpbtrf.c
-     lapack_interface/wrapper/zpbtrf_real.c
      lapack_interface/wrapper/zpbtrs.c
-     lapack_interface/wrapper/zpbtrs_real.c
      lapack_interface/wrapper/zpftrf.c
-     lapack_interface/wrapper/zpftrf_real.c
      lapack_interface/wrapper/zpftri.c
-     lapack_interface/wrapper/zpftri_real.c
      lapack_interface/wrapper/zpftrs.c
-     lapack_interface/wrapper/zpftrs_real.c
      lapack_interface/wrapper/zpocon.c
-     lapack_interface/wrapper/zpocon_real.c
      lapack_interface/wrapper/zpoequ.c
-     lapack_interface/wrapper/zpoequ_real.c
      lapack_interface/wrapper/zpoequb.c
-     lapack_interface/wrapper/zpoequb_real.c
      lapack_interface/wrapper/zporfs.c
-     lapack_interface/wrapper/zporfs_real.c
      lapack_interface/wrapper/zposv.c
-     lapack_interface/wrapper/zposv_real.c
      lapack_interface/wrapper/zposvx.c
-     lapack_interface/wrapper/zposvx_real.c
      lapack_interface/wrapper/zpotf2.c
-     lapack_interface/wrapper/zpotf2_real.c
      lapack_interface/wrapper/zpotrf.c
-     lapack_interface/wrapper/zpotrf_real.c
      lapack_interface/wrapper/zpotrf2.c
-     lapack_interface/wrapper/zpotrf2_real.c
      lapack_interface/wrapper/zpotri.c
-     lapack_interface/wrapper/zpotri_real.c
      lapack_interface/wrapper/zpotrs.c
-     lapack_interface/wrapper/zpotrs_real.c
      lapack_interface/wrapper/zppcon.c
-     lapack_interface/wrapper/zppcon_real.c
      lapack_interface/wrapper/zppequ.c
-     lapack_interface/wrapper/zppequ_real.c
      lapack_interface/wrapper/zpprfs.c
-     lapack_interface/wrapper/zpprfs_real.c
      lapack_interface/wrapper/zppsv.c
-     lapack_interface/wrapper/zppsv_real.c
      lapack_interface/wrapper/zppsvx.c
-     lapack_interface/wrapper/zppsvx_real.c
      lapack_interface/wrapper/zpptrf.c
-     lapack_interface/wrapper/zpptrf_real.c
      lapack_interface/wrapper/zpptri.c
-     lapack_interface/wrapper/zpptri_real.c
      lapack_interface/wrapper/zpptrs.c
-     lapack_interface/wrapper/zpptrs_real.c
      lapack_interface/wrapper/zpstf2.c
-     lapack_interface/wrapper/zpstf2_real.c
      lapack_interface/wrapper/zpstrf.c
-     lapack_interface/wrapper/zpstrf_real.c
      lapack_interface/wrapper/zptcon.c
-     lapack_interface/wrapper/zptcon_real.c
      lapack_interface/wrapper/zpteqr.c
-     lapack_interface/wrapper/zpteqr_real.c
      lapack_interface/wrapper/zptrfs.c
-     lapack_interface/wrapper/zptrfs_real.c
      lapack_interface/wrapper/zptsv.c
-     lapack_interface/wrapper/zptsv_real.c
      lapack_interface/wrapper/zptsvx.c
-     lapack_interface/wrapper/zptsvx_real.c
      lapack_interface/wrapper/zpttrf.c
-     lapack_interface/wrapper/zpttrf_real.c
      lapack_interface/wrapper/zpttrs.c
-     lapack_interface/wrapper/zpttrs_real.c
      lapack_interface/wrapper/zptts2.c
-     lapack_interface/wrapper/zptts2_real.c
      lapack_interface/wrapper/zrot.c
-     lapack_interface/wrapper/zrot_real.c
      lapack_interface/wrapper/zspcon.c
-     lapack_interface/wrapper/zspcon_real.c
      lapack_interface/wrapper/zspmv.c
-     lapack_interface/wrapper/zspmv_real.c
      lapack_interface/wrapper/zspr.c
-     lapack_interface/wrapper/zspr_real.c
      lapack_interface/wrapper/zsprfs.c
-     lapack_interface/wrapper/zsprfs_real.c
      lapack_interface/wrapper/zspsv.c
-     lapack_interface/wrapper/zspsv_real.c
      lapack_interface/wrapper/zspsvx.c
-     lapack_interface/wrapper/zspsvx_real.c
      lapack_interface/wrapper/zsptrf.c
-     lapack_interface/wrapper/zsptrf_real.c
      lapack_interface/wrapper/zsptri.c
-     lapack_interface/wrapper/zsptri_real.c
      lapack_interface/wrapper/zsptrs.c
-     lapack_interface/wrapper/zsptrs_real.c
      lapack_interface/wrapper/zstedc.c
-     lapack_interface/wrapper/zstedc_real.c
      lapack_interface/wrapper/zstegr.c
-     lapack_interface/wrapper/zstegr_real.c
      lapack_interface/wrapper/zstein.c
-     lapack_interface/wrapper/zstein_real.c
      lapack_interface/wrapper/zstemr.c
-     lapack_interface/wrapper/zstemr_real.c
      lapack_interface/wrapper/zsteqr.c
-     lapack_interface/wrapper/zsteqr_real.c
      lapack_interface/wrapper/zsycon.c
-     lapack_interface/wrapper/zsycon_real.c
      lapack_interface/wrapper/zsycon_rook.c
-     lapack_interface/wrapper/zsycon_rook_real.c
      lapack_interface/wrapper/zsyconv.c
-     lapack_interface/wrapper/zsyconv_real.c
      lapack_interface/wrapper/zsyequb.c
-     lapack_interface/wrapper/zsyequb_real.c
      lapack_interface/wrapper/zsymv.c
-     lapack_interface/wrapper/zsymv_real.c
      lapack_interface/wrapper/zsyr.c
-     lapack_interface/wrapper/zsyr_real.c
      lapack_interface/wrapper/zsyrfs.c
-     lapack_interface/wrapper/zsyrfs_real.c
      lapack_interface/wrapper/zsysv.c
-     lapack_interface/wrapper/zsysv_real.c
      lapack_interface/wrapper/zsysv_rook.c
-     lapack_interface/wrapper/zsysv_rook_real.c
      lapack_interface/wrapper/zsysvx.c
-     lapack_interface/wrapper/zsysvx_real.c
      lapack_interface/wrapper/zsyswapr.c
-     lapack_interface/wrapper/zsyswapr_real.c
      lapack_interface/wrapper/zsytf2.c
-     lapack_interface/wrapper/zsytf2_real.c
      lapack_interface/wrapper/zsytf2_rook.c
-     lapack_interface/wrapper/zsytf2_rook_real.c
      lapack_interface/wrapper/zsytrf.c
-     lapack_interface/wrapper/zsytrf_real.c
      lapack_interface/wrapper/zsytrf_rook.c
-     lapack_interface/wrapper/zsytrf_rook_real.c
      lapack_interface/wrapper/zsytri.c
-     lapack_interface/wrapper/zsytri_real.c
      lapack_interface/wrapper/zsytri2.c
-     lapack_interface/wrapper/zsytri2_real.c
      lapack_interface/wrapper/zsytri2x.c
-     lapack_interface/wrapper/zsytri2x_real.c
      lapack_interface/wrapper/zsytri_rook.c
-     lapack_interface/wrapper/zsytri_rook_real.c
      lapack_interface/wrapper/zsytrs.c
-     lapack_interface/wrapper/zsytrs_real.c
      lapack_interface/wrapper/zsytrs2.c
-     lapack_interface/wrapper/zsytrs2_real.c
      lapack_interface/wrapper/zsytrs_rook.c
-     lapack_interface/wrapper/zsytrs_rook_real.c
      lapack_interface/wrapper/ztbcon.c
-     lapack_interface/wrapper/ztbcon_real.c
      lapack_interface/wrapper/ztbrfs.c
-     lapack_interface/wrapper/ztbrfs_real.c
      lapack_interface/wrapper/ztbtrs.c
-     lapack_interface/wrapper/ztbtrs_real.c
      lapack_interface/wrapper/ztfsm.c
-     lapack_interface/wrapper/ztfsm_real.c
      lapack_interface/wrapper/ztftri.c
-     lapack_interface/wrapper/ztftri_real.c
      lapack_interface/wrapper/ztfttp.c
-     lapack_interface/wrapper/ztfttp_real.c
      lapack_interface/wrapper/ztfttr.c
-     lapack_interface/wrapper/ztfttr_real.c
      lapack_interface/wrapper/ztgevc.c
-     lapack_interface/wrapper/ztgevc_real.c
      lapack_interface/wrapper/ztgex2.c
-     lapack_interface/wrapper/ztgex2_real.c
      lapack_interface/wrapper/ztgexc.c
-     lapack_interface/wrapper/ztgexc_real.c
      lapack_interface/wrapper/ztgsen.c
-     lapack_interface/wrapper/ztgsen_real.c
      lapack_interface/wrapper/ztgsja.c
-     lapack_interface/wrapper/ztgsja_real.c
      lapack_interface/wrapper/ztgsna.c
-     lapack_interface/wrapper/ztgsna_real.c
      lapack_interface/wrapper/ztgsy2.c
-     lapack_interface/wrapper/ztgsy2_real.c
      lapack_interface/wrapper/ztgsyl.c
-     lapack_interface/wrapper/ztgsyl_real.c
      lapack_interface/wrapper/ztpcon.c
-     lapack_interface/wrapper/ztpcon_real.c
      lapack_interface/wrapper/ztpmqrt.c
-     lapack_interface/wrapper/ztpmqrt_real.c
      lapack_interface/wrapper/ztpqrt.c
-     lapack_interface/wrapper/ztpqrt_real.c
      lapack_interface/wrapper/ztpqrt2.c
-     lapack_interface/wrapper/ztpqrt2_real.c
      lapack_interface/wrapper/ztprfb.c
-     lapack_interface/wrapper/ztprfb_real.c
      lapack_interface/wrapper/ztprfs.c
-     lapack_interface/wrapper/ztprfs_real.c
      lapack_interface/wrapper/ztptri.c
-     lapack_interface/wrapper/ztptri_real.c
      lapack_interface/wrapper/ztptrs.c
-     lapack_interface/wrapper/ztptrs_real.c
      lapack_interface/wrapper/ztpttf.c
-     lapack_interface/wrapper/ztpttf_real.c
      lapack_interface/wrapper/ztpttr.c
-     lapack_interface/wrapper/ztpttr_real.c
      lapack_interface/wrapper/ztrcon.c
-     lapack_interface/wrapper/ztrcon_real.c
      lapack_interface/wrapper/ztrevc.c
-     lapack_interface/wrapper/ztrevc_real.c
      lapack_interface/wrapper/ztrexc.c
-     lapack_interface/wrapper/ztrexc_real.c
      lapack_interface/wrapper/ztrrfs.c
-     lapack_interface/wrapper/ztrrfs_real.c
      lapack_interface/wrapper/ztrsen.c
-     lapack_interface/wrapper/ztrsen_real.c
      lapack_interface/wrapper/ztrsna.c
-     lapack_interface/wrapper/ztrsna_real.c
      lapack_interface/wrapper/ztrsyl.c
-     lapack_interface/wrapper/ztrsyl_real.c
      lapack_interface/wrapper/ztrti2.c
-     lapack_interface/wrapper/ztrti2_real.c
      lapack_interface/wrapper/ztrtri.c
-     lapack_interface/wrapper/ztrtri_real.c
      lapack_interface/wrapper/ztrtrs.c
-     lapack_interface/wrapper/ztrtrs_real.c
      lapack_interface/wrapper/ztrttf.c
-     lapack_interface/wrapper/ztrttf_real.c
      lapack_interface/wrapper/ztrttp.c
-     lapack_interface/wrapper/ztrttp_real.c
      lapack_interface/wrapper/ztzrqf.c
-     lapack_interface/wrapper/ztzrqf_real.c
      lapack_interface/wrapper/ztzrzf.c
-     lapack_interface/wrapper/ztzrzf_real.c
      lapack_interface/wrapper/zunbdb.c
-     lapack_interface/wrapper/zunbdb_real.c
      lapack_interface/wrapper/zunbdb1.c
-     lapack_interface/wrapper/zunbdb1_real.c
      lapack_interface/wrapper/zunbdb2.c
-     lapack_interface/wrapper/zunbdb2_real.c
      lapack_interface/wrapper/zunbdb3.c
-     lapack_interface/wrapper/zunbdb3_real.c
      lapack_interface/wrapper/zunbdb4.c
-     lapack_interface/wrapper/zunbdb4_real.c
      lapack_interface/wrapper/zunbdb5.c
-     lapack_interface/wrapper/zunbdb5_real.c
      lapack_interface/wrapper/zunbdb6.c
-     lapack_interface/wrapper/zunbdb6_real.c
      lapack_interface/wrapper/zuncsd.c
-     lapack_interface/wrapper/zuncsd_real.c
      lapack_interface/wrapper/zuncsd2by1.c
-     lapack_interface/wrapper/zuncsd2by1_real.c
      lapack_interface/wrapper/zung2l.c
-     lapack_interface/wrapper/zung2l_real.c
      lapack_interface/wrapper/zung2r.c
-     lapack_interface/wrapper/zung2r_real.c
      lapack_interface/wrapper/zungbr.c
-     lapack_interface/wrapper/zungbr_real.c
      lapack_interface/wrapper/zunghr.c
-     lapack_interface/wrapper/zunghr_real.c
      lapack_interface/wrapper/zungl2.c
-     lapack_interface/wrapper/zungl2_real.c
      lapack_interface/wrapper/zunglq.c
-     lapack_interface/wrapper/zunglq_real.c
      lapack_interface/wrapper/zungql.c
-     lapack_interface/wrapper/zungql_real.c
      lapack_interface/wrapper/zungqr.c
-     lapack_interface/wrapper/zungqr_real.c
      lapack_interface/wrapper/zungr2.c
-     lapack_interface/wrapper/zungr2_real.c
      lapack_interface/wrapper/zungrq.c
-     lapack_interface/wrapper/zungrq_real.c
      lapack_interface/wrapper/zungtr.c
-     lapack_interface/wrapper/zungtr_real.c
      lapack_interface/wrapper/zunm22.c
-     lapack_interface/wrapper/zunm22_real.c
      lapack_interface/wrapper/zunm2l.c
-     lapack_interface/wrapper/zunm2l_real.c
      lapack_interface/wrapper/zunm2r.c
-     lapack_interface/wrapper/zunm2r_real.c
      lapack_interface/wrapper/zunmbr.c
-     lapack_interface/wrapper/zunmbr_real.c
      lapack_interface/wrapper/zunmhr.c
-     lapack_interface/wrapper/zunmhr_real.c
      lapack_interface/wrapper/zunml2.c
-     lapack_interface/wrapper/zunml2_real.c
      lapack_interface/wrapper/zunmlq.c
-     lapack_interface/wrapper/zunmlq_real.c
      lapack_interface/wrapper/zunmql.c
-     lapack_interface/wrapper/zunmql_real.c
      lapack_interface/wrapper/zunmqr.c
-     lapack_interface/wrapper/zunmqr_real.c
      lapack_interface/wrapper/zunmr2.c
-     lapack_interface/wrapper/zunmr2_real.c
      lapack_interface/wrapper/zunmr3.c
-     lapack_interface/wrapper/zunmr3_real.c
      lapack_interface/wrapper/zunmrq.c
-     lapack_interface/wrapper/zunmrq_real.c
      lapack_interface/wrapper/zunmrz.c
-     lapack_interface/wrapper/zunmrz_real.c
      lapack_interface/wrapper/zunmtr.c
-     lapack_interface/wrapper/zunmtr_real.c
      lapack_interface/wrapper/zupgtr.c
-     lapack_interface/wrapper/zupgtr_real.c
      lapack_interface/wrapper/zupmtr.c
-     lapack_interface/wrapper/zupmtr_real.c
 )

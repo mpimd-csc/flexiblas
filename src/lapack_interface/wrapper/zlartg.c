@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:38 2017 */ 
+ /* Generated: Wed Mar 28 11:20:05 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_zlartg = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 void FC_GLOBAL(zlartg,ZLARTG)(double complex* f, double complex* g, double* cs, double complex* sn, double complex* r)
 #else
 void FC_GLOBAL(zlartg,ZLARTG)(double complex* f, double complex* g, double* cs, double complex* sn, double complex* r)
-#endif 
+#endif
 {
-    double ts;
 	void (*fn) (void* f, void* g, void* cs, void* sn, void* r);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn_hook) (void* f, void* g, void* cs, void* sn, void* r);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.zlartg.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->zlartg.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) f, (void*) g, (void*) cs, (void*) sn, (void*) r); 
+		return;
+	} else {
+		hook_pos_zlartg = 0;
+		fn_hook((void*) f, (void*) g, (void*) cs, (void*) sn, (void*) r);
+		return;
 	}
-	fn = current_backend->lapack.zlartg.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) f, (void*) g, (void*) cs, (void*) sn, (void*) r); 
-		current_backend->lapack.zlartg.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.zlartg.calls[0]++;
-	} else { 
-		fn((void*) f, (void*) g, (void*) cs, (void*) sn, (void*) r); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void zlartg_(double complex* f, double complex* g, double* cs, double complex* sn, double complex* r) __attribute__((alias(MTS(FC_GLOBAL(zlartg,ZLARTG)))));
 #else
 void zlartg(double complex* f, double complex* g, double* cs, double complex* sn, double complex* r) __attribute__((alias(MTS(FC_GLOBAL(zlartg,ZLARTG)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_zlartg_(void* f, void* g, void* cs, void* sn, void* r)
+{
+	void (*fn) (void* f, void* g, void* cs, void* sn, void* r);
+
+	fn = current_backend->lapack.zlartg.f77_blas_function; 
+
+		fn((void*) f, (void*) g, (void*) cs, (void*) sn, (void*) r); 
+
+	return;
+}
+
+void flexiblas_real_zlartg(void* f, void* g, void* cs, void* sn, void* r)  __attribute__((alias("flexiblas_real_zlartg_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_zlartg_(void* f, void* g, void* cs, void* sn, void* r)
+{
+	void (*fn) (void* f, void* g, void* cs, void* sn, void* r);
+	void (*fn_hook) (void* f, void* g, void* cs, void* sn, void* r);
+
+	fn      = current_backend->lapack.zlartg.f77_blas_function; 
+
+    hook_pos_zlartg ++;
+    if( hook_pos_zlartg < __flexiblas_hooks->zlartg.nhook) {
+        fn_hook = __flexiblas_hooks->zlartg.f77_hook_function[hook_pos_zlartg];
+        fn_hook((void*) f, (void*) g, (void*) cs, (void*) sn, (void*) r);
+    } else {
+        hook_pos_zlartg = 0;
+		fn((void*) f, (void*) g, (void*) cs, (void*) sn, (void*) r); 
+	}
+	return;
+}
+
+void flexiblas_chain_zlartg(void* f, void* g, void* cs, void* sn, void* r)  __attribute__((alias("flexiblas_chain_zlartg_")));
+
 
 
 

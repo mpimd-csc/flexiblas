@@ -38,6 +38,10 @@
 #
 #============================================================================
 
+
+# lint_cmake: -package/consistency
+
+
 # Finding SciPy involves calling the Python interpreter
 if(SciPy_FIND_REQUIRED)
     find_package(PythonInterp REQUIRED)
@@ -46,23 +50,23 @@ else()
 endif()
 
 if(NOT PYTHONINTERP_FOUND)
-	set(SCIPY_FOUND FALSE)
-	return()
+    set(SCIPY_FOUND FALSE)
+    return()
 endif()
 
 execute_process(COMMAND "${PYTHON_EXECUTABLE}" "-c"
-    "import numpy as n; import scipy as s;  print(s.__version__); print(s.get_include());"
+    "import scipy as s;  print(s.__version__); print(s.__file__);"
     RESULT_VARIABLE _SCIPY_SEARCH_SUCCESS
     OUTPUT_VARIABLE _SCIPY_VALUES_OUTPUT
     ERROR_VARIABLE _SCIPY_ERROR_VALUE
     OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 if(NOT _SCIPY_SEARCH_SUCCESS MATCHES 0)
-	if(SciPy_FIND_REQUIRED)
-		message(FATAL_ERROR "SciPy import failure:\n${_SCIPY_ERROR_VALUE}")
-	endif()
-	set(SCIPY_FOUND FALSE)
-	return()
+    if(SciPy_FIND_REQUIRED)
+        message(FATAL_ERROR "SciPy import failure:\n${_SCIPY_ERROR_VALUE}")
+    endif()
+    set(SCIPY_FOUND FALSE)
+    return()
 endif()
 
 # Convert the process output into a list
@@ -77,12 +81,13 @@ if("${_VER_CHECK}" STREQUAL "")
     # The output from Python was unexpected. Raise an error always
     # here, because we found SciPy, but it appears to be corrupted somehow.
     message(FATAL_ERROR
-	    "Requested version and include path from SciPy, got instead:\n${_SCIPY_VALUES_OUTPUT}\n")
+        "Requested version and include path from SciPy, got instead:\n${_SCIPY_VALUES_OUTPUT}\n")
     return()
 endif()
 
 # Make sure all directory separators are '/'
 string(REGEX REPLACE "\\\\" "/" SCIPY_INCLUDE_DIRS ${SCIPY_INCLUDE_DIRS})
+string(REGEX REPLACE "__init__.py[c]*" "" SCIPY_INCLUDE_DIRS ${SCIPY_INCLUDE_DIRS})
 
 # Get the major and minor version numbers
 string(REGEX REPLACE "\\." ";" _SCIPY_VERSION_LIST ${SCIPY_VERSION})
@@ -94,7 +99,7 @@ math(EXPR SCIPY_VERSION_DECIMAL
     "(${SCIPY_VERSION_MAJOR} * 10000) + (${SCIPY_VERSION_MINOR} * 100) + ${SCIPY_VERSION_PATCH}")
 
 find_package_message(SCIPY
-	"Found SciPy: version \"${SCIPY_VERSION}\" ${SCIPY_INCLUDE_DIRS}"
+    "Found SciPy: version \"${SCIPY_VERSION}\" ${SCIPY_INCLUDE_DIRS}"
     "${SCIPY_INCLUDE_DIRS}${SCIPY_VERSION}")
 
 set(SCIPY_FOUND TRUE)

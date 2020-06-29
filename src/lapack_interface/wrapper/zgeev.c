@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:37 2017 */ 
+ /* Generated: Wed Mar 28 11:20:04 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_zgeev = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 void FC_GLOBAL(zgeev,ZGEEV)(char* jobvl, char* jobvr, blasint* n, double complex* a, blasint* lda, double complex* w, double complex* vl, blasint* ldvl, double complex* vr, blasint* ldvr, double complex* work, blasint* lwork, double* rwork, blasint* info)
 #else
 void FC_GLOBAL(zgeev,ZGEEV)(char* jobvl, char* jobvr, blasint* n, double complex* a, blasint* lda, double complex* w, double complex* vl, blasint* ldvl, double complex* vr, blasint* ldvr, double complex* work, blasint* lwork, double* rwork, blasint* info)
-#endif 
+#endif
 {
-    double ts;
 	void (*fn) (void* jobvl, void* jobvr, void* n, void* a, void* lda, void* w, void* vl, void* ldvl, void* vr, void* ldvr, void* work, void* lwork, void* rwork, void* info);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn_hook) (void* jobvl, void* jobvr, void* n, void* a, void* lda, void* w, void* vl, void* ldvl, void* vr, void* ldvr, void* work, void* lwork, void* rwork, void* info);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.zgeev.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->zgeev.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) jobvl, (void*) jobvr, (void*) n, (void*) a, (void*) lda, (void*) w, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) work, (void*) lwork, (void*) rwork, (void*) info); 
+		return;
+	} else {
+		hook_pos_zgeev = 0;
+		fn_hook((void*) jobvl, (void*) jobvr, (void*) n, (void*) a, (void*) lda, (void*) w, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) work, (void*) lwork, (void*) rwork, (void*) info);
+		return;
 	}
-	fn = current_backend->lapack.zgeev.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) jobvl, (void*) jobvr, (void*) n, (void*) a, (void*) lda, (void*) w, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) work, (void*) lwork, (void*) rwork, (void*) info); 
-		current_backend->lapack.zgeev.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.zgeev.calls[0]++;
-	} else { 
-		fn((void*) jobvl, (void*) jobvr, (void*) n, (void*) a, (void*) lda, (void*) w, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) work, (void*) lwork, (void*) rwork, (void*) info); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void zgeev_(char* jobvl, char* jobvr, blasint* n, double complex* a, blasint* lda, double complex* w, double complex* vl, blasint* ldvl, double complex* vr, blasint* ldvr, double complex* work, blasint* lwork, double* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zgeev,ZGEEV)))));
 #else
 void zgeev(char* jobvl, char* jobvr, blasint* n, double complex* a, blasint* lda, double complex* w, double complex* vl, blasint* ldvl, double complex* vr, blasint* ldvr, double complex* work, blasint* lwork, double* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zgeev,ZGEEV)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_zgeev_(void* jobvl, void* jobvr, void* n, void* a, void* lda, void* w, void* vl, void* ldvl, void* vr, void* ldvr, void* work, void* lwork, void* rwork, void* info)
+{
+	void (*fn) (void* jobvl, void* jobvr, void* n, void* a, void* lda, void* w, void* vl, void* ldvl, void* vr, void* ldvr, void* work, void* lwork, void* rwork, void* info);
+
+	fn = current_backend->lapack.zgeev.f77_blas_function; 
+
+		fn((void*) jobvl, (void*) jobvr, (void*) n, (void*) a, (void*) lda, (void*) w, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) work, (void*) lwork, (void*) rwork, (void*) info); 
+
+	return;
+}
+
+void flexiblas_real_zgeev(void* jobvl, void* jobvr, void* n, void* a, void* lda, void* w, void* vl, void* ldvl, void* vr, void* ldvr, void* work, void* lwork, void* rwork, void* info)  __attribute__((alias("flexiblas_real_zgeev_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_zgeev_(void* jobvl, void* jobvr, void* n, void* a, void* lda, void* w, void* vl, void* ldvl, void* vr, void* ldvr, void* work, void* lwork, void* rwork, void* info)
+{
+	void (*fn) (void* jobvl, void* jobvr, void* n, void* a, void* lda, void* w, void* vl, void* ldvl, void* vr, void* ldvr, void* work, void* lwork, void* rwork, void* info);
+	void (*fn_hook) (void* jobvl, void* jobvr, void* n, void* a, void* lda, void* w, void* vl, void* ldvl, void* vr, void* ldvr, void* work, void* lwork, void* rwork, void* info);
+
+	fn      = current_backend->lapack.zgeev.f77_blas_function; 
+
+    hook_pos_zgeev ++;
+    if( hook_pos_zgeev < __flexiblas_hooks->zgeev.nhook) {
+        fn_hook = __flexiblas_hooks->zgeev.f77_hook_function[hook_pos_zgeev];
+        fn_hook((void*) jobvl, (void*) jobvr, (void*) n, (void*) a, (void*) lda, (void*) w, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) work, (void*) lwork, (void*) rwork, (void*) info);
+    } else {
+        hook_pos_zgeev = 0;
+		fn((void*) jobvl, (void*) jobvr, (void*) n, (void*) a, (void*) lda, (void*) w, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) work, (void*) lwork, (void*) rwork, (void*) info); 
+	}
+	return;
+}
+
+void flexiblas_chain_zgeev(void* jobvl, void* jobvr, void* n, void* a, void* lda, void* w, void* vl, void* ldvl, void* vr, void* ldvr, void* work, void* lwork, void* rwork, void* info)  __attribute__((alias("flexiblas_chain_zgeev_")));
+
 
 
 

@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:33 2017 */ 
+ /* Generated: Wed Mar 28 11:20:03 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_claev2 = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 void FC_GLOBAL(claev2,CLAEV2)(float complex* a, float complex* b, float complex* c, float* rt1, float* rt2, float* cs1, float complex* sn1)
 #else
 void FC_GLOBAL(claev2,CLAEV2)(float complex* a, float complex* b, float complex* c, float* rt1, float* rt2, float* cs1, float complex* sn1)
-#endif 
+#endif
 {
-    double ts;
 	void (*fn) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn_hook) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.claev2.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->claev2.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1); 
+		return;
+	} else {
+		hook_pos_claev2 = 0;
+		fn_hook((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1);
+		return;
 	}
-	fn = current_backend->lapack.claev2.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1); 
-		current_backend->lapack.claev2.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.claev2.calls[0]++;
-	} else { 
-		fn((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void claev2_(float complex* a, float complex* b, float complex* c, float* rt1, float* rt2, float* cs1, float complex* sn1) __attribute__((alias(MTS(FC_GLOBAL(claev2,CLAEV2)))));
 #else
 void claev2(float complex* a, float complex* b, float complex* c, float* rt1, float* rt2, float* cs1, float complex* sn1) __attribute__((alias(MTS(FC_GLOBAL(claev2,CLAEV2)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_claev2_(void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1)
+{
+	void (*fn) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
+
+	fn = current_backend->lapack.claev2.f77_blas_function; 
+
+		fn((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1); 
+
+	return;
+}
+
+void flexiblas_real_claev2(void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1)  __attribute__((alias("flexiblas_real_claev2_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_claev2_(void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1)
+{
+	void (*fn) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
+	void (*fn_hook) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
+
+	fn      = current_backend->lapack.claev2.f77_blas_function; 
+
+    hook_pos_claev2 ++;
+    if( hook_pos_claev2 < __flexiblas_hooks->claev2.nhook) {
+        fn_hook = __flexiblas_hooks->claev2.f77_hook_function[hook_pos_claev2];
+        fn_hook((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1);
+    } else {
+        hook_pos_claev2 = 0;
+		fn((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1); 
+	}
+	return;
+}
+
+void flexiblas_chain_claev2(void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1)  __attribute__((alias("flexiblas_chain_claev2_")));
+
 
 
 

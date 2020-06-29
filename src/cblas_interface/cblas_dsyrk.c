@@ -1,11 +1,11 @@
 /* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
-/* 
+/*
  Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License.
- 
+
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -23,9 +23,9 @@ void cblas_dsyrk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
                  const double alpha, const double  *A, const int lda,
                  const double beta, double  *C, const int ldc)
 {
-   char UL, TR;   
-   #define F77_TR &TR  
-   #define F77_UL &UL  
+   char UL, TR;
+   #define F77_TR &TR
+   #define F77_UL &UL
 
 #ifdef F77_INT
    F77_INT F77_N=N, F77_K=K, F77_lda=lda;
@@ -43,10 +43,6 @@ void cblas_dsyrk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
    	current_backend->post_init = 0;
    }
    if ( current_backend->blas.dsyrk.call_cblas != NULL ) {
-	   double te = 0, ts = 0;
-	   if ( __flexiblas_profile ) {
-		   ts = flexiblas_wtime(); 
-	   }
 	   void (*fn)
 		  (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
                  const CBLAS_TRANSPOSE Trans, const int N, const int K,
@@ -54,10 +50,6 @@ void cblas_dsyrk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
                  const double beta, double  *C, const int ldc)
 		   = current_backend->blas.dsyrk.call_cblas;
 	fn(layout,Uplo,Trans,N,K,alpha,A,lda,beta,C,ldc);
-        if ( __flexiblas_profile ){
-	   te = flexiblas_wtime(); 
-	   current_backend->blas.dsyrk.timings[POS_CBLAS] += (te - ts); 
-	}
    } else {
 
 	   extern int CBLAS_CallFromC;
@@ -70,7 +62,7 @@ void cblas_dsyrk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
 
 	      if( Uplo == CblasUpper) UL='U';
 	      else if ( Uplo == CblasLower ) UL='L';
-	      else 
+	      else
 	      {
 		 cblas_xerbla(2, "cblas_dsyrk","Illegal Uplo setting, %d\n", Uplo);
 		 CBLAS_CallFromC = 0;
@@ -81,7 +73,7 @@ void cblas_dsyrk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
 	      if( Trans == CblasTrans) TR ='T';
 	      else if ( Trans == CblasConjTrans ) TR='C';
 	      else if ( Trans == CblasNoTrans )   TR='N';
-	      else 
+	      else
 	      {
 		 cblas_xerbla(3, "cblas_dsyrk","Illegal Trans setting, %d\n", Trans);
 		 CBLAS_CallFromC = 0;
@@ -102,7 +94,7 @@ void cblas_dsyrk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
 	      RowMajorStrg = 1;
 	      if( Uplo == CblasUpper) UL='L';
 	      else if ( Uplo == CblasLower ) UL='U';
-	      else 
+	      else
 	      {
 		 cblas_xerbla(3, "cblas_dsyrk","Illegal Uplo setting, %d\n", Uplo);
 		 CBLAS_CallFromC = 0;
@@ -112,7 +104,7 @@ void cblas_dsyrk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
 	      if( Trans == CblasTrans) TR ='N';
 	      else if ( Trans == CblasConjTrans ) TR='N';
 	      else if ( Trans == CblasNoTrans )   TR='T';
-	      else 
+	      else
 	      {
 		 cblas_xerbla(3, "cblas_dsyrk","Illegal Trans setting, %d\n", Trans);
 		 CBLAS_CallFromC = 0;
@@ -127,7 +119,7 @@ void cblas_dsyrk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
 
 	      FC_GLOBAL(dsyrk,DSYRK)(F77_UL, F77_TR, &F77_N, &F77_K, &alpha, A, &F77_lda,
 			     &beta, C, &F77_ldc);
-	   } 
+	   }
 	   else cblas_xerbla(1, "cblas_dsyrk","Illegal layout setting, %d\n", layout);
 	   CBLAS_CallFromC = 0;
 	   RowMajorStrg = 0;

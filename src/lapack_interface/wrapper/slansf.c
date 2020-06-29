@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:36 2017 */ 
+ /* Generated: Wed Mar 28 11:20:04 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,41 +29,92 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_slansf = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 float FC_GLOBAL(slansf,SLANSF)(char* norm, char* transr, char* uplo, blasint* n, float* a, float* work)
 #else
 float FC_GLOBAL(slansf,SLANSF)(char* norm, char* transr, char* uplo, blasint* n, float* a, float* work)
-#endif 
+#endif
 {
-    double ts;
 	float (*fn) (void* norm, void* transr, void* uplo, void* n, void* a, void* work);
+	float (*fn_hook) (void* norm, void* transr, void* uplo, void* n, void* a, void* work);
 	float ret;
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.slansf.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->slansf.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		ret = fn((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work); 
+		return ret; 
+	} else {
+		hook_pos_slansf = 0;
+		ret=fn_hook((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work);
+		return ret;
 	}
-	fn = current_backend->lapack.slansf.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		ret = fn((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work); 
-		current_backend->lapack.slansf.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.slansf.calls[0]++;
-	} else { 
-		ret = fn((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work); 
-	} 
-	return ret; 
 }
 #ifdef FLEXIBLAS_ABI_IBM
 float slansf_(char* norm, char* transr, char* uplo, blasint* n, float* a, float* work) __attribute__((alias(MTS(FC_GLOBAL(slansf,SLANSF)))));
 #else
 float slansf(char* norm, char* transr, char* uplo, blasint* n, float* a, float* work) __attribute__((alias(MTS(FC_GLOBAL(slansf,SLANSF)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+float flexiblas_real_slansf_(void* norm, void* transr, void* uplo, void* n, void* a, void* work)
+{
+	float (*fn) (void* norm, void* transr, void* uplo, void* n, void* a, void* work);
+	float ret;
+
+	fn = current_backend->lapack.slansf.f77_blas_function; 
+
+		ret = fn((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work); 
+
+	return ret ;
+}
+
+float flexiblas_real_slansf(void* norm, void* transr, void* uplo, void* n, void* a, void* work)  __attribute__((alias("flexiblas_real_slansf_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+float flexiblas_chain_slansf_(void* norm, void* transr, void* uplo, void* n, void* a, void* work)
+{
+	float (*fn) (void* norm, void* transr, void* uplo, void* n, void* a, void* work);
+	float (*fn_hook) (void* norm, void* transr, void* uplo, void* n, void* a, void* work);
+	float ret;
+
+	fn      = current_backend->lapack.slansf.f77_blas_function; 
+
+    hook_pos_slansf ++;
+    if( hook_pos_slansf < __flexiblas_hooks->slansf.nhook) {
+        fn_hook = __flexiblas_hooks->slansf.f77_hook_function[hook_pos_slansf];
+        ret = fn_hook((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work);
+    } else {
+        hook_pos_slansf = 0;
+		ret = fn((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work); 
+	}
+	return ret ;
+}
+
+float flexiblas_chain_slansf(void* norm, void* transr, void* uplo, void* n, void* a, void* work)  __attribute__((alias("flexiblas_chain_slansf_")));
+
 
 
 

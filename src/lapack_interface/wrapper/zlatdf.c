@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:07:38 2017 */ 
+ /* Generated: Wed Mar 28 11:20:05 2018 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,40 +29,89 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
 
-#ifdef FLEXIBLAS_ABI_INTEL 
+static TLS_STORE uint8_t hook_pos_zlatdf = 0;
+#ifdef FLEXIBLAS_ABI_INTEL
 void FC_GLOBAL(zlatdf,ZLATDF)(blasint* ijob, blasint* n, double complex* z, blasint* ldz, double complex* rhs, double* rdsum, double* rdscal, blasint* ipiv, blasint* jpiv)
 #else
 void FC_GLOBAL(zlatdf,ZLATDF)(blasint* ijob, blasint* n, double complex* z, blasint* ldz, double complex* rhs, double* rdsum, double* rdscal, blasint* ipiv, blasint* jpiv)
-#endif 
+#endif
 {
-    double ts;
 	void (*fn) (void* ijob, void* n, void* z, void* ldz, void* rhs, void* rdsum, void* rdscal, void* ipiv, void* jpiv);
-	if ( current_backend->post_init != 0 ) {
-		__flexiblas_backend_init(current_backend); 
-		current_backend->post_init = 0; 
+	void (*fn_hook) (void* ijob, void* n, void* z, void* ldz, void* rhs, void* rdsum, void* rdscal, void* ipiv, void* jpiv);
+
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+	fn = current_backend->lapack.zlatdf.f77_blas_function; 
+	fn_hook = __flexiblas_hooks->zlatdf.f77_hook_function[0]; 
+	if ( fn_hook == NULL ) { 
+		fn((void*) ijob, (void*) n, (void*) z, (void*) ldz, (void*) rhs, (void*) rdsum, (void*) rdscal, (void*) ipiv, (void*) jpiv); 
+		return;
+	} else {
+		hook_pos_zlatdf = 0;
+		fn_hook((void*) ijob, (void*) n, (void*) z, (void*) ldz, (void*) rhs, (void*) rdsum, (void*) rdscal, (void*) ipiv, (void*) jpiv);
+		return;
 	}
-	fn = current_backend->lapack.zlatdf.call_fblas; 
-	if ( __flexiblas_profile ) {
-		ts = flexiblas_wtime(); 
-		fn((void*) ijob, (void*) n, (void*) z, (void*) ldz, (void*) rhs, (void*) rdsum, (void*) rdscal, (void*) ipiv, (void*) jpiv); 
-		current_backend->lapack.zlatdf.timings[0] += (flexiblas_wtime() -ts);
-		current_backend->lapack.zlatdf.calls[0]++;
-	} else { 
-		fn((void*) ijob, (void*) n, (void*) z, (void*) ldz, (void*) rhs, (void*) rdsum, (void*) rdscal, (void*) ipiv, (void*) jpiv); 
-	} 
-	return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void zlatdf_(blasint* ijob, blasint* n, double complex* z, blasint* ldz, double complex* rhs, double* rdsum, double* rdscal, blasint* ipiv, blasint* jpiv) __attribute__((alias(MTS(FC_GLOBAL(zlatdf,ZLATDF)))));
 #else
 void zlatdf(blasint* ijob, blasint* n, double complex* z, blasint* ldz, double complex* rhs, double* rdsum, double* rdscal, blasint* ipiv, blasint* jpiv) __attribute__((alias(MTS(FC_GLOBAL(zlatdf,ZLATDF)))));
 #endif
+
+
+
+
+/* Real Implementation for Hooks */
+
+
+void flexiblas_real_zlatdf_(void* ijob, void* n, void* z, void* ldz, void* rhs, void* rdsum, void* rdscal, void* ipiv, void* jpiv)
+{
+	void (*fn) (void* ijob, void* n, void* z, void* ldz, void* rhs, void* rdsum, void* rdscal, void* ipiv, void* jpiv);
+
+	fn = current_backend->lapack.zlatdf.f77_blas_function; 
+
+		fn((void*) ijob, (void*) n, (void*) z, (void*) ldz, (void*) rhs, (void*) rdsum, (void*) rdscal, (void*) ipiv, (void*) jpiv); 
+
+	return;
+}
+
+void flexiblas_real_zlatdf(void* ijob, void* n, void* z, void* ldz, void* rhs, void* rdsum, void* rdscal, void* ipiv, void* jpiv)  __attribute__((alias("flexiblas_real_zlatdf_")));
+
+
+
+
+
+/* Chainloader for Hooks */
+
+
+void flexiblas_chain_zlatdf_(void* ijob, void* n, void* z, void* ldz, void* rhs, void* rdsum, void* rdscal, void* ipiv, void* jpiv)
+{
+	void (*fn) (void* ijob, void* n, void* z, void* ldz, void* rhs, void* rdsum, void* rdscal, void* ipiv, void* jpiv);
+	void (*fn_hook) (void* ijob, void* n, void* z, void* ldz, void* rhs, void* rdsum, void* rdscal, void* ipiv, void* jpiv);
+
+	fn      = current_backend->lapack.zlatdf.f77_blas_function; 
+
+    hook_pos_zlatdf ++;
+    if( hook_pos_zlatdf < __flexiblas_hooks->zlatdf.nhook) {
+        fn_hook = __flexiblas_hooks->zlatdf.f77_hook_function[hook_pos_zlatdf];
+        fn_hook((void*) ijob, (void*) n, (void*) z, (void*) ldz, (void*) rhs, (void*) rdsum, (void*) rdscal, (void*) ipiv, (void*) jpiv);
+    } else {
+        hook_pos_zlatdf = 0;
+		fn((void*) ijob, (void*) n, (void*) z, (void*) ldz, (void*) rhs, (void*) rdsum, (void*) rdscal, (void*) ipiv, (void*) jpiv); 
+	}
+	return;
+}
+
+void flexiblas_chain_zlatdf(void* ijob, void* n, void* z, void* ldz, void* rhs, void* rdsum, void* rdscal, void* ipiv, void* jpiv)  __attribute__((alias("flexiblas_chain_zlatdf_")));
+
 
 
 

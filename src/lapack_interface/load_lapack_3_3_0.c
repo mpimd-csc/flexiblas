@@ -12,10 +12,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2013-2020
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Tue Mar 28 16:12:32 2017 */ 
+ /* Generated: Mon Jun  8 19:59:43 2020 */
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,8 +29,8 @@
 
 #ifdef INTEGER8
 #define blasint int64_t
-#else 
-#define blasint int 
+#else
+#define blasint int
 #endif
 
 
@@ -1544,6 +1544,6 @@ HIDDEN int __flexiblas_load_flapack ( flexiblas_backend_t *handle, int *loaded, 
 	if (_ifailed != (*failed))
 		return 1;
 	else
-			return 0;
+		 return 0;
 }
 

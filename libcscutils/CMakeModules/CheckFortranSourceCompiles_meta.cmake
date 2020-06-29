@@ -1,0 +1,5 @@
+IF(${CMAKE_VERSION} VERSION_LESS "3.0.0")
+    INCLUDE(CheckFortranSourceCompiles_old)
+ELSE()
+    INCLUDE(CheckFortranSourceCompiles)
+ENDIF()
