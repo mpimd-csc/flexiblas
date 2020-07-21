@@ -192,28 +192,27 @@ SET ( CBLAS_SRC
 	cblas_interface/cblas_ztrsm.c
 	cblas_interface/cblas_ztrsv.c
 	cblas_interface/cblas_izamax.c
-	)
+    cblas_interface/cblas_daxpby.c
+    cblas_interface/cblas_saxpby.c
+    cblas_interface/cblas_caxpby.c
+    cblas_interface/cblas_zaxpby.c
+    cblas_interface/cblas_simatcopy.c
+    cblas_interface/cblas_dimatcopy.c
+    cblas_interface/cblas_cimatcopy.c
+    cblas_interface/cblas_zimatcopy.c
+    cblas_interface/cblas_somatcopy.c
+    cblas_interface/cblas_domatcopy.c
+    cblas_interface/cblas_comatcopy.c
+    cblas_interface/cblas_zomatcopy.c
+    cblas_interface/cblas_dgeadd.c
+    cblas_interface/cblas_cgeadd.c
+    cblas_interface/cblas_zgeadd.c
+    cblas_interface/cblas_sgeadd.c
+
+
+    )
 IF (CBLAS STREQUAL ON)
 	SET (SRC ${SRC} ${CBLAS_SRC})
-	SET (SRC ${SRC}
-			ext_blas/cblas_daxpby.c
-			ext_blas/cblas_saxpby.c
-			ext_blas/cblas_caxpby.c
-			ext_blas/cblas_zaxpby.c
-			ext_blas/cblas_somatcopy.c
-			ext_blas/cblas_domatcopy.c
-			ext_blas/cblas_comatcopy.c
-			ext_blas/cblas_zomatcopy.c
-			ext_blas/cblas_simatcopy.c
-			ext_blas/cblas_dimatcopy.c
-			ext_blas/cblas_cimatcopy.c
-			ext_blas/cblas_zimatcopy.c
-			ext_blas/cblas_dgeadd.c
-			ext_blas/cblas_cgeadd.c
-			ext_blas/cblas_zgeadd.c
-			ext_blas/cblas_sgeadd.c
-
-			)
 ENDIF()
 
 #

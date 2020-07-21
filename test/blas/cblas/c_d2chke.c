@@ -3,8 +3,8 @@
 #include "cblas.h"
 #include "cblas_test.h"
 
-int cblas_ok, cblas_lerr, cblas_info;
-int link_xerbla=TRUE;
+F77_INT cblas_ok, cblas_lerr, cblas_info;
+F77_INT link_xerbla=TRUE;
 char *cblas_rout;
 
 #ifdef F77_Char
@@ -14,11 +14,11 @@ void F77_xerbla(char *srname, void *vinfo);
 #endif
 
 void chkxer(void) {
-   extern int cblas_ok, cblas_lerr, cblas_info;
-   extern int link_xerbla;
+   extern F77_INT cblas_ok, cblas_lerr, cblas_info;
+   extern F77_INT link_xerbla;
    extern char *cblas_rout;
    if (cblas_lerr == 1 ) {
-      printf("***** ILLEGAL VALUE OF PARAMETER NUMBER %d NOT DETECTED BY %s *****\n", cblas_info, cblas_rout);
+      printf("***** ILLEGAL VALUE OF PARAMETER NUMBER %d NOT DETECTED BY %s *****\n", (int)  cblas_info, cblas_rout);
       cblas_ok = 0 ;
    }
    cblas_lerr = 1 ;
@@ -30,8 +30,8 @@ void F77_d2chke(char *rout) {
           X[2] = {0.0,0.0},
           Y[2] = {0.0,0.0},
           ALPHA=0.0, BETA=0.0;
-   extern int cblas_info, cblas_lerr, cblas_ok;
-   extern int RowMajorStrg;
+   extern F77_INT cblas_info, cblas_lerr, cblas_ok;
+   extern F77_INT RowMajorStrg;
    extern char *cblas_rout;
 
    if (link_xerbla) /* call these first to link */

@@ -1,7 +1,7 @@
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -9,11 +9,40 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
+ * Linking FlexiBLAS statically or dynamically with other modules is making a
+ * combined work based on FlexiBLAS. Thus, the terms and conditions of the GNU
+ * General Public License cover the whole combination.
+ *
+ * As a special exception, the copyright holders of FlexiBLAS give you permission
+ * to combine FlexiBLAS program with free software programs or libraries that are
+ * released under the GNU LGPL and with independent modules that communicate with
+ * FlexiBLAS solely through the BLAS/LAPACK interface as provided by the
+ * BLAS/LAPACK reference implementation. You may copy and distribute such a system
+ * following the terms of the GNU GPL for FlexiBLAS and the licenses of the other
+ * code concerned, provided that you include the source code of that other code
+ * when and as the GNU GPL requires distribution of source code and provided that
+ * you do not modify the BLAS/LAPACK interface.
+ *
+ * Note that people who make modified versions of FlexiBLAS are not obligated to
+ * grant this special exception for their modified versions; it is their choice
+ * whether to do so. The GNU General Public License gives permission to release a
+ * modified version without this exception; this exception also makes it possible
+ * to release a modified version which carries forward this exception. If you
+ * modify the BLAS/LAPACK interface, this exception does not apply to your
+ * modified version of FlexiBLAS, and you must remove this exception when you
+ * distribute your modified version.
+ *
+ * This exception is an additional permission under section 7 of the GNU General
+ * Public License, version 3 (“GPLv3”)
+ *
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
  * Copyright (C) Martin Koehler, 2013-2020
  */
+
+
 
 #ifdef __linux__
 #define __GNU_SOURCE
@@ -572,6 +601,8 @@ __attribute__((constructor))
         __flexiblas_initialized = 1;
         __flexiblas_mgmt_init = 1;
 
+        (void) flexiblas_verbosity();
+
         /* Color Output */
         if (env_FLEXIBLAS_COLOR_OUTPUT != NULL) {
             int s = atoi(env_FLEXIBLAS_COLOR_OUTPUT);
@@ -631,98 +662,6 @@ __attribute__((constructor))
             __flexiblas_print_copyright(1);
         }
 
-        /*
-         * Load Hooks
-         */
-        __flexiblas_hooks = (flexiblas_hook_t *) malloc(sizeof(flexiblas_hook_t) * (1));
-        if (!__flexiblas_hooks) {
-            DPRINTF_ERROR(0, "Failed to allocate memory for hook management. Abort.\n");
-            abort();
-        }
-        memset(__flexiblas_hooks, 0, sizeof(flexiblas_hook_t));
-        __flexiblas_hooks->hooks_loaded = 0;
-        __flexiblas_hooks->initialized  = 0;
-
-
-        int hooks_to_load = 0;
-        char ** hook_load_list = NULL;
-        int ret = 0;
-        int i ;
-        if ( env_FLEXIBLAS_HOOK == NULL ){
-            // Load from Config
-            flexiblas_mgmt_location_t locx;
-            ret = flexiblas_mgmt_hook_get_active(__flexiblas_mgmt, &locx, &hooks_to_load, &hook_load_list);
-            if ( ret != 0 ) {
-                DPRINTF_ERROR(0, "Failed to obtain list of enabled hooks from the configuration. Continue without hooks.\n");
-                goto continue_load;
-            }
-        } else {
-            // load from environment
-            char *nexttoken = NULL;
-            char *saveptr = NULL;
-            i = 0;
-            nexttoken = strtok_r(env_FLEXIBLAS_HOOK,":,", &saveptr);
-            while (nexttoken != NULL ){
-                i++;
-                if (!( __flexiblas_hook_exists(nexttoken))) {
-                    char *hook_name = __flexiblas_hook_add_from_file(nexttoken);
-                    if ( !hook_name) {
-                        DPRINTF_ERROR(0, "Hook %s not found. Abort.\n", nexttoken);
-                        abort();
-                    }
-                    hook_load_list = realloc (hook_load_list, i * sizeof(char*));
-                    hook_load_list[i-1] = strdup(hook_name);
-
-                } else {
-                    hook_load_list = realloc (hook_load_list, i * sizeof(char*));
-                    hook_load_list[i-1] = strdup(nexttoken);
-                }
-                nexttoken = strtok_r(NULL,":,", &saveptr);
-            }
-            hooks_to_load = i;
-        }
-
-        int k = 0;
-        for (i = 0; i < hooks_to_load; i++) {
-            char * sofile;
-            void * handle = NULL;
-
-            sofile = __flexiblas_hook_sofile(hook_load_list[i]);
-            handle  = __flexiblas_dlopen(sofile, RTLD_NOW | RTLD_LOCAL , NULL);
-            DPRINTF(1,"Load hook: %s - %s\n", hook_load_list[i], sofile);
-            if ( ! handle ) {
-                DPRINTF_ERROR(0, "Failed to load hook %s. Either it does not exists in the configuration or it is not a shared object.\n", hook_load_list[i]);
-                free(hook_load_list[i]);
-                continue;
-            }
-
-
-            __flexiblas_hooks->handles[k] = handle;
-            __flexiblas_hooks->hook_init[k] = (flexiblas_init_function_t) dlsym(handle, FLEXIBLAS_HOOK_INIT_FUNCTION_NAME);
-            __flexiblas_hooks->hook_exit[k] = (flexiblas_exit_function_t) dlsym(handle, FLEXIBLAS_HOOK_EXIT_FUNCTION_NAME);
-
-            __flexiblas_load_blas_hooks(__flexiblas_hooks, handle);
-
-            __flexiblas_hooks->hooks_loaded ++;
-            if ( __flexiblas_hooks->hooks_loaded >= FLEXIBLAS_MAX_HOOKS ) {
-                DPRINTF_ERROR(0, "More than %d hook libraries loaded. Please reduce the number of hook libraries. Abort!\n", FLEXIBLAS_MAX_HOOKS);
-                abort();
-            }
-            k++;
-            free(hook_load_list[i]);
-        }
-        free(hook_load_list);
-
-        /* Init The Hook Library  */
-        if (__flexiblas_hooks->initialized == 0) {
-            __flexiblas_hooks->initialized = 1;
-            for (k = 0; k < __flexiblas_hooks->hooks_loaded; k++) {
-                __flexiblas_hooks->hook_init[k]();
-            }
-        }
-
-
-continue_load:
         /*-----------------------------------------------------------------------------
          *  Load Library
          *-----------------------------------------------------------------------------*/
@@ -785,6 +724,105 @@ continue_load:
         current_backend  = backend;
 
 
+        /*
+         * Load Hooks
+         */
+        __flexiblas_hooks = (flexiblas_hook_t *) malloc(sizeof(flexiblas_hook_t) * (1));
+        if (!__flexiblas_hooks) {
+            DPRINTF_ERROR(0, "Failed to allocate memory for hook management. Abort.\n");
+            abort();
+        }
+        memset(__flexiblas_hooks, 0, sizeof(flexiblas_hook_t));
+        __flexiblas_hooks->hooks_loaded = 0;
+        __flexiblas_hooks->initialized  = 0;
+
+        dlsym((void *) 0, "flexiblas_verbosity");
+
+        int hooks_to_load = 0;
+        char ** hook_load_list = NULL;
+        int ret = 0;
+        int i ;
+        if ( env_FLEXIBLAS_HOOK == NULL ){
+            // Load from Config
+            flexiblas_mgmt_location_t locx;
+            ret = flexiblas_mgmt_hook_get_active(__flexiblas_mgmt, &locx, &hooks_to_load, &hook_load_list);
+            if ( ret != 0 ) {
+                DPRINTF_ERROR(0, "Failed to obtain list of enabled hooks from the configuration. Continue without hooks.\n");
+                goto continue_load;
+            }
+        } else {
+            // load from environment
+            char *nexttoken = NULL;
+            char *saveptr = NULL;
+            i = 0;
+            nexttoken = strtok_r(env_FLEXIBLAS_HOOK,":,", &saveptr);
+            while (nexttoken != NULL ){
+                i++;
+                if (!( __flexiblas_hook_exists(nexttoken))) {
+                    char *hook_name = __flexiblas_hook_add_from_file(nexttoken);
+                    if ( !hook_name) {
+                        DPRINTF_ERROR(0, "Hook %s not found. Abort.\n", nexttoken);
+                        abort();
+                    }
+                    hook_load_list = realloc (hook_load_list, i * sizeof(char*));
+                    hook_load_list[i-1] = strdup(hook_name);
+
+                } else {
+                    hook_load_list = realloc (hook_load_list, i * sizeof(char*));
+                    hook_load_list[i-1] = strdup(nexttoken);
+                }
+                nexttoken = strtok_r(NULL,":,", &saveptr);
+            }
+            hooks_to_load = i;
+        }
+
+        int k = 0;
+        for (i = 0; i < hooks_to_load; i++) {
+            char * sofile;
+            void * handle = NULL;
+
+            sofile = __flexiblas_hook_sofile(hook_load_list[i]);
+            handle  = __flexiblas_dlopen(sofile, RTLD_LAZY | RTLD_LOCAL , NULL);
+            DPRINTF(1,"Load hook: %s - %s\n", hook_load_list[i], sofile);
+            if ( ! handle ) {
+                DPRINTF_ERROR(0, "Failed to load hook %s. Either it does not exists in the configuration or it is not a shared object.\n", hook_load_list[i]);
+                free(hook_load_list[i]);
+                continue;
+            }
+
+
+            __flexiblas_hooks->handles[k] = handle;
+            __flexiblas_hooks->hook_init[k] = (flexiblas_init_function_t) dlsym(handle, FLEXIBLAS_HOOK_INIT_FUNCTION_NAME);
+            __flexiblas_hooks->hook_exit[k] = (flexiblas_exit_function_t) dlsym(handle, FLEXIBLAS_HOOK_EXIT_FUNCTION_NAME);
+
+            __flexiblas_load_blas_hooks(__flexiblas_hooks, handle);
+
+            __flexiblas_hooks->hooks_loaded ++;
+            if ( __flexiblas_hooks->hooks_loaded >= FLEXIBLAS_MAX_HOOKS ) {
+                DPRINTF_ERROR(0, "More than %d hook libraries loaded. Please reduce the number of hook libraries. Abort!\n", FLEXIBLAS_MAX_HOOKS);
+                abort();
+            }
+            k++;
+            free(hook_load_list[i]);
+        }
+        free(hook_load_list);
+
+        /* Init The Hook Library  */
+        if (__flexiblas_hooks->initialized == 0) {
+            __flexiblas_hooks->initialized = 1;
+            for (k = 0; k < __flexiblas_hooks->hooks_loaded; k++) {
+                __flexiblas_hooks->hook_init[k]();
+            }
+        }
+
+
+        continue_load:
+        return;
+
+
+
+
+
     }
 
 
@@ -798,6 +836,18 @@ __attribute__((destructor))
     void flexiblas_exit() {
         size_t i;
         if (__flexiblas_verbose ) DPRINTF(1,"cleanup\n");
+
+        int k;
+        for ( k = __flexiblas_hooks->hooks_loaded-1; k>=0; k--){
+            __flexiblas_hooks->hook_exit[k]();
+            dlclose(__flexiblas_hooks->handles[k]);
+        }
+        free(__flexiblas_hooks);
+        nloaded_backends = 0;
+        __flexiblas_free_paths();
+        __flexiblas_exit_hook();
+
+
         for (i = 0; i < nloaded_backends ; i++) {
             if ( loaded_backends[i]->exit_function != NULL) {
                 loaded_backends[i]->exit_function();
@@ -818,15 +868,6 @@ __attribute__((destructor))
 #ifdef FLEXIBLAS_LAPACK
         dlclose(__flexiblas_lapack_fallback);
 #endif
-        int k;
-        for ( k = __flexiblas_hooks->hooks_loaded-1; k>=0; k--){
-            __flexiblas_hooks->hook_exit[k]();
-            dlclose(__flexiblas_hooks->handles[k]);
-        }
-        free(__flexiblas_hooks);
-        nloaded_backends = 0;
-        __flexiblas_free_paths();
-        __flexiblas_exit_hook();
         flexiblas_mgmt_free_config(__flexiblas_mgmt);
     }
 
@@ -840,6 +881,13 @@ double flexiblas_wtime()
     gettimeofday (&tv, NULL);
     return (double)tv.tv_sec + (double)tv.tv_usec / 1e6;
 }
+
+
+int flexiblas_verbosity()
+{
+    return __flexiblas_verbose;
+}
+
 
 #ifdef __WIN32__
 #include <windows.h>

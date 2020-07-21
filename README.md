@@ -1,7 +1,7 @@
 FlexiBLAS - A BLAS and LAPACK wrapper library with runtime exchangeable backends
 ================================================================================
 
-**Version 3.0.0** https://doi.org/10.5281/zenodo.3909214
+**Version 3.0.1** https://doi.org/10.5281/zenodo.3949804
 
 **Project Website:** https://www.mpi-magdeburg.mpg.de/projects/flexiblas
 
@@ -548,8 +548,13 @@ Send feedback to:
 
 ## License
 
-The whole library is provided under the conditions of the *GPLv3*.
-Except of the testing code ( contained in `test/` ) and the *Netlib BLAS*
-implementation (contained in `netlib/`). These two parts are covered by the
+The whole library is provided under the conditions of the *GPLv3* and later with
+a linking exception according to section 7 of the GNU General Public License,
+version 3 ("GPLv3"). This exception, written in COPYING.ADDITIONAL, is valid
+for all files in the src/ directory. It allows to link FlexiBLAS against all
+software, opensource or proprietary, without violating the GPL license as long
+as only the BLAS/LAPACK interface of the reference implementation is used.
+The testing code ( contained in `test/` ) and the *Reference Implementation*
+implementation (contained in `contributed/`) are covered by the
 license of *LAPACK* ( https://www.netlib.org/lapack ). See ``COPYING.NETLIB``
 for more details about this license.

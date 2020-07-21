@@ -1,4 +1,4 @@
-.TH flexiblas_get_num_threads  3 "Mar. 2017" "M. Koehler" "The FlexiBLAS Library" 
+.TH flexiblas_get_num_threads  3 "Mar. 2017" "M. Koehler" "The FlexiBLAS Library"
 .SH NAME
 flexiblas_get_num_threads \- Get the number of threads the backend uses for computation.
 
@@ -7,7 +7,7 @@ flexiblas_get_num_threads \- Get the number of threads the backend uses for comp
 
 \fBint flexiblas_get_num_threads();\fR
 
-and as weak aliases 
+and as weak aliases
 
 \fBint openblas_get_num_threads();\fR
 .br
@@ -18,28 +18,28 @@ and as weak aliases
 \fBint acmlgetnumthreads();\fR
 .br
 
-Link with \fI-lflexiblas\fR. 
+Link with \fI-lflexiblas\fR.
 
 .SH DESCRIPTION
 \fBflexiblas_get_num_threads\fR function gets the number of threads used for computation if
-the backend supports this. The aliases exist for compatibility reasons with other BLAS implementations 
-like Intel MKL, OpenBLAS, or AMD ACML. 
+the backend supports this. The aliases exist for compatibility reasons with other BLAS implementations
+like Intel MKL, OpenBLAS, or AMD ACML.
 
 .SH ERRORS
 
-If the backends does not support it, one is returned.  
+If the backends does not support it, one is returned.
 
 .SH REPORTING BUGS
-The current information about the developers and reporting bugs can be found on the FlexiBLAS homepage. 
+The current information about the developers and reporting bugs can be found on the FlexiBLAS homepage.
 
 FlexiBLAS Homepage: <http://www.mpi-magdeburg.mpg.de/projects/flexiblas>
 
-.SH AUTHORS 
- Martin Koehler, Jens Saak 
+.SH AUTHORS
+ Martin Koehler, Jens Saak
 
 .SH COPYRIGHT
-Copyright (C) 2013-2019 Martin Koehler
+Copyright (C) 2013-2020 Martin Koehler
 .SH LICENSE
-License GPLv2+: GNU GPL version 2 or later <http://gnu.org/licenses/gpl.html>.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
 This is free software: you are free to change and redistribute it.  There is NO WARRANTY, to the extent permitted by law.
 

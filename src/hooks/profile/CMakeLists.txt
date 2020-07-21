@@ -16,7 +16,7 @@ ELSE ()
 ENDIF()
 
 SET_TARGET_PROPERTIES(flexiblas_hook_profile PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS}")
-TARGET_LINK_LIBRARIES(flexiblas_hook_profile cscutils)
+TARGET_LINK_LIBRARIES(flexiblas_hook_profile flexiblas cscutils)
 
 INSTALL(TARGETS flexiblas_hook_profile LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR})
 

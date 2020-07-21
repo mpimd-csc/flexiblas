@@ -1,13 +1,40 @@
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ *
+ * Linking FlexiBLAS statically or dynamically with other modules is making a
+ * combined work based on FlexiBLAS. Thus, the terms and conditions of the GNU
+ * General Public License cover the whole combination.
+ *
+ * As a special exception, the copyright holders of FlexiBLAS give you permission
+ * to combine FlexiBLAS program with free software programs or libraries that are
+ * released under the GNU LGPL and with independent modules that communicate with
+ * FlexiBLAS solely through the BLAS/LAPACK interface as provided by the
+ * BLAS/LAPACK reference implementation. You may copy and distribute such a system
+ * following the terms of the GNU GPL for FlexiBLAS and the licenses of the other
+ * code concerned, provided that you include the source code of that other code
+ * when and as the GNU GPL requires distribution of source code and provided that
+ * you do not modify the BLAS/LAPACK interface.
+ *
+ * Note that people who make modified versions of FlexiBLAS are not obligated to
+ * grant this special exception for their modified versions; it is their choice
+ * whether to do so. The GNU General Public License gives permission to release a
+ * modified version without this exception; this exception also makes it possible
+ * to release a modified version which carries forward this exception. If you
+ * modify the BLAS/LAPACK interface, this exception does not apply to your
+ * modified version of FlexiBLAS, and you must remove this exception when you
+ * distribute your modified version.
+ *
+ * This exception is an additional permission under section 7 of the GNU General
+ * Public License, version 3 (“GPLv3”)
+ *
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
@@ -17,12 +44,12 @@
 
 #ifndef CBLAS_F77_H
 #define CBLAS_F77_H
-#include <stdlib.h> 
-#include <complex.h> 
+#include <stdlib.h>
+#include <complex.h>
 #include "fortran_mangle.h"
 #include "flexiblas.h"
 
-#ifdef INTEGER8 
+#ifdef INTEGER8
 	#include <stdint.h>
 	#define F77_INT int64_t
 #endif
@@ -56,7 +83,7 @@ extern "C" {
 /* Single Precision */
 
    void FC_GLOBAL(srot,SROT)(FINT, float *, FINT, float *, FINT, const float *, const float *);
-   void FC_GLOBAL(srotg,SROTG)(float *,float *,float *,float *);    
+   void FC_GLOBAL(srotg,SROTG)(float *,float *,float *,float *);
    void FC_GLOBAL(srotm,SROTM)( FINT, float *, FINT, float *, FINT, const float *);
    void FC_GLOBAL(srotmg,SROTMG)(float *,float *,float *,const float *, float *);
    void FC_GLOBAL(sswap,SSWAP)( FINT, float *, FINT, float *, FINT);
@@ -71,7 +98,7 @@ extern "C" {
 /* Double Precision */
 
    void FC_GLOBAL(drot,DROT)(FINT, double *, FINT, double *, FINT, const double *, const double *);
-   void FC_GLOBAL(drotg,DROTG)(double *,double *,double *,double *);    
+   void FC_GLOBAL(drotg,DROTG)(double *,double *,double *,double *);
    void FC_GLOBAL(drotm,DROTM)( FINT, double *, FINT, double *, FINT, const double *);
    void FC_GLOBAL(drotmg,DROTMG)(double *,double *,double *,const double *, double *);
    void FC_GLOBAL(dswap,DSWAP)( FINT, double *, FINT, double *, FINT);
@@ -92,7 +119,7 @@ extern "C" {
 #ifdef FLEXIBLAS_ABI_INTEL
    void  FC_GLOBAL(cdotc,CDOTC)( void *, FINT, const void *, FINT, const void *, FINT);
    void  FC_GLOBAL(cdotu,CDOTU)( void *, FINT, const void *, FINT, const void *, FINT);
-#else 
+#else
    float complex FC_GLOBAL(cdotc,CDOTC)( FINT, const void *, FINT, const void *, FINT);
    float complex FC_GLOBAL(cdotu,CDOTU)( FINT, const void *, FINT, const void *, FINT);
 #endif
@@ -106,15 +133,15 @@ extern "C" {
    void FC_GLOBAL(zswap,ZSWAP)( FINT, void *, FINT, void *, FINT);
    void FC_GLOBAL(zcopy,ZCOPY)( FINT, const void *, FINT, void *, FINT);
    void FC_GLOBAL(zaxpy,ZAXPY)( FINT, const void *, const void *, FINT, void *, FINT);
-   
+
 #ifdef FLEXIBLAS_ABI_INTEL
    void  FC_GLOBAL(zdotc,ZDOTC)(void * RET, FINT, const void *, FINT, const void *, FINT);
    void  FC_GLOBAL(zdotu,ZDOTU)(void * RET, FINT, const void *, FINT, const void *, FINT);
-#else 
+#else
    double complex  FC_GLOBAL(zdotc,ZDOTC)( FINT, const void *, FINT, const void *, FINT);
    double complex  FC_GLOBAL(zdotu,ZDOTU)( FINT, const void *, FINT, const void *, FINT);
-#endif 
-   
+#endif
+
    void FC_GLOBAL(zdscal,ZDSCAL)( FINT, const double *, void *, FINT);
    void FC_GLOBAL(zscal,ZSCAL)( FINT, const void *, void *, FINT);
    double FC_GLOBAL(dznrm2,DZNRM2)( FINT, const void *, FINT);
@@ -145,8 +172,8 @@ extern "C" {
    void FC_GLOBAL(stpsv,STPSV)( FCHAR, FCHAR, FCHAR, FINT, const float *, float *, FINT);
    void FC_GLOBAL(sger,SGER)( FINT, FINT, const float *, const float *, FINT, const float *, FINT, float *, FINT);
    void FC_GLOBAL(ssyr,SSYR)(FCHAR, FINT, const float *, const float *, FINT, float *, FINT);
-   void FC_GLOBAL(sspr,SSPR)(FCHAR, FINT, const float *, const float *, FINT, float *); 
-   void FC_GLOBAL(sspr2,SSPR2)(FCHAR, FINT, const float *, const float *, FINT, const float *, FINT,  float *); 
+   void FC_GLOBAL(sspr,SSPR)(FCHAR, FINT, const float *, const float *, FINT, float *);
+   void FC_GLOBAL(sspr2,SSPR2)(FCHAR, FINT, const float *, const float *, FINT, const float *, FINT,  float *);
    void FC_GLOBAL(ssyr2,SSYR2)(FCHAR, FINT, const float *, const float *, FINT, const float *, FINT,  float *, FINT);
 
 /* Double Precision */
@@ -164,8 +191,8 @@ extern "C" {
    void FC_GLOBAL(dtpsv,DTPSV)( FCHAR, FCHAR, FCHAR, FINT, const double *, double *, FINT);
    void FC_GLOBAL(dger,DGER)( FINT, FINT, const double *, const double *, FINT, const double *, FINT, double *, FINT);
    void FC_GLOBAL(dsyr,DSYR)(FCHAR, FINT, const double *, const double *, FINT, double *, FINT);
-   void FC_GLOBAL(dspr,DSPR)(FCHAR, FINT, const double *, const double *, FINT, double *); 
-   void FC_GLOBAL(dspr2,DSPR2)(FCHAR, FINT, const double *, const double *, FINT, const double *, FINT,  double *); 
+   void FC_GLOBAL(dspr,DSPR)(FCHAR, FINT, const double *, const double *, FINT, double *);
+   void FC_GLOBAL(dspr2,DSPR2)(FCHAR, FINT, const double *, const double *, FINT, const double *, FINT,  double *);
    void FC_GLOBAL(dsyr2,DSYR2)(FCHAR, FINT, const double *, const double *, FINT, const double *, FINT,  double *, FINT);
 
 /* Single Complex Precision */
@@ -261,20 +288,20 @@ extern "C" {
    void FC_GLOBAL(caxpby,CAXPBY)( FINT, const float *, const void *, FINT, const void *, void*, FINT);
    void FC_GLOBAL(zaxpby,ZAXPBY)( FINT, const float *, const void *, FINT, const void *, void*, FINT);
 
-   void FC_GLOBAL(somatcopy,SOMATCOPY)(FCHAR, FCHAR, FINT, FINT, const float * , const float*, FINT, float *, FINT); 
-   void FC_GLOBAL(domatcopy,DOMATCOPY)(FCHAR, FCHAR, FINT, FINT, const double * , const double*, FINT, double *, FINT); 
-   void FC_GLOBAL(comatcopy,COMATCOPY)(FCHAR, FCHAR, FINT, FINT, const void * , const void*, FINT, void *, FINT); 
-   void FC_GLOBAL(zomatcopy,ZOMATCOPY)(FCHAR, FCHAR, FINT, FINT, const void * , const void*, FINT, void *, FINT); 
+   void FC_GLOBAL(somatcopy,SOMATCOPY)(FCHAR, FCHAR, FINT, FINT, const float * , const float*, FINT, float *, FINT);
+   void FC_GLOBAL(domatcopy,DOMATCOPY)(FCHAR, FCHAR, FINT, FINT, const double * , const double*, FINT, double *, FINT);
+   void FC_GLOBAL(comatcopy,COMATCOPY)(FCHAR, FCHAR, FINT, FINT, const void * , const void*, FINT, void *, FINT);
+   void FC_GLOBAL(zomatcopy,ZOMATCOPY)(FCHAR, FCHAR, FINT, FINT, const void * , const void*, FINT, void *, FINT);
 
-   void FC_GLOBAL(simatcopy,SIMATCOPY)(FCHAR, FCHAR, FINT, FINT, const float * , float*, FINT, FINT); 
-   void FC_GLOBAL(dimatcopy,DIMATCOPY)(FCHAR, FCHAR, FINT, FINT, const double * ,double*, FINT, FINT); 
-   void FC_GLOBAL(cimatcopy,CIMATCOPY)(FCHAR, FCHAR, FINT, FINT, const void * , void*, FINT, FINT); 
-   void FC_GLOBAL(zimatcopy,ZIMATCOPY)(FCHAR, FCHAR, FINT, FINT, const void * , void*, FINT, FINT); 
+   void FC_GLOBAL(simatcopy,SIMATCOPY)(FCHAR, FCHAR, FINT, FINT, const float * , float*, FINT, FINT);
+   void FC_GLOBAL(dimatcopy,DIMATCOPY)(FCHAR, FCHAR, FINT, FINT, const double * ,double*, FINT, FINT);
+   void FC_GLOBAL(cimatcopy,CIMATCOPY)(FCHAR, FCHAR, FINT, FINT, const void * , void*, FINT, FINT);
+   void FC_GLOBAL(zimatcopy,ZIMATCOPY)(FCHAR, FCHAR, FINT, FINT, const void * , void*, FINT, FINT);
 
-   void FC_GLOBAL(sgeadd,SGEADD)(FINT, FINT, const float *, float *, FINT, const float *, float *, FINT); 
-   void FC_GLOBAL(dgeadd,DGEADD)(FINT, FINT, const double *, double *, FINT, const double *, double *, FINT); 
-   void FC_GLOBAL(cgeadd,CGEADD)(FINT, FINT, const float complex *, float complex *, FINT, const float complex *, float complex *, FINT); 
-   void FC_GLOBAL(zgeadd,ZGEADD)(FINT, FINT, const double complex *, double complex *, FINT, const double complex *, double complex *, FINT); 
+   void FC_GLOBAL(sgeadd,SGEADD)(FINT, FINT, const float *, float *, FINT, const float *, float *, FINT);
+   void FC_GLOBAL(dgeadd,DGEADD)(FINT, FINT, const double *, double *, FINT, const double *, double *, FINT);
+   void FC_GLOBAL(cgeadd,CGEADD)(FINT, FINT, const float complex *, float complex *, FINT, const float complex *, float complex *, FINT);
+   void FC_GLOBAL(zgeadd,ZGEADD)(FINT, FINT, const double complex *, double complex *, FINT, const double complex *, double complex *, FINT);
 
 
 

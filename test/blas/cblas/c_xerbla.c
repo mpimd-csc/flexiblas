@@ -7,9 +7,9 @@
 
 void cblas_xerbla(int info, const char *rout, const char *form, ...)
 {
-   extern int cblas_lerr, cblas_info, cblas_ok;
-   extern int link_xerbla;
-   extern int RowMajorStrg;
+   extern F77_INT cblas_lerr, cblas_info, cblas_ok;
+   extern F77_INT link_xerbla;
+   extern F77_INT RowMajorStrg;
    extern char *cblas_rout;
 
    /* Initially, c__3chke will call this routine with
@@ -77,7 +77,7 @@ void cblas_xerbla(int info, const char *rout, const char *form, ...)
    }
 
    if (info != cblas_info){
-      printf("***** XERBLA WAS CALLED WITH INFO = %d INSTEAD OF %d in %s *******\n",info, cblas_info, rout);
+      printf("***** XERBLA WAS CALLED WITH INFO = %d INSTEAD OF %d in %s *******\n",(int) info, (int) cblas_info, rout);
       cblas_lerr = PASSED;
       cblas_ok = FALSE;
    } else cblas_lerr = FAILED;
@@ -95,10 +95,10 @@ void FC_GLOBAL(xerbla,XERBLA)(char *srname, void *vinfo)
 
    char rout[] = {'c','b','l','a','s','_','\0','\0','\0','\0','\0','\0','\0'};
 
-#ifdef F77_Integer
-   F77_Integer *info=vinfo;
-   F77_Integer i;
-   extern F77_Integer link_xerbla;
+#ifdef F77_INT
+   F77_INT *info=vinfo;
+   F77_INT i;
+   extern F77_INT link_xerbla;
 #else
    int *info=vinfo;
    int i;

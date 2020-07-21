@@ -12,4 +12,5 @@ usr/include/flexiblas64/blas_intel.h
 usr/include/flexiblas64/flexiblas_config.h
 usr/include/flexiblas64/flexiblas_dummy_fortran.h
 usr/include/flexiblas64/flexiblas_real_calls.h
+usr/include/flexiblas64/flexiblas_real_cblas_calls.h
 usr/include/flexiblas64/fortran_mangle.h

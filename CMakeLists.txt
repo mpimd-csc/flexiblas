@@ -9,10 +9,10 @@ ENDIF()
 #
 # FlexiBLAS version setup
 #
-SET(FLEXIBLAS_VERSION "3.0.0")
+SET(FLEXIBLAS_VERSION "3.0.1")
 SET(FLEXIBLAS_VERSION_MAJOR  3)
 SET(FLEXIBLAS_VERSION_MINOR  0)
-SET(FLEXIBLAS_VERSION_PATCH  0)
+SET(FLEXIBLAS_VERSION_PATCH  1)
 
 
 
@@ -166,7 +166,7 @@ ELSE()
 	ELSE ()
 		SET ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_FILE_OFFSET_BITS=64")
 		IF  ( CMAKE_Fortran_COMPILER_ID STREQUAL "Intel" OR CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
-			set (CMAKE_SHARED_LINKER_FLAGS "-rdynamic")
+            set (CMAKE_SHARED_LINKER_FLAGS "-rdynamic -Wl,--export-dynamic")
 		ENDIF()
 		# SET ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_FILE_OFFSET_BITS=64 ")
 
@@ -336,6 +336,7 @@ IF(LAPACK STREQUAL ON)
 ENDIF()
 INSTALL(FILES   ${CMAKE_SOURCE_DIR}/src/flexiblas_backend.h
 		${CMAKE_SOURCE_DIR}/src/flexiblas_real_calls.h
+        ${CMAKE_SOURCE_DIR}/src/flexiblas_real_cblas_calls.h
 		${CMAKE_SOURCE_DIR}/src/flexiblas_api.h
 		${CMAKE_SOURCE_DIR}/src/flexiblas_dummy_fortran.h
 		${CMAKE_SOURCE_DIR}/src/flexiblas_dummy_cblas.h

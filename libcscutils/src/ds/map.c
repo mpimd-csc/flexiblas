@@ -258,6 +258,9 @@ void *csc_map_get(csc_map_t *map, void *key)
     tmp = csc_map_has_key_intern(map, key);
     pthread_mutex_unlock(&map->lock);
 
+    if ( tmp == NULL)
+        return NULL;
+
     return (void *) tmp->value;
 }
 

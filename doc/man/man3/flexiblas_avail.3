@@ -1,37 +1,37 @@
-.TH flexiblas_get_version  3 "Mar. 2017" "M. Koehler" "The FlexiBLAS Library" 
+.TH flexiblas_get_version  3 "Mar. 2017" "M. Koehler" "The FlexiBLAS Library"
 .SH NAME
-flexiblas_avail \- check if FlexiBLAS is available in the current namespace. 
+flexiblas_avail \- check if FlexiBLAS is available in the current namespace.
 .SH SYNOPSIS
 \fB#include <flexiblas/flexiblas_api.h>
 
-\fBint flexiblas_avail(); 
+\fBint flexiblas_avail();
 
 Link with \fI-lflexiblas\fR or \fI-lflexiblas_api\fR.
 
 .SH DESCRIPTION
 \fBflexiblas_avail\fR returns true if FlexiBLAS is available in the current shared
-library namespace otherwise false is returned. This function can be used to check 
-if in an update-alternative enviroment the used BLAS library is FlexiBLAS or not. 
-In this way one can write applications using FlexiBLAS features even if the 
+library namespace otherwise false is returned. This function can be used to check
+if in an update-alternative enviroment the used BLAS library is FlexiBLAS or not.
+In this way one can write applications using FlexiBLAS features even if the
 BLAS implementaion was changed by update-alternative.
 
 .SH RETURN VALUE
 True(!=0) if FlexiBLAS is available. False(=0) otherwise.
 
 .SH ERRORS
-No errors occur. 
+No errors occur.
 
 .SH REPORTING BUGS
-The current information about the developers and reporting bugs can be found on the FlexiBLAS homepage. 
+The current information about the developers and reporting bugs can be found on the FlexiBLAS homepage.
 
 FlexiBLAS Homepage: <http://www.mpi-magdeburg.mpg.de/projects/flexiblas>
 
-.SH AUTHORS 
- Martin Koehler, Jens Saak 
+.SH AUTHORS
+ Martin Koehler, Jens Saak
 
 .SH COPYRIGHT
-Copyright (C) 2013-2019 Martin Koehler
+Copyright (C) 2013-2020 Martin Koehler
 .SH LICENSE
-License GPLv2+: GNU GPL version 2 or later <http://gnu.org/licenses/gpl.html>.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
 This is free software: you are free to change and redistribute it.  There is NO WARRANTY, to the extent permitted by law.
 

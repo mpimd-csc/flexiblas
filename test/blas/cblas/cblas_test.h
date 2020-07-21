@@ -26,6 +26,8 @@
 #ifdef INTEGER8 
 	#include <stdint.h>
 	#define F77_INT int64_t
+#else 
+	#define F77_INT int 
 #endif
 
 #ifdef  F77_CHAR

@@ -1,7 +1,7 @@
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -12,10 +12,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2020
+ * Linking FlexiBLAS statically or dynamically with other modules is making a combined
+ * work based on FlexiBLAS. Thus, the terms and conditions of the GNU General
+ * Public License cover the whole combination.
+ *
+ * As a special exception, the copyright holders of FlexiBLAS give you permission
+ * to combine FlexiBLAS program with free software programs or libraries that are
+ * released under the GNU LGPL and with independent modules that communicate with
+ * FlexiBLAS solely through the BLAS/LAPACK interface as provided by the
+ * BLAS/LAPACK reference implementation. You may copy and distribute such a system
+ * following the terms of the GNU GPL for FlexiBLAS and the licenses of the other
+ * code concerned, provided that you include the source code of that other code
+ * when and as the GNU GPL requires distribution of source code and provided that
+ * you do not modify the BLAS/LAPACK interface.
+ *
+ * Note that people who make modified versions of FlexiBLAS are not obligated to
+ * grant this special exception for their modified versions; it is their choice
+ * whether to do so. The GNU General Public License gives permission to release a
+ * modified version without this exception; this exception also makes it possible
+ * to release a modified version which carries forward this exception. If you
+ * modify the BLAS/LAPACK interface, this exception does not apply to your
+ * modified version of FlexiBLAS, and you must remove this exception when you
+ * distribute your modified version.
+ *
+ * This exception is an additional permission under section 7 of the GNU General
+ * Public License, version 3 (“GPLv3”)
+ *
+ *
+ * Copyright (C) Martin Koehler, 2015-2017
  */
  /* This file it automatically generated. Please do not edit. */
- /* Generated: Mon Jun  8 19:59:40 2020 */
+ /* Generated: Fri Jul 10 16:25:32 2020 */
         
 #ifndef FLEXIBLAS_REAL_CALLS_LAPACK_H
 #define FLEXIBLAS_REAL_CALLS_LAPACK_H
@@ -2077,10 +2104,6 @@ void flexiblas_real_dlalsd_(void* uplo, void* smlsiz, void* n, void* nrhs, void*
 void flexiblas_real_dlalsd(void* uplo, void* smlsiz, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* rcond, void* rank_bn, void* work, void* iwork, void* info);
 void flexiblas_chain_dlalsd_(void* uplo, void* smlsiz, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* rcond, void* rank_bn, void* work, void* iwork, void* info);
 void flexiblas_chain_dlalsd(void* uplo, void* smlsiz, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* rcond, void* rank_bn, void* work, void* iwork, void* info);
-double flexiblas_real_dlamc3_(void* a, void* b);
-double flexiblas_real_dlamc3(void* a, void* b);
-double flexiblas_chain_dlamc3_(void* a, void* b);
-double flexiblas_chain_dlamc3(void* a, void* b);
 double flexiblas_real_dlamch_(void* cmach);
 double flexiblas_real_dlamch(void* cmach);
 double flexiblas_chain_dlamch_(void* cmach);
@@ -3821,10 +3844,6 @@ void flexiblas_real_slalsd_(void* uplo, void* smlsiz, void* n, void* nrhs, void*
 void flexiblas_real_slalsd(void* uplo, void* smlsiz, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* rcond, void* rank_bn, void* work, void* iwork, void* info);
 void flexiblas_chain_slalsd_(void* uplo, void* smlsiz, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* rcond, void* rank_bn, void* work, void* iwork, void* info);
 void flexiblas_chain_slalsd(void* uplo, void* smlsiz, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* rcond, void* rank_bn, void* work, void* iwork, void* info);
-float flexiblas_real_slamc3_(void* a, void* b);
-float flexiblas_real_slamc3(void* a, void* b);
-float flexiblas_chain_slamc3_(void* a, void* b);
-float flexiblas_chain_slamc3(void* a, void* b);
 float flexiblas_real_slamch_(void* cmach);
 float flexiblas_real_slamch(void* cmach);
 float flexiblas_chain_slamch_(void* cmach);

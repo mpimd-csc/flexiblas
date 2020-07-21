@@ -8,12 +8,12 @@
 #include "cblas.h"
 #include "cblas_test.h"
 
-void F77_dgemv(int *layout, char *transp, int *m, int *n, double *alpha,
-	       double *a, int *lda, double *x, int *incx, double *beta,
-	       double *y, int *incy ) {
+void F77_dgemv(F77_INT *layout, char *transp, F77_INT *m, F77_INT *n, double *alpha,
+	       double *a, F77_INT *lda, double *x, F77_INT *incx, double *beta,
+	       double *y, F77_INT *incy ) {
 
   double *A;
-  int i,j,LDA;
+  F77_INT i,j,LDA;
   CBLAS_TRANSPOSE trans;
 
   get_transpose_type(transp, &trans);
@@ -35,11 +35,11 @@ void F77_dgemv(int *layout, char *transp, int *m, int *n, double *alpha,
 		  *m, *n, *alpha, a, *lda, x, *incx, *beta, y, *incy );
 }
 
-void F77_dger(int *layout, int *m, int *n, double *alpha, double *x, int *incx,
-	     double *y, int *incy, double *a, int *lda ) {
+void F77_dger(F77_INT *layout, F77_INT *m, F77_INT *n, double *alpha, double *x, F77_INT *incx,
+	     double *y, F77_INT *incy, double *a, F77_INT *lda ) {
 
   double *A;
-  int i,j,LDA;
+  F77_INT i,j,LDA;
 
   if (*layout == TEST_ROW_MJR) {
      LDA = *n+1;
@@ -60,10 +60,10 @@ void F77_dger(int *layout, int *m, int *n, double *alpha, double *x, int *incx,
      cblas_dger( CblasColMajor, *m, *n, *alpha, x, *incx, y, *incy, a, *lda );
 }
 
-void F77_dtrmv(int *layout, char *uplow, char *transp, char *diagn,
-	      int *n, double *a, int *lda, double *x, int *incx) {
+void F77_dtrmv(F77_INT *layout, char *uplow, char *transp, char *diagn,
+	      F77_INT *n, double *a, F77_INT *lda, double *x, F77_INT *incx) {
   double *A;
-  int i,j,LDA;
+  F77_INT i,j,LDA;
   CBLAS_TRANSPOSE trans;
   CBLAS_UPLO uplo;
   CBLAS_DIAG diag;
@@ -88,10 +88,10 @@ void F77_dtrmv(int *layout, char *uplow, char *transp, char *diagn,
   }
 }
 
-void F77_dtrsv(int *layout, char *uplow, char *transp, char *diagn,
-	       int *n, double *a, int *lda, double *x, int *incx ) {
+void F77_dtrsv(F77_INT *layout, char *uplow, char *transp, char *diagn,
+	       F77_INT *n, double *a, F77_INT *lda, double *x, F77_INT *incx ) {
   double *A;
-  int i,j,LDA;
+  F77_INT i,j,LDA;
   CBLAS_TRANSPOSE trans;
   CBLAS_UPLO uplo;
   CBLAS_DIAG diag;
@@ -112,11 +112,11 @@ void F77_dtrsv(int *layout, char *uplow, char *transp, char *diagn,
    else
      cblas_dtrsv(CblasColMajor, uplo, trans, diag, *n, a, *lda, x, *incx );
 }
-void F77_dsymv(int *layout, char *uplow, int *n, double *alpha, double *a,
-	      int *lda, double *x, int *incx, double *beta, double *y,
-	      int *incy) {
+void F77_dsymv(F77_INT *layout, char *uplow, F77_INT *n, double *alpha, double *a,
+	      F77_INT *lda, double *x, F77_INT *incx, double *beta, double *y,
+	      F77_INT *incy) {
   double *A;
-  int i,j,LDA;
+  F77_INT i,j,LDA;
   CBLAS_UPLO uplo;
 
   get_uplo_type(uplow,&uplo);
@@ -136,10 +136,10 @@ void F77_dsymv(int *layout, char *uplow, int *n, double *alpha, double *a,
 		 *beta, y, *incy );
 }
 
-void F77_dsyr(int *layout, char *uplow, int *n, double *alpha, double *x,
-	     int *incx, double *a, int *lda) {
+void F77_dsyr(F77_INT *layout, char *uplow, F77_INT *n, double *alpha, double *x,
+	     F77_INT *incx, double *a, F77_INT *lda) {
   double *A;
-  int i,j,LDA;
+  F77_INT i,j,LDA;
   CBLAS_UPLO uplo;
 
   get_uplo_type(uplow,&uplo);
@@ -160,10 +160,10 @@ void F77_dsyr(int *layout, char *uplow, int *n, double *alpha, double *x,
      cblas_dsyr(CblasColMajor, uplo, *n, *alpha, x, *incx, a, *lda);
 }
 
-void F77_dsyr2(int *layout, char *uplow, int *n, double *alpha, double *x,
-	     int *incx, double *y, int *incy, double *a, int *lda) {
+void F77_dsyr2(F77_INT *layout, char *uplow, F77_INT *n, double *alpha, double *x,
+	     F77_INT *incx, double *y, F77_INT *incy, double *a, F77_INT *lda) {
   double *A;
-  int i,j,LDA;
+  F77_INT i,j,LDA;
   CBLAS_UPLO uplo;
 
   get_uplo_type(uplow,&uplo);
@@ -184,12 +184,12 @@ void F77_dsyr2(int *layout, char *uplow, int *n, double *alpha, double *x,
      cblas_dsyr2(CblasColMajor, uplo, *n, *alpha, x, *incx, y, *incy, a, *lda);
 }
 
-void F77_dgbmv(int *layout, char *transp, int *m, int *n, int *kl, int *ku,
-	       double *alpha, double *a, int *lda, double *x, int *incx,
-	       double *beta, double *y, int *incy ) {
+void F77_dgbmv(F77_INT *layout, char *transp, F77_INT *m, F77_INT *n, F77_INT *kl, F77_INT *ku,
+	       double *alpha, double *a, F77_INT *lda, double *x, F77_INT *incx,
+	       double *beta, double *y, F77_INT *incy ) {
 
   double *A;
-  int i,irow,j,jcol,LDA;
+  F77_INT i,irow,j,jcol,LDA;
   CBLAS_TRANSPOSE trans;
 
   get_transpose_type(transp, &trans);
@@ -222,10 +222,10 @@ void F77_dgbmv(int *layout, char *transp, int *m, int *n, int *kl, int *ku,
 		  a, *lda, x, *incx, *beta, y, *incy );
 }
 
-void F77_dtbmv(int *layout, char *uplow, char *transp, char *diagn,
-	      int *n, int *k, double *a, int *lda, double *x, int *incx) {
+void F77_dtbmv(F77_INT *layout, char *uplow, char *transp, char *diagn,
+	      F77_INT *n, F77_INT *k, double *a, F77_INT *lda, double *x, F77_INT *incx) {
   double *A;
-  int irow, jcol, i, j, LDA;
+  F77_INT irow, jcol, i, j, LDA;
   CBLAS_TRANSPOSE trans;
   CBLAS_UPLO uplo;
   CBLAS_DIAG diag;
@@ -268,10 +268,10 @@ void F77_dtbmv(int *layout, char *uplow, char *transp, char *diagn,
      cblas_dtbmv(CblasColMajor, uplo, trans, diag, *n, *k, a, *lda, x, *incx);
 }
 
-void F77_dtbsv(int *layout, char *uplow, char *transp, char *diagn,
-	      int *n, int *k, double *a, int *lda, double *x, int *incx) {
+void F77_dtbsv(F77_INT *layout, char *uplow, char *transp, char *diagn,
+	      F77_INT *n, F77_INT *k, double *a, F77_INT *lda, double *x, F77_INT *incx) {
   double *A;
-  int irow, jcol, i, j, LDA;
+  F77_INT irow, jcol, i, j, LDA;
   CBLAS_TRANSPOSE trans;
   CBLAS_UPLO uplo;
   CBLAS_DIAG diag;
@@ -314,11 +314,11 @@ void F77_dtbsv(int *layout, char *uplow, char *transp, char *diagn,
      cblas_dtbsv(CblasColMajor, uplo, trans, diag, *n, *k, a, *lda, x, *incx);
 }
 
-void F77_dsbmv(int *layout, char *uplow, int *n, int *k, double *alpha,
-	      double *a, int *lda, double *x, int *incx, double *beta,
-	      double *y, int *incy) {
+void F77_dsbmv(F77_INT *layout, char *uplow, F77_INT *n, F77_INT *k, double *alpha,
+	      double *a, F77_INT *lda, double *x, F77_INT *incx, double *beta,
+	      double *y, F77_INT *incy) {
   double *A;
-  int i,j,irow,jcol,LDA;
+  F77_INT i,j,irow,jcol,LDA;
   CBLAS_UPLO uplo;
 
   get_uplo_type(uplow,&uplo);
@@ -359,10 +359,10 @@ void F77_dsbmv(int *layout, char *uplow, int *n, int *k, double *alpha,
 		 *beta, y, *incy );
 }
 
-void F77_dspmv(int *layout, char *uplow, int *n, double *alpha, double *ap,
-	      double *x, int *incx, double *beta, double *y, int *incy) {
+void F77_dspmv(F77_INT *layout, char *uplow, F77_INT *n, double *alpha, double *ap,
+	      double *x, F77_INT *incx, double *beta, double *y, F77_INT *incy) {
   double *A,*AP;
-  int i,j,k,LDA;
+  F77_INT i,j,k,LDA;
   CBLAS_UPLO uplo;
 
   get_uplo_type(uplow,&uplo);
@@ -397,10 +397,10 @@ void F77_dspmv(int *layout, char *uplow, int *n, double *alpha, double *ap,
 		  *incy );
 }
 
-void F77_dtpmv(int *layout, char *uplow, char *transp, char *diagn,
-	      int *n, double *ap, double *x, int *incx) {
+void F77_dtpmv(F77_INT *layout, char *uplow, char *transp, char *diagn,
+	      F77_INT *n, double *ap, double *x, F77_INT *incx) {
   double *A, *AP;
-  int i, j, k, LDA;
+  F77_INT i, j, k, LDA;
   CBLAS_TRANSPOSE trans;
   CBLAS_UPLO uplo;
   CBLAS_DIAG diag;
@@ -437,10 +437,10 @@ void F77_dtpmv(int *layout, char *uplow, char *transp, char *diagn,
      cblas_dtpmv( CblasColMajor, uplo, trans, diag, *n, ap, x, *incx );
 }
 
-void F77_dtpsv(int *layout, char *uplow, char *transp, char *diagn,
-	      int *n, double *ap, double *x, int *incx) {
+void F77_dtpsv(F77_INT *layout, char *uplow, char *transp, char *diagn,
+	      F77_INT *n, double *ap, double *x, F77_INT *incx) {
   double *A, *AP;
-  int i, j, k, LDA;
+  F77_INT i, j, k, LDA;
   CBLAS_TRANSPOSE trans;
   CBLAS_UPLO uplo;
   CBLAS_DIAG diag;
@@ -478,10 +478,10 @@ void F77_dtpsv(int *layout, char *uplow, char *transp, char *diagn,
      cblas_dtpsv( CblasColMajor, uplo, trans, diag, *n, ap, x, *incx );
 }
 
-void F77_dspr(int *layout, char *uplow, int *n, double *alpha, double *x,
-	     int *incx, double *ap ){
+void F77_dspr(F77_INT *layout, char *uplow, F77_INT *n, double *alpha, double *x,
+	     F77_INT *incx, double *ap ){
   double *A, *AP;
-  int i,j,k,LDA;
+  F77_INT i,j,k,LDA;
   CBLAS_UPLO uplo;
 
   get_uplo_type(uplow,&uplo);
@@ -530,10 +530,10 @@ void F77_dspr(int *layout, char *uplow, int *n, double *alpha, double *x,
      cblas_dspr( CblasColMajor, uplo, *n, *alpha, x, *incx, ap );
 }
 
-void F77_dspr2(int *layout, char *uplow, int *n, double *alpha, double *x,
-	     int *incx, double *y, int *incy, double *ap ){
+void F77_dspr2(F77_INT *layout, char *uplow, F77_INT *n, double *alpha, double *x,
+	     F77_INT *incx, double *y, F77_INT *incy, double *ap ){
   double *A, *AP;
-  int i,j,k,LDA;
+  F77_INT i,j,k,LDA;
   CBLAS_UPLO uplo;
 
   get_uplo_type(uplow,&uplo);

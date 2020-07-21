@@ -1,72 +1,72 @@
-.TH flexiblas_switch  3 "Mar. 2017" "M. Koehler" "The FlexiBLAS Library" 
+.TH flexiblas_switch  3 "Mar. 2017" "M. Koehler" "The FlexiBLAS Library"
 .SH NAME
-flexiblas_switch \- switch the currently used FlexiBLAS backend. 
+flexiblas_switch \- switch the currently used FlexiBLAS backend.
 
 .SH SYNOPSIS
 \fB#include <flexiblas/flexiblas_api.h>
 
 \fBint flexiblas_switch(int \fIid\fB );\fR
 
-Link with \fI-lflexiblas\fR. 
+Link with \fI-lflexiblas\fR.
 
 .SH DESCRIPTION
-\fBflexiblas_switch\fR switches the currently used BLAS backend. The \fIid\fR parameter 
+\fBflexiblas_switch\fR switches the currently used BLAS backend. The \fIid\fR parameter
 is the id of the previously loaded backend. This id value is returned by \fBflexiblas_load_backend\fR
-or \fBflexiblas_load_backend_library\fR. The function is not thread safe and switching the backend 
-inside a threaded environment can cause problems if there is a BLAS call running at the same time. 
+or \fBflexiblas_load_backend_library\fR. The function is not thread safe and switching the backend
+inside a threaded environment can cause problems if there is a BLAS call running at the same time.
 
 The special \fIid\fR 0 resets the backend to the default backend which is loaded at the initialization before
-the program starts. 
+the program starts.
 
 
 .SH RETURN VALUE
-On success, it returns zero. 
+On success, it returns zero.
 
 .SH ERRORS
 
-All negative return values are errors. This happens if the \fIid\fR is out of range. 
+All negative return values are errors. This happens if the \fIid\fR is out of range.
 
-.SH EXAMPLES 
-The following example loads the NETLIB BLAS backend and switches to it. 
-.SS Program Source 
-\& 
-.nf 
-#include <stdio.h> 
-#include <flexiblas/flexiblas_api.h> 
+.SH EXAMPLES
+The following example loads the NETLIB BLAS backend and switches to it.
+.SS Program Source
+\&
+.nf
+#include <stdio.h>
+#include <flexiblas/flexiblas_api.h>
 
 int main ( int argc, char **argv ) {
-	int netlib_id; 
+	int netlib_id;
 
-	netlib_id = flexiblas_load_backend("NETLIB"); 
+	netlib_id = flexiblas_load_backend("NETLIB");
 	if ( netlib_id < 0 ) {
-		fprintf(stderr, "Failed to load the NETLIB backend.\\n"); 
-		return -1; 
+		fprintf(stderr, "Failed to load the NETLIB backend.\\n");
+		return -1;
 	}
-	/* Switch to the NETLIB backend */ 
-	flexiblas_switch(netlib_id); 
+	/* Switch to the NETLIB backend */
+	flexiblas_switch(netlib_id);
 
-	/* DGEMM performed with the NETLIB backend. */ 
-	dgemm_(.....); 
+	/* DGEMM performed with the NETLIB backend. */
+	dgemm_(.....);
 
-	return 0; 
+	return 0;
 }
 .fi
 
-.SH SEE ALSO 
-.BR flexiblas_load_backend_library (3), 
-.BR flexiblas_load_backend (3) 
-	
+.SH SEE ALSO
+.BR flexiblas_load_backend_library (3),
+.BR flexiblas_load_backend (3)
+
 .SH REPORTING BUGS
-The current information about the developers and reporting bugs can be found on the FlexiBLAS homepage. 
+The current information about the developers and reporting bugs can be found on the FlexiBLAS homepage.
 
 FlexiBLAS Homepage: <http://www.mpi-magdeburg.mpg.de/projects/flexiblas>
 
-.SH AUTHORS 
- Martin Koehler, Jens Saak 
+.SH AUTHORS
+ Martin Koehler, Jens Saak
 
 .SH COPYRIGHT
-Copyright (C) 2013-2019 Martin Koehler
+Copyright (C) 2013-2020 Martin Koehler
 .SH LICENSE
-License GPLv2+: GNU GPL version 2 or later <http://gnu.org/licenses/gpl.html>.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
 This is free software: you are free to change and redistribute it.  There is NO WARRANTY, to the extent permitted by law.
 

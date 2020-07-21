@@ -1,170 +1,237 @@
-/* $Id: flexiblas.h 3741 2013-10-01 12:54:54Z komart $ */
 /*
- Copyright (C) 2013  Martin Köhler, koehlerm@mpi-magdeburg.mpg.de
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * Linking FlexiBLAS statically or dynamically with other modules is making a
+ * combined work based on FlexiBLAS. Thus, the terms and conditions of the GNU
+ * General Public License cover the whole combination.
+ *
+ * As a special exception, the copyright holders of FlexiBLAS give you permission
+ * to combine FlexiBLAS program with free software programs or libraries that are
+ * released under the GNU LGPL and with independent modules that communicate with
+ * FlexiBLAS solely through the BLAS/LAPACK interface as provided by the
+ * BLAS/LAPACK reference implementation. You may copy and distribute such a system
+ * following the terms of the GNU GPL for FlexiBLAS and the licenses of the other
+ * code concerned, provided that you include the source code of that other code
+ * when and as the GNU GPL requires distribution of source code and provided that
+ * you do not modify the BLAS/LAPACK interface.
+ *
+ * Note that people who make modified versions of FlexiBLAS are not obligated to
+ * grant this special exception for their modified versions; it is their choice
+ * whether to do so. The GNU General Public License gives permission to release a
+ * modified version without this exception; this exception also makes it possible
+ * to release a modified version which carries forward this exception. If you
+ * modify the BLAS/LAPACK interface, this exception does not apply to your
+ * modified version of FlexiBLAS, and you must remove this exception when you
+ * distribute your modified version.
+ *
+ * This exception is an additional permission under section 7 of the GNU General
+ * Public License, version 3 (“GPLv3”)
+ *
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright (C) Martin Koehler, 2013-2020
+ */
 
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+
 #include "cblas.h"
 #include "cblas_f77.h"
 #include "../flexiblas.h"
+#include "cblas_flexiblas.h"
+
+static TLS_STORE uint8_t hook_cblas_ztpsv_pos = 0;
 
 void cblas_ztpsv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-                 const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
-                 const int N, const void  *Ap, void  *X, const int incX)
+        const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
+        const int N, const void  *Ap, void  *X, const int incX)
 {
-   char TA;
-   char UL;
-   char DI;
-   #define F77_TA &TA
-   #define F77_UL &UL
-   #define F77_DI &DI
+    void (*fn)
+            (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
+             const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
+             const int N, const void  *Ap, void  *X, const int incX);
+    CBLAS_BACKEND_INIT();
+    CBLAS_HOOK_SELECT(ztpsv);
+    fn(layout,Uplo,TransA,Diag,N,Ap,X,incX);
+
+}
+
+void flexiblas_chain_cblas_ztpsv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
+        const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
+        const int N, const void  *Ap, void  *X, const int incX)
+{
+    void (*fn)
+            (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
+             const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
+             const int N, const void  *Ap, void  *X, const int incX);
+    CBLAS_HOOK_ADVANCE(ztpsv);
+
+    fn(layout,Uplo,TransA,Diag,N,Ap,X,incX);
+
+}
+
+void flexiblas_real_cblas_ztpsv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
+        const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
+        const int N, const void  *Ap, void  *X, const int incX)
+{
+    char TA;
+    char UL;
+    char DI;
+#define F77_TA &TA
+#define F77_UL &UL
+#define F77_DI &DI
 #ifdef F77_INT
-   F77_INT F77_N=N, F77_incX=incX;
+    F77_INT F77_N=N, F77_incX=incX;
 #else
-   #define F77_N N
-   #define F77_incX incX
+#define F77_N N
+#define F77_incX incX
 #endif
-   current_backend->blas.ztpsv.calls[POS_CBLAS] ++;
+    if ( current_backend->blas.ztpsv.cblas_function != NULL ) {
+        void (*fn)
+            (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
+             const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
+             const int N, const void  *Ap, void  *X, const int incX)
+            = current_backend->blas.ztpsv.cblas_function;
+        fn(layout,Uplo,TransA,Diag,N,Ap,X,incX);
+    }else {
 
-   if ( current_backend->post_init != 0 ) {
-   	__flexiblas_backend_init(current_backend);
-   	current_backend->post_init = 0;
-   }
-   if ( current_backend->blas.ztpsv.call_cblas != NULL ) {
-	   void (*fn)
-		 (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-                 const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
-                 const int N, const void  *Ap, void  *X, const int incX)
-		   = current_backend->blas.ztpsv.call_cblas;
-	fn(layout,Uplo,TransA,Diag,N,Ap,X,incX);
-}else {
+        int n, i=0, tincX;
+        double *st=0, *x=(double*)X;
+        extern int CBLAS_CallFromC;
+        extern int RowMajorStrg;
+        RowMajorStrg = 0;
 
+        CBLAS_CallFromC = 1;
+        if (layout == CblasColMajor)
+        {
+            if (Uplo == CblasUpper) UL = 'U';
+            else if (Uplo == CblasLower) UL = 'L';
+            else
+            {
+                cblas_xerbla(2, "cblas_ztpsv","Illegal Uplo setting, %d\n", Uplo);
+                CBLAS_CallFromC = 0;
+                RowMajorStrg = 0;
+                return;
+            }
+            if (TransA == CblasNoTrans) TA = 'N';
+            else if (TransA == CblasTrans) TA = 'T';
+            else if (TransA == CblasConjTrans) TA = 'C';
+            else
+            {
+                cblas_xerbla(3, "cblas_ztpsv","Illegal TransA setting, %d\n", TransA);
+                CBLAS_CallFromC = 0;
+                RowMajorStrg = 0;
+                return;
+            }
+            if (Diag == CblasUnit) DI = 'U';
+            else if (Diag == CblasNonUnit) DI = 'N';
+            else
+            {
+                cblas_xerbla(4, "cblas_ztpsv","Illegal Diag setting, %d\n", Diag);
+                CBLAS_CallFromC = 0;
+                RowMajorStrg = 0;
+                return;
+            }
+#ifdef F77_CHAR
+            F77_UL = C2F_CHAR(&UL);
+            F77_TA = C2F_CHAR(&TA);
+            F77_DI = C2F_CHAR(&DI);
+#endif
+            FC_GLOBAL(ztpsv,ZTPSV)( F77_UL, F77_TA, F77_DI, &F77_N, Ap, X, &F77_incX);
+        }
+        else if (layout == CblasRowMajor)
+        {
+            RowMajorStrg = 1;
+            if (Uplo == CblasUpper) UL = 'L';
+            else if (Uplo == CblasLower) UL = 'U';
+            else
+            {
+                cblas_xerbla(2, "cblas_ztpsv","Illegal Uplo setting, %d\n", Uplo);
+                CBLAS_CallFromC = 0;
+                RowMajorStrg = 0;
+                return;
+            }
 
-	   int n, i=0, tincX;
-	   double *st=0, *x=(double*)X;
-	   extern int CBLAS_CallFromC;
-	   extern int RowMajorStrg;
-	   RowMajorStrg = 0;
+            if (TransA == CblasNoTrans) TA = 'T';
+            else if (TransA == CblasTrans) TA = 'N';
+            else if (TransA == CblasConjTrans)
+            {
+                TA = 'N';
+                if ( N > 0)
+                {
+                    if ( incX > 0 )
+                        tincX = incX;
+                    else
+                        tincX = -incX;
 
-	   CBLAS_CallFromC = 1;
-	   if (layout == CblasColMajor)
-	   {
-	      if (Uplo == CblasUpper) UL = 'U';
-	      else if (Uplo == CblasLower) UL = 'L';
-	      else
-	      {
-		 cblas_xerbla(2, "cblas_ztpsv","Illegal Uplo setting, %d\n", Uplo);
-		 CBLAS_CallFromC = 0;
-		 RowMajorStrg = 0;
-		 return;
-	      }
-	      if (TransA == CblasNoTrans) TA = 'N';
-	      else if (TransA == CblasTrans) TA = 'T';
-	      else if (TransA == CblasConjTrans) TA = 'C';
-	      else
-	      {
-		 cblas_xerbla(3, "cblas_ztpsv","Illegal TransA setting, %d\n", TransA);
-		 CBLAS_CallFromC = 0;
-		 RowMajorStrg = 0;
-		 return;
-	      }
-	      if (Diag == CblasUnit) DI = 'U';
-	      else if (Diag == CblasNonUnit) DI = 'N';
-	      else
-	      {
-		 cblas_xerbla(4, "cblas_ztpsv","Illegal Diag setting, %d\n", Diag);
-		 CBLAS_CallFromC = 0;
-		 RowMajorStrg = 0;
-		 return;
-	      }
-	      FC_GLOBAL(ztpsv,ZTPSV)( F77_UL, F77_TA, F77_DI, &F77_N, Ap, X, &F77_incX);
-	   }
-	   else if (layout == CblasRowMajor)
-	   {
-	      RowMajorStrg = 1;
-	      if (Uplo == CblasUpper) UL = 'L';
-	      else if (Uplo == CblasLower) UL = 'U';
-	      else
-	      {
-		 cblas_xerbla(2, "cblas_ztpsv","Illegal Uplo setting, %d\n", Uplo);
-		 CBLAS_CallFromC = 0;
-		 RowMajorStrg = 0;
-		 return;
-	      }
+                    n = N*2*(tincX);
 
-	      if (TransA == CblasNoTrans) TA = 'T';
-	      else if (TransA == CblasTrans) TA = 'N';
-	      else if (TransA == CblasConjTrans)
-	      {
-		 TA = 'N';
-		 if ( N > 0)
-		 {
-		    if ( incX > 0 )
-		       tincX = incX;
-		    else
-		       tincX = -incX;
+                    x++;
 
-		    n = N*2*(tincX);
+                    st=x+n;
 
-		    x++;
+                    i = tincX << 1;
+                    do
+                    {
+                        *x = -(*x);
+                        x+=i;
+                    }
+                    while (x != st);
+                    x -= n;
+                }
+            }
+            else
+            {
+                cblas_xerbla(3, "cblas_ztpsv","Illegal TransA setting, %d\n", TransA);
+                CBLAS_CallFromC = 0;
+                RowMajorStrg = 0;
+                return;
+            }
 
-		    st=x+n;
+            if (Diag == CblasUnit) DI = 'U';
+            else if (Diag == CblasNonUnit) DI = 'N';
+            else
+            {
+                cblas_xerbla(4, "cblas_ztpsv","Illegal Diag setting, %d\n", Diag);
+                CBLAS_CallFromC = 0;
+                RowMajorStrg = 0;
+                return;
+            }
+#ifdef F77_CHAR
+            F77_UL = C2F_CHAR(&UL);
+            F77_TA = C2F_CHAR(&TA);
+            F77_DI = C2F_CHAR(&DI);
+#endif
 
-		    i = tincX << 1;
-		    do
-		    {
-		       *x = -(*x);
-		       x+=i;
-		    }
-		    while (x != st);
-		    x -= n;
-		 }
-	      }
-	      else
-	      {
-		 cblas_xerbla(3, "cblas_ztpsv","Illegal TransA setting, %d\n", TransA);
-		 CBLAS_CallFromC = 0;
-		 RowMajorStrg = 0;
-		 return;
-	      }
+            FC_GLOBAL(ztpsv,ZTPSV)( F77_UL, F77_TA, F77_DI, &F77_N, Ap, X,&F77_incX);
 
-	      if (Diag == CblasUnit) DI = 'U';
-	      else if (Diag == CblasNonUnit) DI = 'N';
-	      else
-	      {
-		 cblas_xerbla(4, "cblas_ztpsv","Illegal Diag setting, %d\n", Diag);
-		 CBLAS_CallFromC = 0;
-		 RowMajorStrg = 0;
-		 return;
-	      }
-	      FC_GLOBAL(ztpsv,ZTPSV)( F77_UL, F77_TA, F77_DI, &F77_N, Ap, X,&F77_incX);
+            if (TransA == CblasConjTrans)
+            {
+                if (N > 0)
+                {
+                    do
+                    {
+                        *x = -(*x);
+                        x += i;
+                    }
+                    while (x != st);
+                }
+            }
+        }
+        else cblas_xerbla(1, "cblas_ztpsv", "Illegal layout setting, %d\n", layout);
+        CBLAS_CallFromC = 0;
+        RowMajorStrg = 0;
 
-	      if (TransA == CblasConjTrans)
-	      {
-		 if (N > 0)
-		 {
-		    do
-		    {
-		       *x = -(*x);
-		       x += i;
-		    }
-		    while (x != st);
-		 }
-	      }
-	   }
-	   else cblas_xerbla(1, "cblas_ztpsv", "Illegal layout setting, %d\n", layout);
-	   CBLAS_CallFromC = 0;
-	   RowMajorStrg = 0;
-   }
-   return;
+    }
+    return;
 }

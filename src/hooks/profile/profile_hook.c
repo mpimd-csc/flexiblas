@@ -1,7 +1,7 @@
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -9,25 +9,52 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
+ * Linking FlexiBLAS statically or dynamically with other modules is making a
+ * combined work based on FlexiBLAS. Thus, the terms and conditions of the GNU
+ * General Public License cover the whole combination.
+ *
+ * As a special exception, the copyright holders of FlexiBLAS give you permission
+ * to combine FlexiBLAS program with free software programs or libraries that are
+ * released under the GNU LGPL and with independent modules that communicate with
+ * FlexiBLAS solely through the BLAS/LAPACK interface as provided by the
+ * BLAS/LAPACK reference implementation. You may copy and distribute such a system
+ * following the terms of the GNU GPL for FlexiBLAS and the licenses of the other
+ * code concerned, provided that you include the source code of that other code
+ * when and as the GNU GPL requires distribution of source code and provided that
+ * you do not modify the BLAS/LAPACK interface.
+ *
+ * Note that people who make modified versions of FlexiBLAS are not obligated to
+ * grant this special exception for their modified versions; it is their choice
+ * whether to do so. The GNU General Public License gives permission to release a
+ * modified version without this exception; this exception also makes it possible
+ * to release a modified version which carries forward this exception. If you
+ * modify the BLAS/LAPACK interface, this exception does not apply to your
+ * modified version of FlexiBLAS, and you must remove this exception when you
+ * distribute your modified version.
+ *
+ * This exception is an additional permission under section 7 of the GNU General
+ * Public License, version 3 (“GPLv3”)
+ *
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
  * Copyright (C) Martin Koehler, 2013-2020
  */
 
+
+
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "cscutils/table.h"
 
-
-#include "flexiblas.h"
-#include "flexiblas_mgmt.h"
 #include "flexiblas_backend.h"
 #include "flexiblas_real_calls.h"
 
 #include "profile_hook.h"
 
+int __profile_verbose = 0;
 
 FLEXIBLAS_HOOK_OPTIONS(
     FLEXIBLAS_HOOK_OPTION("output", "Output file for profiling.", FLEXIBLAS_OPTIONS_STRING, "flexiblas_profile.txt"),
@@ -49,17 +76,18 @@ static char *profile_file;
 
 FLEXIBLAS_HOOK_INIT_FUNCTION () {
     flexiblas_mgmt_t *mgmt;
+    __profile_verbose = flexiblas_verbosity();
 
     data = (blas_calls_t *) malloc(sizeof(blas_calls_t) * (1));
     memset(data, '\0', sizeof(blas_calls_t));
     if (!data) {
-        DPRINTFP_ERROR(0,"flexiblas-profile", "Failed to allocate memory for profiling data. Abort\n");
+        /* DPRINTFP_ERROR(0,"flexiblas-profile", "Failed to allocate memory for profiling data. Abort\n"); */
         abort();
     }
 
     mgmt = flexiblas_mgmt();
     if ( mgmt == NULL ) {
-        DPRINTFP_ERROR(0, "flexiblas-profile", "Failed to load FlexiBLAS runtime configuration. Abort.\n");
+        /* DPRINTFP_ERROR(0, "flexiblas-profile", "Failed to load FlexiBLAS runtime configuration. Abort.\n"); */
         abort();
     }
 
@@ -69,7 +97,7 @@ FLEXIBLAS_HOOK_INIT_FUNCTION () {
         char *v = FLEXIBLAS_HOOK_GET_OPTION_STRING(profile, "output");
         profile_file= strdup(v);
     }
-    DPRINTFP(1, "flexiblas-profile", "Use %s for output.\n", profile_file);
+    /* DPRINTFP(1, "flexiblas-profile", "Use %s for output.\n", profile_file); */
 }
 
 
@@ -274,7 +302,7 @@ FLEXIBLAS_HOOK_EXIT_FUNCTION () {
     } else {
         FILE * fp = fopen(profile_file, "w");
         if ( !fp ) {
-            DPRINTFP_ERROR(0, "flexiblas-profile", "failed to open %s\n", profile_file);
+            /* DPRINTFP_ERROR(0, "flexiblas-profile", "failed to open %s\n", profile_file); */
             goto end;
         }
         csc_table_print_ascii(fp, tab, "    ");

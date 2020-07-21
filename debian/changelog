@@ -1,11 +1,23 @@
-flexiblas (3.0.0) UNRELEASED; urgency=medium
+flexiblas (3.0.1) unstable; urgency=medium
+
+  * Close #97: Hooks are loaded up to LAPACK 3.9.0
+  * Close #92: CBLAS works with 64bit integer values on big-endian
+  * Close #94: LSAMEN with implicit casting returns wrong values on big-endian
+             systems.
+  * Close #95: Failed looking up symbols from hooks when used from Python
+  * Close #91: Manpages still reference GPLv2+
+
+
+ -- Martin Köhler <koehlerm@mpi-magdeburg.mpg.de>  Wed, 01 Jul 2020 09:05:35 +0200
+
+flexiblas (3.0.0) focal; urgency=medium
 
   * Rewrite of the hook System
   * 32 and 64 bit integer builds can coexist
   * detection of the BLIS library
 
 
- -- Martin Köhler <koehlerm@mpi-magdeburg.mpg.de>  Tue, 16 Jun 2020 14:33:39 +0200
+ -- Martin Köhler <koehlerm@mpi-magdeburg.mpg.de>  Wed, 01 Jul 2020 09:05:23 +0200
 
 flexiblas (2.0.0) unstable; urgency=medium
 

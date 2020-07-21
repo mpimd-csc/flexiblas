@@ -488,7 +488,6 @@ SET(LAPACK_SRC
      lapack_interface/wrapper/dlals0.c
      lapack_interface/wrapper/dlalsa.c
      lapack_interface/wrapper/dlalsd.c
-     lapack_interface/wrapper/dlamc3.c
      lapack_interface/wrapper/dlamch.c
      lapack_interface/wrapper/dlamrg.c
      lapack_interface/wrapper/dlaneg.c
@@ -908,7 +907,6 @@ SET(LAPACK_SRC
      lapack_interface/wrapper/slals0.c
      lapack_interface/wrapper/slalsa.c
      lapack_interface/wrapper/slalsd.c
-     lapack_interface/wrapper/slamc3.c
      lapack_interface/wrapper/slamch.c
      lapack_interface/wrapper/slamrg.c
      lapack_interface/wrapper/slaneg.c

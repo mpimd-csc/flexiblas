@@ -1,3 +1,12 @@
+3.0.1 (July 17th, 2020)
+------------------
+- Close #97; CBLAS functions missed hook support
+- Close #92: CBLAS works with 64bit integer values on big-endian
+- Close #94: LSAMEN with implicit casting returns wrong values on big-endian
+             systems.
+- Close #95: Failed looking up symbols from hooks when used from Python
+- Close #91: Manpages still reference GPLv2+
+
 3.0.0 (June, 2020)
 ------------------
 - Remove useless NETLIB64 config option
