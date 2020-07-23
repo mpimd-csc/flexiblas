@@ -1,7 +1,7 @@
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -39,10 +39,8 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2017
+ * Copyright (C) Martin Koehler, 2015-2020
  */
- /* This file it automatically generated. Please do not edit. */
- /* Generated: Fri Jul 10 16:25:31 2020 */
         
 #include <stdio.h>
 #include <stdlib.h>

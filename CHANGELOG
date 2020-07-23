@@ -1,3 +1,8 @@
+3.0.2 (July 23rd, 2020)
+-----------------------
+- Close #99: Auto generation text removed.
+- Close #100: Code generators included.
+
 3.0.1 (July 17th, 2020)
 ------------------
 - Close #97; CBLAS functions missed hook support

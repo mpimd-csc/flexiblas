@@ -1,4 +1,10 @@
-flexiblas (3.0.1) unstable; urgency=medium
+flexiblas (3.0.2) focal; urgency=medium
+
+  * Close #99, #100: Include codegens in source
+
+ -- Martin Köhler <koehlerm@mpi-magdeburg.mpg.de>  Thu, 23 Jul 2020 09:58:03 +0200
+
+flexiblas (3.0.1) focal; urgency=medium
 
   * Close #97: Hooks are loaded up to LAPACK 3.9.0
   * Close #92: CBLAS works with 64bit integer values on big-endian
