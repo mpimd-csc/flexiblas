@@ -2462,6 +2462,10 @@ void flexiblas_real_dlalsd_(void* uplo, void* smlsiz, void* n, void* nrhs, void*
 void flexiblas_real_dlalsd(void* uplo, void* smlsiz, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* rcond, void* rank_bn, void* work, void* iwork, void* info);
 void flexiblas_chain_dlalsd_(void* uplo, void* smlsiz, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* rcond, void* rank_bn, void* work, void* iwork, void* info);
 void flexiblas_chain_dlalsd(void* uplo, void* smlsiz, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* rcond, void* rank_bn, void* work, void* iwork, void* info);
+double flexiblas_real_dlamc3_(void* a, void* b);
+double flexiblas_real_dlamc3(void* a, void* b);
+double flexiblas_chain_dlamc3_(void* a, void* b);
+double flexiblas_chain_dlamc3(void* a, void* b);
 double flexiblas_real_dlamch_(void* cmach);
 double flexiblas_real_dlamch(void* cmach);
 double flexiblas_chain_dlamch_(void* cmach);
@@ -4434,6 +4438,10 @@ void flexiblas_real_slalsd_(void* uplo, void* smlsiz, void* n, void* nrhs, void*
 void flexiblas_real_slalsd(void* uplo, void* smlsiz, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* rcond, void* rank_bn, void* work, void* iwork, void* info);
 void flexiblas_chain_slalsd_(void* uplo, void* smlsiz, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* rcond, void* rank_bn, void* work, void* iwork, void* info);
 void flexiblas_chain_slalsd(void* uplo, void* smlsiz, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* rcond, void* rank_bn, void* work, void* iwork, void* info);
+float flexiblas_real_slamc3_(void* a, void* b);
+float flexiblas_real_slamc3(void* a, void* b);
+float flexiblas_chain_slamc3_(void* a, void* b);
+float flexiblas_chain_slamc3(void* a, void* b);
 float flexiblas_real_slamch_(void* cmach);
 float flexiblas_real_slamch(void* cmach);
 float flexiblas_chain_slamch_(void* cmach);

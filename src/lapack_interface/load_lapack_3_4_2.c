@@ -550,6 +550,7 @@ HIDDEN int __flexiblas_load_flapack ( flexiblas_backend_t *handle, int *loaded, 
 	LOAD_FLAPACK(handle,lapack.dlals0,dlals0);
 	LOAD_FLAPACK(handle,lapack.dlalsa,dlalsa);
 	LOAD_FLAPACK(handle,lapack.dlalsd,dlalsd);
+	LOAD_FLAPACK(handle,lapack.dlamc3,dlamc3);
 	LOAD_FLAPACK(handle,lapack.dlamch,dlamch);
 	LOAD_FLAPACK(handle,lapack.dlamrg,dlamrg);
 	LOAD_FLAPACK(handle,lapack.dlaneg,dlaneg);
@@ -969,6 +970,7 @@ HIDDEN int __flexiblas_load_flapack ( flexiblas_backend_t *handle, int *loaded, 
 	LOAD_FLAPACK(handle,lapack.slals0,slals0);
 	LOAD_FLAPACK(handle,lapack.slalsa,slalsa);
 	LOAD_FLAPACK(handle,lapack.slalsd,slalsd);
+	LOAD_FLAPACK(handle,lapack.slamc3,slamc3);
 	LOAD_FLAPACK(handle,lapack.slamch,slamch);
 	LOAD_FLAPACK(handle,lapack.slamrg,slamrg);
 	LOAD_FLAPACK(handle,lapack.slaneg,slaneg);

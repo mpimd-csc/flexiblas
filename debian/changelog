@@ -1,3 +1,9 @@
+flexiblas (3.0.3) focal; urgency=medium
+
+  * Close #101: DLAMC3 and SLAMC3 missing
+
+ -- Martin Koehler <koehlerm@.mpi-magdeburg.mpg.de>  Fri, 28 Aug 2020 14:35:54 +0200
+
 flexiblas (3.0.2) focal; urgency=medium
 
   * Close #99, #100: Include codegens in source

@@ -602,6 +602,7 @@ extern "C" {
 #define DLALS0   dlals0_ 
 #define DLALSA   dlalsa_ 
 #define DLALSD   dlalsd_ 
+#define DLAMC3   dlamc3_ 
 #define DLAMCH   dlamch_ 
 #define DLAMRG   dlamrg_ 
 #define DLAMSWLQ dlamswlq_
@@ -1086,6 +1087,7 @@ extern "C" {
 #define SLALS0   slals0_ 
 #define SLALSA   slalsa_ 
 #define SLALSD   slalsd_ 
+#define SLAMC3   slamc3_ 
 #define SLAMCH   slamch_ 
 #define SLAMRG   slamrg_ 
 #define SLAMSWLQ slamswlq_
@@ -3031,6 +3033,8 @@ void FC_GLOBAL(dlalsa,DLALSA)(blasint* icompq, blasint* smlsiz, blasint* n, blas
 
 void FC_GLOBAL(dlalsd,DLALSD)(char* uplo, blasint* smlsiz, blasint* n, blasint* nrhs, double* d, double* e, double* b, blasint* ldb, double* rcond, blasint* rank_bn, double* work, blasint* iwork, blasint* info);
 
+double FC_GLOBAL(dlamc3,DLAMC3)(double* a, double* b);
+
 double FC_GLOBAL(dlamch,DLAMCH)(char* cmach);
 
 void FC_GLOBAL(dlamrg,DLAMRG)(blasint* n1, blasint* n2, double* a, blasint* dtrd1, blasint* dtrd2, blasint* index_bn);
@@ -3998,6 +4002,8 @@ void FC_GLOBAL(slals0,SLALS0)(blasint* icompq, blasint* nl, blasint* nr, blasint
 void FC_GLOBAL(slalsa,SLALSA)(blasint* icompq, blasint* smlsiz, blasint* n, blasint* nrhs, float* b, blasint* ldb, float* bx, blasint* ldbx, float* u, blasint* ldu, float* vt, blasint* k, float* difl, float* difr, float* z, float* poles, blasint* givptr, blasint* givcol, blasint* ldgcol, blasint* perm, float* givnum, float* c, float* s, float* work, blasint* iwork, blasint* info);
 
 void FC_GLOBAL(slalsd,SLALSD)(char* uplo, blasint* smlsiz, blasint* n, blasint* nrhs, float* d, float* e, float* b, blasint* ldb, float* rcond, blasint* rank_bn, float* work, blasint* iwork, blasint* info);
+
+float FC_GLOBAL(slamc3,SLAMC3)(float* a, float* b);
 
 float FC_GLOBAL(slamch,SLAMCH)(char* cmach);
 
