@@ -29,8 +29,8 @@ extern "C" {
 
 #define HDF5_GET_ATTR_ULONG(root,dset_name,attrname,dest) do { \
     unsigned long _tmp; herr_t _err;  \
-    _err = H5LTget_attribute_ulong(root, dset_name, attrname, &_tmp); \
-    if ( _err < 0 ) {\
+    _err = csc_hdf5_attribute_read_ulong(root, dset_name, attrname, &_tmp); \
+    if ( _err != 0 ) {\
         csc_error_message("Cannot get the attribute %s from the data set.\n", attrname); \
         return -1; \
     }\

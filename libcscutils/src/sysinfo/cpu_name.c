@@ -67,7 +67,7 @@ char *csc_sysinfo_cpuname()
     fclose(fp);
     return NULL;
 #else
-    return strup("unknown");
+    return strdup("unknown");
 #endif
 }
 

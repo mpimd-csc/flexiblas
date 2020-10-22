@@ -1,3 +1,13 @@
+flexiblas (3.0.4) focal; urgency=medium
+
+  * Closes #107: DCABS1 and SCABS1 missing
+  * Closes #105: Could not compile on FreeBSD
+  * Closes #104: Missing prefix in some outputs of xerbla.c
+  * Closes #103: GH #7 - LAPACK decompositions do not run in parallel
+  * Closes #102: GH #6 - Wrong return type.
+
+ -- Martin Koehler <koehlerm@.mpi-magdeburg.mpg.de>  Thu, 22 Oct 2020 10:52:54 +0200
+
 flexiblas (3.0.3) focal; urgency=medium
 
   * Close #101: DLAMC3 and SLAMC3 missing

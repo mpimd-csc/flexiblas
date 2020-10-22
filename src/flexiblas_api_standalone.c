@@ -371,7 +371,7 @@ int flexiblas_current_backend(char *name, size_t len)
 /* Set number of threads  */
 void flexiblas_set_num_threads(int num)
 {
-    int (*fnptr) (int);
+    void (*fnptr) (int);
     void *ptr_next    = dlsym(RTLD_NEXT, "flexiblas_set_num_threads");
     void *ptr_default = dlsym(RTLD_DEFAULT, "flexiblas_set_num_threads");
     void *ptr_self = &flexiblas_set_num_threads;

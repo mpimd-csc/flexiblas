@@ -52,7 +52,13 @@ int csc_hdf5_group_exist(hid_t base, const char *path)
             goto end;
         }
 
+        #if H5_VERSION_GE(1,12,0)
+        err = H5Oget_info_by_name3(last, pch, &info, H5O_INFO_ALL,H5P_DEFAULT);
+        #elif H5_VERSION_GE(1,10,3)
+        err = H5Oget_info_by_name2(last, pch, &info, H5O_INFO_ALL,H5P_DEFAULT);
+        #else
         err = H5Oget_info_by_name(last, pch, &info, H5P_DEFAULT);
+        #endif
         if ( err < 0 ) {
             ret = 0;
             goto end;

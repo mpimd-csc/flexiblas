@@ -1,7 +1,7 @@
 name: FlexiBLAS - A BLAS and LAPACK wrapper library with runtime exchangable backends
 shortname: flexiblas
-version: 3.0.3
-release-date: 2020-08-28
+version: 3.0.4
+release-date: 2020-10-21
 id:  10.5281/zenodo.3949804
 id-type: doi
 author: Martin Köhler, Jens Saak

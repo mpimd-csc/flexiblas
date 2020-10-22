@@ -193,6 +193,7 @@ int main(int argc, char **argv)
                 case '\\':
                     fputc('\\',ofp);
                     fputc('\\',ofp);
+                    break;
                 case '"':
                     fputc('\\', ofp);
                     fputc('"', ofp);

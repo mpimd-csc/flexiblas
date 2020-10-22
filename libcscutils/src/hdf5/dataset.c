@@ -81,7 +81,15 @@ int csc_hdf5_dataset_exist(hid_t root, const char *dset_name)
 
     /* Remove existing */
     if ( H5Lexists(gid, tok, H5P_DEFAULT) > 0 ) {
+
+        #if H5_VERSION_GE(1,12,0)
+        err = H5Oget_info_by_name3(gid, tok, &info, H5O_INFO_ALL, H5P_DEFAULT);
+        #elif H5_VERSION_GE(1,10,3)
+        err = H5Oget_info_by_name2(gid, tok, &info, H5O_INFO_ALL, H5P_DEFAULT);
+        #else
         err = H5Oget_info_by_name(gid, tok, &info, H5P_DEFAULT);
+        #endif
+
         if ( err < 0 ) {
             ret = 0;
             goto end;

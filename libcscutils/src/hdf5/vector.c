@@ -65,7 +65,7 @@ int csc_hdf5_vector_write(csc_hdf5_field_t field, hid_t root, const char *dset_n
     }
 
     tmp = len;
-    err = H5LTset_attribute_ulong(root, dset_name, "len", &tmp, 1);
+    err = csc_hdf5_attribute_write_ulong(root, dset_name, "len", tmp);
     if ( err < 0 ) {
         csc_error_message("Failed to set attribute rows.\n");
         H5Gclose(vg);
@@ -138,7 +138,7 @@ int csc_hdf5_vector_read(csc_hdf5_field_t field, hid_t root, const char *dset_na
     hid_t did;
     hid_t tid, tid_out;
     ssize_t elemsize, elemsize_out;
-    ssize_t len;
+    ssize_t len = 0;
     void *tmp;
 
     if (! csc_hdf5_is_vector(root, dset_name)){
@@ -220,7 +220,8 @@ int csc_hdf5_vector_read(csc_hdf5_field_t field, hid_t root, const char *dset_na
         free(tmp);
         err = 0;
     } else if ( field == CSC_HDF5_REAL ) {
-        err = H5LTread_dataset(vg, "values", H5T_NATIVE_DOUBLE, vector);
+
+        err = csc_hdf5_read_double_vector(vg, "values", len, vector, NULL);
 
     } else if ( field == CSC_HDF5_COMPLEX ) {
         hid_t complex_type = csc_hdf5_complex_type(root);
@@ -230,7 +231,8 @@ int csc_hdf5_vector_read(csc_hdf5_field_t field, hid_t root, const char *dset_na
             H5Gclose(vg);
             return -1;
         }
-        err = H5LTread_dataset(vg, "values", complex_type, vector);
+
+        err = csc_hdf5_read_double_complex_vector(vg, "values", len, vector, NULL);
         H5Tclose(complex_type);
 
     }

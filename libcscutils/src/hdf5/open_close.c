@@ -25,7 +25,6 @@
 #include <time.h>
 #include <sys/time.h>
 
-#define H5_NO_DEPRECATED_SYMBOLS
 #include <hdf5.h>
 #include <hdf5_hl.h>
 
@@ -143,7 +142,6 @@ hid_t csc_hdf5_open2(const char *filename, const char *mode, void *header)
             (void) fseek(fp, 0, SEEK_SET);
             fwrite(header, 1, 512, fp);
             fclose(fp);
-            free(header);
 
             file = H5Fopen(filename,H5F_ACC_RDWR,plist_ap);
         }
@@ -201,7 +199,11 @@ void * csc_hdf5_matlab_header(const char * str){
 
 hid_t csc_hdf5_open_matlab(const char *filename, const char *mode)
 {
-    return csc_hdf5_open2(filename, mode, csc_hdf5_matlab_header(NULL));
+    void *mlhdr = csc_hdf5_matlab_header(NULL);
+    hid_t ret;
+    ret = csc_hdf5_open2(filename, mode, mlhdr);
+    free(mlhdr);
+    return ret;
 }
 
 hid_t csc_hdf5_close(hid_t root)

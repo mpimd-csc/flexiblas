@@ -341,7 +341,7 @@ int csc_hdf5_get_content(hid_t root, const char *dset_name, csc_hdf5_content_t *
         return -1;
     }
 
-    err = H5LTget_attribute(root, dset_name, "csc_hdf5_content", content_type, &val);
+    err = csc_hdf5_attribute_read_int(root, dset_name, "csc_hdf5_content", &val);
     if ( err < 0 ) {
         csc_error_message("Failed to get content.\n");
         H5Tclose(content_type);
@@ -396,7 +396,7 @@ int csc_hdf5_get_field(hid_t root, const char *dset_name, csc_hdf5_field_t *fiel
         return -1;
     }
 
-    err = H5LTget_attribute(root, dset_name, "csc_hdf5_field", field_type, &val);
+    err = csc_hdf5_attribute_read_int(root, dset_name, "csc_hdf5_field", &val);
     if ( err < 0 ) {
         csc_error_message("Failed to get field.\n");
         H5Tclose(field_type);

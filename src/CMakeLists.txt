@@ -24,6 +24,7 @@ SET ( SRC
 	lsame.c
 	set_num_threads.c
 	wrap_cblas.c
+    cabs.c
     ${COMMON_SRC}
 )
 

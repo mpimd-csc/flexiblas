@@ -69,7 +69,9 @@ int csc_sysinfo_memory(size_t *total_ram, size_t *free_ram, size_t *total_swap, 
 /*-----------------------------------------------------------------------------
  *  FreeBSD and DragonFlyBSD implementation
  *-----------------------------------------------------------------------------*/
+#ifndef _BSD_SOURCE	
 #define _BSD_SOURCE
+#endif 
 
 typedef unsigned int u_int;
 #include <stdlib.h>
@@ -116,7 +118,7 @@ int csc_sysinfo_memory(size_t *total_ram, size_t *free_ram, size_t *total_swap, 
     }
 
     if ( free_ram  != NULL ) {
-        *free_ram  = free_mem *  sysconf(_SC_PAGE_SIZE) ;
+        *free_ram  = free_mem *  sysconf(_SC_PAGESIZE) ;
     }
 
 
@@ -132,8 +134,8 @@ int csc_sysinfo_memory(size_t *total_ram, size_t *free_ram, size_t *total_swap, 
 
     saveptr = NULL;
     strtok_r(buf, " ", &saveptr);
-    total_str = (char * )strtok(NULL, " ", &saveptr);
-    used_str =  (char * )strtok(NULL, " ", &saveptr);
+    total_str = (char * )strtok_r(NULL, " ", &saveptr);
+    used_str =  (char * )strtok_r(NULL, " ", &saveptr);
     used = atoi(used_str);
     total = atoi(total_str);
 

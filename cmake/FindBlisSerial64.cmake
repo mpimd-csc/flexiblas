@@ -4,10 +4,10 @@ SET(BLIS_LIB_NAME Serial64)
 IF ( EXISTS /etc/debian_version )
     # We are on debian
     MESSAGE(STATUS "${BLIS_PREFIX} ${CMAKE_LIBRARY_ARCHITECTURE} ")
-    SET(SEARCH_PATH /usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/blis64-serial)
+    SET(SEARCH_PATH /usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/blis64-serial /usr/lib/ /usr/lib64 /usr/local/lib /usr/local/lib64)
     SET(SEARCH_NAME blis64 blis)
 ELSE()
-    SET(SEARCH_PATH /usr/lib/ /usr/lib64)
+    SET(SEARCH_PATH /usr/lib/ /usr/lib64 /usr/local/lib /usr/local/lib64)
     SET(SEARCH_NAME blis64 blis)
 ENDIF()
 

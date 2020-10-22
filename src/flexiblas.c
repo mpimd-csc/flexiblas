@@ -578,6 +578,8 @@ int flexiblas_load_backend_library(const char *libname)
 }
 
 
+static void * reload_handler = NULL;
+
 /*-----------------------------------------------------------------------------
  *  Init Routine
  *-----------------------------------------------------------------------------*/
@@ -589,6 +591,7 @@ __attribute__((constructor))
         char path[FLEXIBLAS_MGMT_MAX_BUFFER_LEN];
         flexiblas_backend_t  *backend = NULL;
         flexiblas_mgmt_location_t loc;
+        int fallback_flags = RTLD_LAZY | RTLD_LOCAL;
 
         /*-----------------------------------------------------------------------------
          *  Read Environment Variables
@@ -641,6 +644,20 @@ __attribute__((constructor))
         __flexiblas_init_default_paths();
 
 
+        /* Backward Init */
+        void *ptr =  (void*)flexiblas_init;
+        Dl_info fb_info;
+        memset(&fb_info, 0, sizeof(Dl_info));
+        dlerror();
+        if ( dladdr(ptr, &fb_info) == 0 || fb_info.dli_fname == NULL)  {
+            DPRINTF_WARN(0, "Failed to integrated FlexiBLAS's symbols globally. This might let applications like NumPy to run slowly. (err = %s)\n", dlerror());
+            fallback_flags = RTLD_GLOBAL | RTLD_LAZY;
+        } else {
+            DPRINTF(1, "libflexiblas.so is %s\n", fb_info.dli_fname);
+            reload_handler = dlopen(fb_info.dli_fname, RTLD_NOW | RTLD_GLOBAL);
+            fallback_flags = RTLD_LOCAL | RTLD_LAZY;
+        }
+
         /* Search all available hooks */
         __flexiblas_add_hooks();
 
@@ -677,11 +694,12 @@ __attribute__((constructor))
             snprintf(blas_name,len, "%s%s", FALLBACK_NAME,SO_EXTENSION);
             free(SO_EXTENSION);
 
-            __flexiblas_blas_fallback = __flexiblas_dlopen(blas_name, RTLD_LAZY | RTLD_GLOBAL , NULL);
+            __flexiblas_blas_fallback = __flexiblas_dlopen(blas_name, fallback_flags , NULL);
             if ( __flexiblas_blas_fallback == NULL ) {
                 DPRINTF_ERROR(0," Failed to load the BLAS fallback library.  Abort!\n");
                 abort();
             }
+            DPRINTF(2, "Load fallback_netlib at = 0x%lx\n", (unsigned long) __flexiblas_blas_fallback);
             free(blas_name);
         }
 
@@ -696,14 +714,15 @@ __attribute__((constructor))
             snprintf(lapack_name,len, "%s%s", LAPACK_FALLBACK_NAME,SO_EXTENSION);
             free(SO_EXTENSION);
 #ifdef LAPACK_DEEPBIND
-            __flexiblas_lapack_fallback = __flexiblas_dlopen(lapack_name, RTLD_LAZY | RTLD_DEEPBIND |  RTLD_GLOBAL , NULL);
+            __flexiblas_lapack_fallback = __flexiblas_dlopen(lapack_name, fallback_flags | RTLD_DEEPBIND , NULL);
 #else
-            __flexiblas_lapack_fallback = __flexiblas_dlopen(lapack_name, RTLD_LAZY | RTLD_GLOBAL , NULL);
+            __flexiblas_lapack_fallback = __flexiblas_dlopen(lapack_name, fallback_flags , NULL);
 #endif
             if ( __flexiblas_lapack_fallback == NULL ) {
                 DPRINTF_ERROR(0," Failed to load the LAPACK fallback library.  Abort!\n");
                 abort();
             }
+            DPRINTF(2, "Load fallback_lapack at = 0x%lx\n", (unsigned long) __flexiblas_lapack_fallback);
             free(lapack_name);
         }
 #endif
@@ -713,6 +732,7 @@ __attribute__((constructor))
          * LOAD BLAS Backend.
          */
         backend = flexiblas_load_library_from_init(__flexiblas_mgmt, blas_default_map);
+        DPRINTF(2, "Load %s at = 0x%lx\n", blas_default_map, (unsigned long) backend->library_handle);
         if ( backend == NULL ){
             DPRINTF_ERROR(0, "Loading Backend Failed.\n");
             abort();
@@ -869,6 +889,8 @@ __attribute__((destructor))
         dlclose(__flexiblas_lapack_fallback);
 #endif
         flexiblas_mgmt_free_config(__flexiblas_mgmt);
+        if ( reload_handler)
+            dlclose(reload_handler);
     }
 
 

@@ -115,14 +115,10 @@ int __flexiblas_setup_xerbla(flexiblas_backend_t *backend)
 		}
 
 		if ( user_xerbla == 0 ){
-			if (__flexiblas_verbose > 0 ) {
-				fprintf(stderr, "<" PRINT_PREFIX "> Use XERBLA of the BLAS backend.\n");
-			}
+			DPRINTF(1,"Use XERBLA of the BLAS backend.\n");
 			backend->xerbla.f77_blas_function = xerbla_symbol1;
 		} else {
-			if (__flexiblas_verbose > 0 ) {
-				fprintf(stderr, PRINT_PREFIX "Use XERBLA supplied by the user.\n");
-			}
+			DPRINTF(1,"Use XERBLA supplied by the user.\n");
 			backend->xerbla.f77_blas_function = xerbla_symbol2;
 		}
 	}
@@ -154,14 +150,10 @@ int __flexiblas_setup_cblas_xerbla(flexiblas_backend_t *backend)
 		}
 
 		if ( user_xerbla == 0 ){
-			if (__flexiblas_verbose > 0 ) {
-				fprintf(stderr, "<" PRINT_PREFIX "> Use XERBLA of the BLAS backend.\n");
-			}
+			DPRINTF(1,"Use XERBLA of the BLAS backend.\n");
 			backend->xerbla.cblas_function = xerbla_symbol1;
 		} else {
-			if (__flexiblas_verbose > 0 ) {
-				fprintf(stderr, PRINT_PREFIX "Use XERBLA supplied by the user.\n");
-			}
+			DPRINTF(1, "Use XERBLA supplied by the user.\n");
 			backend->xerbla.cblas_function = xerbla_symbol2;
 		}
 	}

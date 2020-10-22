@@ -677,6 +677,11 @@ extern "C" {
 
 
 
+    int csc_ini_easy_get_int(const char *filename, const char * section, const char *key, int *val);
+    int csc_ini_easy_get_double(const char *filename, const char * section, const char *key, double *val);
+    int csc_ini_easy_get_string(const char *filename, const char * section, const char *key, char *val, int maxlen);
+
+
     /** @}  */
 
 #ifdef __cplusplus

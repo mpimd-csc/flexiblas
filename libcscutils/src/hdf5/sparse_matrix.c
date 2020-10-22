@@ -1388,22 +1388,22 @@ int csc_hdf5_sparse_write (csc_hdf5_content_t type, csc_hdf5_field_t number_fiel
     ul_rows = (unsigned long) rows;
     ul_nnz  = (unsigned long) nnz;
 
-    err = H5LTset_attribute_ulong(root, dset_name, "rows", &ul_rows, 1);
-    if ( err < 0 ) {
+    err = csc_hdf5_attribute_write_ulong(root, dset_name, "rows", ul_rows);
+    if ( err != 0 ) {
         csc_error_message("Failed to set attribute rows.\n");
         H5Gclose(sparse_group);
         return -1;
     }
 
-    err = H5LTset_attribute_ulong(root, dset_name, "cols", &ul_cols, 1);
-    if ( err < 0 ) {
+    err = csc_hdf5_attribute_write_ulong(root, dset_name, "cols", ul_cols);
+    if ( err != 0 ) {
         csc_error_message("Failed to set attribute cols.\n");
         H5Gclose(sparse_group);
         return -1;
     }
 
-    err = H5LTset_attribute_ulong(root, dset_name, "nnz", &ul_nnz, 1);
-    if ( err < 0 ) {
+    err = csc_hdf5_attribute_write_ulong(root, dset_name, "nnz", ul_nnz);
+    if ( err != 0 ) {
         csc_error_message("Failed to set attribute nnz.\n");
         H5Gclose(sparse_group);
         return -1;

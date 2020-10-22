@@ -232,11 +232,20 @@ static int csc_hdf5_write_matrix_ex(hid_t root, const char *dset_name, hid_t dty
         ret = -1;
         goto end;
     }
-    if ( csc_hdf5_attribute_write_int(root, dset_name, "COMPLEX_STRIDE", cpx_stride)) {
-        csc_error_message("Failed to write attribute to %s\n", dset_name);
-        ret = -1;
-        goto end;
+    if ( cpx_stride > 1 && opts->complex_as_compound) {
+        if ( csc_hdf5_attribute_write_int(root, dset_name, "COMPLEX_STRIDE", 1)) {
+            csc_error_message("Failed to write attribute to %s\n", dset_name);
+            ret = -1;
+            goto end;
+        }
+    } else {
+        if ( csc_hdf5_attribute_write_int(root, dset_name, "COMPLEX_STRIDE", cpx_stride)) {
+            csc_error_message("Failed to write attribute to %s\n", dset_name);
+            ret = -1;
+            goto end;
+        }
     }
+
     if ( csc_hdf5_attribute_write_int(root, dset_name, "COMPLEX", (cpx_stride==2)?1:0)) {
         csc_error_message("Failed to write attribute to %s\n", dset_name);
         ret = -1;
@@ -291,7 +300,7 @@ static int csc_hdf5_write_matrix_ex1(hid_t root, const char *dset_name, hid_t dt
             goto end;
         }
         size_t tmp_size = len + 20;
-        strcpy(tmp, dset_name);
+        strncpy(tmp, dset_name, tmp_size);
         csc_strremovedup(tmp, '/');
         len2 = strlen(tmp);
         if ( tmp[len2-1] == '/') {
@@ -976,9 +985,10 @@ int csc_hdf5_matrix_size(hid_t root, const char *dset_name, size_t *rows, size_t
             *cols = dims[0];
         }
 
+        cpx = 0;
         if ( csc_hdf5_attribute_exist(root, dset_name, "COMPLEX") &&
-             csc_hdf5_attribute_read_int(root, dset_name, "COMPLEX", &cpx) == 0 ) {
-            if ( cpx ) *rows /= 2;
+             csc_hdf5_attribute_read_int(root, dset_name, "COMPLEX_STRIDE", &cpx) == 0 ) {
+            if ( cpx ) *rows /= cpx;
         }
         ret = 0;
         goto end;
@@ -1274,14 +1284,14 @@ int csc_hdf5_matrix_write_real(hid_t root, const char *dset_name, size_t rows, s
     ul_cols = (unsigned long) cols;
     ul_rows = (unsigned long) rows;
 
-    err = H5LTset_attribute_ulong(root, dset_name, "rows", &ul_rows, 1);
-    if ( err < 0 ) {
+    err = csc_hdf5_attribute_write_ulong(root, dset_name, "rows", ul_rows);
+    if ( err != 0 ) {
         csc_error_message("Failed to set attribute rows.\n");
         H5Gclose(vg);
         return -1;
     }
 
-    err = H5LTset_attribute_ulong(root, dset_name, "cols", &ul_cols, 1);
+    err = csc_hdf5_attribute_write_ulong(root, dset_name, "cols", ul_cols);
     if ( err < 0 ) {
         csc_error_message("Failed to set attribute cols.\n");
         H5Gclose(vg);
@@ -1420,14 +1430,14 @@ int csc_hdf5_matrix_write_real_single(hid_t root, const char *dset_name, size_t 
     ul_cols = (unsigned long) cols;
     ul_rows = (unsigned long) rows;
 
-    err = H5LTset_attribute_ulong(root, dset_name, "rows", &ul_rows, 1);
-    if ( err < 0 ) {
+    err = csc_hdf5_attribute_write_ulong(root, dset_name, "rows", ul_rows);
+    if ( err != 0 ) {
         csc_error_message("Failed to set attribute rows.\n");
         H5Gclose(vg);
         return -1;
     }
 
-    err = H5LTset_attribute_ulong(root, dset_name, "cols", &ul_cols, 1);
+    err = csc_hdf5_attribute_write_ulong(root, dset_name, "cols", ul_cols);
     if ( err < 0 ) {
         csc_error_message("Failed to set attribute cols.\n");
         H5Gclose(vg);
@@ -1567,15 +1577,15 @@ int csc_hdf5_matrix_write_complex(hid_t root, const char *dset_name, size_t rows
     ul_cols = (unsigned long) cols;
     ul_rows = (unsigned long) rows;
 
-    err = H5LTset_attribute_ulong(root, dset_name, "rows", &ul_rows, 1);
-    if ( err < 0 ) {
+    err = csc_hdf5_attribute_write_ulong(root, dset_name, "rows", ul_rows);
+    if ( err != 0 ) {
         csc_error_message("Failed to set attribute rows.\n");
         H5Gclose(vg);
         return -1;
     }
 
-    err = H5LTset_attribute_ulong(root, dset_name, "cols", &ul_cols, 1);
-    if ( err < 0 ) {
+    err = csc_hdf5_attribute_write_ulong(root, dset_name, "cols", ul_cols);
+    if ( err != 0 ) {
         csc_error_message("Failed to set attribute cols.\n");
         H5Gclose(vg);
         return -1;

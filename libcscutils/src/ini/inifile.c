@@ -16,6 +16,7 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  *
  */
+#if defined (__linux__) 
 #ifndef _DEFAULT_SOURCE
 #define _DEFAULT_SOURCE
 #endif
@@ -25,6 +26,9 @@
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
+#elif defined(__FreeBSD__) 
+ #define _POSIX_C_SOURCE 200809L
+#endif 
 
 #include <stdio.h>
 #include <stdlib.h>

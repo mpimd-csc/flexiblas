@@ -28,6 +28,8 @@
 #cmakedefine HAVE_ATTR_ALIAS
 #cmakedefine HAVE_ATTR_CONSTRUCTOR
 #cmakedefine HAVE_ATTR_HIDDEN
+#cmakedefine HAVE_SYSMACRO_H
+#cmakedefine HAVE_SYS_STAT_H
 #cmakedefine FALLBACK_NAME
 #cmakedefine FLEXIBLAS_LAPACK
 #cmakedefine FLEXIBLAS_LAPACK_3_9_0

@@ -16,6 +16,13 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  *
  */
+#if defined(__FreeBSD__) 
+#ifndef _BSD_SOURCE
+#define _BSD_SOURCE 
+#define _BSD_VISIBLE 1
+#endif 
+#endif 
+
 
 #include <stdio.h>
 #include <stdlib.h>
