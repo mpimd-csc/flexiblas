@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(chsein,CHSEIN)(char* side, char* eigsrc, char* initv, blasint* se
 #ifdef FLEXIBLAS_ABI_IBM
 void chsein_(char* side, char* eigsrc, char* initv, blasint* select, blasint* n, float complex* h, blasint* ldh, float complex* w, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, blasint* mm, blasint* m, float complex* work, float* rwork, blasint* ifaill, blasint* ifailr, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(chsein,CHSEIN)))));
 #else
+#ifndef __APPLE__
 void chsein(char* side, char* eigsrc, char* initv, blasint* select, blasint* n, float complex* h, blasint* ldh, float complex* w, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, blasint* mm, blasint* m, float complex* work, float* rwork, blasint* ifaill, blasint* ifailr, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(chsein,CHSEIN)))));
+#else
+void chsein(char* side, char* eigsrc, char* initv, blasint* select, blasint* n, float complex* h, blasint* ldh, float complex* w, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, blasint* mm, blasint* m, float complex* work, float* rwork, blasint* ifaill, blasint* ifailr, blasint* info){ FC_GLOBAL(chsein,CHSEIN)((void*) side, (void*) eigsrc, (void*) initv, (void*) select, (void*) n, (void*) h, (void*) ldh, (void*) w, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) mm, (void*) m, (void*) work, (void*) rwork, (void*) ifaill, (void*) ifailr, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_chsein_(void* side, void* eigsrc, void* initv, void* select,
 
 	return;
 }
-
-void flexiblas_real_chsein(void* side, void* eigsrc, void* initv, void* select, void* n, void* h, void* ldh, void* w, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* rwork, void* ifaill, void* ifailr, void* info)  __attribute__((alias("flexiblas_real_chsein_")));
-
+#ifndef __APPLE__
+void flexiblas_real_chsein(void* side, void* eigsrc, void* initv, void* select, void* n, void* h, void* ldh, void* w, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* rwork, void* ifaill, void* ifailr, void* info) __attribute__((alias("flexiblas_real_chsein_")));
+#else
+void flexiblas_real_chsein(void* side, void* eigsrc, void* initv, void* select, void* n, void* h, void* ldh, void* w, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* rwork, void* ifaill, void* ifailr, void* info){flexiblas_real_chsein_((void*) side, (void*) eigsrc, (void*) initv, (void*) select, (void*) n, (void*) h, (void*) ldh, (void*) w, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) mm, (void*) m, (void*) work, (void*) rwork, (void*) ifaill, (void*) ifailr, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_chsein_(void* side, void* eigsrc, void* initv, void* select
 	}
 	return;
 }
-
-void flexiblas_chain_chsein(void* side, void* eigsrc, void* initv, void* select, void* n, void* h, void* ldh, void* w, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* rwork, void* ifaill, void* ifailr, void* info)  __attribute__((alias("flexiblas_chain_chsein_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_chsein(void* side, void* eigsrc, void* initv, void* select, void* n, void* h, void* ldh, void* w, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* rwork, void* ifaill, void* ifailr, void* info) __attribute__((alias("flexiblas_chain_chsein_")));
+#else
+void flexiblas_chain_chsein(void* side, void* eigsrc, void* initv, void* select, void* n, void* h, void* ldh, void* w, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* rwork, void* ifaill, void* ifailr, void* info){flexiblas_chain_chsein_((void*) side, (void*) eigsrc, (void*) initv, (void*) select, (void*) n, (void*) h, (void*) ldh, (void*) w, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) mm, (void*) m, (void*) work, (void*) rwork, (void*) ifaill, (void*) ifailr, (void*) info);}
+#endif
 
 
 

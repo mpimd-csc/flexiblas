@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zlaqge,ZLAQGE)(blasint* m, blasint* n, double complex* a, blasint
 #ifdef FLEXIBLAS_ABI_IBM
 void zlaqge_(blasint* m, blasint* n, double complex* a, blasint* lda, double* r, double* c, double* rowcnd, double* colcnd, double* amax, char* equed) __attribute__((alias(MTS(FC_GLOBAL(zlaqge,ZLAQGE)))));
 #else
+#ifndef __APPLE__
 void zlaqge(blasint* m, blasint* n, double complex* a, blasint* lda, double* r, double* c, double* rowcnd, double* colcnd, double* amax, char* equed) __attribute__((alias(MTS(FC_GLOBAL(zlaqge,ZLAQGE)))));
+#else
+void zlaqge(blasint* m, blasint* n, double complex* a, blasint* lda, double* r, double* c, double* rowcnd, double* colcnd, double* amax, char* equed){ FC_GLOBAL(zlaqge,ZLAQGE)((void*) m, (void*) n, (void*) a, (void*) lda, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) equed); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zlaqge_(void* m, void* n, void* a, void* lda, void* r, void*
 
 	return;
 }
-
-void flexiblas_real_zlaqge(void* m, void* n, void* a, void* lda, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* equed)  __attribute__((alias("flexiblas_real_zlaqge_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zlaqge(void* m, void* n, void* a, void* lda, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* equed) __attribute__((alias("flexiblas_real_zlaqge_")));
+#else
+void flexiblas_real_zlaqge(void* m, void* n, void* a, void* lda, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* equed){flexiblas_real_zlaqge_((void*) m, (void*) n, (void*) a, (void*) lda, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) equed);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zlaqge_(void* m, void* n, void* a, void* lda, void* r, void
 	}
 	return;
 }
-
-void flexiblas_chain_zlaqge(void* m, void* n, void* a, void* lda, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* equed)  __attribute__((alias("flexiblas_chain_zlaqge_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zlaqge(void* m, void* n, void* a, void* lda, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* equed) __attribute__((alias("flexiblas_chain_zlaqge_")));
+#else
+void flexiblas_chain_zlaqge(void* m, void* n, void* a, void* lda, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* equed){flexiblas_chain_zlaqge_((void*) m, (void*) n, (void*) a, (void*) lda, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) equed);}
+#endif
 
 
 

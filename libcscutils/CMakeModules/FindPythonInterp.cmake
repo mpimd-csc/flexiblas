@@ -57,7 +57,7 @@ endif()
 
 if(NOT PYTHON_EXECUTABLE)
     # Search for the current active python version first
-    find_program(PYTHON_EXECUTABLE NAMES python)
+    find_program(PYTHON_EXECUTABLE NAMES python3 python python2)
 endif()
 
 # determine library, include path and version from python exectuable
@@ -102,7 +102,7 @@ if(PYTHON_EXECUTABLE)
 endif()
 
 if(PYTHON_IGNORE_LIBRARY STREQUAL ON)
-    find_package_handle_standard_args(PYTHONINTERP REQUIRED_VARS
+    find_package_handle_standard_args(PythonInterp REQUIRED_VARS
                                     PYTHON_EXECUTABLE
                                     PYTHON_VERSION_STRING
                                     PYTHON_INCLUDE_DIR)
@@ -111,18 +111,20 @@ if(PYTHON_IGNORE_LIBRARY STREQUAL ON)
         "Found Python (${PYTHON_VERSION_STRING}): ${PYTHON_INCLUDE_DIR}"
         "${PYTHON_INCLUDE_DIR}")
 else()
-    find_package_handle_standard_args(PYTHONINTERP REQUIRED_VARS
+    find_package_handle_standard_args(PythonInterp REQUIRED_VARS
                                     PYTHON_EXECUTABLE
                                     PYTHON_VERSION_STRING PYTHON_LIBRARIES
                                     PYTHON_INCLUDE_DIR)
 
-    find_package_message(PYTHININTERP
+    find_package_message(PythonInterp
         "Found Python (${PYTHON_VERSION_STRING}): ${PYTHON_INCLUDE_DIR} - ${PYTHON_LIBRARIES}"
         "${PYTHON_INCLUDE_DIR}${PYTHON_LIBRARIES}")
 
 
 endif()
-
+if ( PythonInterp_FOUND )
+	SET(PYTHONINTERP_FOUND TRUE)
+endif()
 
 mark_as_advanced(PYTHON_EXECUTABLE)
 

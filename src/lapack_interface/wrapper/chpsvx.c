@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(chpsvx,CHPSVX)(char* fact, char* uplo, blasint* n, blasint* nrhs,
 #ifdef FLEXIBLAS_ABI_IBM
 void chpsvx_(char* fact, char* uplo, blasint* n, blasint* nrhs, float complex* ap, float complex* afp, blasint* ipiv, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* rcond, float* ferr, float* berr, float complex* work, float* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(chpsvx,CHPSVX)))));
 #else
+#ifndef __APPLE__
 void chpsvx(char* fact, char* uplo, blasint* n, blasint* nrhs, float complex* ap, float complex* afp, blasint* ipiv, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* rcond, float* ferr, float* berr, float complex* work, float* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(chpsvx,CHPSVX)))));
+#else
+void chpsvx(char* fact, char* uplo, blasint* n, blasint* nrhs, float complex* ap, float complex* afp, blasint* ipiv, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* rcond, float* ferr, float* berr, float complex* work, float* rwork, blasint* info){ FC_GLOBAL(chpsvx,CHPSVX)((void*) fact, (void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) afp, (void*) ipiv, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) rcond, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_chpsvx_(void* fact, void* uplo, void* n, void* nrhs, void* a
 
 	return;
 }
-
-void flexiblas_real_chpsvx(void* fact, void* uplo, void* n, void* nrhs, void* ap, void* afp, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* rwork, void* info)  __attribute__((alias("flexiblas_real_chpsvx_")));
-
+#ifndef __APPLE__
+void flexiblas_real_chpsvx(void* fact, void* uplo, void* n, void* nrhs, void* ap, void* afp, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* rwork, void* info) __attribute__((alias("flexiblas_real_chpsvx_")));
+#else
+void flexiblas_real_chpsvx(void* fact, void* uplo, void* n, void* nrhs, void* ap, void* afp, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* rwork, void* info){flexiblas_real_chpsvx_((void*) fact, (void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) afp, (void*) ipiv, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) rcond, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_chpsvx_(void* fact, void* uplo, void* n, void* nrhs, void* 
 	}
 	return;
 }
-
-void flexiblas_chain_chpsvx(void* fact, void* uplo, void* n, void* nrhs, void* ap, void* afp, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* rwork, void* info)  __attribute__((alias("flexiblas_chain_chpsvx_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_chpsvx(void* fact, void* uplo, void* n, void* nrhs, void* ap, void* afp, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* rwork, void* info) __attribute__((alias("flexiblas_chain_chpsvx_")));
+#else
+void flexiblas_chain_chpsvx(void* fact, void* uplo, void* n, void* nrhs, void* ap, void* afp, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* rwork, void* info){flexiblas_chain_chpsvx_((void*) fact, (void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) afp, (void*) ipiv, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) rcond, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info);}
+#endif
 
 
 

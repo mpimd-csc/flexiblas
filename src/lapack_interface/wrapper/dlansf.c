@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ double FC_GLOBAL(dlansf,DLANSF)(char* norm, char* transr, char* uplo, blasint* n
 #ifdef FLEXIBLAS_ABI_IBM
 double dlansf_(char* norm, char* transr, char* uplo, blasint* n, double* a, double* work) __attribute__((alias(MTS(FC_GLOBAL(dlansf,DLANSF)))));
 #else
+#ifndef __APPLE__
 double dlansf(char* norm, char* transr, char* uplo, blasint* n, double* a, double* work) __attribute__((alias(MTS(FC_GLOBAL(dlansf,DLANSF)))));
+#else
+double dlansf(char* norm, char* transr, char* uplo, blasint* n, double* a, double* work){ return FC_GLOBAL(dlansf,DLANSF)((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ double flexiblas_real_dlansf_(void* norm, void* transr, void* uplo, void* n, voi
 
 	return ret ;
 }
-
-double flexiblas_real_dlansf(void* norm, void* transr, void* uplo, void* n, void* a, void* work)  __attribute__((alias("flexiblas_real_dlansf_")));
-
+#ifndef __APPLE__
+double flexiblas_real_dlansf(void* norm, void* transr, void* uplo, void* n, void* a, void* work) __attribute__((alias("flexiblas_real_dlansf_")));
+#else
+double flexiblas_real_dlansf(void* norm, void* transr, void* uplo, void* n, void* a, void* work){return flexiblas_real_dlansf_((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ double flexiblas_chain_dlansf_(void* norm, void* transr, void* uplo, void* n, vo
 	}
 	return ret ;
 }
-
-double flexiblas_chain_dlansf(void* norm, void* transr, void* uplo, void* n, void* a, void* work)  __attribute__((alias("flexiblas_chain_dlansf_")));
-
+#ifndef __APPLE__
+double flexiblas_chain_dlansf(void* norm, void* transr, void* uplo, void* n, void* a, void* work) __attribute__((alias("flexiblas_chain_dlansf_")));
+#else
+double flexiblas_chain_dlansf(void* norm, void* transr, void* uplo, void* n, void* a, void* work){return flexiblas_chain_dlansf_((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work);}
+#endif
 
 
 

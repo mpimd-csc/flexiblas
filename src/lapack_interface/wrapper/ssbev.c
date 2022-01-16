@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(ssbev,SSBEV)(char* jobz, char* uplo, blasint* n, blasint* kd, flo
 #ifdef FLEXIBLAS_ABI_IBM
 void ssbev_(char* jobz, char* uplo, blasint* n, blasint* kd, float* ab, blasint* ldab, float* w, float* z, blasint* ldz, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ssbev,SSBEV)))));
 #else
+#ifndef __APPLE__
 void ssbev(char* jobz, char* uplo, blasint* n, blasint* kd, float* ab, blasint* ldab, float* w, float* z, blasint* ldz, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ssbev,SSBEV)))));
+#else
+void ssbev(char* jobz, char* uplo, blasint* n, blasint* kd, float* ab, blasint* ldab, float* w, float* z, blasint* ldz, float* work, blasint* info){ FC_GLOBAL(ssbev,SSBEV)((void*) jobz, (void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_ssbev_(void* jobz, void* uplo, void* n, void* kd, void* ab, 
 
 	return;
 }
-
-void flexiblas_real_ssbev(void* jobz, void* uplo, void* n, void* kd, void* ab, void* ldab, void* w, void* z, void* ldz, void* work, void* info)  __attribute__((alias("flexiblas_real_ssbev_")));
-
+#ifndef __APPLE__
+void flexiblas_real_ssbev(void* jobz, void* uplo, void* n, void* kd, void* ab, void* ldab, void* w, void* z, void* ldz, void* work, void* info) __attribute__((alias("flexiblas_real_ssbev_")));
+#else
+void flexiblas_real_ssbev(void* jobz, void* uplo, void* n, void* kd, void* ab, void* ldab, void* w, void* z, void* ldz, void* work, void* info){flexiblas_real_ssbev_((void*) jobz, (void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_ssbev_(void* jobz, void* uplo, void* n, void* kd, void* ab,
 	}
 	return;
 }
-
-void flexiblas_chain_ssbev(void* jobz, void* uplo, void* n, void* kd, void* ab, void* ldab, void* w, void* z, void* ldz, void* work, void* info)  __attribute__((alias("flexiblas_chain_ssbev_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_ssbev(void* jobz, void* uplo, void* n, void* kd, void* ab, void* ldab, void* w, void* z, void* ldz, void* work, void* info) __attribute__((alias("flexiblas_chain_ssbev_")));
+#else
+void flexiblas_chain_ssbev(void* jobz, void* uplo, void* n, void* kd, void* ab, void* ldab, void* w, void* z, void* ldz, void* work, void* info){flexiblas_chain_ssbev_((void*) jobz, (void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) info);}
+#endif
 
 
 

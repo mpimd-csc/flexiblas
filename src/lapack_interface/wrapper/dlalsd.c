@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlalsd,DLALSD)(char* uplo, blasint* smlsiz, blasint* n, blasint* 
 #ifdef FLEXIBLAS_ABI_IBM
 void dlalsd_(char* uplo, blasint* smlsiz, blasint* n, blasint* nrhs, double* d, double* e, double* b, blasint* ldb, double* rcond, blasint* rank_bn, double* work, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlalsd,DLALSD)))));
 #else
+#ifndef __APPLE__
 void dlalsd(char* uplo, blasint* smlsiz, blasint* n, blasint* nrhs, double* d, double* e, double* b, blasint* ldb, double* rcond, blasint* rank_bn, double* work, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlalsd,DLALSD)))));
+#else
+void dlalsd(char* uplo, blasint* smlsiz, blasint* n, blasint* nrhs, double* d, double* e, double* b, blasint* ldb, double* rcond, blasint* rank_bn, double* work, blasint* iwork, blasint* info){ FC_GLOBAL(dlalsd,DLALSD)((void*) uplo, (void*) smlsiz, (void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) b, (void*) ldb, (void*) rcond, (void*) rank_bn, (void*) work, (void*) iwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlalsd_(void* uplo, void* smlsiz, void* n, void* nrhs, void*
 
 	return;
 }
-
-void flexiblas_real_dlalsd(void* uplo, void* smlsiz, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* rcond, void* rank_bn, void* work, void* iwork, void* info)  __attribute__((alias("flexiblas_real_dlalsd_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlalsd(void* uplo, void* smlsiz, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* rcond, void* rank_bn, void* work, void* iwork, void* info) __attribute__((alias("flexiblas_real_dlalsd_")));
+#else
+void flexiblas_real_dlalsd(void* uplo, void* smlsiz, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* rcond, void* rank_bn, void* work, void* iwork, void* info){flexiblas_real_dlalsd_((void*) uplo, (void*) smlsiz, (void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) b, (void*) ldb, (void*) rcond, (void*) rank_bn, (void*) work, (void*) iwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlalsd_(void* uplo, void* smlsiz, void* n, void* nrhs, void
 	}
 	return;
 }
-
-void flexiblas_chain_dlalsd(void* uplo, void* smlsiz, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* rcond, void* rank_bn, void* work, void* iwork, void* info)  __attribute__((alias("flexiblas_chain_dlalsd_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlalsd(void* uplo, void* smlsiz, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* rcond, void* rank_bn, void* work, void* iwork, void* info) __attribute__((alias("flexiblas_chain_dlalsd_")));
+#else
+void flexiblas_chain_dlalsd(void* uplo, void* smlsiz, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* rcond, void* rank_bn, void* work, void* iwork, void* info){flexiblas_chain_dlalsd_((void*) uplo, (void*) smlsiz, (void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) b, (void*) ldb, (void*) rcond, (void*) rank_bn, (void*) work, (void*) iwork, (void*) info);}
+#endif
 
 
 

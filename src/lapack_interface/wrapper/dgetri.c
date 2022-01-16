@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dgetri,DGETRI)(blasint* n, double* a, blasint* lda, blasint* ipiv
 #ifdef FLEXIBLAS_ABI_IBM
 void dgetri_(blasint* n, double* a, blasint* lda, blasint* ipiv, double* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dgetri,DGETRI)))));
 #else
+#ifndef __APPLE__
 void dgetri(blasint* n, double* a, blasint* lda, blasint* ipiv, double* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dgetri,DGETRI)))));
+#else
+void dgetri(blasint* n, double* a, blasint* lda, blasint* ipiv, double* work, blasint* lwork, blasint* info){ FC_GLOBAL(dgetri,DGETRI)((void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) lwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dgetri_(void* n, void* a, void* lda, void* ipiv, void* work,
 
 	return;
 }
-
-void flexiblas_real_dgetri(void* n, void* a, void* lda, void* ipiv, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_real_dgetri_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dgetri(void* n, void* a, void* lda, void* ipiv, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_dgetri_")));
+#else
+void flexiblas_real_dgetri(void* n, void* a, void* lda, void* ipiv, void* work, void* lwork, void* info){flexiblas_real_dgetri_((void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dgetri_(void* n, void* a, void* lda, void* ipiv, void* work
 	}
 	return;
 }
-
-void flexiblas_chain_dgetri(void* n, void* a, void* lda, void* ipiv, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_chain_dgetri_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dgetri(void* n, void* a, void* lda, void* ipiv, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_dgetri_")));
+#else
+void flexiblas_chain_dgetri(void* n, void* a, void* lda, void* ipiv, void* work, void* lwork, void* info){flexiblas_chain_dgetri_((void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 

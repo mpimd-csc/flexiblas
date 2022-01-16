@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(cpftri,CPFTRI)(char* transr, char* uplo, blasint* n, float comple
 #ifdef FLEXIBLAS_ABI_IBM
 void cpftri_(char* transr, char* uplo, blasint* n, float complex* a, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cpftri,CPFTRI)))));
 #else
+#ifndef __APPLE__
 void cpftri(char* transr, char* uplo, blasint* n, float complex* a, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cpftri,CPFTRI)))));
+#else
+void cpftri(char* transr, char* uplo, blasint* n, float complex* a, blasint* info){ FC_GLOBAL(cpftri,CPFTRI)((void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_cpftri_(void* transr, void* uplo, void* n, void* a, void* in
 
 	return;
 }
-
-void flexiblas_real_cpftri(void* transr, void* uplo, void* n, void* a, void* info)  __attribute__((alias("flexiblas_real_cpftri_")));
-
+#ifndef __APPLE__
+void flexiblas_real_cpftri(void* transr, void* uplo, void* n, void* a, void* info) __attribute__((alias("flexiblas_real_cpftri_")));
+#else
+void flexiblas_real_cpftri(void* transr, void* uplo, void* n, void* a, void* info){flexiblas_real_cpftri_((void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_cpftri_(void* transr, void* uplo, void* n, void* a, void* i
 	}
 	return;
 }
-
-void flexiblas_chain_cpftri(void* transr, void* uplo, void* n, void* a, void* info)  __attribute__((alias("flexiblas_chain_cpftri_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_cpftri(void* transr, void* uplo, void* n, void* a, void* info) __attribute__((alias("flexiblas_chain_cpftri_")));
+#else
+void flexiblas_chain_cpftri(void* transr, void* uplo, void* n, void* a, void* info){flexiblas_chain_cpftri_((void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) info);}
+#endif
 
 
 

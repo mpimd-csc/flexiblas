@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(cgeqr2p,CGEQR2P)(blasint* m, blasint* n, float complex* a, blasin
 #ifdef FLEXIBLAS_ABI_IBM
 void cgeqr2p_(blasint* m, blasint* n, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cgeqr2p,CGEQR2P)))));
 #else
+#ifndef __APPLE__
 void cgeqr2p(blasint* m, blasint* n, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cgeqr2p,CGEQR2P)))));
+#else
+void cgeqr2p(blasint* m, blasint* n, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* info){ FC_GLOBAL(cgeqr2p,CGEQR2P)((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_cgeqr2p_(void* m, void* n, void* a, void* lda, void* tau, vo
 
 	return;
 }
-
-void flexiblas_real_cgeqr2p(void* m, void* n, void* a, void* lda, void* tau, void* work, void* info)  __attribute__((alias("flexiblas_real_cgeqr2p_")));
-
+#ifndef __APPLE__
+void flexiblas_real_cgeqr2p(void* m, void* n, void* a, void* lda, void* tau, void* work, void* info) __attribute__((alias("flexiblas_real_cgeqr2p_")));
+#else
+void flexiblas_real_cgeqr2p(void* m, void* n, void* a, void* lda, void* tau, void* work, void* info){flexiblas_real_cgeqr2p_((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_cgeqr2p_(void* m, void* n, void* a, void* lda, void* tau, v
 	}
 	return;
 }
-
-void flexiblas_chain_cgeqr2p(void* m, void* n, void* a, void* lda, void* tau, void* work, void* info)  __attribute__((alias("flexiblas_chain_cgeqr2p_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_cgeqr2p(void* m, void* n, void* a, void* lda, void* tau, void* work, void* info) __attribute__((alias("flexiblas_chain_cgeqr2p_")));
+#else
+void flexiblas_chain_cgeqr2p(void* m, void* n, void* a, void* lda, void* tau, void* work, void* info){flexiblas_chain_cgeqr2p_((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) info);}
+#endif
 
 
 

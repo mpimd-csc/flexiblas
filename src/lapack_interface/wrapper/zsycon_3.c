@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL_(zsycon_3,ZSYCON_3)(char* uplo, blasint* n, double complex* a, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void zsycon_3_(char* uplo, blasint* n, double complex* a, blasint* lda, double complex* e, blasint* ipiv, double* anorm, double* rcond, double complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL_(zsycon_3,ZSYCON_3)))));
 #else
+#ifndef __APPLE__
 void zsycon_3(char* uplo, blasint* n, double complex* a, blasint* lda, double complex* e, blasint* ipiv, double* anorm, double* rcond, double complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL_(zsycon_3,ZSYCON_3)))));
+#else
+void zsycon_3(char* uplo, blasint* n, double complex* a, blasint* lda, double complex* e, blasint* ipiv, double* anorm, double* rcond, double complex* work, blasint* info){ FC_GLOBAL_(zsycon_3,ZSYCON_3)((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zsycon_3_(void* uplo, void* n, void* a, void* lda, void* e, 
 
 	return;
 }
-
-void flexiblas_real_zsycon_3(void* uplo, void* n, void* a, void* lda, void* e, void* ipiv, void* anorm, void* rcond, void* work, void* info)  __attribute__((alias("flexiblas_real_zsycon_3_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zsycon_3(void* uplo, void* n, void* a, void* lda, void* e, void* ipiv, void* anorm, void* rcond, void* work, void* info) __attribute__((alias("flexiblas_real_zsycon_3_")));
+#else
+void flexiblas_real_zsycon_3(void* uplo, void* n, void* a, void* lda, void* e, void* ipiv, void* anorm, void* rcond, void* work, void* info){flexiblas_real_zsycon_3_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zsycon_3_(void* uplo, void* n, void* a, void* lda, void* e,
 	}
 	return;
 }
-
-void flexiblas_chain_zsycon_3(void* uplo, void* n, void* a, void* lda, void* e, void* ipiv, void* anorm, void* rcond, void* work, void* info)  __attribute__((alias("flexiblas_chain_zsycon_3_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zsycon_3(void* uplo, void* n, void* a, void* lda, void* e, void* ipiv, void* anorm, void* rcond, void* work, void* info) __attribute__((alias("flexiblas_chain_zsycon_3_")));
+#else
+void flexiblas_chain_zsycon_3(void* uplo, void* n, void* a, void* lda, void* e, void* ipiv, void* anorm, void* rcond, void* work, void* info){flexiblas_chain_zsycon_3_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) info);}
+#endif
 
 
 

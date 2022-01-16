@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ double FC_GLOBAL(dzsum1,DZSUM1)(blasint* n, double complex* cx, blasint* incx)
 #ifdef FLEXIBLAS_ABI_IBM
 double dzsum1_(blasint* n, double complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dzsum1,DZSUM1)))));
 #else
+#ifndef __APPLE__
 double dzsum1(blasint* n, double complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dzsum1,DZSUM1)))));
+#else
+double dzsum1(blasint* n, double complex* cx, blasint* incx){ return FC_GLOBAL(dzsum1,DZSUM1)((void*) n, (void*) cx, (void*) incx); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ double flexiblas_real_dzsum1_(void* n, void* cx, void* incx)
 
 	return ret ;
 }
-
-double flexiblas_real_dzsum1(void* n, void* cx, void* incx)  __attribute__((alias("flexiblas_real_dzsum1_")));
-
+#ifndef __APPLE__
+double flexiblas_real_dzsum1(void* n, void* cx, void* incx) __attribute__((alias("flexiblas_real_dzsum1_")));
+#else
+double flexiblas_real_dzsum1(void* n, void* cx, void* incx){return flexiblas_real_dzsum1_((void*) n, (void*) cx, (void*) incx);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ double flexiblas_chain_dzsum1_(void* n, void* cx, void* incx)
 	}
 	return ret ;
 }
-
-double flexiblas_chain_dzsum1(void* n, void* cx, void* incx)  __attribute__((alias("flexiblas_chain_dzsum1_")));
-
+#ifndef __APPLE__
+double flexiblas_chain_dzsum1(void* n, void* cx, void* incx) __attribute__((alias("flexiblas_chain_dzsum1_")));
+#else
+double flexiblas_chain_dzsum1(void* n, void* cx, void* incx){return flexiblas_chain_dzsum1_((void*) n, (void*) cx, (void*) incx);}
+#endif
 
 
 

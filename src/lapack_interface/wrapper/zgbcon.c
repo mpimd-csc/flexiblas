@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zgbcon,ZGBCON)(char* norm, blasint* n, blasint* kl, blasint* ku, 
 #ifdef FLEXIBLAS_ABI_IBM
 void zgbcon_(char* norm, blasint* n, blasint* kl, blasint* ku, double complex* ab, blasint* ldab, blasint* ipiv, double* anorm, double* rcond, double complex* work, double* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zgbcon,ZGBCON)))));
 #else
+#ifndef __APPLE__
 void zgbcon(char* norm, blasint* n, blasint* kl, blasint* ku, double complex* ab, blasint* ldab, blasint* ipiv, double* anorm, double* rcond, double complex* work, double* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zgbcon,ZGBCON)))));
+#else
+void zgbcon(char* norm, blasint* n, blasint* kl, blasint* ku, double complex* ab, blasint* ldab, blasint* ipiv, double* anorm, double* rcond, double complex* work, double* rwork, blasint* info){ FC_GLOBAL(zgbcon,ZGBCON)((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zgbcon_(void* norm, void* n, void* kl, void* ku, void* ab, v
 
 	return;
 }
-
-void flexiblas_real_zgbcon(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* ipiv, void* anorm, void* rcond, void* work, void* rwork, void* info)  __attribute__((alias("flexiblas_real_zgbcon_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zgbcon(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* ipiv, void* anorm, void* rcond, void* work, void* rwork, void* info) __attribute__((alias("flexiblas_real_zgbcon_")));
+#else
+void flexiblas_real_zgbcon(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* ipiv, void* anorm, void* rcond, void* work, void* rwork, void* info){flexiblas_real_zgbcon_((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zgbcon_(void* norm, void* n, void* kl, void* ku, void* ab, 
 	}
 	return;
 }
-
-void flexiblas_chain_zgbcon(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* ipiv, void* anorm, void* rcond, void* work, void* rwork, void* info)  __attribute__((alias("flexiblas_chain_zgbcon_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zgbcon(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* ipiv, void* anorm, void* rcond, void* work, void* rwork, void* info) __attribute__((alias("flexiblas_chain_zgbcon_")));
+#else
+void flexiblas_chain_zgbcon(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* ipiv, void* anorm, void* rcond, void* work, void* rwork, void* info){flexiblas_chain_zgbcon_((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info);}
+#endif
 
 
 

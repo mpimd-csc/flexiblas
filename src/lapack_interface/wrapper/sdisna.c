@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(sdisna,SDISNA)(char* job, blasint* m, blasint* n, float* d, float
 #ifdef FLEXIBLAS_ABI_IBM
 void sdisna_(char* job, blasint* m, blasint* n, float* d, float* sep, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sdisna,SDISNA)))));
 #else
+#ifndef __APPLE__
 void sdisna(char* job, blasint* m, blasint* n, float* d, float* sep, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sdisna,SDISNA)))));
+#else
+void sdisna(char* job, blasint* m, blasint* n, float* d, float* sep, blasint* info){ FC_GLOBAL(sdisna,SDISNA)((void*) job, (void*) m, (void*) n, (void*) d, (void*) sep, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_sdisna_(void* job, void* m, void* n, void* d, void* sep, voi
 
 	return;
 }
-
-void flexiblas_real_sdisna(void* job, void* m, void* n, void* d, void* sep, void* info)  __attribute__((alias("flexiblas_real_sdisna_")));
-
+#ifndef __APPLE__
+void flexiblas_real_sdisna(void* job, void* m, void* n, void* d, void* sep, void* info) __attribute__((alias("flexiblas_real_sdisna_")));
+#else
+void flexiblas_real_sdisna(void* job, void* m, void* n, void* d, void* sep, void* info){flexiblas_real_sdisna_((void*) job, (void*) m, (void*) n, (void*) d, (void*) sep, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_sdisna_(void* job, void* m, void* n, void* d, void* sep, vo
 	}
 	return;
 }
-
-void flexiblas_chain_sdisna(void* job, void* m, void* n, void* d, void* sep, void* info)  __attribute__((alias("flexiblas_chain_sdisna_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_sdisna(void* job, void* m, void* n, void* d, void* sep, void* info) __attribute__((alias("flexiblas_chain_sdisna_")));
+#else
+void flexiblas_chain_sdisna(void* job, void* m, void* n, void* d, void* sep, void* info){flexiblas_chain_sdisna_((void*) job, (void*) m, (void*) n, (void*) d, (void*) sep, (void*) info);}
+#endif
 
 
 

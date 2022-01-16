@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(cpprfs,CPPRFS)(char* uplo, blasint* n, blasint* nrhs, float compl
 #ifdef FLEXIBLAS_ABI_IBM
 void cpprfs_(char* uplo, blasint* n, blasint* nrhs, float complex* ap, float complex* afp, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* ferr, float* berr, float complex* work, float* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cpprfs,CPPRFS)))));
 #else
+#ifndef __APPLE__
 void cpprfs(char* uplo, blasint* n, blasint* nrhs, float complex* ap, float complex* afp, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* ferr, float* berr, float complex* work, float* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cpprfs,CPPRFS)))));
+#else
+void cpprfs(char* uplo, blasint* n, blasint* nrhs, float complex* ap, float complex* afp, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* ferr, float* berr, float complex* work, float* rwork, blasint* info){ FC_GLOBAL(cpprfs,CPPRFS)((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) afp, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_cpprfs_(void* uplo, void* n, void* nrhs, void* ap, void* afp
 
 	return;
 }
-
-void flexiblas_real_cpprfs(void* uplo, void* n, void* nrhs, void* ap, void* afp, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* rwork, void* info)  __attribute__((alias("flexiblas_real_cpprfs_")));
-
+#ifndef __APPLE__
+void flexiblas_real_cpprfs(void* uplo, void* n, void* nrhs, void* ap, void* afp, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* rwork, void* info) __attribute__((alias("flexiblas_real_cpprfs_")));
+#else
+void flexiblas_real_cpprfs(void* uplo, void* n, void* nrhs, void* ap, void* afp, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* rwork, void* info){flexiblas_real_cpprfs_((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) afp, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_cpprfs_(void* uplo, void* n, void* nrhs, void* ap, void* af
 	}
 	return;
 }
-
-void flexiblas_chain_cpprfs(void* uplo, void* n, void* nrhs, void* ap, void* afp, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* rwork, void* info)  __attribute__((alias("flexiblas_chain_cpprfs_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_cpprfs(void* uplo, void* n, void* nrhs, void* ap, void* afp, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* rwork, void* info) __attribute__((alias("flexiblas_chain_cpprfs_")));
+#else
+void flexiblas_chain_cpprfs(void* uplo, void* n, void* nrhs, void* ap, void* afp, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* rwork, void* info){flexiblas_chain_cpprfs_((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) afp, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info);}
+#endif
 
 
 

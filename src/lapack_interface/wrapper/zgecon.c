@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zgecon,ZGECON)(char* norm, blasint* n, double complex* a, blasint
 #ifdef FLEXIBLAS_ABI_IBM
 void zgecon_(char* norm, blasint* n, double complex* a, blasint* lda, double* anorm, double* rcond, double complex* work, double* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zgecon,ZGECON)))));
 #else
+#ifndef __APPLE__
 void zgecon(char* norm, blasint* n, double complex* a, blasint* lda, double* anorm, double* rcond, double complex* work, double* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zgecon,ZGECON)))));
+#else
+void zgecon(char* norm, blasint* n, double complex* a, blasint* lda, double* anorm, double* rcond, double complex* work, double* rwork, blasint* info){ FC_GLOBAL(zgecon,ZGECON)((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zgecon_(void* norm, void* n, void* a, void* lda, void* anorm
 
 	return;
 }
-
-void flexiblas_real_zgecon(void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info)  __attribute__((alias("flexiblas_real_zgecon_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zgecon(void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info) __attribute__((alias("flexiblas_real_zgecon_")));
+#else
+void flexiblas_real_zgecon(void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info){flexiblas_real_zgecon_((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zgecon_(void* norm, void* n, void* a, void* lda, void* anor
 	}
 	return;
 }
-
-void flexiblas_chain_zgecon(void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info)  __attribute__((alias("flexiblas_chain_zgecon_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zgecon(void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info) __attribute__((alias("flexiblas_chain_zgecon_")));
+#else
+void flexiblas_chain_zgecon(void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info){flexiblas_chain_zgecon_((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info);}
+#endif
 
 
 

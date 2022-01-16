@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(cgbbrd,CGBBRD)(char* vect, blasint* m, blasint* n, blasint* ncc, 
 #ifdef FLEXIBLAS_ABI_IBM
 void cgbbrd_(char* vect, blasint* m, blasint* n, blasint* ncc, blasint* kl, blasint* ku, float complex* ab, blasint* ldab, float* d, float* e, float complex* q, blasint* ldq, float complex* pt, blasint* ldpt, float complex* c, blasint* ldc, float complex* work, float* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cgbbrd,CGBBRD)))));
 #else
+#ifndef __APPLE__
 void cgbbrd(char* vect, blasint* m, blasint* n, blasint* ncc, blasint* kl, blasint* ku, float complex* ab, blasint* ldab, float* d, float* e, float complex* q, blasint* ldq, float complex* pt, blasint* ldpt, float complex* c, blasint* ldc, float complex* work, float* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cgbbrd,CGBBRD)))));
+#else
+void cgbbrd(char* vect, blasint* m, blasint* n, blasint* ncc, blasint* kl, blasint* ku, float complex* ab, blasint* ldab, float* d, float* e, float complex* q, blasint* ldq, float complex* pt, blasint* ldpt, float complex* c, blasint* ldc, float complex* work, float* rwork, blasint* info){ FC_GLOBAL(cgbbrd,CGBBRD)((void*) vect, (void*) m, (void*) n, (void*) ncc, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) d, (void*) e, (void*) q, (void*) ldq, (void*) pt, (void*) ldpt, (void*) c, (void*) ldc, (void*) work, (void*) rwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_cgbbrd_(void* vect, void* m, void* n, void* ncc, void* kl, v
 
 	return;
 }
-
-void flexiblas_real_cgbbrd(void* vect, void* m, void* n, void* ncc, void* kl, void* ku, void* ab, void* ldab, void* d, void* e, void* q, void* ldq, void* pt, void* ldpt, void* c, void* ldc, void* work, void* rwork, void* info)  __attribute__((alias("flexiblas_real_cgbbrd_")));
-
+#ifndef __APPLE__
+void flexiblas_real_cgbbrd(void* vect, void* m, void* n, void* ncc, void* kl, void* ku, void* ab, void* ldab, void* d, void* e, void* q, void* ldq, void* pt, void* ldpt, void* c, void* ldc, void* work, void* rwork, void* info) __attribute__((alias("flexiblas_real_cgbbrd_")));
+#else
+void flexiblas_real_cgbbrd(void* vect, void* m, void* n, void* ncc, void* kl, void* ku, void* ab, void* ldab, void* d, void* e, void* q, void* ldq, void* pt, void* ldpt, void* c, void* ldc, void* work, void* rwork, void* info){flexiblas_real_cgbbrd_((void*) vect, (void*) m, (void*) n, (void*) ncc, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) d, (void*) e, (void*) q, (void*) ldq, (void*) pt, (void*) ldpt, (void*) c, (void*) ldc, (void*) work, (void*) rwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_cgbbrd_(void* vect, void* m, void* n, void* ncc, void* kl, 
 	}
 	return;
 }
-
-void flexiblas_chain_cgbbrd(void* vect, void* m, void* n, void* ncc, void* kl, void* ku, void* ab, void* ldab, void* d, void* e, void* q, void* ldq, void* pt, void* ldpt, void* c, void* ldc, void* work, void* rwork, void* info)  __attribute__((alias("flexiblas_chain_cgbbrd_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_cgbbrd(void* vect, void* m, void* n, void* ncc, void* kl, void* ku, void* ab, void* ldab, void* d, void* e, void* q, void* ldq, void* pt, void* ldpt, void* c, void* ldc, void* work, void* rwork, void* info) __attribute__((alias("flexiblas_chain_cgbbrd_")));
+#else
+void flexiblas_chain_cgbbrd(void* vect, void* m, void* n, void* ncc, void* kl, void* ku, void* ab, void* ldab, void* d, void* e, void* q, void* ldq, void* pt, void* ldpt, void* c, void* ldc, void* work, void* rwork, void* info){flexiblas_chain_cgbbrd_((void*) vect, (void*) m, (void*) n, (void*) ncc, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) d, (void*) e, (void*) q, (void*) ldq, (void*) pt, (void*) ldpt, (void*) c, (void*) ldc, (void*) work, (void*) rwork, (void*) info);}
+#endif
 
 
 

@@ -39,12 +39,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
-
-
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -258,7 +254,11 @@ void FC_GLOBAL(caxpy,CAXPY)(blasint* n, float complex* ca, float complex* cx, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void caxpy_(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(caxpy,CAXPY)))));
 #else
+#ifndef __APPLE__
 void caxpy(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(caxpy,CAXPY)))));
+#else
+void caxpy(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cy, blasint* incy){ FC_GLOBAL(caxpy,CAXPY)((void*) n, (void*) ca, (void*) cx, (void*) incx, (void*) cy, (void*) incy); }
+#endif
 #endif
 
 
@@ -272,7 +272,11 @@ void flexiblas_real_caxpy_(void* n, void* ca, void* cx, void* incx, void* cy, vo
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_caxpy(void* n, void* ca, void* cx, void* incx, void* cy, void* incy) __attribute__((alias("flexiblas_real_caxpy_")));
+#else
+void flexiblas_real_caxpy(void* n, void* ca, void* cx, void* incx, void* cy, void* incy){flexiblas_real_caxpy_((void*) n, (void*) ca, (void*) cx, (void*) incx, (void*) cy, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_caxpy_(void* n, void* ca, void* cx, void* incx, void* cy, void* incy)
@@ -292,7 +296,11 @@ void flexiblas_chain_caxpy_(void* n, void* ca, void* cx, void* incx, void* cy, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_caxpy(void* n, void* ca, void* cx, void* incx, void* cy, void* incy) __attribute__((alias("flexiblas_chain_caxpy_")));
+#else
+void flexiblas_chain_caxpy(void* n, void* ca, void* cx, void* incx, void* cy, void* incy){flexiblas_chain_caxpy_((void*) n, (void*) ca, (void*) cx, (void*) incx, (void*) cy, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_ccopy = 0;
@@ -318,7 +326,11 @@ void FC_GLOBAL(ccopy,CCOPY)(blasint* n, float complex* cx, blasint* incx, float 
 #ifdef FLEXIBLAS_ABI_IBM
 void ccopy_(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(ccopy,CCOPY)))));
 #else
+#ifndef __APPLE__
 void ccopy(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(ccopy,CCOPY)))));
+#else
+void ccopy(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy){ FC_GLOBAL(ccopy,CCOPY)((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy); }
+#endif
 #endif
 
 
@@ -332,7 +344,11 @@ void flexiblas_real_ccopy_(void* n, void* cx, void* incx, void* cy, void* incy)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_ccopy(void* n, void* cx, void* incx, void* cy, void* incy) __attribute__((alias("flexiblas_real_ccopy_")));
+#else
+void flexiblas_real_ccopy(void* n, void* cx, void* incx, void* cy, void* incy){flexiblas_real_ccopy_((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_ccopy_(void* n, void* cx, void* incx, void* cy, void* incy)
@@ -352,7 +368,11 @@ void flexiblas_chain_ccopy_(void* n, void* cx, void* incx, void* cy, void* incy)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_ccopy(void* n, void* cx, void* incx, void* cy, void* incy) __attribute__((alias("flexiblas_chain_ccopy_")));
+#else
+void flexiblas_chain_ccopy(void* n, void* cx, void* incx, void* cy, void* incy){flexiblas_chain_ccopy_((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_cdotc = 0;
@@ -391,12 +411,16 @@ float complex FC_GLOBAL(cdotc,CDOTC)(blasint* n, float complex* cx, blasint* inc
 #ifdef FLEXIBLAS_ABI_IBM
 float complex cdotc_(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cdotc,CDOTC)))));
 #else
+#ifndef __APPLE__
 float complex cdotc(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cdotc,CDOTC)))));
+#else
+float complex cdotc(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy){ return FC_GLOBAL(cdotc,CDOTC)((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy); }
+#endif
 #endif
 
 
 
-void flexiblas_real_cdotc_( void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy)
+void flexiblas_real_cdotc_(void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy)
 {
 	float complex (*fn) (void* n, void* cx, void* incx, void* cy, void* incy);
 	void (*fn_intel) (float complex *ret, void* n, void* cx, void* incx, void* cy, void* incy);
@@ -410,13 +434,17 @@ void flexiblas_real_cdotc_( void * returnvalue, void* n, void* cx, void* incx, v
 			fn_intel( &ret, (void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy);
 		}
 
-	*((float complex *)returnvalue) = ret;
+	*((float complex *)returnvalue) = ret; 
 	return;
 }
-void flexiblas_real_cdotc( void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy) __attribute__((alias("flexiblas_real_cdotc_")));
+#ifndef __APPLE__
+void flexiblas_real_cdotc(void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy) __attribute__((alias("flexiblas_real_cdotc_")));
+#else
+void flexiblas_real_cdotc(void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy){flexiblas_real_cdotc_((void *)returnvalue, (void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy);}
+#endif
 
 
-void flexiblas_chain_cdotc_( void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy)
+void flexiblas_chain_cdotc_(void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy)
 {
 	float complex (*fn) (void* n, void* cx, void* incx, void* cy, void* incy);
 	void (*fn_intel) (float complex *ret, void* n, void* cx, void* incx, void* cy, void* incy);
@@ -438,10 +466,14 @@ void flexiblas_chain_cdotc_( void * returnvalue, void* n, void* cx, void* incx, 
 			fn_intel( &ret, (void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy);
 		}
 
-	*((float complex *)returnvalue) = ret;
+	*((float complex *)returnvalue) = ret; 
 	return;
 }
-void flexiblas_chain_cdotc( void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy) __attribute__((alias("flexiblas_chain_cdotc_")));
+#ifndef __APPLE__
+void flexiblas_chain_cdotc(void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy) __attribute__((alias("flexiblas_chain_cdotc_")));
+#else
+void flexiblas_chain_cdotc(void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy){(void) flexiblas_chain_cdotc_((void *) returnvalue, (void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_cdotu = 0;
@@ -480,12 +512,16 @@ float complex FC_GLOBAL(cdotu,CDOTU)(blasint* n, float complex* cx, blasint* inc
 #ifdef FLEXIBLAS_ABI_IBM
 float complex cdotu_(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cdotu,CDOTU)))));
 #else
+#ifndef __APPLE__
 float complex cdotu(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cdotu,CDOTU)))));
+#else
+float complex cdotu(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy){ return FC_GLOBAL(cdotu,CDOTU)((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy); }
+#endif
 #endif
 
 
 
-void flexiblas_real_cdotu_( void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy)
+void flexiblas_real_cdotu_(void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy)
 {
 	float complex (*fn) (void* n, void* cx, void* incx, void* cy, void* incy);
 	void (*fn_intel) (float complex *ret, void* n, void* cx, void* incx, void* cy, void* incy);
@@ -499,13 +535,17 @@ void flexiblas_real_cdotu_( void * returnvalue, void* n, void* cx, void* incx, v
 			fn_intel( &ret, (void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy);
 		}
 
-	*((float complex *)returnvalue) = ret;
+	*((float complex *)returnvalue) = ret; 
 	return;
 }
-void flexiblas_real_cdotu( void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy) __attribute__((alias("flexiblas_real_cdotu_")));
+#ifndef __APPLE__
+void flexiblas_real_cdotu(void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy) __attribute__((alias("flexiblas_real_cdotu_")));
+#else
+void flexiblas_real_cdotu(void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy){flexiblas_real_cdotu_((void *)returnvalue, (void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy);}
+#endif
 
 
-void flexiblas_chain_cdotu_( void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy)
+void flexiblas_chain_cdotu_(void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy)
 {
 	float complex (*fn) (void* n, void* cx, void* incx, void* cy, void* incy);
 	void (*fn_intel) (float complex *ret, void* n, void* cx, void* incx, void* cy, void* incy);
@@ -527,10 +567,14 @@ void flexiblas_chain_cdotu_( void * returnvalue, void* n, void* cx, void* incx, 
 			fn_intel( &ret, (void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy);
 		}
 
-	*((float complex *)returnvalue) = ret;
+	*((float complex *)returnvalue) = ret; 
 	return;
 }
-void flexiblas_chain_cdotu( void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy) __attribute__((alias("flexiblas_chain_cdotu_")));
+#ifndef __APPLE__
+void flexiblas_chain_cdotu(void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy) __attribute__((alias("flexiblas_chain_cdotu_")));
+#else
+void flexiblas_chain_cdotu(void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy){(void) flexiblas_chain_cdotu_((void *) returnvalue, (void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_cgbmv = 0;
@@ -556,7 +600,11 @@ void FC_GLOBAL(cgbmv,CGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void cgbmv_(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cgbmv,CGBMV)))));
 #else
+#ifndef __APPLE__
 void cgbmv(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cgbmv,CGBMV)))));
+#else
+void cgbmv(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy){ FC_GLOBAL(cgbmv,CGBMV)((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); }
+#endif
 #endif
 
 
@@ -570,7 +618,11 @@ void flexiblas_real_cgbmv_(void* trans, void* m, void* n, void* kl, void* ku, vo
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_cgbmv(void* trans, void* m, void* n, void* kl, void* ku, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_real_cgbmv_")));
+#else
+void flexiblas_real_cgbmv(void* trans, void* m, void* n, void* kl, void* ku, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_real_cgbmv_((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_cgbmv_(void* trans, void* m, void* n, void* kl, void* ku, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy)
@@ -590,7 +642,11 @@ void flexiblas_chain_cgbmv_(void* trans, void* m, void* n, void* kl, void* ku, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_cgbmv(void* trans, void* m, void* n, void* kl, void* ku, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_chain_cgbmv_")));
+#else
+void flexiblas_chain_cgbmv(void* trans, void* m, void* n, void* kl, void* ku, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_chain_cgbmv_((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_cgemm = 0;
@@ -616,7 +672,11 @@ void FC_GLOBAL(cgemm,CGEMM)(char* transa, char* transb, blasint* m, blasint* n, 
 #ifdef FLEXIBLAS_ABI_IBM
 void cgemm_(char* transa, char* transb, blasint* m, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(cgemm,CGEMM)))));
 #else
+#ifndef __APPLE__
 void cgemm(char* transa, char* transb, blasint* m, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(cgemm,CGEMM)))));
+#else
+void cgemm(char* transa, char* transb, blasint* m, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc){ FC_GLOBAL(cgemm,CGEMM)((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc); }
+#endif
 #endif
 
 
@@ -630,7 +690,11 @@ void flexiblas_real_cgemm_(void* transa, void* transb, void* m, void* n, void* k
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_cgemm(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_real_cgemm_")));
+#else
+void flexiblas_real_cgemm(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_real_cgemm_((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 void flexiblas_chain_cgemm_(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc)
@@ -650,7 +714,11 @@ void flexiblas_chain_cgemm_(void* transa, void* transb, void* m, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_cgemm(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_chain_cgemm_")));
+#else
+void flexiblas_chain_cgemm(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_chain_cgemm_((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_cgemv = 0;
@@ -676,7 +744,11 @@ void FC_GLOBAL(cgemv,CGEMV)(char* trans, blasint* m, blasint* n, float complex* 
 #ifdef FLEXIBLAS_ABI_IBM
 void cgemv_(char* trans, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cgemv,CGEMV)))));
 #else
+#ifndef __APPLE__
 void cgemv(char* trans, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cgemv,CGEMV)))));
+#else
+void cgemv(char* trans, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy){ FC_GLOBAL(cgemv,CGEMV)((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); }
+#endif
 #endif
 
 
@@ -690,7 +762,11 @@ void flexiblas_real_cgemv_(void* trans, void* m, void* n, void* alpha, void* a, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_cgemv(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_real_cgemv_")));
+#else
+void flexiblas_real_cgemv(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_real_cgemv_((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_cgemv_(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy)
@@ -710,7 +786,11 @@ void flexiblas_chain_cgemv_(void* trans, void* m, void* n, void* alpha, void* a,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_cgemv(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_chain_cgemv_")));
+#else
+void flexiblas_chain_cgemv(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_chain_cgemv_((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_cgerc = 0;
@@ -736,7 +816,11 @@ void FC_GLOBAL(cgerc,CGERC)(blasint* m, blasint* n, float complex* alpha, float 
 #ifdef FLEXIBLAS_ABI_IBM
 void cgerc_(blasint* m, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(cgerc,CGERC)))));
 #else
+#ifndef __APPLE__
 void cgerc(blasint* m, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(cgerc,CGERC)))));
+#else
+void cgerc(blasint* m, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda){ FC_GLOBAL(cgerc,CGERC)((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
+#endif
 #endif
 
 
@@ -750,7 +834,11 @@ void flexiblas_real_cgerc_(void* m, void* n, void* alpha, void* x, void* incx, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_cgerc(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda) __attribute__((alias("flexiblas_real_cgerc_")));
+#else
+void flexiblas_real_cgerc(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda){flexiblas_real_cgerc_((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);}
+#endif
 
 
 void flexiblas_chain_cgerc_(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda)
@@ -770,7 +858,11 @@ void flexiblas_chain_cgerc_(void* m, void* n, void* alpha, void* x, void* incx, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_cgerc(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda) __attribute__((alias("flexiblas_chain_cgerc_")));
+#else
+void flexiblas_chain_cgerc(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda){flexiblas_chain_cgerc_((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_cgeru = 0;
@@ -796,7 +888,11 @@ void FC_GLOBAL(cgeru,CGERU)(blasint* m, blasint* n, float complex* alpha, float 
 #ifdef FLEXIBLAS_ABI_IBM
 void cgeru_(blasint* m, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(cgeru,CGERU)))));
 #else
+#ifndef __APPLE__
 void cgeru(blasint* m, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(cgeru,CGERU)))));
+#else
+void cgeru(blasint* m, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda){ FC_GLOBAL(cgeru,CGERU)((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
+#endif
 #endif
 
 
@@ -810,7 +906,11 @@ void flexiblas_real_cgeru_(void* m, void* n, void* alpha, void* x, void* incx, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_cgeru(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda) __attribute__((alias("flexiblas_real_cgeru_")));
+#else
+void flexiblas_real_cgeru(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda){flexiblas_real_cgeru_((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);}
+#endif
 
 
 void flexiblas_chain_cgeru_(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda)
@@ -830,7 +930,11 @@ void flexiblas_chain_cgeru_(void* m, void* n, void* alpha, void* x, void* incx, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_cgeru(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda) __attribute__((alias("flexiblas_chain_cgeru_")));
+#else
+void flexiblas_chain_cgeru(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda){flexiblas_chain_cgeru_((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_chbmv = 0;
@@ -856,7 +960,11 @@ void FC_GLOBAL(chbmv,CHBMV)(char* uplo, blasint* n, blasint* k, float complex* a
 #ifdef FLEXIBLAS_ABI_IBM
 void chbmv_(char* uplo, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(chbmv,CHBMV)))));
 #else
+#ifndef __APPLE__
 void chbmv(char* uplo, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(chbmv,CHBMV)))));
+#else
+void chbmv(char* uplo, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy){ FC_GLOBAL(chbmv,CHBMV)((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); }
+#endif
 #endif
 
 
@@ -870,7 +978,11 @@ void flexiblas_real_chbmv_(void* uplo, void* n, void* k, void* alpha, void* a, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_chbmv(void* uplo, void* n, void* k, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_real_chbmv_")));
+#else
+void flexiblas_real_chbmv(void* uplo, void* n, void* k, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_real_chbmv_((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_chbmv_(void* uplo, void* n, void* k, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy)
@@ -890,7 +1002,11 @@ void flexiblas_chain_chbmv_(void* uplo, void* n, void* k, void* alpha, void* a, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_chbmv(void* uplo, void* n, void* k, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_chain_chbmv_")));
+#else
+void flexiblas_chain_chbmv(void* uplo, void* n, void* k, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_chain_chbmv_((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_chemm = 0;
@@ -916,7 +1032,11 @@ void FC_GLOBAL(chemm,CHEMM)(char* side, char* uplo, blasint* m, blasint* n, floa
 #ifdef FLEXIBLAS_ABI_IBM
 void chemm_(char* side, char* uplo, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(chemm,CHEMM)))));
 #else
+#ifndef __APPLE__
 void chemm(char* side, char* uplo, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(chemm,CHEMM)))));
+#else
+void chemm(char* side, char* uplo, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc){ FC_GLOBAL(chemm,CHEMM)((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc); }
+#endif
 #endif
 
 
@@ -930,7 +1050,11 @@ void flexiblas_real_chemm_(void* side, void* uplo, void* m, void* n, void* alpha
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_chemm(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_real_chemm_")));
+#else
+void flexiblas_real_chemm(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_real_chemm_((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 void flexiblas_chain_chemm_(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc)
@@ -950,7 +1074,11 @@ void flexiblas_chain_chemm_(void* side, void* uplo, void* m, void* n, void* alph
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_chemm(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_chain_chemm_")));
+#else
+void flexiblas_chain_chemm(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_chain_chemm_((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_chemv = 0;
@@ -976,7 +1104,11 @@ void FC_GLOBAL(chemv,CHEMV)(char* uplo, blasint* n, float complex* alpha, float 
 #ifdef FLEXIBLAS_ABI_IBM
 void chemv_(char* uplo, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(chemv,CHEMV)))));
 #else
+#ifndef __APPLE__
 void chemv(char* uplo, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(chemv,CHEMV)))));
+#else
+void chemv(char* uplo, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy){ FC_GLOBAL(chemv,CHEMV)((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); }
+#endif
 #endif
 
 
@@ -990,7 +1122,11 @@ void flexiblas_real_chemv_(void* uplo, void* n, void* alpha, void* a, void* lda,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_chemv(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_real_chemv_")));
+#else
+void flexiblas_real_chemv(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_real_chemv_((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_chemv_(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy)
@@ -1010,7 +1146,11 @@ void flexiblas_chain_chemv_(void* uplo, void* n, void* alpha, void* a, void* lda
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_chemv(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_chain_chemv_")));
+#else
+void flexiblas_chain_chemv(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_chain_chemv_((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_cher = 0;
@@ -1036,7 +1176,11 @@ void FC_GLOBAL(cher,CHER)(char* uplo, blasint* n, float* alpha, float complex* x
 #ifdef FLEXIBLAS_ABI_IBM
 void cher_(char* uplo, blasint* n, float* alpha, float complex* x, blasint* incx, float complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(cher,CHER)))));
 #else
+#ifndef __APPLE__
 void cher(char* uplo, blasint* n, float* alpha, float complex* x, blasint* incx, float complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(cher,CHER)))));
+#else
+void cher(char* uplo, blasint* n, float* alpha, float complex* x, blasint* incx, float complex* a, blasint* lda){ FC_GLOBAL(cher,CHER)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda); }
+#endif
 #endif
 
 
@@ -1050,7 +1194,11 @@ void flexiblas_real_cher_(void* uplo, void* n, void* alpha, void* x, void* incx,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_cher(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda) __attribute__((alias("flexiblas_real_cher_")));
+#else
+void flexiblas_real_cher(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda){flexiblas_real_cher_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda);}
+#endif
 
 
 void flexiblas_chain_cher_(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda)
@@ -1070,7 +1218,11 @@ void flexiblas_chain_cher_(void* uplo, void* n, void* alpha, void* x, void* incx
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_cher(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda) __attribute__((alias("flexiblas_chain_cher_")));
+#else
+void flexiblas_chain_cher(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda){flexiblas_chain_cher_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_cher2 = 0;
@@ -1096,7 +1248,11 @@ void FC_GLOBAL(cher2,CHER2)(char* uplo, blasint* n, float complex* alpha, float 
 #ifdef FLEXIBLAS_ABI_IBM
 void cher2_(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(cher2,CHER2)))));
 #else
+#ifndef __APPLE__
 void cher2(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(cher2,CHER2)))));
+#else
+void cher2(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda){ FC_GLOBAL(cher2,CHER2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
+#endif
 #endif
 
 
@@ -1110,7 +1266,11 @@ void flexiblas_real_cher2_(void* uplo, void* n, void* alpha, void* x, void* incx
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_cher2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda) __attribute__((alias("flexiblas_real_cher2_")));
+#else
+void flexiblas_real_cher2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda){flexiblas_real_cher2_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);}
+#endif
 
 
 void flexiblas_chain_cher2_(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda)
@@ -1130,7 +1290,11 @@ void flexiblas_chain_cher2_(void* uplo, void* n, void* alpha, void* x, void* inc
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_cher2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda) __attribute__((alias("flexiblas_chain_cher2_")));
+#else
+void flexiblas_chain_cher2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda){flexiblas_chain_cher2_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_cher2k = 0;
@@ -1156,7 +1320,11 @@ void FC_GLOBAL(cher2k,CHER2K)(char* uplo, char* trans, blasint* n, blasint* k, f
 #ifdef FLEXIBLAS_ABI_IBM
 void cher2k_(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* beta, float complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(cher2k,CHER2K)))));
 #else
+#ifndef __APPLE__
 void cher2k(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* beta, float complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(cher2k,CHER2K)))));
+#else
+void cher2k(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* beta, float complex* c, blasint* ldc){ FC_GLOBAL(cher2k,CHER2K)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc); }
+#endif
 #endif
 
 
@@ -1170,7 +1338,11 @@ void flexiblas_real_cher2k_(void* uplo, void* trans, void* n, void* k, void* alp
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_cher2k(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_real_cher2k_")));
+#else
+void flexiblas_real_cher2k(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_real_cher2k_((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 void flexiblas_chain_cher2k_(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc)
@@ -1190,7 +1362,11 @@ void flexiblas_chain_cher2k_(void* uplo, void* trans, void* n, void* k, void* al
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_cher2k(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_chain_cher2k_")));
+#else
+void flexiblas_chain_cher2k(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_chain_cher2k_((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_cherk = 0;
@@ -1216,7 +1392,11 @@ void FC_GLOBAL(cherk,CHERK)(char* uplo, char* trans, blasint* n, blasint* k, flo
 #ifdef FLEXIBLAS_ABI_IBM
 void cherk_(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float complex* a, blasint* lda, float* beta, float complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(cherk,CHERK)))));
 #else
+#ifndef __APPLE__
 void cherk(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float complex* a, blasint* lda, float* beta, float complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(cherk,CHERK)))));
+#else
+void cherk(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float complex* a, blasint* lda, float* beta, float complex* c, blasint* ldc){ FC_GLOBAL(cherk,CHERK)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc); }
+#endif
 #endif
 
 
@@ -1230,7 +1410,11 @@ void flexiblas_real_cherk_(void* uplo, void* trans, void* n, void* k, void* alph
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_cherk(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_real_cherk_")));
+#else
+void flexiblas_real_cherk(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc){flexiblas_real_cherk_((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 void flexiblas_chain_cherk_(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc)
@@ -1250,7 +1434,11 @@ void flexiblas_chain_cherk_(void* uplo, void* trans, void* n, void* k, void* alp
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_cherk(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_chain_cherk_")));
+#else
+void flexiblas_chain_cherk(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc){flexiblas_chain_cherk_((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_chpmv = 0;
@@ -1276,7 +1464,11 @@ void FC_GLOBAL(chpmv,CHPMV)(char* uplo, blasint* n, float complex* alpha, float 
 #ifdef FLEXIBLAS_ABI_IBM
 void chpmv_(char* uplo, blasint* n, float complex* alpha, float complex* ap, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(chpmv,CHPMV)))));
 #else
+#ifndef __APPLE__
 void chpmv(char* uplo, blasint* n, float complex* alpha, float complex* ap, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(chpmv,CHPMV)))));
+#else
+void chpmv(char* uplo, blasint* n, float complex* alpha, float complex* ap, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy){ FC_GLOBAL(chpmv,CHPMV)((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); }
+#endif
 #endif
 
 
@@ -1290,7 +1482,11 @@ void flexiblas_real_chpmv_(void* uplo, void* n, void* alpha, void* ap, void* x, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_chpmv(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_real_chpmv_")));
+#else
+void flexiblas_real_chpmv(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_real_chpmv_((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_chpmv_(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy)
@@ -1310,7 +1506,11 @@ void flexiblas_chain_chpmv_(void* uplo, void* n, void* alpha, void* ap, void* x,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_chpmv(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_chain_chpmv_")));
+#else
+void flexiblas_chain_chpmv(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_chain_chpmv_((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_chpr = 0;
@@ -1336,7 +1536,11 @@ void FC_GLOBAL(chpr,CHPR)(char* uplo, blasint* n, float* alpha, float complex* x
 #ifdef FLEXIBLAS_ABI_IBM
 void chpr_(char* uplo, blasint* n, float* alpha, float complex* x, blasint* incx, float complex* ap) __attribute__((alias(MTS(FC_GLOBAL(chpr,CHPR)))));
 #else
+#ifndef __APPLE__
 void chpr(char* uplo, blasint* n, float* alpha, float complex* x, blasint* incx, float complex* ap) __attribute__((alias(MTS(FC_GLOBAL(chpr,CHPR)))));
+#else
+void chpr(char* uplo, blasint* n, float* alpha, float complex* x, blasint* incx, float complex* ap){ FC_GLOBAL(chpr,CHPR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap); }
+#endif
 #endif
 
 
@@ -1350,7 +1554,11 @@ void flexiblas_real_chpr_(void* uplo, void* n, void* alpha, void* x, void* incx,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_chpr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap) __attribute__((alias("flexiblas_real_chpr_")));
+#else
+void flexiblas_real_chpr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap){flexiblas_real_chpr_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap);}
+#endif
 
 
 void flexiblas_chain_chpr_(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap)
@@ -1370,7 +1578,11 @@ void flexiblas_chain_chpr_(void* uplo, void* n, void* alpha, void* x, void* incx
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_chpr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap) __attribute__((alias("flexiblas_chain_chpr_")));
+#else
+void flexiblas_chain_chpr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap){flexiblas_chain_chpr_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_chpr2 = 0;
@@ -1396,7 +1608,11 @@ void FC_GLOBAL(chpr2,CHPR2)(char* uplo, blasint* n, float complex* alpha, float 
 #ifdef FLEXIBLAS_ABI_IBM
 void chpr2_(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* ap) __attribute__((alias(MTS(FC_GLOBAL(chpr2,CHPR2)))));
 #else
+#ifndef __APPLE__
 void chpr2(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* ap) __attribute__((alias(MTS(FC_GLOBAL(chpr2,CHPR2)))));
+#else
+void chpr2(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* ap){ FC_GLOBAL(chpr2,CHPR2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap); }
+#endif
 #endif
 
 
@@ -1410,7 +1626,11 @@ void flexiblas_real_chpr2_(void* uplo, void* n, void* alpha, void* x, void* incx
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_chpr2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* ap) __attribute__((alias("flexiblas_real_chpr2_")));
+#else
+void flexiblas_real_chpr2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* ap){flexiblas_real_chpr2_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap);}
+#endif
 
 
 void flexiblas_chain_chpr2_(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* ap)
@@ -1430,7 +1650,11 @@ void flexiblas_chain_chpr2_(void* uplo, void* n, void* alpha, void* x, void* inc
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_chpr2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* ap) __attribute__((alias("flexiblas_chain_chpr2_")));
+#else
+void flexiblas_chain_chpr2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* ap){flexiblas_chain_chpr2_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_crotg = 0;
@@ -1456,7 +1680,11 @@ void FC_GLOBAL(crotg,CROTG)(float complex* ca, float complex* cb, float* c, floa
 #ifdef FLEXIBLAS_ABI_IBM
 void crotg_(float complex* ca, float complex* cb, float* c, float complex* s) __attribute__((alias(MTS(FC_GLOBAL(crotg,CROTG)))));
 #else
+#ifndef __APPLE__
 void crotg(float complex* ca, float complex* cb, float* c, float complex* s) __attribute__((alias(MTS(FC_GLOBAL(crotg,CROTG)))));
+#else
+void crotg(float complex* ca, float complex* cb, float* c, float complex* s){ FC_GLOBAL(crotg,CROTG)((void*) ca, (void*) cb, (void*) c, (void*) s); }
+#endif
 #endif
 
 
@@ -1470,7 +1698,11 @@ void flexiblas_real_crotg_(void* ca, void* cb, void* c, void* s)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_crotg(void* ca, void* cb, void* c, void* s) __attribute__((alias("flexiblas_real_crotg_")));
+#else
+void flexiblas_real_crotg(void* ca, void* cb, void* c, void* s){flexiblas_real_crotg_((void*) ca, (void*) cb, (void*) c, (void*) s);}
+#endif
 
 
 void flexiblas_chain_crotg_(void* ca, void* cb, void* c, void* s)
@@ -1490,7 +1722,11 @@ void flexiblas_chain_crotg_(void* ca, void* cb, void* c, void* s)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_crotg(void* ca, void* cb, void* c, void* s) __attribute__((alias("flexiblas_chain_crotg_")));
+#else
+void flexiblas_chain_crotg(void* ca, void* cb, void* c, void* s){flexiblas_chain_crotg_((void*) ca, (void*) cb, (void*) c, (void*) s);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_cscal = 0;
@@ -1516,7 +1752,11 @@ void FC_GLOBAL(cscal,CSCAL)(blasint* n, float complex* ca, float complex* cx, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void cscal_(blasint* n, float complex* ca, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(cscal,CSCAL)))));
 #else
+#ifndef __APPLE__
 void cscal(blasint* n, float complex* ca, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(cscal,CSCAL)))));
+#else
+void cscal(blasint* n, float complex* ca, float complex* cx, blasint* incx){ FC_GLOBAL(cscal,CSCAL)((void*) n, (void*) ca, (void*) cx, (void*) incx); }
+#endif
 #endif
 
 
@@ -1530,7 +1770,11 @@ void flexiblas_real_cscal_(void* n, void* ca, void* cx, void* incx)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_cscal(void* n, void* ca, void* cx, void* incx) __attribute__((alias("flexiblas_real_cscal_")));
+#else
+void flexiblas_real_cscal(void* n, void* ca, void* cx, void* incx){flexiblas_real_cscal_((void*) n, (void*) ca, (void*) cx, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_cscal_(void* n, void* ca, void* cx, void* incx)
@@ -1550,7 +1794,11 @@ void flexiblas_chain_cscal_(void* n, void* ca, void* cx, void* incx)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_cscal(void* n, void* ca, void* cx, void* incx) __attribute__((alias("flexiblas_chain_cscal_")));
+#else
+void flexiblas_chain_cscal(void* n, void* ca, void* cx, void* incx){flexiblas_chain_cscal_((void*) n, (void*) ca, (void*) cx, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_csrot = 0;
@@ -1576,7 +1824,11 @@ void FC_GLOBAL(csrot,CSROT)(blasint* n, float complex* cx, blasint* incx, float 
 #ifdef FLEXIBLAS_ABI_IBM
 void csrot_(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy, float* c, float* s) __attribute__((alias(MTS(FC_GLOBAL(csrot,CSROT)))));
 #else
+#ifndef __APPLE__
 void csrot(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy, float* c, float* s) __attribute__((alias(MTS(FC_GLOBAL(csrot,CSROT)))));
+#else
+void csrot(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy, float* c, float* s){ FC_GLOBAL(csrot,CSROT)((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s); }
+#endif
 #endif
 
 
@@ -1590,7 +1842,11 @@ void flexiblas_real_csrot_(void* n, void* cx, void* incx, void* cy, void* incy, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_csrot(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s) __attribute__((alias("flexiblas_real_csrot_")));
+#else
+void flexiblas_real_csrot(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s){flexiblas_real_csrot_((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s);}
+#endif
 
 
 void flexiblas_chain_csrot_(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s)
@@ -1610,7 +1866,11 @@ void flexiblas_chain_csrot_(void* n, void* cx, void* incx, void* cy, void* incy,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_csrot(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s) __attribute__((alias("flexiblas_chain_csrot_")));
+#else
+void flexiblas_chain_csrot(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s){flexiblas_chain_csrot_((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_csscal = 0;
@@ -1636,7 +1896,11 @@ void FC_GLOBAL(csscal,CSSCAL)(blasint* n, float* sa, float complex* cx, blasint*
 #ifdef FLEXIBLAS_ABI_IBM
 void csscal_(blasint* n, float* sa, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(csscal,CSSCAL)))));
 #else
+#ifndef __APPLE__
 void csscal(blasint* n, float* sa, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(csscal,CSSCAL)))));
+#else
+void csscal(blasint* n, float* sa, float complex* cx, blasint* incx){ FC_GLOBAL(csscal,CSSCAL)((void*) n, (void*) sa, (void*) cx, (void*) incx); }
+#endif
 #endif
 
 
@@ -1650,7 +1914,11 @@ void flexiblas_real_csscal_(void* n, void* sa, void* cx, void* incx)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_csscal(void* n, void* sa, void* cx, void* incx) __attribute__((alias("flexiblas_real_csscal_")));
+#else
+void flexiblas_real_csscal(void* n, void* sa, void* cx, void* incx){flexiblas_real_csscal_((void*) n, (void*) sa, (void*) cx, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_csscal_(void* n, void* sa, void* cx, void* incx)
@@ -1670,7 +1938,11 @@ void flexiblas_chain_csscal_(void* n, void* sa, void* cx, void* incx)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_csscal(void* n, void* sa, void* cx, void* incx) __attribute__((alias("flexiblas_chain_csscal_")));
+#else
+void flexiblas_chain_csscal(void* n, void* sa, void* cx, void* incx){flexiblas_chain_csscal_((void*) n, (void*) sa, (void*) cx, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_cswap = 0;
@@ -1696,7 +1968,11 @@ void FC_GLOBAL(cswap,CSWAP)(blasint* n, float complex* cx, blasint* incx, float 
 #ifdef FLEXIBLAS_ABI_IBM
 void cswap_(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cswap,CSWAP)))));
 #else
+#ifndef __APPLE__
 void cswap(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cswap,CSWAP)))));
+#else
+void cswap(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy){ FC_GLOBAL(cswap,CSWAP)((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy); }
+#endif
 #endif
 
 
@@ -1710,7 +1986,11 @@ void flexiblas_real_cswap_(void* n, void* cx, void* incx, void* cy, void* incy)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_cswap(void* n, void* cx, void* incx, void* cy, void* incy) __attribute__((alias("flexiblas_real_cswap_")));
+#else
+void flexiblas_real_cswap(void* n, void* cx, void* incx, void* cy, void* incy){flexiblas_real_cswap_((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_cswap_(void* n, void* cx, void* incx, void* cy, void* incy)
@@ -1730,7 +2010,11 @@ void flexiblas_chain_cswap_(void* n, void* cx, void* incx, void* cy, void* incy)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_cswap(void* n, void* cx, void* incx, void* cy, void* incy) __attribute__((alias("flexiblas_chain_cswap_")));
+#else
+void flexiblas_chain_cswap(void* n, void* cx, void* incx, void* cy, void* incy){flexiblas_chain_cswap_((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_csymm = 0;
@@ -1756,7 +2040,11 @@ void FC_GLOBAL(csymm,CSYMM)(char* side, char* uplo, blasint* m, blasint* n, floa
 #ifdef FLEXIBLAS_ABI_IBM
 void csymm_(char* side, char* uplo, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(csymm,CSYMM)))));
 #else
+#ifndef __APPLE__
 void csymm(char* side, char* uplo, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(csymm,CSYMM)))));
+#else
+void csymm(char* side, char* uplo, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc){ FC_GLOBAL(csymm,CSYMM)((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc); }
+#endif
 #endif
 
 
@@ -1770,7 +2058,11 @@ void flexiblas_real_csymm_(void* side, void* uplo, void* m, void* n, void* alpha
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_csymm(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_real_csymm_")));
+#else
+void flexiblas_real_csymm(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_real_csymm_((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 void flexiblas_chain_csymm_(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc)
@@ -1790,7 +2082,11 @@ void flexiblas_chain_csymm_(void* side, void* uplo, void* m, void* n, void* alph
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_csymm(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_chain_csymm_")));
+#else
+void flexiblas_chain_csymm(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_chain_csymm_((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_csyr2k = 0;
@@ -1816,7 +2112,11 @@ void FC_GLOBAL(csyr2k,CSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, f
 #ifdef FLEXIBLAS_ABI_IBM
 void csyr2k_(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(csyr2k,CSYR2K)))));
 #else
+#ifndef __APPLE__
 void csyr2k(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(csyr2k,CSYR2K)))));
+#else
+void csyr2k(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc){ FC_GLOBAL(csyr2k,CSYR2K)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc); }
+#endif
 #endif
 
 
@@ -1830,7 +2130,11 @@ void flexiblas_real_csyr2k_(void* uplo, void* trans, void* n, void* k, void* alp
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_csyr2k(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_real_csyr2k_")));
+#else
+void flexiblas_real_csyr2k(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_real_csyr2k_((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 void flexiblas_chain_csyr2k_(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc)
@@ -1850,7 +2154,11 @@ void flexiblas_chain_csyr2k_(void* uplo, void* trans, void* n, void* k, void* al
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_csyr2k(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_chain_csyr2k_")));
+#else
+void flexiblas_chain_csyr2k(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_chain_csyr2k_((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_csyrk = 0;
@@ -1876,7 +2184,11 @@ void FC_GLOBAL(csyrk,CSYRK)(char* uplo, char* trans, blasint* n, blasint* k, flo
 #ifdef FLEXIBLAS_ABI_IBM
 void csyrk_(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* beta, float complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(csyrk,CSYRK)))));
 #else
+#ifndef __APPLE__
 void csyrk(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* beta, float complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(csyrk,CSYRK)))));
+#else
+void csyrk(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* beta, float complex* c, blasint* ldc){ FC_GLOBAL(csyrk,CSYRK)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc); }
+#endif
 #endif
 
 
@@ -1890,7 +2202,11 @@ void flexiblas_real_csyrk_(void* uplo, void* trans, void* n, void* k, void* alph
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_csyrk(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_real_csyrk_")));
+#else
+void flexiblas_real_csyrk(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc){flexiblas_real_csyrk_((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 void flexiblas_chain_csyrk_(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc)
@@ -1910,7 +2226,11 @@ void flexiblas_chain_csyrk_(void* uplo, void* trans, void* n, void* k, void* alp
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_csyrk(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_chain_csyrk_")));
+#else
+void flexiblas_chain_csyrk(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc){flexiblas_chain_csyrk_((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_ctbmv = 0;
@@ -1936,7 +2256,11 @@ void FC_GLOBAL(ctbmv,CTBMV)(char* uplo, char* trans, char* diag, blasint* n, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void ctbmv_(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(ctbmv,CTBMV)))));
 #else
+#ifndef __APPLE__
 void ctbmv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(ctbmv,CTBMV)))));
+#else
+void ctbmv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* x, blasint* incx){ FC_GLOBAL(ctbmv,CTBMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -1950,7 +2274,11 @@ void flexiblas_real_ctbmv_(void* uplo, void* trans, void* diag, void* n, void* k
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_ctbmv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_real_ctbmv_")));
+#else
+void flexiblas_real_ctbmv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx){flexiblas_real_ctbmv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_ctbmv_(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx)
@@ -1970,7 +2298,11 @@ void flexiblas_chain_ctbmv_(void* uplo, void* trans, void* diag, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_ctbmv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_chain_ctbmv_")));
+#else
+void flexiblas_chain_ctbmv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx){flexiblas_chain_ctbmv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_ctbsv = 0;
@@ -1996,7 +2328,11 @@ void FC_GLOBAL(ctbsv,CTBSV)(char* uplo, char* trans, char* diag, blasint* n, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void ctbsv_(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(ctbsv,CTBSV)))));
 #else
+#ifndef __APPLE__
 void ctbsv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(ctbsv,CTBSV)))));
+#else
+void ctbsv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* x, blasint* incx){ FC_GLOBAL(ctbsv,CTBSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -2010,7 +2346,11 @@ void flexiblas_real_ctbsv_(void* uplo, void* trans, void* diag, void* n, void* k
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_ctbsv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_real_ctbsv_")));
+#else
+void flexiblas_real_ctbsv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx){flexiblas_real_ctbsv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_ctbsv_(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx)
@@ -2030,7 +2370,11 @@ void flexiblas_chain_ctbsv_(void* uplo, void* trans, void* diag, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_ctbsv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_chain_ctbsv_")));
+#else
+void flexiblas_chain_ctbsv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx){flexiblas_chain_ctbsv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_ctpmv = 0;
@@ -2056,7 +2400,11 @@ void FC_GLOBAL(ctpmv,CTPMV)(char* uplo, char* trans, char* diag, blasint* n, flo
 #ifdef FLEXIBLAS_ABI_IBM
 void ctpmv_(char* uplo, char* trans, char* diag, blasint* n, float complex* ap, float complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(ctpmv,CTPMV)))));
 #else
+#ifndef __APPLE__
 void ctpmv(char* uplo, char* trans, char* diag, blasint* n, float complex* ap, float complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(ctpmv,CTPMV)))));
+#else
+void ctpmv(char* uplo, char* trans, char* diag, blasint* n, float complex* ap, float complex* x, blasint* incx){ FC_GLOBAL(ctpmv,CTPMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -2070,7 +2418,11 @@ void flexiblas_real_ctpmv_(void* uplo, void* trans, void* diag, void* n, void* a
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_ctpmv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx) __attribute__((alias("flexiblas_real_ctpmv_")));
+#else
+void flexiblas_real_ctpmv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx){flexiblas_real_ctpmv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_ctpmv_(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx)
@@ -2090,7 +2442,11 @@ void flexiblas_chain_ctpmv_(void* uplo, void* trans, void* diag, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_ctpmv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx) __attribute__((alias("flexiblas_chain_ctpmv_")));
+#else
+void flexiblas_chain_ctpmv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx){flexiblas_chain_ctpmv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_ctpsv = 0;
@@ -2116,7 +2472,11 @@ void FC_GLOBAL(ctpsv,CTPSV)(char* uplo, char* trans, char* diag, blasint* n, flo
 #ifdef FLEXIBLAS_ABI_IBM
 void ctpsv_(char* uplo, char* trans, char* diag, blasint* n, float complex* ap, float complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(ctpsv,CTPSV)))));
 #else
+#ifndef __APPLE__
 void ctpsv(char* uplo, char* trans, char* diag, blasint* n, float complex* ap, float complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(ctpsv,CTPSV)))));
+#else
+void ctpsv(char* uplo, char* trans, char* diag, blasint* n, float complex* ap, float complex* x, blasint* incx){ FC_GLOBAL(ctpsv,CTPSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -2130,7 +2490,11 @@ void flexiblas_real_ctpsv_(void* uplo, void* trans, void* diag, void* n, void* a
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_ctpsv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx) __attribute__((alias("flexiblas_real_ctpsv_")));
+#else
+void flexiblas_real_ctpsv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx){flexiblas_real_ctpsv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_ctpsv_(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx)
@@ -2150,7 +2514,11 @@ void flexiblas_chain_ctpsv_(void* uplo, void* trans, void* diag, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_ctpsv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx) __attribute__((alias("flexiblas_chain_ctpsv_")));
+#else
+void flexiblas_chain_ctpsv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx){flexiblas_chain_ctpsv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_ctrmm = 0;
@@ -2176,7 +2544,11 @@ void FC_GLOBAL(ctrmm,CTRMM)(char* side, char* uplo, char* transa, char* diag, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void ctrmm_(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(ctrmm,CTRMM)))));
 #else
+#ifndef __APPLE__
 void ctrmm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(ctrmm,CTRMM)))));
+#else
+void ctrmm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb){ FC_GLOBAL(ctrmm,CTRMM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb); }
+#endif
 #endif
 
 
@@ -2190,7 +2562,11 @@ void flexiblas_real_ctrmm_(void* side, void* uplo, void* transa, void* diag, voi
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_ctrmm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_real_ctrmm_")));
+#else
+void flexiblas_real_ctrmm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb){flexiblas_real_ctrmm_((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 void flexiblas_chain_ctrmm_(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb)
@@ -2210,7 +2586,11 @@ void flexiblas_chain_ctrmm_(void* side, void* uplo, void* transa, void* diag, vo
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_ctrmm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_chain_ctrmm_")));
+#else
+void flexiblas_chain_ctrmm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb){flexiblas_chain_ctrmm_((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_ctrmv = 0;
@@ -2236,7 +2616,11 @@ void FC_GLOBAL(ctrmv,CTRMV)(char* uplo, char* trans, char* diag, blasint* n, flo
 #ifdef FLEXIBLAS_ABI_IBM
 void ctrmv_(char* uplo, char* trans, char* diag, blasint* n, float complex* a, blasint* lda, float complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(ctrmv,CTRMV)))));
 #else
+#ifndef __APPLE__
 void ctrmv(char* uplo, char* trans, char* diag, blasint* n, float complex* a, blasint* lda, float complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(ctrmv,CTRMV)))));
+#else
+void ctrmv(char* uplo, char* trans, char* diag, blasint* n, float complex* a, blasint* lda, float complex* x, blasint* incx){ FC_GLOBAL(ctrmv,CTRMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -2250,7 +2634,11 @@ void flexiblas_real_ctrmv_(void* uplo, void* trans, void* diag, void* n, void* a
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_ctrmv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_real_ctrmv_")));
+#else
+void flexiblas_real_ctrmv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx){flexiblas_real_ctrmv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_ctrmv_(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx)
@@ -2270,7 +2658,11 @@ void flexiblas_chain_ctrmv_(void* uplo, void* trans, void* diag, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_ctrmv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_chain_ctrmv_")));
+#else
+void flexiblas_chain_ctrmv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx){flexiblas_chain_ctrmv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_ctrsm = 0;
@@ -2296,7 +2688,11 @@ void FC_GLOBAL(ctrsm,CTRSM)(char* side, char* uplo, char* transa, char* diag, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void ctrsm_(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(ctrsm,CTRSM)))));
 #else
+#ifndef __APPLE__
 void ctrsm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(ctrsm,CTRSM)))));
+#else
+void ctrsm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb){ FC_GLOBAL(ctrsm,CTRSM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb); }
+#endif
 #endif
 
 
@@ -2310,7 +2706,11 @@ void flexiblas_real_ctrsm_(void* side, void* uplo, void* transa, void* diag, voi
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_ctrsm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_real_ctrsm_")));
+#else
+void flexiblas_real_ctrsm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb){flexiblas_real_ctrsm_((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 void flexiblas_chain_ctrsm_(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb)
@@ -2330,7 +2730,11 @@ void flexiblas_chain_ctrsm_(void* side, void* uplo, void* transa, void* diag, vo
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_ctrsm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_chain_ctrsm_")));
+#else
+void flexiblas_chain_ctrsm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb){flexiblas_chain_ctrsm_((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_ctrsv = 0;
@@ -2356,7 +2760,11 @@ void FC_GLOBAL(ctrsv,CTRSV)(char* uplo, char* trans, char* diag, blasint* n, flo
 #ifdef FLEXIBLAS_ABI_IBM
 void ctrsv_(char* uplo, char* trans, char* diag, blasint* n, float complex* a, blasint* lda, float complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(ctrsv,CTRSV)))));
 #else
+#ifndef __APPLE__
 void ctrsv(char* uplo, char* trans, char* diag, blasint* n, float complex* a, blasint* lda, float complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(ctrsv,CTRSV)))));
+#else
+void ctrsv(char* uplo, char* trans, char* diag, blasint* n, float complex* a, blasint* lda, float complex* x, blasint* incx){ FC_GLOBAL(ctrsv,CTRSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -2370,7 +2778,11 @@ void flexiblas_real_ctrsv_(void* uplo, void* trans, void* diag, void* n, void* a
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_ctrsv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_real_ctrsv_")));
+#else
+void flexiblas_real_ctrsv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx){flexiblas_real_ctrsv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_ctrsv_(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx)
@@ -2390,7 +2802,11 @@ void flexiblas_chain_ctrsv_(void* uplo, void* trans, void* diag, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_ctrsv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_chain_ctrsv_")));
+#else
+void flexiblas_chain_ctrsv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx){flexiblas_chain_ctrsv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dasum = 0;
@@ -2417,7 +2833,11 @@ double FC_GLOBAL(dasum,DASUM)(blasint* n, double* dx, blasint* incx)
 #ifdef FLEXIBLAS_ABI_IBM
 double dasum_(blasint* n, double* dx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dasum,DASUM)))));
 #else
+#ifndef __APPLE__
 double dasum(blasint* n, double* dx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dasum,DASUM)))));
+#else
+double dasum(blasint* n, double* dx, blasint* incx){ return FC_GLOBAL(dasum,DASUM)((void*) n, (void*) dx, (void*) incx); }
+#endif
 #endif
 
 
@@ -2432,7 +2852,11 @@ double flexiblas_real_dasum_(void* n, void* dx, void* incx)
 
 	return ret;
 }
+#ifndef __APPLE__
 double flexiblas_real_dasum(void* n, void* dx, void* incx) __attribute__((alias("flexiblas_real_dasum_")));
+#else
+double flexiblas_real_dasum(void* n, void* dx, void* incx){return flexiblas_real_dasum_((void*) n, (void*) dx, (void*) incx);}
+#endif
 
 
 double flexiblas_chain_dasum_(void* n, void* dx, void* incx)
@@ -2453,7 +2877,11 @@ double flexiblas_chain_dasum_(void* n, void* dx, void* incx)
 
 	return ret;
 }
+#ifndef __APPLE__
 double flexiblas_chain_dasum(void* n, void* dx, void* incx) __attribute__((alias("flexiblas_chain_dasum_")));
+#else
+double flexiblas_chain_dasum(void* n, void* dx, void* incx){return flexiblas_chain_dasum_((void*) n, (void*) dx, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_daxpy = 0;
@@ -2479,7 +2907,11 @@ void FC_GLOBAL(daxpy,DAXPY)(blasint* n, double* da, double* dx, blasint* incx, d
 #ifdef FLEXIBLAS_ABI_IBM
 void daxpy_(blasint* n, double* da, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(daxpy,DAXPY)))));
 #else
+#ifndef __APPLE__
 void daxpy(blasint* n, double* da, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(daxpy,DAXPY)))));
+#else
+void daxpy(blasint* n, double* da, double* dx, blasint* incx, double* dy, blasint* incy){ FC_GLOBAL(daxpy,DAXPY)((void*) n, (void*) da, (void*) dx, (void*) incx, (void*) dy, (void*) incy); }
+#endif
 #endif
 
 
@@ -2493,7 +2925,11 @@ void flexiblas_real_daxpy_(void* n, void* da, void* dx, void* incx, void* dy, vo
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_daxpy(void* n, void* da, void* dx, void* incx, void* dy, void* incy) __attribute__((alias("flexiblas_real_daxpy_")));
+#else
+void flexiblas_real_daxpy(void* n, void* da, void* dx, void* incx, void* dy, void* incy){flexiblas_real_daxpy_((void*) n, (void*) da, (void*) dx, (void*) incx, (void*) dy, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_daxpy_(void* n, void* da, void* dx, void* incx, void* dy, void* incy)
@@ -2513,7 +2949,11 @@ void flexiblas_chain_daxpy_(void* n, void* da, void* dx, void* incx, void* dy, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_daxpy(void* n, void* da, void* dx, void* incx, void* dy, void* incy) __attribute__((alias("flexiblas_chain_daxpy_")));
+#else
+void flexiblas_chain_daxpy(void* n, void* da, void* dx, void* incx, void* dy, void* incy){flexiblas_chain_daxpy_((void*) n, (void*) da, (void*) dx, (void*) incx, (void*) dy, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dcopy = 0;
@@ -2539,7 +2979,11 @@ void FC_GLOBAL(dcopy,DCOPY)(blasint* n, double* dx, blasint* incx, double* dy, b
 #ifdef FLEXIBLAS_ABI_IBM
 void dcopy_(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dcopy,DCOPY)))));
 #else
+#ifndef __APPLE__
 void dcopy(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dcopy,DCOPY)))));
+#else
+void dcopy(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy){ FC_GLOBAL(dcopy,DCOPY)((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy); }
+#endif
 #endif
 
 
@@ -2553,7 +2997,11 @@ void flexiblas_real_dcopy_(void* n, void* dx, void* incx, void* dy, void* incy)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dcopy(void* n, void* dx, void* incx, void* dy, void* incy) __attribute__((alias("flexiblas_real_dcopy_")));
+#else
+void flexiblas_real_dcopy(void* n, void* dx, void* incx, void* dy, void* incy){flexiblas_real_dcopy_((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_dcopy_(void* n, void* dx, void* incx, void* dy, void* incy)
@@ -2573,7 +3021,11 @@ void flexiblas_chain_dcopy_(void* n, void* dx, void* incx, void* dy, void* incy)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dcopy(void* n, void* dx, void* incx, void* dy, void* incy) __attribute__((alias("flexiblas_chain_dcopy_")));
+#else
+void flexiblas_chain_dcopy(void* n, void* dx, void* incx, void* dy, void* incy){flexiblas_chain_dcopy_((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_ddot = 0;
@@ -2600,7 +3052,11 @@ double FC_GLOBAL(ddot,DDOT)(blasint* n, double* dx, blasint* incx, double* dy, b
 #ifdef FLEXIBLAS_ABI_IBM
 double ddot_(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(ddot,DDOT)))));
 #else
+#ifndef __APPLE__
 double ddot(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(ddot,DDOT)))));
+#else
+double ddot(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy){ return FC_GLOBAL(ddot,DDOT)((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy); }
+#endif
 #endif
 
 
@@ -2615,7 +3071,11 @@ double flexiblas_real_ddot_(void* n, void* dx, void* incx, void* dy, void* incy)
 
 	return ret;
 }
+#ifndef __APPLE__
 double flexiblas_real_ddot(void* n, void* dx, void* incx, void* dy, void* incy) __attribute__((alias("flexiblas_real_ddot_")));
+#else
+double flexiblas_real_ddot(void* n, void* dx, void* incx, void* dy, void* incy){return flexiblas_real_ddot_((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy);}
+#endif
 
 
 double flexiblas_chain_ddot_(void* n, void* dx, void* incx, void* dy, void* incy)
@@ -2636,7 +3096,11 @@ double flexiblas_chain_ddot_(void* n, void* dx, void* incx, void* dy, void* incy
 
 	return ret;
 }
+#ifndef __APPLE__
 double flexiblas_chain_ddot(void* n, void* dx, void* incx, void* dy, void* incy) __attribute__((alias("flexiblas_chain_ddot_")));
+#else
+double flexiblas_chain_ddot(void* n, void* dx, void* incx, void* dy, void* incy){return flexiblas_chain_ddot_((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dgbmv = 0;
@@ -2662,7 +3126,11 @@ void FC_GLOBAL(dgbmv,DGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void dgbmv_(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dgbmv,DGBMV)))));
 #else
+#ifndef __APPLE__
 void dgbmv(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dgbmv,DGBMV)))));
+#else
+void dgbmv(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy){ FC_GLOBAL(dgbmv,DGBMV)((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); }
+#endif
 #endif
 
 
@@ -2676,7 +3144,11 @@ void flexiblas_real_dgbmv_(void* trans, void* m, void* n, void* kl, void* ku, vo
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dgbmv(void* trans, void* m, void* n, void* kl, void* ku, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_real_dgbmv_")));
+#else
+void flexiblas_real_dgbmv(void* trans, void* m, void* n, void* kl, void* ku, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_real_dgbmv_((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_dgbmv_(void* trans, void* m, void* n, void* kl, void* ku, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy)
@@ -2696,7 +3168,11 @@ void flexiblas_chain_dgbmv_(void* trans, void* m, void* n, void* kl, void* ku, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dgbmv(void* trans, void* m, void* n, void* kl, void* ku, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_chain_dgbmv_")));
+#else
+void flexiblas_chain_dgbmv(void* trans, void* m, void* n, void* kl, void* ku, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_chain_dgbmv_((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dgemm = 0;
@@ -2722,7 +3198,11 @@ void FC_GLOBAL(dgemm,DGEMM)(char* transa, char* transb, blasint* m, blasint* n, 
 #ifdef FLEXIBLAS_ABI_IBM
 void dgemm_(char* transa, char* transb, blasint* m, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(dgemm,DGEMM)))));
 #else
+#ifndef __APPLE__
 void dgemm(char* transa, char* transb, blasint* m, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(dgemm,DGEMM)))));
+#else
+void dgemm(char* transa, char* transb, blasint* m, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc){ FC_GLOBAL(dgemm,DGEMM)((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc); }
+#endif
 #endif
 
 
@@ -2736,7 +3216,11 @@ void flexiblas_real_dgemm_(void* transa, void* transb, void* m, void* n, void* k
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dgemm(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_real_dgemm_")));
+#else
+void flexiblas_real_dgemm(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_real_dgemm_((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 void flexiblas_chain_dgemm_(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc)
@@ -2756,7 +3240,11 @@ void flexiblas_chain_dgemm_(void* transa, void* transb, void* m, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dgemm(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_chain_dgemm_")));
+#else
+void flexiblas_chain_dgemm(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_chain_dgemm_((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dgemv = 0;
@@ -2782,7 +3270,11 @@ void FC_GLOBAL(dgemv,DGEMV)(char* trans, blasint* m, blasint* n, double* alpha, 
 #ifdef FLEXIBLAS_ABI_IBM
 void dgemv_(char* trans, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dgemv,DGEMV)))));
 #else
+#ifndef __APPLE__
 void dgemv(char* trans, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dgemv,DGEMV)))));
+#else
+void dgemv(char* trans, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy){ FC_GLOBAL(dgemv,DGEMV)((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); }
+#endif
 #endif
 
 
@@ -2796,7 +3288,11 @@ void flexiblas_real_dgemv_(void* trans, void* m, void* n, void* alpha, void* a, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dgemv(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_real_dgemv_")));
+#else
+void flexiblas_real_dgemv(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_real_dgemv_((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_dgemv_(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy)
@@ -2816,7 +3312,11 @@ void flexiblas_chain_dgemv_(void* trans, void* m, void* n, void* alpha, void* a,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dgemv(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_chain_dgemv_")));
+#else
+void flexiblas_chain_dgemv(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_chain_dgemv_((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dger = 0;
@@ -2842,7 +3342,11 @@ void FC_GLOBAL(dger,DGER)(blasint* m, blasint* n, double* alpha, double* x, blas
 #ifdef FLEXIBLAS_ABI_IBM
 void dger_(blasint* m, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(dger,DGER)))));
 #else
+#ifndef __APPLE__
 void dger(blasint* m, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(dger,DGER)))));
+#else
+void dger(blasint* m, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* a, blasint* lda){ FC_GLOBAL(dger,DGER)((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
+#endif
 #endif
 
 
@@ -2856,7 +3360,11 @@ void flexiblas_real_dger_(void* m, void* n, void* alpha, void* x, void* incx, vo
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dger(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda) __attribute__((alias("flexiblas_real_dger_")));
+#else
+void flexiblas_real_dger(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda){flexiblas_real_dger_((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);}
+#endif
 
 
 void flexiblas_chain_dger_(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda)
@@ -2876,7 +3384,11 @@ void flexiblas_chain_dger_(void* m, void* n, void* alpha, void* x, void* incx, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dger(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda) __attribute__((alias("flexiblas_chain_dger_")));
+#else
+void flexiblas_chain_dger(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda){flexiblas_chain_dger_((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dnrm2 = 0;
@@ -2903,7 +3415,11 @@ double FC_GLOBAL(dnrm2,DNRM2)(blasint* n, double* x, blasint* incx)
 #ifdef FLEXIBLAS_ABI_IBM
 double dnrm2_(blasint* n, double* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dnrm2,DNRM2)))));
 #else
+#ifndef __APPLE__
 double dnrm2(blasint* n, double* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dnrm2,DNRM2)))));
+#else
+double dnrm2(blasint* n, double* x, blasint* incx){ return FC_GLOBAL(dnrm2,DNRM2)((void*) n, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -2918,7 +3434,11 @@ double flexiblas_real_dnrm2_(void* n, void* x, void* incx)
 
 	return ret;
 }
+#ifndef __APPLE__
 double flexiblas_real_dnrm2(void* n, void* x, void* incx) __attribute__((alias("flexiblas_real_dnrm2_")));
+#else
+double flexiblas_real_dnrm2(void* n, void* x, void* incx){return flexiblas_real_dnrm2_((void*) n, (void*) x, (void*) incx);}
+#endif
 
 
 double flexiblas_chain_dnrm2_(void* n, void* x, void* incx)
@@ -2939,7 +3459,11 @@ double flexiblas_chain_dnrm2_(void* n, void* x, void* incx)
 
 	return ret;
 }
+#ifndef __APPLE__
 double flexiblas_chain_dnrm2(void* n, void* x, void* incx) __attribute__((alias("flexiblas_chain_dnrm2_")));
+#else
+double flexiblas_chain_dnrm2(void* n, void* x, void* incx){return flexiblas_chain_dnrm2_((void*) n, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_drot = 0;
@@ -2965,7 +3489,11 @@ void FC_GLOBAL(drot,DROT)(blasint* n, double* dx, blasint* incx, double* dy, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void drot_(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy, double* c, double* s) __attribute__((alias(MTS(FC_GLOBAL(drot,DROT)))));
 #else
+#ifndef __APPLE__
 void drot(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy, double* c, double* s) __attribute__((alias(MTS(FC_GLOBAL(drot,DROT)))));
+#else
+void drot(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy, double* c, double* s){ FC_GLOBAL(drot,DROT)((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy, (void*) c, (void*) s); }
+#endif
 #endif
 
 
@@ -2979,7 +3507,11 @@ void flexiblas_real_drot_(void* n, void* dx, void* incx, void* dy, void* incy, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_drot(void* n, void* dx, void* incx, void* dy, void* incy, void* c, void* s) __attribute__((alias("flexiblas_real_drot_")));
+#else
+void flexiblas_real_drot(void* n, void* dx, void* incx, void* dy, void* incy, void* c, void* s){flexiblas_real_drot_((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy, (void*) c, (void*) s);}
+#endif
 
 
 void flexiblas_chain_drot_(void* n, void* dx, void* incx, void* dy, void* incy, void* c, void* s)
@@ -2999,7 +3531,11 @@ void flexiblas_chain_drot_(void* n, void* dx, void* incx, void* dy, void* incy, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_drot(void* n, void* dx, void* incx, void* dy, void* incy, void* c, void* s) __attribute__((alias("flexiblas_chain_drot_")));
+#else
+void flexiblas_chain_drot(void* n, void* dx, void* incx, void* dy, void* incy, void* c, void* s){flexiblas_chain_drot_((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy, (void*) c, (void*) s);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_drotg = 0;
@@ -3025,7 +3561,11 @@ void FC_GLOBAL(drotg,DROTG)(double* da, double* db, double* c, double* s)
 #ifdef FLEXIBLAS_ABI_IBM
 void drotg_(double* da, double* db, double* c, double* s) __attribute__((alias(MTS(FC_GLOBAL(drotg,DROTG)))));
 #else
+#ifndef __APPLE__
 void drotg(double* da, double* db, double* c, double* s) __attribute__((alias(MTS(FC_GLOBAL(drotg,DROTG)))));
+#else
+void drotg(double* da, double* db, double* c, double* s){ FC_GLOBAL(drotg,DROTG)((void*) da, (void*) db, (void*) c, (void*) s); }
+#endif
 #endif
 
 
@@ -3039,7 +3579,11 @@ void flexiblas_real_drotg_(void* da, void* db, void* c, void* s)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_drotg(void* da, void* db, void* c, void* s) __attribute__((alias("flexiblas_real_drotg_")));
+#else
+void flexiblas_real_drotg(void* da, void* db, void* c, void* s){flexiblas_real_drotg_((void*) da, (void*) db, (void*) c, (void*) s);}
+#endif
 
 
 void flexiblas_chain_drotg_(void* da, void* db, void* c, void* s)
@@ -3059,7 +3603,11 @@ void flexiblas_chain_drotg_(void* da, void* db, void* c, void* s)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_drotg(void* da, void* db, void* c, void* s) __attribute__((alias("flexiblas_chain_drotg_")));
+#else
+void flexiblas_chain_drotg(void* da, void* db, void* c, void* s){flexiblas_chain_drotg_((void*) da, (void*) db, (void*) c, (void*) s);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_drotm = 0;
@@ -3085,7 +3633,11 @@ void FC_GLOBAL(drotm,DROTM)(blasint* n, double* dx, blasint* incx, double* dy, b
 #ifdef FLEXIBLAS_ABI_IBM
 void drotm_(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy, double* dparam) __attribute__((alias(MTS(FC_GLOBAL(drotm,DROTM)))));
 #else
+#ifndef __APPLE__
 void drotm(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy, double* dparam) __attribute__((alias(MTS(FC_GLOBAL(drotm,DROTM)))));
+#else
+void drotm(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy, double* dparam){ FC_GLOBAL(drotm,DROTM)((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy, (void*) dparam); }
+#endif
 #endif
 
 
@@ -3099,7 +3651,11 @@ void flexiblas_real_drotm_(void* n, void* dx, void* incx, void* dy, void* incy, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_drotm(void* n, void* dx, void* incx, void* dy, void* incy, void* dparam) __attribute__((alias("flexiblas_real_drotm_")));
+#else
+void flexiblas_real_drotm(void* n, void* dx, void* incx, void* dy, void* incy, void* dparam){flexiblas_real_drotm_((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy, (void*) dparam);}
+#endif
 
 
 void flexiblas_chain_drotm_(void* n, void* dx, void* incx, void* dy, void* incy, void* dparam)
@@ -3119,7 +3675,11 @@ void flexiblas_chain_drotm_(void* n, void* dx, void* incx, void* dy, void* incy,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_drotm(void* n, void* dx, void* incx, void* dy, void* incy, void* dparam) __attribute__((alias("flexiblas_chain_drotm_")));
+#else
+void flexiblas_chain_drotm(void* n, void* dx, void* incx, void* dy, void* incy, void* dparam){flexiblas_chain_drotm_((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy, (void*) dparam);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_drotmg = 0;
@@ -3145,7 +3705,11 @@ void FC_GLOBAL(drotmg,DROTMG)(double* dd1, double* dd2, double* dx1, double* dy1
 #ifdef FLEXIBLAS_ABI_IBM
 void drotmg_(double* dd1, double* dd2, double* dx1, double* dy1, double* dparam) __attribute__((alias(MTS(FC_GLOBAL(drotmg,DROTMG)))));
 #else
+#ifndef __APPLE__
 void drotmg(double* dd1, double* dd2, double* dx1, double* dy1, double* dparam) __attribute__((alias(MTS(FC_GLOBAL(drotmg,DROTMG)))));
+#else
+void drotmg(double* dd1, double* dd2, double* dx1, double* dy1, double* dparam){ FC_GLOBAL(drotmg,DROTMG)((void*) dd1, (void*) dd2, (void*) dx1, (void*) dy1, (void*) dparam); }
+#endif
 #endif
 
 
@@ -3159,7 +3723,11 @@ void flexiblas_real_drotmg_(void* dd1, void* dd2, void* dx1, void* dy1, void* dp
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_drotmg(void* dd1, void* dd2, void* dx1, void* dy1, void* dparam) __attribute__((alias("flexiblas_real_drotmg_")));
+#else
+void flexiblas_real_drotmg(void* dd1, void* dd2, void* dx1, void* dy1, void* dparam){flexiblas_real_drotmg_((void*) dd1, (void*) dd2, (void*) dx1, (void*) dy1, (void*) dparam);}
+#endif
 
 
 void flexiblas_chain_drotmg_(void* dd1, void* dd2, void* dx1, void* dy1, void* dparam)
@@ -3179,7 +3747,11 @@ void flexiblas_chain_drotmg_(void* dd1, void* dd2, void* dx1, void* dy1, void* d
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_drotmg(void* dd1, void* dd2, void* dx1, void* dy1, void* dparam) __attribute__((alias("flexiblas_chain_drotmg_")));
+#else
+void flexiblas_chain_drotmg(void* dd1, void* dd2, void* dx1, void* dy1, void* dparam){flexiblas_chain_drotmg_((void*) dd1, (void*) dd2, (void*) dx1, (void*) dy1, (void*) dparam);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dsbmv = 0;
@@ -3205,7 +3777,11 @@ void FC_GLOBAL(dsbmv,DSBMV)(char* uplo, blasint* n, blasint* k, double* alpha, d
 #ifdef FLEXIBLAS_ABI_IBM
 void dsbmv_(char* uplo, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dsbmv,DSBMV)))));
 #else
+#ifndef __APPLE__
 void dsbmv(char* uplo, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dsbmv,DSBMV)))));
+#else
+void dsbmv(char* uplo, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy){ FC_GLOBAL(dsbmv,DSBMV)((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); }
+#endif
 #endif
 
 
@@ -3219,7 +3795,11 @@ void flexiblas_real_dsbmv_(void* uplo, void* n, void* k, void* alpha, void* a, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dsbmv(void* uplo, void* n, void* k, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_real_dsbmv_")));
+#else
+void flexiblas_real_dsbmv(void* uplo, void* n, void* k, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_real_dsbmv_((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_dsbmv_(void* uplo, void* n, void* k, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy)
@@ -3239,7 +3819,11 @@ void flexiblas_chain_dsbmv_(void* uplo, void* n, void* k, void* alpha, void* a, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dsbmv(void* uplo, void* n, void* k, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_chain_dsbmv_")));
+#else
+void flexiblas_chain_dsbmv(void* uplo, void* n, void* k, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_chain_dsbmv_((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dscal = 0;
@@ -3265,7 +3849,11 @@ void FC_GLOBAL(dscal,DSCAL)(blasint* n, double* da, double* dx, blasint* incx)
 #ifdef FLEXIBLAS_ABI_IBM
 void dscal_(blasint* n, double* da, double* dx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dscal,DSCAL)))));
 #else
+#ifndef __APPLE__
 void dscal(blasint* n, double* da, double* dx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dscal,DSCAL)))));
+#else
+void dscal(blasint* n, double* da, double* dx, blasint* incx){ FC_GLOBAL(dscal,DSCAL)((void*) n, (void*) da, (void*) dx, (void*) incx); }
+#endif
 #endif
 
 
@@ -3279,7 +3867,11 @@ void flexiblas_real_dscal_(void* n, void* da, void* dx, void* incx)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dscal(void* n, void* da, void* dx, void* incx) __attribute__((alias("flexiblas_real_dscal_")));
+#else
+void flexiblas_real_dscal(void* n, void* da, void* dx, void* incx){flexiblas_real_dscal_((void*) n, (void*) da, (void*) dx, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_dscal_(void* n, void* da, void* dx, void* incx)
@@ -3299,7 +3891,11 @@ void flexiblas_chain_dscal_(void* n, void* da, void* dx, void* incx)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dscal(void* n, void* da, void* dx, void* incx) __attribute__((alias("flexiblas_chain_dscal_")));
+#else
+void flexiblas_chain_dscal(void* n, void* da, void* dx, void* incx){flexiblas_chain_dscal_((void*) n, (void*) da, (void*) dx, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dsdot = 0;
@@ -3326,7 +3922,11 @@ double FC_GLOBAL(dsdot,DSDOT)(blasint* n, float* sx, blasint* incx, float* sy, b
 #ifdef FLEXIBLAS_ABI_IBM
 double dsdot_(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dsdot,DSDOT)))));
 #else
+#ifndef __APPLE__
 double dsdot(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dsdot,DSDOT)))));
+#else
+double dsdot(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy){ return FC_GLOBAL(dsdot,DSDOT)((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy); }
+#endif
 #endif
 
 
@@ -3341,7 +3941,11 @@ double flexiblas_real_dsdot_(void* n, void* sx, void* incx, void* sy, void* incy
 
 	return ret;
 }
+#ifndef __APPLE__
 double flexiblas_real_dsdot(void* n, void* sx, void* incx, void* sy, void* incy) __attribute__((alias("flexiblas_real_dsdot_")));
+#else
+double flexiblas_real_dsdot(void* n, void* sx, void* incx, void* sy, void* incy){return flexiblas_real_dsdot_((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy);}
+#endif
 
 
 double flexiblas_chain_dsdot_(void* n, void* sx, void* incx, void* sy, void* incy)
@@ -3362,7 +3966,11 @@ double flexiblas_chain_dsdot_(void* n, void* sx, void* incx, void* sy, void* inc
 
 	return ret;
 }
+#ifndef __APPLE__
 double flexiblas_chain_dsdot(void* n, void* sx, void* incx, void* sy, void* incy) __attribute__((alias("flexiblas_chain_dsdot_")));
+#else
+double flexiblas_chain_dsdot(void* n, void* sx, void* incx, void* sy, void* incy){return flexiblas_chain_dsdot_((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dspmv = 0;
@@ -3388,7 +3996,11 @@ void FC_GLOBAL(dspmv,DSPMV)(char* uplo, blasint* n, double* alpha, double* ap, d
 #ifdef FLEXIBLAS_ABI_IBM
 void dspmv_(char* uplo, blasint* n, double* alpha, double* ap, double* x, blasint* incx, double* beta, double* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dspmv,DSPMV)))));
 #else
+#ifndef __APPLE__
 void dspmv(char* uplo, blasint* n, double* alpha, double* ap, double* x, blasint* incx, double* beta, double* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dspmv,DSPMV)))));
+#else
+void dspmv(char* uplo, blasint* n, double* alpha, double* ap, double* x, blasint* incx, double* beta, double* y, blasint* incy){ FC_GLOBAL(dspmv,DSPMV)((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); }
+#endif
 #endif
 
 
@@ -3402,7 +4014,11 @@ void flexiblas_real_dspmv_(void* uplo, void* n, void* alpha, void* ap, void* x, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dspmv(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_real_dspmv_")));
+#else
+void flexiblas_real_dspmv(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_real_dspmv_((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_dspmv_(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy)
@@ -3422,7 +4038,11 @@ void flexiblas_chain_dspmv_(void* uplo, void* n, void* alpha, void* ap, void* x,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dspmv(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_chain_dspmv_")));
+#else
+void flexiblas_chain_dspmv(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_chain_dspmv_((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dspr = 0;
@@ -3448,7 +4068,11 @@ void FC_GLOBAL(dspr,DSPR)(char* uplo, blasint* n, double* alpha, double* x, blas
 #ifdef FLEXIBLAS_ABI_IBM
 void dspr_(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* ap) __attribute__((alias(MTS(FC_GLOBAL(dspr,DSPR)))));
 #else
+#ifndef __APPLE__
 void dspr(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* ap) __attribute__((alias(MTS(FC_GLOBAL(dspr,DSPR)))));
+#else
+void dspr(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* ap){ FC_GLOBAL(dspr,DSPR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap); }
+#endif
 #endif
 
 
@@ -3462,7 +4086,11 @@ void flexiblas_real_dspr_(void* uplo, void* n, void* alpha, void* x, void* incx,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dspr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap) __attribute__((alias("flexiblas_real_dspr_")));
+#else
+void flexiblas_real_dspr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap){flexiblas_real_dspr_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap);}
+#endif
 
 
 void flexiblas_chain_dspr_(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap)
@@ -3482,7 +4110,11 @@ void flexiblas_chain_dspr_(void* uplo, void* n, void* alpha, void* x, void* incx
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dspr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap) __attribute__((alias("flexiblas_chain_dspr_")));
+#else
+void flexiblas_chain_dspr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap){flexiblas_chain_dspr_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dspr2 = 0;
@@ -3508,7 +4140,11 @@ void FC_GLOBAL(dspr2,DSPR2)(char* uplo, blasint* n, double* alpha, double* x, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void dspr2_(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* ap) __attribute__((alias(MTS(FC_GLOBAL(dspr2,DSPR2)))));
 #else
+#ifndef __APPLE__
 void dspr2(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* ap) __attribute__((alias(MTS(FC_GLOBAL(dspr2,DSPR2)))));
+#else
+void dspr2(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* ap){ FC_GLOBAL(dspr2,DSPR2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap); }
+#endif
 #endif
 
 
@@ -3522,7 +4158,11 @@ void flexiblas_real_dspr2_(void* uplo, void* n, void* alpha, void* x, void* incx
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dspr2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* ap) __attribute__((alias("flexiblas_real_dspr2_")));
+#else
+void flexiblas_real_dspr2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* ap){flexiblas_real_dspr2_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap);}
+#endif
 
 
 void flexiblas_chain_dspr2_(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* ap)
@@ -3542,7 +4182,11 @@ void flexiblas_chain_dspr2_(void* uplo, void* n, void* alpha, void* x, void* inc
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dspr2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* ap) __attribute__((alias("flexiblas_chain_dspr2_")));
+#else
+void flexiblas_chain_dspr2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* ap){flexiblas_chain_dspr2_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dswap = 0;
@@ -3568,7 +4212,11 @@ void FC_GLOBAL(dswap,DSWAP)(blasint* n, double* dx, blasint* incx, double* dy, b
 #ifdef FLEXIBLAS_ABI_IBM
 void dswap_(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dswap,DSWAP)))));
 #else
+#ifndef __APPLE__
 void dswap(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dswap,DSWAP)))));
+#else
+void dswap(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy){ FC_GLOBAL(dswap,DSWAP)((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy); }
+#endif
 #endif
 
 
@@ -3582,7 +4230,11 @@ void flexiblas_real_dswap_(void* n, void* dx, void* incx, void* dy, void* incy)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dswap(void* n, void* dx, void* incx, void* dy, void* incy) __attribute__((alias("flexiblas_real_dswap_")));
+#else
+void flexiblas_real_dswap(void* n, void* dx, void* incx, void* dy, void* incy){flexiblas_real_dswap_((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_dswap_(void* n, void* dx, void* incx, void* dy, void* incy)
@@ -3602,7 +4254,11 @@ void flexiblas_chain_dswap_(void* n, void* dx, void* incx, void* dy, void* incy)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dswap(void* n, void* dx, void* incx, void* dy, void* incy) __attribute__((alias("flexiblas_chain_dswap_")));
+#else
+void flexiblas_chain_dswap(void* n, void* dx, void* incx, void* dy, void* incy){flexiblas_chain_dswap_((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dsymm = 0;
@@ -3628,7 +4284,11 @@ void FC_GLOBAL(dsymm,DSYMM)(char* side, char* uplo, blasint* m, blasint* n, doub
 #ifdef FLEXIBLAS_ABI_IBM
 void dsymm_(char* side, char* uplo, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(dsymm,DSYMM)))));
 #else
+#ifndef __APPLE__
 void dsymm(char* side, char* uplo, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(dsymm,DSYMM)))));
+#else
+void dsymm(char* side, char* uplo, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc){ FC_GLOBAL(dsymm,DSYMM)((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc); }
+#endif
 #endif
 
 
@@ -3642,7 +4302,11 @@ void flexiblas_real_dsymm_(void* side, void* uplo, void* m, void* n, void* alpha
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dsymm(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_real_dsymm_")));
+#else
+void flexiblas_real_dsymm(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_real_dsymm_((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 void flexiblas_chain_dsymm_(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc)
@@ -3662,7 +4326,11 @@ void flexiblas_chain_dsymm_(void* side, void* uplo, void* m, void* n, void* alph
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dsymm(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_chain_dsymm_")));
+#else
+void flexiblas_chain_dsymm(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_chain_dsymm_((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dsymv = 0;
@@ -3688,7 +4356,11 @@ void FC_GLOBAL(dsymv,DSYMV)(char* uplo, blasint* n, double* alpha, double* a, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void dsymv_(char* uplo, blasint* n, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dsymv,DSYMV)))));
 #else
+#ifndef __APPLE__
 void dsymv(char* uplo, blasint* n, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dsymv,DSYMV)))));
+#else
+void dsymv(char* uplo, blasint* n, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy){ FC_GLOBAL(dsymv,DSYMV)((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); }
+#endif
 #endif
 
 
@@ -3702,7 +4374,11 @@ void flexiblas_real_dsymv_(void* uplo, void* n, void* alpha, void* a, void* lda,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dsymv(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_real_dsymv_")));
+#else
+void flexiblas_real_dsymv(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_real_dsymv_((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_dsymv_(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy)
@@ -3722,7 +4398,11 @@ void flexiblas_chain_dsymv_(void* uplo, void* n, void* alpha, void* a, void* lda
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dsymv(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_chain_dsymv_")));
+#else
+void flexiblas_chain_dsymv(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_chain_dsymv_((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dsyr = 0;
@@ -3748,7 +4428,11 @@ void FC_GLOBAL(dsyr,DSYR)(char* uplo, blasint* n, double* alpha, double* x, blas
 #ifdef FLEXIBLAS_ABI_IBM
 void dsyr_(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(dsyr,DSYR)))));
 #else
+#ifndef __APPLE__
 void dsyr(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(dsyr,DSYR)))));
+#else
+void dsyr(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* a, blasint* lda){ FC_GLOBAL(dsyr,DSYR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda); }
+#endif
 #endif
 
 
@@ -3762,7 +4446,11 @@ void flexiblas_real_dsyr_(void* uplo, void* n, void* alpha, void* x, void* incx,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dsyr(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda) __attribute__((alias("flexiblas_real_dsyr_")));
+#else
+void flexiblas_real_dsyr(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda){flexiblas_real_dsyr_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda);}
+#endif
 
 
 void flexiblas_chain_dsyr_(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda)
@@ -3782,7 +4470,11 @@ void flexiblas_chain_dsyr_(void* uplo, void* n, void* alpha, void* x, void* incx
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dsyr(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda) __attribute__((alias("flexiblas_chain_dsyr_")));
+#else
+void flexiblas_chain_dsyr(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda){flexiblas_chain_dsyr_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dsyr2 = 0;
@@ -3808,7 +4500,11 @@ void FC_GLOBAL(dsyr2,DSYR2)(char* uplo, blasint* n, double* alpha, double* x, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void dsyr2_(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(dsyr2,DSYR2)))));
 #else
+#ifndef __APPLE__
 void dsyr2(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(dsyr2,DSYR2)))));
+#else
+void dsyr2(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* a, blasint* lda){ FC_GLOBAL(dsyr2,DSYR2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
+#endif
 #endif
 
 
@@ -3822,7 +4518,11 @@ void flexiblas_real_dsyr2_(void* uplo, void* n, void* alpha, void* x, void* incx
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dsyr2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda) __attribute__((alias("flexiblas_real_dsyr2_")));
+#else
+void flexiblas_real_dsyr2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda){flexiblas_real_dsyr2_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);}
+#endif
 
 
 void flexiblas_chain_dsyr2_(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda)
@@ -3842,7 +4542,11 @@ void flexiblas_chain_dsyr2_(void* uplo, void* n, void* alpha, void* x, void* inc
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dsyr2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda) __attribute__((alias("flexiblas_chain_dsyr2_")));
+#else
+void flexiblas_chain_dsyr2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda){flexiblas_chain_dsyr2_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dsyr2k = 0;
@@ -3868,7 +4572,11 @@ void FC_GLOBAL(dsyr2k,DSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, d
 #ifdef FLEXIBLAS_ABI_IBM
 void dsyr2k_(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(dsyr2k,DSYR2K)))));
 #else
+#ifndef __APPLE__
 void dsyr2k(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(dsyr2k,DSYR2K)))));
+#else
+void dsyr2k(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc){ FC_GLOBAL(dsyr2k,DSYR2K)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc); }
+#endif
 #endif
 
 
@@ -3882,7 +4590,11 @@ void flexiblas_real_dsyr2k_(void* uplo, void* trans, void* n, void* k, void* alp
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dsyr2k(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_real_dsyr2k_")));
+#else
+void flexiblas_real_dsyr2k(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_real_dsyr2k_((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 void flexiblas_chain_dsyr2k_(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc)
@@ -3902,7 +4614,11 @@ void flexiblas_chain_dsyr2k_(void* uplo, void* trans, void* n, void* k, void* al
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dsyr2k(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_chain_dsyr2k_")));
+#else
+void flexiblas_chain_dsyr2k(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_chain_dsyr2k_((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dsyrk = 0;
@@ -3928,7 +4644,11 @@ void FC_GLOBAL(dsyrk,DSYRK)(char* uplo, char* trans, blasint* n, blasint* k, dou
 #ifdef FLEXIBLAS_ABI_IBM
 void dsyrk_(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* beta, double* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(dsyrk,DSYRK)))));
 #else
+#ifndef __APPLE__
 void dsyrk(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* beta, double* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(dsyrk,DSYRK)))));
+#else
+void dsyrk(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* beta, double* c, blasint* ldc){ FC_GLOBAL(dsyrk,DSYRK)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc); }
+#endif
 #endif
 
 
@@ -3942,7 +4662,11 @@ void flexiblas_real_dsyrk_(void* uplo, void* trans, void* n, void* k, void* alph
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dsyrk(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_real_dsyrk_")));
+#else
+void flexiblas_real_dsyrk(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc){flexiblas_real_dsyrk_((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 void flexiblas_chain_dsyrk_(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc)
@@ -3962,7 +4686,11 @@ void flexiblas_chain_dsyrk_(void* uplo, void* trans, void* n, void* k, void* alp
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dsyrk(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_chain_dsyrk_")));
+#else
+void flexiblas_chain_dsyrk(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc){flexiblas_chain_dsyrk_((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dtbmv = 0;
@@ -3988,7 +4716,11 @@ void FC_GLOBAL(dtbmv,DTBMV)(char* uplo, char* trans, char* diag, blasint* n, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void dtbmv_(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double* a, blasint* lda, double* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dtbmv,DTBMV)))));
 #else
+#ifndef __APPLE__
 void dtbmv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double* a, blasint* lda, double* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dtbmv,DTBMV)))));
+#else
+void dtbmv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double* a, blasint* lda, double* x, blasint* incx){ FC_GLOBAL(dtbmv,DTBMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -4002,7 +4734,11 @@ void flexiblas_real_dtbmv_(void* uplo, void* trans, void* diag, void* n, void* k
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dtbmv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_real_dtbmv_")));
+#else
+void flexiblas_real_dtbmv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx){flexiblas_real_dtbmv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_dtbmv_(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx)
@@ -4022,7 +4758,11 @@ void flexiblas_chain_dtbmv_(void* uplo, void* trans, void* diag, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dtbmv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_chain_dtbmv_")));
+#else
+void flexiblas_chain_dtbmv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx){flexiblas_chain_dtbmv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dtbsv = 0;
@@ -4048,7 +4788,11 @@ void FC_GLOBAL(dtbsv,DTBSV)(char* uplo, char* trans, char* diag, blasint* n, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void dtbsv_(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double* a, blasint* lda, double* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dtbsv,DTBSV)))));
 #else
+#ifndef __APPLE__
 void dtbsv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double* a, blasint* lda, double* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dtbsv,DTBSV)))));
+#else
+void dtbsv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double* a, blasint* lda, double* x, blasint* incx){ FC_GLOBAL(dtbsv,DTBSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -4062,7 +4806,11 @@ void flexiblas_real_dtbsv_(void* uplo, void* trans, void* diag, void* n, void* k
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dtbsv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_real_dtbsv_")));
+#else
+void flexiblas_real_dtbsv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx){flexiblas_real_dtbsv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_dtbsv_(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx)
@@ -4082,7 +4830,11 @@ void flexiblas_chain_dtbsv_(void* uplo, void* trans, void* diag, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dtbsv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_chain_dtbsv_")));
+#else
+void flexiblas_chain_dtbsv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx){flexiblas_chain_dtbsv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dtpmv = 0;
@@ -4108,7 +4860,11 @@ void FC_GLOBAL(dtpmv,DTPMV)(char* uplo, char* trans, char* diag, blasint* n, dou
 #ifdef FLEXIBLAS_ABI_IBM
 void dtpmv_(char* uplo, char* trans, char* diag, blasint* n, double* ap, double* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dtpmv,DTPMV)))));
 #else
+#ifndef __APPLE__
 void dtpmv(char* uplo, char* trans, char* diag, blasint* n, double* ap, double* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dtpmv,DTPMV)))));
+#else
+void dtpmv(char* uplo, char* trans, char* diag, blasint* n, double* ap, double* x, blasint* incx){ FC_GLOBAL(dtpmv,DTPMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -4122,7 +4878,11 @@ void flexiblas_real_dtpmv_(void* uplo, void* trans, void* diag, void* n, void* a
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dtpmv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx) __attribute__((alias("flexiblas_real_dtpmv_")));
+#else
+void flexiblas_real_dtpmv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx){flexiblas_real_dtpmv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_dtpmv_(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx)
@@ -4142,7 +4902,11 @@ void flexiblas_chain_dtpmv_(void* uplo, void* trans, void* diag, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dtpmv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx) __attribute__((alias("flexiblas_chain_dtpmv_")));
+#else
+void flexiblas_chain_dtpmv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx){flexiblas_chain_dtpmv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dtpsv = 0;
@@ -4168,7 +4932,11 @@ void FC_GLOBAL(dtpsv,DTPSV)(char* uplo, char* trans, char* diag, blasint* n, dou
 #ifdef FLEXIBLAS_ABI_IBM
 void dtpsv_(char* uplo, char* trans, char* diag, blasint* n, double* ap, double* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dtpsv,DTPSV)))));
 #else
+#ifndef __APPLE__
 void dtpsv(char* uplo, char* trans, char* diag, blasint* n, double* ap, double* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dtpsv,DTPSV)))));
+#else
+void dtpsv(char* uplo, char* trans, char* diag, blasint* n, double* ap, double* x, blasint* incx){ FC_GLOBAL(dtpsv,DTPSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -4182,7 +4950,11 @@ void flexiblas_real_dtpsv_(void* uplo, void* trans, void* diag, void* n, void* a
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dtpsv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx) __attribute__((alias("flexiblas_real_dtpsv_")));
+#else
+void flexiblas_real_dtpsv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx){flexiblas_real_dtpsv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_dtpsv_(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx)
@@ -4202,7 +4974,11 @@ void flexiblas_chain_dtpsv_(void* uplo, void* trans, void* diag, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dtpsv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx) __attribute__((alias("flexiblas_chain_dtpsv_")));
+#else
+void flexiblas_chain_dtpsv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx){flexiblas_chain_dtpsv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dtrmm = 0;
@@ -4228,7 +5004,11 @@ void FC_GLOBAL(dtrmm,DTRMM)(char* side, char* uplo, char* transa, char* diag, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void dtrmm_(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(dtrmm,DTRMM)))));
 #else
+#ifndef __APPLE__
 void dtrmm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(dtrmm,DTRMM)))));
+#else
+void dtrmm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb){ FC_GLOBAL(dtrmm,DTRMM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb); }
+#endif
 #endif
 
 
@@ -4242,7 +5022,11 @@ void flexiblas_real_dtrmm_(void* side, void* uplo, void* transa, void* diag, voi
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dtrmm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_real_dtrmm_")));
+#else
+void flexiblas_real_dtrmm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb){flexiblas_real_dtrmm_((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 void flexiblas_chain_dtrmm_(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb)
@@ -4262,7 +5046,11 @@ void flexiblas_chain_dtrmm_(void* side, void* uplo, void* transa, void* diag, vo
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dtrmm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_chain_dtrmm_")));
+#else
+void flexiblas_chain_dtrmm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb){flexiblas_chain_dtrmm_((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dtrmv = 0;
@@ -4288,7 +5076,11 @@ void FC_GLOBAL(dtrmv,DTRMV)(char* uplo, char* trans, char* diag, blasint* n, dou
 #ifdef FLEXIBLAS_ABI_IBM
 void dtrmv_(char* uplo, char* trans, char* diag, blasint* n, double* a, blasint* lda, double* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dtrmv,DTRMV)))));
 #else
+#ifndef __APPLE__
 void dtrmv(char* uplo, char* trans, char* diag, blasint* n, double* a, blasint* lda, double* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dtrmv,DTRMV)))));
+#else
+void dtrmv(char* uplo, char* trans, char* diag, blasint* n, double* a, blasint* lda, double* x, blasint* incx){ FC_GLOBAL(dtrmv,DTRMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -4302,7 +5094,11 @@ void flexiblas_real_dtrmv_(void* uplo, void* trans, void* diag, void* n, void* a
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dtrmv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_real_dtrmv_")));
+#else
+void flexiblas_real_dtrmv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx){flexiblas_real_dtrmv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_dtrmv_(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx)
@@ -4322,7 +5118,11 @@ void flexiblas_chain_dtrmv_(void* uplo, void* trans, void* diag, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dtrmv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_chain_dtrmv_")));
+#else
+void flexiblas_chain_dtrmv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx){flexiblas_chain_dtrmv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dtrsm = 0;
@@ -4348,7 +5148,11 @@ void FC_GLOBAL(dtrsm,DTRSM)(char* side, char* uplo, char* transa, char* diag, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void dtrsm_(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(dtrsm,DTRSM)))));
 #else
+#ifndef __APPLE__
 void dtrsm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(dtrsm,DTRSM)))));
+#else
+void dtrsm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb){ FC_GLOBAL(dtrsm,DTRSM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb); }
+#endif
 #endif
 
 
@@ -4362,7 +5166,11 @@ void flexiblas_real_dtrsm_(void* side, void* uplo, void* transa, void* diag, voi
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dtrsm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_real_dtrsm_")));
+#else
+void flexiblas_real_dtrsm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb){flexiblas_real_dtrsm_((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 void flexiblas_chain_dtrsm_(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb)
@@ -4382,7 +5190,11 @@ void flexiblas_chain_dtrsm_(void* side, void* uplo, void* transa, void* diag, vo
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dtrsm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_chain_dtrsm_")));
+#else
+void flexiblas_chain_dtrsm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb){flexiblas_chain_dtrsm_((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dtrsv = 0;
@@ -4408,7 +5220,11 @@ void FC_GLOBAL(dtrsv,DTRSV)(char* uplo, char* trans, char* diag, blasint* n, dou
 #ifdef FLEXIBLAS_ABI_IBM
 void dtrsv_(char* uplo, char* trans, char* diag, blasint* n, double* a, blasint* lda, double* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dtrsv,DTRSV)))));
 #else
+#ifndef __APPLE__
 void dtrsv(char* uplo, char* trans, char* diag, blasint* n, double* a, blasint* lda, double* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dtrsv,DTRSV)))));
+#else
+void dtrsv(char* uplo, char* trans, char* diag, blasint* n, double* a, blasint* lda, double* x, blasint* incx){ FC_GLOBAL(dtrsv,DTRSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -4422,7 +5238,11 @@ void flexiblas_real_dtrsv_(void* uplo, void* trans, void* diag, void* n, void* a
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dtrsv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_real_dtrsv_")));
+#else
+void flexiblas_real_dtrsv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx){flexiblas_real_dtrsv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_dtrsv_(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx)
@@ -4442,7 +5262,11 @@ void flexiblas_chain_dtrsv_(void* uplo, void* trans, void* diag, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dtrsv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_chain_dtrsv_")));
+#else
+void flexiblas_chain_dtrsv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx){flexiblas_chain_dtrsv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dzasum = 0;
@@ -4469,7 +5293,11 @@ double FC_GLOBAL(dzasum,DZASUM)(blasint* n, double complex* zx, blasint* incx)
 #ifdef FLEXIBLAS_ABI_IBM
 double dzasum_(blasint* n, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dzasum,DZASUM)))));
 #else
+#ifndef __APPLE__
 double dzasum(blasint* n, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dzasum,DZASUM)))));
+#else
+double dzasum(blasint* n, double complex* zx, blasint* incx){ return FC_GLOBAL(dzasum,DZASUM)((void*) n, (void*) zx, (void*) incx); }
+#endif
 #endif
 
 
@@ -4484,7 +5312,11 @@ double flexiblas_real_dzasum_(void* n, void* zx, void* incx)
 
 	return ret;
 }
+#ifndef __APPLE__
 double flexiblas_real_dzasum(void* n, void* zx, void* incx) __attribute__((alias("flexiblas_real_dzasum_")));
+#else
+double flexiblas_real_dzasum(void* n, void* zx, void* incx){return flexiblas_real_dzasum_((void*) n, (void*) zx, (void*) incx);}
+#endif
 
 
 double flexiblas_chain_dzasum_(void* n, void* zx, void* incx)
@@ -4505,7 +5337,11 @@ double flexiblas_chain_dzasum_(void* n, void* zx, void* incx)
 
 	return ret;
 }
+#ifndef __APPLE__
 double flexiblas_chain_dzasum(void* n, void* zx, void* incx) __attribute__((alias("flexiblas_chain_dzasum_")));
+#else
+double flexiblas_chain_dzasum(void* n, void* zx, void* incx){return flexiblas_chain_dzasum_((void*) n, (void*) zx, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dznrm2 = 0;
@@ -4532,7 +5368,11 @@ double FC_GLOBAL(dznrm2,DZNRM2)(blasint* n, double complex* x, blasint* incx)
 #ifdef FLEXIBLAS_ABI_IBM
 double dznrm2_(blasint* n, double complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dznrm2,DZNRM2)))));
 #else
+#ifndef __APPLE__
 double dznrm2(blasint* n, double complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dznrm2,DZNRM2)))));
+#else
+double dznrm2(blasint* n, double complex* x, blasint* incx){ return FC_GLOBAL(dznrm2,DZNRM2)((void*) n, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -4547,7 +5387,11 @@ double flexiblas_real_dznrm2_(void* n, void* x, void* incx)
 
 	return ret;
 }
+#ifndef __APPLE__
 double flexiblas_real_dznrm2(void* n, void* x, void* incx) __attribute__((alias("flexiblas_real_dznrm2_")));
+#else
+double flexiblas_real_dznrm2(void* n, void* x, void* incx){return flexiblas_real_dznrm2_((void*) n, (void*) x, (void*) incx);}
+#endif
 
 
 double flexiblas_chain_dznrm2_(void* n, void* x, void* incx)
@@ -4568,7 +5412,11 @@ double flexiblas_chain_dznrm2_(void* n, void* x, void* incx)
 
 	return ret;
 }
+#ifndef __APPLE__
 double flexiblas_chain_dznrm2(void* n, void* x, void* incx) __attribute__((alias("flexiblas_chain_dznrm2_")));
+#else
+double flexiblas_chain_dznrm2(void* n, void* x, void* incx){return flexiblas_chain_dznrm2_((void*) n, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_icamax = 0;
@@ -4595,7 +5443,11 @@ int FC_GLOBAL(icamax,ICAMAX)(blasint* n, float complex* cx, blasint* incx)
 #ifdef FLEXIBLAS_ABI_IBM
 int icamax_(blasint* n, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(icamax,ICAMAX)))));
 #else
+#ifndef __APPLE__
 int icamax(blasint* n, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(icamax,ICAMAX)))));
+#else
+int icamax(blasint* n, float complex* cx, blasint* incx){ return FC_GLOBAL(icamax,ICAMAX)((void*) n, (void*) cx, (void*) incx); }
+#endif
 #endif
 
 
@@ -4610,7 +5462,11 @@ blasint flexiblas_real_icamax_(void* n, void* cx, void* incx)
 
 	return ret;
 }
+#ifndef __APPLE__
 blasint flexiblas_real_icamax(void* n, void* cx, void* incx) __attribute__((alias("flexiblas_real_icamax_")));
+#else
+blasint flexiblas_real_icamax(void* n, void* cx, void* incx){return flexiblas_real_icamax_((void*) n, (void*) cx, (void*) incx);}
+#endif
 
 
 blasint flexiblas_chain_icamax_(void* n, void* cx, void* incx)
@@ -4631,7 +5487,11 @@ blasint flexiblas_chain_icamax_(void* n, void* cx, void* incx)
 
 	return ret;
 }
+#ifndef __APPLE__
 blasint flexiblas_chain_icamax(void* n, void* cx, void* incx) __attribute__((alias("flexiblas_chain_icamax_")));
+#else
+blasint flexiblas_chain_icamax(void* n, void* cx, void* incx){return flexiblas_chain_icamax_((void*) n, (void*) cx, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_idamax = 0;
@@ -4658,7 +5518,11 @@ int FC_GLOBAL(idamax,IDAMAX)(blasint* n, double* dx, blasint* incx)
 #ifdef FLEXIBLAS_ABI_IBM
 int idamax_(blasint* n, double* dx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(idamax,IDAMAX)))));
 #else
+#ifndef __APPLE__
 int idamax(blasint* n, double* dx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(idamax,IDAMAX)))));
+#else
+int idamax(blasint* n, double* dx, blasint* incx){ return FC_GLOBAL(idamax,IDAMAX)((void*) n, (void*) dx, (void*) incx); }
+#endif
 #endif
 
 
@@ -4673,7 +5537,11 @@ blasint flexiblas_real_idamax_(void* n, void* dx, void* incx)
 
 	return ret;
 }
+#ifndef __APPLE__
 blasint flexiblas_real_idamax(void* n, void* dx, void* incx) __attribute__((alias("flexiblas_real_idamax_")));
+#else
+blasint flexiblas_real_idamax(void* n, void* dx, void* incx){return flexiblas_real_idamax_((void*) n, (void*) dx, (void*) incx);}
+#endif
 
 
 blasint flexiblas_chain_idamax_(void* n, void* dx, void* incx)
@@ -4694,7 +5562,11 @@ blasint flexiblas_chain_idamax_(void* n, void* dx, void* incx)
 
 	return ret;
 }
+#ifndef __APPLE__
 blasint flexiblas_chain_idamax(void* n, void* dx, void* incx) __attribute__((alias("flexiblas_chain_idamax_")));
+#else
+blasint flexiblas_chain_idamax(void* n, void* dx, void* incx){return flexiblas_chain_idamax_((void*) n, (void*) dx, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_isamax = 0;
@@ -4721,7 +5593,11 @@ int FC_GLOBAL(isamax,ISAMAX)(blasint* n, float* sx, blasint* incx)
 #ifdef FLEXIBLAS_ABI_IBM
 int isamax_(blasint* n, float* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(isamax,ISAMAX)))));
 #else
+#ifndef __APPLE__
 int isamax(blasint* n, float* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(isamax,ISAMAX)))));
+#else
+int isamax(blasint* n, float* sx, blasint* incx){ return FC_GLOBAL(isamax,ISAMAX)((void*) n, (void*) sx, (void*) incx); }
+#endif
 #endif
 
 
@@ -4736,7 +5612,11 @@ blasint flexiblas_real_isamax_(void* n, void* sx, void* incx)
 
 	return ret;
 }
+#ifndef __APPLE__
 blasint flexiblas_real_isamax(void* n, void* sx, void* incx) __attribute__((alias("flexiblas_real_isamax_")));
+#else
+blasint flexiblas_real_isamax(void* n, void* sx, void* incx){return flexiblas_real_isamax_((void*) n, (void*) sx, (void*) incx);}
+#endif
 
 
 blasint flexiblas_chain_isamax_(void* n, void* sx, void* incx)
@@ -4757,7 +5637,11 @@ blasint flexiblas_chain_isamax_(void* n, void* sx, void* incx)
 
 	return ret;
 }
+#ifndef __APPLE__
 blasint flexiblas_chain_isamax(void* n, void* sx, void* incx) __attribute__((alias("flexiblas_chain_isamax_")));
+#else
+blasint flexiblas_chain_isamax(void* n, void* sx, void* incx){return flexiblas_chain_isamax_((void*) n, (void*) sx, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_izamax = 0;
@@ -4784,7 +5668,11 @@ int FC_GLOBAL(izamax,IZAMAX)(blasint* n, double complex* zx, blasint* incx)
 #ifdef FLEXIBLAS_ABI_IBM
 int izamax_(blasint* n, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(izamax,IZAMAX)))));
 #else
+#ifndef __APPLE__
 int izamax(blasint* n, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(izamax,IZAMAX)))));
+#else
+int izamax(blasint* n, double complex* zx, blasint* incx){ return FC_GLOBAL(izamax,IZAMAX)((void*) n, (void*) zx, (void*) incx); }
+#endif
 #endif
 
 
@@ -4799,7 +5687,11 @@ blasint flexiblas_real_izamax_(void* n, void* zx, void* incx)
 
 	return ret;
 }
+#ifndef __APPLE__
 blasint flexiblas_real_izamax(void* n, void* zx, void* incx) __attribute__((alias("flexiblas_real_izamax_")));
+#else
+blasint flexiblas_real_izamax(void* n, void* zx, void* incx){return flexiblas_real_izamax_((void*) n, (void*) zx, (void*) incx);}
+#endif
 
 
 blasint flexiblas_chain_izamax_(void* n, void* zx, void* incx)
@@ -4820,7 +5712,11 @@ blasint flexiblas_chain_izamax_(void* n, void* zx, void* incx)
 
 	return ret;
 }
+#ifndef __APPLE__
 blasint flexiblas_chain_izamax(void* n, void* zx, void* incx) __attribute__((alias("flexiblas_chain_izamax_")));
+#else
+blasint flexiblas_chain_izamax(void* n, void* zx, void* incx){return flexiblas_chain_izamax_((void*) n, (void*) zx, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_sasum = 0;
@@ -4847,7 +5743,11 @@ float FC_GLOBAL(sasum,SASUM)(blasint* n, float* sx, blasint* incx)
 #ifdef FLEXIBLAS_ABI_IBM
 float sasum_(blasint* n, float* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(sasum,SASUM)))));
 #else
+#ifndef __APPLE__
 float sasum(blasint* n, float* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(sasum,SASUM)))));
+#else
+float sasum(blasint* n, float* sx, blasint* incx){ return FC_GLOBAL(sasum,SASUM)((void*) n, (void*) sx, (void*) incx); }
+#endif
 #endif
 
 
@@ -4862,7 +5762,11 @@ float flexiblas_real_sasum_(void* n, void* sx, void* incx)
 
 	return ret;
 }
+#ifndef __APPLE__
 float flexiblas_real_sasum(void* n, void* sx, void* incx) __attribute__((alias("flexiblas_real_sasum_")));
+#else
+float flexiblas_real_sasum(void* n, void* sx, void* incx){return flexiblas_real_sasum_((void*) n, (void*) sx, (void*) incx);}
+#endif
 
 
 float flexiblas_chain_sasum_(void* n, void* sx, void* incx)
@@ -4883,7 +5787,11 @@ float flexiblas_chain_sasum_(void* n, void* sx, void* incx)
 
 	return ret;
 }
+#ifndef __APPLE__
 float flexiblas_chain_sasum(void* n, void* sx, void* incx) __attribute__((alias("flexiblas_chain_sasum_")));
+#else
+float flexiblas_chain_sasum(void* n, void* sx, void* incx){return flexiblas_chain_sasum_((void*) n, (void*) sx, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_saxpy = 0;
@@ -4909,7 +5817,11 @@ void FC_GLOBAL(saxpy,SAXPY)(blasint* n, float* sa, float* sx, blasint* incx, flo
 #ifdef FLEXIBLAS_ABI_IBM
 void saxpy_(blasint* n, float* sa, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(saxpy,SAXPY)))));
 #else
+#ifndef __APPLE__
 void saxpy(blasint* n, float* sa, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(saxpy,SAXPY)))));
+#else
+void saxpy(blasint* n, float* sa, float* sx, blasint* incx, float* sy, blasint* incy){ FC_GLOBAL(saxpy,SAXPY)((void*) n, (void*) sa, (void*) sx, (void*) incx, (void*) sy, (void*) incy); }
+#endif
 #endif
 
 
@@ -4923,7 +5835,11 @@ void flexiblas_real_saxpy_(void* n, void* sa, void* sx, void* incx, void* sy, vo
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_saxpy(void* n, void* sa, void* sx, void* incx, void* sy, void* incy) __attribute__((alias("flexiblas_real_saxpy_")));
+#else
+void flexiblas_real_saxpy(void* n, void* sa, void* sx, void* incx, void* sy, void* incy){flexiblas_real_saxpy_((void*) n, (void*) sa, (void*) sx, (void*) incx, (void*) sy, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_saxpy_(void* n, void* sa, void* sx, void* incx, void* sy, void* incy)
@@ -4943,7 +5859,11 @@ void flexiblas_chain_saxpy_(void* n, void* sa, void* sx, void* incx, void* sy, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_saxpy(void* n, void* sa, void* sx, void* incx, void* sy, void* incy) __attribute__((alias("flexiblas_chain_saxpy_")));
+#else
+void flexiblas_chain_saxpy(void* n, void* sa, void* sx, void* incx, void* sy, void* incy){flexiblas_chain_saxpy_((void*) n, (void*) sa, (void*) sx, (void*) incx, (void*) sy, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_scasum = 0;
@@ -4970,7 +5890,11 @@ float FC_GLOBAL(scasum,SCASUM)(blasint* n, float complex* cx, blasint* incx)
 #ifdef FLEXIBLAS_ABI_IBM
 float scasum_(blasint* n, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(scasum,SCASUM)))));
 #else
+#ifndef __APPLE__
 float scasum(blasint* n, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(scasum,SCASUM)))));
+#else
+float scasum(blasint* n, float complex* cx, blasint* incx){ return FC_GLOBAL(scasum,SCASUM)((void*) n, (void*) cx, (void*) incx); }
+#endif
 #endif
 
 
@@ -4985,7 +5909,11 @@ float flexiblas_real_scasum_(void* n, void* cx, void* incx)
 
 	return ret;
 }
+#ifndef __APPLE__
 float flexiblas_real_scasum(void* n, void* cx, void* incx) __attribute__((alias("flexiblas_real_scasum_")));
+#else
+float flexiblas_real_scasum(void* n, void* cx, void* incx){return flexiblas_real_scasum_((void*) n, (void*) cx, (void*) incx);}
+#endif
 
 
 float flexiblas_chain_scasum_(void* n, void* cx, void* incx)
@@ -5006,7 +5934,11 @@ float flexiblas_chain_scasum_(void* n, void* cx, void* incx)
 
 	return ret;
 }
+#ifndef __APPLE__
 float flexiblas_chain_scasum(void* n, void* cx, void* incx) __attribute__((alias("flexiblas_chain_scasum_")));
+#else
+float flexiblas_chain_scasum(void* n, void* cx, void* incx){return flexiblas_chain_scasum_((void*) n, (void*) cx, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_scnrm2 = 0;
@@ -5033,7 +5965,11 @@ float FC_GLOBAL(scnrm2,SCNRM2)(blasint* n, float complex* x, blasint* incx)
 #ifdef FLEXIBLAS_ABI_IBM
 float scnrm2_(blasint* n, float complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(scnrm2,SCNRM2)))));
 #else
+#ifndef __APPLE__
 float scnrm2(blasint* n, float complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(scnrm2,SCNRM2)))));
+#else
+float scnrm2(blasint* n, float complex* x, blasint* incx){ return FC_GLOBAL(scnrm2,SCNRM2)((void*) n, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -5048,7 +5984,11 @@ float flexiblas_real_scnrm2_(void* n, void* x, void* incx)
 
 	return ret;
 }
+#ifndef __APPLE__
 float flexiblas_real_scnrm2(void* n, void* x, void* incx) __attribute__((alias("flexiblas_real_scnrm2_")));
+#else
+float flexiblas_real_scnrm2(void* n, void* x, void* incx){return flexiblas_real_scnrm2_((void*) n, (void*) x, (void*) incx);}
+#endif
 
 
 float flexiblas_chain_scnrm2_(void* n, void* x, void* incx)
@@ -5069,7 +6009,11 @@ float flexiblas_chain_scnrm2_(void* n, void* x, void* incx)
 
 	return ret;
 }
+#ifndef __APPLE__
 float flexiblas_chain_scnrm2(void* n, void* x, void* incx) __attribute__((alias("flexiblas_chain_scnrm2_")));
+#else
+float flexiblas_chain_scnrm2(void* n, void* x, void* incx){return flexiblas_chain_scnrm2_((void*) n, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_scopy = 0;
@@ -5095,7 +6039,11 @@ void FC_GLOBAL(scopy,SCOPY)(blasint* n, float* sx, blasint* incx, float* sy, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void scopy_(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(scopy,SCOPY)))));
 #else
+#ifndef __APPLE__
 void scopy(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(scopy,SCOPY)))));
+#else
+void scopy(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy){ FC_GLOBAL(scopy,SCOPY)((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy); }
+#endif
 #endif
 
 
@@ -5109,7 +6057,11 @@ void flexiblas_real_scopy_(void* n, void* sx, void* incx, void* sy, void* incy)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_scopy(void* n, void* sx, void* incx, void* sy, void* incy) __attribute__((alias("flexiblas_real_scopy_")));
+#else
+void flexiblas_real_scopy(void* n, void* sx, void* incx, void* sy, void* incy){flexiblas_real_scopy_((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_scopy_(void* n, void* sx, void* incx, void* sy, void* incy)
@@ -5129,7 +6081,11 @@ void flexiblas_chain_scopy_(void* n, void* sx, void* incx, void* sy, void* incy)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_scopy(void* n, void* sx, void* incx, void* sy, void* incy) __attribute__((alias("flexiblas_chain_scopy_")));
+#else
+void flexiblas_chain_scopy(void* n, void* sx, void* incx, void* sy, void* incy){flexiblas_chain_scopy_((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_sdot = 0;
@@ -5156,7 +6112,11 @@ float FC_GLOBAL(sdot,SDOT)(blasint* n, float* sx, blasint* incx, float* sy, blas
 #ifdef FLEXIBLAS_ABI_IBM
 float sdot_(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sdot,SDOT)))));
 #else
+#ifndef __APPLE__
 float sdot(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sdot,SDOT)))));
+#else
+float sdot(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy){ return FC_GLOBAL(sdot,SDOT)((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy); }
+#endif
 #endif
 
 
@@ -5171,7 +6131,11 @@ float flexiblas_real_sdot_(void* n, void* sx, void* incx, void* sy, void* incy)
 
 	return ret;
 }
+#ifndef __APPLE__
 float flexiblas_real_sdot(void* n, void* sx, void* incx, void* sy, void* incy) __attribute__((alias("flexiblas_real_sdot_")));
+#else
+float flexiblas_real_sdot(void* n, void* sx, void* incx, void* sy, void* incy){return flexiblas_real_sdot_((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy);}
+#endif
 
 
 float flexiblas_chain_sdot_(void* n, void* sx, void* incx, void* sy, void* incy)
@@ -5192,7 +6156,11 @@ float flexiblas_chain_sdot_(void* n, void* sx, void* incx, void* sy, void* incy)
 
 	return ret;
 }
+#ifndef __APPLE__
 float flexiblas_chain_sdot(void* n, void* sx, void* incx, void* sy, void* incy) __attribute__((alias("flexiblas_chain_sdot_")));
+#else
+float flexiblas_chain_sdot(void* n, void* sx, void* incx, void* sy, void* incy){return flexiblas_chain_sdot_((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_sdsdot = 0;
@@ -5219,7 +6187,11 @@ float FC_GLOBAL(sdsdot,SDSDOT)(blasint* n, float* sb, float* sx, blasint* incx, 
 #ifdef FLEXIBLAS_ABI_IBM
 float sdsdot_(blasint* n, float* sb, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sdsdot,SDSDOT)))));
 #else
+#ifndef __APPLE__
 float sdsdot(blasint* n, float* sb, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sdsdot,SDSDOT)))));
+#else
+float sdsdot(blasint* n, float* sb, float* sx, blasint* incx, float* sy, blasint* incy){ return FC_GLOBAL(sdsdot,SDSDOT)((void*) n, (void*) sb, (void*) sx, (void*) incx, (void*) sy, (void*) incy); }
+#endif
 #endif
 
 
@@ -5234,7 +6206,11 @@ float flexiblas_real_sdsdot_(void* n, void* sb, void* sx, void* incx, void* sy, 
 
 	return ret;
 }
+#ifndef __APPLE__
 float flexiblas_real_sdsdot(void* n, void* sb, void* sx, void* incx, void* sy, void* incy) __attribute__((alias("flexiblas_real_sdsdot_")));
+#else
+float flexiblas_real_sdsdot(void* n, void* sb, void* sx, void* incx, void* sy, void* incy){return flexiblas_real_sdsdot_((void*) n, (void*) sb, (void*) sx, (void*) incx, (void*) sy, (void*) incy);}
+#endif
 
 
 float flexiblas_chain_sdsdot_(void* n, void* sb, void* sx, void* incx, void* sy, void* incy)
@@ -5255,7 +6231,11 @@ float flexiblas_chain_sdsdot_(void* n, void* sb, void* sx, void* incx, void* sy,
 
 	return ret;
 }
+#ifndef __APPLE__
 float flexiblas_chain_sdsdot(void* n, void* sb, void* sx, void* incx, void* sy, void* incy) __attribute__((alias("flexiblas_chain_sdsdot_")));
+#else
+float flexiblas_chain_sdsdot(void* n, void* sb, void* sx, void* incx, void* sy, void* incy){return flexiblas_chain_sdsdot_((void*) n, (void*) sb, (void*) sx, (void*) incx, (void*) sy, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_sgbmv = 0;
@@ -5281,7 +6261,11 @@ void FC_GLOBAL(sgbmv,SGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void sgbmv_(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sgbmv,SGBMV)))));
 #else
+#ifndef __APPLE__
 void sgbmv(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sgbmv,SGBMV)))));
+#else
+void sgbmv(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy){ FC_GLOBAL(sgbmv,SGBMV)((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); }
+#endif
 #endif
 
 
@@ -5295,7 +6279,11 @@ void flexiblas_real_sgbmv_(void* trans, void* m, void* n, void* kl, void* ku, vo
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_sgbmv(void* trans, void* m, void* n, void* kl, void* ku, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_real_sgbmv_")));
+#else
+void flexiblas_real_sgbmv(void* trans, void* m, void* n, void* kl, void* ku, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_real_sgbmv_((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_sgbmv_(void* trans, void* m, void* n, void* kl, void* ku, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy)
@@ -5315,7 +6303,11 @@ void flexiblas_chain_sgbmv_(void* trans, void* m, void* n, void* kl, void* ku, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_sgbmv(void* trans, void* m, void* n, void* kl, void* ku, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_chain_sgbmv_")));
+#else
+void flexiblas_chain_sgbmv(void* trans, void* m, void* n, void* kl, void* ku, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_chain_sgbmv_((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_sgemm = 0;
@@ -5341,7 +6333,11 @@ void FC_GLOBAL(sgemm,SGEMM)(char* transa, char* transb, blasint* m, blasint* n, 
 #ifdef FLEXIBLAS_ABI_IBM
 void sgemm_(char* transa, char* transb, blasint* m, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(sgemm,SGEMM)))));
 #else
+#ifndef __APPLE__
 void sgemm(char* transa, char* transb, blasint* m, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(sgemm,SGEMM)))));
+#else
+void sgemm(char* transa, char* transb, blasint* m, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc){ FC_GLOBAL(sgemm,SGEMM)((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc); }
+#endif
 #endif
 
 
@@ -5355,7 +6351,11 @@ void flexiblas_real_sgemm_(void* transa, void* transb, void* m, void* n, void* k
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_sgemm(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_real_sgemm_")));
+#else
+void flexiblas_real_sgemm(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_real_sgemm_((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 void flexiblas_chain_sgemm_(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc)
@@ -5375,7 +6375,11 @@ void flexiblas_chain_sgemm_(void* transa, void* transb, void* m, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_sgemm(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_chain_sgemm_")));
+#else
+void flexiblas_chain_sgemm(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_chain_sgemm_((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_sgemv = 0;
@@ -5401,7 +6405,11 @@ void FC_GLOBAL(sgemv,SGEMV)(char* trans, blasint* m, blasint* n, float* alpha, f
 #ifdef FLEXIBLAS_ABI_IBM
 void sgemv_(char* trans, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sgemv,SGEMV)))));
 #else
+#ifndef __APPLE__
 void sgemv(char* trans, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sgemv,SGEMV)))));
+#else
+void sgemv(char* trans, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy){ FC_GLOBAL(sgemv,SGEMV)((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); }
+#endif
 #endif
 
 
@@ -5415,7 +6423,11 @@ void flexiblas_real_sgemv_(void* trans, void* m, void* n, void* alpha, void* a, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_sgemv(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_real_sgemv_")));
+#else
+void flexiblas_real_sgemv(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_real_sgemv_((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_sgemv_(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy)
@@ -5435,7 +6447,11 @@ void flexiblas_chain_sgemv_(void* trans, void* m, void* n, void* alpha, void* a,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_sgemv(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_chain_sgemv_")));
+#else
+void flexiblas_chain_sgemv(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_chain_sgemv_((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_sger = 0;
@@ -5461,7 +6477,11 @@ void FC_GLOBAL(sger,SGER)(blasint* m, blasint* n, float* alpha, float* x, blasin
 #ifdef FLEXIBLAS_ABI_IBM
 void sger_(blasint* m, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(sger,SGER)))));
 #else
+#ifndef __APPLE__
 void sger(blasint* m, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(sger,SGER)))));
+#else
+void sger(blasint* m, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* a, blasint* lda){ FC_GLOBAL(sger,SGER)((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
+#endif
 #endif
 
 
@@ -5475,7 +6495,11 @@ void flexiblas_real_sger_(void* m, void* n, void* alpha, void* x, void* incx, vo
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_sger(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda) __attribute__((alias("flexiblas_real_sger_")));
+#else
+void flexiblas_real_sger(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda){flexiblas_real_sger_((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);}
+#endif
 
 
 void flexiblas_chain_sger_(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda)
@@ -5495,7 +6519,11 @@ void flexiblas_chain_sger_(void* m, void* n, void* alpha, void* x, void* incx, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_sger(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda) __attribute__((alias("flexiblas_chain_sger_")));
+#else
+void flexiblas_chain_sger(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda){flexiblas_chain_sger_((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_snrm2 = 0;
@@ -5522,7 +6550,11 @@ float FC_GLOBAL(snrm2,SNRM2)(blasint* n, float* x, blasint* incx)
 #ifdef FLEXIBLAS_ABI_IBM
 float snrm2_(blasint* n, float* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(snrm2,SNRM2)))));
 #else
+#ifndef __APPLE__
 float snrm2(blasint* n, float* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(snrm2,SNRM2)))));
+#else
+float snrm2(blasint* n, float* x, blasint* incx){ return FC_GLOBAL(snrm2,SNRM2)((void*) n, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -5537,7 +6569,11 @@ float flexiblas_real_snrm2_(void* n, void* x, void* incx)
 
 	return ret;
 }
+#ifndef __APPLE__
 float flexiblas_real_snrm2(void* n, void* x, void* incx) __attribute__((alias("flexiblas_real_snrm2_")));
+#else
+float flexiblas_real_snrm2(void* n, void* x, void* incx){return flexiblas_real_snrm2_((void*) n, (void*) x, (void*) incx);}
+#endif
 
 
 float flexiblas_chain_snrm2_(void* n, void* x, void* incx)
@@ -5558,7 +6594,11 @@ float flexiblas_chain_snrm2_(void* n, void* x, void* incx)
 
 	return ret;
 }
+#ifndef __APPLE__
 float flexiblas_chain_snrm2(void* n, void* x, void* incx) __attribute__((alias("flexiblas_chain_snrm2_")));
+#else
+float flexiblas_chain_snrm2(void* n, void* x, void* incx){return flexiblas_chain_snrm2_((void*) n, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_srot = 0;
@@ -5584,7 +6624,11 @@ void FC_GLOBAL(srot,SROT)(blasint* n, float* sx, blasint* incx, float* sy, blasi
 #ifdef FLEXIBLAS_ABI_IBM
 void srot_(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy, float* c, float* s) __attribute__((alias(MTS(FC_GLOBAL(srot,SROT)))));
 #else
+#ifndef __APPLE__
 void srot(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy, float* c, float* s) __attribute__((alias(MTS(FC_GLOBAL(srot,SROT)))));
+#else
+void srot(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy, float* c, float* s){ FC_GLOBAL(srot,SROT)((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy, (void*) c, (void*) s); }
+#endif
 #endif
 
 
@@ -5598,7 +6642,11 @@ void flexiblas_real_srot_(void* n, void* sx, void* incx, void* sy, void* incy, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_srot(void* n, void* sx, void* incx, void* sy, void* incy, void* c, void* s) __attribute__((alias("flexiblas_real_srot_")));
+#else
+void flexiblas_real_srot(void* n, void* sx, void* incx, void* sy, void* incy, void* c, void* s){flexiblas_real_srot_((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy, (void*) c, (void*) s);}
+#endif
 
 
 void flexiblas_chain_srot_(void* n, void* sx, void* incx, void* sy, void* incy, void* c, void* s)
@@ -5618,7 +6666,11 @@ void flexiblas_chain_srot_(void* n, void* sx, void* incx, void* sy, void* incy, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_srot(void* n, void* sx, void* incx, void* sy, void* incy, void* c, void* s) __attribute__((alias("flexiblas_chain_srot_")));
+#else
+void flexiblas_chain_srot(void* n, void* sx, void* incx, void* sy, void* incy, void* c, void* s){flexiblas_chain_srot_((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy, (void*) c, (void*) s);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_srotg = 0;
@@ -5644,7 +6696,11 @@ void FC_GLOBAL(srotg,SROTG)(float* sa, float* sb, float* c, float* s)
 #ifdef FLEXIBLAS_ABI_IBM
 void srotg_(float* sa, float* sb, float* c, float* s) __attribute__((alias(MTS(FC_GLOBAL(srotg,SROTG)))));
 #else
+#ifndef __APPLE__
 void srotg(float* sa, float* sb, float* c, float* s) __attribute__((alias(MTS(FC_GLOBAL(srotg,SROTG)))));
+#else
+void srotg(float* sa, float* sb, float* c, float* s){ FC_GLOBAL(srotg,SROTG)((void*) sa, (void*) sb, (void*) c, (void*) s); }
+#endif
 #endif
 
 
@@ -5658,7 +6714,11 @@ void flexiblas_real_srotg_(void* sa, void* sb, void* c, void* s)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_srotg(void* sa, void* sb, void* c, void* s) __attribute__((alias("flexiblas_real_srotg_")));
+#else
+void flexiblas_real_srotg(void* sa, void* sb, void* c, void* s){flexiblas_real_srotg_((void*) sa, (void*) sb, (void*) c, (void*) s);}
+#endif
 
 
 void flexiblas_chain_srotg_(void* sa, void* sb, void* c, void* s)
@@ -5678,7 +6738,11 @@ void flexiblas_chain_srotg_(void* sa, void* sb, void* c, void* s)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_srotg(void* sa, void* sb, void* c, void* s) __attribute__((alias("flexiblas_chain_srotg_")));
+#else
+void flexiblas_chain_srotg(void* sa, void* sb, void* c, void* s){flexiblas_chain_srotg_((void*) sa, (void*) sb, (void*) c, (void*) s);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_srotm = 0;
@@ -5704,7 +6768,11 @@ void FC_GLOBAL(srotm,SROTM)(blasint* n, float* sx, blasint* incx, float* sy, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void srotm_(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy, float* sparam) __attribute__((alias(MTS(FC_GLOBAL(srotm,SROTM)))));
 #else
+#ifndef __APPLE__
 void srotm(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy, float* sparam) __attribute__((alias(MTS(FC_GLOBAL(srotm,SROTM)))));
+#else
+void srotm(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy, float* sparam){ FC_GLOBAL(srotm,SROTM)((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy, (void*) sparam); }
+#endif
 #endif
 
 
@@ -5718,7 +6786,11 @@ void flexiblas_real_srotm_(void* n, void* sx, void* incx, void* sy, void* incy, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_srotm(void* n, void* sx, void* incx, void* sy, void* incy, void* sparam) __attribute__((alias("flexiblas_real_srotm_")));
+#else
+void flexiblas_real_srotm(void* n, void* sx, void* incx, void* sy, void* incy, void* sparam){flexiblas_real_srotm_((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy, (void*) sparam);}
+#endif
 
 
 void flexiblas_chain_srotm_(void* n, void* sx, void* incx, void* sy, void* incy, void* sparam)
@@ -5738,7 +6810,11 @@ void flexiblas_chain_srotm_(void* n, void* sx, void* incx, void* sy, void* incy,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_srotm(void* n, void* sx, void* incx, void* sy, void* incy, void* sparam) __attribute__((alias("flexiblas_chain_srotm_")));
+#else
+void flexiblas_chain_srotm(void* n, void* sx, void* incx, void* sy, void* incy, void* sparam){flexiblas_chain_srotm_((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy, (void*) sparam);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_srotmg = 0;
@@ -5764,7 +6840,11 @@ void FC_GLOBAL(srotmg,SROTMG)(float* sd1, float* sd2, float* sx1, float* sy1, fl
 #ifdef FLEXIBLAS_ABI_IBM
 void srotmg_(float* sd1, float* sd2, float* sx1, float* sy1, float* sparam) __attribute__((alias(MTS(FC_GLOBAL(srotmg,SROTMG)))));
 #else
+#ifndef __APPLE__
 void srotmg(float* sd1, float* sd2, float* sx1, float* sy1, float* sparam) __attribute__((alias(MTS(FC_GLOBAL(srotmg,SROTMG)))));
+#else
+void srotmg(float* sd1, float* sd2, float* sx1, float* sy1, float* sparam){ FC_GLOBAL(srotmg,SROTMG)((void*) sd1, (void*) sd2, (void*) sx1, (void*) sy1, (void*) sparam); }
+#endif
 #endif
 
 
@@ -5778,7 +6858,11 @@ void flexiblas_real_srotmg_(void* sd1, void* sd2, void* sx1, void* sy1, void* sp
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_srotmg(void* sd1, void* sd2, void* sx1, void* sy1, void* sparam) __attribute__((alias("flexiblas_real_srotmg_")));
+#else
+void flexiblas_real_srotmg(void* sd1, void* sd2, void* sx1, void* sy1, void* sparam){flexiblas_real_srotmg_((void*) sd1, (void*) sd2, (void*) sx1, (void*) sy1, (void*) sparam);}
+#endif
 
 
 void flexiblas_chain_srotmg_(void* sd1, void* sd2, void* sx1, void* sy1, void* sparam)
@@ -5798,7 +6882,11 @@ void flexiblas_chain_srotmg_(void* sd1, void* sd2, void* sx1, void* sy1, void* s
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_srotmg(void* sd1, void* sd2, void* sx1, void* sy1, void* sparam) __attribute__((alias("flexiblas_chain_srotmg_")));
+#else
+void flexiblas_chain_srotmg(void* sd1, void* sd2, void* sx1, void* sy1, void* sparam){flexiblas_chain_srotmg_((void*) sd1, (void*) sd2, (void*) sx1, (void*) sy1, (void*) sparam);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_ssbmv = 0;
@@ -5824,7 +6912,11 @@ void FC_GLOBAL(ssbmv,SSBMV)(char* uplo, blasint* n, blasint* k, float* alpha, fl
 #ifdef FLEXIBLAS_ABI_IBM
 void ssbmv_(char* uplo, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(ssbmv,SSBMV)))));
 #else
+#ifndef __APPLE__
 void ssbmv(char* uplo, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(ssbmv,SSBMV)))));
+#else
+void ssbmv(char* uplo, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy){ FC_GLOBAL(ssbmv,SSBMV)((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); }
+#endif
 #endif
 
 
@@ -5838,7 +6930,11 @@ void flexiblas_real_ssbmv_(void* uplo, void* n, void* k, void* alpha, void* a, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_ssbmv(void* uplo, void* n, void* k, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_real_ssbmv_")));
+#else
+void flexiblas_real_ssbmv(void* uplo, void* n, void* k, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_real_ssbmv_((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_ssbmv_(void* uplo, void* n, void* k, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy)
@@ -5858,7 +6954,11 @@ void flexiblas_chain_ssbmv_(void* uplo, void* n, void* k, void* alpha, void* a, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_ssbmv(void* uplo, void* n, void* k, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_chain_ssbmv_")));
+#else
+void flexiblas_chain_ssbmv(void* uplo, void* n, void* k, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_chain_ssbmv_((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_sscal = 0;
@@ -5884,7 +6984,11 @@ void FC_GLOBAL(sscal,SSCAL)(blasint* n, float* sa, float* sx, blasint* incx)
 #ifdef FLEXIBLAS_ABI_IBM
 void sscal_(blasint* n, float* sa, float* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(sscal,SSCAL)))));
 #else
+#ifndef __APPLE__
 void sscal(blasint* n, float* sa, float* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(sscal,SSCAL)))));
+#else
+void sscal(blasint* n, float* sa, float* sx, blasint* incx){ FC_GLOBAL(sscal,SSCAL)((void*) n, (void*) sa, (void*) sx, (void*) incx); }
+#endif
 #endif
 
 
@@ -5898,7 +7002,11 @@ void flexiblas_real_sscal_(void* n, void* sa, void* sx, void* incx)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_sscal(void* n, void* sa, void* sx, void* incx) __attribute__((alias("flexiblas_real_sscal_")));
+#else
+void flexiblas_real_sscal(void* n, void* sa, void* sx, void* incx){flexiblas_real_sscal_((void*) n, (void*) sa, (void*) sx, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_sscal_(void* n, void* sa, void* sx, void* incx)
@@ -5918,7 +7026,11 @@ void flexiblas_chain_sscal_(void* n, void* sa, void* sx, void* incx)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_sscal(void* n, void* sa, void* sx, void* incx) __attribute__((alias("flexiblas_chain_sscal_")));
+#else
+void flexiblas_chain_sscal(void* n, void* sa, void* sx, void* incx){flexiblas_chain_sscal_((void*) n, (void*) sa, (void*) sx, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_sspmv = 0;
@@ -5944,7 +7056,11 @@ void FC_GLOBAL(sspmv,SSPMV)(char* uplo, blasint* n, float* alpha, float* ap, flo
 #ifdef FLEXIBLAS_ABI_IBM
 void sspmv_(char* uplo, blasint* n, float* alpha, float* ap, float* x, blasint* incx, float* beta, float* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sspmv,SSPMV)))));
 #else
+#ifndef __APPLE__
 void sspmv(char* uplo, blasint* n, float* alpha, float* ap, float* x, blasint* incx, float* beta, float* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sspmv,SSPMV)))));
+#else
+void sspmv(char* uplo, blasint* n, float* alpha, float* ap, float* x, blasint* incx, float* beta, float* y, blasint* incy){ FC_GLOBAL(sspmv,SSPMV)((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); }
+#endif
 #endif
 
 
@@ -5958,7 +7074,11 @@ void flexiblas_real_sspmv_(void* uplo, void* n, void* alpha, void* ap, void* x, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_sspmv(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_real_sspmv_")));
+#else
+void flexiblas_real_sspmv(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_real_sspmv_((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_sspmv_(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy)
@@ -5978,7 +7098,11 @@ void flexiblas_chain_sspmv_(void* uplo, void* n, void* alpha, void* ap, void* x,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_sspmv(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_chain_sspmv_")));
+#else
+void flexiblas_chain_sspmv(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_chain_sspmv_((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_sspr = 0;
@@ -6004,7 +7128,11 @@ void FC_GLOBAL(sspr,SSPR)(char* uplo, blasint* n, float* alpha, float* x, blasin
 #ifdef FLEXIBLAS_ABI_IBM
 void sspr_(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* ap) __attribute__((alias(MTS(FC_GLOBAL(sspr,SSPR)))));
 #else
+#ifndef __APPLE__
 void sspr(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* ap) __attribute__((alias(MTS(FC_GLOBAL(sspr,SSPR)))));
+#else
+void sspr(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* ap){ FC_GLOBAL(sspr,SSPR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap); }
+#endif
 #endif
 
 
@@ -6018,7 +7146,11 @@ void flexiblas_real_sspr_(void* uplo, void* n, void* alpha, void* x, void* incx,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_sspr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap) __attribute__((alias("flexiblas_real_sspr_")));
+#else
+void flexiblas_real_sspr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap){flexiblas_real_sspr_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap);}
+#endif
 
 
 void flexiblas_chain_sspr_(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap)
@@ -6038,7 +7170,11 @@ void flexiblas_chain_sspr_(void* uplo, void* n, void* alpha, void* x, void* incx
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_sspr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap) __attribute__((alias("flexiblas_chain_sspr_")));
+#else
+void flexiblas_chain_sspr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap){flexiblas_chain_sspr_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_sspr2 = 0;
@@ -6064,7 +7200,11 @@ void FC_GLOBAL(sspr2,SSPR2)(char* uplo, blasint* n, float* alpha, float* x, blas
 #ifdef FLEXIBLAS_ABI_IBM
 void sspr2_(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* ap) __attribute__((alias(MTS(FC_GLOBAL(sspr2,SSPR2)))));
 #else
+#ifndef __APPLE__
 void sspr2(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* ap) __attribute__((alias(MTS(FC_GLOBAL(sspr2,SSPR2)))));
+#else
+void sspr2(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* ap){ FC_GLOBAL(sspr2,SSPR2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap); }
+#endif
 #endif
 
 
@@ -6078,7 +7218,11 @@ void flexiblas_real_sspr2_(void* uplo, void* n, void* alpha, void* x, void* incx
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_sspr2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* ap) __attribute__((alias("flexiblas_real_sspr2_")));
+#else
+void flexiblas_real_sspr2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* ap){flexiblas_real_sspr2_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap);}
+#endif
 
 
 void flexiblas_chain_sspr2_(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* ap)
@@ -6098,7 +7242,11 @@ void flexiblas_chain_sspr2_(void* uplo, void* n, void* alpha, void* x, void* inc
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_sspr2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* ap) __attribute__((alias("flexiblas_chain_sspr2_")));
+#else
+void flexiblas_chain_sspr2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* ap){flexiblas_chain_sspr2_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_sswap = 0;
@@ -6124,7 +7272,11 @@ void FC_GLOBAL(sswap,SSWAP)(blasint* n, float* sx, blasint* incx, float* sy, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void sswap_(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sswap,SSWAP)))));
 #else
+#ifndef __APPLE__
 void sswap(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sswap,SSWAP)))));
+#else
+void sswap(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy){ FC_GLOBAL(sswap,SSWAP)((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy); }
+#endif
 #endif
 
 
@@ -6138,7 +7290,11 @@ void flexiblas_real_sswap_(void* n, void* sx, void* incx, void* sy, void* incy)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_sswap(void* n, void* sx, void* incx, void* sy, void* incy) __attribute__((alias("flexiblas_real_sswap_")));
+#else
+void flexiblas_real_sswap(void* n, void* sx, void* incx, void* sy, void* incy){flexiblas_real_sswap_((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_sswap_(void* n, void* sx, void* incx, void* sy, void* incy)
@@ -6158,7 +7314,11 @@ void flexiblas_chain_sswap_(void* n, void* sx, void* incx, void* sy, void* incy)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_sswap(void* n, void* sx, void* incx, void* sy, void* incy) __attribute__((alias("flexiblas_chain_sswap_")));
+#else
+void flexiblas_chain_sswap(void* n, void* sx, void* incx, void* sy, void* incy){flexiblas_chain_sswap_((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_ssymm = 0;
@@ -6184,7 +7344,11 @@ void FC_GLOBAL(ssymm,SSYMM)(char* side, char* uplo, blasint* m, blasint* n, floa
 #ifdef FLEXIBLAS_ABI_IBM
 void ssymm_(char* side, char* uplo, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(ssymm,SSYMM)))));
 #else
+#ifndef __APPLE__
 void ssymm(char* side, char* uplo, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(ssymm,SSYMM)))));
+#else
+void ssymm(char* side, char* uplo, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc){ FC_GLOBAL(ssymm,SSYMM)((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc); }
+#endif
 #endif
 
 
@@ -6198,7 +7362,11 @@ void flexiblas_real_ssymm_(void* side, void* uplo, void* m, void* n, void* alpha
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_ssymm(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_real_ssymm_")));
+#else
+void flexiblas_real_ssymm(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_real_ssymm_((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 void flexiblas_chain_ssymm_(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc)
@@ -6218,7 +7386,11 @@ void flexiblas_chain_ssymm_(void* side, void* uplo, void* m, void* n, void* alph
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_ssymm(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_chain_ssymm_")));
+#else
+void flexiblas_chain_ssymm(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_chain_ssymm_((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_ssymv = 0;
@@ -6244,7 +7416,11 @@ void FC_GLOBAL(ssymv,SSYMV)(char* uplo, blasint* n, float* alpha, float* a, blas
 #ifdef FLEXIBLAS_ABI_IBM
 void ssymv_(char* uplo, blasint* n, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(ssymv,SSYMV)))));
 #else
+#ifndef __APPLE__
 void ssymv(char* uplo, blasint* n, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(ssymv,SSYMV)))));
+#else
+void ssymv(char* uplo, blasint* n, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy){ FC_GLOBAL(ssymv,SSYMV)((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); }
+#endif
 #endif
 
 
@@ -6258,7 +7434,11 @@ void flexiblas_real_ssymv_(void* uplo, void* n, void* alpha, void* a, void* lda,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_ssymv(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_real_ssymv_")));
+#else
+void flexiblas_real_ssymv(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_real_ssymv_((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_ssymv_(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy)
@@ -6278,7 +7458,11 @@ void flexiblas_chain_ssymv_(void* uplo, void* n, void* alpha, void* a, void* lda
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_ssymv(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_chain_ssymv_")));
+#else
+void flexiblas_chain_ssymv(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_chain_ssymv_((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_ssyr = 0;
@@ -6304,7 +7488,11 @@ void FC_GLOBAL(ssyr,SSYR)(char* uplo, blasint* n, float* alpha, float* x, blasin
 #ifdef FLEXIBLAS_ABI_IBM
 void ssyr_(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(ssyr,SSYR)))));
 #else
+#ifndef __APPLE__
 void ssyr(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(ssyr,SSYR)))));
+#else
+void ssyr(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* a, blasint* lda){ FC_GLOBAL(ssyr,SSYR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda); }
+#endif
 #endif
 
 
@@ -6318,7 +7506,11 @@ void flexiblas_real_ssyr_(void* uplo, void* n, void* alpha, void* x, void* incx,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_ssyr(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda) __attribute__((alias("flexiblas_real_ssyr_")));
+#else
+void flexiblas_real_ssyr(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda){flexiblas_real_ssyr_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda);}
+#endif
 
 
 void flexiblas_chain_ssyr_(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda)
@@ -6338,7 +7530,11 @@ void flexiblas_chain_ssyr_(void* uplo, void* n, void* alpha, void* x, void* incx
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_ssyr(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda) __attribute__((alias("flexiblas_chain_ssyr_")));
+#else
+void flexiblas_chain_ssyr(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda){flexiblas_chain_ssyr_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_ssyr2 = 0;
@@ -6364,7 +7560,11 @@ void FC_GLOBAL(ssyr2,SSYR2)(char* uplo, blasint* n, float* alpha, float* x, blas
 #ifdef FLEXIBLAS_ABI_IBM
 void ssyr2_(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(ssyr2,SSYR2)))));
 #else
+#ifndef __APPLE__
 void ssyr2(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(ssyr2,SSYR2)))));
+#else
+void ssyr2(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* a, blasint* lda){ FC_GLOBAL(ssyr2,SSYR2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
+#endif
 #endif
 
 
@@ -6378,7 +7578,11 @@ void flexiblas_real_ssyr2_(void* uplo, void* n, void* alpha, void* x, void* incx
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_ssyr2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda) __attribute__((alias("flexiblas_real_ssyr2_")));
+#else
+void flexiblas_real_ssyr2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda){flexiblas_real_ssyr2_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);}
+#endif
 
 
 void flexiblas_chain_ssyr2_(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda)
@@ -6398,7 +7602,11 @@ void flexiblas_chain_ssyr2_(void* uplo, void* n, void* alpha, void* x, void* inc
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_ssyr2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda) __attribute__((alias("flexiblas_chain_ssyr2_")));
+#else
+void flexiblas_chain_ssyr2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda){flexiblas_chain_ssyr2_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_ssyr2k = 0;
@@ -6424,7 +7632,11 @@ void FC_GLOBAL(ssyr2k,SSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, f
 #ifdef FLEXIBLAS_ABI_IBM
 void ssyr2k_(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(ssyr2k,SSYR2K)))));
 #else
+#ifndef __APPLE__
 void ssyr2k(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(ssyr2k,SSYR2K)))));
+#else
+void ssyr2k(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc){ FC_GLOBAL(ssyr2k,SSYR2K)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc); }
+#endif
 #endif
 
 
@@ -6438,7 +7650,11 @@ void flexiblas_real_ssyr2k_(void* uplo, void* trans, void* n, void* k, void* alp
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_ssyr2k(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_real_ssyr2k_")));
+#else
+void flexiblas_real_ssyr2k(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_real_ssyr2k_((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 void flexiblas_chain_ssyr2k_(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc)
@@ -6458,7 +7674,11 @@ void flexiblas_chain_ssyr2k_(void* uplo, void* trans, void* n, void* k, void* al
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_ssyr2k(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_chain_ssyr2k_")));
+#else
+void flexiblas_chain_ssyr2k(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_chain_ssyr2k_((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_ssyrk = 0;
@@ -6484,7 +7704,11 @@ void FC_GLOBAL(ssyrk,SSYRK)(char* uplo, char* trans, blasint* n, blasint* k, flo
 #ifdef FLEXIBLAS_ABI_IBM
 void ssyrk_(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* beta, float* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(ssyrk,SSYRK)))));
 #else
+#ifndef __APPLE__
 void ssyrk(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* beta, float* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(ssyrk,SSYRK)))));
+#else
+void ssyrk(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* beta, float* c, blasint* ldc){ FC_GLOBAL(ssyrk,SSYRK)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc); }
+#endif
 #endif
 
 
@@ -6498,7 +7722,11 @@ void flexiblas_real_ssyrk_(void* uplo, void* trans, void* n, void* k, void* alph
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_ssyrk(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_real_ssyrk_")));
+#else
+void flexiblas_real_ssyrk(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc){flexiblas_real_ssyrk_((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 void flexiblas_chain_ssyrk_(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc)
@@ -6518,7 +7746,11 @@ void flexiblas_chain_ssyrk_(void* uplo, void* trans, void* n, void* k, void* alp
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_ssyrk(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_chain_ssyrk_")));
+#else
+void flexiblas_chain_ssyrk(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc){flexiblas_chain_ssyrk_((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_stbmv = 0;
@@ -6544,7 +7776,11 @@ void FC_GLOBAL(stbmv,STBMV)(char* uplo, char* trans, char* diag, blasint* n, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void stbmv_(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float* a, blasint* lda, float* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(stbmv,STBMV)))));
 #else
+#ifndef __APPLE__
 void stbmv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float* a, blasint* lda, float* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(stbmv,STBMV)))));
+#else
+void stbmv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float* a, blasint* lda, float* x, blasint* incx){ FC_GLOBAL(stbmv,STBMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -6558,7 +7794,11 @@ void flexiblas_real_stbmv_(void* uplo, void* trans, void* diag, void* n, void* k
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_stbmv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_real_stbmv_")));
+#else
+void flexiblas_real_stbmv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx){flexiblas_real_stbmv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_stbmv_(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx)
@@ -6578,7 +7818,11 @@ void flexiblas_chain_stbmv_(void* uplo, void* trans, void* diag, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_stbmv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_chain_stbmv_")));
+#else
+void flexiblas_chain_stbmv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx){flexiblas_chain_stbmv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_stbsv = 0;
@@ -6604,7 +7848,11 @@ void FC_GLOBAL(stbsv,STBSV)(char* uplo, char* trans, char* diag, blasint* n, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void stbsv_(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float* a, blasint* lda, float* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(stbsv,STBSV)))));
 #else
+#ifndef __APPLE__
 void stbsv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float* a, blasint* lda, float* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(stbsv,STBSV)))));
+#else
+void stbsv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float* a, blasint* lda, float* x, blasint* incx){ FC_GLOBAL(stbsv,STBSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -6618,7 +7866,11 @@ void flexiblas_real_stbsv_(void* uplo, void* trans, void* diag, void* n, void* k
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_stbsv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_real_stbsv_")));
+#else
+void flexiblas_real_stbsv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx){flexiblas_real_stbsv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_stbsv_(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx)
@@ -6638,7 +7890,11 @@ void flexiblas_chain_stbsv_(void* uplo, void* trans, void* diag, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_stbsv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_chain_stbsv_")));
+#else
+void flexiblas_chain_stbsv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx){flexiblas_chain_stbsv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_stpmv = 0;
@@ -6664,7 +7920,11 @@ void FC_GLOBAL(stpmv,STPMV)(char* uplo, char* trans, char* diag, blasint* n, flo
 #ifdef FLEXIBLAS_ABI_IBM
 void stpmv_(char* uplo, char* trans, char* diag, blasint* n, float* ap, float* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(stpmv,STPMV)))));
 #else
+#ifndef __APPLE__
 void stpmv(char* uplo, char* trans, char* diag, blasint* n, float* ap, float* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(stpmv,STPMV)))));
+#else
+void stpmv(char* uplo, char* trans, char* diag, blasint* n, float* ap, float* x, blasint* incx){ FC_GLOBAL(stpmv,STPMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -6678,7 +7938,11 @@ void flexiblas_real_stpmv_(void* uplo, void* trans, void* diag, void* n, void* a
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_stpmv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx) __attribute__((alias("flexiblas_real_stpmv_")));
+#else
+void flexiblas_real_stpmv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx){flexiblas_real_stpmv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_stpmv_(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx)
@@ -6698,7 +7962,11 @@ void flexiblas_chain_stpmv_(void* uplo, void* trans, void* diag, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_stpmv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx) __attribute__((alias("flexiblas_chain_stpmv_")));
+#else
+void flexiblas_chain_stpmv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx){flexiblas_chain_stpmv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_stpsv = 0;
@@ -6724,7 +7992,11 @@ void FC_GLOBAL(stpsv,STPSV)(char* uplo, char* trans, char* diag, blasint* n, flo
 #ifdef FLEXIBLAS_ABI_IBM
 void stpsv_(char* uplo, char* trans, char* diag, blasint* n, float* ap, float* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(stpsv,STPSV)))));
 #else
+#ifndef __APPLE__
 void stpsv(char* uplo, char* trans, char* diag, blasint* n, float* ap, float* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(stpsv,STPSV)))));
+#else
+void stpsv(char* uplo, char* trans, char* diag, blasint* n, float* ap, float* x, blasint* incx){ FC_GLOBAL(stpsv,STPSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -6738,7 +8010,11 @@ void flexiblas_real_stpsv_(void* uplo, void* trans, void* diag, void* n, void* a
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_stpsv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx) __attribute__((alias("flexiblas_real_stpsv_")));
+#else
+void flexiblas_real_stpsv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx){flexiblas_real_stpsv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_stpsv_(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx)
@@ -6758,7 +8034,11 @@ void flexiblas_chain_stpsv_(void* uplo, void* trans, void* diag, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_stpsv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx) __attribute__((alias("flexiblas_chain_stpsv_")));
+#else
+void flexiblas_chain_stpsv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx){flexiblas_chain_stpsv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_strmm = 0;
@@ -6784,7 +8064,11 @@ void FC_GLOBAL(strmm,STRMM)(char* side, char* uplo, char* transa, char* diag, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void strmm_(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(strmm,STRMM)))));
 #else
+#ifndef __APPLE__
 void strmm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(strmm,STRMM)))));
+#else
+void strmm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb){ FC_GLOBAL(strmm,STRMM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb); }
+#endif
 #endif
 
 
@@ -6798,7 +8082,11 @@ void flexiblas_real_strmm_(void* side, void* uplo, void* transa, void* diag, voi
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_strmm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_real_strmm_")));
+#else
+void flexiblas_real_strmm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb){flexiblas_real_strmm_((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 void flexiblas_chain_strmm_(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb)
@@ -6818,7 +8106,11 @@ void flexiblas_chain_strmm_(void* side, void* uplo, void* transa, void* diag, vo
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_strmm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_chain_strmm_")));
+#else
+void flexiblas_chain_strmm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb){flexiblas_chain_strmm_((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_strmv = 0;
@@ -6844,7 +8136,11 @@ void FC_GLOBAL(strmv,STRMV)(char* uplo, char* trans, char* diag, blasint* n, flo
 #ifdef FLEXIBLAS_ABI_IBM
 void strmv_(char* uplo, char* trans, char* diag, blasint* n, float* a, blasint* lda, float* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(strmv,STRMV)))));
 #else
+#ifndef __APPLE__
 void strmv(char* uplo, char* trans, char* diag, blasint* n, float* a, blasint* lda, float* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(strmv,STRMV)))));
+#else
+void strmv(char* uplo, char* trans, char* diag, blasint* n, float* a, blasint* lda, float* x, blasint* incx){ FC_GLOBAL(strmv,STRMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -6858,7 +8154,11 @@ void flexiblas_real_strmv_(void* uplo, void* trans, void* diag, void* n, void* a
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_strmv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_real_strmv_")));
+#else
+void flexiblas_real_strmv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx){flexiblas_real_strmv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_strmv_(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx)
@@ -6878,7 +8178,11 @@ void flexiblas_chain_strmv_(void* uplo, void* trans, void* diag, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_strmv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_chain_strmv_")));
+#else
+void flexiblas_chain_strmv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx){flexiblas_chain_strmv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_strsm = 0;
@@ -6904,7 +8208,11 @@ void FC_GLOBAL(strsm,STRSM)(char* side, char* uplo, char* transa, char* diag, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void strsm_(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(strsm,STRSM)))));
 #else
+#ifndef __APPLE__
 void strsm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(strsm,STRSM)))));
+#else
+void strsm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb){ FC_GLOBAL(strsm,STRSM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb); }
+#endif
 #endif
 
 
@@ -6918,7 +8226,11 @@ void flexiblas_real_strsm_(void* side, void* uplo, void* transa, void* diag, voi
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_strsm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_real_strsm_")));
+#else
+void flexiblas_real_strsm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb){flexiblas_real_strsm_((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 void flexiblas_chain_strsm_(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb)
@@ -6938,7 +8250,11 @@ void flexiblas_chain_strsm_(void* side, void* uplo, void* transa, void* diag, vo
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_strsm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_chain_strsm_")));
+#else
+void flexiblas_chain_strsm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb){flexiblas_chain_strsm_((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_strsv = 0;
@@ -6964,7 +8280,11 @@ void FC_GLOBAL(strsv,STRSV)(char* uplo, char* trans, char* diag, blasint* n, flo
 #ifdef FLEXIBLAS_ABI_IBM
 void strsv_(char* uplo, char* trans, char* diag, blasint* n, float* a, blasint* lda, float* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(strsv,STRSV)))));
 #else
+#ifndef __APPLE__
 void strsv(char* uplo, char* trans, char* diag, blasint* n, float* a, blasint* lda, float* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(strsv,STRSV)))));
+#else
+void strsv(char* uplo, char* trans, char* diag, blasint* n, float* a, blasint* lda, float* x, blasint* incx){ FC_GLOBAL(strsv,STRSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -6978,7 +8298,11 @@ void flexiblas_real_strsv_(void* uplo, void* trans, void* diag, void* n, void* a
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_strsv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_real_strsv_")));
+#else
+void flexiblas_real_strsv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx){flexiblas_real_strsv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_strsv_(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx)
@@ -6998,7 +8322,11 @@ void flexiblas_chain_strsv_(void* uplo, void* trans, void* diag, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_strsv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_chain_strsv_")));
+#else
+void flexiblas_chain_strsv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx){flexiblas_chain_strsv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zaxpy = 0;
@@ -7024,7 +8352,11 @@ void FC_GLOBAL(zaxpy,ZAXPY)(blasint* n, double complex* za, double complex* zx, 
 #ifdef FLEXIBLAS_ABI_IBM
 void zaxpy_(blasint* n, double complex* za, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zaxpy,ZAXPY)))));
 #else
+#ifndef __APPLE__
 void zaxpy(blasint* n, double complex* za, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zaxpy,ZAXPY)))));
+#else
+void zaxpy(blasint* n, double complex* za, double complex* zx, blasint* incx, double complex* zy, blasint* incy){ FC_GLOBAL(zaxpy,ZAXPY)((void*) n, (void*) za, (void*) zx, (void*) incx, (void*) zy, (void*) incy); }
+#endif
 #endif
 
 
@@ -7038,7 +8370,11 @@ void flexiblas_real_zaxpy_(void* n, void* za, void* zx, void* incx, void* zy, vo
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zaxpy(void* n, void* za, void* zx, void* incx, void* zy, void* incy) __attribute__((alias("flexiblas_real_zaxpy_")));
+#else
+void flexiblas_real_zaxpy(void* n, void* za, void* zx, void* incx, void* zy, void* incy){flexiblas_real_zaxpy_((void*) n, (void*) za, (void*) zx, (void*) incx, (void*) zy, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_zaxpy_(void* n, void* za, void* zx, void* incx, void* zy, void* incy)
@@ -7058,7 +8394,11 @@ void flexiblas_chain_zaxpy_(void* n, void* za, void* zx, void* incx, void* zy, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zaxpy(void* n, void* za, void* zx, void* incx, void* zy, void* incy) __attribute__((alias("flexiblas_chain_zaxpy_")));
+#else
+void flexiblas_chain_zaxpy(void* n, void* za, void* zx, void* incx, void* zy, void* incy){flexiblas_chain_zaxpy_((void*) n, (void*) za, (void*) zx, (void*) incx, (void*) zy, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zcopy = 0;
@@ -7084,7 +8424,11 @@ void FC_GLOBAL(zcopy,ZCOPY)(blasint* n, double complex* zx, blasint* incx, doubl
 #ifdef FLEXIBLAS_ABI_IBM
 void zcopy_(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zcopy,ZCOPY)))));
 #else
+#ifndef __APPLE__
 void zcopy(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zcopy,ZCOPY)))));
+#else
+void zcopy(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy){ FC_GLOBAL(zcopy,ZCOPY)((void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy); }
+#endif
 #endif
 
 
@@ -7098,7 +8442,11 @@ void flexiblas_real_zcopy_(void* n, void* zx, void* incx, void* zy, void* incy)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zcopy(void* n, void* zx, void* incx, void* zy, void* incy) __attribute__((alias("flexiblas_real_zcopy_")));
+#else
+void flexiblas_real_zcopy(void* n, void* zx, void* incx, void* zy, void* incy){flexiblas_real_zcopy_((void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_zcopy_(void* n, void* zx, void* incx, void* zy, void* incy)
@@ -7118,7 +8466,11 @@ void flexiblas_chain_zcopy_(void* n, void* zx, void* incx, void* zy, void* incy)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zcopy(void* n, void* zx, void* incx, void* zy, void* incy) __attribute__((alias("flexiblas_chain_zcopy_")));
+#else
+void flexiblas_chain_zcopy(void* n, void* zx, void* incx, void* zy, void* incy){flexiblas_chain_zcopy_((void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zdotc = 0;
@@ -7157,12 +8509,16 @@ double complex FC_GLOBAL(zdotc,ZDOTC)(blasint* n, double complex* zx, blasint* i
 #ifdef FLEXIBLAS_ABI_IBM
 double complex zdotc_(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zdotc,ZDOTC)))));
 #else
+#ifndef __APPLE__
 double complex zdotc(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zdotc,ZDOTC)))));
+#else
+double complex zdotc(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy){ return FC_GLOBAL(zdotc,ZDOTC)((void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy); }
+#endif
 #endif
 
 
 
-void flexiblas_real_zdotc_( void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy)
+void flexiblas_real_zdotc_(void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy)
 {
 	double complex (*fn) (void* n, void* zx, void* incx, void* zy, void* incy);
 	void (*fn_intel) (double complex *ret, void* n, void* zx, void* incx, void* zy, void* incy);
@@ -7176,13 +8532,17 @@ void flexiblas_real_zdotc_( void * returnvalue, void* n, void* zx, void* incx, v
 			fn_intel( &ret, (void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy);
 		}
 
-	*((double complex *)returnvalue) = ret;
+	*((double complex *)returnvalue) = ret; 
 	return;
 }
-void flexiblas_real_zdotc( void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy) __attribute__((alias("flexiblas_real_zdotc_")));
+#ifndef __APPLE__
+void flexiblas_real_zdotc(void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy) __attribute__((alias("flexiblas_real_zdotc_")));
+#else
+void flexiblas_real_zdotc(void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy){flexiblas_real_zdotc_((void *)returnvalue, (void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy);}
+#endif
 
 
-void flexiblas_chain_zdotc_( void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy)
+void flexiblas_chain_zdotc_(void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy)
 {
 	double complex (*fn) (void* n, void* zx, void* incx, void* zy, void* incy);
 	void (*fn_intel) (double complex *ret, void* n, void* zx, void* incx, void* zy, void* incy);
@@ -7204,10 +8564,14 @@ void flexiblas_chain_zdotc_( void * returnvalue, void* n, void* zx, void* incx, 
 			fn_intel( &ret, (void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy);
 		}
 
-	*((double complex *)returnvalue) = ret;
+	*((double complex *)returnvalue) = ret; 
 	return;
 }
-void flexiblas_chain_zdotc( void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy) __attribute__((alias("flexiblas_chain_zdotc_")));
+#ifndef __APPLE__
+void flexiblas_chain_zdotc(void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy) __attribute__((alias("flexiblas_chain_zdotc_")));
+#else
+void flexiblas_chain_zdotc(void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy){(void) flexiblas_chain_zdotc_((void *) returnvalue, (void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zdotu = 0;
@@ -7246,12 +8610,16 @@ double complex FC_GLOBAL(zdotu,ZDOTU)(blasint* n, double complex* zx, blasint* i
 #ifdef FLEXIBLAS_ABI_IBM
 double complex zdotu_(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zdotu,ZDOTU)))));
 #else
+#ifndef __APPLE__
 double complex zdotu(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zdotu,ZDOTU)))));
+#else
+double complex zdotu(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy){ return FC_GLOBAL(zdotu,ZDOTU)((void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy); }
+#endif
 #endif
 
 
 
-void flexiblas_real_zdotu_( void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy)
+void flexiblas_real_zdotu_(void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy)
 {
 	double complex (*fn) (void* n, void* zx, void* incx, void* zy, void* incy);
 	void (*fn_intel) (double complex *ret, void* n, void* zx, void* incx, void* zy, void* incy);
@@ -7265,13 +8633,17 @@ void flexiblas_real_zdotu_( void * returnvalue, void* n, void* zx, void* incx, v
 			fn_intel( &ret, (void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy);
 		}
 
-	*((double complex *)returnvalue) = ret;
+	*((double complex *)returnvalue) = ret; 
 	return;
 }
-void flexiblas_real_zdotu( void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy) __attribute__((alias("flexiblas_real_zdotu_")));
+#ifndef __APPLE__
+void flexiblas_real_zdotu(void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy) __attribute__((alias("flexiblas_real_zdotu_")));
+#else
+void flexiblas_real_zdotu(void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy){flexiblas_real_zdotu_((void *)returnvalue, (void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy);}
+#endif
 
 
-void flexiblas_chain_zdotu_( void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy)
+void flexiblas_chain_zdotu_(void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy)
 {
 	double complex (*fn) (void* n, void* zx, void* incx, void* zy, void* incy);
 	void (*fn_intel) (double complex *ret, void* n, void* zx, void* incx, void* zy, void* incy);
@@ -7293,10 +8665,14 @@ void flexiblas_chain_zdotu_( void * returnvalue, void* n, void* zx, void* incx, 
 			fn_intel( &ret, (void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy);
 		}
 
-	*((double complex *)returnvalue) = ret;
+	*((double complex *)returnvalue) = ret; 
 	return;
 }
-void flexiblas_chain_zdotu( void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy) __attribute__((alias("flexiblas_chain_zdotu_")));
+#ifndef __APPLE__
+void flexiblas_chain_zdotu(void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy) __attribute__((alias("flexiblas_chain_zdotu_")));
+#else
+void flexiblas_chain_zdotu(void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy){(void) flexiblas_chain_zdotu_((void *) returnvalue, (void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zdrot = 0;
@@ -7322,7 +8698,11 @@ void FC_GLOBAL(zdrot,ZDROT)(blasint* n, double complex* cx, blasint* incx, doubl
 #ifdef FLEXIBLAS_ABI_IBM
 void zdrot_(blasint* n, double complex* cx, blasint* incx, double complex* cy, blasint* incy, double* c, double* s) __attribute__((alias(MTS(FC_GLOBAL(zdrot,ZDROT)))));
 #else
+#ifndef __APPLE__
 void zdrot(blasint* n, double complex* cx, blasint* incx, double complex* cy, blasint* incy, double* c, double* s) __attribute__((alias(MTS(FC_GLOBAL(zdrot,ZDROT)))));
+#else
+void zdrot(blasint* n, double complex* cx, blasint* incx, double complex* cy, blasint* incy, double* c, double* s){ FC_GLOBAL(zdrot,ZDROT)((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s); }
+#endif
 #endif
 
 
@@ -7336,7 +8716,11 @@ void flexiblas_real_zdrot_(void* n, void* cx, void* incx, void* cy, void* incy, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zdrot(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s) __attribute__((alias("flexiblas_real_zdrot_")));
+#else
+void flexiblas_real_zdrot(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s){flexiblas_real_zdrot_((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s);}
+#endif
 
 
 void flexiblas_chain_zdrot_(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s)
@@ -7356,7 +8740,11 @@ void flexiblas_chain_zdrot_(void* n, void* cx, void* incx, void* cy, void* incy,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zdrot(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s) __attribute__((alias("flexiblas_chain_zdrot_")));
+#else
+void flexiblas_chain_zdrot(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s){flexiblas_chain_zdrot_((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zdscal = 0;
@@ -7382,7 +8770,11 @@ void FC_GLOBAL(zdscal,ZDSCAL)(blasint* n, double* da, double complex* zx, blasin
 #ifdef FLEXIBLAS_ABI_IBM
 void zdscal_(blasint* n, double* da, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(zdscal,ZDSCAL)))));
 #else
+#ifndef __APPLE__
 void zdscal(blasint* n, double* da, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(zdscal,ZDSCAL)))));
+#else
+void zdscal(blasint* n, double* da, double complex* zx, blasint* incx){ FC_GLOBAL(zdscal,ZDSCAL)((void*) n, (void*) da, (void*) zx, (void*) incx); }
+#endif
 #endif
 
 
@@ -7396,7 +8788,11 @@ void flexiblas_real_zdscal_(void* n, void* da, void* zx, void* incx)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zdscal(void* n, void* da, void* zx, void* incx) __attribute__((alias("flexiblas_real_zdscal_")));
+#else
+void flexiblas_real_zdscal(void* n, void* da, void* zx, void* incx){flexiblas_real_zdscal_((void*) n, (void*) da, (void*) zx, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_zdscal_(void* n, void* da, void* zx, void* incx)
@@ -7416,7 +8812,11 @@ void flexiblas_chain_zdscal_(void* n, void* da, void* zx, void* incx)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zdscal(void* n, void* da, void* zx, void* incx) __attribute__((alias("flexiblas_chain_zdscal_")));
+#else
+void flexiblas_chain_zdscal(void* n, void* da, void* zx, void* incx){flexiblas_chain_zdscal_((void*) n, (void*) da, (void*) zx, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zgbmv = 0;
@@ -7442,7 +8842,11 @@ void FC_GLOBAL(zgbmv,ZGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void zgbmv_(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zgbmv,ZGBMV)))));
 #else
+#ifndef __APPLE__
 void zgbmv(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zgbmv,ZGBMV)))));
+#else
+void zgbmv(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy){ FC_GLOBAL(zgbmv,ZGBMV)((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); }
+#endif
 #endif
 
 
@@ -7456,7 +8860,11 @@ void flexiblas_real_zgbmv_(void* trans, void* m, void* n, void* kl, void* ku, vo
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zgbmv(void* trans, void* m, void* n, void* kl, void* ku, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_real_zgbmv_")));
+#else
+void flexiblas_real_zgbmv(void* trans, void* m, void* n, void* kl, void* ku, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_real_zgbmv_((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_zgbmv_(void* trans, void* m, void* n, void* kl, void* ku, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy)
@@ -7476,7 +8884,11 @@ void flexiblas_chain_zgbmv_(void* trans, void* m, void* n, void* kl, void* ku, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zgbmv(void* trans, void* m, void* n, void* kl, void* ku, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_chain_zgbmv_")));
+#else
+void flexiblas_chain_zgbmv(void* trans, void* m, void* n, void* kl, void* ku, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_chain_zgbmv_((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zgemm = 0;
@@ -7502,7 +8914,11 @@ void FC_GLOBAL(zgemm,ZGEMM)(char* transa, char* transb, blasint* m, blasint* n, 
 #ifdef FLEXIBLAS_ABI_IBM
 void zgemm_(char* transa, char* transb, blasint* m, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(zgemm,ZGEMM)))));
 #else
+#ifndef __APPLE__
 void zgemm(char* transa, char* transb, blasint* m, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(zgemm,ZGEMM)))));
+#else
+void zgemm(char* transa, char* transb, blasint* m, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc){ FC_GLOBAL(zgemm,ZGEMM)((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc); }
+#endif
 #endif
 
 
@@ -7516,7 +8932,11 @@ void flexiblas_real_zgemm_(void* transa, void* transb, void* m, void* n, void* k
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zgemm(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_real_zgemm_")));
+#else
+void flexiblas_real_zgemm(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_real_zgemm_((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 void flexiblas_chain_zgemm_(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc)
@@ -7536,7 +8956,11 @@ void flexiblas_chain_zgemm_(void* transa, void* transb, void* m, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zgemm(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_chain_zgemm_")));
+#else
+void flexiblas_chain_zgemm(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_chain_zgemm_((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zgemv = 0;
@@ -7562,7 +8986,11 @@ void FC_GLOBAL(zgemv,ZGEMV)(char* trans, blasint* m, blasint* n, double complex*
 #ifdef FLEXIBLAS_ABI_IBM
 void zgemv_(char* trans, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zgemv,ZGEMV)))));
 #else
+#ifndef __APPLE__
 void zgemv(char* trans, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zgemv,ZGEMV)))));
+#else
+void zgemv(char* trans, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy){ FC_GLOBAL(zgemv,ZGEMV)((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); }
+#endif
 #endif
 
 
@@ -7576,7 +9004,11 @@ void flexiblas_real_zgemv_(void* trans, void* m, void* n, void* alpha, void* a, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zgemv(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_real_zgemv_")));
+#else
+void flexiblas_real_zgemv(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_real_zgemv_((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_zgemv_(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy)
@@ -7596,7 +9028,11 @@ void flexiblas_chain_zgemv_(void* trans, void* m, void* n, void* alpha, void* a,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zgemv(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_chain_zgemv_")));
+#else
+void flexiblas_chain_zgemv(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_chain_zgemv_((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zgerc = 0;
@@ -7622,7 +9058,11 @@ void FC_GLOBAL(zgerc,ZGERC)(blasint* m, blasint* n, double complex* alpha, doubl
 #ifdef FLEXIBLAS_ABI_IBM
 void zgerc_(blasint* m, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(zgerc,ZGERC)))));
 #else
+#ifndef __APPLE__
 void zgerc(blasint* m, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(zgerc,ZGERC)))));
+#else
+void zgerc(blasint* m, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda){ FC_GLOBAL(zgerc,ZGERC)((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
+#endif
 #endif
 
 
@@ -7636,7 +9076,11 @@ void flexiblas_real_zgerc_(void* m, void* n, void* alpha, void* x, void* incx, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zgerc(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda) __attribute__((alias("flexiblas_real_zgerc_")));
+#else
+void flexiblas_real_zgerc(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda){flexiblas_real_zgerc_((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);}
+#endif
 
 
 void flexiblas_chain_zgerc_(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda)
@@ -7656,7 +9100,11 @@ void flexiblas_chain_zgerc_(void* m, void* n, void* alpha, void* x, void* incx, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zgerc(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda) __attribute__((alias("flexiblas_chain_zgerc_")));
+#else
+void flexiblas_chain_zgerc(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda){flexiblas_chain_zgerc_((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zgeru = 0;
@@ -7682,7 +9130,11 @@ void FC_GLOBAL(zgeru,ZGERU)(blasint* m, blasint* n, double complex* alpha, doubl
 #ifdef FLEXIBLAS_ABI_IBM
 void zgeru_(blasint* m, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(zgeru,ZGERU)))));
 #else
+#ifndef __APPLE__
 void zgeru(blasint* m, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(zgeru,ZGERU)))));
+#else
+void zgeru(blasint* m, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda){ FC_GLOBAL(zgeru,ZGERU)((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
+#endif
 #endif
 
 
@@ -7696,7 +9148,11 @@ void flexiblas_real_zgeru_(void* m, void* n, void* alpha, void* x, void* incx, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zgeru(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda) __attribute__((alias("flexiblas_real_zgeru_")));
+#else
+void flexiblas_real_zgeru(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda){flexiblas_real_zgeru_((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);}
+#endif
 
 
 void flexiblas_chain_zgeru_(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda)
@@ -7716,7 +9172,11 @@ void flexiblas_chain_zgeru_(void* m, void* n, void* alpha, void* x, void* incx, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zgeru(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda) __attribute__((alias("flexiblas_chain_zgeru_")));
+#else
+void flexiblas_chain_zgeru(void* m, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda){flexiblas_chain_zgeru_((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zhbmv = 0;
@@ -7742,7 +9202,11 @@ void FC_GLOBAL(zhbmv,ZHBMV)(char* uplo, blasint* n, blasint* k, double complex* 
 #ifdef FLEXIBLAS_ABI_IBM
 void zhbmv_(char* uplo, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zhbmv,ZHBMV)))));
 #else
+#ifndef __APPLE__
 void zhbmv(char* uplo, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zhbmv,ZHBMV)))));
+#else
+void zhbmv(char* uplo, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy){ FC_GLOBAL(zhbmv,ZHBMV)((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); }
+#endif
 #endif
 
 
@@ -7756,7 +9220,11 @@ void flexiblas_real_zhbmv_(void* uplo, void* n, void* k, void* alpha, void* a, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zhbmv(void* uplo, void* n, void* k, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_real_zhbmv_")));
+#else
+void flexiblas_real_zhbmv(void* uplo, void* n, void* k, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_real_zhbmv_((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_zhbmv_(void* uplo, void* n, void* k, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy)
@@ -7776,7 +9244,11 @@ void flexiblas_chain_zhbmv_(void* uplo, void* n, void* k, void* alpha, void* a, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zhbmv(void* uplo, void* n, void* k, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_chain_zhbmv_")));
+#else
+void flexiblas_chain_zhbmv(void* uplo, void* n, void* k, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_chain_zhbmv_((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zhemm = 0;
@@ -7802,7 +9274,11 @@ void FC_GLOBAL(zhemm,ZHEMM)(char* side, char* uplo, blasint* m, blasint* n, doub
 #ifdef FLEXIBLAS_ABI_IBM
 void zhemm_(char* side, char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(zhemm,ZHEMM)))));
 #else
+#ifndef __APPLE__
 void zhemm(char* side, char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(zhemm,ZHEMM)))));
+#else
+void zhemm(char* side, char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc){ FC_GLOBAL(zhemm,ZHEMM)((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc); }
+#endif
 #endif
 
 
@@ -7816,7 +9292,11 @@ void flexiblas_real_zhemm_(void* side, void* uplo, void* m, void* n, void* alpha
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zhemm(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_real_zhemm_")));
+#else
+void flexiblas_real_zhemm(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_real_zhemm_((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 void flexiblas_chain_zhemm_(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc)
@@ -7836,7 +9316,11 @@ void flexiblas_chain_zhemm_(void* side, void* uplo, void* m, void* n, void* alph
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zhemm(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_chain_zhemm_")));
+#else
+void flexiblas_chain_zhemm(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_chain_zhemm_((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zhemv = 0;
@@ -7862,7 +9346,11 @@ void FC_GLOBAL(zhemv,ZHEMV)(char* uplo, blasint* n, double complex* alpha, doubl
 #ifdef FLEXIBLAS_ABI_IBM
 void zhemv_(char* uplo, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zhemv,ZHEMV)))));
 #else
+#ifndef __APPLE__
 void zhemv(char* uplo, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zhemv,ZHEMV)))));
+#else
+void zhemv(char* uplo, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy){ FC_GLOBAL(zhemv,ZHEMV)((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); }
+#endif
 #endif
 
 
@@ -7876,7 +9364,11 @@ void flexiblas_real_zhemv_(void* uplo, void* n, void* alpha, void* a, void* lda,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zhemv(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_real_zhemv_")));
+#else
+void flexiblas_real_zhemv(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_real_zhemv_((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_zhemv_(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy)
@@ -7896,7 +9388,11 @@ void flexiblas_chain_zhemv_(void* uplo, void* n, void* alpha, void* a, void* lda
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zhemv(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_chain_zhemv_")));
+#else
+void flexiblas_chain_zhemv(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_chain_zhemv_((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zher = 0;
@@ -7922,7 +9418,11 @@ void FC_GLOBAL(zher,ZHER)(char* uplo, blasint* n, double* alpha, double complex*
 #ifdef FLEXIBLAS_ABI_IBM
 void zher_(char* uplo, blasint* n, double* alpha, double complex* x, blasint* incx, double complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(zher,ZHER)))));
 #else
+#ifndef __APPLE__
 void zher(char* uplo, blasint* n, double* alpha, double complex* x, blasint* incx, double complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(zher,ZHER)))));
+#else
+void zher(char* uplo, blasint* n, double* alpha, double complex* x, blasint* incx, double complex* a, blasint* lda){ FC_GLOBAL(zher,ZHER)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda); }
+#endif
 #endif
 
 
@@ -7936,7 +9436,11 @@ void flexiblas_real_zher_(void* uplo, void* n, void* alpha, void* x, void* incx,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zher(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda) __attribute__((alias("flexiblas_real_zher_")));
+#else
+void flexiblas_real_zher(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda){flexiblas_real_zher_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda);}
+#endif
 
 
 void flexiblas_chain_zher_(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda)
@@ -7956,7 +9460,11 @@ void flexiblas_chain_zher_(void* uplo, void* n, void* alpha, void* x, void* incx
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zher(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda) __attribute__((alias("flexiblas_chain_zher_")));
+#else
+void flexiblas_chain_zher(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda){flexiblas_chain_zher_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zher2 = 0;
@@ -7982,7 +9490,11 @@ void FC_GLOBAL(zher2,ZHER2)(char* uplo, blasint* n, double complex* alpha, doubl
 #ifdef FLEXIBLAS_ABI_IBM
 void zher2_(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(zher2,ZHER2)))));
 #else
+#ifndef __APPLE__
 void zher2(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(zher2,ZHER2)))));
+#else
+void zher2(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda){ FC_GLOBAL(zher2,ZHER2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
+#endif
 #endif
 
 
@@ -7996,7 +9508,11 @@ void flexiblas_real_zher2_(void* uplo, void* n, void* alpha, void* x, void* incx
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zher2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda) __attribute__((alias("flexiblas_real_zher2_")));
+#else
+void flexiblas_real_zher2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda){flexiblas_real_zher2_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);}
+#endif
 
 
 void flexiblas_chain_zher2_(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda)
@@ -8016,7 +9532,11 @@ void flexiblas_chain_zher2_(void* uplo, void* n, void* alpha, void* x, void* inc
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zher2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda) __attribute__((alias("flexiblas_chain_zher2_")));
+#else
+void flexiblas_chain_zher2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* a, void* lda){flexiblas_chain_zher2_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zher2k = 0;
@@ -8042,7 +9562,11 @@ void FC_GLOBAL(zher2k,ZHER2K)(char* uplo, char* trans, blasint* n, blasint* k, d
 #ifdef FLEXIBLAS_ABI_IBM
 void zher2k_(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* beta, double complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(zher2k,ZHER2K)))));
 #else
+#ifndef __APPLE__
 void zher2k(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* beta, double complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(zher2k,ZHER2K)))));
+#else
+void zher2k(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* beta, double complex* c, blasint* ldc){ FC_GLOBAL(zher2k,ZHER2K)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc); }
+#endif
 #endif
 
 
@@ -8056,7 +9580,11 @@ void flexiblas_real_zher2k_(void* uplo, void* trans, void* n, void* k, void* alp
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zher2k(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_real_zher2k_")));
+#else
+void flexiblas_real_zher2k(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_real_zher2k_((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 void flexiblas_chain_zher2k_(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc)
@@ -8076,7 +9604,11 @@ void flexiblas_chain_zher2k_(void* uplo, void* trans, void* n, void* k, void* al
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zher2k(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_chain_zher2k_")));
+#else
+void flexiblas_chain_zher2k(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_chain_zher2k_((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zherk = 0;
@@ -8102,7 +9634,11 @@ void FC_GLOBAL(zherk,ZHERK)(char* uplo, char* trans, blasint* n, blasint* k, dou
 #ifdef FLEXIBLAS_ABI_IBM
 void zherk_(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double complex* a, blasint* lda, double* beta, double complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(zherk,ZHERK)))));
 #else
+#ifndef __APPLE__
 void zherk(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double complex* a, blasint* lda, double* beta, double complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(zherk,ZHERK)))));
+#else
+void zherk(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double complex* a, blasint* lda, double* beta, double complex* c, blasint* ldc){ FC_GLOBAL(zherk,ZHERK)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc); }
+#endif
 #endif
 
 
@@ -8116,7 +9652,11 @@ void flexiblas_real_zherk_(void* uplo, void* trans, void* n, void* k, void* alph
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zherk(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_real_zherk_")));
+#else
+void flexiblas_real_zherk(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc){flexiblas_real_zherk_((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 void flexiblas_chain_zherk_(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc)
@@ -8136,7 +9676,11 @@ void flexiblas_chain_zherk_(void* uplo, void* trans, void* n, void* k, void* alp
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zherk(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_chain_zherk_")));
+#else
+void flexiblas_chain_zherk(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc){flexiblas_chain_zherk_((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zhpmv = 0;
@@ -8162,7 +9706,11 @@ void FC_GLOBAL(zhpmv,ZHPMV)(char* uplo, blasint* n, double complex* alpha, doubl
 #ifdef FLEXIBLAS_ABI_IBM
 void zhpmv_(char* uplo, blasint* n, double complex* alpha, double complex* ap, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zhpmv,ZHPMV)))));
 #else
+#ifndef __APPLE__
 void zhpmv(char* uplo, blasint* n, double complex* alpha, double complex* ap, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zhpmv,ZHPMV)))));
+#else
+void zhpmv(char* uplo, blasint* n, double complex* alpha, double complex* ap, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy){ FC_GLOBAL(zhpmv,ZHPMV)((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); }
+#endif
 #endif
 
 
@@ -8176,7 +9724,11 @@ void flexiblas_real_zhpmv_(void* uplo, void* n, void* alpha, void* ap, void* x, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zhpmv(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_real_zhpmv_")));
+#else
+void flexiblas_real_zhpmv(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_real_zhpmv_((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_zhpmv_(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy)
@@ -8196,7 +9748,11 @@ void flexiblas_chain_zhpmv_(void* uplo, void* n, void* alpha, void* ap, void* x,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zhpmv(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_chain_zhpmv_")));
+#else
+void flexiblas_chain_zhpmv(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_chain_zhpmv_((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zhpr = 0;
@@ -8222,7 +9778,11 @@ void FC_GLOBAL(zhpr,ZHPR)(char* uplo, blasint* n, double* alpha, double complex*
 #ifdef FLEXIBLAS_ABI_IBM
 void zhpr_(char* uplo, blasint* n, double* alpha, double complex* x, blasint* incx, double complex* ap) __attribute__((alias(MTS(FC_GLOBAL(zhpr,ZHPR)))));
 #else
+#ifndef __APPLE__
 void zhpr(char* uplo, blasint* n, double* alpha, double complex* x, blasint* incx, double complex* ap) __attribute__((alias(MTS(FC_GLOBAL(zhpr,ZHPR)))));
+#else
+void zhpr(char* uplo, blasint* n, double* alpha, double complex* x, blasint* incx, double complex* ap){ FC_GLOBAL(zhpr,ZHPR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap); }
+#endif
 #endif
 
 
@@ -8236,7 +9796,11 @@ void flexiblas_real_zhpr_(void* uplo, void* n, void* alpha, void* x, void* incx,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zhpr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap) __attribute__((alias("flexiblas_real_zhpr_")));
+#else
+void flexiblas_real_zhpr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap){flexiblas_real_zhpr_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap);}
+#endif
 
 
 void flexiblas_chain_zhpr_(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap)
@@ -8256,7 +9820,11 @@ void flexiblas_chain_zhpr_(void* uplo, void* n, void* alpha, void* x, void* incx
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zhpr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap) __attribute__((alias("flexiblas_chain_zhpr_")));
+#else
+void flexiblas_chain_zhpr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap){flexiblas_chain_zhpr_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zhpr2 = 0;
@@ -8282,7 +9850,11 @@ void FC_GLOBAL(zhpr2,ZHPR2)(char* uplo, blasint* n, double complex* alpha, doubl
 #ifdef FLEXIBLAS_ABI_IBM
 void zhpr2_(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* ap) __attribute__((alias(MTS(FC_GLOBAL(zhpr2,ZHPR2)))));
 #else
+#ifndef __APPLE__
 void zhpr2(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* ap) __attribute__((alias(MTS(FC_GLOBAL(zhpr2,ZHPR2)))));
+#else
+void zhpr2(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* ap){ FC_GLOBAL(zhpr2,ZHPR2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap); }
+#endif
 #endif
 
 
@@ -8296,7 +9868,11 @@ void flexiblas_real_zhpr2_(void* uplo, void* n, void* alpha, void* x, void* incx
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zhpr2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* ap) __attribute__((alias("flexiblas_real_zhpr2_")));
+#else
+void flexiblas_real_zhpr2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* ap){flexiblas_real_zhpr2_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap);}
+#endif
 
 
 void flexiblas_chain_zhpr2_(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* ap)
@@ -8316,7 +9892,11 @@ void flexiblas_chain_zhpr2_(void* uplo, void* n, void* alpha, void* x, void* inc
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zhpr2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* ap) __attribute__((alias("flexiblas_chain_zhpr2_")));
+#else
+void flexiblas_chain_zhpr2(void* uplo, void* n, void* alpha, void* x, void* incx, void* y, void* incy, void* ap){flexiblas_chain_zhpr2_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zrotg = 0;
@@ -8342,7 +9922,11 @@ void FC_GLOBAL(zrotg,ZROTG)(double complex* ca, double complex* cb, double* c, d
 #ifdef FLEXIBLAS_ABI_IBM
 void zrotg_(double complex* ca, double complex* cb, double* c, double complex* s) __attribute__((alias(MTS(FC_GLOBAL(zrotg,ZROTG)))));
 #else
+#ifndef __APPLE__
 void zrotg(double complex* ca, double complex* cb, double* c, double complex* s) __attribute__((alias(MTS(FC_GLOBAL(zrotg,ZROTG)))));
+#else
+void zrotg(double complex* ca, double complex* cb, double* c, double complex* s){ FC_GLOBAL(zrotg,ZROTG)((void*) ca, (void*) cb, (void*) c, (void*) s); }
+#endif
 #endif
 
 
@@ -8356,7 +9940,11 @@ void flexiblas_real_zrotg_(void* ca, void* cb, void* c, void* s)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zrotg(void* ca, void* cb, void* c, void* s) __attribute__((alias("flexiblas_real_zrotg_")));
+#else
+void flexiblas_real_zrotg(void* ca, void* cb, void* c, void* s){flexiblas_real_zrotg_((void*) ca, (void*) cb, (void*) c, (void*) s);}
+#endif
 
 
 void flexiblas_chain_zrotg_(void* ca, void* cb, void* c, void* s)
@@ -8376,7 +9964,11 @@ void flexiblas_chain_zrotg_(void* ca, void* cb, void* c, void* s)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zrotg(void* ca, void* cb, void* c, void* s) __attribute__((alias("flexiblas_chain_zrotg_")));
+#else
+void flexiblas_chain_zrotg(void* ca, void* cb, void* c, void* s){flexiblas_chain_zrotg_((void*) ca, (void*) cb, (void*) c, (void*) s);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zscal = 0;
@@ -8402,7 +9994,11 @@ void FC_GLOBAL(zscal,ZSCAL)(blasint* n, double complex* za, double complex* zx, 
 #ifdef FLEXIBLAS_ABI_IBM
 void zscal_(blasint* n, double complex* za, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(zscal,ZSCAL)))));
 #else
+#ifndef __APPLE__
 void zscal(blasint* n, double complex* za, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(zscal,ZSCAL)))));
+#else
+void zscal(blasint* n, double complex* za, double complex* zx, blasint* incx){ FC_GLOBAL(zscal,ZSCAL)((void*) n, (void*) za, (void*) zx, (void*) incx); }
+#endif
 #endif
 
 
@@ -8416,7 +10012,11 @@ void flexiblas_real_zscal_(void* n, void* za, void* zx, void* incx)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zscal(void* n, void* za, void* zx, void* incx) __attribute__((alias("flexiblas_real_zscal_")));
+#else
+void flexiblas_real_zscal(void* n, void* za, void* zx, void* incx){flexiblas_real_zscal_((void*) n, (void*) za, (void*) zx, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_zscal_(void* n, void* za, void* zx, void* incx)
@@ -8436,7 +10036,11 @@ void flexiblas_chain_zscal_(void* n, void* za, void* zx, void* incx)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zscal(void* n, void* za, void* zx, void* incx) __attribute__((alias("flexiblas_chain_zscal_")));
+#else
+void flexiblas_chain_zscal(void* n, void* za, void* zx, void* incx){flexiblas_chain_zscal_((void*) n, (void*) za, (void*) zx, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zswap = 0;
@@ -8462,7 +10066,11 @@ void FC_GLOBAL(zswap,ZSWAP)(blasint* n, double complex* zx, blasint* incx, doubl
 #ifdef FLEXIBLAS_ABI_IBM
 void zswap_(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zswap,ZSWAP)))));
 #else
+#ifndef __APPLE__
 void zswap(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zswap,ZSWAP)))));
+#else
+void zswap(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy){ FC_GLOBAL(zswap,ZSWAP)((void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy); }
+#endif
 #endif
 
 
@@ -8476,7 +10084,11 @@ void flexiblas_real_zswap_(void* n, void* zx, void* incx, void* zy, void* incy)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zswap(void* n, void* zx, void* incx, void* zy, void* incy) __attribute__((alias("flexiblas_real_zswap_")));
+#else
+void flexiblas_real_zswap(void* n, void* zx, void* incx, void* zy, void* incy){flexiblas_real_zswap_((void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_zswap_(void* n, void* zx, void* incx, void* zy, void* incy)
@@ -8496,7 +10108,11 @@ void flexiblas_chain_zswap_(void* n, void* zx, void* incx, void* zy, void* incy)
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zswap(void* n, void* zx, void* incx, void* zy, void* incy) __attribute__((alias("flexiblas_chain_zswap_")));
+#else
+void flexiblas_chain_zswap(void* n, void* zx, void* incx, void* zy, void* incy){flexiblas_chain_zswap_((void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zsymm = 0;
@@ -8522,7 +10138,11 @@ void FC_GLOBAL(zsymm,ZSYMM)(char* side, char* uplo, blasint* m, blasint* n, doub
 #ifdef FLEXIBLAS_ABI_IBM
 void zsymm_(char* side, char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(zsymm,ZSYMM)))));
 #else
+#ifndef __APPLE__
 void zsymm(char* side, char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(zsymm,ZSYMM)))));
+#else
+void zsymm(char* side, char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc){ FC_GLOBAL(zsymm,ZSYMM)((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc); }
+#endif
 #endif
 
 
@@ -8536,7 +10156,11 @@ void flexiblas_real_zsymm_(void* side, void* uplo, void* m, void* n, void* alpha
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zsymm(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_real_zsymm_")));
+#else
+void flexiblas_real_zsymm(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_real_zsymm_((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 void flexiblas_chain_zsymm_(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc)
@@ -8556,7 +10180,11 @@ void flexiblas_chain_zsymm_(void* side, void* uplo, void* m, void* n, void* alph
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zsymm(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_chain_zsymm_")));
+#else
+void flexiblas_chain_zsymm(void* side, void* uplo, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_chain_zsymm_((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zsyr2k = 0;
@@ -8582,7 +10210,11 @@ void FC_GLOBAL(zsyr2k,ZSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, d
 #ifdef FLEXIBLAS_ABI_IBM
 void zsyr2k_(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(zsyr2k,ZSYR2K)))));
 #else
+#ifndef __APPLE__
 void zsyr2k(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(zsyr2k,ZSYR2K)))));
+#else
+void zsyr2k(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc){ FC_GLOBAL(zsyr2k,ZSYR2K)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc); }
+#endif
 #endif
 
 
@@ -8596,7 +10228,11 @@ void flexiblas_real_zsyr2k_(void* uplo, void* trans, void* n, void* k, void* alp
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zsyr2k(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_real_zsyr2k_")));
+#else
+void flexiblas_real_zsyr2k(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_real_zsyr2k_((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 void flexiblas_chain_zsyr2k_(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc)
@@ -8616,7 +10252,11 @@ void flexiblas_chain_zsyr2k_(void* uplo, void* trans, void* n, void* k, void* al
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zsyr2k(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_chain_zsyr2k_")));
+#else
+void flexiblas_chain_zsyr2k(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc){flexiblas_chain_zsyr2k_((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zsyrk = 0;
@@ -8642,7 +10282,11 @@ void FC_GLOBAL(zsyrk,ZSYRK)(char* uplo, char* trans, blasint* n, blasint* k, dou
 #ifdef FLEXIBLAS_ABI_IBM
 void zsyrk_(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* beta, double complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(zsyrk,ZSYRK)))));
 #else
+#ifndef __APPLE__
 void zsyrk(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* beta, double complex* c, blasint* ldc) __attribute__((alias(MTS(FC_GLOBAL(zsyrk,ZSYRK)))));
+#else
+void zsyrk(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* beta, double complex* c, blasint* ldc){ FC_GLOBAL(zsyrk,ZSYRK)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc); }
+#endif
 #endif
 
 
@@ -8656,7 +10300,11 @@ void flexiblas_real_zsyrk_(void* uplo, void* trans, void* n, void* k, void* alph
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zsyrk(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_real_zsyrk_")));
+#else
+void flexiblas_real_zsyrk(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc){flexiblas_real_zsyrk_((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 void flexiblas_chain_zsyrk_(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc)
@@ -8676,7 +10324,11 @@ void flexiblas_chain_zsyrk_(void* uplo, void* trans, void* n, void* k, void* alp
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zsyrk(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc) __attribute__((alias("flexiblas_chain_zsyrk_")));
+#else
+void flexiblas_chain_zsyrk(void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c, void* ldc){flexiblas_chain_zsyrk_((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_ztbmv = 0;
@@ -8702,7 +10354,11 @@ void FC_GLOBAL(ztbmv,ZTBMV)(char* uplo, char* trans, char* diag, blasint* n, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void ztbmv_(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(ztbmv,ZTBMV)))));
 #else
+#ifndef __APPLE__
 void ztbmv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(ztbmv,ZTBMV)))));
+#else
+void ztbmv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* x, blasint* incx){ FC_GLOBAL(ztbmv,ZTBMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -8716,7 +10372,11 @@ void flexiblas_real_ztbmv_(void* uplo, void* trans, void* diag, void* n, void* k
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_ztbmv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_real_ztbmv_")));
+#else
+void flexiblas_real_ztbmv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx){flexiblas_real_ztbmv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_ztbmv_(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx)
@@ -8736,7 +10396,11 @@ void flexiblas_chain_ztbmv_(void* uplo, void* trans, void* diag, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_ztbmv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_chain_ztbmv_")));
+#else
+void flexiblas_chain_ztbmv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx){flexiblas_chain_ztbmv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_ztbsv = 0;
@@ -8762,7 +10426,11 @@ void FC_GLOBAL(ztbsv,ZTBSV)(char* uplo, char* trans, char* diag, blasint* n, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void ztbsv_(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(ztbsv,ZTBSV)))));
 #else
+#ifndef __APPLE__
 void ztbsv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(ztbsv,ZTBSV)))));
+#else
+void ztbsv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* x, blasint* incx){ FC_GLOBAL(ztbsv,ZTBSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -8776,7 +10444,11 @@ void flexiblas_real_ztbsv_(void* uplo, void* trans, void* diag, void* n, void* k
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_ztbsv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_real_ztbsv_")));
+#else
+void flexiblas_real_ztbsv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx){flexiblas_real_ztbsv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_ztbsv_(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx)
@@ -8796,7 +10468,11 @@ void flexiblas_chain_ztbsv_(void* uplo, void* trans, void* diag, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_ztbsv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_chain_ztbsv_")));
+#else
+void flexiblas_chain_ztbsv(void* uplo, void* trans, void* diag, void* n, void* k, void* a, void* lda, void* x, void* incx){flexiblas_chain_ztbsv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_ztpmv = 0;
@@ -8822,7 +10498,11 @@ void FC_GLOBAL(ztpmv,ZTPMV)(char* uplo, char* trans, char* diag, blasint* n, dou
 #ifdef FLEXIBLAS_ABI_IBM
 void ztpmv_(char* uplo, char* trans, char* diag, blasint* n, double complex* ap, double complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(ztpmv,ZTPMV)))));
 #else
+#ifndef __APPLE__
 void ztpmv(char* uplo, char* trans, char* diag, blasint* n, double complex* ap, double complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(ztpmv,ZTPMV)))));
+#else
+void ztpmv(char* uplo, char* trans, char* diag, blasint* n, double complex* ap, double complex* x, blasint* incx){ FC_GLOBAL(ztpmv,ZTPMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -8836,7 +10516,11 @@ void flexiblas_real_ztpmv_(void* uplo, void* trans, void* diag, void* n, void* a
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_ztpmv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx) __attribute__((alias("flexiblas_real_ztpmv_")));
+#else
+void flexiblas_real_ztpmv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx){flexiblas_real_ztpmv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_ztpmv_(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx)
@@ -8856,7 +10540,11 @@ void flexiblas_chain_ztpmv_(void* uplo, void* trans, void* diag, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_ztpmv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx) __attribute__((alias("flexiblas_chain_ztpmv_")));
+#else
+void flexiblas_chain_ztpmv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx){flexiblas_chain_ztpmv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_ztpsv = 0;
@@ -8882,7 +10570,11 @@ void FC_GLOBAL(ztpsv,ZTPSV)(char* uplo, char* trans, char* diag, blasint* n, dou
 #ifdef FLEXIBLAS_ABI_IBM
 void ztpsv_(char* uplo, char* trans, char* diag, blasint* n, double complex* ap, double complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(ztpsv,ZTPSV)))));
 #else
+#ifndef __APPLE__
 void ztpsv(char* uplo, char* trans, char* diag, blasint* n, double complex* ap, double complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(ztpsv,ZTPSV)))));
+#else
+void ztpsv(char* uplo, char* trans, char* diag, blasint* n, double complex* ap, double complex* x, blasint* incx){ FC_GLOBAL(ztpsv,ZTPSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -8896,7 +10588,11 @@ void flexiblas_real_ztpsv_(void* uplo, void* trans, void* diag, void* n, void* a
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_ztpsv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx) __attribute__((alias("flexiblas_real_ztpsv_")));
+#else
+void flexiblas_real_ztpsv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx){flexiblas_real_ztpsv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_ztpsv_(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx)
@@ -8916,7 +10612,11 @@ void flexiblas_chain_ztpsv_(void* uplo, void* trans, void* diag, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_ztpsv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx) __attribute__((alias("flexiblas_chain_ztpsv_")));
+#else
+void flexiblas_chain_ztpsv(void* uplo, void* trans, void* diag, void* n, void* ap, void* x, void* incx){flexiblas_chain_ztpsv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_ztrmm = 0;
@@ -8942,7 +10642,11 @@ void FC_GLOBAL(ztrmm,ZTRMM)(char* side, char* uplo, char* transa, char* diag, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void ztrmm_(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(ztrmm,ZTRMM)))));
 #else
+#ifndef __APPLE__
 void ztrmm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(ztrmm,ZTRMM)))));
+#else
+void ztrmm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb){ FC_GLOBAL(ztrmm,ZTRMM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb); }
+#endif
 #endif
 
 
@@ -8956,7 +10660,11 @@ void flexiblas_real_ztrmm_(void* side, void* uplo, void* transa, void* diag, voi
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_ztrmm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_real_ztrmm_")));
+#else
+void flexiblas_real_ztrmm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb){flexiblas_real_ztrmm_((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 void flexiblas_chain_ztrmm_(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb)
@@ -8976,7 +10684,11 @@ void flexiblas_chain_ztrmm_(void* side, void* uplo, void* transa, void* diag, vo
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_ztrmm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_chain_ztrmm_")));
+#else
+void flexiblas_chain_ztrmm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb){flexiblas_chain_ztrmm_((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_ztrmv = 0;
@@ -9002,7 +10714,11 @@ void FC_GLOBAL(ztrmv,ZTRMV)(char* uplo, char* trans, char* diag, blasint* n, dou
 #ifdef FLEXIBLAS_ABI_IBM
 void ztrmv_(char* uplo, char* trans, char* diag, blasint* n, double complex* a, blasint* lda, double complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(ztrmv,ZTRMV)))));
 #else
+#ifndef __APPLE__
 void ztrmv(char* uplo, char* trans, char* diag, blasint* n, double complex* a, blasint* lda, double complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(ztrmv,ZTRMV)))));
+#else
+void ztrmv(char* uplo, char* trans, char* diag, blasint* n, double complex* a, blasint* lda, double complex* x, blasint* incx){ FC_GLOBAL(ztrmv,ZTRMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -9016,7 +10732,11 @@ void flexiblas_real_ztrmv_(void* uplo, void* trans, void* diag, void* n, void* a
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_ztrmv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_real_ztrmv_")));
+#else
+void flexiblas_real_ztrmv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx){flexiblas_real_ztrmv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_ztrmv_(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx)
@@ -9036,7 +10756,11 @@ void flexiblas_chain_ztrmv_(void* uplo, void* trans, void* diag, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_ztrmv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_chain_ztrmv_")));
+#else
+void flexiblas_chain_ztrmv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx){flexiblas_chain_ztrmv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_ztrsm = 0;
@@ -9062,7 +10786,11 @@ void FC_GLOBAL(ztrsm,ZTRSM)(char* side, char* uplo, char* transa, char* diag, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void ztrsm_(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(ztrsm,ZTRSM)))));
 #else
+#ifndef __APPLE__
 void ztrsm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(ztrsm,ZTRSM)))));
+#else
+void ztrsm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb){ FC_GLOBAL(ztrsm,ZTRSM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb); }
+#endif
 #endif
 
 
@@ -9076,7 +10804,11 @@ void flexiblas_real_ztrsm_(void* side, void* uplo, void* transa, void* diag, voi
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_ztrsm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_real_ztrsm_")));
+#else
+void flexiblas_real_ztrsm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb){flexiblas_real_ztrsm_((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 void flexiblas_chain_ztrsm_(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb)
@@ -9096,7 +10828,11 @@ void flexiblas_chain_ztrsm_(void* side, void* uplo, void* transa, void* diag, vo
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_ztrsm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_chain_ztrsm_")));
+#else
+void flexiblas_chain_ztrsm(void* side, void* uplo, void* transa, void* diag, void* m, void* n, void* alpha, void* a, void* lda, void* b, void* ldb){flexiblas_chain_ztrsm_((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_ztrsv = 0;
@@ -9122,7 +10858,11 @@ void FC_GLOBAL(ztrsv,ZTRSV)(char* uplo, char* trans, char* diag, blasint* n, dou
 #ifdef FLEXIBLAS_ABI_IBM
 void ztrsv_(char* uplo, char* trans, char* diag, blasint* n, double complex* a, blasint* lda, double complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(ztrsv,ZTRSV)))));
 #else
+#ifndef __APPLE__
 void ztrsv(char* uplo, char* trans, char* diag, blasint* n, double complex* a, blasint* lda, double complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(ztrsv,ZTRSV)))));
+#else
+void ztrsv(char* uplo, char* trans, char* diag, blasint* n, double complex* a, blasint* lda, double complex* x, blasint* incx){ FC_GLOBAL(ztrsv,ZTRSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx); }
+#endif
 #endif
 
 
@@ -9136,7 +10876,11 @@ void flexiblas_real_ztrsv_(void* uplo, void* trans, void* diag, void* n, void* a
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_ztrsv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_real_ztrsv_")));
+#else
+void flexiblas_real_ztrsv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx){flexiblas_real_ztrsv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 void flexiblas_chain_ztrsv_(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx)
@@ -9156,7 +10900,11 @@ void flexiblas_chain_ztrsv_(void* uplo, void* trans, void* diag, void* n, void* 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_ztrsv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx) __attribute__((alias("flexiblas_chain_ztrsv_")));
+#else
+void flexiblas_chain_ztrsv(void* uplo, void* trans, void* diag, void* n, void* a, void* lda, void* x, void* incx){flexiblas_chain_ztrsv_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_caxpby = 0;
@@ -9182,7 +10930,11 @@ void FC_GLOBAL(caxpby,CAXPBY)(blasint* n, float complex* ca, float complex* cx, 
 #ifdef FLEXIBLAS_ABI_IBM
 void caxpby_(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cb, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(caxpby,CAXPBY)))));
 #else
+#ifndef __APPLE__
 void caxpby(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cb, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(caxpby,CAXPBY)))));
+#else
+void caxpby(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cb, float complex* cy, blasint* incy){ FC_GLOBAL(caxpby,CAXPBY)((void*) n, (void*) ca, (void*) cx, (void*) incx, (void*) cb, (void*) cy, (void*) incy); }
+#endif
 #endif
 
 
@@ -9196,7 +10948,11 @@ void flexiblas_real_caxpby_(void* n, void* ca, void* cx, void* incx, void* cb, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_caxpby(void* n, void* ca, void* cx, void* incx, void* cb, void* cy, void* incy) __attribute__((alias("flexiblas_real_caxpby_")));
+#else
+void flexiblas_real_caxpby(void* n, void* ca, void* cx, void* incx, void* cb, void* cy, void* incy){flexiblas_real_caxpby_((void*) n, (void*) ca, (void*) cx, (void*) incx, (void*) cb, (void*) cy, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_caxpby_(void* n, void* ca, void* cx, void* incx, void* cb, void* cy, void* incy)
@@ -9216,7 +10972,11 @@ void flexiblas_chain_caxpby_(void* n, void* ca, void* cx, void* incx, void* cb, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_caxpby(void* n, void* ca, void* cx, void* incx, void* cb, void* cy, void* incy) __attribute__((alias("flexiblas_chain_caxpby_")));
+#else
+void flexiblas_chain_caxpby(void* n, void* ca, void* cx, void* incx, void* cb, void* cy, void* incy){flexiblas_chain_caxpby_((void*) n, (void*) ca, (void*) cx, (void*) incx, (void*) cb, (void*) cy, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_daxpby = 0;
@@ -9242,7 +11002,11 @@ void FC_GLOBAL(daxpby,DAXPBY)(blasint* n, double* da, double* dx, blasint* incx,
 #ifdef FLEXIBLAS_ABI_IBM
 void daxpby_(blasint* n, double* da, double* dx, blasint* incx, double* db, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(daxpby,DAXPBY)))));
 #else
+#ifndef __APPLE__
 void daxpby(blasint* n, double* da, double* dx, blasint* incx, double* db, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(daxpby,DAXPBY)))));
+#else
+void daxpby(blasint* n, double* da, double* dx, blasint* incx, double* db, double* dy, blasint* incy){ FC_GLOBAL(daxpby,DAXPBY)((void*) n, (void*) da, (void*) dx, (void*) incx, (void*) db, (void*) dy, (void*) incy); }
+#endif
 #endif
 
 
@@ -9256,7 +11020,11 @@ void flexiblas_real_daxpby_(void* n, void* da, void* dx, void* incx, void* db, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_daxpby(void* n, void* da, void* dx, void* incx, void* db, void* dy, void* incy) __attribute__((alias("flexiblas_real_daxpby_")));
+#else
+void flexiblas_real_daxpby(void* n, void* da, void* dx, void* incx, void* db, void* dy, void* incy){flexiblas_real_daxpby_((void*) n, (void*) da, (void*) dx, (void*) incx, (void*) db, (void*) dy, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_daxpby_(void* n, void* da, void* dx, void* incx, void* db, void* dy, void* incy)
@@ -9276,7 +11044,11 @@ void flexiblas_chain_daxpby_(void* n, void* da, void* dx, void* incx, void* db, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_daxpby(void* n, void* da, void* dx, void* incx, void* db, void* dy, void* incy) __attribute__((alias("flexiblas_chain_daxpby_")));
+#else
+void flexiblas_chain_daxpby(void* n, void* da, void* dx, void* incx, void* db, void* dy, void* incy){flexiblas_chain_daxpby_((void*) n, (void*) da, (void*) dx, (void*) incx, (void*) db, (void*) dy, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zaxpby = 0;
@@ -9302,7 +11074,11 @@ void FC_GLOBAL(zaxpby,ZAXPBY)(blasint* n, double complex* za, double complex* zx
 #ifdef FLEXIBLAS_ABI_IBM
 void zaxpby_(blasint* n, double complex* za, double complex* zx, blasint* incx, double complex* zb, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zaxpby,ZAXPBY)))));
 #else
+#ifndef __APPLE__
 void zaxpby(blasint* n, double complex* za, double complex* zx, blasint* incx, double complex* zb, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zaxpby,ZAXPBY)))));
+#else
+void zaxpby(blasint* n, double complex* za, double complex* zx, blasint* incx, double complex* zb, double complex* zy, blasint* incy){ FC_GLOBAL(zaxpby,ZAXPBY)((void*) n, (void*) za, (void*) zx, (void*) incx, (void*) zb, (void*) zy, (void*) incy); }
+#endif
 #endif
 
 
@@ -9316,7 +11092,11 @@ void flexiblas_real_zaxpby_(void* n, void* za, void* zx, void* incx, void* zb, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zaxpby(void* n, void* za, void* zx, void* incx, void* zb, void* zy, void* incy) __attribute__((alias("flexiblas_real_zaxpby_")));
+#else
+void flexiblas_real_zaxpby(void* n, void* za, void* zx, void* incx, void* zb, void* zy, void* incy){flexiblas_real_zaxpby_((void*) n, (void*) za, (void*) zx, (void*) incx, (void*) zb, (void*) zy, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_zaxpby_(void* n, void* za, void* zx, void* incx, void* zb, void* zy, void* incy)
@@ -9336,7 +11116,11 @@ void flexiblas_chain_zaxpby_(void* n, void* za, void* zx, void* incx, void* zb, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zaxpby(void* n, void* za, void* zx, void* incx, void* zb, void* zy, void* incy) __attribute__((alias("flexiblas_chain_zaxpby_")));
+#else
+void flexiblas_chain_zaxpby(void* n, void* za, void* zx, void* incx, void* zb, void* zy, void* incy){flexiblas_chain_zaxpby_((void*) n, (void*) za, (void*) zx, (void*) incx, (void*) zb, (void*) zy, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_saxpby = 0;
@@ -9362,7 +11146,11 @@ void FC_GLOBAL(saxpby,SAXPBY)(blasint* n, float* sa, float* sx, blasint* incx, f
 #ifdef FLEXIBLAS_ABI_IBM
 void saxpby_(blasint* n, float* sa, float* sx, blasint* incx, float* sb, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(saxpby,SAXPBY)))));
 #else
+#ifndef __APPLE__
 void saxpby(blasint* n, float* sa, float* sx, blasint* incx, float* sb, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(saxpby,SAXPBY)))));
+#else
+void saxpby(blasint* n, float* sa, float* sx, blasint* incx, float* sb, float* sy, blasint* incy){ FC_GLOBAL(saxpby,SAXPBY)((void*) n, (void*) sa, (void*) sx, (void*) incx, (void*) sb, (void*) sy, (void*) incy); }
+#endif
 #endif
 
 
@@ -9376,7 +11164,11 @@ void flexiblas_real_saxpby_(void* n, void* sa, void* sx, void* incx, void* sb, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_saxpby(void* n, void* sa, void* sx, void* incx, void* sb, void* sy, void* incy) __attribute__((alias("flexiblas_real_saxpby_")));
+#else
+void flexiblas_real_saxpby(void* n, void* sa, void* sx, void* incx, void* sb, void* sy, void* incy){flexiblas_real_saxpby_((void*) n, (void*) sa, (void*) sx, (void*) incx, (void*) sb, (void*) sy, (void*) incy);}
+#endif
 
 
 void flexiblas_chain_saxpby_(void* n, void* sa, void* sx, void* incx, void* sb, void* sy, void* incy)
@@ -9396,7 +11188,11 @@ void flexiblas_chain_saxpby_(void* n, void* sa, void* sx, void* incx, void* sb, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_saxpby(void* n, void* sa, void* sx, void* incx, void* sb, void* sy, void* incy) __attribute__((alias("flexiblas_chain_saxpby_")));
+#else
+void flexiblas_chain_saxpby(void* n, void* sa, void* sx, void* incx, void* sb, void* sy, void* incy){flexiblas_chain_saxpby_((void*) n, (void*) sa, (void*) sx, (void*) incx, (void*) sb, (void*) sy, (void*) incy);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_comatcopy = 0;
@@ -9422,7 +11218,11 @@ void FC_GLOBAL(comatcopy,COMATCOPY)(char* order, char* trans, blasint* rows, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void comatcopy_(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(comatcopy,COMATCOPY)))));
 #else
+#ifndef __APPLE__
 void comatcopy(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(comatcopy,COMATCOPY)))));
+#else
+void comatcopy(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb){ FC_GLOBAL(comatcopy,COMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb); }
+#endif
 #endif
 
 
@@ -9436,7 +11236,11 @@ void flexiblas_real_comatcopy_(void* order, void* trans, void* rows, void* cols,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_comatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_real_comatcopy_")));
+#else
+void flexiblas_real_comatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* b, void* ldb){flexiblas_real_comatcopy_((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 void flexiblas_chain_comatcopy_(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* b, void* ldb)
@@ -9456,7 +11260,11 @@ void flexiblas_chain_comatcopy_(void* order, void* trans, void* rows, void* cols
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_comatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_chain_comatcopy_")));
+#else
+void flexiblas_chain_comatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* b, void* ldb){flexiblas_chain_comatcopy_((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zomatcopy = 0;
@@ -9482,7 +11290,11 @@ void FC_GLOBAL(zomatcopy,ZOMATCOPY)(char* order, char* trans, blasint* rows, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void zomatcopy_(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(zomatcopy,ZOMATCOPY)))));
 #else
+#ifndef __APPLE__
 void zomatcopy(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(zomatcopy,ZOMATCOPY)))));
+#else
+void zomatcopy(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb){ FC_GLOBAL(zomatcopy,ZOMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb); }
+#endif
 #endif
 
 
@@ -9496,7 +11308,11 @@ void flexiblas_real_zomatcopy_(void* order, void* trans, void* rows, void* cols,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zomatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_real_zomatcopy_")));
+#else
+void flexiblas_real_zomatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* b, void* ldb){flexiblas_real_zomatcopy_((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 void flexiblas_chain_zomatcopy_(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* b, void* ldb)
@@ -9516,7 +11332,11 @@ void flexiblas_chain_zomatcopy_(void* order, void* trans, void* rows, void* cols
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zomatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_chain_zomatcopy_")));
+#else
+void flexiblas_chain_zomatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* b, void* ldb){flexiblas_chain_zomatcopy_((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_domatcopy = 0;
@@ -9542,7 +11362,11 @@ void FC_GLOBAL(domatcopy,DOMATCOPY)(char* order, char* trans, blasint* rows, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void domatcopy_(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, double* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(domatcopy,DOMATCOPY)))));
 #else
+#ifndef __APPLE__
 void domatcopy(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, double* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(domatcopy,DOMATCOPY)))));
+#else
+void domatcopy(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, double* b, blasint* ldb){ FC_GLOBAL(domatcopy,DOMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb); }
+#endif
 #endif
 
 
@@ -9556,7 +11380,11 @@ void flexiblas_real_domatcopy_(void* order, void* trans, void* rows, void* cols,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_domatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_real_domatcopy_")));
+#else
+void flexiblas_real_domatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* b, void* ldb){flexiblas_real_domatcopy_((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 void flexiblas_chain_domatcopy_(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* b, void* ldb)
@@ -9576,7 +11404,11 @@ void flexiblas_chain_domatcopy_(void* order, void* trans, void* rows, void* cols
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_domatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_chain_domatcopy_")));
+#else
+void flexiblas_chain_domatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* b, void* ldb){flexiblas_chain_domatcopy_((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_somatcopy = 0;
@@ -9602,7 +11434,11 @@ void FC_GLOBAL(somatcopy,SOMATCOPY)(char* order, char* trans, blasint* rows, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void somatcopy_(char* order, char* trans, blasint* rows, blasint* cols, float* alpha, float* a, blasint* lda, float* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(somatcopy,SOMATCOPY)))));
 #else
+#ifndef __APPLE__
 void somatcopy(char* order, char* trans, blasint* rows, blasint* cols, float* alpha, float* a, blasint* lda, float* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(somatcopy,SOMATCOPY)))));
+#else
+void somatcopy(char* order, char* trans, blasint* rows, blasint* cols, float* alpha, float* a, blasint* lda, float* b, blasint* ldb){ FC_GLOBAL(somatcopy,SOMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb); }
+#endif
 #endif
 
 
@@ -9616,7 +11452,11 @@ void flexiblas_real_somatcopy_(void* order, void* trans, void* rows, void* cols,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_somatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_real_somatcopy_")));
+#else
+void flexiblas_real_somatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* b, void* ldb){flexiblas_real_somatcopy_((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 void flexiblas_chain_somatcopy_(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* b, void* ldb)
@@ -9636,7 +11476,11 @@ void flexiblas_chain_somatcopy_(void* order, void* trans, void* rows, void* cols
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_somatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_chain_somatcopy_")));
+#else
+void flexiblas_chain_somatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* b, void* ldb){flexiblas_chain_somatcopy_((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_cimatcopy = 0;
@@ -9662,7 +11506,11 @@ void FC_GLOBAL(cimatcopy,CIMATCOPY)(char* order, char* trans, blasint* rows, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void cimatcopy_(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(cimatcopy,CIMATCOPY)))));
 #else
+#ifndef __APPLE__
 void cimatcopy(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(cimatcopy,CIMATCOPY)))));
+#else
+void cimatcopy(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, blasint* ldb){ FC_GLOBAL(cimatcopy,CIMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb); }
+#endif
 #endif
 
 
@@ -9676,7 +11524,11 @@ void flexiblas_real_cimatcopy_(void* order, void* trans, void* rows, void* cols,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_cimatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* ldb) __attribute__((alias("flexiblas_real_cimatcopy_")));
+#else
+void flexiblas_real_cimatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* ldb){flexiblas_real_cimatcopy_((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb);}
+#endif
 
 
 void flexiblas_chain_cimatcopy_(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* ldb)
@@ -9696,7 +11548,11 @@ void flexiblas_chain_cimatcopy_(void* order, void* trans, void* rows, void* cols
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_cimatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* ldb) __attribute__((alias("flexiblas_chain_cimatcopy_")));
+#else
+void flexiblas_chain_cimatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* ldb){flexiblas_chain_cimatcopy_((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zimatcopy = 0;
@@ -9722,7 +11578,11 @@ void FC_GLOBAL(zimatcopy,ZIMATCOPY)(char* order, char* trans, blasint* rows, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void zimatcopy_(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(zimatcopy,ZIMATCOPY)))));
 #else
+#ifndef __APPLE__
 void zimatcopy(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(zimatcopy,ZIMATCOPY)))));
+#else
+void zimatcopy(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, blasint* ldb){ FC_GLOBAL(zimatcopy,ZIMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb); }
+#endif
 #endif
 
 
@@ -9736,7 +11596,11 @@ void flexiblas_real_zimatcopy_(void* order, void* trans, void* rows, void* cols,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zimatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* ldb) __attribute__((alias("flexiblas_real_zimatcopy_")));
+#else
+void flexiblas_real_zimatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* ldb){flexiblas_real_zimatcopy_((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb);}
+#endif
 
 
 void flexiblas_chain_zimatcopy_(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* ldb)
@@ -9756,7 +11620,11 @@ void flexiblas_chain_zimatcopy_(void* order, void* trans, void* rows, void* cols
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zimatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* ldb) __attribute__((alias("flexiblas_chain_zimatcopy_")));
+#else
+void flexiblas_chain_zimatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* ldb){flexiblas_chain_zimatcopy_((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dimatcopy = 0;
@@ -9782,7 +11650,11 @@ void FC_GLOBAL(dimatcopy,DIMATCOPY)(char* order, char* trans, blasint* rows, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void dimatcopy_(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(dimatcopy,DIMATCOPY)))));
 #else
+#ifndef __APPLE__
 void dimatcopy(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(dimatcopy,DIMATCOPY)))));
+#else
+void dimatcopy(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, blasint* ldb){ FC_GLOBAL(dimatcopy,DIMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb); }
+#endif
 #endif
 
 
@@ -9796,7 +11668,11 @@ void flexiblas_real_dimatcopy_(void* order, void* trans, void* rows, void* cols,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dimatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* ldb) __attribute__((alias("flexiblas_real_dimatcopy_")));
+#else
+void flexiblas_real_dimatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* ldb){flexiblas_real_dimatcopy_((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb);}
+#endif
 
 
 void flexiblas_chain_dimatcopy_(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* ldb)
@@ -9816,7 +11692,11 @@ void flexiblas_chain_dimatcopy_(void* order, void* trans, void* rows, void* cols
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dimatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* ldb) __attribute__((alias("flexiblas_chain_dimatcopy_")));
+#else
+void flexiblas_chain_dimatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* ldb){flexiblas_chain_dimatcopy_((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_simatcopy = 0;
@@ -9842,7 +11722,11 @@ void FC_GLOBAL(simatcopy,SIMATCOPY)(char* order, char* trans, blasint* rows, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void simatcopy_(char* order, char* trans, blasint* rows, blasint* cols, float* alpha, float* a, blasint* lda, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(simatcopy,SIMATCOPY)))));
 #else
+#ifndef __APPLE__
 void simatcopy(char* order, char* trans, blasint* rows, blasint* cols, float* alpha, float* a, blasint* lda, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(simatcopy,SIMATCOPY)))));
+#else
+void simatcopy(char* order, char* trans, blasint* rows, blasint* cols, float* alpha, float* a, blasint* lda, blasint* ldb){ FC_GLOBAL(simatcopy,SIMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb); }
+#endif
 #endif
 
 
@@ -9856,7 +11740,11 @@ void flexiblas_real_simatcopy_(void* order, void* trans, void* rows, void* cols,
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_simatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* ldb) __attribute__((alias("flexiblas_real_simatcopy_")));
+#else
+void flexiblas_real_simatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* ldb){flexiblas_real_simatcopy_((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb);}
+#endif
 
 
 void flexiblas_chain_simatcopy_(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* ldb)
@@ -9876,7 +11764,11 @@ void flexiblas_chain_simatcopy_(void* order, void* trans, void* rows, void* cols
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_simatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* ldb) __attribute__((alias("flexiblas_chain_simatcopy_")));
+#else
+void flexiblas_chain_simatcopy(void* order, void* trans, void* rows, void* cols, void* alpha, void* a, void* lda, void* ldb){flexiblas_chain_simatcopy_((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_sgeadd = 0;
@@ -9902,7 +11794,11 @@ void FC_GLOBAL(sgeadd,SGEADD)(blasint* m, blasint* n, float* alpha, float* a, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void sgeadd_(blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* beta, float* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(sgeadd,SGEADD)))));
 #else
+#ifndef __APPLE__
 void sgeadd(blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* beta, float* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(sgeadd,SGEADD)))));
+#else
+void sgeadd(blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* beta, float* b, blasint* ldb){ FC_GLOBAL(sgeadd,SGEADD)((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb); }
+#endif
 #endif
 
 
@@ -9916,7 +11812,11 @@ void flexiblas_real_sgeadd_(void* m, void* n, void* alpha, void* a, void* lda, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_sgeadd(void* m, void* n, void* alpha, void* a, void* lda, void* beta, void* b, void* ldb) __attribute__((alias("flexiblas_real_sgeadd_")));
+#else
+void flexiblas_real_sgeadd(void* m, void* n, void* alpha, void* a, void* lda, void* beta, void* b, void* ldb){flexiblas_real_sgeadd_((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb);}
+#endif
 
 
 void flexiblas_chain_sgeadd_(void* m, void* n, void* alpha, void* a, void* lda, void* beta, void* b, void* ldb)
@@ -9936,7 +11836,11 @@ void flexiblas_chain_sgeadd_(void* m, void* n, void* alpha, void* a, void* lda, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_sgeadd(void* m, void* n, void* alpha, void* a, void* lda, void* beta, void* b, void* ldb) __attribute__((alias("flexiblas_chain_sgeadd_")));
+#else
+void flexiblas_chain_sgeadd(void* m, void* n, void* alpha, void* a, void* lda, void* beta, void* b, void* ldb){flexiblas_chain_sgeadd_((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_dgeadd = 0;
@@ -9962,7 +11866,11 @@ void FC_GLOBAL(dgeadd,DGEADD)(blasint* m, blasint* n, double* alpha, double* a, 
 #ifdef FLEXIBLAS_ABI_IBM
 void dgeadd_(blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* beta, double* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(dgeadd,DGEADD)))));
 #else
+#ifndef __APPLE__
 void dgeadd(blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* beta, double* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(dgeadd,DGEADD)))));
+#else
+void dgeadd(blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* beta, double* b, blasint* ldb){ FC_GLOBAL(dgeadd,DGEADD)((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb); }
+#endif
 #endif
 
 
@@ -9976,7 +11884,11 @@ void flexiblas_real_dgeadd_(void* m, void* n, void* alpha, void* a, void* lda, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_dgeadd(void* m, void* n, void* alpha, void* a, void* lda, void* beta, void* b, void* ldb) __attribute__((alias("flexiblas_real_dgeadd_")));
+#else
+void flexiblas_real_dgeadd(void* m, void* n, void* alpha, void* a, void* lda, void* beta, void* b, void* ldb){flexiblas_real_dgeadd_((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb);}
+#endif
 
 
 void flexiblas_chain_dgeadd_(void* m, void* n, void* alpha, void* a, void* lda, void* beta, void* b, void* ldb)
@@ -9996,7 +11908,11 @@ void flexiblas_chain_dgeadd_(void* m, void* n, void* alpha, void* a, void* lda, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_dgeadd(void* m, void* n, void* alpha, void* a, void* lda, void* beta, void* b, void* ldb) __attribute__((alias("flexiblas_chain_dgeadd_")));
+#else
+void flexiblas_chain_dgeadd(void* m, void* n, void* alpha, void* a, void* lda, void* beta, void* b, void* ldb){flexiblas_chain_dgeadd_((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_cgeadd = 0;
@@ -10022,7 +11938,11 @@ void FC_GLOBAL(cgeadd,CGEADD)(blasint* m, blasint* n, float complex* alpha, floa
 #ifdef FLEXIBLAS_ABI_IBM
 void cgeadd_(blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* beta, float complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(cgeadd,CGEADD)))));
 #else
+#ifndef __APPLE__
 void cgeadd(blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* beta, float complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(cgeadd,CGEADD)))));
+#else
+void cgeadd(blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* beta, float complex* b, blasint* ldb){ FC_GLOBAL(cgeadd,CGEADD)((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb); }
+#endif
 #endif
 
 
@@ -10036,7 +11956,11 @@ void flexiblas_real_cgeadd_(void* m, void* n, void* alpha, void* a, void* lda, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_cgeadd(void* m, void* n, void* alpha, void* a, void* lda, void* beta, void* b, void* ldb) __attribute__((alias("flexiblas_real_cgeadd_")));
+#else
+void flexiblas_real_cgeadd(void* m, void* n, void* alpha, void* a, void* lda, void* beta, void* b, void* ldb){flexiblas_real_cgeadd_((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb);}
+#endif
 
 
 void flexiblas_chain_cgeadd_(void* m, void* n, void* alpha, void* a, void* lda, void* beta, void* b, void* ldb)
@@ -10056,7 +11980,11 @@ void flexiblas_chain_cgeadd_(void* m, void* n, void* alpha, void* a, void* lda, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_cgeadd(void* m, void* n, void* alpha, void* a, void* lda, void* beta, void* b, void* ldb) __attribute__((alias("flexiblas_chain_cgeadd_")));
+#else
+void flexiblas_chain_cgeadd(void* m, void* n, void* alpha, void* a, void* lda, void* beta, void* b, void* ldb){flexiblas_chain_cgeadd_((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb);}
+#endif
 
 
 static TLS_STORE uint8_t hook_pos_zgeadd = 0;
@@ -10082,7 +12010,11 @@ void FC_GLOBAL(zgeadd,ZGEADD)(blasint* m, blasint* n, double complex* alpha, dou
 #ifdef FLEXIBLAS_ABI_IBM
 void zgeadd_(blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* beta, double complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(zgeadd,ZGEADD)))));
 #else
+#ifndef __APPLE__
 void zgeadd(blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* beta, double complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(zgeadd,ZGEADD)))));
+#else
+void zgeadd(blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* beta, double complex* b, blasint* ldb){ FC_GLOBAL(zgeadd,ZGEADD)((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb); }
+#endif
 #endif
 
 
@@ -10096,7 +12028,11 @@ void flexiblas_real_zgeadd_(void* m, void* n, void* alpha, void* a, void* lda, v
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_real_zgeadd(void* m, void* n, void* alpha, void* a, void* lda, void* beta, void* b, void* ldb) __attribute__((alias("flexiblas_real_zgeadd_")));
+#else
+void flexiblas_real_zgeadd(void* m, void* n, void* alpha, void* a, void* lda, void* beta, void* b, void* ldb){flexiblas_real_zgeadd_((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb);}
+#endif
 
 
 void flexiblas_chain_zgeadd_(void* m, void* n, void* alpha, void* a, void* lda, void* beta, void* b, void* ldb)
@@ -10116,7 +12052,11 @@ void flexiblas_chain_zgeadd_(void* m, void* n, void* alpha, void* a, void* lda, 
 
 	return;
 }
+#ifndef __APPLE__
 void flexiblas_chain_zgeadd(void* m, void* n, void* alpha, void* a, void* lda, void* beta, void* b, void* ldb) __attribute__((alias("flexiblas_chain_zgeadd_")));
+#else
+void flexiblas_chain_zgeadd(void* m, void* n, void* alpha, void* a, void* lda, void* beta, void* b, void* ldb){flexiblas_chain_zgeadd_((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb);}
+#endif
 
 
 

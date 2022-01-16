@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 2.8)
+CheckPolicy(CMP0048 NEW)
+cmake_minimum_required(VERSION 3.5)
 project(LAPACK Fortran)
 
 set(LAPACK_MAJOR_VERSION 3)
@@ -27,9 +28,9 @@ STRING(REPLACE \;mtsk\; \; CMAKE_Fortran_IMPLICIT_LINK_LIBRARIES "${CMAKE_Fortra
 
 
 
-# Disable Warings for BLAS 
-if ( CMAKE_Fortran_COMPILER_ID STREQUAL "GNU" ) 
-	SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Wno-conversion -Wno-maybe-uninitialized -Wno-unused-dummy-argument -Wno-unused-variable -Wno-intrinsic-shadow -Wno-surprising -Wno-character-truncation") 
+# Disable Warings for BLAS
+if ( CMAKE_Fortran_COMPILER_ID STREQUAL "GNU" )
+	SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Wno-conversion -Wno-maybe-uninitialized -Wno-unused-dummy-argument -Wno-unused-variable -Wno-intrinsic-shadow -Wno-surprising -Wno-character-truncation")
 endif()
 # --------------------------------------------------
 # Check for any necessary platform specific compiler flags
@@ -51,7 +52,7 @@ message(STATUS "--> Will use second_${TIME_FUNC}.f and dsecnd_${TIME_FUNC}.f as 
 set(SECOND_SRC  ${LAPACK_SOURCE_DIR}/INSTALL/second_${TIME_FUNC}.f)
 set(DSECOND_SRC  ${LAPACK_SOURCE_DIR}/INSTALL/dsecnd_${TIME_FUNC}.f)
 
-IF ( INTEGER8 STREQUAL ON ) 
+IF ( INTEGER8 STREQUAL ON )
 	SET (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${I8_FLAGS}")
 	ADD_DEFINITIONS(-DINTEGER8)
 ENDIF()

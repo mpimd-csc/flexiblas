@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(slartgs,SLARTGS)(float* x, float* y, float* sigma, float* cs, flo
 #ifdef FLEXIBLAS_ABI_IBM
 void slartgs_(float* x, float* y, float* sigma, float* cs, float* sn) __attribute__((alias(MTS(FC_GLOBAL(slartgs,SLARTGS)))));
 #else
+#ifndef __APPLE__
 void slartgs(float* x, float* y, float* sigma, float* cs, float* sn) __attribute__((alias(MTS(FC_GLOBAL(slartgs,SLARTGS)))));
+#else
+void slartgs(float* x, float* y, float* sigma, float* cs, float* sn){ FC_GLOBAL(slartgs,SLARTGS)((void*) x, (void*) y, (void*) sigma, (void*) cs, (void*) sn); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_slartgs_(void* x, void* y, void* sigma, void* cs, void* sn)
 
 	return;
 }
-
-void flexiblas_real_slartgs(void* x, void* y, void* sigma, void* cs, void* sn)  __attribute__((alias("flexiblas_real_slartgs_")));
-
+#ifndef __APPLE__
+void flexiblas_real_slartgs(void* x, void* y, void* sigma, void* cs, void* sn) __attribute__((alias("flexiblas_real_slartgs_")));
+#else
+void flexiblas_real_slartgs(void* x, void* y, void* sigma, void* cs, void* sn){flexiblas_real_slartgs_((void*) x, (void*) y, (void*) sigma, (void*) cs, (void*) sn);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_slartgs_(void* x, void* y, void* sigma, void* cs, void* sn)
 	}
 	return;
 }
-
-void flexiblas_chain_slartgs(void* x, void* y, void* sigma, void* cs, void* sn)  __attribute__((alias("flexiblas_chain_slartgs_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_slartgs(void* x, void* y, void* sigma, void* cs, void* sn) __attribute__((alias("flexiblas_chain_slartgs_")));
+#else
+void flexiblas_chain_slartgs(void* x, void* y, void* sigma, void* cs, void* sn){flexiblas_chain_slartgs_((void*) x, (void*) y, (void*) sigma, (void*) cs, (void*) sn);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(claed0,CLAED0)(blasint* qsiz, blasint* n, float* d, float* e, flo
 #ifdef FLEXIBLAS_ABI_IBM
 void claed0_(blasint* qsiz, blasint* n, float* d, float* e, float complex* q, blasint* ldq, float complex* qstore, blasint* ldqs, float* rwork, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(claed0,CLAED0)))));
 #else
+#ifndef __APPLE__
 void claed0(blasint* qsiz, blasint* n, float* d, float* e, float complex* q, blasint* ldq, float complex* qstore, blasint* ldqs, float* rwork, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(claed0,CLAED0)))));
+#else
+void claed0(blasint* qsiz, blasint* n, float* d, float* e, float complex* q, blasint* ldq, float complex* qstore, blasint* ldqs, float* rwork, blasint* iwork, blasint* info){ FC_GLOBAL(claed0,CLAED0)((void*) qsiz, (void*) n, (void*) d, (void*) e, (void*) q, (void*) ldq, (void*) qstore, (void*) ldqs, (void*) rwork, (void*) iwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_claed0_(void* qsiz, void* n, void* d, void* e, void* q, void
 
 	return;
 }
-
-void flexiblas_real_claed0(void* qsiz, void* n, void* d, void* e, void* q, void* ldq, void* qstore, void* ldqs, void* rwork, void* iwork, void* info)  __attribute__((alias("flexiblas_real_claed0_")));
-
+#ifndef __APPLE__
+void flexiblas_real_claed0(void* qsiz, void* n, void* d, void* e, void* q, void* ldq, void* qstore, void* ldqs, void* rwork, void* iwork, void* info) __attribute__((alias("flexiblas_real_claed0_")));
+#else
+void flexiblas_real_claed0(void* qsiz, void* n, void* d, void* e, void* q, void* ldq, void* qstore, void* ldqs, void* rwork, void* iwork, void* info){flexiblas_real_claed0_((void*) qsiz, (void*) n, (void*) d, (void*) e, (void*) q, (void*) ldq, (void*) qstore, (void*) ldqs, (void*) rwork, (void*) iwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_claed0_(void* qsiz, void* n, void* d, void* e, void* q, voi
 	}
 	return;
 }
-
-void flexiblas_chain_claed0(void* qsiz, void* n, void* d, void* e, void* q, void* ldq, void* qstore, void* ldqs, void* rwork, void* iwork, void* info)  __attribute__((alias("flexiblas_chain_claed0_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_claed0(void* qsiz, void* n, void* d, void* e, void* q, void* ldq, void* qstore, void* ldqs, void* rwork, void* iwork, void* info) __attribute__((alias("flexiblas_chain_claed0_")));
+#else
+void flexiblas_chain_claed0(void* qsiz, void* n, void* d, void* e, void* q, void* ldq, void* qstore, void* ldqs, void* rwork, void* iwork, void* info){flexiblas_chain_claed0_((void*) qsiz, (void*) n, (void*) d, (void*) e, (void*) q, (void*) ldq, (void*) qstore, (void*) ldqs, (void*) rwork, (void*) iwork, (void*) info);}
+#endif
 
 
 

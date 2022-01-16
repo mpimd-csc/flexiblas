@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(sgghd3,SGGHD3)(char* compq, char* compz, blasint* n, blasint* ilo
 #ifdef FLEXIBLAS_ABI_IBM
 void sgghd3_(char* compq, char* compz, blasint* n, blasint* ilo, blasint* ihi, float* a, blasint* lda, float* b, blasint* ldb, float* q, blasint* ldq, float* z, blasint* ldz, float* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sgghd3,SGGHD3)))));
 #else
+#ifndef __APPLE__
 void sgghd3(char* compq, char* compz, blasint* n, blasint* ilo, blasint* ihi, float* a, blasint* lda, float* b, blasint* ldb, float* q, blasint* ldq, float* z, blasint* ldz, float* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sgghd3,SGGHD3)))));
+#else
+void sgghd3(char* compq, char* compz, blasint* n, blasint* ilo, blasint* ihi, float* a, blasint* lda, float* b, blasint* ldb, float* q, blasint* ldq, float* z, blasint* ldz, float* work, blasint* lwork, blasint* info){ FC_GLOBAL(sgghd3,SGGHD3)((void*) compq, (void*) compz, (void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_sgghd3_(void* compq, void* compz, void* n, void* ilo, void* 
 
 	return;
 }
-
-void flexiblas_real_sgghd3(void* compq, void* compz, void* n, void* ilo, void* ihi, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_real_sgghd3_")));
-
+#ifndef __APPLE__
+void flexiblas_real_sgghd3(void* compq, void* compz, void* n, void* ilo, void* ihi, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_sgghd3_")));
+#else
+void flexiblas_real_sgghd3(void* compq, void* compz, void* n, void* ilo, void* ihi, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* work, void* lwork, void* info){flexiblas_real_sgghd3_((void*) compq, (void*) compz, (void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_sgghd3_(void* compq, void* compz, void* n, void* ilo, void*
 	}
 	return;
 }
-
-void flexiblas_chain_sgghd3(void* compq, void* compz, void* n, void* ilo, void* ihi, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_chain_sgghd3_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_sgghd3(void* compq, void* compz, void* n, void* ilo, void* ihi, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_sgghd3_")));
+#else
+void flexiblas_chain_sgghd3(void* compq, void* compz, void* n, void* ilo, void* ihi, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* work, void* lwork, void* info){flexiblas_chain_sgghd3_((void*) compq, (void*) compz, (void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 

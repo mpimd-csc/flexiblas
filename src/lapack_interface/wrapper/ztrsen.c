@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(ztrsen,ZTRSEN)(char* job, char* compq, blasint* select, blasint* 
 #ifdef FLEXIBLAS_ABI_IBM
 void ztrsen_(char* job, char* compq, blasint* select, blasint* n, double complex* t, blasint* ldt, double complex* q, blasint* ldq, double complex* w, blasint* m, double* s, double* sep, double complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ztrsen,ZTRSEN)))));
 #else
+#ifndef __APPLE__
 void ztrsen(char* job, char* compq, blasint* select, blasint* n, double complex* t, blasint* ldt, double complex* q, blasint* ldq, double complex* w, blasint* m, double* s, double* sep, double complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ztrsen,ZTRSEN)))));
+#else
+void ztrsen(char* job, char* compq, blasint* select, blasint* n, double complex* t, blasint* ldt, double complex* q, blasint* ldq, double complex* w, blasint* m, double* s, double* sep, double complex* work, blasint* lwork, blasint* info){ FC_GLOBAL(ztrsen,ZTRSEN)((void*) job, (void*) compq, (void*) select, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) w, (void*) m, (void*) s, (void*) sep, (void*) work, (void*) lwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_ztrsen_(void* job, void* compq, void* select, void* n, void*
 
 	return;
 }
-
-void flexiblas_real_ztrsen(void* job, void* compq, void* select, void* n, void* t, void* ldt, void* q, void* ldq, void* w, void* m, void* s, void* sep, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_real_ztrsen_")));
-
+#ifndef __APPLE__
+void flexiblas_real_ztrsen(void* job, void* compq, void* select, void* n, void* t, void* ldt, void* q, void* ldq, void* w, void* m, void* s, void* sep, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_ztrsen_")));
+#else
+void flexiblas_real_ztrsen(void* job, void* compq, void* select, void* n, void* t, void* ldt, void* q, void* ldq, void* w, void* m, void* s, void* sep, void* work, void* lwork, void* info){flexiblas_real_ztrsen_((void*) job, (void*) compq, (void*) select, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) w, (void*) m, (void*) s, (void*) sep, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_ztrsen_(void* job, void* compq, void* select, void* n, void
 	}
 	return;
 }
-
-void flexiblas_chain_ztrsen(void* job, void* compq, void* select, void* n, void* t, void* ldt, void* q, void* ldq, void* w, void* m, void* s, void* sep, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_chain_ztrsen_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_ztrsen(void* job, void* compq, void* select, void* n, void* t, void* ldt, void* q, void* ldq, void* w, void* m, void* s, void* sep, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_ztrsen_")));
+#else
+void flexiblas_chain_ztrsen(void* job, void* compq, void* select, void* n, void* t, void* ldt, void* q, void* ldq, void* w, void* m, void* s, void* sep, void* work, void* lwork, void* info){flexiblas_chain_ztrsen_((void*) job, (void*) compq, (void*) select, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) w, (void*) m, (void*) s, (void*) sep, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 

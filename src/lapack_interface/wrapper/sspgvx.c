@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(sspgvx,SSPGVX)(blasint* itype, char* jobz, char* range, char* upl
 #ifdef FLEXIBLAS_ABI_IBM
 void sspgvx_(blasint* itype, char* jobz, char* range, char* uplo, blasint* n, float* ap, float* bp, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, blasint* m, float* w, float* z, blasint* ldz, float* work, blasint* iwork, blasint* ifail, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sspgvx,SSPGVX)))));
 #else
+#ifndef __APPLE__
 void sspgvx(blasint* itype, char* jobz, char* range, char* uplo, blasint* n, float* ap, float* bp, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, blasint* m, float* w, float* z, blasint* ldz, float* work, blasint* iwork, blasint* ifail, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sspgvx,SSPGVX)))));
+#else
+void sspgvx(blasint* itype, char* jobz, char* range, char* uplo, blasint* n, float* ap, float* bp, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, blasint* m, float* w, float* z, blasint* ldz, float* work, blasint* iwork, blasint* ifail, blasint* info){ FC_GLOBAL(sspgvx,SSPGVX)((void*) itype, (void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) iwork, (void*) ifail, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_sspgvx_(void* itype, void* jobz, void* range, void* uplo, vo
 
 	return;
 }
-
-void flexiblas_real_sspgvx(void* itype, void* jobz, void* range, void* uplo, void* n, void* ap, void* bp, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* iwork, void* ifail, void* info)  __attribute__((alias("flexiblas_real_sspgvx_")));
-
+#ifndef __APPLE__
+void flexiblas_real_sspgvx(void* itype, void* jobz, void* range, void* uplo, void* n, void* ap, void* bp, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* iwork, void* ifail, void* info) __attribute__((alias("flexiblas_real_sspgvx_")));
+#else
+void flexiblas_real_sspgvx(void* itype, void* jobz, void* range, void* uplo, void* n, void* ap, void* bp, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* iwork, void* ifail, void* info){flexiblas_real_sspgvx_((void*) itype, (void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) iwork, (void*) ifail, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_sspgvx_(void* itype, void* jobz, void* range, void* uplo, v
 	}
 	return;
 }
-
-void flexiblas_chain_sspgvx(void* itype, void* jobz, void* range, void* uplo, void* n, void* ap, void* bp, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* iwork, void* ifail, void* info)  __attribute__((alias("flexiblas_chain_sspgvx_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_sspgvx(void* itype, void* jobz, void* range, void* uplo, void* n, void* ap, void* bp, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* iwork, void* ifail, void* info) __attribute__((alias("flexiblas_chain_sspgvx_")));
+#else
+void flexiblas_chain_sspgvx(void* itype, void* jobz, void* range, void* uplo, void* n, void* ap, void* bp, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* iwork, void* ifail, void* info){flexiblas_chain_sspgvx_((void*) itype, (void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) iwork, (void*) ifail, (void*) info);}
+#endif
 
 
 

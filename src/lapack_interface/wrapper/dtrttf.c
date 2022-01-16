@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dtrttf,DTRTTF)(char* transr, char* uplo, blasint* n, double* a, b
 #ifdef FLEXIBLAS_ABI_IBM
 void dtrttf_(char* transr, char* uplo, blasint* n, double* a, blasint* lda, double* arf, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dtrttf,DTRTTF)))));
 #else
+#ifndef __APPLE__
 void dtrttf(char* transr, char* uplo, blasint* n, double* a, blasint* lda, double* arf, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dtrttf,DTRTTF)))));
+#else
+void dtrttf(char* transr, char* uplo, blasint* n, double* a, blasint* lda, double* arf, blasint* info){ FC_GLOBAL(dtrttf,DTRTTF)((void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) arf, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dtrttf_(void* transr, void* uplo, void* n, void* a, void* ld
 
 	return;
 }
-
-void flexiblas_real_dtrttf(void* transr, void* uplo, void* n, void* a, void* lda, void* arf, void* info)  __attribute__((alias("flexiblas_real_dtrttf_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dtrttf(void* transr, void* uplo, void* n, void* a, void* lda, void* arf, void* info) __attribute__((alias("flexiblas_real_dtrttf_")));
+#else
+void flexiblas_real_dtrttf(void* transr, void* uplo, void* n, void* a, void* lda, void* arf, void* info){flexiblas_real_dtrttf_((void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) arf, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dtrttf_(void* transr, void* uplo, void* n, void* a, void* l
 	}
 	return;
 }
-
-void flexiblas_chain_dtrttf(void* transr, void* uplo, void* n, void* a, void* lda, void* arf, void* info)  __attribute__((alias("flexiblas_chain_dtrttf_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dtrttf(void* transr, void* uplo, void* n, void* a, void* lda, void* arf, void* info) __attribute__((alias("flexiblas_chain_dtrttf_")));
+#else
+void flexiblas_chain_dtrttf(void* transr, void* uplo, void* n, void* a, void* lda, void* arf, void* info){flexiblas_chain_dtrttf_((void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) arf, (void*) info);}
+#endif
 
 
 

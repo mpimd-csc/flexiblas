@@ -1,4 +1,39 @@
+IF ( LAPACK_API_VERSION VERSION_GREATER 3.9.1 )
+    MESSAGE(STATUS "Netlib BLAS uses the scaling/overflow/underflow improvements from LAPACK 3.10")
+    SET( ROTG
+        drotg.f90
+        srotg.f90
+        crotg.f90
+        zrotg.f90
+        )
+    SET (NRM
+        dznrm2.f90
+        scnrm2.f90
+        dnrm2.f90
+        snrm2.f90
+
+        )
+
+ELSE ()
+    MESSAGE(STATUS "Netlib BLAS uses the pre LAPACK 3.10.0 codes")
+    SET( ROTG
+        drotg.f
+        srotg.f
+        crotg.f
+        zrotg.f
+        )
+    SET( NRM
+        dznrm2.f
+        scnrm2.f
+        dnrm2.f
+        snrm2.f
+        )
+ENDIF()
+
+
 SET (NETLIBSRC
+    ${ROTG}
+    ${NRM}
 caxpy.f
 ccopy.f
 cdotc.f
@@ -18,7 +53,6 @@ cherk.f
 chpmv.f
 chpr2.f
 chpr.f
-crotg.f
 cscal.f
 csrot.f
 csscal.f
@@ -43,9 +77,7 @@ dgbmv.f
 dgemm.f
 dgemv.f
 dger.f
-dnrm2.f
 drot.f
-drotg.f
 drotm.f
 drotmg.f
 dsbmv.f
@@ -70,7 +102,6 @@ dtrmv.f
 dtrsm.f
 dtrsv.f
 dzasum.f
-dznrm2.f
 icamax.f
 idamax.f
 isamax.f
@@ -80,7 +111,6 @@ sasum.f
 saxpy.f
 scabs1.f
 scasum.f
-scnrm2.f
 scopy.f
 sdot.f
 sdsdot.f
@@ -88,9 +118,7 @@ sgbmv.f
 sgemm.f
 sgemv.f
 sger.f
-snrm2.f
 srot.f
-srotg.f
 srotm.f
 srotmg.f
 ssbmv.f
@@ -136,7 +164,6 @@ zherk.f
 zhpmv.f
 zhpr2.f
 zhpr.f
-zrotg.f
 zscal.f
 zswap.f
 zsymm.f

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(cggglm,CGGGLM)(blasint* n, blasint* m, blasint* p, float complex*
 #ifdef FLEXIBLAS_ABI_IBM
 void cggglm_(blasint* n, blasint* m, blasint* p, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* d, float complex* x, float complex* y, float complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cggglm,CGGGLM)))));
 #else
+#ifndef __APPLE__
 void cggglm(blasint* n, blasint* m, blasint* p, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* d, float complex* x, float complex* y, float complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cggglm,CGGGLM)))));
+#else
+void cggglm(blasint* n, blasint* m, blasint* p, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* d, float complex* x, float complex* y, float complex* work, blasint* lwork, blasint* info){ FC_GLOBAL(cggglm,CGGGLM)((void*) n, (void*) m, (void*) p, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) d, (void*) x, (void*) y, (void*) work, (void*) lwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_cggglm_(void* n, void* m, void* p, void* a, void* lda, void*
 
 	return;
 }
-
-void flexiblas_real_cggglm(void* n, void* m, void* p, void* a, void* lda, void* b, void* ldb, void* d, void* x, void* y, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_real_cggglm_")));
-
+#ifndef __APPLE__
+void flexiblas_real_cggglm(void* n, void* m, void* p, void* a, void* lda, void* b, void* ldb, void* d, void* x, void* y, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_cggglm_")));
+#else
+void flexiblas_real_cggglm(void* n, void* m, void* p, void* a, void* lda, void* b, void* ldb, void* d, void* x, void* y, void* work, void* lwork, void* info){flexiblas_real_cggglm_((void*) n, (void*) m, (void*) p, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) d, (void*) x, (void*) y, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_cggglm_(void* n, void* m, void* p, void* a, void* lda, void
 	}
 	return;
 }
-
-void flexiblas_chain_cggglm(void* n, void* m, void* p, void* a, void* lda, void* b, void* ldb, void* d, void* x, void* y, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_chain_cggglm_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_cggglm(void* n, void* m, void* p, void* a, void* lda, void* b, void* ldb, void* d, void* x, void* y, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_cggglm_")));
+#else
+void flexiblas_chain_cggglm(void* n, void* m, void* p, void* a, void* lda, void* b, void* ldb, void* d, void* x, void* y, void* work, void* lwork, void* info){flexiblas_chain_cggglm_((void*) n, (void*) m, (void*) p, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) d, (void*) x, (void*) y, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(cstedc,CSTEDC)(char* compz, blasint* n, float* d, float* e, float
 #ifdef FLEXIBLAS_ABI_IBM
 void cstedc_(char* compz, blasint* n, float* d, float* e, float complex* z, blasint* ldz, float complex* work, blasint* lwork, float* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cstedc,CSTEDC)))));
 #else
+#ifndef __APPLE__
 void cstedc(char* compz, blasint* n, float* d, float* e, float complex* z, blasint* ldz, float complex* work, blasint* lwork, float* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cstedc,CSTEDC)))));
+#else
+void cstedc(char* compz, blasint* n, float* d, float* e, float complex* z, blasint* ldz, float complex* work, blasint* lwork, float* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info){ FC_GLOBAL(cstedc,CSTEDC)((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) iwork, (void*) liwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_cstedc_(void* compz, void* n, void* d, void* e, void* z, voi
 
 	return;
 }
-
-void flexiblas_real_cstedc(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* lwork, void* rwork, void* lrwork, void* iwork, void* liwork, void* info)  __attribute__((alias("flexiblas_real_cstedc_")));
-
+#ifndef __APPLE__
+void flexiblas_real_cstedc(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* lwork, void* rwork, void* lrwork, void* iwork, void* liwork, void* info) __attribute__((alias("flexiblas_real_cstedc_")));
+#else
+void flexiblas_real_cstedc(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* lwork, void* rwork, void* lrwork, void* iwork, void* liwork, void* info){flexiblas_real_cstedc_((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) iwork, (void*) liwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_cstedc_(void* compz, void* n, void* d, void* e, void* z, vo
 	}
 	return;
 }
-
-void flexiblas_chain_cstedc(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* lwork, void* rwork, void* lrwork, void* iwork, void* liwork, void* info)  __attribute__((alias("flexiblas_chain_cstedc_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_cstedc(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* lwork, void* rwork, void* lrwork, void* iwork, void* liwork, void* info) __attribute__((alias("flexiblas_chain_cstedc_")));
+#else
+void flexiblas_chain_cstedc(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* lwork, void* rwork, void* lrwork, void* iwork, void* liwork, void* info){flexiblas_chain_cstedc_((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) iwork, (void*) liwork, (void*) info);}
+#endif
 
 
 

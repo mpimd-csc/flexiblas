@@ -39,11 +39,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
-
-
-
 #ifndef FLEXIBLAS_REAL_CALLS_H
 #define FLEXIBLAS_REAL_CALLS_H
 
@@ -64,14 +61,14 @@ void flexiblas_real_ccopy_(void* n, void* cx, void* incx, void* cy, void* incy);
 void flexiblas_real_ccopy(void* n, void* cx, void* incx, void* cy, void* incy);
 void flexiblas_chain_ccopy_(void* n, void* cx, void* incx, void* cy, void* incy);
 void flexiblas_chain_ccopy(void* n, void* cx, void* incx, void* cy, void* incy);
-void flexiblas_real_cdotc_( void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy);
-void flexiblas_real_cdotc( void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy);
-void flexiblas_chain_cdotc_( void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy);
-void flexiblas_chain_cdotc( void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy);
-void flexiblas_real_cdotu_( void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy);
-void flexiblas_real_cdotu( void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy);
-void flexiblas_chain_cdotu_( void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy);
-void flexiblas_chain_cdotu( void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy);
+void flexiblas_real_cdotc_(void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy);
+void flexiblas_real_cdotc(void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy);
+void flexiblas_chain_cdotc_(void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy);
+void flexiblas_chain_cdotc(void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy);
+void flexiblas_real_cdotu_(void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy);
+void flexiblas_real_cdotu(void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy);
+void flexiblas_chain_cdotu_(void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy);
+void flexiblas_chain_cdotu(void * returnvalue, void* n, void* cx, void* incx, void* cy, void* incy);
 void flexiblas_real_cgbmv_(void* trans, void* m, void* n, void* kl, void* ku, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy);
 void flexiblas_real_cgbmv(void* trans, void* m, void* n, void* kl, void* ku, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy);
 void flexiblas_chain_cgbmv_(void* trans, void* m, void* n, void* kl, void* ku, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy);
@@ -508,14 +505,14 @@ void flexiblas_real_zcopy_(void* n, void* zx, void* incx, void* zy, void* incy);
 void flexiblas_real_zcopy(void* n, void* zx, void* incx, void* zy, void* incy);
 void flexiblas_chain_zcopy_(void* n, void* zx, void* incx, void* zy, void* incy);
 void flexiblas_chain_zcopy(void* n, void* zx, void* incx, void* zy, void* incy);
-void flexiblas_real_zdotc_( void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy);
-void flexiblas_real_zdotc( void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy);
-void flexiblas_chain_zdotc_( void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy);
-void flexiblas_chain_zdotc( void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy);
-void flexiblas_real_zdotu_( void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy);
-void flexiblas_real_zdotu( void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy);
-void flexiblas_chain_zdotu_( void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy);
-void flexiblas_chain_zdotu( void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy);
+void flexiblas_real_zdotc_(void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy);
+void flexiblas_real_zdotc(void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy);
+void flexiblas_chain_zdotc_(void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy);
+void flexiblas_chain_zdotc(void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy);
+void flexiblas_real_zdotu_(void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy);
+void flexiblas_real_zdotu(void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy);
+void flexiblas_chain_zdotu_(void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy);
+void flexiblas_chain_zdotu(void * returnvalue, void* n, void* zx, void* incx, void* zy, void* incy);
 void flexiblas_real_zdrot_(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s);
 void flexiblas_real_zdrot(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s);
 void flexiblas_chain_zdrot_(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s);

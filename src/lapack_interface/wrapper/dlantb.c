@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ double FC_GLOBAL(dlantb,DLANTB)(char* norm, char* uplo, char* diag, blasint* n, 
 #ifdef FLEXIBLAS_ABI_IBM
 double dlantb_(char* norm, char* uplo, char* diag, blasint* n, blasint* k, double* ab, blasint* ldab, double* work) __attribute__((alias(MTS(FC_GLOBAL(dlantb,DLANTB)))));
 #else
+#ifndef __APPLE__
 double dlantb(char* norm, char* uplo, char* diag, blasint* n, blasint* k, double* ab, blasint* ldab, double* work) __attribute__((alias(MTS(FC_GLOBAL(dlantb,DLANTB)))));
+#else
+double dlantb(char* norm, char* uplo, char* diag, blasint* n, blasint* k, double* ab, blasint* ldab, double* work){ return FC_GLOBAL(dlantb,DLANTB)((void*) norm, (void*) uplo, (void*) diag, (void*) n, (void*) k, (void*) ab, (void*) ldab, (void*) work); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ double flexiblas_real_dlantb_(void* norm, void* uplo, void* diag, void* n, void*
 
 	return ret ;
 }
-
-double flexiblas_real_dlantb(void* norm, void* uplo, void* diag, void* n, void* k, void* ab, void* ldab, void* work)  __attribute__((alias("flexiblas_real_dlantb_")));
-
+#ifndef __APPLE__
+double flexiblas_real_dlantb(void* norm, void* uplo, void* diag, void* n, void* k, void* ab, void* ldab, void* work) __attribute__((alias("flexiblas_real_dlantb_")));
+#else
+double flexiblas_real_dlantb(void* norm, void* uplo, void* diag, void* n, void* k, void* ab, void* ldab, void* work){return flexiblas_real_dlantb_((void*) norm, (void*) uplo, (void*) diag, (void*) n, (void*) k, (void*) ab, (void*) ldab, (void*) work);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ double flexiblas_chain_dlantb_(void* norm, void* uplo, void* diag, void* n, void
 	}
 	return ret ;
 }
-
-double flexiblas_chain_dlantb(void* norm, void* uplo, void* diag, void* n, void* k, void* ab, void* ldab, void* work)  __attribute__((alias("flexiblas_chain_dlantb_")));
-
+#ifndef __APPLE__
+double flexiblas_chain_dlantb(void* norm, void* uplo, void* diag, void* n, void* k, void* ab, void* ldab, void* work) __attribute__((alias("flexiblas_chain_dlantb_")));
+#else
+double flexiblas_chain_dlantb(void* norm, void* uplo, void* diag, void* n, void* k, void* ab, void* ldab, void* work){return flexiblas_chain_dlantb_((void*) norm, (void*) uplo, (void*) diag, (void*) n, (void*) k, (void*) ab, (void*) ldab, (void*) work);}
+#endif
 
 
 

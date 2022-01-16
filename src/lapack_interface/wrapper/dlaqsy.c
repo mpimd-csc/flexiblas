@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlaqsy,DLAQSY)(char* uplo, blasint* n, double* a, blasint* lda, d
 #ifdef FLEXIBLAS_ABI_IBM
 void dlaqsy_(char* uplo, blasint* n, double* a, blasint* lda, double* s, double* scond, double* amax, char* equed) __attribute__((alias(MTS(FC_GLOBAL(dlaqsy,DLAQSY)))));
 #else
+#ifndef __APPLE__
 void dlaqsy(char* uplo, blasint* n, double* a, blasint* lda, double* s, double* scond, double* amax, char* equed) __attribute__((alias(MTS(FC_GLOBAL(dlaqsy,DLAQSY)))));
+#else
+void dlaqsy(char* uplo, blasint* n, double* a, blasint* lda, double* s, double* scond, double* amax, char* equed){ FC_GLOBAL(dlaqsy,DLAQSY)((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) equed); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlaqsy_(void* uplo, void* n, void* a, void* lda, void* s, vo
 
 	return;
 }
-
-void flexiblas_real_dlaqsy(void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed)  __attribute__((alias("flexiblas_real_dlaqsy_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlaqsy(void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed) __attribute__((alias("flexiblas_real_dlaqsy_")));
+#else
+void flexiblas_real_dlaqsy(void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed){flexiblas_real_dlaqsy_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) equed);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlaqsy_(void* uplo, void* n, void* a, void* lda, void* s, v
 	}
 	return;
 }
-
-void flexiblas_chain_dlaqsy(void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed)  __attribute__((alias("flexiblas_chain_dlaqsy_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlaqsy(void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed) __attribute__((alias("flexiblas_chain_dlaqsy_")));
+#else
+void flexiblas_chain_dlaqsy(void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed){flexiblas_chain_dlaqsy_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) equed);}
+#endif
 
 
 

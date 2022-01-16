@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlag2,DLAG2)(double* a, blasint* lda, double* b, blasint* ldb, do
 #ifdef FLEXIBLAS_ABI_IBM
 void dlag2_(double* a, blasint* lda, double* b, blasint* ldb, double* safmin, double* scale1, double* scale2, double* wr1, double* wr2, double* wi) __attribute__((alias(MTS(FC_GLOBAL(dlag2,DLAG2)))));
 #else
+#ifndef __APPLE__
 void dlag2(double* a, blasint* lda, double* b, blasint* ldb, double* safmin, double* scale1, double* scale2, double* wr1, double* wr2, double* wi) __attribute__((alias(MTS(FC_GLOBAL(dlag2,DLAG2)))));
+#else
+void dlag2(double* a, blasint* lda, double* b, blasint* ldb, double* safmin, double* scale1, double* scale2, double* wr1, double* wr2, double* wi){ FC_GLOBAL(dlag2,DLAG2)((void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) safmin, (void*) scale1, (void*) scale2, (void*) wr1, (void*) wr2, (void*) wi); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlag2_(void* a, void* lda, void* b, void* ldb, void* safmin,
 
 	return;
 }
-
-void flexiblas_real_dlag2(void* a, void* lda, void* b, void* ldb, void* safmin, void* scale1, void* scale2, void* wr1, void* wr2, void* wi)  __attribute__((alias("flexiblas_real_dlag2_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlag2(void* a, void* lda, void* b, void* ldb, void* safmin, void* scale1, void* scale2, void* wr1, void* wr2, void* wi) __attribute__((alias("flexiblas_real_dlag2_")));
+#else
+void flexiblas_real_dlag2(void* a, void* lda, void* b, void* ldb, void* safmin, void* scale1, void* scale2, void* wr1, void* wr2, void* wi){flexiblas_real_dlag2_((void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) safmin, (void*) scale1, (void*) scale2, (void*) wr1, (void*) wr2, (void*) wi);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlag2_(void* a, void* lda, void* b, void* ldb, void* safmin
 	}
 	return;
 }
-
-void flexiblas_chain_dlag2(void* a, void* lda, void* b, void* ldb, void* safmin, void* scale1, void* scale2, void* wr1, void* wr2, void* wi)  __attribute__((alias("flexiblas_chain_dlag2_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlag2(void* a, void* lda, void* b, void* ldb, void* safmin, void* scale1, void* scale2, void* wr1, void* wr2, void* wi) __attribute__((alias("flexiblas_chain_dlag2_")));
+#else
+void flexiblas_chain_dlag2(void* a, void* lda, void* b, void* ldb, void* safmin, void* scale1, void* scale2, void* wr1, void* wr2, void* wi){flexiblas_chain_dlag2_((void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) safmin, (void*) scale1, (void*) scale2, (void*) wr1, (void*) wr2, (void*) wi);}
+#endif
 
 
 

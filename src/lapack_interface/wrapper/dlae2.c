@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlae2,DLAE2)(double* a, double* b, double* c, double* rt1, double
 #ifdef FLEXIBLAS_ABI_IBM
 void dlae2_(double* a, double* b, double* c, double* rt1, double* rt2) __attribute__((alias(MTS(FC_GLOBAL(dlae2,DLAE2)))));
 #else
+#ifndef __APPLE__
 void dlae2(double* a, double* b, double* c, double* rt1, double* rt2) __attribute__((alias(MTS(FC_GLOBAL(dlae2,DLAE2)))));
+#else
+void dlae2(double* a, double* b, double* c, double* rt1, double* rt2){ FC_GLOBAL(dlae2,DLAE2)((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlae2_(void* a, void* b, void* c, void* rt1, void* rt2)
 
 	return;
 }
-
-void flexiblas_real_dlae2(void* a, void* b, void* c, void* rt1, void* rt2)  __attribute__((alias("flexiblas_real_dlae2_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlae2(void* a, void* b, void* c, void* rt1, void* rt2) __attribute__((alias("flexiblas_real_dlae2_")));
+#else
+void flexiblas_real_dlae2(void* a, void* b, void* c, void* rt1, void* rt2){flexiblas_real_dlae2_((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlae2_(void* a, void* b, void* c, void* rt1, void* rt2)
 	}
 	return;
 }
-
-void flexiblas_chain_dlae2(void* a, void* b, void* c, void* rt1, void* rt2)  __attribute__((alias("flexiblas_chain_dlae2_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlae2(void* a, void* b, void* c, void* rt1, void* rt2) __attribute__((alias("flexiblas_chain_dlae2_")));
+#else
+void flexiblas_chain_dlae2(void* a, void* b, void* c, void* rt1, void* rt2){flexiblas_chain_dlae2_((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2);}
+#endif
 
 
 

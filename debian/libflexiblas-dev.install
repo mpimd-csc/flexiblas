@@ -1,6 +1,7 @@
 usr/lib/*/pkgconfig/flexiblas.pc
 usr/lib/*/libflexiblas.so
 usr/lib/*/libflexiblas_mgmt.so
+usr/bin/flexiblas-config
 usr/include/flexiblas/blas_gnu.h
 usr/include/flexiblas/cblas.h
 usr/include/flexiblas/flexiblas_backend.h

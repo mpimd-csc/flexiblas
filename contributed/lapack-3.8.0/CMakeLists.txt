@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 2.8.12)
+CheckPolicy(CMP0048 NEW)
+cmake_minimum_required(VERSION 3.5)
 
 project(LAPACK Fortran C)
 

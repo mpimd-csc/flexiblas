@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(cpocon,CPOCON)(char* uplo, blasint* n, float complex* a, blasint*
 #ifdef FLEXIBLAS_ABI_IBM
 void cpocon_(char* uplo, blasint* n, float complex* a, blasint* lda, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cpocon,CPOCON)))));
 #else
+#ifndef __APPLE__
 void cpocon(char* uplo, blasint* n, float complex* a, blasint* lda, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cpocon,CPOCON)))));
+#else
+void cpocon(char* uplo, blasint* n, float complex* a, blasint* lda, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info){ FC_GLOBAL(cpocon,CPOCON)((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_cpocon_(void* uplo, void* n, void* a, void* lda, void* anorm
 
 	return;
 }
-
-void flexiblas_real_cpocon(void* uplo, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info)  __attribute__((alias("flexiblas_real_cpocon_")));
-
+#ifndef __APPLE__
+void flexiblas_real_cpocon(void* uplo, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info) __attribute__((alias("flexiblas_real_cpocon_")));
+#else
+void flexiblas_real_cpocon(void* uplo, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info){flexiblas_real_cpocon_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_cpocon_(void* uplo, void* n, void* a, void* lda, void* anor
 	}
 	return;
 }
-
-void flexiblas_chain_cpocon(void* uplo, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info)  __attribute__((alias("flexiblas_chain_cpocon_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_cpocon(void* uplo, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info) __attribute__((alias("flexiblas_chain_cpocon_")));
+#else
+void flexiblas_chain_cpocon(void* uplo, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info){flexiblas_chain_cpocon_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info);}
+#endif
 
 
 

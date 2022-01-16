@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dgttrf,DGTTRF)(blasint* n, double* dl, double* d, double* du, dou
 #ifdef FLEXIBLAS_ABI_IBM
 void dgttrf_(blasint* n, double* dl, double* d, double* du, double* du2, blasint* ipiv, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dgttrf,DGTTRF)))));
 #else
+#ifndef __APPLE__
 void dgttrf(blasint* n, double* dl, double* d, double* du, double* du2, blasint* ipiv, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dgttrf,DGTTRF)))));
+#else
+void dgttrf(blasint* n, double* dl, double* d, double* du, double* du2, blasint* ipiv, blasint* info){ FC_GLOBAL(dgttrf,DGTTRF)((void*) n, (void*) dl, (void*) d, (void*) du, (void*) du2, (void*) ipiv, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dgttrf_(void* n, void* dl, void* d, void* du, void* du2, voi
 
 	return;
 }
-
-void flexiblas_real_dgttrf(void* n, void* dl, void* d, void* du, void* du2, void* ipiv, void* info)  __attribute__((alias("flexiblas_real_dgttrf_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dgttrf(void* n, void* dl, void* d, void* du, void* du2, void* ipiv, void* info) __attribute__((alias("flexiblas_real_dgttrf_")));
+#else
+void flexiblas_real_dgttrf(void* n, void* dl, void* d, void* du, void* du2, void* ipiv, void* info){flexiblas_real_dgttrf_((void*) n, (void*) dl, (void*) d, (void*) du, (void*) du2, (void*) ipiv, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dgttrf_(void* n, void* dl, void* d, void* du, void* du2, vo
 	}
 	return;
 }
-
-void flexiblas_chain_dgttrf(void* n, void* dl, void* d, void* du, void* du2, void* ipiv, void* info)  __attribute__((alias("flexiblas_chain_dgttrf_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dgttrf(void* n, void* dl, void* d, void* du, void* du2, void* ipiv, void* info) __attribute__((alias("flexiblas_chain_dgttrf_")));
+#else
+void flexiblas_chain_dgttrf(void* n, void* dl, void* d, void* du, void* du2, void* ipiv, void* info){flexiblas_chain_dgttrf_((void*) n, (void*) dl, (void*) d, (void*) du, (void*) du2, (void*) ipiv, (void*) info);}
+#endif
 
 
 

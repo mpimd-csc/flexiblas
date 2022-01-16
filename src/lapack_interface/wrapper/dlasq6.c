@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlasq6,DLASQ6)(blasint* i0, blasint* n0, double* z, blasint* pp, 
 #ifdef FLEXIBLAS_ABI_IBM
 void dlasq6_(blasint* i0, blasint* n0, double* z, blasint* pp, double* dmin, double* dmin1, double* dmin2, double* dn, double* dnm1, double* dnm2) __attribute__((alias(MTS(FC_GLOBAL(dlasq6,DLASQ6)))));
 #else
+#ifndef __APPLE__
 void dlasq6(blasint* i0, blasint* n0, double* z, blasint* pp, double* dmin, double* dmin1, double* dmin2, double* dn, double* dnm1, double* dnm2) __attribute__((alias(MTS(FC_GLOBAL(dlasq6,DLASQ6)))));
+#else
+void dlasq6(blasint* i0, blasint* n0, double* z, blasint* pp, double* dmin, double* dmin1, double* dmin2, double* dn, double* dnm1, double* dnm2){ FC_GLOBAL(dlasq6,DLASQ6)((void*) i0, (void*) n0, (void*) z, (void*) pp, (void*) dmin, (void*) dmin1, (void*) dmin2, (void*) dn, (void*) dnm1, (void*) dnm2); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlasq6_(void* i0, void* n0, void* z, void* pp, void* dmin, v
 
 	return;
 }
-
-void flexiblas_real_dlasq6(void* i0, void* n0, void* z, void* pp, void* dmin, void* dmin1, void* dmin2, void* dn, void* dnm1, void* dnm2)  __attribute__((alias("flexiblas_real_dlasq6_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlasq6(void* i0, void* n0, void* z, void* pp, void* dmin, void* dmin1, void* dmin2, void* dn, void* dnm1, void* dnm2) __attribute__((alias("flexiblas_real_dlasq6_")));
+#else
+void flexiblas_real_dlasq6(void* i0, void* n0, void* z, void* pp, void* dmin, void* dmin1, void* dmin2, void* dn, void* dnm1, void* dnm2){flexiblas_real_dlasq6_((void*) i0, (void*) n0, (void*) z, (void*) pp, (void*) dmin, (void*) dmin1, (void*) dmin2, (void*) dn, (void*) dnm1, (void*) dnm2);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlasq6_(void* i0, void* n0, void* z, void* pp, void* dmin, 
 	}
 	return;
 }
-
-void flexiblas_chain_dlasq6(void* i0, void* n0, void* z, void* pp, void* dmin, void* dmin1, void* dmin2, void* dn, void* dnm1, void* dnm2)  __attribute__((alias("flexiblas_chain_dlasq6_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlasq6(void* i0, void* n0, void* z, void* pp, void* dmin, void* dmin1, void* dmin2, void* dn, void* dnm1, void* dnm2) __attribute__((alias("flexiblas_chain_dlasq6_")));
+#else
+void flexiblas_chain_dlasq6(void* i0, void* n0, void* z, void* pp, void* dmin, void* dmin1, void* dmin2, void* dn, void* dnm1, void* dnm2){flexiblas_chain_dlasq6_((void*) i0, (void*) n0, (void*) z, (void*) pp, (void*) dmin, (void*) dmin1, (void*) dmin2, (void*) dn, (void*) dnm1, (void*) dnm2);}
+#endif
 
 
 

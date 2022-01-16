@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zlaqr5,ZLAQR5)(blasint* wantt, blasint* wantz, blasint* kacc22, b
 #ifdef FLEXIBLAS_ABI_IBM
 void zlaqr5_(blasint* wantt, blasint* wantz, blasint* kacc22, blasint* n, blasint* ktop, blasint* kbot, blasint* nshfts, double complex* s, double complex* h, blasint* ldh, blasint* iloz, blasint* ihiz, double complex* z, blasint* ldz, double complex* v, blasint* ldv, double complex* u, blasint* ldu, blasint* nv, double complex* wv, blasint* ldwv, blasint* nh, double complex* wh, blasint* ldwh) __attribute__((alias(MTS(FC_GLOBAL(zlaqr5,ZLAQR5)))));
 #else
+#ifndef __APPLE__
 void zlaqr5(blasint* wantt, blasint* wantz, blasint* kacc22, blasint* n, blasint* ktop, blasint* kbot, blasint* nshfts, double complex* s, double complex* h, blasint* ldh, blasint* iloz, blasint* ihiz, double complex* z, blasint* ldz, double complex* v, blasint* ldv, double complex* u, blasint* ldu, blasint* nv, double complex* wv, blasint* ldwv, blasint* nh, double complex* wh, blasint* ldwh) __attribute__((alias(MTS(FC_GLOBAL(zlaqr5,ZLAQR5)))));
+#else
+void zlaqr5(blasint* wantt, blasint* wantz, blasint* kacc22, blasint* n, blasint* ktop, blasint* kbot, blasint* nshfts, double complex* s, double complex* h, blasint* ldh, blasint* iloz, blasint* ihiz, double complex* z, blasint* ldz, double complex* v, blasint* ldv, double complex* u, blasint* ldu, blasint* nv, double complex* wv, blasint* ldwv, blasint* nh, double complex* wh, blasint* ldwh){ FC_GLOBAL(zlaqr5,ZLAQR5)((void*) wantt, (void*) wantz, (void*) kacc22, (void*) n, (void*) ktop, (void*) kbot, (void*) nshfts, (void*) s, (void*) h, (void*) ldh, (void*) iloz, (void*) ihiz, (void*) z, (void*) ldz, (void*) v, (void*) ldv, (void*) u, (void*) ldu, (void*) nv, (void*) wv, (void*) ldwv, (void*) nh, (void*) wh, (void*) ldwh); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zlaqr5_(void* wantt, void* wantz, void* kacc22, void* n, voi
 
 	return;
 }
-
-void flexiblas_real_zlaqr5(void* wantt, void* wantz, void* kacc22, void* n, void* ktop, void* kbot, void* nshfts, void* s, void* h, void* ldh, void* iloz, void* ihiz, void* z, void* ldz, void* v, void* ldv, void* u, void* ldu, void* nv, void* wv, void* ldwv, void* nh, void* wh, void* ldwh)  __attribute__((alias("flexiblas_real_zlaqr5_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zlaqr5(void* wantt, void* wantz, void* kacc22, void* n, void* ktop, void* kbot, void* nshfts, void* s, void* h, void* ldh, void* iloz, void* ihiz, void* z, void* ldz, void* v, void* ldv, void* u, void* ldu, void* nv, void* wv, void* ldwv, void* nh, void* wh, void* ldwh) __attribute__((alias("flexiblas_real_zlaqr5_")));
+#else
+void flexiblas_real_zlaqr5(void* wantt, void* wantz, void* kacc22, void* n, void* ktop, void* kbot, void* nshfts, void* s, void* h, void* ldh, void* iloz, void* ihiz, void* z, void* ldz, void* v, void* ldv, void* u, void* ldu, void* nv, void* wv, void* ldwv, void* nh, void* wh, void* ldwh){flexiblas_real_zlaqr5_((void*) wantt, (void*) wantz, (void*) kacc22, (void*) n, (void*) ktop, (void*) kbot, (void*) nshfts, (void*) s, (void*) h, (void*) ldh, (void*) iloz, (void*) ihiz, (void*) z, (void*) ldz, (void*) v, (void*) ldv, (void*) u, (void*) ldu, (void*) nv, (void*) wv, (void*) ldwv, (void*) nh, (void*) wh, (void*) ldwh);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zlaqr5_(void* wantt, void* wantz, void* kacc22, void* n, vo
 	}
 	return;
 }
-
-void flexiblas_chain_zlaqr5(void* wantt, void* wantz, void* kacc22, void* n, void* ktop, void* kbot, void* nshfts, void* s, void* h, void* ldh, void* iloz, void* ihiz, void* z, void* ldz, void* v, void* ldv, void* u, void* ldu, void* nv, void* wv, void* ldwv, void* nh, void* wh, void* ldwh)  __attribute__((alias("flexiblas_chain_zlaqr5_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zlaqr5(void* wantt, void* wantz, void* kacc22, void* n, void* ktop, void* kbot, void* nshfts, void* s, void* h, void* ldh, void* iloz, void* ihiz, void* z, void* ldz, void* v, void* ldv, void* u, void* ldu, void* nv, void* wv, void* ldwv, void* nh, void* wh, void* ldwh) __attribute__((alias("flexiblas_chain_zlaqr5_")));
+#else
+void flexiblas_chain_zlaqr5(void* wantt, void* wantz, void* kacc22, void* n, void* ktop, void* kbot, void* nshfts, void* s, void* h, void* ldh, void* iloz, void* ihiz, void* z, void* ldz, void* v, void* ldv, void* u, void* ldu, void* nv, void* wv, void* ldwv, void* nh, void* wh, void* ldwh){flexiblas_chain_zlaqr5_((void*) wantt, (void*) wantz, (void*) kacc22, (void*) n, (void*) ktop, (void*) kbot, (void*) nshfts, (void*) s, (void*) h, (void*) ldh, (void*) iloz, (void*) ihiz, (void*) z, (void*) ldz, (void*) v, (void*) ldv, (void*) u, (void*) ldu, (void*) nv, (void*) wv, (void*) ldwv, (void*) nh, (void*) wh, (void*) ldwh);}
+#endif
 
 
 

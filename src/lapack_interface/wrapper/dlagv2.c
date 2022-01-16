@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlagv2,DLAGV2)(double* a, blasint* lda, double* b, blasint* ldb, 
 #ifdef FLEXIBLAS_ABI_IBM
 void dlagv2_(double* a, blasint* lda, double* b, blasint* ldb, double* alphar, double* alphai, double* beta, double* csl, double* snl, double* csr, double* snr) __attribute__((alias(MTS(FC_GLOBAL(dlagv2,DLAGV2)))));
 #else
+#ifndef __APPLE__
 void dlagv2(double* a, blasint* lda, double* b, blasint* ldb, double* alphar, double* alphai, double* beta, double* csl, double* snl, double* csr, double* snr) __attribute__((alias(MTS(FC_GLOBAL(dlagv2,DLAGV2)))));
+#else
+void dlagv2(double* a, blasint* lda, double* b, blasint* ldb, double* alphar, double* alphai, double* beta, double* csl, double* snl, double* csr, double* snr){ FC_GLOBAL(dlagv2,DLAGV2)((void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) alphar, (void*) alphai, (void*) beta, (void*) csl, (void*) snl, (void*) csr, (void*) snr); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlagv2_(void* a, void* lda, void* b, void* ldb, void* alphar
 
 	return;
 }
-
-void flexiblas_real_dlagv2(void* a, void* lda, void* b, void* ldb, void* alphar, void* alphai, void* beta, void* csl, void* snl, void* csr, void* snr)  __attribute__((alias("flexiblas_real_dlagv2_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlagv2(void* a, void* lda, void* b, void* ldb, void* alphar, void* alphai, void* beta, void* csl, void* snl, void* csr, void* snr) __attribute__((alias("flexiblas_real_dlagv2_")));
+#else
+void flexiblas_real_dlagv2(void* a, void* lda, void* b, void* ldb, void* alphar, void* alphai, void* beta, void* csl, void* snl, void* csr, void* snr){flexiblas_real_dlagv2_((void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) alphar, (void*) alphai, (void*) beta, (void*) csl, (void*) snl, (void*) csr, (void*) snr);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlagv2_(void* a, void* lda, void* b, void* ldb, void* alpha
 	}
 	return;
 }
-
-void flexiblas_chain_dlagv2(void* a, void* lda, void* b, void* ldb, void* alphar, void* alphai, void* beta, void* csl, void* snl, void* csr, void* snr)  __attribute__((alias("flexiblas_chain_dlagv2_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlagv2(void* a, void* lda, void* b, void* ldb, void* alphar, void* alphai, void* beta, void* csl, void* snl, void* csr, void* snr) __attribute__((alias("flexiblas_chain_dlagv2_")));
+#else
+void flexiblas_chain_dlagv2(void* a, void* lda, void* b, void* ldb, void* alphar, void* alphai, void* beta, void* csl, void* snl, void* csr, void* snr){flexiblas_chain_dlagv2_((void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) alphar, (void*) alphai, (void*) beta, (void*) csl, (void*) snl, (void*) csr, (void*) snr);}
+#endif
 
 
 

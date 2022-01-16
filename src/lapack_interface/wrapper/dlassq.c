@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlassq,DLASSQ)(blasint* n, double* x, blasint* incx, double* scal
 #ifdef FLEXIBLAS_ABI_IBM
 void dlassq_(blasint* n, double* x, blasint* incx, double* scale, double* sumsq) __attribute__((alias(MTS(FC_GLOBAL(dlassq,DLASSQ)))));
 #else
+#ifndef __APPLE__
 void dlassq(blasint* n, double* x, blasint* incx, double* scale, double* sumsq) __attribute__((alias(MTS(FC_GLOBAL(dlassq,DLASSQ)))));
+#else
+void dlassq(blasint* n, double* x, blasint* incx, double* scale, double* sumsq){ FC_GLOBAL(dlassq,DLASSQ)((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlassq_(void* n, void* x, void* incx, void* scale, void* sum
 
 	return;
 }
-
-void flexiblas_real_dlassq(void* n, void* x, void* incx, void* scale, void* sumsq)  __attribute__((alias("flexiblas_real_dlassq_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlassq(void* n, void* x, void* incx, void* scale, void* sumsq) __attribute__((alias("flexiblas_real_dlassq_")));
+#else
+void flexiblas_real_dlassq(void* n, void* x, void* incx, void* scale, void* sumsq){flexiblas_real_dlassq_((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlassq_(void* n, void* x, void* incx, void* scale, void* su
 	}
 	return;
 }
-
-void flexiblas_chain_dlassq(void* n, void* x, void* incx, void* scale, void* sumsq)  __attribute__((alias("flexiblas_chain_dlassq_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlassq(void* n, void* x, void* incx, void* scale, void* sumsq) __attribute__((alias("flexiblas_chain_dlassq_")));
+#else
+void flexiblas_chain_dlassq(void* n, void* x, void* incx, void* scale, void* sumsq){flexiblas_chain_dlassq_((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(sppsv,SPPSV)(char* uplo, blasint* n, blasint* nrhs, float* ap, fl
 #ifdef FLEXIBLAS_ABI_IBM
 void sppsv_(char* uplo, blasint* n, blasint* nrhs, float* ap, float* b, blasint* ldb, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sppsv,SPPSV)))));
 #else
+#ifndef __APPLE__
 void sppsv(char* uplo, blasint* n, blasint* nrhs, float* ap, float* b, blasint* ldb, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sppsv,SPPSV)))));
+#else
+void sppsv(char* uplo, blasint* n, blasint* nrhs, float* ap, float* b, blasint* ldb, blasint* info){ FC_GLOBAL(sppsv,SPPSV)((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) b, (void*) ldb, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_sppsv_(void* uplo, void* n, void* nrhs, void* ap, void* b, v
 
 	return;
 }
-
-void flexiblas_real_sppsv(void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info)  __attribute__((alias("flexiblas_real_sppsv_")));
-
+#ifndef __APPLE__
+void flexiblas_real_sppsv(void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info) __attribute__((alias("flexiblas_real_sppsv_")));
+#else
+void flexiblas_real_sppsv(void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info){flexiblas_real_sppsv_((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) b, (void*) ldb, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_sppsv_(void* uplo, void* n, void* nrhs, void* ap, void* b, 
 	}
 	return;
 }
-
-void flexiblas_chain_sppsv(void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info)  __attribute__((alias("flexiblas_chain_sppsv_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_sppsv(void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info) __attribute__((alias("flexiblas_chain_sppsv_")));
+#else
+void flexiblas_chain_sppsv(void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info){flexiblas_chain_sppsv_((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) b, (void*) ldb, (void*) info);}
+#endif
 
 
 

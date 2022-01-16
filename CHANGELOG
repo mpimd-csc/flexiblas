@@ -1,3 +1,18 @@
+3.1.0 (January 16, 2022)
+-----------------------
+- Closes Github #19, added LINK_OPENMP option
+- Import LAPACK 3.10.0
+- Closes #119: Make stack protection flags the default setting.
+- Add the backend builder tool in tool/backend_builder
+- Import LAPACK 3.9.1
+- Closes #108: Numpy-Scipy Test added.
+- Closes #112: Build failure on MacOS (Github: #10)
+- Closes Github #15: silly typo
+- Closes Github #16: MKL now searched in the MKLROOT.
+   In order to make some command line options clearer MKL_CUSTOM is renamed
+   to MKL_BUILDER
+- New example: quick return benchmark on x86_64
+
 3.0.4 (October 22nd, 2020)
 --------------------------
 - Closes #107: DCABS1 and SCABS1 missing

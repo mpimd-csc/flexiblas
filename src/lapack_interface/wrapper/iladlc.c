@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ int FC_GLOBAL(iladlc,ILADLC)(blasint* m, blasint* n, double* a, blasint* lda)
 #ifdef FLEXIBLAS_ABI_IBM
 int iladlc_(blasint* m, blasint* n, double* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(iladlc,ILADLC)))));
 #else
+#ifndef __APPLE__
 int iladlc(blasint* m, blasint* n, double* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(iladlc,ILADLC)))));
+#else
+int iladlc(blasint* m, blasint* n, double* a, blasint* lda){ return FC_GLOBAL(iladlc,ILADLC)((void*) m, (void*) n, (void*) a, (void*) lda); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ blasint flexiblas_real_iladlc_(void* m, void* n, void* a, void* lda)
 
 	return ret ;
 }
-
-blasint flexiblas_real_iladlc(void* m, void* n, void* a, void* lda)  __attribute__((alias("flexiblas_real_iladlc_")));
-
+#ifndef __APPLE__
+blasint flexiblas_real_iladlc(void* m, void* n, void* a, void* lda) __attribute__((alias("flexiblas_real_iladlc_")));
+#else
+blasint flexiblas_real_iladlc(void* m, void* n, void* a, void* lda){return flexiblas_real_iladlc_((void*) m, (void*) n, (void*) a, (void*) lda);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ blasint flexiblas_chain_iladlc_(void* m, void* n, void* a, void* lda)
 	}
 	return ret ;
 }
-
-blasint flexiblas_chain_iladlc(void* m, void* n, void* a, void* lda)  __attribute__((alias("flexiblas_chain_iladlc_")));
-
+#ifndef __APPLE__
+blasint flexiblas_chain_iladlc(void* m, void* n, void* a, void* lda) __attribute__((alias("flexiblas_chain_iladlc_")));
+#else
+blasint flexiblas_chain_iladlc(void* m, void* n, void* a, void* lda){return flexiblas_chain_iladlc_((void*) m, (void*) n, (void*) a, (void*) lda);}
+#endif
 
 
 

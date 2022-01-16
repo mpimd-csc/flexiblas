@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(slasd0,SLASD0)(blasint* n, blasint* sqre, float* d, float* e, flo
 #ifdef FLEXIBLAS_ABI_IBM
 void slasd0_(blasint* n, blasint* sqre, float* d, float* e, float* u, blasint* ldu, float* vt, blasint* ldvt, blasint* smlsiz, blasint* iwork, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(slasd0,SLASD0)))));
 #else
+#ifndef __APPLE__
 void slasd0(blasint* n, blasint* sqre, float* d, float* e, float* u, blasint* ldu, float* vt, blasint* ldvt, blasint* smlsiz, blasint* iwork, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(slasd0,SLASD0)))));
+#else
+void slasd0(blasint* n, blasint* sqre, float* d, float* e, float* u, blasint* ldu, float* vt, blasint* ldvt, blasint* smlsiz, blasint* iwork, float* work, blasint* info){ FC_GLOBAL(slasd0,SLASD0)((void*) n, (void*) sqre, (void*) d, (void*) e, (void*) u, (void*) ldu, (void*) vt, (void*) ldvt, (void*) smlsiz, (void*) iwork, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_slasd0_(void* n, void* sqre, void* d, void* e, void* u, void
 
 	return;
 }
-
-void flexiblas_real_slasd0(void* n, void* sqre, void* d, void* e, void* u, void* ldu, void* vt, void* ldvt, void* smlsiz, void* iwork, void* work, void* info)  __attribute__((alias("flexiblas_real_slasd0_")));
-
+#ifndef __APPLE__
+void flexiblas_real_slasd0(void* n, void* sqre, void* d, void* e, void* u, void* ldu, void* vt, void* ldvt, void* smlsiz, void* iwork, void* work, void* info) __attribute__((alias("flexiblas_real_slasd0_")));
+#else
+void flexiblas_real_slasd0(void* n, void* sqre, void* d, void* e, void* u, void* ldu, void* vt, void* ldvt, void* smlsiz, void* iwork, void* work, void* info){flexiblas_real_slasd0_((void*) n, (void*) sqre, (void*) d, (void*) e, (void*) u, (void*) ldu, (void*) vt, (void*) ldvt, (void*) smlsiz, (void*) iwork, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_slasd0_(void* n, void* sqre, void* d, void* e, void* u, voi
 	}
 	return;
 }
-
-void flexiblas_chain_slasd0(void* n, void* sqre, void* d, void* e, void* u, void* ldu, void* vt, void* ldvt, void* smlsiz, void* iwork, void* work, void* info)  __attribute__((alias("flexiblas_chain_slasd0_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_slasd0(void* n, void* sqre, void* d, void* e, void* u, void* ldu, void* vt, void* ldvt, void* smlsiz, void* iwork, void* work, void* info) __attribute__((alias("flexiblas_chain_slasd0_")));
+#else
+void flexiblas_chain_slasd0(void* n, void* sqre, void* d, void* e, void* u, void* ldu, void* vt, void* ldvt, void* smlsiz, void* iwork, void* work, void* info){flexiblas_chain_slasd0_((void*) n, (void*) sqre, (void*) d, (void*) e, (void*) u, (void*) ldu, (void*) vt, (void*) ldvt, (void*) smlsiz, (void*) iwork, (void*) work, (void*) info);}
+#endif
 
 
 

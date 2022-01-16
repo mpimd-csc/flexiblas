@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlaed5,DLAED5)(blasint* i, double* d, double* z, double* delta, d
 #ifdef FLEXIBLAS_ABI_IBM
 void dlaed5_(blasint* i, double* d, double* z, double* delta, double* rho, double* dlam) __attribute__((alias(MTS(FC_GLOBAL(dlaed5,DLAED5)))));
 #else
+#ifndef __APPLE__
 void dlaed5(blasint* i, double* d, double* z, double* delta, double* rho, double* dlam) __attribute__((alias(MTS(FC_GLOBAL(dlaed5,DLAED5)))));
+#else
+void dlaed5(blasint* i, double* d, double* z, double* delta, double* rho, double* dlam){ FC_GLOBAL(dlaed5,DLAED5)((void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) dlam); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlaed5_(void* i, void* d, void* z, void* delta, void* rho, v
 
 	return;
 }
-
-void flexiblas_real_dlaed5(void* i, void* d, void* z, void* delta, void* rho, void* dlam)  __attribute__((alias("flexiblas_real_dlaed5_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlaed5(void* i, void* d, void* z, void* delta, void* rho, void* dlam) __attribute__((alias("flexiblas_real_dlaed5_")));
+#else
+void flexiblas_real_dlaed5(void* i, void* d, void* z, void* delta, void* rho, void* dlam){flexiblas_real_dlaed5_((void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) dlam);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlaed5_(void* i, void* d, void* z, void* delta, void* rho, 
 	}
 	return;
 }
-
-void flexiblas_chain_dlaed5(void* i, void* d, void* z, void* delta, void* rho, void* dlam)  __attribute__((alias("flexiblas_chain_dlaed5_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlaed5(void* i, void* d, void* z, void* delta, void* rho, void* dlam) __attribute__((alias("flexiblas_chain_dlaed5_")));
+#else
+void flexiblas_chain_dlaed5(void* i, void* d, void* z, void* delta, void* rho, void* dlam){flexiblas_chain_dlaed5_((void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) dlam);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlatzm,DLATZM)(char* side, blasint* m, blasint* n, double* v, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void dlatzm_(char* side, blasint* m, blasint* n, double* v, blasint* incv, double* tau, double* c1, double* c2, blasint* ldc, double* work) __attribute__((alias(MTS(FC_GLOBAL(dlatzm,DLATZM)))));
 #else
+#ifndef __APPLE__
 void dlatzm(char* side, blasint* m, blasint* n, double* v, blasint* incv, double* tau, double* c1, double* c2, blasint* ldc, double* work) __attribute__((alias(MTS(FC_GLOBAL(dlatzm,DLATZM)))));
+#else
+void dlatzm(char* side, blasint* m, blasint* n, double* v, blasint* incv, double* tau, double* c1, double* c2, blasint* ldc, double* work){ FC_GLOBAL(dlatzm,DLATZM)((void*) side, (void*) m, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c1, (void*) c2, (void*) ldc, (void*) work); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlatzm_(void* side, void* m, void* n, void* v, void* incv, v
 
 	return;
 }
-
-void flexiblas_real_dlatzm(void* side, void* m, void* n, void* v, void* incv, void* tau, void* c1, void* c2, void* ldc, void* work)  __attribute__((alias("flexiblas_real_dlatzm_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlatzm(void* side, void* m, void* n, void* v, void* incv, void* tau, void* c1, void* c2, void* ldc, void* work) __attribute__((alias("flexiblas_real_dlatzm_")));
+#else
+void flexiblas_real_dlatzm(void* side, void* m, void* n, void* v, void* incv, void* tau, void* c1, void* c2, void* ldc, void* work){flexiblas_real_dlatzm_((void*) side, (void*) m, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c1, (void*) c2, (void*) ldc, (void*) work);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlatzm_(void* side, void* m, void* n, void* v, void* incv, 
 	}
 	return;
 }
-
-void flexiblas_chain_dlatzm(void* side, void* m, void* n, void* v, void* incv, void* tau, void* c1, void* c2, void* ldc, void* work)  __attribute__((alias("flexiblas_chain_dlatzm_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlatzm(void* side, void* m, void* n, void* v, void* incv, void* tau, void* c1, void* c2, void* ldc, void* work) __attribute__((alias("flexiblas_chain_dlatzm_")));
+#else
+void flexiblas_chain_dlatzm(void* side, void* m, void* n, void* v, void* incv, void* tau, void* c1, void* c2, void* ldc, void* work){flexiblas_chain_dlatzm_((void*) side, (void*) m, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c1, (void*) c2, (void*) ldc, (void*) work);}
+#endif
 
 
 

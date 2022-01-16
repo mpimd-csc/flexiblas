@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zlatsqr,ZLATSQR)(blasint* m, blasint* n, blasint* mb, blasint* nb
 #ifdef FLEXIBLAS_ABI_IBM
 void zlatsqr_(blasint* m, blasint* n, blasint* mb, blasint* nb, double complex* a, blasint* lda, double complex* t, blasint* ldt, double complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zlatsqr,ZLATSQR)))));
 #else
+#ifndef __APPLE__
 void zlatsqr(blasint* m, blasint* n, blasint* mb, blasint* nb, double complex* a, blasint* lda, double complex* t, blasint* ldt, double complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zlatsqr,ZLATSQR)))));
+#else
+void zlatsqr(blasint* m, blasint* n, blasint* mb, blasint* nb, double complex* a, blasint* lda, double complex* t, blasint* ldt, double complex* work, blasint* lwork, blasint* info){ FC_GLOBAL(zlatsqr,ZLATSQR)((void*) m, (void*) n, (void*) mb, (void*) nb, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) work, (void*) lwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zlatsqr_(void* m, void* n, void* mb, void* nb, void* a, void
 
 	return;
 }
-
-void flexiblas_real_zlatsqr(void* m, void* n, void* mb, void* nb, void* a, void* lda, void* t, void* ldt, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_real_zlatsqr_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zlatsqr(void* m, void* n, void* mb, void* nb, void* a, void* lda, void* t, void* ldt, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_zlatsqr_")));
+#else
+void flexiblas_real_zlatsqr(void* m, void* n, void* mb, void* nb, void* a, void* lda, void* t, void* ldt, void* work, void* lwork, void* info){flexiblas_real_zlatsqr_((void*) m, (void*) n, (void*) mb, (void*) nb, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zlatsqr_(void* m, void* n, void* mb, void* nb, void* a, voi
 	}
 	return;
 }
-
-void flexiblas_chain_zlatsqr(void* m, void* n, void* mb, void* nb, void* a, void* lda, void* t, void* ldt, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_chain_zlatsqr_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zlatsqr(void* m, void* n, void* mb, void* nb, void* a, void* lda, void* t, void* ldt, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_zlatsqr_")));
+#else
+void flexiblas_chain_zlatsqr(void* m, void* n, void* mb, void* nb, void* a, void* lda, void* t, void* ldt, void* work, void* lwork, void* info){flexiblas_chain_zlatsqr_((void*) m, (void*) n, (void*) mb, (void*) nb, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 

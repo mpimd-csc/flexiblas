@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(chetf2,CHETF2)(char* uplo, blasint* n, float complex* a, blasint*
 #ifdef FLEXIBLAS_ABI_IBM
 void chetf2_(char* uplo, blasint* n, float complex* a, blasint* lda, blasint* ipiv, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(chetf2,CHETF2)))));
 #else
+#ifndef __APPLE__
 void chetf2(char* uplo, blasint* n, float complex* a, blasint* lda, blasint* ipiv, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(chetf2,CHETF2)))));
+#else
+void chetf2(char* uplo, blasint* n, float complex* a, blasint* lda, blasint* ipiv, blasint* info){ FC_GLOBAL(chetf2,CHETF2)((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_chetf2_(void* uplo, void* n, void* a, void* lda, void* ipiv,
 
 	return;
 }
-
-void flexiblas_real_chetf2(void* uplo, void* n, void* a, void* lda, void* ipiv, void* info)  __attribute__((alias("flexiblas_real_chetf2_")));
-
+#ifndef __APPLE__
+void flexiblas_real_chetf2(void* uplo, void* n, void* a, void* lda, void* ipiv, void* info) __attribute__((alias("flexiblas_real_chetf2_")));
+#else
+void flexiblas_real_chetf2(void* uplo, void* n, void* a, void* lda, void* ipiv, void* info){flexiblas_real_chetf2_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_chetf2_(void* uplo, void* n, void* a, void* lda, void* ipiv
 	}
 	return;
 }
-
-void flexiblas_chain_chetf2(void* uplo, void* n, void* a, void* lda, void* ipiv, void* info)  __attribute__((alias("flexiblas_chain_chetf2_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_chetf2(void* uplo, void* n, void* a, void* lda, void* ipiv, void* info) __attribute__((alias("flexiblas_chain_chetf2_")));
+#else
+void flexiblas_chain_chetf2(void* uplo, void* n, void* a, void* lda, void* ipiv, void* info){flexiblas_chain_chetf2_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) info);}
+#endif
 
 
 

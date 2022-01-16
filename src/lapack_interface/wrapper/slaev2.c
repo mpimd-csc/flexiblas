@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(slaev2,SLAEV2)(float* a, float* b, float* c, float* rt1, float* r
 #ifdef FLEXIBLAS_ABI_IBM
 void slaev2_(float* a, float* b, float* c, float* rt1, float* rt2, float* cs1, float* sn1) __attribute__((alias(MTS(FC_GLOBAL(slaev2,SLAEV2)))));
 #else
+#ifndef __APPLE__
 void slaev2(float* a, float* b, float* c, float* rt1, float* rt2, float* cs1, float* sn1) __attribute__((alias(MTS(FC_GLOBAL(slaev2,SLAEV2)))));
+#else
+void slaev2(float* a, float* b, float* c, float* rt1, float* rt2, float* cs1, float* sn1){ FC_GLOBAL(slaev2,SLAEV2)((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_slaev2_(void* a, void* b, void* c, void* rt1, void* rt2, voi
 
 	return;
 }
-
-void flexiblas_real_slaev2(void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1)  __attribute__((alias("flexiblas_real_slaev2_")));
-
+#ifndef __APPLE__
+void flexiblas_real_slaev2(void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1) __attribute__((alias("flexiblas_real_slaev2_")));
+#else
+void flexiblas_real_slaev2(void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1){flexiblas_real_slaev2_((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_slaev2_(void* a, void* b, void* c, void* rt1, void* rt2, vo
 	}
 	return;
 }
-
-void flexiblas_chain_slaev2(void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1)  __attribute__((alias("flexiblas_chain_slaev2_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_slaev2(void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1) __attribute__((alias("flexiblas_chain_slaev2_")));
+#else
+void flexiblas_chain_slaev2(void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1){flexiblas_chain_slaev2_((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1);}
+#endif
 
 
 

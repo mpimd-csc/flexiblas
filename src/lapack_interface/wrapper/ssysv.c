@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(ssysv,SSYSV)(char* uplo, blasint* n, blasint* nrhs, float* a, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void ssysv_(char* uplo, blasint* n, blasint* nrhs, float* a, blasint* lda, blasint* ipiv, float* b, blasint* ldb, float* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ssysv,SSYSV)))));
 #else
+#ifndef __APPLE__
 void ssysv(char* uplo, blasint* n, blasint* nrhs, float* a, blasint* lda, blasint* ipiv, float* b, blasint* ldb, float* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ssysv,SSYSV)))));
+#else
+void ssysv(char* uplo, blasint* n, blasint* nrhs, float* a, blasint* lda, blasint* ipiv, float* b, blasint* ldb, float* work, blasint* lwork, blasint* info){ FC_GLOBAL(ssysv,SSYSV)((void*) uplo, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) work, (void*) lwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_ssysv_(void* uplo, void* n, void* nrhs, void* a, void* lda, 
 
 	return;
 }
-
-void flexiblas_real_ssysv(void* uplo, void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_real_ssysv_")));
-
+#ifndef __APPLE__
+void flexiblas_real_ssysv(void* uplo, void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_ssysv_")));
+#else
+void flexiblas_real_ssysv(void* uplo, void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* work, void* lwork, void* info){flexiblas_real_ssysv_((void*) uplo, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_ssysv_(void* uplo, void* n, void* nrhs, void* a, void* lda,
 	}
 	return;
 }
-
-void flexiblas_chain_ssysv(void* uplo, void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_chain_ssysv_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_ssysv(void* uplo, void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_ssysv_")));
+#else
+void flexiblas_chain_ssysv(void* uplo, void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* work, void* lwork, void* info){flexiblas_chain_ssysv_((void*) uplo, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 

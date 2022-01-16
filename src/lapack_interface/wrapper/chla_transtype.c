@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ char FC_GLOBAL_(chla_transtype,CHLA_TRANSTYPE)(blasint* trans)
 #ifdef FLEXIBLAS_ABI_IBM
 char chla_transtype_(blasint* trans) __attribute__((alias(MTS(FC_GLOBAL_(chla_transtype,CHLA_TRANSTYPE)))));
 #else
+#ifndef __APPLE__
 char chla_transtype(blasint* trans) __attribute__((alias(MTS(FC_GLOBAL_(chla_transtype,CHLA_TRANSTYPE)))));
+#else
+char chla_transtype(blasint* trans){ return FC_GLOBAL_(chla_transtype,CHLA_TRANSTYPE)((void*) trans); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ char flexiblas_real_chla_transtype_(void* trans)
 
 	return ret ;
 }
-
-char flexiblas_real_chla_transtype(void* trans)  __attribute__((alias("flexiblas_real_chla_transtype_")));
-
+#ifndef __APPLE__
+char flexiblas_real_chla_transtype(void* trans) __attribute__((alias("flexiblas_real_chla_transtype_")));
+#else
+char flexiblas_real_chla_transtype(void* trans){return flexiblas_real_chla_transtype_((void*) trans);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ char flexiblas_chain_chla_transtype_(void* trans)
 	}
 	return ret ;
 }
-
-char flexiblas_chain_chla_transtype(void* trans)  __attribute__((alias("flexiblas_chain_chla_transtype_")));
-
+#ifndef __APPLE__
+char flexiblas_chain_chla_transtype(void* trans) __attribute__((alias("flexiblas_chain_chla_transtype_")));
+#else
+char flexiblas_chain_chla_transtype(void* trans){return flexiblas_chain_chla_transtype_((void*) trans);}
+#endif
 
 
 

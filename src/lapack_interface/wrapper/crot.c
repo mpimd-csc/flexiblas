@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(crot,CROT)(blasint* n, float complex* cx, blasint* incx, float co
 #ifdef FLEXIBLAS_ABI_IBM
 void crot_(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy, float* c, float complex* s) __attribute__((alias(MTS(FC_GLOBAL(crot,CROT)))));
 #else
+#ifndef __APPLE__
 void crot(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy, float* c, float complex* s) __attribute__((alias(MTS(FC_GLOBAL(crot,CROT)))));
+#else
+void crot(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy, float* c, float complex* s){ FC_GLOBAL(crot,CROT)((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_crot_(void* n, void* cx, void* incx, void* cy, void* incy, v
 
 	return;
 }
-
-void flexiblas_real_crot(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s)  __attribute__((alias("flexiblas_real_crot_")));
-
+#ifndef __APPLE__
+void flexiblas_real_crot(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s) __attribute__((alias("flexiblas_real_crot_")));
+#else
+void flexiblas_real_crot(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s){flexiblas_real_crot_((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_crot_(void* n, void* cx, void* incx, void* cy, void* incy, 
 	}
 	return;
 }
-
-void flexiblas_chain_crot(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s)  __attribute__((alias("flexiblas_chain_crot_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_crot(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s) __attribute__((alias("flexiblas_chain_crot_")));
+#else
+void flexiblas_chain_crot(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s){flexiblas_chain_crot_((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s);}
+#endif
 
 
 

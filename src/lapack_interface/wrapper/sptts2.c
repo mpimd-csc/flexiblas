@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(sptts2,SPTTS2)(blasint* n, blasint* nrhs, float* d, float* e, flo
 #ifdef FLEXIBLAS_ABI_IBM
 void sptts2_(blasint* n, blasint* nrhs, float* d, float* e, float* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(sptts2,SPTTS2)))));
 #else
+#ifndef __APPLE__
 void sptts2(blasint* n, blasint* nrhs, float* d, float* e, float* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(sptts2,SPTTS2)))));
+#else
+void sptts2(blasint* n, blasint* nrhs, float* d, float* e, float* b, blasint* ldb){ FC_GLOBAL(sptts2,SPTTS2)((void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) b, (void*) ldb); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_sptts2_(void* n, void* nrhs, void* d, void* e, void* b, void
 
 	return;
 }
-
-void flexiblas_real_sptts2(void* n, void* nrhs, void* d, void* e, void* b, void* ldb)  __attribute__((alias("flexiblas_real_sptts2_")));
-
+#ifndef __APPLE__
+void flexiblas_real_sptts2(void* n, void* nrhs, void* d, void* e, void* b, void* ldb) __attribute__((alias("flexiblas_real_sptts2_")));
+#else
+void flexiblas_real_sptts2(void* n, void* nrhs, void* d, void* e, void* b, void* ldb){flexiblas_real_sptts2_((void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) b, (void*) ldb);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_sptts2_(void* n, void* nrhs, void* d, void* e, void* b, voi
 	}
 	return;
 }
-
-void flexiblas_chain_sptts2(void* n, void* nrhs, void* d, void* e, void* b, void* ldb)  __attribute__((alias("flexiblas_chain_sptts2_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_sptts2(void* n, void* nrhs, void* d, void* e, void* b, void* ldb) __attribute__((alias("flexiblas_chain_sptts2_")));
+#else
+void flexiblas_chain_sptts2(void* n, void* nrhs, void* d, void* e, void* b, void* ldb){flexiblas_chain_sptts2_((void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) b, (void*) ldb);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(clabrd,CLABRD)(blasint* m, blasint* n, blasint* nb, float complex
 #ifdef FLEXIBLAS_ABI_IBM
 void clabrd_(blasint* m, blasint* n, blasint* nb, float complex* a, blasint* lda, float* d, float* e, float complex* tauq, float complex* taup, float complex* x, blasint* ldx, float complex* y, blasint* ldy) __attribute__((alias(MTS(FC_GLOBAL(clabrd,CLABRD)))));
 #else
+#ifndef __APPLE__
 void clabrd(blasint* m, blasint* n, blasint* nb, float complex* a, blasint* lda, float* d, float* e, float complex* tauq, float complex* taup, float complex* x, blasint* ldx, float complex* y, blasint* ldy) __attribute__((alias(MTS(FC_GLOBAL(clabrd,CLABRD)))));
+#else
+void clabrd(blasint* m, blasint* n, blasint* nb, float complex* a, blasint* lda, float* d, float* e, float complex* tauq, float complex* taup, float complex* x, blasint* ldx, float complex* y, blasint* ldy){ FC_GLOBAL(clabrd,CLABRD)((void*) m, (void*) n, (void*) nb, (void*) a, (void*) lda, (void*) d, (void*) e, (void*) tauq, (void*) taup, (void*) x, (void*) ldx, (void*) y, (void*) ldy); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_clabrd_(void* m, void* n, void* nb, void* a, void* lda, void
 
 	return;
 }
-
-void flexiblas_real_clabrd(void* m, void* n, void* nb, void* a, void* lda, void* d, void* e, void* tauq, void* taup, void* x, void* ldx, void* y, void* ldy)  __attribute__((alias("flexiblas_real_clabrd_")));
-
+#ifndef __APPLE__
+void flexiblas_real_clabrd(void* m, void* n, void* nb, void* a, void* lda, void* d, void* e, void* tauq, void* taup, void* x, void* ldx, void* y, void* ldy) __attribute__((alias("flexiblas_real_clabrd_")));
+#else
+void flexiblas_real_clabrd(void* m, void* n, void* nb, void* a, void* lda, void* d, void* e, void* tauq, void* taup, void* x, void* ldx, void* y, void* ldy){flexiblas_real_clabrd_((void*) m, (void*) n, (void*) nb, (void*) a, (void*) lda, (void*) d, (void*) e, (void*) tauq, (void*) taup, (void*) x, (void*) ldx, (void*) y, (void*) ldy);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_clabrd_(void* m, void* n, void* nb, void* a, void* lda, voi
 	}
 	return;
 }
-
-void flexiblas_chain_clabrd(void* m, void* n, void* nb, void* a, void* lda, void* d, void* e, void* tauq, void* taup, void* x, void* ldx, void* y, void* ldy)  __attribute__((alias("flexiblas_chain_clabrd_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_clabrd(void* m, void* n, void* nb, void* a, void* lda, void* d, void* e, void* tauq, void* taup, void* x, void* ldx, void* y, void* ldy) __attribute__((alias("flexiblas_chain_clabrd_")));
+#else
+void flexiblas_chain_clabrd(void* m, void* n, void* nb, void* a, void* lda, void* d, void* e, void* tauq, void* taup, void* x, void* ldx, void* y, void* ldy){flexiblas_chain_clabrd_((void*) m, (void*) n, (void*) nb, (void*) a, (void*) lda, (void*) d, (void*) e, (void*) tauq, (void*) taup, (void*) x, (void*) ldx, (void*) y, (void*) ldy);}
+#endif
 
 
 

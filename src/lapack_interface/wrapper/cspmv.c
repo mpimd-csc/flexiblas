@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(cspmv,CSPMV)(char* uplo, blasint* n, float complex* alpha, float 
 #ifdef FLEXIBLAS_ABI_IBM
 void cspmv_(char* uplo, blasint* n, float complex* alpha, float complex* ap, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cspmv,CSPMV)))));
 #else
+#ifndef __APPLE__
 void cspmv(char* uplo, blasint* n, float complex* alpha, float complex* ap, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cspmv,CSPMV)))));
+#else
+void cspmv(char* uplo, blasint* n, float complex* alpha, float complex* ap, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy){ FC_GLOBAL(cspmv,CSPMV)((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_cspmv_(void* uplo, void* n, void* alpha, void* ap, void* x, 
 
 	return;
 }
-
-void flexiblas_real_cspmv(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy)  __attribute__((alias("flexiblas_real_cspmv_")));
-
+#ifndef __APPLE__
+void flexiblas_real_cspmv(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_real_cspmv_")));
+#else
+void flexiblas_real_cspmv(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_real_cspmv_((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_cspmv_(void* uplo, void* n, void* alpha, void* ap, void* x,
 	}
 	return;
 }
-
-void flexiblas_chain_cspmv(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy)  __attribute__((alias("flexiblas_chain_cspmv_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_cspmv(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_chain_cspmv_")));
+#else
+void flexiblas_chain_cspmv(void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_chain_cspmv_((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ int FC_GLOBAL(dlaisnan,DLAISNAN)(double* din1, double* din2)
 #ifdef FLEXIBLAS_ABI_IBM
 int dlaisnan_(double* din1, double* din2) __attribute__((alias(MTS(FC_GLOBAL(dlaisnan,DLAISNAN)))));
 #else
+#ifndef __APPLE__
 int dlaisnan(double* din1, double* din2) __attribute__((alias(MTS(FC_GLOBAL(dlaisnan,DLAISNAN)))));
+#else
+int dlaisnan(double* din1, double* din2){ return FC_GLOBAL(dlaisnan,DLAISNAN)((void*) din1, (void*) din2); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ blasint flexiblas_real_dlaisnan_(void* din1, void* din2)
 
 	return ret ;
 }
-
-blasint flexiblas_real_dlaisnan(void* din1, void* din2)  __attribute__((alias("flexiblas_real_dlaisnan_")));
-
+#ifndef __APPLE__
+blasint flexiblas_real_dlaisnan(void* din1, void* din2) __attribute__((alias("flexiblas_real_dlaisnan_")));
+#else
+blasint flexiblas_real_dlaisnan(void* din1, void* din2){return flexiblas_real_dlaisnan_((void*) din1, (void*) din2);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ blasint flexiblas_chain_dlaisnan_(void* din1, void* din2)
 	}
 	return ret ;
 }
-
-blasint flexiblas_chain_dlaisnan(void* din1, void* din2)  __attribute__((alias("flexiblas_chain_dlaisnan_")));
-
+#ifndef __APPLE__
+blasint flexiblas_chain_dlaisnan(void* din1, void* din2) __attribute__((alias("flexiblas_chain_dlaisnan_")));
+#else
+blasint flexiblas_chain_dlaisnan(void* din1, void* din2){return flexiblas_chain_dlaisnan_((void*) din1, (void*) din2);}
+#endif
 
 
 

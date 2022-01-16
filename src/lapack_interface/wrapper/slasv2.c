@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(slasv2,SLASV2)(float* f, float* g, float* h, float* ssmin, float*
 #ifdef FLEXIBLAS_ABI_IBM
 void slasv2_(float* f, float* g, float* h, float* ssmin, float* ssmax, float* snr, float* csr, float* snl, float* csl) __attribute__((alias(MTS(FC_GLOBAL(slasv2,SLASV2)))));
 #else
+#ifndef __APPLE__
 void slasv2(float* f, float* g, float* h, float* ssmin, float* ssmax, float* snr, float* csr, float* snl, float* csl) __attribute__((alias(MTS(FC_GLOBAL(slasv2,SLASV2)))));
+#else
+void slasv2(float* f, float* g, float* h, float* ssmin, float* ssmax, float* snr, float* csr, float* snl, float* csl){ FC_GLOBAL(slasv2,SLASV2)((void*) f, (void*) g, (void*) h, (void*) ssmin, (void*) ssmax, (void*) snr, (void*) csr, (void*) snl, (void*) csl); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_slasv2_(void* f, void* g, void* h, void* ssmin, void* ssmax,
 
 	return;
 }
-
-void flexiblas_real_slasv2(void* f, void* g, void* h, void* ssmin, void* ssmax, void* snr, void* csr, void* snl, void* csl)  __attribute__((alias("flexiblas_real_slasv2_")));
-
+#ifndef __APPLE__
+void flexiblas_real_slasv2(void* f, void* g, void* h, void* ssmin, void* ssmax, void* snr, void* csr, void* snl, void* csl) __attribute__((alias("flexiblas_real_slasv2_")));
+#else
+void flexiblas_real_slasv2(void* f, void* g, void* h, void* ssmin, void* ssmax, void* snr, void* csr, void* snl, void* csl){flexiblas_real_slasv2_((void*) f, (void*) g, (void*) h, (void*) ssmin, (void*) ssmax, (void*) snr, (void*) csr, (void*) snl, (void*) csl);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_slasv2_(void* f, void* g, void* h, void* ssmin, void* ssmax
 	}
 	return;
 }
-
-void flexiblas_chain_slasv2(void* f, void* g, void* h, void* ssmin, void* ssmax, void* snr, void* csr, void* snl, void* csl)  __attribute__((alias("flexiblas_chain_slasv2_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_slasv2(void* f, void* g, void* h, void* ssmin, void* ssmax, void* snr, void* csr, void* snl, void* csl) __attribute__((alias("flexiblas_chain_slasv2_")));
+#else
+void flexiblas_chain_slasv2(void* f, void* g, void* h, void* ssmin, void* ssmax, void* snr, void* csr, void* snl, void* csl){flexiblas_chain_slasv2_((void*) f, (void*) g, (void*) h, (void*) ssmin, (void*) ssmax, (void*) snr, (void*) csr, (void*) snl, (void*) csl);}
+#endif
 
 
 

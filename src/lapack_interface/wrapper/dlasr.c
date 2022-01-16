@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlasr,DLASR)(char* side, char* pivot, char* direct, blasint* m, b
 #ifdef FLEXIBLAS_ABI_IBM
 void dlasr_(char* side, char* pivot, char* direct, blasint* m, blasint* n, double* c, double* s, double* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(dlasr,DLASR)))));
 #else
+#ifndef __APPLE__
 void dlasr(char* side, char* pivot, char* direct, blasint* m, blasint* n, double* c, double* s, double* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(dlasr,DLASR)))));
+#else
+void dlasr(char* side, char* pivot, char* direct, blasint* m, blasint* n, double* c, double* s, double* a, blasint* lda){ FC_GLOBAL(dlasr,DLASR)((void*) side, (void*) pivot, (void*) direct, (void*) m, (void*) n, (void*) c, (void*) s, (void*) a, (void*) lda); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlasr_(void* side, void* pivot, void* direct, void* m, void*
 
 	return;
 }
-
-void flexiblas_real_dlasr(void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda)  __attribute__((alias("flexiblas_real_dlasr_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlasr(void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda) __attribute__((alias("flexiblas_real_dlasr_")));
+#else
+void flexiblas_real_dlasr(void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda){flexiblas_real_dlasr_((void*) side, (void*) pivot, (void*) direct, (void*) m, (void*) n, (void*) c, (void*) s, (void*) a, (void*) lda);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlasr_(void* side, void* pivot, void* direct, void* m, void
 	}
 	return;
 }
-
-void flexiblas_chain_dlasr(void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda)  __attribute__((alias("flexiblas_chain_dlasr_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlasr(void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda) __attribute__((alias("flexiblas_chain_dlasr_")));
+#else
+void flexiblas_chain_dlasr(void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda){flexiblas_chain_dlasr_((void*) side, (void*) pivot, (void*) direct, (void*) m, (void*) n, (void*) c, (void*) s, (void*) a, (void*) lda);}
+#endif
 
 
 

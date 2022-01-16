@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(slargv,SLARGV)(blasint* n, float* x, blasint* incx, float* y, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void slargv_(blasint* n, float* x, blasint* incx, float* y, blasint* incy, float* c, blasint* incc) __attribute__((alias(MTS(FC_GLOBAL(slargv,SLARGV)))));
 #else
+#ifndef __APPLE__
 void slargv(blasint* n, float* x, blasint* incx, float* y, blasint* incy, float* c, blasint* incc) __attribute__((alias(MTS(FC_GLOBAL(slargv,SLARGV)))));
+#else
+void slargv(blasint* n, float* x, blasint* incx, float* y, blasint* incy, float* c, blasint* incc){ FC_GLOBAL(slargv,SLARGV)((void*) n, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) c, (void*) incc); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_slargv_(void* n, void* x, void* incx, void* y, void* incy, v
 
 	return;
 }
-
-void flexiblas_real_slargv(void* n, void* x, void* incx, void* y, void* incy, void* c, void* incc)  __attribute__((alias("flexiblas_real_slargv_")));
-
+#ifndef __APPLE__
+void flexiblas_real_slargv(void* n, void* x, void* incx, void* y, void* incy, void* c, void* incc) __attribute__((alias("flexiblas_real_slargv_")));
+#else
+void flexiblas_real_slargv(void* n, void* x, void* incx, void* y, void* incy, void* c, void* incc){flexiblas_real_slargv_((void*) n, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) c, (void*) incc);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_slargv_(void* n, void* x, void* incx, void* y, void* incy, 
 	}
 	return;
 }
-
-void flexiblas_chain_slargv(void* n, void* x, void* incx, void* y, void* incy, void* c, void* incc)  __attribute__((alias("flexiblas_chain_slargv_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_slargv(void* n, void* x, void* incx, void* y, void* incy, void* c, void* incc) __attribute__((alias("flexiblas_chain_slargv_")));
+#else
+void flexiblas_chain_slargv(void* n, void* x, void* incx, void* y, void* incy, void* c, void* incc){flexiblas_chain_slargv_((void*) n, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) c, (void*) incc);}
+#endif
 
 
 

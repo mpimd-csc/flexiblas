@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zhbgv,ZHBGV)(char* jobz, char* uplo, blasint* n, blasint* ka, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void zhbgv_(char* jobz, char* uplo, blasint* n, blasint* ka, blasint* kb, double complex* ab, blasint* ldab, double complex* bb, blasint* ldbb, double* w, double complex* z, blasint* ldz, double complex* work, double* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zhbgv,ZHBGV)))));
 #else
+#ifndef __APPLE__
 void zhbgv(char* jobz, char* uplo, blasint* n, blasint* ka, blasint* kb, double complex* ab, blasint* ldab, double complex* bb, blasint* ldbb, double* w, double complex* z, blasint* ldz, double complex* work, double* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zhbgv,ZHBGV)))));
+#else
+void zhbgv(char* jobz, char* uplo, blasint* n, blasint* ka, blasint* kb, double complex* ab, blasint* ldab, double complex* bb, blasint* ldbb, double* w, double complex* z, blasint* ldz, double complex* work, double* rwork, blasint* info){ FC_GLOBAL(zhbgv,ZHBGV)((void*) jobz, (void*) uplo, (void*) n, (void*) ka, (void*) kb, (void*) ab, (void*) ldab, (void*) bb, (void*) ldbb, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) rwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zhbgv_(void* jobz, void* uplo, void* n, void* ka, void* kb, 
 
 	return;
 }
-
-void flexiblas_real_zhbgv(void* jobz, void* uplo, void* n, void* ka, void* kb, void* ab, void* ldab, void* bb, void* ldbb, void* w, void* z, void* ldz, void* work, void* rwork, void* info)  __attribute__((alias("flexiblas_real_zhbgv_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zhbgv(void* jobz, void* uplo, void* n, void* ka, void* kb, void* ab, void* ldab, void* bb, void* ldbb, void* w, void* z, void* ldz, void* work, void* rwork, void* info) __attribute__((alias("flexiblas_real_zhbgv_")));
+#else
+void flexiblas_real_zhbgv(void* jobz, void* uplo, void* n, void* ka, void* kb, void* ab, void* ldab, void* bb, void* ldbb, void* w, void* z, void* ldz, void* work, void* rwork, void* info){flexiblas_real_zhbgv_((void*) jobz, (void*) uplo, (void*) n, (void*) ka, (void*) kb, (void*) ab, (void*) ldab, (void*) bb, (void*) ldbb, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) rwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zhbgv_(void* jobz, void* uplo, void* n, void* ka, void* kb,
 	}
 	return;
 }
-
-void flexiblas_chain_zhbgv(void* jobz, void* uplo, void* n, void* ka, void* kb, void* ab, void* ldab, void* bb, void* ldbb, void* w, void* z, void* ldz, void* work, void* rwork, void* info)  __attribute__((alias("flexiblas_chain_zhbgv_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zhbgv(void* jobz, void* uplo, void* n, void* ka, void* kb, void* ab, void* ldab, void* bb, void* ldbb, void* w, void* z, void* ldz, void* work, void* rwork, void* info) __attribute__((alias("flexiblas_chain_zhbgv_")));
+#else
+void flexiblas_chain_zhbgv(void* jobz, void* uplo, void* n, void* ka, void* kb, void* ab, void* ldab, void* bb, void* ldbb, void* w, void* z, void* ldz, void* work, void* rwork, void* info){flexiblas_chain_zhbgv_((void*) jobz, (void*) uplo, (void*) n, (void*) ka, (void*) kb, (void*) ab, (void*) ldab, (void*) bb, (void*) ldbb, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) rwork, (void*) info);}
+#endif
 
 
 

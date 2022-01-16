@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ double FC_GLOBAL(zlanhs,ZLANHS)(char* norm, blasint* n, double complex* a, blasi
 #ifdef FLEXIBLAS_ABI_IBM
 double zlanhs_(char* norm, blasint* n, double complex* a, blasint* lda, double* work) __attribute__((alias(MTS(FC_GLOBAL(zlanhs,ZLANHS)))));
 #else
+#ifndef __APPLE__
 double zlanhs(char* norm, blasint* n, double complex* a, blasint* lda, double* work) __attribute__((alias(MTS(FC_GLOBAL(zlanhs,ZLANHS)))));
+#else
+double zlanhs(char* norm, blasint* n, double complex* a, blasint* lda, double* work){ return FC_GLOBAL(zlanhs,ZLANHS)((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) work); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ double flexiblas_real_zlanhs_(void* norm, void* n, void* a, void* lda, void* wor
 
 	return ret ;
 }
-
-double flexiblas_real_zlanhs(void* norm, void* n, void* a, void* lda, void* work)  __attribute__((alias("flexiblas_real_zlanhs_")));
-
+#ifndef __APPLE__
+double flexiblas_real_zlanhs(void* norm, void* n, void* a, void* lda, void* work) __attribute__((alias("flexiblas_real_zlanhs_")));
+#else
+double flexiblas_real_zlanhs(void* norm, void* n, void* a, void* lda, void* work){return flexiblas_real_zlanhs_((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) work);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ double flexiblas_chain_zlanhs_(void* norm, void* n, void* a, void* lda, void* wo
 	}
 	return ret ;
 }
-
-double flexiblas_chain_zlanhs(void* norm, void* n, void* a, void* lda, void* work)  __attribute__((alias("flexiblas_chain_zlanhs_")));
-
+#ifndef __APPLE__
+double flexiblas_chain_zlanhs(void* norm, void* n, void* a, void* lda, void* work) __attribute__((alias("flexiblas_chain_zlanhs_")));
+#else
+double flexiblas_chain_zlanhs(void* norm, void* n, void* a, void* lda, void* work){return flexiblas_chain_zlanhs_((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) work);}
+#endif
 
 
 

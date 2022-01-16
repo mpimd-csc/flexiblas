@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlaeda,DLAEDA)(blasint* n, blasint* tlvls, blasint* curlvl, blasi
 #ifdef FLEXIBLAS_ABI_IBM
 void dlaeda_(blasint* n, blasint* tlvls, blasint* curlvl, blasint* curpbm, blasint* prmptr, blasint* perm, blasint* givptr, blasint* givcol, double* givnum, double* q, blasint* qptr, double* z, double* ztemp, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlaeda,DLAEDA)))));
 #else
+#ifndef __APPLE__
 void dlaeda(blasint* n, blasint* tlvls, blasint* curlvl, blasint* curpbm, blasint* prmptr, blasint* perm, blasint* givptr, blasint* givcol, double* givnum, double* q, blasint* qptr, double* z, double* ztemp, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlaeda,DLAEDA)))));
+#else
+void dlaeda(blasint* n, blasint* tlvls, blasint* curlvl, blasint* curpbm, blasint* prmptr, blasint* perm, blasint* givptr, blasint* givcol, double* givnum, double* q, blasint* qptr, double* z, double* ztemp, blasint* info){ FC_GLOBAL(dlaeda,DLAEDA)((void*) n, (void*) tlvls, (void*) curlvl, (void*) curpbm, (void*) prmptr, (void*) perm, (void*) givptr, (void*) givcol, (void*) givnum, (void*) q, (void*) qptr, (void*) z, (void*) ztemp, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlaeda_(void* n, void* tlvls, void* curlvl, void* curpbm, vo
 
 	return;
 }
-
-void flexiblas_real_dlaeda(void* n, void* tlvls, void* curlvl, void* curpbm, void* prmptr, void* perm, void* givptr, void* givcol, void* givnum, void* q, void* qptr, void* z, void* ztemp, void* info)  __attribute__((alias("flexiblas_real_dlaeda_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlaeda(void* n, void* tlvls, void* curlvl, void* curpbm, void* prmptr, void* perm, void* givptr, void* givcol, void* givnum, void* q, void* qptr, void* z, void* ztemp, void* info) __attribute__((alias("flexiblas_real_dlaeda_")));
+#else
+void flexiblas_real_dlaeda(void* n, void* tlvls, void* curlvl, void* curpbm, void* prmptr, void* perm, void* givptr, void* givcol, void* givnum, void* q, void* qptr, void* z, void* ztemp, void* info){flexiblas_real_dlaeda_((void*) n, (void*) tlvls, (void*) curlvl, (void*) curpbm, (void*) prmptr, (void*) perm, (void*) givptr, (void*) givcol, (void*) givnum, (void*) q, (void*) qptr, (void*) z, (void*) ztemp, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlaeda_(void* n, void* tlvls, void* curlvl, void* curpbm, v
 	}
 	return;
 }
-
-void flexiblas_chain_dlaeda(void* n, void* tlvls, void* curlvl, void* curpbm, void* prmptr, void* perm, void* givptr, void* givcol, void* givnum, void* q, void* qptr, void* z, void* ztemp, void* info)  __attribute__((alias("flexiblas_chain_dlaeda_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlaeda(void* n, void* tlvls, void* curlvl, void* curpbm, void* prmptr, void* perm, void* givptr, void* givcol, void* givnum, void* q, void* qptr, void* z, void* ztemp, void* info) __attribute__((alias("flexiblas_chain_dlaeda_")));
+#else
+void flexiblas_chain_dlaeda(void* n, void* tlvls, void* curlvl, void* curpbm, void* prmptr, void* perm, void* givptr, void* givcol, void* givnum, void* q, void* qptr, void* z, void* ztemp, void* info){flexiblas_chain_dlaeda_((void*) n, (void*) tlvls, (void*) curlvl, (void*) curpbm, (void*) prmptr, (void*) perm, (void*) givptr, (void*) givcol, (void*) givnum, (void*) q, (void*) qptr, (void*) z, (void*) ztemp, (void*) info);}
+#endif
 
 
 

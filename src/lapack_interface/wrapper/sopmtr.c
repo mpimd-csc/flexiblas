@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(sopmtr,SOPMTR)(char* side, char* uplo, char* trans, blasint* m, b
 #ifdef FLEXIBLAS_ABI_IBM
 void sopmtr_(char* side, char* uplo, char* trans, blasint* m, blasint* n, float* ap, float* tau, float* c, blasint* ldc, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sopmtr,SOPMTR)))));
 #else
+#ifndef __APPLE__
 void sopmtr(char* side, char* uplo, char* trans, blasint* m, blasint* n, float* ap, float* tau, float* c, blasint* ldc, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sopmtr,SOPMTR)))));
+#else
+void sopmtr(char* side, char* uplo, char* trans, blasint* m, blasint* n, float* ap, float* tau, float* c, blasint* ldc, float* work, blasint* info){ FC_GLOBAL(sopmtr,SOPMTR)((void*) side, (void*) uplo, (void*) trans, (void*) m, (void*) n, (void*) ap, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_sopmtr_(void* side, void* uplo, void* trans, void* m, void* 
 
 	return;
 }
-
-void flexiblas_real_sopmtr(void* side, void* uplo, void* trans, void* m, void* n, void* ap, void* tau, void* c, void* ldc, void* work, void* info)  __attribute__((alias("flexiblas_real_sopmtr_")));
-
+#ifndef __APPLE__
+void flexiblas_real_sopmtr(void* side, void* uplo, void* trans, void* m, void* n, void* ap, void* tau, void* c, void* ldc, void* work, void* info) __attribute__((alias("flexiblas_real_sopmtr_")));
+#else
+void flexiblas_real_sopmtr(void* side, void* uplo, void* trans, void* m, void* n, void* ap, void* tau, void* c, void* ldc, void* work, void* info){flexiblas_real_sopmtr_((void*) side, (void*) uplo, (void*) trans, (void*) m, (void*) n, (void*) ap, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_sopmtr_(void* side, void* uplo, void* trans, void* m, void*
 	}
 	return;
 }
-
-void flexiblas_chain_sopmtr(void* side, void* uplo, void* trans, void* m, void* n, void* ap, void* tau, void* c, void* ldc, void* work, void* info)  __attribute__((alias("flexiblas_chain_sopmtr_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_sopmtr(void* side, void* uplo, void* trans, void* m, void* n, void* ap, void* tau, void* c, void* ldc, void* work, void* info) __attribute__((alias("flexiblas_chain_sopmtr_")));
+#else
+void flexiblas_chain_sopmtr(void* side, void* uplo, void* trans, void* m, void* n, void* ap, void* tau, void* c, void* ldc, void* work, void* info){flexiblas_chain_sopmtr_((void*) side, (void*) uplo, (void*) trans, (void*) m, (void*) n, (void*) ap, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) info);}
+#endif
 
 
 

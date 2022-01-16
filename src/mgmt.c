@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
 
 
@@ -380,7 +380,7 @@ flexiblas_mgmt_t * flexiblas_mgmt_load_config()
         DPRINTF(1, "Load enviroment config %s\n", path);
         csc_ini_load(path, ini, CSC_INI_LOAD_SECTION_UPPERCASE);
     } else {
-        DPRINTF_WARN(1, "Environment suppiled config (%s) does not exist.\n", path);
+        DPRINTF_WARN(1, "Environment supplied config (%s) does not exist.\n", path);
     }
 
     if ( path ) free(path);

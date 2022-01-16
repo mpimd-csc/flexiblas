@@ -1,4 +1,4 @@
-IF($ENV{MKLROOT})
+IF(DEFINED ENV{MKLROOT})
     IF(CMAKE_SIZEOF_VOID_P EQUAL 8)
         SET(SEARCH_PATH $ENV{MKLROOT}/lib/intel64 $ENV{MKLROOT}/lib/intel64_lin)
     ELSE()
@@ -7,7 +7,6 @@ IF($ENV{MKLROOT})
 ELSE()
     SET(SEARCH_PATH /usr/local/lib64 /usr/local/lib32/ /usr/local/lib/ /usr/lib64 /usr/lib32 /usr/lib)
 ENDIF()
-
 
 IF(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
     SET(MKL_FRONTEND mkl_gf_lp64)

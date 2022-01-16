@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dtgexc,DTGEXC)(blasint* wantq, blasint* wantz, blasint* n, double
 #ifdef FLEXIBLAS_ABI_IBM
 void dtgexc_(blasint* wantq, blasint* wantz, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, double* q, blasint* ldq, double* z, blasint* ldz, blasint* ifst, blasint* ilst, double* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dtgexc,DTGEXC)))));
 #else
+#ifndef __APPLE__
 void dtgexc(blasint* wantq, blasint* wantz, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, double* q, blasint* ldq, double* z, blasint* ldz, blasint* ifst, blasint* ilst, double* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dtgexc,DTGEXC)))));
+#else
+void dtgexc(blasint* wantq, blasint* wantz, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, double* q, blasint* ldq, double* z, blasint* ldz, blasint* ifst, blasint* ilst, double* work, blasint* lwork, blasint* info){ FC_GLOBAL(dtgexc,DTGEXC)((void*) wantq, (void*) wantz, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) ifst, (void*) ilst, (void*) work, (void*) lwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dtgexc_(void* wantq, void* wantz, void* n, void* a, void* ld
 
 	return;
 }
-
-void flexiblas_real_dtgexc(void* wantq, void* wantz, void* n, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* ifst, void* ilst, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_real_dtgexc_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dtgexc(void* wantq, void* wantz, void* n, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* ifst, void* ilst, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_dtgexc_")));
+#else
+void flexiblas_real_dtgexc(void* wantq, void* wantz, void* n, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* ifst, void* ilst, void* work, void* lwork, void* info){flexiblas_real_dtgexc_((void*) wantq, (void*) wantz, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) ifst, (void*) ilst, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dtgexc_(void* wantq, void* wantz, void* n, void* a, void* l
 	}
 	return;
 }
-
-void flexiblas_chain_dtgexc(void* wantq, void* wantz, void* n, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* ifst, void* ilst, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_chain_dtgexc_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dtgexc(void* wantq, void* wantz, void* n, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* ifst, void* ilst, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_dtgexc_")));
+#else
+void flexiblas_chain_dtgexc(void* wantq, void* wantz, void* n, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* ifst, void* ilst, void* work, void* lwork, void* info){flexiblas_chain_dtgexc_((void*) wantq, (void*) wantz, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) ifst, (void*) ilst, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 

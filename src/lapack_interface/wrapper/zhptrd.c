@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zhptrd,ZHPTRD)(char* uplo, blasint* n, double complex* ap, double
 #ifdef FLEXIBLAS_ABI_IBM
 void zhptrd_(char* uplo, blasint* n, double complex* ap, double* d, double* e, double complex* tau, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zhptrd,ZHPTRD)))));
 #else
+#ifndef __APPLE__
 void zhptrd(char* uplo, blasint* n, double complex* ap, double* d, double* e, double complex* tau, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zhptrd,ZHPTRD)))));
+#else
+void zhptrd(char* uplo, blasint* n, double complex* ap, double* d, double* e, double complex* tau, blasint* info){ FC_GLOBAL(zhptrd,ZHPTRD)((void*) uplo, (void*) n, (void*) ap, (void*) d, (void*) e, (void*) tau, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zhptrd_(void* uplo, void* n, void* ap, void* d, void* e, voi
 
 	return;
 }
-
-void flexiblas_real_zhptrd(void* uplo, void* n, void* ap, void* d, void* e, void* tau, void* info)  __attribute__((alias("flexiblas_real_zhptrd_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zhptrd(void* uplo, void* n, void* ap, void* d, void* e, void* tau, void* info) __attribute__((alias("flexiblas_real_zhptrd_")));
+#else
+void flexiblas_real_zhptrd(void* uplo, void* n, void* ap, void* d, void* e, void* tau, void* info){flexiblas_real_zhptrd_((void*) uplo, (void*) n, (void*) ap, (void*) d, (void*) e, (void*) tau, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zhptrd_(void* uplo, void* n, void* ap, void* d, void* e, vo
 	}
 	return;
 }
-
-void flexiblas_chain_zhptrd(void* uplo, void* n, void* ap, void* d, void* e, void* tau, void* info)  __attribute__((alias("flexiblas_chain_zhptrd_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zhptrd(void* uplo, void* n, void* ap, void* d, void* e, void* tau, void* info) __attribute__((alias("flexiblas_chain_zhptrd_")));
+#else
+void flexiblas_chain_zhptrd(void* uplo, void* n, void* ap, void* d, void* e, void* tau, void* info){flexiblas_chain_zhptrd_((void*) uplo, (void*) n, (void*) ap, (void*) d, (void*) e, (void*) tau, (void*) info);}
+#endif
 
 
 

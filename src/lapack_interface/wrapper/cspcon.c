@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(cspcon,CSPCON)(char* uplo, blasint* n, float complex* ap, blasint
 #ifdef FLEXIBLAS_ABI_IBM
 void cspcon_(char* uplo, blasint* n, float complex* ap, blasint* ipiv, float* anorm, float* rcond, float complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cspcon,CSPCON)))));
 #else
+#ifndef __APPLE__
 void cspcon(char* uplo, blasint* n, float complex* ap, blasint* ipiv, float* anorm, float* rcond, float complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cspcon,CSPCON)))));
+#else
+void cspcon(char* uplo, blasint* n, float complex* ap, blasint* ipiv, float* anorm, float* rcond, float complex* work, blasint* info){ FC_GLOBAL(cspcon,CSPCON)((void*) uplo, (void*) n, (void*) ap, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_cspcon_(void* uplo, void* n, void* ap, void* ipiv, void* ano
 
 	return;
 }
-
-void flexiblas_real_cspcon(void* uplo, void* n, void* ap, void* ipiv, void* anorm, void* rcond, void* work, void* info)  __attribute__((alias("flexiblas_real_cspcon_")));
-
+#ifndef __APPLE__
+void flexiblas_real_cspcon(void* uplo, void* n, void* ap, void* ipiv, void* anorm, void* rcond, void* work, void* info) __attribute__((alias("flexiblas_real_cspcon_")));
+#else
+void flexiblas_real_cspcon(void* uplo, void* n, void* ap, void* ipiv, void* anorm, void* rcond, void* work, void* info){flexiblas_real_cspcon_((void*) uplo, (void*) n, (void*) ap, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_cspcon_(void* uplo, void* n, void* ap, void* ipiv, void* an
 	}
 	return;
 }
-
-void flexiblas_chain_cspcon(void* uplo, void* n, void* ap, void* ipiv, void* anorm, void* rcond, void* work, void* info)  __attribute__((alias("flexiblas_chain_cspcon_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_cspcon(void* uplo, void* n, void* ap, void* ipiv, void* anorm, void* rcond, void* work, void* info) __attribute__((alias("flexiblas_chain_cspcon_")));
+#else
+void flexiblas_chain_cspcon(void* uplo, void* n, void* ap, void* ipiv, void* anorm, void* rcond, void* work, void* info){flexiblas_chain_cspcon_((void*) uplo, (void*) n, (void*) ap, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) info);}
+#endif
 
 
 

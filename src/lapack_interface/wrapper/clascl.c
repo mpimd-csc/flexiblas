@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(clascl,CLASCL)(char* type_bn, blasint* kl, blasint* ku, float* cf
 #ifdef FLEXIBLAS_ABI_IBM
 void clascl_(char* type_bn, blasint* kl, blasint* ku, float* cfrom, float* cto, blasint* m, blasint* n, float complex* a, blasint* lda, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(clascl,CLASCL)))));
 #else
+#ifndef __APPLE__
 void clascl(char* type_bn, blasint* kl, blasint* ku, float* cfrom, float* cto, blasint* m, blasint* n, float complex* a, blasint* lda, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(clascl,CLASCL)))));
+#else
+void clascl(char* type_bn, blasint* kl, blasint* ku, float* cfrom, float* cto, blasint* m, blasint* n, float complex* a, blasint* lda, blasint* info){ FC_GLOBAL(clascl,CLASCL)((void*) type_bn, (void*) kl, (void*) ku, (void*) cfrom, (void*) cto, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_clascl_(void* type_bn, void* kl, void* ku, void* cfrom, void
 
 	return;
 }
-
-void flexiblas_real_clascl(void* type_bn, void* kl, void* ku, void* cfrom, void* cto, void* m, void* n, void* a, void* lda, void* info)  __attribute__((alias("flexiblas_real_clascl_")));
-
+#ifndef __APPLE__
+void flexiblas_real_clascl(void* type_bn, void* kl, void* ku, void* cfrom, void* cto, void* m, void* n, void* a, void* lda, void* info) __attribute__((alias("flexiblas_real_clascl_")));
+#else
+void flexiblas_real_clascl(void* type_bn, void* kl, void* ku, void* cfrom, void* cto, void* m, void* n, void* a, void* lda, void* info){flexiblas_real_clascl_((void*) type_bn, (void*) kl, (void*) ku, (void*) cfrom, (void*) cto, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_clascl_(void* type_bn, void* kl, void* ku, void* cfrom, voi
 	}
 	return;
 }
-
-void flexiblas_chain_clascl(void* type_bn, void* kl, void* ku, void* cfrom, void* cto, void* m, void* n, void* a, void* lda, void* info)  __attribute__((alias("flexiblas_chain_clascl_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_clascl(void* type_bn, void* kl, void* ku, void* cfrom, void* cto, void* m, void* n, void* a, void* lda, void* info) __attribute__((alias("flexiblas_chain_clascl_")));
+#else
+void flexiblas_chain_clascl(void* type_bn, void* kl, void* ku, void* cfrom, void* cto, void* m, void* n, void* a, void* lda, void* info){flexiblas_chain_clascl_((void*) type_bn, (void*) kl, (void*) ku, (void*) cfrom, (void*) cto, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) info);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ double FC_GLOBAL(zlantp,ZLANTP)(char* norm, char* uplo, char* diag, blasint* n, 
 #ifdef FLEXIBLAS_ABI_IBM
 double zlantp_(char* norm, char* uplo, char* diag, blasint* n, double complex* ap, double* work) __attribute__((alias(MTS(FC_GLOBAL(zlantp,ZLANTP)))));
 #else
+#ifndef __APPLE__
 double zlantp(char* norm, char* uplo, char* diag, blasint* n, double complex* ap, double* work) __attribute__((alias(MTS(FC_GLOBAL(zlantp,ZLANTP)))));
+#else
+double zlantp(char* norm, char* uplo, char* diag, blasint* n, double complex* ap, double* work){ return FC_GLOBAL(zlantp,ZLANTP)((void*) norm, (void*) uplo, (void*) diag, (void*) n, (void*) ap, (void*) work); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ double flexiblas_real_zlantp_(void* norm, void* uplo, void* diag, void* n, void*
 
 	return ret ;
 }
-
-double flexiblas_real_zlantp(void* norm, void* uplo, void* diag, void* n, void* ap, void* work)  __attribute__((alias("flexiblas_real_zlantp_")));
-
+#ifndef __APPLE__
+double flexiblas_real_zlantp(void* norm, void* uplo, void* diag, void* n, void* ap, void* work) __attribute__((alias("flexiblas_real_zlantp_")));
+#else
+double flexiblas_real_zlantp(void* norm, void* uplo, void* diag, void* n, void* ap, void* work){return flexiblas_real_zlantp_((void*) norm, (void*) uplo, (void*) diag, (void*) n, (void*) ap, (void*) work);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ double flexiblas_chain_zlantp_(void* norm, void* uplo, void* diag, void* n, void
 	}
 	return ret ;
 }
-
-double flexiblas_chain_zlantp(void* norm, void* uplo, void* diag, void* n, void* ap, void* work)  __attribute__((alias("flexiblas_chain_zlantp_")));
-
+#ifndef __APPLE__
+double flexiblas_chain_zlantp(void* norm, void* uplo, void* diag, void* n, void* ap, void* work) __attribute__((alias("flexiblas_chain_zlantp_")));
+#else
+double flexiblas_chain_zlantp(void* norm, void* uplo, void* diag, void* n, void* ap, void* work){return flexiblas_chain_zlantp_((void*) norm, (void*) uplo, (void*) diag, (void*) n, (void*) ap, (void*) work);}
+#endif
 
 
 

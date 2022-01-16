@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(cggsvp,CGGSVP)(char* jobu, char* jobv, char* jobq, blasint* m, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void cggsvp_(char* jobu, char* jobv, char* jobq, blasint* m, blasint* p, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* tola, float* tolb, blasint* k, blasint* l, float complex* u, blasint* ldu, float complex* v, blasint* ldv, float complex* q, blasint* ldq, blasint* iwork, float* rwork, float complex* tau, float complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cggsvp,CGGSVP)))));
 #else
+#ifndef __APPLE__
 void cggsvp(char* jobu, char* jobv, char* jobq, blasint* m, blasint* p, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* tola, float* tolb, blasint* k, blasint* l, float complex* u, blasint* ldu, float complex* v, blasint* ldv, float complex* q, blasint* ldq, blasint* iwork, float* rwork, float complex* tau, float complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cggsvp,CGGSVP)))));
+#else
+void cggsvp(char* jobu, char* jobv, char* jobq, blasint* m, blasint* p, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* tola, float* tolb, blasint* k, blasint* l, float complex* u, blasint* ldu, float complex* v, blasint* ldv, float complex* q, blasint* ldq, blasint* iwork, float* rwork, float complex* tau, float complex* work, blasint* info){ FC_GLOBAL(cggsvp,CGGSVP)((void*) jobu, (void*) jobv, (void*) jobq, (void*) m, (void*) p, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) tola, (void*) tolb, (void*) k, (void*) l, (void*) u, (void*) ldu, (void*) v, (void*) ldv, (void*) q, (void*) ldq, (void*) iwork, (void*) rwork, (void*) tau, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_cggsvp_(void* jobu, void* jobv, void* jobq, void* m, void* p
 
 	return;
 }
-
-void flexiblas_real_cggsvp(void* jobu, void* jobv, void* jobq, void* m, void* p, void* n, void* a, void* lda, void* b, void* ldb, void* tola, void* tolb, void* k, void* l, void* u, void* ldu, void* v, void* ldv, void* q, void* ldq, void* iwork, void* rwork, void* tau, void* work, void* info)  __attribute__((alias("flexiblas_real_cggsvp_")));
-
+#ifndef __APPLE__
+void flexiblas_real_cggsvp(void* jobu, void* jobv, void* jobq, void* m, void* p, void* n, void* a, void* lda, void* b, void* ldb, void* tola, void* tolb, void* k, void* l, void* u, void* ldu, void* v, void* ldv, void* q, void* ldq, void* iwork, void* rwork, void* tau, void* work, void* info) __attribute__((alias("flexiblas_real_cggsvp_")));
+#else
+void flexiblas_real_cggsvp(void* jobu, void* jobv, void* jobq, void* m, void* p, void* n, void* a, void* lda, void* b, void* ldb, void* tola, void* tolb, void* k, void* l, void* u, void* ldu, void* v, void* ldv, void* q, void* ldq, void* iwork, void* rwork, void* tau, void* work, void* info){flexiblas_real_cggsvp_((void*) jobu, (void*) jobv, (void*) jobq, (void*) m, (void*) p, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) tola, (void*) tolb, (void*) k, (void*) l, (void*) u, (void*) ldu, (void*) v, (void*) ldv, (void*) q, (void*) ldq, (void*) iwork, (void*) rwork, (void*) tau, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_cggsvp_(void* jobu, void* jobv, void* jobq, void* m, void* 
 	}
 	return;
 }
-
-void flexiblas_chain_cggsvp(void* jobu, void* jobv, void* jobq, void* m, void* p, void* n, void* a, void* lda, void* b, void* ldb, void* tola, void* tolb, void* k, void* l, void* u, void* ldu, void* v, void* ldv, void* q, void* ldq, void* iwork, void* rwork, void* tau, void* work, void* info)  __attribute__((alias("flexiblas_chain_cggsvp_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_cggsvp(void* jobu, void* jobv, void* jobq, void* m, void* p, void* n, void* a, void* lda, void* b, void* ldb, void* tola, void* tolb, void* k, void* l, void* u, void* ldu, void* v, void* ldv, void* q, void* ldq, void* iwork, void* rwork, void* tau, void* work, void* info) __attribute__((alias("flexiblas_chain_cggsvp_")));
+#else
+void flexiblas_chain_cggsvp(void* jobu, void* jobv, void* jobq, void* m, void* p, void* n, void* a, void* lda, void* b, void* ldb, void* tola, void* tolb, void* k, void* l, void* u, void* ldu, void* v, void* ldv, void* q, void* ldq, void* iwork, void* rwork, void* tau, void* work, void* info){flexiblas_chain_cggsvp_((void*) jobu, (void*) jobv, (void*) jobq, (void*) m, (void*) p, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) tola, (void*) tolb, (void*) k, (void*) l, (void*) u, (void*) ldu, (void*) v, (void*) ldv, (void*) q, (void*) ldq, (void*) iwork, (void*) rwork, (void*) tau, (void*) work, (void*) info);}
+#endif
 
 
 

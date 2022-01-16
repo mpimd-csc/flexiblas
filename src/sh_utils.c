@@ -39,22 +39,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
 
 
-#if defined(__linux__) 
+#if defined(__linux__)
 #ifndef _DEFAULT_SOURCE
 #define _DEFAULT_SOURCE
 #endif
 #ifndef _XOPEN_SOURCE
 #define _XOPEN_SOURCE 500
 #endif
-#elif defined(__FreeBSD__) 
-#ifndef _POSIX_C_SOURCE 
-#define _POSIX_C_SOURCE 200809L 
-#endif 
-#endif 
+#elif defined(__FreeBSD__)
+#ifndef _POSIX_C_SOURCE
+#define _POSIX_C_SOURCE 200809L
+#endif
+#endif
 
 #include "flexiblas.h"
 #include <ctype.h>
@@ -67,6 +67,7 @@
 #define DLOPEN_FLAGS (0)
 #include <windows.h>
 #endif
+
 
 /*-----------------------------------------------------------------------------
  *  Return true if it is an absolute path.
@@ -207,9 +208,15 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
 		void * ld_flags_sym_deep = NULL;
 		int32_t ld_flags_deep = 0 ;
 #endif
+        /* flags = RTLD_GLOBAL | RTLD_NOW; */
+
 		if ( flags < 0 ) {
 			dlerror();
-			handle = dlopen(filepath, RTLD_LAZY | RTLD_LOCAL);
+#ifdef HAVE_RTLD_NODELETE
+			handle = dlopen(filepath, RTLD_LAZY | RTLD_LOCAL | RTLD_NODELETE);
+#else
+    		handle = dlopen(filepath, RTLD_LAZY | RTLD_LOCAL );
+#endif
 			if (!handle) {
 				DPRINTF_ERROR(0, "Failed to load %s - error: %s \n", filepath, dlerror());
 				if ( filepath) free(filepath);

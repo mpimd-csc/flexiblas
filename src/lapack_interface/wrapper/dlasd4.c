@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlasd4,DLASD4)(blasint* n, blasint* i, double* d, double* z, doub
 #ifdef FLEXIBLAS_ABI_IBM
 void dlasd4_(blasint* n, blasint* i, double* d, double* z, double* delta, double* rho, double* sigma, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlasd4,DLASD4)))));
 #else
+#ifndef __APPLE__
 void dlasd4(blasint* n, blasint* i, double* d, double* z, double* delta, double* rho, double* sigma, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlasd4,DLASD4)))));
+#else
+void dlasd4(blasint* n, blasint* i, double* d, double* z, double* delta, double* rho, double* sigma, double* work, blasint* info){ FC_GLOBAL(dlasd4,DLASD4)((void*) n, (void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) sigma, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlasd4_(void* n, void* i, void* d, void* z, void* delta, voi
 
 	return;
 }
-
-void flexiblas_real_dlasd4(void* n, void* i, void* d, void* z, void* delta, void* rho, void* sigma, void* work, void* info)  __attribute__((alias("flexiblas_real_dlasd4_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlasd4(void* n, void* i, void* d, void* z, void* delta, void* rho, void* sigma, void* work, void* info) __attribute__((alias("flexiblas_real_dlasd4_")));
+#else
+void flexiblas_real_dlasd4(void* n, void* i, void* d, void* z, void* delta, void* rho, void* sigma, void* work, void* info){flexiblas_real_dlasd4_((void*) n, (void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) sigma, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlasd4_(void* n, void* i, void* d, void* z, void* delta, vo
 	}
 	return;
 }
-
-void flexiblas_chain_dlasd4(void* n, void* i, void* d, void* z, void* delta, void* rho, void* sigma, void* work, void* info)  __attribute__((alias("flexiblas_chain_dlasd4_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlasd4(void* n, void* i, void* d, void* z, void* delta, void* rho, void* sigma, void* work, void* info) __attribute__((alias("flexiblas_chain_dlasd4_")));
+#else
+void flexiblas_chain_dlasd4(void* n, void* i, void* d, void* z, void* delta, void* rho, void* sigma, void* work, void* info){flexiblas_chain_dlasd4_((void*) n, (void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) sigma, (void*) work, (void*) info);}
+#endif
 
 
 

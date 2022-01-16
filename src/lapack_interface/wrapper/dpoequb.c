@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dpoequb,DPOEQUB)(blasint* n, double* a, blasint* lda, double* s, 
 #ifdef FLEXIBLAS_ABI_IBM
 void dpoequb_(blasint* n, double* a, blasint* lda, double* s, double* scond, double* amax, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dpoequb,DPOEQUB)))));
 #else
+#ifndef __APPLE__
 void dpoequb(blasint* n, double* a, blasint* lda, double* s, double* scond, double* amax, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dpoequb,DPOEQUB)))));
+#else
+void dpoequb(blasint* n, double* a, blasint* lda, double* s, double* scond, double* amax, blasint* info){ FC_GLOBAL(dpoequb,DPOEQUB)((void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dpoequb_(void* n, void* a, void* lda, void* s, void* scond, 
 
 	return;
 }
-
-void flexiblas_real_dpoequb(void* n, void* a, void* lda, void* s, void* scond, void* amax, void* info)  __attribute__((alias("flexiblas_real_dpoequb_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dpoequb(void* n, void* a, void* lda, void* s, void* scond, void* amax, void* info) __attribute__((alias("flexiblas_real_dpoequb_")));
+#else
+void flexiblas_real_dpoequb(void* n, void* a, void* lda, void* s, void* scond, void* amax, void* info){flexiblas_real_dpoequb_((void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dpoequb_(void* n, void* a, void* lda, void* s, void* scond,
 	}
 	return;
 }
-
-void flexiblas_chain_dpoequb(void* n, void* a, void* lda, void* s, void* scond, void* amax, void* info)  __attribute__((alias("flexiblas_chain_dpoequb_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dpoequb(void* n, void* a, void* lda, void* s, void* scond, void* amax, void* info) __attribute__((alias("flexiblas_chain_dpoequb_")));
+#else
+void flexiblas_chain_dpoequb(void* n, void* a, void* lda, void* s, void* scond, void* amax, void* info){flexiblas_chain_dpoequb_((void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) info);}
+#endif
 
 
 

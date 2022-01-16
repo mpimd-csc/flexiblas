@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL_(ssytrd_sy2sb,SSYTRD_SY2SB)(char* uplo, blasint* n, blasint* kd, 
 #ifdef FLEXIBLAS_ABI_IBM
 void ssytrd_sy2sb_(char* uplo, blasint* n, blasint* kd, float* a, blasint* lda, float* ab, blasint* ldab, float* tau, float* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL_(ssytrd_sy2sb,SSYTRD_SY2SB)))));
 #else
+#ifndef __APPLE__
 void ssytrd_sy2sb(char* uplo, blasint* n, blasint* kd, float* a, blasint* lda, float* ab, blasint* ldab, float* tau, float* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL_(ssytrd_sy2sb,SSYTRD_SY2SB)))));
+#else
+void ssytrd_sy2sb(char* uplo, blasint* n, blasint* kd, float* a, blasint* lda, float* ab, blasint* ldab, float* tau, float* work, blasint* lwork, blasint* info){ FC_GLOBAL_(ssytrd_sy2sb,SSYTRD_SY2SB)((void*) uplo, (void*) n, (void*) kd, (void*) a, (void*) lda, (void*) ab, (void*) ldab, (void*) tau, (void*) work, (void*) lwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_ssytrd_sy2sb_(void* uplo, void* n, void* kd, void* a, void* 
 
 	return;
 }
-
-void flexiblas_real_ssytrd_sy2sb(void* uplo, void* n, void* kd, void* a, void* lda, void* ab, void* ldab, void* tau, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_real_ssytrd_sy2sb_")));
-
+#ifndef __APPLE__
+void flexiblas_real_ssytrd_sy2sb(void* uplo, void* n, void* kd, void* a, void* lda, void* ab, void* ldab, void* tau, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_ssytrd_sy2sb_")));
+#else
+void flexiblas_real_ssytrd_sy2sb(void* uplo, void* n, void* kd, void* a, void* lda, void* ab, void* ldab, void* tau, void* work, void* lwork, void* info){flexiblas_real_ssytrd_sy2sb_((void*) uplo, (void*) n, (void*) kd, (void*) a, (void*) lda, (void*) ab, (void*) ldab, (void*) tau, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_ssytrd_sy2sb_(void* uplo, void* n, void* kd, void* a, void*
 	}
 	return;
 }
-
-void flexiblas_chain_ssytrd_sy2sb(void* uplo, void* n, void* kd, void* a, void* lda, void* ab, void* ldab, void* tau, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_chain_ssytrd_sy2sb_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_ssytrd_sy2sb(void* uplo, void* n, void* kd, void* a, void* lda, void* ab, void* ldab, void* tau, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_ssytrd_sy2sb_")));
+#else
+void flexiblas_chain_ssytrd_sy2sb(void* uplo, void* n, void* kd, void* a, void* lda, void* ab, void* ldab, void* tau, void* work, void* lwork, void* info){flexiblas_chain_ssytrd_sy2sb_((void*) uplo, (void*) n, (void*) kd, (void*) a, (void*) lda, (void*) ab, (void*) ldab, (void*) tau, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 

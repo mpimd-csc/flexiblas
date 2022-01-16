@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(clapll,CLAPLL)(blasint* n, float complex* x, blasint* incx, float
 #ifdef FLEXIBLAS_ABI_IBM
 void clapll_(blasint* n, float complex* x, blasint* incx, float complex* y, blasint* incy, float* ssmin) __attribute__((alias(MTS(FC_GLOBAL(clapll,CLAPLL)))));
 #else
+#ifndef __APPLE__
 void clapll(blasint* n, float complex* x, blasint* incx, float complex* y, blasint* incy, float* ssmin) __attribute__((alias(MTS(FC_GLOBAL(clapll,CLAPLL)))));
+#else
+void clapll(blasint* n, float complex* x, blasint* incx, float complex* y, blasint* incy, float* ssmin){ FC_GLOBAL(clapll,CLAPLL)((void*) n, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ssmin); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_clapll_(void* n, void* x, void* incx, void* y, void* incy, v
 
 	return;
 }
-
-void flexiblas_real_clapll(void* n, void* x, void* incx, void* y, void* incy, void* ssmin)  __attribute__((alias("flexiblas_real_clapll_")));
-
+#ifndef __APPLE__
+void flexiblas_real_clapll(void* n, void* x, void* incx, void* y, void* incy, void* ssmin) __attribute__((alias("flexiblas_real_clapll_")));
+#else
+void flexiblas_real_clapll(void* n, void* x, void* incx, void* y, void* incy, void* ssmin){flexiblas_real_clapll_((void*) n, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ssmin);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_clapll_(void* n, void* x, void* incx, void* y, void* incy, 
 	}
 	return;
 }
-
-void flexiblas_chain_clapll(void* n, void* x, void* incx, void* y, void* incy, void* ssmin)  __attribute__((alias("flexiblas_chain_clapll_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_clapll(void* n, void* x, void* incx, void* y, void* incy, void* ssmin) __attribute__((alias("flexiblas_chain_clapll_")));
+#else
+void flexiblas_chain_clapll(void* n, void* x, void* incx, void* y, void* incy, void* ssmin){flexiblas_chain_clapll_((void*) n, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ssmin);}
+#endif
 
 
 

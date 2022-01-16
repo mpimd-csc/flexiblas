@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ int FC_GLOBAL(slaneg,SLANEG)(blasint* n, float* d, float* lld, float* sigma, flo
 #ifdef FLEXIBLAS_ABI_IBM
 int slaneg_(blasint* n, float* d, float* lld, float* sigma, float* pivmin, blasint* r) __attribute__((alias(MTS(FC_GLOBAL(slaneg,SLANEG)))));
 #else
+#ifndef __APPLE__
 int slaneg(blasint* n, float* d, float* lld, float* sigma, float* pivmin, blasint* r) __attribute__((alias(MTS(FC_GLOBAL(slaneg,SLANEG)))));
+#else
+int slaneg(blasint* n, float* d, float* lld, float* sigma, float* pivmin, blasint* r){ return FC_GLOBAL(slaneg,SLANEG)((void*) n, (void*) d, (void*) lld, (void*) sigma, (void*) pivmin, (void*) r); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ blasint flexiblas_real_slaneg_(void* n, void* d, void* lld, void* sigma, void* p
 
 	return ret ;
 }
-
-blasint flexiblas_real_slaneg(void* n, void* d, void* lld, void* sigma, void* pivmin, void* r)  __attribute__((alias("flexiblas_real_slaneg_")));
-
+#ifndef __APPLE__
+blasint flexiblas_real_slaneg(void* n, void* d, void* lld, void* sigma, void* pivmin, void* r) __attribute__((alias("flexiblas_real_slaneg_")));
+#else
+blasint flexiblas_real_slaneg(void* n, void* d, void* lld, void* sigma, void* pivmin, void* r){return flexiblas_real_slaneg_((void*) n, (void*) d, (void*) lld, (void*) sigma, (void*) pivmin, (void*) r);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ blasint flexiblas_chain_slaneg_(void* n, void* d, void* lld, void* sigma, void* 
 	}
 	return ret ;
 }
-
-blasint flexiblas_chain_slaneg(void* n, void* d, void* lld, void* sigma, void* pivmin, void* r)  __attribute__((alias("flexiblas_chain_slaneg_")));
-
+#ifndef __APPLE__
+blasint flexiblas_chain_slaneg(void* n, void* d, void* lld, void* sigma, void* pivmin, void* r) __attribute__((alias("flexiblas_chain_slaneg_")));
+#else
+blasint flexiblas_chain_slaneg(void* n, void* d, void* lld, void* sigma, void* pivmin, void* r){return flexiblas_chain_slaneg_((void*) n, (void*) d, (void*) lld, (void*) sigma, (void*) pivmin, (void*) r);}
+#endif
 
 
 

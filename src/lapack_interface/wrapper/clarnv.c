@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(clarnv,CLARNV)(blasint* idist, blasint* iseed, blasint* n, float 
 #ifdef FLEXIBLAS_ABI_IBM
 void clarnv_(blasint* idist, blasint* iseed, blasint* n, float complex* x) __attribute__((alias(MTS(FC_GLOBAL(clarnv,CLARNV)))));
 #else
+#ifndef __APPLE__
 void clarnv(blasint* idist, blasint* iseed, blasint* n, float complex* x) __attribute__((alias(MTS(FC_GLOBAL(clarnv,CLARNV)))));
+#else
+void clarnv(blasint* idist, blasint* iseed, blasint* n, float complex* x){ FC_GLOBAL(clarnv,CLARNV)((void*) idist, (void*) iseed, (void*) n, (void*) x); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_clarnv_(void* idist, void* iseed, void* n, void* x)
 
 	return;
 }
-
-void flexiblas_real_clarnv(void* idist, void* iseed, void* n, void* x)  __attribute__((alias("flexiblas_real_clarnv_")));
-
+#ifndef __APPLE__
+void flexiblas_real_clarnv(void* idist, void* iseed, void* n, void* x) __attribute__((alias("flexiblas_real_clarnv_")));
+#else
+void flexiblas_real_clarnv(void* idist, void* iseed, void* n, void* x){flexiblas_real_clarnv_((void*) idist, (void*) iseed, (void*) n, (void*) x);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_clarnv_(void* idist, void* iseed, void* n, void* x)
 	}
 	return;
 }
-
-void flexiblas_chain_clarnv(void* idist, void* iseed, void* n, void* x)  __attribute__((alias("flexiblas_chain_clarnv_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_clarnv(void* idist, void* iseed, void* n, void* x) __attribute__((alias("flexiblas_chain_clarnv_")));
+#else
+void flexiblas_chain_clarnv(void* idist, void* iseed, void* n, void* x){flexiblas_chain_clarnv_((void*) idist, (void*) iseed, (void*) n, (void*) x);}
+#endif
 
 
 

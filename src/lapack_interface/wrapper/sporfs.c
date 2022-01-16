@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(sporfs,SPORFS)(char* uplo, blasint* n, blasint* nrhs, float* a, b
 #ifdef FLEXIBLAS_ABI_IBM
 void sporfs_(char* uplo, blasint* n, blasint* nrhs, float* a, blasint* lda, float* af, blasint* ldaf, float* b, blasint* ldb, float* x, blasint* ldx, float* ferr, float* berr, float* work, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sporfs,SPORFS)))));
 #else
+#ifndef __APPLE__
 void sporfs(char* uplo, blasint* n, blasint* nrhs, float* a, blasint* lda, float* af, blasint* ldaf, float* b, blasint* ldb, float* x, blasint* ldx, float* ferr, float* berr, float* work, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sporfs,SPORFS)))));
+#else
+void sporfs(char* uplo, blasint* n, blasint* nrhs, float* a, blasint* lda, float* af, blasint* ldaf, float* b, blasint* ldb, float* x, blasint* ldx, float* ferr, float* berr, float* work, blasint* iwork, blasint* info){ FC_GLOBAL(sporfs,SPORFS)((void*) uplo, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) af, (void*) ldaf, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) iwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_sporfs_(void* uplo, void* n, void* nrhs, void* a, void* lda,
 
 	return;
 }
-
-void flexiblas_real_sporfs(void* uplo, void* n, void* nrhs, void* a, void* lda, void* af, void* ldaf, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* iwork, void* info)  __attribute__((alias("flexiblas_real_sporfs_")));
-
+#ifndef __APPLE__
+void flexiblas_real_sporfs(void* uplo, void* n, void* nrhs, void* a, void* lda, void* af, void* ldaf, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* iwork, void* info) __attribute__((alias("flexiblas_real_sporfs_")));
+#else
+void flexiblas_real_sporfs(void* uplo, void* n, void* nrhs, void* a, void* lda, void* af, void* ldaf, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* iwork, void* info){flexiblas_real_sporfs_((void*) uplo, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) af, (void*) ldaf, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) iwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_sporfs_(void* uplo, void* n, void* nrhs, void* a, void* lda
 	}
 	return;
 }
-
-void flexiblas_chain_sporfs(void* uplo, void* n, void* nrhs, void* a, void* lda, void* af, void* ldaf, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* iwork, void* info)  __attribute__((alias("flexiblas_chain_sporfs_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_sporfs(void* uplo, void* n, void* nrhs, void* a, void* lda, void* af, void* ldaf, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* iwork, void* info) __attribute__((alias("flexiblas_chain_sporfs_")));
+#else
+void flexiblas_chain_sporfs(void* uplo, void* n, void* nrhs, void* a, void* lda, void* af, void* ldaf, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* iwork, void* info){flexiblas_chain_sporfs_((void*) uplo, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) af, (void*) ldaf, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) iwork, (void*) info);}
+#endif
 
 
 

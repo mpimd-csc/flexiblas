@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dtpqrt2,DTPQRT2)(blasint* m, blasint* n, blasint* l, double* a, b
 #ifdef FLEXIBLAS_ABI_IBM
 void dtpqrt2_(blasint* m, blasint* n, blasint* l, double* a, blasint* lda, double* b, blasint* ldb, double* t, blasint* ldt, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dtpqrt2,DTPQRT2)))));
 #else
+#ifndef __APPLE__
 void dtpqrt2(blasint* m, blasint* n, blasint* l, double* a, blasint* lda, double* b, blasint* ldb, double* t, blasint* ldt, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dtpqrt2,DTPQRT2)))));
+#else
+void dtpqrt2(blasint* m, blasint* n, blasint* l, double* a, blasint* lda, double* b, blasint* ldb, double* t, blasint* ldt, blasint* info){ FC_GLOBAL(dtpqrt2,DTPQRT2)((void*) m, (void*) n, (void*) l, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) t, (void*) ldt, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dtpqrt2_(void* m, void* n, void* l, void* a, void* lda, void
 
 	return;
 }
-
-void flexiblas_real_dtpqrt2(void* m, void* n, void* l, void* a, void* lda, void* b, void* ldb, void* t, void* ldt, void* info)  __attribute__((alias("flexiblas_real_dtpqrt2_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dtpqrt2(void* m, void* n, void* l, void* a, void* lda, void* b, void* ldb, void* t, void* ldt, void* info) __attribute__((alias("flexiblas_real_dtpqrt2_")));
+#else
+void flexiblas_real_dtpqrt2(void* m, void* n, void* l, void* a, void* lda, void* b, void* ldb, void* t, void* ldt, void* info){flexiblas_real_dtpqrt2_((void*) m, (void*) n, (void*) l, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) t, (void*) ldt, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dtpqrt2_(void* m, void* n, void* l, void* a, void* lda, voi
 	}
 	return;
 }
-
-void flexiblas_chain_dtpqrt2(void* m, void* n, void* l, void* a, void* lda, void* b, void* ldb, void* t, void* ldt, void* info)  __attribute__((alias("flexiblas_chain_dtpqrt2_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dtpqrt2(void* m, void* n, void* l, void* a, void* lda, void* b, void* ldb, void* t, void* ldt, void* info) __attribute__((alias("flexiblas_chain_dtpqrt2_")));
+#else
+void flexiblas_chain_dtpqrt2(void* m, void* n, void* l, void* a, void* lda, void* b, void* ldb, void* t, void* ldt, void* info){flexiblas_chain_dtpqrt2_((void*) m, (void*) n, (void*) l, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) t, (void*) ldt, (void*) info);}
+#endif
 
 
 

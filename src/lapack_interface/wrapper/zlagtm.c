@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zlagtm,ZLAGTM)(char* trans, blasint* n, blasint* nrhs, double* al
 #ifdef FLEXIBLAS_ABI_IBM
 void zlagtm_(char* trans, blasint* n, blasint* nrhs, double* alpha, double complex* dl, double complex* d, double complex* du, double complex* x, blasint* ldx, double* beta, double complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(zlagtm,ZLAGTM)))));
 #else
+#ifndef __APPLE__
 void zlagtm(char* trans, blasint* n, blasint* nrhs, double* alpha, double complex* dl, double complex* d, double complex* du, double complex* x, blasint* ldx, double* beta, double complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(zlagtm,ZLAGTM)))));
+#else
+void zlagtm(char* trans, blasint* n, blasint* nrhs, double* alpha, double complex* dl, double complex* d, double complex* du, double complex* x, blasint* ldx, double* beta, double complex* b, blasint* ldb){ FC_GLOBAL(zlagtm,ZLAGTM)((void*) trans, (void*) n, (void*) nrhs, (void*) alpha, (void*) dl, (void*) d, (void*) du, (void*) x, (void*) ldx, (void*) beta, (void*) b, (void*) ldb); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zlagtm_(void* trans, void* n, void* nrhs, void* alpha, void*
 
 	return;
 }
-
-void flexiblas_real_zlagtm(void* trans, void* n, void* nrhs, void* alpha, void* dl, void* d, void* du, void* x, void* ldx, void* beta, void* b, void* ldb)  __attribute__((alias("flexiblas_real_zlagtm_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zlagtm(void* trans, void* n, void* nrhs, void* alpha, void* dl, void* d, void* du, void* x, void* ldx, void* beta, void* b, void* ldb) __attribute__((alias("flexiblas_real_zlagtm_")));
+#else
+void flexiblas_real_zlagtm(void* trans, void* n, void* nrhs, void* alpha, void* dl, void* d, void* du, void* x, void* ldx, void* beta, void* b, void* ldb){flexiblas_real_zlagtm_((void*) trans, (void*) n, (void*) nrhs, (void*) alpha, (void*) dl, (void*) d, (void*) du, (void*) x, (void*) ldx, (void*) beta, (void*) b, (void*) ldb);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zlagtm_(void* trans, void* n, void* nrhs, void* alpha, void
 	}
 	return;
 }
-
-void flexiblas_chain_zlagtm(void* trans, void* n, void* nrhs, void* alpha, void* dl, void* d, void* du, void* x, void* ldx, void* beta, void* b, void* ldb)  __attribute__((alias("flexiblas_chain_zlagtm_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zlagtm(void* trans, void* n, void* nrhs, void* alpha, void* dl, void* d, void* du, void* x, void* ldx, void* beta, void* b, void* ldb) __attribute__((alias("flexiblas_chain_zlagtm_")));
+#else
+void flexiblas_chain_zlagtm(void* trans, void* n, void* nrhs, void* alpha, void* dl, void* d, void* du, void* x, void* ldx, void* beta, void* b, void* ldb){flexiblas_chain_zlagtm_((void*) trans, (void*) n, (void*) nrhs, (void*) alpha, (void*) dl, (void*) d, (void*) du, (void*) x, (void*) ldx, (void*) beta, (void*) b, (void*) ldb);}
+#endif
 
 
 

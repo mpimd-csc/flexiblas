@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ int FC_GLOBAL(iladiag,ILADIAG)(char* diag)
 #ifdef FLEXIBLAS_ABI_IBM
 int iladiag_(char* diag) __attribute__((alias(MTS(FC_GLOBAL(iladiag,ILADIAG)))));
 #else
+#ifndef __APPLE__
 int iladiag(char* diag) __attribute__((alias(MTS(FC_GLOBAL(iladiag,ILADIAG)))));
+#else
+int iladiag(char* diag){ return FC_GLOBAL(iladiag,ILADIAG)((void*) diag); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ blasint flexiblas_real_iladiag_(void* diag)
 
 	return ret ;
 }
-
-blasint flexiblas_real_iladiag(void* diag)  __attribute__((alias("flexiblas_real_iladiag_")));
-
+#ifndef __APPLE__
+blasint flexiblas_real_iladiag(void* diag) __attribute__((alias("flexiblas_real_iladiag_")));
+#else
+blasint flexiblas_real_iladiag(void* diag){return flexiblas_real_iladiag_((void*) diag);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ blasint flexiblas_chain_iladiag_(void* diag)
 	}
 	return ret ;
 }
-
-blasint flexiblas_chain_iladiag(void* diag)  __attribute__((alias("flexiblas_chain_iladiag_")));
-
+#ifndef __APPLE__
+blasint flexiblas_chain_iladiag(void* diag) __attribute__((alias("flexiblas_chain_iladiag_")));
+#else
+blasint flexiblas_chain_iladiag(void* diag){return flexiblas_chain_iladiag_((void*) diag);}
+#endif
 
 
 

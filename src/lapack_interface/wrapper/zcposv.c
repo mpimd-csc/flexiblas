@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zcposv,ZCPOSV)(char* uplo, blasint* n, blasint* nrhs, double comp
 #ifdef FLEXIBLAS_ABI_IBM
 void zcposv_(char* uplo, blasint* n, blasint* nrhs, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double complex* work, float complex* swork, double* rwork, blasint* iter, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zcposv,ZCPOSV)))));
 #else
+#ifndef __APPLE__
 void zcposv(char* uplo, blasint* n, blasint* nrhs, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double complex* work, float complex* swork, double* rwork, blasint* iter, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zcposv,ZCPOSV)))));
+#else
+void zcposv(char* uplo, blasint* n, blasint* nrhs, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double complex* work, float complex* swork, double* rwork, blasint* iter, blasint* info){ FC_GLOBAL(zcposv,ZCPOSV)((void*) uplo, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) work, (void*) swork, (void*) rwork, (void*) iter, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zcposv_(void* uplo, void* n, void* nrhs, void* a, void* lda,
 
 	return;
 }
-
-void flexiblas_real_zcposv(void* uplo, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* x, void* ldx, void* work, void* swork, void* rwork, void* iter, void* info)  __attribute__((alias("flexiblas_real_zcposv_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zcposv(void* uplo, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* x, void* ldx, void* work, void* swork, void* rwork, void* iter, void* info) __attribute__((alias("flexiblas_real_zcposv_")));
+#else
+void flexiblas_real_zcposv(void* uplo, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* x, void* ldx, void* work, void* swork, void* rwork, void* iter, void* info){flexiblas_real_zcposv_((void*) uplo, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) work, (void*) swork, (void*) rwork, (void*) iter, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zcposv_(void* uplo, void* n, void* nrhs, void* a, void* lda
 	}
 	return;
 }
-
-void flexiblas_chain_zcposv(void* uplo, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* x, void* ldx, void* work, void* swork, void* rwork, void* iter, void* info)  __attribute__((alias("flexiblas_chain_zcposv_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zcposv(void* uplo, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* x, void* ldx, void* work, void* swork, void* rwork, void* iter, void* info) __attribute__((alias("flexiblas_chain_zcposv_")));
+#else
+void flexiblas_chain_zcposv(void* uplo, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* x, void* ldx, void* work, void* swork, void* rwork, void* iter, void* info){flexiblas_chain_zcposv_((void*) uplo, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) work, (void*) swork, (void*) rwork, (void*) iter, (void*) info);}
+#endif
 
 
 

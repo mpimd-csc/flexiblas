@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(stfttp,STFTTP)(char* transr, char* uplo, blasint* n, float* arf, 
 #ifdef FLEXIBLAS_ABI_IBM
 void stfttp_(char* transr, char* uplo, blasint* n, float* arf, float* ap, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(stfttp,STFTTP)))));
 #else
+#ifndef __APPLE__
 void stfttp(char* transr, char* uplo, blasint* n, float* arf, float* ap, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(stfttp,STFTTP)))));
+#else
+void stfttp(char* transr, char* uplo, blasint* n, float* arf, float* ap, blasint* info){ FC_GLOBAL(stfttp,STFTTP)((void*) transr, (void*) uplo, (void*) n, (void*) arf, (void*) ap, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_stfttp_(void* transr, void* uplo, void* n, void* arf, void* 
 
 	return;
 }
-
-void flexiblas_real_stfttp(void* transr, void* uplo, void* n, void* arf, void* ap, void* info)  __attribute__((alias("flexiblas_real_stfttp_")));
-
+#ifndef __APPLE__
+void flexiblas_real_stfttp(void* transr, void* uplo, void* n, void* arf, void* ap, void* info) __attribute__((alias("flexiblas_real_stfttp_")));
+#else
+void flexiblas_real_stfttp(void* transr, void* uplo, void* n, void* arf, void* ap, void* info){flexiblas_real_stfttp_((void*) transr, (void*) uplo, (void*) n, (void*) arf, (void*) ap, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_stfttp_(void* transr, void* uplo, void* n, void* arf, void*
 	}
 	return;
 }
-
-void flexiblas_chain_stfttp(void* transr, void* uplo, void* n, void* arf, void* ap, void* info)  __attribute__((alias("flexiblas_chain_stfttp_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_stfttp(void* transr, void* uplo, void* n, void* arf, void* ap, void* info) __attribute__((alias("flexiblas_chain_stfttp_")));
+#else
+void flexiblas_chain_stfttp(void* transr, void* uplo, void* n, void* arf, void* ap, void* info){flexiblas_chain_stfttp_((void*) transr, (void*) uplo, (void*) n, (void*) arf, (void*) ap, (void*) info);}
+#endif
 
 
 

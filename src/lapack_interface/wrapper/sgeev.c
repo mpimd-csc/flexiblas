@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(sgeev,SGEEV)(char* jobvl, char* jobvr, blasint* n, float* a, blas
 #ifdef FLEXIBLAS_ABI_IBM
 void sgeev_(char* jobvl, char* jobvr, blasint* n, float* a, blasint* lda, float* wr, float* wi, float* vl, blasint* ldvl, float* vr, blasint* ldvr, float* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sgeev,SGEEV)))));
 #else
+#ifndef __APPLE__
 void sgeev(char* jobvl, char* jobvr, blasint* n, float* a, blasint* lda, float* wr, float* wi, float* vl, blasint* ldvl, float* vr, blasint* ldvr, float* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sgeev,SGEEV)))));
+#else
+void sgeev(char* jobvl, char* jobvr, blasint* n, float* a, blasint* lda, float* wr, float* wi, float* vl, blasint* ldvl, float* vr, blasint* ldvr, float* work, blasint* lwork, blasint* info){ FC_GLOBAL(sgeev,SGEEV)((void*) jobvl, (void*) jobvr, (void*) n, (void*) a, (void*) lda, (void*) wr, (void*) wi, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) work, (void*) lwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_sgeev_(void* jobvl, void* jobvr, void* n, void* a, void* lda
 
 	return;
 }
-
-void flexiblas_real_sgeev(void* jobvl, void* jobvr, void* n, void* a, void* lda, void* wr, void* wi, void* vl, void* ldvl, void* vr, void* ldvr, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_real_sgeev_")));
-
+#ifndef __APPLE__
+void flexiblas_real_sgeev(void* jobvl, void* jobvr, void* n, void* a, void* lda, void* wr, void* wi, void* vl, void* ldvl, void* vr, void* ldvr, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_sgeev_")));
+#else
+void flexiblas_real_sgeev(void* jobvl, void* jobvr, void* n, void* a, void* lda, void* wr, void* wi, void* vl, void* ldvl, void* vr, void* ldvr, void* work, void* lwork, void* info){flexiblas_real_sgeev_((void*) jobvl, (void*) jobvr, (void*) n, (void*) a, (void*) lda, (void*) wr, (void*) wi, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_sgeev_(void* jobvl, void* jobvr, void* n, void* a, void* ld
 	}
 	return;
 }
-
-void flexiblas_chain_sgeev(void* jobvl, void* jobvr, void* n, void* a, void* lda, void* wr, void* wi, void* vl, void* ldvl, void* vr, void* ldvr, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_chain_sgeev_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_sgeev(void* jobvl, void* jobvr, void* n, void* a, void* lda, void* wr, void* wi, void* vl, void* ldvl, void* vr, void* ldvr, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_sgeev_")));
+#else
+void flexiblas_chain_sgeev(void* jobvl, void* jobvr, void* n, void* a, void* lda, void* wr, void* wi, void* vl, void* ldvl, void* vr, void* ldvr, void* work, void* lwork, void* info){flexiblas_chain_sgeev_((void*) jobvl, (void*) jobvr, (void*) n, (void*) a, (void*) lda, (void*) wr, (void*) wi, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zppcon,ZPPCON)(char* uplo, blasint* n, double complex* ap, double
 #ifdef FLEXIBLAS_ABI_IBM
 void zppcon_(char* uplo, blasint* n, double complex* ap, double* anorm, double* rcond, double complex* work, double* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zppcon,ZPPCON)))));
 #else
+#ifndef __APPLE__
 void zppcon(char* uplo, blasint* n, double complex* ap, double* anorm, double* rcond, double complex* work, double* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zppcon,ZPPCON)))));
+#else
+void zppcon(char* uplo, blasint* n, double complex* ap, double* anorm, double* rcond, double complex* work, double* rwork, blasint* info){ FC_GLOBAL(zppcon,ZPPCON)((void*) uplo, (void*) n, (void*) ap, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zppcon_(void* uplo, void* n, void* ap, void* anorm, void* rc
 
 	return;
 }
-
-void flexiblas_real_zppcon(void* uplo, void* n, void* ap, void* anorm, void* rcond, void* work, void* rwork, void* info)  __attribute__((alias("flexiblas_real_zppcon_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zppcon(void* uplo, void* n, void* ap, void* anorm, void* rcond, void* work, void* rwork, void* info) __attribute__((alias("flexiblas_real_zppcon_")));
+#else
+void flexiblas_real_zppcon(void* uplo, void* n, void* ap, void* anorm, void* rcond, void* work, void* rwork, void* info){flexiblas_real_zppcon_((void*) uplo, (void*) n, (void*) ap, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zppcon_(void* uplo, void* n, void* ap, void* anorm, void* r
 	}
 	return;
 }
-
-void flexiblas_chain_zppcon(void* uplo, void* n, void* ap, void* anorm, void* rcond, void* work, void* rwork, void* info)  __attribute__((alias("flexiblas_chain_zppcon_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zppcon(void* uplo, void* n, void* ap, void* anorm, void* rcond, void* work, void* rwork, void* info) __attribute__((alias("flexiblas_chain_zppcon_")));
+#else
+void flexiblas_chain_zppcon(void* uplo, void* n, void* ap, void* anorm, void* rcond, void* work, void* rwork, void* info){flexiblas_chain_zppcon_((void*) uplo, (void*) n, (void*) ap, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info);}
+#endif
 
 
 

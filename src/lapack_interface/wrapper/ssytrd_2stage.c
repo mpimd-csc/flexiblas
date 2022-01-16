@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL_(ssytrd_2stage,SSYTRD_2STAGE)(char* vect, char* uplo, blasint* n,
 #ifdef FLEXIBLAS_ABI_IBM
 void ssytrd_2stage_(char* vect, char* uplo, blasint* n, float* a, blasint* lda, float* d, float* e, float* tau, float* hous2, blasint* lhous2, float* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL_(ssytrd_2stage,SSYTRD_2STAGE)))));
 #else
+#ifndef __APPLE__
 void ssytrd_2stage(char* vect, char* uplo, blasint* n, float* a, blasint* lda, float* d, float* e, float* tau, float* hous2, blasint* lhous2, float* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL_(ssytrd_2stage,SSYTRD_2STAGE)))));
+#else
+void ssytrd_2stage(char* vect, char* uplo, blasint* n, float* a, blasint* lda, float* d, float* e, float* tau, float* hous2, blasint* lhous2, float* work, blasint* lwork, blasint* info){ FC_GLOBAL_(ssytrd_2stage,SSYTRD_2STAGE)((void*) vect, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) d, (void*) e, (void*) tau, (void*) hous2, (void*) lhous2, (void*) work, (void*) lwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_ssytrd_2stage_(void* vect, void* uplo, void* n, void* a, voi
 
 	return;
 }
-
-void flexiblas_real_ssytrd_2stage(void* vect, void* uplo, void* n, void* a, void* lda, void* d, void* e, void* tau, void* hous2, void* lhous2, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_real_ssytrd_2stage_")));
-
+#ifndef __APPLE__
+void flexiblas_real_ssytrd_2stage(void* vect, void* uplo, void* n, void* a, void* lda, void* d, void* e, void* tau, void* hous2, void* lhous2, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_ssytrd_2stage_")));
+#else
+void flexiblas_real_ssytrd_2stage(void* vect, void* uplo, void* n, void* a, void* lda, void* d, void* e, void* tau, void* hous2, void* lhous2, void* work, void* lwork, void* info){flexiblas_real_ssytrd_2stage_((void*) vect, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) d, (void*) e, (void*) tau, (void*) hous2, (void*) lhous2, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_ssytrd_2stage_(void* vect, void* uplo, void* n, void* a, vo
 	}
 	return;
 }
-
-void flexiblas_chain_ssytrd_2stage(void* vect, void* uplo, void* n, void* a, void* lda, void* d, void* e, void* tau, void* hous2, void* lhous2, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_chain_ssytrd_2stage_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_ssytrd_2stage(void* vect, void* uplo, void* n, void* a, void* lda, void* d, void* e, void* tau, void* hous2, void* lhous2, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_ssytrd_2stage_")));
+#else
+void flexiblas_chain_ssytrd_2stage(void* vect, void* uplo, void* n, void* a, void* lda, void* d, void* e, void* tau, void* hous2, void* lhous2, void* work, void* lwork, void* info){flexiblas_chain_ssytrd_2stage_((void*) vect, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) d, (void*) e, (void*) tau, (void*) hous2, (void*) lhous2, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 

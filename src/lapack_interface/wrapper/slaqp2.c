@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(slaqp2,SLAQP2)(blasint* m, blasint* n, blasint* offset, float* a,
 #ifdef FLEXIBLAS_ABI_IBM
 void slaqp2_(blasint* m, blasint* n, blasint* offset, float* a, blasint* lda, blasint* jpvt, float* tau, float* vn1, float* vn2, float* work) __attribute__((alias(MTS(FC_GLOBAL(slaqp2,SLAQP2)))));
 #else
+#ifndef __APPLE__
 void slaqp2(blasint* m, blasint* n, blasint* offset, float* a, blasint* lda, blasint* jpvt, float* tau, float* vn1, float* vn2, float* work) __attribute__((alias(MTS(FC_GLOBAL(slaqp2,SLAQP2)))));
+#else
+void slaqp2(blasint* m, blasint* n, blasint* offset, float* a, blasint* lda, blasint* jpvt, float* tau, float* vn1, float* vn2, float* work){ FC_GLOBAL(slaqp2,SLAQP2)((void*) m, (void*) n, (void*) offset, (void*) a, (void*) lda, (void*) jpvt, (void*) tau, (void*) vn1, (void*) vn2, (void*) work); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_slaqp2_(void* m, void* n, void* offset, void* a, void* lda, 
 
 	return;
 }
-
-void flexiblas_real_slaqp2(void* m, void* n, void* offset, void* a, void* lda, void* jpvt, void* tau, void* vn1, void* vn2, void* work)  __attribute__((alias("flexiblas_real_slaqp2_")));
-
+#ifndef __APPLE__
+void flexiblas_real_slaqp2(void* m, void* n, void* offset, void* a, void* lda, void* jpvt, void* tau, void* vn1, void* vn2, void* work) __attribute__((alias("flexiblas_real_slaqp2_")));
+#else
+void flexiblas_real_slaqp2(void* m, void* n, void* offset, void* a, void* lda, void* jpvt, void* tau, void* vn1, void* vn2, void* work){flexiblas_real_slaqp2_((void*) m, (void*) n, (void*) offset, (void*) a, (void*) lda, (void*) jpvt, (void*) tau, (void*) vn1, (void*) vn2, (void*) work);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_slaqp2_(void* m, void* n, void* offset, void* a, void* lda,
 	}
 	return;
 }
-
-void flexiblas_chain_slaqp2(void* m, void* n, void* offset, void* a, void* lda, void* jpvt, void* tau, void* vn1, void* vn2, void* work)  __attribute__((alias("flexiblas_chain_slaqp2_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_slaqp2(void* m, void* n, void* offset, void* a, void* lda, void* jpvt, void* tau, void* vn1, void* vn2, void* work) __attribute__((alias("flexiblas_chain_slaqp2_")));
+#else
+void flexiblas_chain_slaqp2(void* m, void* n, void* offset, void* a, void* lda, void* jpvt, void* tau, void* vn1, void* vn2, void* work){flexiblas_chain_slaqp2_((void*) m, (void*) n, (void*) offset, (void*) a, (void*) lda, (void*) jpvt, (void*) tau, (void*) vn1, (void*) vn2, (void*) work);}
+#endif
 
 
 

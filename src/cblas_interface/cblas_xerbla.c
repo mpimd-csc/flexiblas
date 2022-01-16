@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
 
 
@@ -58,7 +58,7 @@ void internal_cblas_xerbla(int info, const char *rout, const char *form, ...);
 void cblas_xerbla(int info, const char *, const char *, ...) __attribute__ ((weak, alias ("internal_cblas_xerbla")));
 void internal_cblas_xerbla(int info, const char *rout, const char *form, ...)
 #else
-void cblas_xerbla(int info, const char *rout, const char *form, ...)
+void internal_cblas_xerbla(int info, const char *rout, const char *form, ...)
 #endif
 {
    extern int RowMajorStrg;

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlatdf,DLATDF)(blasint* ijob, blasint* n, double* z, blasint* ldz
 #ifdef FLEXIBLAS_ABI_IBM
 void dlatdf_(blasint* ijob, blasint* n, double* z, blasint* ldz, double* rhs, double* rdsum, double* rdscal, blasint* ipiv, blasint* jpiv) __attribute__((alias(MTS(FC_GLOBAL(dlatdf,DLATDF)))));
 #else
+#ifndef __APPLE__
 void dlatdf(blasint* ijob, blasint* n, double* z, blasint* ldz, double* rhs, double* rdsum, double* rdscal, blasint* ipiv, blasint* jpiv) __attribute__((alias(MTS(FC_GLOBAL(dlatdf,DLATDF)))));
+#else
+void dlatdf(blasint* ijob, blasint* n, double* z, blasint* ldz, double* rhs, double* rdsum, double* rdscal, blasint* ipiv, blasint* jpiv){ FC_GLOBAL(dlatdf,DLATDF)((void*) ijob, (void*) n, (void*) z, (void*) ldz, (void*) rhs, (void*) rdsum, (void*) rdscal, (void*) ipiv, (void*) jpiv); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlatdf_(void* ijob, void* n, void* z, void* ldz, void* rhs, 
 
 	return;
 }
-
-void flexiblas_real_dlatdf(void* ijob, void* n, void* z, void* ldz, void* rhs, void* rdsum, void* rdscal, void* ipiv, void* jpiv)  __attribute__((alias("flexiblas_real_dlatdf_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlatdf(void* ijob, void* n, void* z, void* ldz, void* rhs, void* rdsum, void* rdscal, void* ipiv, void* jpiv) __attribute__((alias("flexiblas_real_dlatdf_")));
+#else
+void flexiblas_real_dlatdf(void* ijob, void* n, void* z, void* ldz, void* rhs, void* rdsum, void* rdscal, void* ipiv, void* jpiv){flexiblas_real_dlatdf_((void*) ijob, (void*) n, (void*) z, (void*) ldz, (void*) rhs, (void*) rdsum, (void*) rdscal, (void*) ipiv, (void*) jpiv);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlatdf_(void* ijob, void* n, void* z, void* ldz, void* rhs,
 	}
 	return;
 }
-
-void flexiblas_chain_dlatdf(void* ijob, void* n, void* z, void* ldz, void* rhs, void* rdsum, void* rdscal, void* ipiv, void* jpiv)  __attribute__((alias("flexiblas_chain_dlatdf_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlatdf(void* ijob, void* n, void* z, void* ldz, void* rhs, void* rdsum, void* rdscal, void* ipiv, void* jpiv) __attribute__((alias("flexiblas_chain_dlatdf_")));
+#else
+void flexiblas_chain_dlatdf(void* ijob, void* n, void* z, void* ldz, void* rhs, void* rdsum, void* rdscal, void* ipiv, void* jpiv){flexiblas_chain_dlatdf_((void*) ijob, (void*) n, (void*) z, (void*) ldz, (void*) rhs, (void*) rdsum, (void*) rdscal, (void*) ipiv, (void*) jpiv);}
+#endif
 
 
 

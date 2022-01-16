@@ -12,7 +12,7 @@ Table of Contents
 4. FlexiBLAS-API is not linked.
 5. Crash with LAPACK interface on IBM Power
 6. CBLAS Interface of BLIS
-
+7. Building with pre-built BLAS and LAPACK on MacOSX
 
 1. Profiling Numpy/Scipy with linked against FlexiBLAS
 ------------------------------------------------------
@@ -90,4 +90,12 @@ The CBLAS wrapper in the BLIS library contains a call to `exit` in its
 cblas_xerbla implementation. This might alter the behavoir of a program and let
 the CBLAS tests fail. For this reason FlexiBLAS does not load the BLIS-CBLAS
 interface if it detects the BLIS library.
+
+7. Building with pre-built BLAS and LAPACK on MacOSX
+----------------------------------------------------
+The `ilaenv` and `iparam2stage` routine from the reference LAPACK implementation
+can cause an faulty memory access due to a copy operation with changing
+array length. The LAPACK/BLAS reference BLAS and LAPACK implementation shipped
+with FlexiBLAS fixes this error. On other systems this error was not detectable
+yet.
 

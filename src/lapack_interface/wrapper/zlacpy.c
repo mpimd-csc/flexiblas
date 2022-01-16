@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zlacpy,ZLACPY)(char* uplo, blasint* m, blasint* n, double complex
 #ifdef FLEXIBLAS_ABI_IBM
 void zlacpy_(char* uplo, blasint* m, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(zlacpy,ZLACPY)))));
 #else
+#ifndef __APPLE__
 void zlacpy(char* uplo, blasint* m, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(zlacpy,ZLACPY)))));
+#else
+void zlacpy(char* uplo, blasint* m, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb){ FC_GLOBAL(zlacpy,ZLACPY)((void*) uplo, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zlacpy_(void* uplo, void* m, void* n, void* a, void* lda, vo
 
 	return;
 }
-
-void flexiblas_real_zlacpy(void* uplo, void* m, void* n, void* a, void* lda, void* b, void* ldb)  __attribute__((alias("flexiblas_real_zlacpy_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zlacpy(void* uplo, void* m, void* n, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_real_zlacpy_")));
+#else
+void flexiblas_real_zlacpy(void* uplo, void* m, void* n, void* a, void* lda, void* b, void* ldb){flexiblas_real_zlacpy_((void*) uplo, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zlacpy_(void* uplo, void* m, void* n, void* a, void* lda, v
 	}
 	return;
 }
-
-void flexiblas_chain_zlacpy(void* uplo, void* m, void* n, void* a, void* lda, void* b, void* ldb)  __attribute__((alias("flexiblas_chain_zlacpy_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zlacpy(void* uplo, void* m, void* n, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_chain_zlacpy_")));
+#else
+void flexiblas_chain_zlacpy(void* uplo, void* m, void* n, void* a, void* lda, void* b, void* ldb){flexiblas_chain_zlacpy_((void*) uplo, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 

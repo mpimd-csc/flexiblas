@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ float FC_GLOBAL(sladiv2,SLADIV2)(float* a, float* b, float* c, float* d, float* 
 #ifdef FLEXIBLAS_ABI_IBM
 float sladiv2_(float* a, float* b, float* c, float* d, float* r, float* t) __attribute__((alias(MTS(FC_GLOBAL(sladiv2,SLADIV2)))));
 #else
+#ifndef __APPLE__
 float sladiv2(float* a, float* b, float* c, float* d, float* r, float* t) __attribute__((alias(MTS(FC_GLOBAL(sladiv2,SLADIV2)))));
+#else
+float sladiv2(float* a, float* b, float* c, float* d, float* r, float* t){ return FC_GLOBAL(sladiv2,SLADIV2)((void*) a, (void*) b, (void*) c, (void*) d, (void*) r, (void*) t); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ float flexiblas_real_sladiv2_(void* a, void* b, void* c, void* d, void* r, void*
 
 	return ret ;
 }
-
-float flexiblas_real_sladiv2(void* a, void* b, void* c, void* d, void* r, void* t)  __attribute__((alias("flexiblas_real_sladiv2_")));
-
+#ifndef __APPLE__
+float flexiblas_real_sladiv2(void* a, void* b, void* c, void* d, void* r, void* t) __attribute__((alias("flexiblas_real_sladiv2_")));
+#else
+float flexiblas_real_sladiv2(void* a, void* b, void* c, void* d, void* r, void* t){return flexiblas_real_sladiv2_((void*) a, (void*) b, (void*) c, (void*) d, (void*) r, (void*) t);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ float flexiblas_chain_sladiv2_(void* a, void* b, void* c, void* d, void* r, void
 	}
 	return ret ;
 }
-
-float flexiblas_chain_sladiv2(void* a, void* b, void* c, void* d, void* r, void* t)  __attribute__((alias("flexiblas_chain_sladiv2_")));
-
+#ifndef __APPLE__
+float flexiblas_chain_sladiv2(void* a, void* b, void* c, void* d, void* r, void* t) __attribute__((alias("flexiblas_chain_sladiv2_")));
+#else
+float flexiblas_chain_sladiv2(void* a, void* b, void* c, void* d, void* r, void* t){return flexiblas_chain_sladiv2_((void*) a, (void*) b, (void*) c, (void*) d, (void*) r, (void*) t);}
+#endif
 
 
 

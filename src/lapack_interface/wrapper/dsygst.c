@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dsygst,DSYGST)(blasint* itype, char* uplo, blasint* n, double* a,
 #ifdef FLEXIBLAS_ABI_IBM
 void dsygst_(blasint* itype, char* uplo, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dsygst,DSYGST)))));
 #else
+#ifndef __APPLE__
 void dsygst(blasint* itype, char* uplo, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dsygst,DSYGST)))));
+#else
+void dsygst(blasint* itype, char* uplo, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, blasint* info){ FC_GLOBAL(dsygst,DSYGST)((void*) itype, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dsygst_(void* itype, void* uplo, void* n, void* a, void* lda
 
 	return;
 }
-
-void flexiblas_real_dsygst(void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info)  __attribute__((alias("flexiblas_real_dsygst_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dsygst(void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info) __attribute__((alias("flexiblas_real_dsygst_")));
+#else
+void flexiblas_real_dsygst(void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info){flexiblas_real_dsygst_((void*) itype, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dsygst_(void* itype, void* uplo, void* n, void* a, void* ld
 	}
 	return;
 }
-
-void flexiblas_chain_dsygst(void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info)  __attribute__((alias("flexiblas_chain_dsygst_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dsygst(void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info) __attribute__((alias("flexiblas_chain_dsygst_")));
+#else
+void flexiblas_chain_dsygst(void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info){flexiblas_chain_dsygst_((void*) itype, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dgebd2,DGEBD2)(blasint* m, blasint* n, double* a, blasint* lda, d
 #ifdef FLEXIBLAS_ABI_IBM
 void dgebd2_(blasint* m, blasint* n, double* a, blasint* lda, double* d, double* e, double* tauq, double* taup, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dgebd2,DGEBD2)))));
 #else
+#ifndef __APPLE__
 void dgebd2(blasint* m, blasint* n, double* a, blasint* lda, double* d, double* e, double* tauq, double* taup, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dgebd2,DGEBD2)))));
+#else
+void dgebd2(blasint* m, blasint* n, double* a, blasint* lda, double* d, double* e, double* tauq, double* taup, double* work, blasint* info){ FC_GLOBAL(dgebd2,DGEBD2)((void*) m, (void*) n, (void*) a, (void*) lda, (void*) d, (void*) e, (void*) tauq, (void*) taup, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dgebd2_(void* m, void* n, void* a, void* lda, void* d, void*
 
 	return;
 }
-
-void flexiblas_real_dgebd2(void* m, void* n, void* a, void* lda, void* d, void* e, void* tauq, void* taup, void* work, void* info)  __attribute__((alias("flexiblas_real_dgebd2_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dgebd2(void* m, void* n, void* a, void* lda, void* d, void* e, void* tauq, void* taup, void* work, void* info) __attribute__((alias("flexiblas_real_dgebd2_")));
+#else
+void flexiblas_real_dgebd2(void* m, void* n, void* a, void* lda, void* d, void* e, void* tauq, void* taup, void* work, void* info){flexiblas_real_dgebd2_((void*) m, (void*) n, (void*) a, (void*) lda, (void*) d, (void*) e, (void*) tauq, (void*) taup, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dgebd2_(void* m, void* n, void* a, void* lda, void* d, void
 	}
 	return;
 }
-
-void flexiblas_chain_dgebd2(void* m, void* n, void* a, void* lda, void* d, void* e, void* tauq, void* taup, void* work, void* info)  __attribute__((alias("flexiblas_chain_dgebd2_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dgebd2(void* m, void* n, void* a, void* lda, void* d, void* e, void* tauq, void* taup, void* work, void* info) __attribute__((alias("flexiblas_chain_dgebd2_")));
+#else
+void flexiblas_chain_dgebd2(void* m, void* n, void* a, void* lda, void* d, void* e, void* tauq, void* taup, void* work, void* info){flexiblas_chain_dgebd2_((void*) m, (void*) n, (void*) a, (void*) lda, (void*) d, (void*) e, (void*) tauq, (void*) taup, (void*) work, (void*) info);}
+#endif
 
 
 

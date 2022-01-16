@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlasdt,DLASDT)(blasint* n, blasint* lvl, blasint* nd, blasint* in
 #ifdef FLEXIBLAS_ABI_IBM
 void dlasdt_(blasint* n, blasint* lvl, blasint* nd, blasint* inode, blasint* ndiml, blasint* ndimr, blasint* msub) __attribute__((alias(MTS(FC_GLOBAL(dlasdt,DLASDT)))));
 #else
+#ifndef __APPLE__
 void dlasdt(blasint* n, blasint* lvl, blasint* nd, blasint* inode, blasint* ndiml, blasint* ndimr, blasint* msub) __attribute__((alias(MTS(FC_GLOBAL(dlasdt,DLASDT)))));
+#else
+void dlasdt(blasint* n, blasint* lvl, blasint* nd, blasint* inode, blasint* ndiml, blasint* ndimr, blasint* msub){ FC_GLOBAL(dlasdt,DLASDT)((void*) n, (void*) lvl, (void*) nd, (void*) inode, (void*) ndiml, (void*) ndimr, (void*) msub); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlasdt_(void* n, void* lvl, void* nd, void* inode, void* ndi
 
 	return;
 }
-
-void flexiblas_real_dlasdt(void* n, void* lvl, void* nd, void* inode, void* ndiml, void* ndimr, void* msub)  __attribute__((alias("flexiblas_real_dlasdt_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlasdt(void* n, void* lvl, void* nd, void* inode, void* ndiml, void* ndimr, void* msub) __attribute__((alias("flexiblas_real_dlasdt_")));
+#else
+void flexiblas_real_dlasdt(void* n, void* lvl, void* nd, void* inode, void* ndiml, void* ndimr, void* msub){flexiblas_real_dlasdt_((void*) n, (void*) lvl, (void*) nd, (void*) inode, (void*) ndiml, (void*) ndimr, (void*) msub);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlasdt_(void* n, void* lvl, void* nd, void* inode, void* nd
 	}
 	return;
 }
-
-void flexiblas_chain_dlasdt(void* n, void* lvl, void* nd, void* inode, void* ndiml, void* ndimr, void* msub)  __attribute__((alias("flexiblas_chain_dlasdt_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlasdt(void* n, void* lvl, void* nd, void* inode, void* ndiml, void* ndimr, void* msub) __attribute__((alias("flexiblas_chain_dlasdt_")));
+#else
+void flexiblas_chain_dlasdt(void* n, void* lvl, void* nd, void* inode, void* ndiml, void* ndimr, void* msub){flexiblas_chain_dlasdt_((void*) n, (void*) lvl, (void*) nd, (void*) inode, (void*) ndiml, (void*) ndimr, (void*) msub);}
+#endif
 
 
 

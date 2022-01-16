@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlasq5,DLASQ5)(blasint* i0, blasint* n0, double* z, blasint* pp, 
 #ifdef FLEXIBLAS_ABI_IBM
 void dlasq5_(blasint* i0, blasint* n0, double* z, blasint* pp, double* tau, double* sigma, double* dmin, double* dmin1, double* dmin2, double* dn, double* dnm1, double* dnm2, blasint* ieee, double* eps) __attribute__((alias(MTS(FC_GLOBAL(dlasq5,DLASQ5)))));
 #else
+#ifndef __APPLE__
 void dlasq5(blasint* i0, blasint* n0, double* z, blasint* pp, double* tau, double* sigma, double* dmin, double* dmin1, double* dmin2, double* dn, double* dnm1, double* dnm2, blasint* ieee, double* eps) __attribute__((alias(MTS(FC_GLOBAL(dlasq5,DLASQ5)))));
+#else
+void dlasq5(blasint* i0, blasint* n0, double* z, blasint* pp, double* tau, double* sigma, double* dmin, double* dmin1, double* dmin2, double* dn, double* dnm1, double* dnm2, blasint* ieee, double* eps){ FC_GLOBAL(dlasq5,DLASQ5)((void*) i0, (void*) n0, (void*) z, (void*) pp, (void*) tau, (void*) sigma, (void*) dmin, (void*) dmin1, (void*) dmin2, (void*) dn, (void*) dnm1, (void*) dnm2, (void*) ieee, (void*) eps); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlasq5_(void* i0, void* n0, void* z, void* pp, void* tau, vo
 
 	return;
 }
-
-void flexiblas_real_dlasq5(void* i0, void* n0, void* z, void* pp, void* tau, void* sigma, void* dmin, void* dmin1, void* dmin2, void* dn, void* dnm1, void* dnm2, void* ieee, void* eps)  __attribute__((alias("flexiblas_real_dlasq5_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlasq5(void* i0, void* n0, void* z, void* pp, void* tau, void* sigma, void* dmin, void* dmin1, void* dmin2, void* dn, void* dnm1, void* dnm2, void* ieee, void* eps) __attribute__((alias("flexiblas_real_dlasq5_")));
+#else
+void flexiblas_real_dlasq5(void* i0, void* n0, void* z, void* pp, void* tau, void* sigma, void* dmin, void* dmin1, void* dmin2, void* dn, void* dnm1, void* dnm2, void* ieee, void* eps){flexiblas_real_dlasq5_((void*) i0, (void*) n0, (void*) z, (void*) pp, (void*) tau, (void*) sigma, (void*) dmin, (void*) dmin1, (void*) dmin2, (void*) dn, (void*) dnm1, (void*) dnm2, (void*) ieee, (void*) eps);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlasq5_(void* i0, void* n0, void* z, void* pp, void* tau, v
 	}
 	return;
 }
-
-void flexiblas_chain_dlasq5(void* i0, void* n0, void* z, void* pp, void* tau, void* sigma, void* dmin, void* dmin1, void* dmin2, void* dn, void* dnm1, void* dnm2, void* ieee, void* eps)  __attribute__((alias("flexiblas_chain_dlasq5_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlasq5(void* i0, void* n0, void* z, void* pp, void* tau, void* sigma, void* dmin, void* dmin1, void* dmin2, void* dn, void* dnm1, void* dnm2, void* ieee, void* eps) __attribute__((alias("flexiblas_chain_dlasq5_")));
+#else
+void flexiblas_chain_dlasq5(void* i0, void* n0, void* z, void* pp, void* tau, void* sigma, void* dmin, void* dmin1, void* dmin2, void* dn, void* dnm1, void* dnm2, void* ieee, void* eps){flexiblas_chain_dlasq5_((void*) i0, (void*) n0, (void*) z, (void*) pp, (void*) tau, (void*) sigma, (void*) dmin, (void*) dmin1, (void*) dmin2, (void*) dn, (void*) dnm1, (void*) dnm2, (void*) ieee, (void*) eps);}
+#endif
 
 
 

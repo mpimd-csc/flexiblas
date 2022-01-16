@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(slasda,SLASDA)(blasint* icompq, blasint* smlsiz, blasint* n, blas
 #ifdef FLEXIBLAS_ABI_IBM
 void slasda_(blasint* icompq, blasint* smlsiz, blasint* n, blasint* sqre, float* d, float* e, float* u, blasint* ldu, float* vt, blasint* k, float* difl, float* difr, float* z, float* poles, blasint* givptr, blasint* givcol, blasint* ldgcol, blasint* perm, float* givnum, float* c, float* s, float* work, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(slasda,SLASDA)))));
 #else
+#ifndef __APPLE__
 void slasda(blasint* icompq, blasint* smlsiz, blasint* n, blasint* sqre, float* d, float* e, float* u, blasint* ldu, float* vt, blasint* k, float* difl, float* difr, float* z, float* poles, blasint* givptr, blasint* givcol, blasint* ldgcol, blasint* perm, float* givnum, float* c, float* s, float* work, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(slasda,SLASDA)))));
+#else
+void slasda(blasint* icompq, blasint* smlsiz, blasint* n, blasint* sqre, float* d, float* e, float* u, blasint* ldu, float* vt, blasint* k, float* difl, float* difr, float* z, float* poles, blasint* givptr, blasint* givcol, blasint* ldgcol, blasint* perm, float* givnum, float* c, float* s, float* work, blasint* iwork, blasint* info){ FC_GLOBAL(slasda,SLASDA)((void*) icompq, (void*) smlsiz, (void*) n, (void*) sqre, (void*) d, (void*) e, (void*) u, (void*) ldu, (void*) vt, (void*) k, (void*) difl, (void*) difr, (void*) z, (void*) poles, (void*) givptr, (void*) givcol, (void*) ldgcol, (void*) perm, (void*) givnum, (void*) c, (void*) s, (void*) work, (void*) iwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_slasda_(void* icompq, void* smlsiz, void* n, void* sqre, voi
 
 	return;
 }
-
-void flexiblas_real_slasda(void* icompq, void* smlsiz, void* n, void* sqre, void* d, void* e, void* u, void* ldu, void* vt, void* k, void* difl, void* difr, void* z, void* poles, void* givptr, void* givcol, void* ldgcol, void* perm, void* givnum, void* c, void* s, void* work, void* iwork, void* info)  __attribute__((alias("flexiblas_real_slasda_")));
-
+#ifndef __APPLE__
+void flexiblas_real_slasda(void* icompq, void* smlsiz, void* n, void* sqre, void* d, void* e, void* u, void* ldu, void* vt, void* k, void* difl, void* difr, void* z, void* poles, void* givptr, void* givcol, void* ldgcol, void* perm, void* givnum, void* c, void* s, void* work, void* iwork, void* info) __attribute__((alias("flexiblas_real_slasda_")));
+#else
+void flexiblas_real_slasda(void* icompq, void* smlsiz, void* n, void* sqre, void* d, void* e, void* u, void* ldu, void* vt, void* k, void* difl, void* difr, void* z, void* poles, void* givptr, void* givcol, void* ldgcol, void* perm, void* givnum, void* c, void* s, void* work, void* iwork, void* info){flexiblas_real_slasda_((void*) icompq, (void*) smlsiz, (void*) n, (void*) sqre, (void*) d, (void*) e, (void*) u, (void*) ldu, (void*) vt, (void*) k, (void*) difl, (void*) difr, (void*) z, (void*) poles, (void*) givptr, (void*) givcol, (void*) ldgcol, (void*) perm, (void*) givnum, (void*) c, (void*) s, (void*) work, (void*) iwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_slasda_(void* icompq, void* smlsiz, void* n, void* sqre, vo
 	}
 	return;
 }
-
-void flexiblas_chain_slasda(void* icompq, void* smlsiz, void* n, void* sqre, void* d, void* e, void* u, void* ldu, void* vt, void* k, void* difl, void* difr, void* z, void* poles, void* givptr, void* givcol, void* ldgcol, void* perm, void* givnum, void* c, void* s, void* work, void* iwork, void* info)  __attribute__((alias("flexiblas_chain_slasda_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_slasda(void* icompq, void* smlsiz, void* n, void* sqre, void* d, void* e, void* u, void* ldu, void* vt, void* k, void* difl, void* difr, void* z, void* poles, void* givptr, void* givcol, void* ldgcol, void* perm, void* givnum, void* c, void* s, void* work, void* iwork, void* info) __attribute__((alias("flexiblas_chain_slasda_")));
+#else
+void flexiblas_chain_slasda(void* icompq, void* smlsiz, void* n, void* sqre, void* d, void* e, void* u, void* ldu, void* vt, void* k, void* difl, void* difr, void* z, void* poles, void* givptr, void* givcol, void* ldgcol, void* perm, void* givnum, void* c, void* s, void* work, void* iwork, void* info){flexiblas_chain_slasda_((void*) icompq, (void*) smlsiz, (void*) n, (void*) sqre, (void*) d, (void*) e, (void*) u, (void*) ldu, (void*) vt, (void*) k, (void*) difl, (void*) difr, (void*) z, (void*) poles, (void*) givptr, (void*) givcol, (void*) ldgcol, (void*) perm, (void*) givnum, (void*) c, (void*) s, (void*) work, (void*) iwork, (void*) info);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zlaev2,ZLAEV2)(double complex* a, double complex* b, double compl
 #ifdef FLEXIBLAS_ABI_IBM
 void zlaev2_(double complex* a, double complex* b, double complex* c, double* rt1, double* rt2, double* cs1, double complex* sn1) __attribute__((alias(MTS(FC_GLOBAL(zlaev2,ZLAEV2)))));
 #else
+#ifndef __APPLE__
 void zlaev2(double complex* a, double complex* b, double complex* c, double* rt1, double* rt2, double* cs1, double complex* sn1) __attribute__((alias(MTS(FC_GLOBAL(zlaev2,ZLAEV2)))));
+#else
+void zlaev2(double complex* a, double complex* b, double complex* c, double* rt1, double* rt2, double* cs1, double complex* sn1){ FC_GLOBAL(zlaev2,ZLAEV2)((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zlaev2_(void* a, void* b, void* c, void* rt1, void* rt2, voi
 
 	return;
 }
-
-void flexiblas_real_zlaev2(void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1)  __attribute__((alias("flexiblas_real_zlaev2_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zlaev2(void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1) __attribute__((alias("flexiblas_real_zlaev2_")));
+#else
+void flexiblas_real_zlaev2(void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1){flexiblas_real_zlaev2_((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zlaev2_(void* a, void* b, void* c, void* rt1, void* rt2, vo
 	}
 	return;
 }
-
-void flexiblas_chain_zlaev2(void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1)  __attribute__((alias("flexiblas_chain_zlaev2_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zlaev2(void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1) __attribute__((alias("flexiblas_chain_zlaev2_")));
+#else
+void flexiblas_chain_zlaev2(void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1){flexiblas_chain_zlaev2_((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1);}
+#endif
 
 
 

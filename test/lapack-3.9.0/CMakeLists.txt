@@ -175,7 +175,7 @@ add_lapack_test(zlse.out lse.in xeigtstz)
 
 # ==============================================================================
 # Only run this test if python 2.7 or greater is found
-if(PYTHONINTERP_FOUND)
+if(PythonInterp_FOUND)
   message(STATUS "Running Summary")
   execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/test/lapack-3.9.0/lapack_testing.py ${PROJECT_BINARY_DIR}/test/lapack-3.9.0/)
   add_test(

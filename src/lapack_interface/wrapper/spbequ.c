@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(spbequ,SPBEQU)(char* uplo, blasint* n, blasint* kd, float* ab, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void spbequ_(char* uplo, blasint* n, blasint* kd, float* ab, blasint* ldab, float* s, float* scond, float* amax, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(spbequ,SPBEQU)))));
 #else
+#ifndef __APPLE__
 void spbequ(char* uplo, blasint* n, blasint* kd, float* ab, blasint* ldab, float* s, float* scond, float* amax, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(spbequ,SPBEQU)))));
+#else
+void spbequ(char* uplo, blasint* n, blasint* kd, float* ab, blasint* ldab, float* s, float* scond, float* amax, blasint* info){ FC_GLOBAL(spbequ,SPBEQU)((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) s, (void*) scond, (void*) amax, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_spbequ_(void* uplo, void* n, void* kd, void* ab, void* ldab,
 
 	return;
 }
-
-void flexiblas_real_spbequ(void* uplo, void* n, void* kd, void* ab, void* ldab, void* s, void* scond, void* amax, void* info)  __attribute__((alias("flexiblas_real_spbequ_")));
-
+#ifndef __APPLE__
+void flexiblas_real_spbequ(void* uplo, void* n, void* kd, void* ab, void* ldab, void* s, void* scond, void* amax, void* info) __attribute__((alias("flexiblas_real_spbequ_")));
+#else
+void flexiblas_real_spbequ(void* uplo, void* n, void* kd, void* ab, void* ldab, void* s, void* scond, void* amax, void* info){flexiblas_real_spbequ_((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) s, (void*) scond, (void*) amax, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_spbequ_(void* uplo, void* n, void* kd, void* ab, void* ldab
 	}
 	return;
 }
-
-void flexiblas_chain_spbequ(void* uplo, void* n, void* kd, void* ab, void* ldab, void* s, void* scond, void* amax, void* info)  __attribute__((alias("flexiblas_chain_spbequ_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_spbequ(void* uplo, void* n, void* kd, void* ab, void* ldab, void* s, void* scond, void* amax, void* info) __attribute__((alias("flexiblas_chain_spbequ_")));
+#else
+void flexiblas_chain_spbequ(void* uplo, void* n, void* kd, void* ab, void* ldab, void* s, void* scond, void* amax, void* info){flexiblas_chain_spbequ_((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) s, (void*) scond, (void*) amax, (void*) info);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
 
 
@@ -51,6 +51,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <complex.h>
+#include <stdarg.h>
 
 #include "flexiblas.h"
 #ifndef __WIN32__
@@ -126,8 +127,60 @@ int __flexiblas_setup_xerbla(flexiblas_backend_t *backend)
 	return 0;
 }
 
+void flexiblas_internal_xerbla(char *SNAME, Int *Info, Int len)  {
+	void (*fn) (char *SNAME, Int *info, Int len)  ;
+	fn = current_backend->xerbla.f77_blas_function;
+
+	if ( fn == NULL ) {
+		int _info = (int) *Info;
+		char * ptr = malloc ( sizeof(char) * (len + 1));
+		strncpy(ptr, SNAME, len);
+		ptr[len] = '\0';
+		fprintf(stderr,"XERBLA: Parameter %d was incorrect on entry to %s\n", _info , ptr);
+		free(ptr);
+		return;
+	}
+	fn (SNAME, Info, len);
+	return;
+}
+
+
+
+/* 
+ * CBLAS related stuff 
+ */ 
+
 #ifdef FLEXIBLAS_CBLAS
+
+#ifndef __APPLE__
 extern void internal_cblas_xerbla(int info, const char *rout, const char *form, ...);
+#else
+/* This routine is designed for maxos */ 
+void internal_cblas_xerbla(int info, const char *rout, const char *form, ...);
+void cblas_xerbla(int info, const char *rout, const char *form, ...)
+{
+	// printf("Hier in xerblas.c (0x%lx) backend = 0x%lx \n", (unsigned long)(void*) & cblas_xerbla, (unsigned long) current_backend->xerbla.cblas_function);
+	if ( current_backend->xerbla.cblas_function != NULL) {
+		va_list ap;
+		void (*fn) ( int, const char*, const char*, ...);
+		size_t a1, a2, a3, a4, a5;
+		
+		fn = current_backend->xerbla.cblas_function;
+		va_start(ap, form);
+		fn(info, rout, form, a1, a2, a3, a4, a5);
+		va_end(ap);		
+	} else {
+		va_list ap;
+		void (*fn) ( int, const char*, const char*, ...);
+		size_t a1, a2, a3, a4, a5;
+		
+		fn = current_backend->xerbla.cblas_function;
+		va_start(ap, form);
+		internal_cblas_xerbla(info, rout, form, a1, a2, a3, a4, a5);
+		va_end(ap);		
+	}
+}
+#endif 
 
 int __flexiblas_setup_cblas_xerbla(flexiblas_backend_t *backend)
 {
@@ -137,12 +190,20 @@ int __flexiblas_setup_cblas_xerbla(flexiblas_backend_t *backend)
         int user_xerbla = 0;
 		void *xerbla_symbol1 = dlsym(backend->library_handle,"cblas_xerbla");
 		void *xerbla_symbol2 = dlsym(RTLD_DEFAULT,"cblas_xerbla");
-		void *internal = (void*) &flexiblas_internal_xerbla;
+#ifndef __APPLE__
+		void *internal = (void*) &internal_cblas_xerbla;
 		DPRINTF(1, "Available CBLAS_XERBLA ( backend: 0x%lx, user defined: 0x%lx, FlexiBLAS: 0x%lx )\n",
 				(unsigned long)((void*)xerbla_symbol1),
 				(unsigned long)((void*)xerbla_symbol2),
 				(unsigned long)((void*)&internal_cblas_xerbla));
+#else 
+		void *internal = (void*) &cblas_xerbla;
+		DPRINTF(1, "Available CBLAS_XERBLA ( backend: 0x%lx, user defined: 0x%lx, FlexiBLAS: 0x%lx)\n",
+				(unsigned long)((void*)xerbla_symbol1),
+				(unsigned long)((void*)xerbla_symbol2),
+				(unsigned long)((void*)&cblas_xerbla));
 
+#endif 
 		if (internal == xerbla_symbol2) {
 			user_xerbla = 0;
 		} else {
@@ -161,26 +222,6 @@ int __flexiblas_setup_cblas_xerbla(flexiblas_backend_t *backend)
 	return 0;
 }
 
-
-
 #endif
-
-void flexiblas_internal_xerbla(char *SNAME, Int *Info, Int len)  {
-	void (*fn) (char *SNAME, Int *info, Int len)  ;
-	fn = current_backend->xerbla.f77_blas_function;
-
-	if ( fn == NULL ) {
-		int _info = (int) *Info;
-		char * ptr = malloc ( sizeof(char) * (len + 1));
-		strncpy(ptr, SNAME, len);
-		ptr[len] = '\0';
-		fprintf(stderr,"XERBLA: Parameter %d was incorrect on entry to %s\n", _info , ptr);
-		free(ptr);
-		return;
-	}
-	fn (SNAME, Info, len);
-	return;
-}
-
 
 

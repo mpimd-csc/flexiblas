@@ -1,4 +1,12 @@
-IF(LAPACK_API_VERSION STREQUAL "3.9.0")
+IF(LAPACK_API_VERSION STREQUAL "3.10.0")
+	SET(_LAPACK_FILE_SUFFIX 3_10_0)
+ELSEIF (LAPACK_API_VERSION STREQUAL "3.10.0-wodprc")
+	SET(_LAPACK_FILE_SUFFIX 3_10_0-wodprc) #
+ELSEIF(LAPACK_API_VERSION STREQUAL "3.9.1")
+	SET(_LAPACK_FILE_SUFFIX 3_9_1)
+ELSEIF (LAPACK_API_VERSION STREQUAL "3.9.1-wodprc")
+	SET(_LAPACK_FILE_SUFFIX 3_9_1-wodprc) #
+ELSEIF(LAPACK_API_VERSION STREQUAL "3.9.0")
 	SET(_LAPACK_FILE_SUFFIX 3_9_0)
 ELSEIF (LAPACK_API_VERSION STREQUAL "3.9.0-wodprc")
 	SET(_LAPACK_FILE_SUFFIX 3_9_0-wodprc) #
@@ -63,6 +71,9 @@ else()
     add_library(flexiblas_fallback_lapack SHARED ${SRC} $<TARGET_OBJECTS:flexiblas_fallback_lapack_objs>)
 endif()
 
+if (APPLE)
+   set_target_properties(flexiblas_fallback_lapack PROPERTIES LINK_FLAGS "-undefined dynamic_lookup -flat_namespace")
+endif()
 
 target_include_directories(flexiblas_fallback_lapack PRIVATE ${PROJECT_BINARY_DIR}/include)
 

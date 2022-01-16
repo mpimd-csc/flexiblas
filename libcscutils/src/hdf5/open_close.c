@@ -38,6 +38,7 @@ hid_t csc_hdf5_open(const char *filename, const char *mode)
     H5E_auto2_t func;
     void *data;
     herr_t err;
+    char *fni;
 
     csc_hdf5_register_filters();
 
@@ -46,30 +47,35 @@ hid_t csc_hdf5_open(const char *filename, const char *mode)
         csc_error_message("Failed to get current error stack function.\n");
         return -1;
     }
+
+    fni = strdup(filename);
+    if (!fni) return -1;
+    csc_strremovedup(fni, '/');
+
     H5Eset_auto2(H5E_DEFAULT, NULL, NULL);
     if ( csc_strcasecmp(mode, "r") == 0  ) {
-        file = H5Fopen(filename, H5F_ACC_RDONLY, H5P_DEFAULT);
+        file = H5Fopen(fni, H5F_ACC_RDONLY, H5P_DEFAULT);
         if ( file < 0 ) {
-               csc_error_message("Failed to open %s.\n", filename);
+               csc_error_message("Failed to open %s.\n", fni);
         }
     } else if ( csc_strcasecmp(mode, "w") == 0
             || csc_strcasecmp(mode,"w+") == 0 ) {
-        file = H5Fcreate(filename, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+        file = H5Fcreate(fni, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
     } else if ( csc_strcasecmp(mode, "rw" ) == 0 ) {
-        if (  H5Fis_hdf5(filename) > 0) {
-            file = H5Fopen(filename, H5F_ACC_RDWR, H5P_DEFAULT);
+        if (  H5Fis_hdf5(fni) > 0) {
+            file = H5Fopen(fni, H5F_ACC_RDWR, H5P_DEFAULT);
             if ( file < 0 ) {
-                csc_error_message("Failed to open %s.\n", filename);
+                csc_error_message("Failed to open %s.\n", fni);
             }
         } else {
-            file = H5Fcreate(filename,  H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+            file = H5Fcreate(fni,  H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
             if ( file < 0 ) {
-                csc_error_message("Failed to create %s and truncate.\n", filename);
+                csc_error_message("Failed to create %s and truncate.\n", fni);
             }
         }
     }
     H5Eset_auto2(H5E_DEFAULT, func, data);
-
+    free(fni);
     return file;
 }
 
@@ -83,7 +89,7 @@ hid_t csc_hdf5_open2(const char *filename, const char *mode, void *header)
     hid_t plist   = H5P_DEFAULT ;
     hid_t plist_ap = H5P_DEFAULT;
     int ret = 0;
-
+    char *fni = NULL;
 
     if (header == NULL || csc_strcasecmp(mode, "r") == 0 ) {
         return csc_hdf5_open(filename, mode);
@@ -96,6 +102,11 @@ hid_t csc_hdf5_open2(const char *filename, const char *mode, void *header)
         csc_error_message("Failed to get current error stack function.\n");
         return -1;
     }
+
+    fni = strdup(filename);
+    if (!fni) return -1;
+    csc_strremovedup(fni, '/');
+
     H5Eset_auto2(H5E_DEFAULT, NULL, NULL);
     if ( csc_strcasecmp(mode, "w") == 0
             || csc_strcasecmp(mode,"w+") == 0 ) {
@@ -126,7 +137,7 @@ hid_t csc_hdf5_open2(const char *filename, const char *mode, void *header)
 #endif
 
         }
-        file = H5Fcreate(filename, H5F_ACC_TRUNC, plist, plist_ap);
+        file = H5Fcreate(fni, H5F_ACC_TRUNC, plist, plist_ap);
 
         /* Write the header  */
         if (header) {
@@ -134,7 +145,7 @@ hid_t csc_hdf5_open2(const char *filename, const char *mode, void *header)
 
             H5Fclose(file);
 
-            fp = fopen(filename, "r+b");
+            fp = fopen(fni, "r+b");
             if ( !fp) {
                 ret = -1;
                 goto end;
@@ -143,24 +154,25 @@ hid_t csc_hdf5_open2(const char *filename, const char *mode, void *header)
             fwrite(header, 1, 512, fp);
             fclose(fp);
 
-            file = H5Fopen(filename,H5F_ACC_RDWR,plist_ap);
+            file = H5Fopen(fni,H5F_ACC_RDWR,plist_ap);
         }
 
 
     } else if ( csc_strcasecmp(mode, "rw" ) == 0 ) {
-        if (  H5Fis_hdf5(filename) > 0) {
-            file = H5Fopen(filename, H5F_ACC_RDWR, H5P_DEFAULT);
+        if (  H5Fis_hdf5(fni) > 0) {
+            file = H5Fopen(fni, H5F_ACC_RDWR, H5P_DEFAULT);
             if ( file < 0 ) {
-                csc_error_message("Failed to open %s.\n", filename);
+                csc_error_message("Failed to open %s.\n", fni);
             }
         } else {
-            return csc_hdf5_open2(filename, "w", header);
+            return csc_hdf5_open2(fni, "w", header);
         }
     }
 
 end:
     if ( plist_ap != H5P_DEFAULT) H5Pclose(plist_ap);
     if ( plist != H5P_DEFAULT ) H5Pclose(plist);
+    if ( fni) free(fni);
     H5Eset_auto2(H5E_DEFAULT, func, data);
     if ( ret < 0 ) return -1;
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(slassq,SLASSQ)(blasint* n, float* x, blasint* incx, float* scale,
 #ifdef FLEXIBLAS_ABI_IBM
 void slassq_(blasint* n, float* x, blasint* incx, float* scale, float* sumsq) __attribute__((alias(MTS(FC_GLOBAL(slassq,SLASSQ)))));
 #else
+#ifndef __APPLE__
 void slassq(blasint* n, float* x, blasint* incx, float* scale, float* sumsq) __attribute__((alias(MTS(FC_GLOBAL(slassq,SLASSQ)))));
+#else
+void slassq(blasint* n, float* x, blasint* incx, float* scale, float* sumsq){ FC_GLOBAL(slassq,SLASSQ)((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_slassq_(void* n, void* x, void* incx, void* scale, void* sum
 
 	return;
 }
-
-void flexiblas_real_slassq(void* n, void* x, void* incx, void* scale, void* sumsq)  __attribute__((alias("flexiblas_real_slassq_")));
-
+#ifndef __APPLE__
+void flexiblas_real_slassq(void* n, void* x, void* incx, void* scale, void* sumsq) __attribute__((alias("flexiblas_real_slassq_")));
+#else
+void flexiblas_real_slassq(void* n, void* x, void* incx, void* scale, void* sumsq){flexiblas_real_slassq_((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_slassq_(void* n, void* x, void* incx, void* scale, void* su
 	}
 	return;
 }
-
-void flexiblas_chain_slassq(void* n, void* x, void* incx, void* scale, void* sumsq)  __attribute__((alias("flexiblas_chain_slassq_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_slassq(void* n, void* x, void* incx, void* scale, void* sumsq) __attribute__((alias("flexiblas_chain_slassq_")));
+#else
+void flexiblas_chain_slassq(void* n, void* x, void* incx, void* scale, void* sumsq){flexiblas_chain_slassq_((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zung2l,ZUNG2L)(blasint* m, blasint* n, blasint* k, double complex
 #ifdef FLEXIBLAS_ABI_IBM
 void zung2l_(blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zung2l,ZUNG2L)))));
 #else
+#ifndef __APPLE__
 void zung2l(blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zung2l,ZUNG2L)))));
+#else
+void zung2l(blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* info){ FC_GLOBAL(zung2l,ZUNG2L)((void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zung2l_(void* m, void* n, void* k, void* a, void* lda, void*
 
 	return;
 }
-
-void flexiblas_real_zung2l(void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* info)  __attribute__((alias("flexiblas_real_zung2l_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zung2l(void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* info) __attribute__((alias("flexiblas_real_zung2l_")));
+#else
+void flexiblas_real_zung2l(void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* info){flexiblas_real_zung2l_((void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zung2l_(void* m, void* n, void* k, void* a, void* lda, void
 	}
 	return;
 }
-
-void flexiblas_chain_zung2l(void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* info)  __attribute__((alias("flexiblas_chain_zung2l_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zung2l(void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* info) __attribute__((alias("flexiblas_chain_zung2l_")));
+#else
+void flexiblas_chain_zung2l(void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* info){flexiblas_chain_zung2l_((void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) info);}
+#endif
 
 
 

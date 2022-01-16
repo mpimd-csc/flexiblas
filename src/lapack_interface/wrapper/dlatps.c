@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlatps,DLATPS)(char* uplo, char* trans, char* diag, char* normin,
 #ifdef FLEXIBLAS_ABI_IBM
 void dlatps_(char* uplo, char* trans, char* diag, char* normin, blasint* n, double* ap, double* x, double* scale, double* cnorm, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlatps,DLATPS)))));
 #else
+#ifndef __APPLE__
 void dlatps(char* uplo, char* trans, char* diag, char* normin, blasint* n, double* ap, double* x, double* scale, double* cnorm, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlatps,DLATPS)))));
+#else
+void dlatps(char* uplo, char* trans, char* diag, char* normin, blasint* n, double* ap, double* x, double* scale, double* cnorm, blasint* info){ FC_GLOBAL(dlatps,DLATPS)((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) ap, (void*) x, (void*) scale, (void*) cnorm, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlatps_(void* uplo, void* trans, void* diag, void* normin, v
 
 	return;
 }
-
-void flexiblas_real_dlatps(void* uplo, void* trans, void* diag, void* normin, void* n, void* ap, void* x, void* scale, void* cnorm, void* info)  __attribute__((alias("flexiblas_real_dlatps_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlatps(void* uplo, void* trans, void* diag, void* normin, void* n, void* ap, void* x, void* scale, void* cnorm, void* info) __attribute__((alias("flexiblas_real_dlatps_")));
+#else
+void flexiblas_real_dlatps(void* uplo, void* trans, void* diag, void* normin, void* n, void* ap, void* x, void* scale, void* cnorm, void* info){flexiblas_real_dlatps_((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) ap, (void*) x, (void*) scale, (void*) cnorm, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlatps_(void* uplo, void* trans, void* diag, void* normin, 
 	}
 	return;
 }
-
-void flexiblas_chain_dlatps(void* uplo, void* trans, void* diag, void* normin, void* n, void* ap, void* x, void* scale, void* cnorm, void* info)  __attribute__((alias("flexiblas_chain_dlatps_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlatps(void* uplo, void* trans, void* diag, void* normin, void* n, void* ap, void* x, void* scale, void* cnorm, void* info) __attribute__((alias("flexiblas_chain_dlatps_")));
+#else
+void flexiblas_chain_dlatps(void* uplo, void* trans, void* diag, void* normin, void* n, void* ap, void* x, void* scale, void* cnorm, void* info){flexiblas_chain_dlatps_((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) ap, (void*) x, (void*) scale, (void*) cnorm, (void*) info);}
+#endif
 
 
 

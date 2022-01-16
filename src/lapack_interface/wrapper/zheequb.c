@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zheequb,ZHEEQUB)(char* uplo, blasint* n, double complex* a, blasi
 #ifdef FLEXIBLAS_ABI_IBM
 void zheequb_(char* uplo, blasint* n, double complex* a, blasint* lda, double* s, double* scond, double* amax, double complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zheequb,ZHEEQUB)))));
 #else
+#ifndef __APPLE__
 void zheequb(char* uplo, blasint* n, double complex* a, blasint* lda, double* s, double* scond, double* amax, double complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zheequb,ZHEEQUB)))));
+#else
+void zheequb(char* uplo, blasint* n, double complex* a, blasint* lda, double* s, double* scond, double* amax, double complex* work, blasint* info){ FC_GLOBAL(zheequb,ZHEEQUB)((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zheequb_(void* uplo, void* n, void* a, void* lda, void* s, v
 
 	return;
 }
-
-void flexiblas_real_zheequb(void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* work, void* info)  __attribute__((alias("flexiblas_real_zheequb_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zheequb(void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* work, void* info) __attribute__((alias("flexiblas_real_zheequb_")));
+#else
+void flexiblas_real_zheequb(void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* work, void* info){flexiblas_real_zheequb_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zheequb_(void* uplo, void* n, void* a, void* lda, void* s, 
 	}
 	return;
 }
-
-void flexiblas_chain_zheequb(void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* work, void* info)  __attribute__((alias("flexiblas_chain_zheequb_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zheequb(void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* work, void* info) __attribute__((alias("flexiblas_chain_zheequb_")));
+#else
+void flexiblas_chain_zheequb(void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* work, void* info){flexiblas_chain_zheequb_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) work, (void*) info);}
+#endif
 
 
 

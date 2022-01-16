@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(slags2,SLAGS2)(blasint* upper, float* a1, float* a2, float* a3, f
 #ifdef FLEXIBLAS_ABI_IBM
 void slags2_(blasint* upper, float* a1, float* a2, float* a3, float* b1, float* b2, float* b3, float* csu, float* snu, float* csv, float* snv, float* csq, float* snq) __attribute__((alias(MTS(FC_GLOBAL(slags2,SLAGS2)))));
 #else
+#ifndef __APPLE__
 void slags2(blasint* upper, float* a1, float* a2, float* a3, float* b1, float* b2, float* b3, float* csu, float* snu, float* csv, float* snv, float* csq, float* snq) __attribute__((alias(MTS(FC_GLOBAL(slags2,SLAGS2)))));
+#else
+void slags2(blasint* upper, float* a1, float* a2, float* a3, float* b1, float* b2, float* b3, float* csu, float* snu, float* csv, float* snv, float* csq, float* snq){ FC_GLOBAL(slags2,SLAGS2)((void*) upper, (void*) a1, (void*) a2, (void*) a3, (void*) b1, (void*) b2, (void*) b3, (void*) csu, (void*) snu, (void*) csv, (void*) snv, (void*) csq, (void*) snq); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_slags2_(void* upper, void* a1, void* a2, void* a3, void* b1,
 
 	return;
 }
-
-void flexiblas_real_slags2(void* upper, void* a1, void* a2, void* a3, void* b1, void* b2, void* b3, void* csu, void* snu, void* csv, void* snv, void* csq, void* snq)  __attribute__((alias("flexiblas_real_slags2_")));
-
+#ifndef __APPLE__
+void flexiblas_real_slags2(void* upper, void* a1, void* a2, void* a3, void* b1, void* b2, void* b3, void* csu, void* snu, void* csv, void* snv, void* csq, void* snq) __attribute__((alias("flexiblas_real_slags2_")));
+#else
+void flexiblas_real_slags2(void* upper, void* a1, void* a2, void* a3, void* b1, void* b2, void* b3, void* csu, void* snu, void* csv, void* snv, void* csq, void* snq){flexiblas_real_slags2_((void*) upper, (void*) a1, (void*) a2, (void*) a3, (void*) b1, (void*) b2, (void*) b3, (void*) csu, (void*) snu, (void*) csv, (void*) snv, (void*) csq, (void*) snq);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_slags2_(void* upper, void* a1, void* a2, void* a3, void* b1
 	}
 	return;
 }
-
-void flexiblas_chain_slags2(void* upper, void* a1, void* a2, void* a3, void* b1, void* b2, void* b3, void* csu, void* snu, void* csv, void* snv, void* csq, void* snq)  __attribute__((alias("flexiblas_chain_slags2_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_slags2(void* upper, void* a1, void* a2, void* a3, void* b1, void* b2, void* b3, void* csu, void* snu, void* csv, void* snv, void* csq, void* snq) __attribute__((alias("flexiblas_chain_slags2_")));
+#else
+void flexiblas_chain_slags2(void* upper, void* a1, void* a2, void* a3, void* b1, void* b2, void* b3, void* csu, void* snu, void* csv, void* snv, void* csq, void* snq){flexiblas_chain_slags2_((void*) upper, (void*) a1, (void*) a2, (void*) a3, (void*) b1, (void*) b2, (void*) b3, (void*) csu, (void*) snu, (void*) csv, (void*) snv, (void*) csq, (void*) snq);}
+#endif
 
 
 

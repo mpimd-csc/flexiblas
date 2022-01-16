@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(sgeqr,SGEQR)(blasint* m, blasint* n, float* a, blasint* lda, floa
 #ifdef FLEXIBLAS_ABI_IBM
 void sgeqr_(blasint* m, blasint* n, float* a, blasint* lda, float* t, blasint* tsize, float* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sgeqr,SGEQR)))));
 #else
+#ifndef __APPLE__
 void sgeqr(blasint* m, blasint* n, float* a, blasint* lda, float* t, blasint* tsize, float* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sgeqr,SGEQR)))));
+#else
+void sgeqr(blasint* m, blasint* n, float* a, blasint* lda, float* t, blasint* tsize, float* work, blasint* lwork, blasint* info){ FC_GLOBAL(sgeqr,SGEQR)((void*) m, (void*) n, (void*) a, (void*) lda, (void*) t, (void*) tsize, (void*) work, (void*) lwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_sgeqr_(void* m, void* n, void* a, void* lda, void* t, void* 
 
 	return;
 }
-
-void flexiblas_real_sgeqr(void* m, void* n, void* a, void* lda, void* t, void* tsize, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_real_sgeqr_")));
-
+#ifndef __APPLE__
+void flexiblas_real_sgeqr(void* m, void* n, void* a, void* lda, void* t, void* tsize, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_sgeqr_")));
+#else
+void flexiblas_real_sgeqr(void* m, void* n, void* a, void* lda, void* t, void* tsize, void* work, void* lwork, void* info){flexiblas_real_sgeqr_((void*) m, (void*) n, (void*) a, (void*) lda, (void*) t, (void*) tsize, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_sgeqr_(void* m, void* n, void* a, void* lda, void* t, void*
 	}
 	return;
 }
-
-void flexiblas_chain_sgeqr(void* m, void* n, void* a, void* lda, void* t, void* tsize, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_chain_sgeqr_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_sgeqr(void* m, void* n, void* a, void* lda, void* t, void* tsize, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_sgeqr_")));
+#else
+void flexiblas_chain_sgeqr(void* m, void* n, void* a, void* lda, void* t, void* tsize, void* work, void* lwork, void* info){flexiblas_chain_sgeqr_((void*) m, (void*) n, (void*) a, (void*) lda, (void*) t, (void*) tsize, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(claesy,CLAESY)(float complex* a, float complex* b, float complex*
 #ifdef FLEXIBLAS_ABI_IBM
 void claesy_(float complex* a, float complex* b, float complex* c, float complex* rt1, float complex* rt2, float complex* evscal, float complex* cs1, float complex* sn1) __attribute__((alias(MTS(FC_GLOBAL(claesy,CLAESY)))));
 #else
+#ifndef __APPLE__
 void claesy(float complex* a, float complex* b, float complex* c, float complex* rt1, float complex* rt2, float complex* evscal, float complex* cs1, float complex* sn1) __attribute__((alias(MTS(FC_GLOBAL(claesy,CLAESY)))));
+#else
+void claesy(float complex* a, float complex* b, float complex* c, float complex* rt1, float complex* rt2, float complex* evscal, float complex* cs1, float complex* sn1){ FC_GLOBAL(claesy,CLAESY)((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) evscal, (void*) cs1, (void*) sn1); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_claesy_(void* a, void* b, void* c, void* rt1, void* rt2, voi
 
 	return;
 }
-
-void flexiblas_real_claesy(void* a, void* b, void* c, void* rt1, void* rt2, void* evscal, void* cs1, void* sn1)  __attribute__((alias("flexiblas_real_claesy_")));
-
+#ifndef __APPLE__
+void flexiblas_real_claesy(void* a, void* b, void* c, void* rt1, void* rt2, void* evscal, void* cs1, void* sn1) __attribute__((alias("flexiblas_real_claesy_")));
+#else
+void flexiblas_real_claesy(void* a, void* b, void* c, void* rt1, void* rt2, void* evscal, void* cs1, void* sn1){flexiblas_real_claesy_((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) evscal, (void*) cs1, (void*) sn1);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_claesy_(void* a, void* b, void* c, void* rt1, void* rt2, vo
 	}
 	return;
 }
-
-void flexiblas_chain_claesy(void* a, void* b, void* c, void* rt1, void* rt2, void* evscal, void* cs1, void* sn1)  __attribute__((alias("flexiblas_chain_claesy_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_claesy(void* a, void* b, void* c, void* rt1, void* rt2, void* evscal, void* cs1, void* sn1) __attribute__((alias("flexiblas_chain_claesy_")));
+#else
+void flexiblas_chain_claesy(void* a, void* b, void* c, void* rt1, void* rt2, void* evscal, void* cs1, void* sn1){flexiblas_chain_claesy_((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) evscal, (void*) cs1, (void*) sn1);}
+#endif
 
 
 

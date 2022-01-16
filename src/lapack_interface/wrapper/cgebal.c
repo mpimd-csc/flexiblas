@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(cgebal,CGEBAL)(char* job, blasint* n, float complex* a, blasint* 
 #ifdef FLEXIBLAS_ABI_IBM
 void cgebal_(char* job, blasint* n, float complex* a, blasint* lda, blasint* ilo, blasint* ihi, float* scale, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cgebal,CGEBAL)))));
 #else
+#ifndef __APPLE__
 void cgebal(char* job, blasint* n, float complex* a, blasint* lda, blasint* ilo, blasint* ihi, float* scale, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cgebal,CGEBAL)))));
+#else
+void cgebal(char* job, blasint* n, float complex* a, blasint* lda, blasint* ilo, blasint* ihi, float* scale, blasint* info){ FC_GLOBAL(cgebal,CGEBAL)((void*) job, (void*) n, (void*) a, (void*) lda, (void*) ilo, (void*) ihi, (void*) scale, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_cgebal_(void* job, void* n, void* a, void* lda, void* ilo, v
 
 	return;
 }
-
-void flexiblas_real_cgebal(void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info)  __attribute__((alias("flexiblas_real_cgebal_")));
-
+#ifndef __APPLE__
+void flexiblas_real_cgebal(void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info) __attribute__((alias("flexiblas_real_cgebal_")));
+#else
+void flexiblas_real_cgebal(void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info){flexiblas_real_cgebal_((void*) job, (void*) n, (void*) a, (void*) lda, (void*) ilo, (void*) ihi, (void*) scale, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_cgebal_(void* job, void* n, void* a, void* lda, void* ilo, 
 	}
 	return;
 }
-
-void flexiblas_chain_cgebal(void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info)  __attribute__((alias("flexiblas_chain_cgebal_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_cgebal(void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info) __attribute__((alias("flexiblas_chain_cgebal_")));
+#else
+void flexiblas_chain_cgebal(void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info){flexiblas_chain_cgebal_((void*) job, (void*) n, (void*) a, (void*) lda, (void*) ilo, (void*) ihi, (void*) scale, (void*) info);}
+#endif
 
 
 

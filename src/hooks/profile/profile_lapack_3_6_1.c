@@ -40,7 +40,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
 
 
@@ -6328,6 +6328,27 @@ double hook_dlamch(char* cmach)
 
     data->dlamch.timings[0] += (helpTimeStop - helpTime);
     data->dlamch.calls[0]++;
+
+    return v;
+}
+
+
+
+extern double flexiblas_chain_dlamc3 (double* a, double* b);
+double hook_dlamc3(double* a, double* b)
+{
+    double v;
+    double helpTime;
+    double helpTimeStop;
+
+    helpTime = flexiblas_wtime();
+
+    v = flexiblas_chain_dlamc3((void*) a, (void*) b);
+
+    helpTimeStop = flexiblas_wtime();
+
+    data->dlamc3.timings[0] += (helpTimeStop - helpTime);
+    data->dlamc3.calls[0]++;
 
     return v;
 }
@@ -21517,6 +21538,27 @@ float hook_slamch(char* cmach)
 
 
 
+extern float flexiblas_chain_slamc3 (float* a, float* b);
+float hook_slamc3(float* a, float* b)
+{
+    float v;
+    double helpTime;
+    double helpTimeStop;
+
+    helpTime = flexiblas_wtime();
+
+    v = flexiblas_chain_slamc3((void*) a, (void*) b);
+
+    helpTimeStop = flexiblas_wtime();
+
+    data->slamc3.timings[0] += (helpTimeStop - helpTime);
+    data->slamc3.calls[0]++;
+
+    return v;
+}
+
+
+
 extern void flexiblas_chain_slag2d (Int * m, Int * n, float* sa, Int * ldsa, double* a, Int * lda, Int * info);
 void hook_slag2d(Int * m, Int * n, float* sa, Int * ldsa, double* a, Int * lda, Int * info)
 {
@@ -35319,6 +35361,7 @@ void profile_lapack_add(csc_table_t *tab, int col_name, int col_calls, int col_t
     ADD_BLAS_ENTRY(dlaisnan);
     ADD_BLAS_ENTRY(zppsvx);
     ADD_BLAS_ENTRY(dlamch);
+    ADD_BLAS_ENTRY(dlamc3);
     ADD_BLAS_ENTRY(ssysv);
     ADD_BLAS_ENTRY(zggbal);
     ADD_BLAS_ENTRY(second);
@@ -36042,6 +36085,7 @@ void profile_lapack_add(csc_table_t *tab, int col_name, int col_calls, int col_t
     ADD_BLAS_ENTRY(zlatbs);
     ADD_BLAS_ENTRY(dgtsvx);
     ADD_BLAS_ENTRY(slamch);
+    ADD_BLAS_ENTRY(slamc3);
     ADD_BLAS_ENTRY(slag2d);
     ADD_BLAS_ENTRY(dgsvj0);
     ADD_BLAS_ENTRY(slagtf);

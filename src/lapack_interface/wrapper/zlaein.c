@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zlaein,ZLAEIN)(blasint* rightv, blasint* noinit, blasint* n, doub
 #ifdef FLEXIBLAS_ABI_IBM
 void zlaein_(blasint* rightv, blasint* noinit, blasint* n, double complex* h, blasint* ldh, double complex* w, double complex* v, double complex* b, blasint* ldb, double* rwork, double* eps3, double* smlnum, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zlaein,ZLAEIN)))));
 #else
+#ifndef __APPLE__
 void zlaein(blasint* rightv, blasint* noinit, blasint* n, double complex* h, blasint* ldh, double complex* w, double complex* v, double complex* b, blasint* ldb, double* rwork, double* eps3, double* smlnum, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zlaein,ZLAEIN)))));
+#else
+void zlaein(blasint* rightv, blasint* noinit, blasint* n, double complex* h, blasint* ldh, double complex* w, double complex* v, double complex* b, blasint* ldb, double* rwork, double* eps3, double* smlnum, blasint* info){ FC_GLOBAL(zlaein,ZLAEIN)((void*) rightv, (void*) noinit, (void*) n, (void*) h, (void*) ldh, (void*) w, (void*) v, (void*) b, (void*) ldb, (void*) rwork, (void*) eps3, (void*) smlnum, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zlaein_(void* rightv, void* noinit, void* n, void* h, void* 
 
 	return;
 }
-
-void flexiblas_real_zlaein(void* rightv, void* noinit, void* n, void* h, void* ldh, void* w, void* v, void* b, void* ldb, void* rwork, void* eps3, void* smlnum, void* info)  __attribute__((alias("flexiblas_real_zlaein_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zlaein(void* rightv, void* noinit, void* n, void* h, void* ldh, void* w, void* v, void* b, void* ldb, void* rwork, void* eps3, void* smlnum, void* info) __attribute__((alias("flexiblas_real_zlaein_")));
+#else
+void flexiblas_real_zlaein(void* rightv, void* noinit, void* n, void* h, void* ldh, void* w, void* v, void* b, void* ldb, void* rwork, void* eps3, void* smlnum, void* info){flexiblas_real_zlaein_((void*) rightv, (void*) noinit, (void*) n, (void*) h, (void*) ldh, (void*) w, (void*) v, (void*) b, (void*) ldb, (void*) rwork, (void*) eps3, (void*) smlnum, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zlaein_(void* rightv, void* noinit, void* n, void* h, void*
 	}
 	return;
 }
-
-void flexiblas_chain_zlaein(void* rightv, void* noinit, void* n, void* h, void* ldh, void* w, void* v, void* b, void* ldb, void* rwork, void* eps3, void* smlnum, void* info)  __attribute__((alias("flexiblas_chain_zlaein_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zlaein(void* rightv, void* noinit, void* n, void* h, void* ldh, void* w, void* v, void* b, void* ldb, void* rwork, void* eps3, void* smlnum, void* info) __attribute__((alias("flexiblas_chain_zlaein_")));
+#else
+void flexiblas_chain_zlaein(void* rightv, void* noinit, void* n, void* h, void* ldh, void* w, void* v, void* b, void* ldb, void* rwork, void* eps3, void* smlnum, void* info){flexiblas_chain_zlaein_((void*) rightv, (void*) noinit, (void*) n, (void*) h, (void*) ldh, (void*) w, (void*) v, (void*) b, (void*) ldb, (void*) rwork, (void*) eps3, (void*) smlnum, (void*) info);}
+#endif
 
 
 

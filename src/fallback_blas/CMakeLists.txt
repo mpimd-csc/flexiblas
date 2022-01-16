@@ -47,6 +47,11 @@ endif()
 
 target_include_directories(flexiblas_netlib PRIVATE ${PROJECT_BINARY_DIR}/include)
 
+if (APPLE) 
+   set_target_properties(flexiblas_netlib PROPERTIES LINK_FLAGS "-undefined dynamic_lookup -flat_namespace") 
+endif()
+
+
 if (WIN32)
 	install(TARGETS flexiblas_netlib EXPORT flexiblas-targets LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR} RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
 else ()

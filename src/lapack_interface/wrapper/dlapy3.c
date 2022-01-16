@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ double FC_GLOBAL(dlapy3,DLAPY3)(double* x, double* y, double* z)
 #ifdef FLEXIBLAS_ABI_IBM
 double dlapy3_(double* x, double* y, double* z) __attribute__((alias(MTS(FC_GLOBAL(dlapy3,DLAPY3)))));
 #else
+#ifndef __APPLE__
 double dlapy3(double* x, double* y, double* z) __attribute__((alias(MTS(FC_GLOBAL(dlapy3,DLAPY3)))));
+#else
+double dlapy3(double* x, double* y, double* z){ return FC_GLOBAL(dlapy3,DLAPY3)((void*) x, (void*) y, (void*) z); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ double flexiblas_real_dlapy3_(void* x, void* y, void* z)
 
 	return ret ;
 }
-
-double flexiblas_real_dlapy3(void* x, void* y, void* z)  __attribute__((alias("flexiblas_real_dlapy3_")));
-
+#ifndef __APPLE__
+double flexiblas_real_dlapy3(void* x, void* y, void* z) __attribute__((alias("flexiblas_real_dlapy3_")));
+#else
+double flexiblas_real_dlapy3(void* x, void* y, void* z){return flexiblas_real_dlapy3_((void*) x, (void*) y, (void*) z);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ double flexiblas_chain_dlapy3_(void* x, void* y, void* z)
 	}
 	return ret ;
 }
-
-double flexiblas_chain_dlapy3(void* x, void* y, void* z)  __attribute__((alias("flexiblas_chain_dlapy3_")));
-
+#ifndef __APPLE__
+double flexiblas_chain_dlapy3(void* x, void* y, void* z) __attribute__((alias("flexiblas_chain_dlapy3_")));
+#else
+double flexiblas_chain_dlapy3(void* x, void* y, void* z){return flexiblas_chain_dlapy3_((void*) x, (void*) y, (void*) z);}
+#endif
 
 
 

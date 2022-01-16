@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ float FC_GLOBAL(slange,SLANGE)(char* norm, blasint* m, blasint* n, float* a, bla
 #ifdef FLEXIBLAS_ABI_IBM
 float slange_(char* norm, blasint* m, blasint* n, float* a, blasint* lda, float* work) __attribute__((alias(MTS(FC_GLOBAL(slange,SLANGE)))));
 #else
+#ifndef __APPLE__
 float slange(char* norm, blasint* m, blasint* n, float* a, blasint* lda, float* work) __attribute__((alias(MTS(FC_GLOBAL(slange,SLANGE)))));
+#else
+float slange(char* norm, blasint* m, blasint* n, float* a, blasint* lda, float* work){ return FC_GLOBAL(slange,SLANGE)((void*) norm, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) work); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ float flexiblas_real_slange_(void* norm, void* m, void* n, void* a, void* lda, v
 
 	return ret ;
 }
-
-float flexiblas_real_slange(void* norm, void* m, void* n, void* a, void* lda, void* work)  __attribute__((alias("flexiblas_real_slange_")));
-
+#ifndef __APPLE__
+float flexiblas_real_slange(void* norm, void* m, void* n, void* a, void* lda, void* work) __attribute__((alias("flexiblas_real_slange_")));
+#else
+float flexiblas_real_slange(void* norm, void* m, void* n, void* a, void* lda, void* work){return flexiblas_real_slange_((void*) norm, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) work);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ float flexiblas_chain_slange_(void* norm, void* m, void* n, void* a, void* lda, 
 	}
 	return ret ;
 }
-
-float flexiblas_chain_slange(void* norm, void* m, void* n, void* a, void* lda, void* work)  __attribute__((alias("flexiblas_chain_slange_")));
-
+#ifndef __APPLE__
+float flexiblas_chain_slange(void* norm, void* m, void* n, void* a, void* lda, void* work) __attribute__((alias("flexiblas_chain_slange_")));
+#else
+float flexiblas_chain_slange(void* norm, void* m, void* n, void* a, void* lda, void* work){return flexiblas_chain_slange_((void*) norm, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) work);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(ctgevc,CTGEVC)(char* side, char* howmny, blasint* select, blasint
 #ifdef FLEXIBLAS_ABI_IBM
 void ctgevc_(char* side, char* howmny, blasint* select, blasint* n, float complex* s, blasint* lds, float complex* p, blasint* ldp, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, blasint* mm, blasint* m, float complex* work, float* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ctgevc,CTGEVC)))));
 #else
+#ifndef __APPLE__
 void ctgevc(char* side, char* howmny, blasint* select, blasint* n, float complex* s, blasint* lds, float complex* p, blasint* ldp, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, blasint* mm, blasint* m, float complex* work, float* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ctgevc,CTGEVC)))));
+#else
+void ctgevc(char* side, char* howmny, blasint* select, blasint* n, float complex* s, blasint* lds, float complex* p, blasint* ldp, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, blasint* mm, blasint* m, float complex* work, float* rwork, blasint* info){ FC_GLOBAL(ctgevc,CTGEVC)((void*) side, (void*) howmny, (void*) select, (void*) n, (void*) s, (void*) lds, (void*) p, (void*) ldp, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) mm, (void*) m, (void*) work, (void*) rwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_ctgevc_(void* side, void* howmny, void* select, void* n, voi
 
 	return;
 }
-
-void flexiblas_real_ctgevc(void* side, void* howmny, void* select, void* n, void* s, void* lds, void* p, void* ldp, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* rwork, void* info)  __attribute__((alias("flexiblas_real_ctgevc_")));
-
+#ifndef __APPLE__
+void flexiblas_real_ctgevc(void* side, void* howmny, void* select, void* n, void* s, void* lds, void* p, void* ldp, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* rwork, void* info) __attribute__((alias("flexiblas_real_ctgevc_")));
+#else
+void flexiblas_real_ctgevc(void* side, void* howmny, void* select, void* n, void* s, void* lds, void* p, void* ldp, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* rwork, void* info){flexiblas_real_ctgevc_((void*) side, (void*) howmny, (void*) select, (void*) n, (void*) s, (void*) lds, (void*) p, (void*) ldp, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) mm, (void*) m, (void*) work, (void*) rwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_ctgevc_(void* side, void* howmny, void* select, void* n, vo
 	}
 	return;
 }
-
-void flexiblas_chain_ctgevc(void* side, void* howmny, void* select, void* n, void* s, void* lds, void* p, void* ldp, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* rwork, void* info)  __attribute__((alias("flexiblas_chain_ctgevc_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_ctgevc(void* side, void* howmny, void* select, void* n, void* s, void* lds, void* p, void* ldp, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* rwork, void* info) __attribute__((alias("flexiblas_chain_ctgevc_")));
+#else
+void flexiblas_chain_ctgevc(void* side, void* howmny, void* select, void* n, void* s, void* lds, void* p, void* ldp, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* rwork, void* info){flexiblas_chain_ctgevc_((void*) side, (void*) howmny, (void*) select, (void*) n, (void*) s, (void*) lds, (void*) p, (void*) ldp, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) mm, (void*) m, (void*) work, (void*) rwork, (void*) info);}
+#endif
 
 
 

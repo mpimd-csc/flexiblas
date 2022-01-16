@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dbdsdc,DBDSDC)(char* uplo, char* compq, blasint* n, double* d, do
 #ifdef FLEXIBLAS_ABI_IBM
 void dbdsdc_(char* uplo, char* compq, blasint* n, double* d, double* e, double* u, blasint* ldu, double* vt, blasint* ldvt, double* q, blasint* iq, double* work, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dbdsdc,DBDSDC)))));
 #else
+#ifndef __APPLE__
 void dbdsdc(char* uplo, char* compq, blasint* n, double* d, double* e, double* u, blasint* ldu, double* vt, blasint* ldvt, double* q, blasint* iq, double* work, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dbdsdc,DBDSDC)))));
+#else
+void dbdsdc(char* uplo, char* compq, blasint* n, double* d, double* e, double* u, blasint* ldu, double* vt, blasint* ldvt, double* q, blasint* iq, double* work, blasint* iwork, blasint* info){ FC_GLOBAL(dbdsdc,DBDSDC)((void*) uplo, (void*) compq, (void*) n, (void*) d, (void*) e, (void*) u, (void*) ldu, (void*) vt, (void*) ldvt, (void*) q, (void*) iq, (void*) work, (void*) iwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dbdsdc_(void* uplo, void* compq, void* n, void* d, void* e, 
 
 	return;
 }
-
-void flexiblas_real_dbdsdc(void* uplo, void* compq, void* n, void* d, void* e, void* u, void* ldu, void* vt, void* ldvt, void* q, void* iq, void* work, void* iwork, void* info)  __attribute__((alias("flexiblas_real_dbdsdc_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dbdsdc(void* uplo, void* compq, void* n, void* d, void* e, void* u, void* ldu, void* vt, void* ldvt, void* q, void* iq, void* work, void* iwork, void* info) __attribute__((alias("flexiblas_real_dbdsdc_")));
+#else
+void flexiblas_real_dbdsdc(void* uplo, void* compq, void* n, void* d, void* e, void* u, void* ldu, void* vt, void* ldvt, void* q, void* iq, void* work, void* iwork, void* info){flexiblas_real_dbdsdc_((void*) uplo, (void*) compq, (void*) n, (void*) d, (void*) e, (void*) u, (void*) ldu, (void*) vt, (void*) ldvt, (void*) q, (void*) iq, (void*) work, (void*) iwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dbdsdc_(void* uplo, void* compq, void* n, void* d, void* e,
 	}
 	return;
 }
-
-void flexiblas_chain_dbdsdc(void* uplo, void* compq, void* n, void* d, void* e, void* u, void* ldu, void* vt, void* ldvt, void* q, void* iq, void* work, void* iwork, void* info)  __attribute__((alias("flexiblas_chain_dbdsdc_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dbdsdc(void* uplo, void* compq, void* n, void* d, void* e, void* u, void* ldu, void* vt, void* ldvt, void* q, void* iq, void* work, void* iwork, void* info) __attribute__((alias("flexiblas_chain_dbdsdc_")));
+#else
+void flexiblas_chain_dbdsdc(void* uplo, void* compq, void* n, void* d, void* e, void* u, void* ldu, void* vt, void* ldvt, void* q, void* iq, void* work, void* iwork, void* info){flexiblas_chain_dbdsdc_((void*) uplo, (void*) compq, (void*) n, (void*) d, (void*) e, (void*) u, (void*) ldu, (void*) vt, (void*) ldvt, (void*) q, (void*) iq, (void*) work, (void*) iwork, (void*) info);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dladiv,DLADIV)(double* a, double* b, double* c, double* d, double
 #ifdef FLEXIBLAS_ABI_IBM
 void dladiv_(double* a, double* b, double* c, double* d, double* p, double* q) __attribute__((alias(MTS(FC_GLOBAL(dladiv,DLADIV)))));
 #else
+#ifndef __APPLE__
 void dladiv(double* a, double* b, double* c, double* d, double* p, double* q) __attribute__((alias(MTS(FC_GLOBAL(dladiv,DLADIV)))));
+#else
+void dladiv(double* a, double* b, double* c, double* d, double* p, double* q){ FC_GLOBAL(dladiv,DLADIV)((void*) a, (void*) b, (void*) c, (void*) d, (void*) p, (void*) q); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dladiv_(void* a, void* b, void* c, void* d, void* p, void* q
 
 	return;
 }
-
-void flexiblas_real_dladiv(void* a, void* b, void* c, void* d, void* p, void* q)  __attribute__((alias("flexiblas_real_dladiv_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dladiv(void* a, void* b, void* c, void* d, void* p, void* q) __attribute__((alias("flexiblas_real_dladiv_")));
+#else
+void flexiblas_real_dladiv(void* a, void* b, void* c, void* d, void* p, void* q){flexiblas_real_dladiv_((void*) a, (void*) b, (void*) c, (void*) d, (void*) p, (void*) q);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dladiv_(void* a, void* b, void* c, void* d, void* p, void* 
 	}
 	return;
 }
-
-void flexiblas_chain_dladiv(void* a, void* b, void* c, void* d, void* p, void* q)  __attribute__((alias("flexiblas_chain_dladiv_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dladiv(void* a, void* b, void* c, void* d, void* p, void* q) __attribute__((alias("flexiblas_chain_dladiv_")));
+#else
+void flexiblas_chain_dladiv(void* a, void* b, void* c, void* d, void* p, void* q){flexiblas_chain_dladiv_((void*) a, (void*) b, (void*) c, (void*) d, (void*) p, (void*) q);}
+#endif
 
 
 

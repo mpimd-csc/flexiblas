@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(shseqr,SHSEQR)(char* job, char* compz, blasint* n, blasint* ilo, 
 #ifdef FLEXIBLAS_ABI_IBM
 void shseqr_(char* job, char* compz, blasint* n, blasint* ilo, blasint* ihi, float* h, blasint* ldh, float* wr, float* wi, float* z, blasint* ldz, float* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(shseqr,SHSEQR)))));
 #else
+#ifndef __APPLE__
 void shseqr(char* job, char* compz, blasint* n, blasint* ilo, blasint* ihi, float* h, blasint* ldh, float* wr, float* wi, float* z, blasint* ldz, float* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(shseqr,SHSEQR)))));
+#else
+void shseqr(char* job, char* compz, blasint* n, blasint* ilo, blasint* ihi, float* h, blasint* ldh, float* wr, float* wi, float* z, blasint* ldz, float* work, blasint* lwork, blasint* info){ FC_GLOBAL(shseqr,SHSEQR)((void*) job, (void*) compz, (void*) n, (void*) ilo, (void*) ihi, (void*) h, (void*) ldh, (void*) wr, (void*) wi, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_shseqr_(void* job, void* compz, void* n, void* ilo, void* ih
 
 	return;
 }
-
-void flexiblas_real_shseqr(void* job, void* compz, void* n, void* ilo, void* ihi, void* h, void* ldh, void* wr, void* wi, void* z, void* ldz, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_real_shseqr_")));
-
+#ifndef __APPLE__
+void flexiblas_real_shseqr(void* job, void* compz, void* n, void* ilo, void* ihi, void* h, void* ldh, void* wr, void* wi, void* z, void* ldz, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_shseqr_")));
+#else
+void flexiblas_real_shseqr(void* job, void* compz, void* n, void* ilo, void* ihi, void* h, void* ldh, void* wr, void* wi, void* z, void* ldz, void* work, void* lwork, void* info){flexiblas_real_shseqr_((void*) job, (void*) compz, (void*) n, (void*) ilo, (void*) ihi, (void*) h, (void*) ldh, (void*) wr, (void*) wi, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_shseqr_(void* job, void* compz, void* n, void* ilo, void* i
 	}
 	return;
 }
-
-void flexiblas_chain_shseqr(void* job, void* compz, void* n, void* ilo, void* ihi, void* h, void* ldh, void* wr, void* wi, void* z, void* ldz, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_chain_shseqr_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_shseqr(void* job, void* compz, void* n, void* ilo, void* ihi, void* h, void* ldh, void* wr, void* wi, void* z, void* ldz, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_shseqr_")));
+#else
+void flexiblas_chain_shseqr(void* job, void* compz, void* n, void* ilo, void* ihi, void* h, void* ldh, void* wr, void* wi, void* z, void* ldz, void* work, void* lwork, void* info){flexiblas_chain_shseqr_((void*) job, (void*) compz, (void*) n, (void*) ilo, (void*) ihi, (void*) h, (void*) ldh, (void*) wr, (void*) wi, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 

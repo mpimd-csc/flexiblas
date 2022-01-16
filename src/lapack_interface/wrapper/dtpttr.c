@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dtpttr,DTPTTR)(char* uplo, blasint* n, double* ap, double* a, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void dtpttr_(char* uplo, blasint* n, double* ap, double* a, blasint* lda, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dtpttr,DTPTTR)))));
 #else
+#ifndef __APPLE__
 void dtpttr(char* uplo, blasint* n, double* ap, double* a, blasint* lda, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dtpttr,DTPTTR)))));
+#else
+void dtpttr(char* uplo, blasint* n, double* ap, double* a, blasint* lda, blasint* info){ FC_GLOBAL(dtpttr,DTPTTR)((void*) uplo, (void*) n, (void*) ap, (void*) a, (void*) lda, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dtpttr_(void* uplo, void* n, void* ap, void* a, void* lda, v
 
 	return;
 }
-
-void flexiblas_real_dtpttr(void* uplo, void* n, void* ap, void* a, void* lda, void* info)  __attribute__((alias("flexiblas_real_dtpttr_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dtpttr(void* uplo, void* n, void* ap, void* a, void* lda, void* info) __attribute__((alias("flexiblas_real_dtpttr_")));
+#else
+void flexiblas_real_dtpttr(void* uplo, void* n, void* ap, void* a, void* lda, void* info){flexiblas_real_dtpttr_((void*) uplo, (void*) n, (void*) ap, (void*) a, (void*) lda, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dtpttr_(void* uplo, void* n, void* ap, void* a, void* lda, 
 	}
 	return;
 }
-
-void flexiblas_chain_dtpttr(void* uplo, void* n, void* ap, void* a, void* lda, void* info)  __attribute__((alias("flexiblas_chain_dtpttr_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dtpttr(void* uplo, void* n, void* ap, void* a, void* lda, void* info) __attribute__((alias("flexiblas_chain_dtpttr_")));
+#else
+void flexiblas_chain_dtpttr(void* uplo, void* n, void* ap, void* a, void* lda, void* info){flexiblas_chain_dtpttr_((void*) uplo, (void*) n, (void*) ap, (void*) a, (void*) lda, (void*) info);}
+#endif
 
 
 

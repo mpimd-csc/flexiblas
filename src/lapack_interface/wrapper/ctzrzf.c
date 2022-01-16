@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(ctzrzf,CTZRZF)(blasint* m, blasint* n, float complex* a, blasint*
 #ifdef FLEXIBLAS_ABI_IBM
 void ctzrzf_(blasint* m, blasint* n, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ctzrzf,CTZRZF)))));
 #else
+#ifndef __APPLE__
 void ctzrzf(blasint* m, blasint* n, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ctzrzf,CTZRZF)))));
+#else
+void ctzrzf(blasint* m, blasint* n, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* lwork, blasint* info){ FC_GLOBAL(ctzrzf,CTZRZF)((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_ctzrzf_(void* m, void* n, void* a, void* lda, void* tau, voi
 
 	return;
 }
-
-void flexiblas_real_ctzrzf(void* m, void* n, void* a, void* lda, void* tau, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_real_ctzrzf_")));
-
+#ifndef __APPLE__
+void flexiblas_real_ctzrzf(void* m, void* n, void* a, void* lda, void* tau, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_ctzrzf_")));
+#else
+void flexiblas_real_ctzrzf(void* m, void* n, void* a, void* lda, void* tau, void* work, void* lwork, void* info){flexiblas_real_ctzrzf_((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_ctzrzf_(void* m, void* n, void* a, void* lda, void* tau, vo
 	}
 	return;
 }
-
-void flexiblas_chain_ctzrzf(void* m, void* n, void* a, void* lda, void* tau, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_chain_ctzrzf_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_ctzrzf(void* m, void* n, void* a, void* lda, void* tau, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_ctzrzf_")));
+#else
+void flexiblas_chain_ctzrzf(void* m, void* n, void* a, void* lda, void* tau, void* work, void* lwork, void* info){flexiblas_chain_ctzrzf_((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 

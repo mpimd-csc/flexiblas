@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(sgtsv,SGTSV)(blasint* n, blasint* nrhs, float* dl, float* d, floa
 #ifdef FLEXIBLAS_ABI_IBM
 void sgtsv_(blasint* n, blasint* nrhs, float* dl, float* d, float* du, float* b, blasint* ldb, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sgtsv,SGTSV)))));
 #else
+#ifndef __APPLE__
 void sgtsv(blasint* n, blasint* nrhs, float* dl, float* d, float* du, float* b, blasint* ldb, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sgtsv,SGTSV)))));
+#else
+void sgtsv(blasint* n, blasint* nrhs, float* dl, float* d, float* du, float* b, blasint* ldb, blasint* info){ FC_GLOBAL(sgtsv,SGTSV)((void*) n, (void*) nrhs, (void*) dl, (void*) d, (void*) du, (void*) b, (void*) ldb, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_sgtsv_(void* n, void* nrhs, void* dl, void* d, void* du, voi
 
 	return;
 }
-
-void flexiblas_real_sgtsv(void* n, void* nrhs, void* dl, void* d, void* du, void* b, void* ldb, void* info)  __attribute__((alias("flexiblas_real_sgtsv_")));
-
+#ifndef __APPLE__
+void flexiblas_real_sgtsv(void* n, void* nrhs, void* dl, void* d, void* du, void* b, void* ldb, void* info) __attribute__((alias("flexiblas_real_sgtsv_")));
+#else
+void flexiblas_real_sgtsv(void* n, void* nrhs, void* dl, void* d, void* du, void* b, void* ldb, void* info){flexiblas_real_sgtsv_((void*) n, (void*) nrhs, (void*) dl, (void*) d, (void*) du, (void*) b, (void*) ldb, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_sgtsv_(void* n, void* nrhs, void* dl, void* d, void* du, vo
 	}
 	return;
 }
-
-void flexiblas_chain_sgtsv(void* n, void* nrhs, void* dl, void* d, void* du, void* b, void* ldb, void* info)  __attribute__((alias("flexiblas_chain_sgtsv_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_sgtsv(void* n, void* nrhs, void* dl, void* d, void* du, void* b, void* ldb, void* info) __attribute__((alias("flexiblas_chain_sgtsv_")));
+#else
+void flexiblas_chain_sgtsv(void* n, void* nrhs, void* dl, void* d, void* du, void* b, void* ldb, void* info){flexiblas_chain_sgtsv_((void*) n, (void*) nrhs, (void*) dl, (void*) d, (void*) du, (void*) b, (void*) ldb, (void*) info);}
+#endif
 
 
 

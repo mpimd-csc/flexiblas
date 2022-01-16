@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL_(csyconvf_rook,CSYCONVF_ROOK)(char* uplo, char* way, blasint* n, 
 #ifdef FLEXIBLAS_ABI_IBM
 void csyconvf_rook_(char* uplo, char* way, blasint* n, float complex* a, blasint* lda, float complex* e, blasint* ipiv, blasint* info) __attribute__((alias(MTS(FC_GLOBAL_(csyconvf_rook,CSYCONVF_ROOK)))));
 #else
+#ifndef __APPLE__
 void csyconvf_rook(char* uplo, char* way, blasint* n, float complex* a, blasint* lda, float complex* e, blasint* ipiv, blasint* info) __attribute__((alias(MTS(FC_GLOBAL_(csyconvf_rook,CSYCONVF_ROOK)))));
+#else
+void csyconvf_rook(char* uplo, char* way, blasint* n, float complex* a, blasint* lda, float complex* e, blasint* ipiv, blasint* info){ FC_GLOBAL_(csyconvf_rook,CSYCONVF_ROOK)((void*) uplo, (void*) way, (void*) n, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_csyconvf_rook_(void* uplo, void* way, void* n, void* a, void
 
 	return;
 }
-
-void flexiblas_real_csyconvf_rook(void* uplo, void* way, void* n, void* a, void* lda, void* e, void* ipiv, void* info)  __attribute__((alias("flexiblas_real_csyconvf_rook_")));
-
+#ifndef __APPLE__
+void flexiblas_real_csyconvf_rook(void* uplo, void* way, void* n, void* a, void* lda, void* e, void* ipiv, void* info) __attribute__((alias("flexiblas_real_csyconvf_rook_")));
+#else
+void flexiblas_real_csyconvf_rook(void* uplo, void* way, void* n, void* a, void* lda, void* e, void* ipiv, void* info){flexiblas_real_csyconvf_rook_((void*) uplo, (void*) way, (void*) n, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_csyconvf_rook_(void* uplo, void* way, void* n, void* a, voi
 	}
 	return;
 }
-
-void flexiblas_chain_csyconvf_rook(void* uplo, void* way, void* n, void* a, void* lda, void* e, void* ipiv, void* info)  __attribute__((alias("flexiblas_chain_csyconvf_rook_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_csyconvf_rook(void* uplo, void* way, void* n, void* a, void* lda, void* e, void* ipiv, void* info) __attribute__((alias("flexiblas_chain_csyconvf_rook_")));
+#else
+void flexiblas_chain_csyconvf_rook(void* uplo, void* way, void* n, void* a, void* lda, void* e, void* ipiv, void* info){flexiblas_chain_csyconvf_rook_((void*) uplo, (void*) way, (void*) n, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) info);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dsygvx,DSYGVX)(blasint* itype, char* jobz, char* range, char* upl
 #ifdef FLEXIBLAS_ABI_IBM
 void dsygvx_(blasint* itype, char* jobz, char* range, char* uplo, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, double* vl, double* vu, blasint* il, blasint* iu, double* abstol, blasint* m, double* w, double* z, blasint* ldz, double* work, blasint* lwork, blasint* iwork, blasint* ifail, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dsygvx,DSYGVX)))));
 #else
+#ifndef __APPLE__
 void dsygvx(blasint* itype, char* jobz, char* range, char* uplo, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, double* vl, double* vu, blasint* il, blasint* iu, double* abstol, blasint* m, double* w, double* z, blasint* ldz, double* work, blasint* lwork, blasint* iwork, blasint* ifail, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dsygvx,DSYGVX)))));
+#else
+void dsygvx(blasint* itype, char* jobz, char* range, char* uplo, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, double* vl, double* vu, blasint* il, blasint* iu, double* abstol, blasint* m, double* w, double* z, blasint* ldz, double* work, blasint* lwork, blasint* iwork, blasint* ifail, blasint* info){ FC_GLOBAL(dsygvx,DSYGVX)((void*) itype, (void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) iwork, (void*) ifail, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dsygvx_(void* itype, void* jobz, void* range, void* uplo, vo
 
 	return;
 }
-
-void flexiblas_real_dsygvx(void* itype, void* jobz, void* range, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* lwork, void* iwork, void* ifail, void* info)  __attribute__((alias("flexiblas_real_dsygvx_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dsygvx(void* itype, void* jobz, void* range, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* lwork, void* iwork, void* ifail, void* info) __attribute__((alias("flexiblas_real_dsygvx_")));
+#else
+void flexiblas_real_dsygvx(void* itype, void* jobz, void* range, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* lwork, void* iwork, void* ifail, void* info){flexiblas_real_dsygvx_((void*) itype, (void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) iwork, (void*) ifail, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dsygvx_(void* itype, void* jobz, void* range, void* uplo, v
 	}
 	return;
 }
-
-void flexiblas_chain_dsygvx(void* itype, void* jobz, void* range, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* lwork, void* iwork, void* ifail, void* info)  __attribute__((alias("flexiblas_chain_dsygvx_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dsygvx(void* itype, void* jobz, void* range, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* lwork, void* iwork, void* ifail, void* info) __attribute__((alias("flexiblas_chain_dsygvx_")));
+#else
+void flexiblas_chain_dsygvx(void* itype, void* jobz, void* range, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* lwork, void* iwork, void* ifail, void* info){flexiblas_chain_dsygvx_((void*) itype, (void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) iwork, (void*) ifail, (void*) info);}
+#endif
 
 
 

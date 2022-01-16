@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
 
 
@@ -48,12 +48,8 @@
 #define FLEXIBLAS_H
 
 
-#define FLEXIBLAS_VERSION "3.0.4"
-#define FLEXIBLAS_VERSION_MAJOR 3
-#define FLEXIBLAS_VERSION_MINOR 0
-#define FLEXIBLAS_VERSION_PATCH 4
 
-#define FLEXIBLAS_YEARS "2014, 2015, 2016, 2017, 2018, 2019, 2020"
+
 
 #define PRINT_PREFIX "flexiblas"
 

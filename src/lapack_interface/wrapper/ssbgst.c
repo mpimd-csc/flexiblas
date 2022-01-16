@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(ssbgst,SSBGST)(char* vect, char* uplo, blasint* n, blasint* ka, b
 #ifdef FLEXIBLAS_ABI_IBM
 void ssbgst_(char* vect, char* uplo, blasint* n, blasint* ka, blasint* kb, float* ab, blasint* ldab, float* bb, blasint* ldbb, float* x, blasint* ldx, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ssbgst,SSBGST)))));
 #else
+#ifndef __APPLE__
 void ssbgst(char* vect, char* uplo, blasint* n, blasint* ka, blasint* kb, float* ab, blasint* ldab, float* bb, blasint* ldbb, float* x, blasint* ldx, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ssbgst,SSBGST)))));
+#else
+void ssbgst(char* vect, char* uplo, blasint* n, blasint* ka, blasint* kb, float* ab, blasint* ldab, float* bb, blasint* ldbb, float* x, blasint* ldx, float* work, blasint* info){ FC_GLOBAL(ssbgst,SSBGST)((void*) vect, (void*) uplo, (void*) n, (void*) ka, (void*) kb, (void*) ab, (void*) ldab, (void*) bb, (void*) ldbb, (void*) x, (void*) ldx, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_ssbgst_(void* vect, void* uplo, void* n, void* ka, void* kb,
 
 	return;
 }
-
-void flexiblas_real_ssbgst(void* vect, void* uplo, void* n, void* ka, void* kb, void* ab, void* ldab, void* bb, void* ldbb, void* x, void* ldx, void* work, void* info)  __attribute__((alias("flexiblas_real_ssbgst_")));
-
+#ifndef __APPLE__
+void flexiblas_real_ssbgst(void* vect, void* uplo, void* n, void* ka, void* kb, void* ab, void* ldab, void* bb, void* ldbb, void* x, void* ldx, void* work, void* info) __attribute__((alias("flexiblas_real_ssbgst_")));
+#else
+void flexiblas_real_ssbgst(void* vect, void* uplo, void* n, void* ka, void* kb, void* ab, void* ldab, void* bb, void* ldbb, void* x, void* ldx, void* work, void* info){flexiblas_real_ssbgst_((void*) vect, (void*) uplo, (void*) n, (void*) ka, (void*) kb, (void*) ab, (void*) ldab, (void*) bb, (void*) ldbb, (void*) x, (void*) ldx, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_ssbgst_(void* vect, void* uplo, void* n, void* ka, void* kb
 	}
 	return;
 }
-
-void flexiblas_chain_ssbgst(void* vect, void* uplo, void* n, void* ka, void* kb, void* ab, void* ldab, void* bb, void* ldbb, void* x, void* ldx, void* work, void* info)  __attribute__((alias("flexiblas_chain_ssbgst_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_ssbgst(void* vect, void* uplo, void* n, void* ka, void* kb, void* ab, void* ldab, void* bb, void* ldbb, void* x, void* ldx, void* work, void* info) __attribute__((alias("flexiblas_chain_ssbgst_")));
+#else
+void flexiblas_chain_ssbgst(void* vect, void* uplo, void* n, void* ka, void* kb, void* ab, void* ldab, void* bb, void* ldbb, void* x, void* ldx, void* work, void* info){flexiblas_chain_ssbgst_((void*) vect, (void*) uplo, (void*) n, (void*) ka, (void*) kb, (void*) ab, (void*) ldab, (void*) bb, (void*) ldbb, (void*) x, (void*) ldx, (void*) work, (void*) info);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlasq1,DLASQ1)(blasint* n, double* d, double* e, double* work, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void dlasq1_(blasint* n, double* d, double* e, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlasq1,DLASQ1)))));
 #else
+#ifndef __APPLE__
 void dlasq1(blasint* n, double* d, double* e, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlasq1,DLASQ1)))));
+#else
+void dlasq1(blasint* n, double* d, double* e, double* work, blasint* info){ FC_GLOBAL(dlasq1,DLASQ1)((void*) n, (void*) d, (void*) e, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlasq1_(void* n, void* d, void* e, void* work, void* info)
 
 	return;
 }
-
-void flexiblas_real_dlasq1(void* n, void* d, void* e, void* work, void* info)  __attribute__((alias("flexiblas_real_dlasq1_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlasq1(void* n, void* d, void* e, void* work, void* info) __attribute__((alias("flexiblas_real_dlasq1_")));
+#else
+void flexiblas_real_dlasq1(void* n, void* d, void* e, void* work, void* info){flexiblas_real_dlasq1_((void*) n, (void*) d, (void*) e, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlasq1_(void* n, void* d, void* e, void* work, void* info)
 	}
 	return;
 }
-
-void flexiblas_chain_dlasq1(void* n, void* d, void* e, void* work, void* info)  __attribute__((alias("flexiblas_chain_dlasq1_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlasq1(void* n, void* d, void* e, void* work, void* info) __attribute__((alias("flexiblas_chain_dlasq1_")));
+#else
+void flexiblas_chain_dlasq1(void* n, void* d, void* e, void* work, void* info){flexiblas_chain_dlasq1_((void*) n, (void*) d, (void*) e, (void*) work, (void*) info);}
+#endif
 
 
 

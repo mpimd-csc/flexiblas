@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dgelss,DGELSS)(blasint* m, blasint* n, blasint* nrhs, double* a, 
 #ifdef FLEXIBLAS_ABI_IBM
 void dgelss_(blasint* m, blasint* n, blasint* nrhs, double* a, blasint* lda, double* b, blasint* ldb, double* s, double* rcond, blasint* rank_bn, double* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dgelss,DGELSS)))));
 #else
+#ifndef __APPLE__
 void dgelss(blasint* m, blasint* n, blasint* nrhs, double* a, blasint* lda, double* b, blasint* ldb, double* s, double* rcond, blasint* rank_bn, double* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dgelss,DGELSS)))));
+#else
+void dgelss(blasint* m, blasint* n, blasint* nrhs, double* a, blasint* lda, double* b, blasint* ldb, double* s, double* rcond, blasint* rank_bn, double* work, blasint* lwork, blasint* info){ FC_GLOBAL(dgelss,DGELSS)((void*) m, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) s, (void*) rcond, (void*) rank_bn, (void*) work, (void*) lwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dgelss_(void* m, void* n, void* nrhs, void* a, void* lda, vo
 
 	return;
 }
-
-void flexiblas_real_dgelss(void* m, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* s, void* rcond, void* rank_bn, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_real_dgelss_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dgelss(void* m, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* s, void* rcond, void* rank_bn, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_dgelss_")));
+#else
+void flexiblas_real_dgelss(void* m, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* s, void* rcond, void* rank_bn, void* work, void* lwork, void* info){flexiblas_real_dgelss_((void*) m, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) s, (void*) rcond, (void*) rank_bn, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dgelss_(void* m, void* n, void* nrhs, void* a, void* lda, v
 	}
 	return;
 }
-
-void flexiblas_chain_dgelss(void* m, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* s, void* rcond, void* rank_bn, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_chain_dgelss_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dgelss(void* m, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* s, void* rcond, void* rank_bn, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_dgelss_")));
+#else
+void flexiblas_chain_dgelss(void* m, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* s, void* rcond, void* rank_bn, void* work, void* lwork, void* info){flexiblas_chain_dgelss_((void*) m, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) s, (void*) rcond, (void*) rank_bn, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 

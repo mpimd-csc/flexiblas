@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlagtf,DLAGTF)(blasint* n, double* a, double* lambda, double* b, 
 #ifdef FLEXIBLAS_ABI_IBM
 void dlagtf_(blasint* n, double* a, double* lambda, double* b, double* c, double* tol, double* d, blasint* in, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlagtf,DLAGTF)))));
 #else
+#ifndef __APPLE__
 void dlagtf(blasint* n, double* a, double* lambda, double* b, double* c, double* tol, double* d, blasint* in, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlagtf,DLAGTF)))));
+#else
+void dlagtf(blasint* n, double* a, double* lambda, double* b, double* c, double* tol, double* d, blasint* in, blasint* info){ FC_GLOBAL(dlagtf,DLAGTF)((void*) n, (void*) a, (void*) lambda, (void*) b, (void*) c, (void*) tol, (void*) d, (void*) in, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlagtf_(void* n, void* a, void* lambda, void* b, void* c, vo
 
 	return;
 }
-
-void flexiblas_real_dlagtf(void* n, void* a, void* lambda, void* b, void* c, void* tol, void* d, void* in, void* info)  __attribute__((alias("flexiblas_real_dlagtf_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlagtf(void* n, void* a, void* lambda, void* b, void* c, void* tol, void* d, void* in, void* info) __attribute__((alias("flexiblas_real_dlagtf_")));
+#else
+void flexiblas_real_dlagtf(void* n, void* a, void* lambda, void* b, void* c, void* tol, void* d, void* in, void* info){flexiblas_real_dlagtf_((void*) n, (void*) a, (void*) lambda, (void*) b, (void*) c, (void*) tol, (void*) d, (void*) in, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlagtf_(void* n, void* a, void* lambda, void* b, void* c, v
 	}
 	return;
 }
-
-void flexiblas_chain_dlagtf(void* n, void* a, void* lambda, void* b, void* c, void* tol, void* d, void* in, void* info)  __attribute__((alias("flexiblas_chain_dlagtf_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlagtf(void* n, void* a, void* lambda, void* b, void* c, void* tol, void* d, void* in, void* info) __attribute__((alias("flexiblas_chain_dlagtf_")));
+#else
+void flexiblas_chain_dlagtf(void* n, void* a, void* lambda, void* b, void* c, void* tol, void* d, void* in, void* info){flexiblas_chain_dlagtf_((void*) n, (void*) a, (void*) lambda, (void*) b, (void*) c, (void*) tol, (void*) d, (void*) in, (void*) info);}
+#endif
 
 
 

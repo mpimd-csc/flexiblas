@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlagts,DLAGTS)(blasint* job, blasint* n, double* a, double* b, do
 #ifdef FLEXIBLAS_ABI_IBM
 void dlagts_(blasint* job, blasint* n, double* a, double* b, double* c, double* d, blasint* in, double* y, double* tol, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlagts,DLAGTS)))));
 #else
+#ifndef __APPLE__
 void dlagts(blasint* job, blasint* n, double* a, double* b, double* c, double* d, blasint* in, double* y, double* tol, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlagts,DLAGTS)))));
+#else
+void dlagts(blasint* job, blasint* n, double* a, double* b, double* c, double* d, blasint* in, double* y, double* tol, blasint* info){ FC_GLOBAL(dlagts,DLAGTS)((void*) job, (void*) n, (void*) a, (void*) b, (void*) c, (void*) d, (void*) in, (void*) y, (void*) tol, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlagts_(void* job, void* n, void* a, void* b, void* c, void*
 
 	return;
 }
-
-void flexiblas_real_dlagts(void* job, void* n, void* a, void* b, void* c, void* d, void* in, void* y, void* tol, void* info)  __attribute__((alias("flexiblas_real_dlagts_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlagts(void* job, void* n, void* a, void* b, void* c, void* d, void* in, void* y, void* tol, void* info) __attribute__((alias("flexiblas_real_dlagts_")));
+#else
+void flexiblas_real_dlagts(void* job, void* n, void* a, void* b, void* c, void* d, void* in, void* y, void* tol, void* info){flexiblas_real_dlagts_((void*) job, (void*) n, (void*) a, (void*) b, (void*) c, (void*) d, (void*) in, (void*) y, (void*) tol, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlagts_(void* job, void* n, void* a, void* b, void* c, void
 	}
 	return;
 }
-
-void flexiblas_chain_dlagts(void* job, void* n, void* a, void* b, void* c, void* d, void* in, void* y, void* tol, void* info)  __attribute__((alias("flexiblas_chain_dlagts_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlagts(void* job, void* n, void* a, void* b, void* c, void* d, void* in, void* y, void* tol, void* info) __attribute__((alias("flexiblas_chain_dlagts_")));
+#else
+void flexiblas_chain_dlagts(void* job, void* n, void* a, void* b, void* c, void* d, void* in, void* y, void* tol, void* info){flexiblas_chain_dlagts_((void*) job, (void*) n, (void*) a, (void*) b, (void*) c, (void*) d, (void*) in, (void*) y, (void*) tol, (void*) info);}
+#endif
 
 
 

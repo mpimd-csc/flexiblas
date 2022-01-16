@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ int FC_GLOBAL(icmax1,ICMAX1)(blasint* n, float complex* cx, blasint* incx)
 #ifdef FLEXIBLAS_ABI_IBM
 int icmax1_(blasint* n, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(icmax1,ICMAX1)))));
 #else
+#ifndef __APPLE__
 int icmax1(blasint* n, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(icmax1,ICMAX1)))));
+#else
+int icmax1(blasint* n, float complex* cx, blasint* incx){ return FC_GLOBAL(icmax1,ICMAX1)((void*) n, (void*) cx, (void*) incx); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ blasint flexiblas_real_icmax1_(void* n, void* cx, void* incx)
 
 	return ret ;
 }
-
-blasint flexiblas_real_icmax1(void* n, void* cx, void* incx)  __attribute__((alias("flexiblas_real_icmax1_")));
-
+#ifndef __APPLE__
+blasint flexiblas_real_icmax1(void* n, void* cx, void* incx) __attribute__((alias("flexiblas_real_icmax1_")));
+#else
+blasint flexiblas_real_icmax1(void* n, void* cx, void* incx){return flexiblas_real_icmax1_((void*) n, (void*) cx, (void*) incx);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ blasint flexiblas_chain_icmax1_(void* n, void* cx, void* incx)
 	}
 	return ret ;
 }
-
-blasint flexiblas_chain_icmax1(void* n, void* cx, void* incx)  __attribute__((alias("flexiblas_chain_icmax1_")));
-
+#ifndef __APPLE__
+blasint flexiblas_chain_icmax1(void* n, void* cx, void* incx) __attribute__((alias("flexiblas_chain_icmax1_")));
+#else
+blasint flexiblas_chain_icmax1(void* n, void* cx, void* incx){return flexiblas_chain_icmax1_((void*) n, (void*) cx, (void*) incx);}
+#endif
 
 
 

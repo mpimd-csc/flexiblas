@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(clacrm,CLACRM)(blasint* m, blasint* n, float complex* a, blasint*
 #ifdef FLEXIBLAS_ABI_IBM
 void clacrm_(blasint* m, blasint* n, float complex* a, blasint* lda, float* b, blasint* ldb, float complex* c, blasint* ldc, float* rwork) __attribute__((alias(MTS(FC_GLOBAL(clacrm,CLACRM)))));
 #else
+#ifndef __APPLE__
 void clacrm(blasint* m, blasint* n, float complex* a, blasint* lda, float* b, blasint* ldb, float complex* c, blasint* ldc, float* rwork) __attribute__((alias(MTS(FC_GLOBAL(clacrm,CLACRM)))));
+#else
+void clacrm(blasint* m, blasint* n, float complex* a, blasint* lda, float* b, blasint* ldb, float complex* c, blasint* ldc, float* rwork){ FC_GLOBAL(clacrm,CLACRM)((void*) m, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) ldc, (void*) rwork); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_clacrm_(void* m, void* n, void* a, void* lda, void* b, void*
 
 	return;
 }
-
-void flexiblas_real_clacrm(void* m, void* n, void* a, void* lda, void* b, void* ldb, void* c, void* ldc, void* rwork)  __attribute__((alias("flexiblas_real_clacrm_")));
-
+#ifndef __APPLE__
+void flexiblas_real_clacrm(void* m, void* n, void* a, void* lda, void* b, void* ldb, void* c, void* ldc, void* rwork) __attribute__((alias("flexiblas_real_clacrm_")));
+#else
+void flexiblas_real_clacrm(void* m, void* n, void* a, void* lda, void* b, void* ldb, void* c, void* ldc, void* rwork){flexiblas_real_clacrm_((void*) m, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) ldc, (void*) rwork);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_clacrm_(void* m, void* n, void* a, void* lda, void* b, void
 	}
 	return;
 }
-
-void flexiblas_chain_clacrm(void* m, void* n, void* a, void* lda, void* b, void* ldb, void* c, void* ldc, void* rwork)  __attribute__((alias("flexiblas_chain_clacrm_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_clacrm(void* m, void* n, void* a, void* lda, void* b, void* ldb, void* c, void* ldc, void* rwork) __attribute__((alias("flexiblas_chain_clacrm_")));
+#else
+void flexiblas_chain_clacrm(void* m, void* n, void* a, void* lda, void* b, void* ldb, void* c, void* ldc, void* rwork){flexiblas_chain_clacrm_((void*) m, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) ldc, (void*) rwork);}
+#endif
 
 
 

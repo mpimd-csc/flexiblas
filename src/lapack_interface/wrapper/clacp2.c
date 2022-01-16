@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(clacp2,CLACP2)(char* uplo, blasint* m, blasint* n, float* a, blas
 #ifdef FLEXIBLAS_ABI_IBM
 void clacp2_(char* uplo, blasint* m, blasint* n, float* a, blasint* lda, float complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(clacp2,CLACP2)))));
 #else
+#ifndef __APPLE__
 void clacp2(char* uplo, blasint* m, blasint* n, float* a, blasint* lda, float complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(clacp2,CLACP2)))));
+#else
+void clacp2(char* uplo, blasint* m, blasint* n, float* a, blasint* lda, float complex* b, blasint* ldb){ FC_GLOBAL(clacp2,CLACP2)((void*) uplo, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_clacp2_(void* uplo, void* m, void* n, void* a, void* lda, vo
 
 	return;
 }
-
-void flexiblas_real_clacp2(void* uplo, void* m, void* n, void* a, void* lda, void* b, void* ldb)  __attribute__((alias("flexiblas_real_clacp2_")));
-
+#ifndef __APPLE__
+void flexiblas_real_clacp2(void* uplo, void* m, void* n, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_real_clacp2_")));
+#else
+void flexiblas_real_clacp2(void* uplo, void* m, void* n, void* a, void* lda, void* b, void* ldb){flexiblas_real_clacp2_((void*) uplo, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_clacp2_(void* uplo, void* m, void* n, void* a, void* lda, v
 	}
 	return;
 }
-
-void flexiblas_chain_clacp2(void* uplo, void* m, void* n, void* a, void* lda, void* b, void* ldb)  __attribute__((alias("flexiblas_chain_clacp2_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_clacp2(void* uplo, void* m, void* n, void* a, void* lda, void* b, void* ldb) __attribute__((alias("flexiblas_chain_clacp2_")));
+#else
+void flexiblas_chain_clacp2(void* uplo, void* m, void* n, void* a, void* lda, void* b, void* ldb){flexiblas_chain_clacp2_((void*) uplo, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb);}
+#endif
 
 
 

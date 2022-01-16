@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ double FC_GLOBAL(dlansb,DLANSB)(char* norm, char* uplo, blasint* n, blasint* k, 
 #ifdef FLEXIBLAS_ABI_IBM
 double dlansb_(char* norm, char* uplo, blasint* n, blasint* k, double* ab, blasint* ldab, double* work) __attribute__((alias(MTS(FC_GLOBAL(dlansb,DLANSB)))));
 #else
+#ifndef __APPLE__
 double dlansb(char* norm, char* uplo, blasint* n, blasint* k, double* ab, blasint* ldab, double* work) __attribute__((alias(MTS(FC_GLOBAL(dlansb,DLANSB)))));
+#else
+double dlansb(char* norm, char* uplo, blasint* n, blasint* k, double* ab, blasint* ldab, double* work){ return FC_GLOBAL(dlansb,DLANSB)((void*) norm, (void*) uplo, (void*) n, (void*) k, (void*) ab, (void*) ldab, (void*) work); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ double flexiblas_real_dlansb_(void* norm, void* uplo, void* n, void* k, void* ab
 
 	return ret ;
 }
-
-double flexiblas_real_dlansb(void* norm, void* uplo, void* n, void* k, void* ab, void* ldab, void* work)  __attribute__((alias("flexiblas_real_dlansb_")));
-
+#ifndef __APPLE__
+double flexiblas_real_dlansb(void* norm, void* uplo, void* n, void* k, void* ab, void* ldab, void* work) __attribute__((alias("flexiblas_real_dlansb_")));
+#else
+double flexiblas_real_dlansb(void* norm, void* uplo, void* n, void* k, void* ab, void* ldab, void* work){return flexiblas_real_dlansb_((void*) norm, (void*) uplo, (void*) n, (void*) k, (void*) ab, (void*) ldab, (void*) work);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ double flexiblas_chain_dlansb_(void* norm, void* uplo, void* n, void* k, void* a
 	}
 	return ret ;
 }
-
-double flexiblas_chain_dlansb(void* norm, void* uplo, void* n, void* k, void* ab, void* ldab, void* work)  __attribute__((alias("flexiblas_chain_dlansb_")));
-
+#ifndef __APPLE__
+double flexiblas_chain_dlansb(void* norm, void* uplo, void* n, void* k, void* ab, void* ldab, void* work) __attribute__((alias("flexiblas_chain_dlansb_")));
+#else
+double flexiblas_chain_dlansb(void* norm, void* uplo, void* n, void* k, void* ab, void* ldab, void* work){return flexiblas_chain_dlansb_((void*) norm, (void*) uplo, (void*) n, (void*) k, (void*) ab, (void*) ldab, (void*) work);}
+#endif
 
 
 

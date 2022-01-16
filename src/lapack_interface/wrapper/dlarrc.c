@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlarrc,DLARRC)(char* jobt, blasint* n, double* vl, double* vu, do
 #ifdef FLEXIBLAS_ABI_IBM
 void dlarrc_(char* jobt, blasint* n, double* vl, double* vu, double* d, double* e, double* pivmin, blasint* eigcnt, blasint* lcnt, blasint* rcnt, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlarrc,DLARRC)))));
 #else
+#ifndef __APPLE__
 void dlarrc(char* jobt, blasint* n, double* vl, double* vu, double* d, double* e, double* pivmin, blasint* eigcnt, blasint* lcnt, blasint* rcnt, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlarrc,DLARRC)))));
+#else
+void dlarrc(char* jobt, blasint* n, double* vl, double* vu, double* d, double* e, double* pivmin, blasint* eigcnt, blasint* lcnt, blasint* rcnt, blasint* info){ FC_GLOBAL(dlarrc,DLARRC)((void*) jobt, (void*) n, (void*) vl, (void*) vu, (void*) d, (void*) e, (void*) pivmin, (void*) eigcnt, (void*) lcnt, (void*) rcnt, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlarrc_(void* jobt, void* n, void* vl, void* vu, void* d, vo
 
 	return;
 }
-
-void flexiblas_real_dlarrc(void* jobt, void* n, void* vl, void* vu, void* d, void* e, void* pivmin, void* eigcnt, void* lcnt, void* rcnt, void* info)  __attribute__((alias("flexiblas_real_dlarrc_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlarrc(void* jobt, void* n, void* vl, void* vu, void* d, void* e, void* pivmin, void* eigcnt, void* lcnt, void* rcnt, void* info) __attribute__((alias("flexiblas_real_dlarrc_")));
+#else
+void flexiblas_real_dlarrc(void* jobt, void* n, void* vl, void* vu, void* d, void* e, void* pivmin, void* eigcnt, void* lcnt, void* rcnt, void* info){flexiblas_real_dlarrc_((void*) jobt, (void*) n, (void*) vl, (void*) vu, (void*) d, (void*) e, (void*) pivmin, (void*) eigcnt, (void*) lcnt, (void*) rcnt, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlarrc_(void* jobt, void* n, void* vl, void* vu, void* d, v
 	}
 	return;
 }
-
-void flexiblas_chain_dlarrc(void* jobt, void* n, void* vl, void* vu, void* d, void* e, void* pivmin, void* eigcnt, void* lcnt, void* rcnt, void* info)  __attribute__((alias("flexiblas_chain_dlarrc_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlarrc(void* jobt, void* n, void* vl, void* vu, void* d, void* e, void* pivmin, void* eigcnt, void* lcnt, void* rcnt, void* info) __attribute__((alias("flexiblas_chain_dlarrc_")));
+#else
+void flexiblas_chain_dlarrc(void* jobt, void* n, void* vl, void* vu, void* d, void* e, void* pivmin, void* eigcnt, void* lcnt, void* rcnt, void* info){flexiblas_chain_dlarrc_((void*) jobt, (void*) n, (void*) vl, (void*) vu, (void*) d, (void*) e, (void*) pivmin, (void*) eigcnt, (void*) lcnt, (void*) rcnt, (void*) info);}
+#endif
 
 
 

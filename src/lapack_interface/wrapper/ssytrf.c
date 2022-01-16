@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(ssytrf,SSYTRF)(char* uplo, blasint* n, float* a, blasint* lda, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void ssytrf_(char* uplo, blasint* n, float* a, blasint* lda, blasint* ipiv, float* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ssytrf,SSYTRF)))));
 #else
+#ifndef __APPLE__
 void ssytrf(char* uplo, blasint* n, float* a, blasint* lda, blasint* ipiv, float* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ssytrf,SSYTRF)))));
+#else
+void ssytrf(char* uplo, blasint* n, float* a, blasint* lda, blasint* ipiv, float* work, blasint* lwork, blasint* info){ FC_GLOBAL(ssytrf,SSYTRF)((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) lwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_ssytrf_(void* uplo, void* n, void* a, void* lda, void* ipiv,
 
 	return;
 }
-
-void flexiblas_real_ssytrf(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_real_ssytrf_")));
-
+#ifndef __APPLE__
+void flexiblas_real_ssytrf(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_ssytrf_")));
+#else
+void flexiblas_real_ssytrf(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* lwork, void* info){flexiblas_real_ssytrf_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_ssytrf_(void* uplo, void* n, void* a, void* lda, void* ipiv
 	}
 	return;
 }
-
-void flexiblas_chain_ssytrf(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_chain_ssytrf_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_ssytrf(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_ssytrf_")));
+#else
+void flexiblas_chain_ssytrf(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* lwork, void* info){flexiblas_chain_ssytrf_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 

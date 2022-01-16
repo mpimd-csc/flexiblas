@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(clarfg,CLARFG)(blasint* n, float complex* alpha, float complex* x
 #ifdef FLEXIBLAS_ABI_IBM
 void clarfg_(blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* tau) __attribute__((alias(MTS(FC_GLOBAL(clarfg,CLARFG)))));
 #else
+#ifndef __APPLE__
 void clarfg(blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* tau) __attribute__((alias(MTS(FC_GLOBAL(clarfg,CLARFG)))));
+#else
+void clarfg(blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* tau){ FC_GLOBAL(clarfg,CLARFG)((void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) tau); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_clarfg_(void* n, void* alpha, void* x, void* incx, void* tau
 
 	return;
 }
-
-void flexiblas_real_clarfg(void* n, void* alpha, void* x, void* incx, void* tau)  __attribute__((alias("flexiblas_real_clarfg_")));
-
+#ifndef __APPLE__
+void flexiblas_real_clarfg(void* n, void* alpha, void* x, void* incx, void* tau) __attribute__((alias("flexiblas_real_clarfg_")));
+#else
+void flexiblas_real_clarfg(void* n, void* alpha, void* x, void* incx, void* tau){flexiblas_real_clarfg_((void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) tau);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_clarfg_(void* n, void* alpha, void* x, void* incx, void* ta
 	}
 	return;
 }
-
-void flexiblas_chain_clarfg(void* n, void* alpha, void* x, void* incx, void* tau)  __attribute__((alias("flexiblas_chain_clarfg_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_clarfg(void* n, void* alpha, void* x, void* incx, void* tau) __attribute__((alias("flexiblas_chain_clarfg_")));
+#else
+void flexiblas_chain_clarfg(void* n, void* alpha, void* x, void* incx, void* tau){flexiblas_chain_clarfg_((void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) tau);}
+#endif
 
 
 

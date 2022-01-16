@@ -15,6 +15,7 @@ SET(COMMON_SRC
     table/table.f90
     table/ops.c
 
+    sysinfo/getpid.c
     sysinfo/meminfo.c
     sysinfo/cpucount.c
     sysinfo/cpufreq.c
@@ -22,6 +23,7 @@ SET(COMMON_SRC
     sysinfo/uname.c
     sysinfo/cpu_name.c
     sysinfo/compiler_info.c
+    sysinfo/fortran_api.f90
     )
 
 IF( LUA_ENABLE)
@@ -119,7 +121,25 @@ SET_TARGET_PROPERTIES(cscutils_src PROPERTIES C_STANDARD 11 C_VISIBILITY_PRESET 
 # ELSE()
     ADD_LIBRARY(cscutils $<TARGET_OBJECTS:cscutils_src>)
     TARGET_LINK_LIBRARIES(cscutils  ${LIBS})
-    SET_TARGET_PROPERTIES(cscutils PROPERTIES OUTPUT_NAME "cscutils" C_STANDARD 11 )
+    TARGET_INCLUDE_DIRECTORIES(cscutils PUBLIC
+        ${INCLUDE_DIR}
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>
+        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
+        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include/cscutils>
+        )
+    TARGET_INCLUDE_DIRECTORIES(cscutils_src PUBLIC
+        ${INCLUDE_DIR}
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>
+        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
+        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include/cscutils>
+        )
+
+    SET_TARGET_PROPERTIES(cscutils PROPERTIES OUTPUT_NAME "cscutils" C_STANDARD 11
+        )
 # ENDIF()
 
 # Build Shared Library if we do not use a stand alone build

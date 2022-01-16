@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(spotrf2,SPOTRF2)(char* uplo, blasint* n, float* a, blasint* lda, 
 #ifdef FLEXIBLAS_ABI_IBM
 void spotrf2_(char* uplo, blasint* n, float* a, blasint* lda, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(spotrf2,SPOTRF2)))));
 #else
+#ifndef __APPLE__
 void spotrf2(char* uplo, blasint* n, float* a, blasint* lda, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(spotrf2,SPOTRF2)))));
+#else
+void spotrf2(char* uplo, blasint* n, float* a, blasint* lda, blasint* info){ FC_GLOBAL(spotrf2,SPOTRF2)((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_spotrf2_(void* uplo, void* n, void* a, void* lda, void* info
 
 	return;
 }
-
-void flexiblas_real_spotrf2(void* uplo, void* n, void* a, void* lda, void* info)  __attribute__((alias("flexiblas_real_spotrf2_")));
-
+#ifndef __APPLE__
+void flexiblas_real_spotrf2(void* uplo, void* n, void* a, void* lda, void* info) __attribute__((alias("flexiblas_real_spotrf2_")));
+#else
+void flexiblas_real_spotrf2(void* uplo, void* n, void* a, void* lda, void* info){flexiblas_real_spotrf2_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_spotrf2_(void* uplo, void* n, void* a, void* lda, void* inf
 	}
 	return;
 }
-
-void flexiblas_chain_spotrf2(void* uplo, void* n, void* a, void* lda, void* info)  __attribute__((alias("flexiblas_chain_spotrf2_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_spotrf2(void* uplo, void* n, void* a, void* lda, void* info) __attribute__((alias("flexiblas_chain_spotrf2_")));
+#else
+void flexiblas_chain_spotrf2(void* uplo, void* n, void* a, void* lda, void* info){flexiblas_chain_spotrf2_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) info);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(slasq4,SLASQ4)(blasint* i0, blasint* n0, float* z, blasint* pp, b
 #ifdef FLEXIBLAS_ABI_IBM
 void slasq4_(blasint* i0, blasint* n0, float* z, blasint* pp, blasint* n0in, float* dmin, float* dmin1, float* dmin2, float* dn, float* dn1, float* dn2, float* tau, blasint* ttype, float* g) __attribute__((alias(MTS(FC_GLOBAL(slasq4,SLASQ4)))));
 #else
+#ifndef __APPLE__
 void slasq4(blasint* i0, blasint* n0, float* z, blasint* pp, blasint* n0in, float* dmin, float* dmin1, float* dmin2, float* dn, float* dn1, float* dn2, float* tau, blasint* ttype, float* g) __attribute__((alias(MTS(FC_GLOBAL(slasq4,SLASQ4)))));
+#else
+void slasq4(blasint* i0, blasint* n0, float* z, blasint* pp, blasint* n0in, float* dmin, float* dmin1, float* dmin2, float* dn, float* dn1, float* dn2, float* tau, blasint* ttype, float* g){ FC_GLOBAL(slasq4,SLASQ4)((void*) i0, (void*) n0, (void*) z, (void*) pp, (void*) n0in, (void*) dmin, (void*) dmin1, (void*) dmin2, (void*) dn, (void*) dn1, (void*) dn2, (void*) tau, (void*) ttype, (void*) g); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_slasq4_(void* i0, void* n0, void* z, void* pp, void* n0in, v
 
 	return;
 }
-
-void flexiblas_real_slasq4(void* i0, void* n0, void* z, void* pp, void* n0in, void* dmin, void* dmin1, void* dmin2, void* dn, void* dn1, void* dn2, void* tau, void* ttype, void* g)  __attribute__((alias("flexiblas_real_slasq4_")));
-
+#ifndef __APPLE__
+void flexiblas_real_slasq4(void* i0, void* n0, void* z, void* pp, void* n0in, void* dmin, void* dmin1, void* dmin2, void* dn, void* dn1, void* dn2, void* tau, void* ttype, void* g) __attribute__((alias("flexiblas_real_slasq4_")));
+#else
+void flexiblas_real_slasq4(void* i0, void* n0, void* z, void* pp, void* n0in, void* dmin, void* dmin1, void* dmin2, void* dn, void* dn1, void* dn2, void* tau, void* ttype, void* g){flexiblas_real_slasq4_((void*) i0, (void*) n0, (void*) z, (void*) pp, (void*) n0in, (void*) dmin, (void*) dmin1, (void*) dmin2, (void*) dn, (void*) dn1, (void*) dn2, (void*) tau, (void*) ttype, (void*) g);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_slasq4_(void* i0, void* n0, void* z, void* pp, void* n0in, 
 	}
 	return;
 }
-
-void flexiblas_chain_slasq4(void* i0, void* n0, void* z, void* pp, void* n0in, void* dmin, void* dmin1, void* dmin2, void* dn, void* dn1, void* dn2, void* tau, void* ttype, void* g)  __attribute__((alias("flexiblas_chain_slasq4_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_slasq4(void* i0, void* n0, void* z, void* pp, void* n0in, void* dmin, void* dmin1, void* dmin2, void* dn, void* dn1, void* dn2, void* tau, void* ttype, void* g) __attribute__((alias("flexiblas_chain_slasq4_")));
+#else
+void flexiblas_chain_slasq4(void* i0, void* n0, void* z, void* pp, void* n0in, void* dmin, void* dmin1, void* dmin2, void* dn, void* dn1, void* dn2, void* tau, void* ttype, void* g){flexiblas_chain_slasq4_((void*) i0, (void*) n0, (void*) z, (void*) pp, (void*) n0in, (void*) dmin, (void*) dmin1, (void*) dmin2, (void*) dn, (void*) dn1, (void*) dn2, (void*) tau, (void*) ttype, (void*) g);}
+#endif
 
 
 

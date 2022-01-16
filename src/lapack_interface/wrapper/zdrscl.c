@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zdrscl,ZDRSCL)(blasint* n, double* sa, double complex* sx, blasin
 #ifdef FLEXIBLAS_ABI_IBM
 void zdrscl_(blasint* n, double* sa, double complex* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(zdrscl,ZDRSCL)))));
 #else
+#ifndef __APPLE__
 void zdrscl(blasint* n, double* sa, double complex* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(zdrscl,ZDRSCL)))));
+#else
+void zdrscl(blasint* n, double* sa, double complex* sx, blasint* incx){ FC_GLOBAL(zdrscl,ZDRSCL)((void*) n, (void*) sa, (void*) sx, (void*) incx); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zdrscl_(void* n, void* sa, void* sx, void* incx)
 
 	return;
 }
-
-void flexiblas_real_zdrscl(void* n, void* sa, void* sx, void* incx)  __attribute__((alias("flexiblas_real_zdrscl_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zdrscl(void* n, void* sa, void* sx, void* incx) __attribute__((alias("flexiblas_real_zdrscl_")));
+#else
+void flexiblas_real_zdrscl(void* n, void* sa, void* sx, void* incx){flexiblas_real_zdrscl_((void*) n, (void*) sa, (void*) sx, (void*) incx);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zdrscl_(void* n, void* sa, void* sx, void* incx)
 	}
 	return;
 }
-
-void flexiblas_chain_zdrscl(void* n, void* sa, void* sx, void* incx)  __attribute__((alias("flexiblas_chain_zdrscl_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zdrscl(void* n, void* sa, void* sx, void* incx) __attribute__((alias("flexiblas_chain_zdrscl_")));
+#else
+void flexiblas_chain_zdrscl(void* n, void* sa, void* sx, void* incx){flexiblas_chain_zdrscl_((void*) n, (void*) sa, (void*) sx, (void*) incx);}
+#endif
 
 
 

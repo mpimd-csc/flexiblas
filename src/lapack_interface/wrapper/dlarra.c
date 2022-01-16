@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlarra,DLARRA)(blasint* n, double* d, double* e, double* e2, doub
 #ifdef FLEXIBLAS_ABI_IBM
 void dlarra_(blasint* n, double* d, double* e, double* e2, double* spltol, double* tnrm, blasint* nsplit, blasint* isplit, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlarra,DLARRA)))));
 #else
+#ifndef __APPLE__
 void dlarra(blasint* n, double* d, double* e, double* e2, double* spltol, double* tnrm, blasint* nsplit, blasint* isplit, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlarra,DLARRA)))));
+#else
+void dlarra(blasint* n, double* d, double* e, double* e2, double* spltol, double* tnrm, blasint* nsplit, blasint* isplit, blasint* info){ FC_GLOBAL(dlarra,DLARRA)((void*) n, (void*) d, (void*) e, (void*) e2, (void*) spltol, (void*) tnrm, (void*) nsplit, (void*) isplit, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlarra_(void* n, void* d, void* e, void* e2, void* spltol, v
 
 	return;
 }
-
-void flexiblas_real_dlarra(void* n, void* d, void* e, void* e2, void* spltol, void* tnrm, void* nsplit, void* isplit, void* info)  __attribute__((alias("flexiblas_real_dlarra_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlarra(void* n, void* d, void* e, void* e2, void* spltol, void* tnrm, void* nsplit, void* isplit, void* info) __attribute__((alias("flexiblas_real_dlarra_")));
+#else
+void flexiblas_real_dlarra(void* n, void* d, void* e, void* e2, void* spltol, void* tnrm, void* nsplit, void* isplit, void* info){flexiblas_real_dlarra_((void*) n, (void*) d, (void*) e, (void*) e2, (void*) spltol, (void*) tnrm, (void*) nsplit, (void*) isplit, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlarra_(void* n, void* d, void* e, void* e2, void* spltol, 
 	}
 	return;
 }
-
-void flexiblas_chain_dlarra(void* n, void* d, void* e, void* e2, void* spltol, void* tnrm, void* nsplit, void* isplit, void* info)  __attribute__((alias("flexiblas_chain_dlarra_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlarra(void* n, void* d, void* e, void* e2, void* spltol, void* tnrm, void* nsplit, void* isplit, void* info) __attribute__((alias("flexiblas_chain_dlarra_")));
+#else
+void flexiblas_chain_dlarra(void* n, void* d, void* e, void* e2, void* spltol, void* tnrm, void* nsplit, void* isplit, void* info){flexiblas_chain_dlarra_((void*) n, (void*) d, (void*) e, (void*) e2, (void*) spltol, (void*) tnrm, (void*) nsplit, (void*) isplit, (void*) info);}
+#endif
 
 
 

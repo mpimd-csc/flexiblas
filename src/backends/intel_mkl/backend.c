@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
 
 #include <stdio.h>
@@ -50,7 +50,7 @@
 #include "flexiblas_backend.h"
 
 /* Necessary to tell FlexiBLAS that this backend needs to be loaded using RTLD_GLOBAL|RTLD_LOCAL */
-#ifdef MKL_CUSTOM
+#ifdef MKL_BUILDER
 	FLEXIBLAS_LAZY_BINDING
 #else
     /* MKL Requires GLOBAL instead of local symbol bind. */

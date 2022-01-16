@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dcombssq,DCOMBSSQ)(double* v1, double* v2)
 #ifdef FLEXIBLAS_ABI_IBM
 void dcombssq_(double* v1, double* v2) __attribute__((alias(MTS(FC_GLOBAL(dcombssq,DCOMBSSQ)))));
 #else
+#ifndef __APPLE__
 void dcombssq(double* v1, double* v2) __attribute__((alias(MTS(FC_GLOBAL(dcombssq,DCOMBSSQ)))));
+#else
+void dcombssq(double* v1, double* v2){ FC_GLOBAL(dcombssq,DCOMBSSQ)((void*) v1, (void*) v2); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dcombssq_(void* v1, void* v2)
 
 	return;
 }
-
-void flexiblas_real_dcombssq(void* v1, void* v2)  __attribute__((alias("flexiblas_real_dcombssq_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dcombssq(void* v1, void* v2) __attribute__((alias("flexiblas_real_dcombssq_")));
+#else
+void flexiblas_real_dcombssq(void* v1, void* v2){flexiblas_real_dcombssq_((void*) v1, (void*) v2);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dcombssq_(void* v1, void* v2)
 	}
 	return;
 }
-
-void flexiblas_chain_dcombssq(void* v1, void* v2)  __attribute__((alias("flexiblas_chain_dcombssq_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dcombssq(void* v1, void* v2) __attribute__((alias("flexiblas_chain_dcombssq_")));
+#else
+void flexiblas_chain_dcombssq(void* v1, void* v2){flexiblas_chain_dcombssq_((void*) v1, (void*) v2);}
+#endif
 
 
 

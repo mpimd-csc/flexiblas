@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(cunmr2,CUNMR2)(char* side, char* trans, blasint* m, blasint* n, b
 #ifdef FLEXIBLAS_ABI_IBM
 void cunmr2_(char* side, char* trans, blasint* m, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* tau, float complex* c, blasint* ldc, float complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cunmr2,CUNMR2)))));
 #else
+#ifndef __APPLE__
 void cunmr2(char* side, char* trans, blasint* m, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* tau, float complex* c, blasint* ldc, float complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cunmr2,CUNMR2)))));
+#else
+void cunmr2(char* side, char* trans, blasint* m, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* tau, float complex* c, blasint* ldc, float complex* work, blasint* info){ FC_GLOBAL(cunmr2,CUNMR2)((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_cunmr2_(void* side, void* trans, void* m, void* n, void* k, 
 
 	return;
 }
-
-void flexiblas_real_cunmr2(void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* info)  __attribute__((alias("flexiblas_real_cunmr2_")));
-
+#ifndef __APPLE__
+void flexiblas_real_cunmr2(void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* info) __attribute__((alias("flexiblas_real_cunmr2_")));
+#else
+void flexiblas_real_cunmr2(void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* info){flexiblas_real_cunmr2_((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_cunmr2_(void* side, void* trans, void* m, void* n, void* k,
 	}
 	return;
 }
-
-void flexiblas_chain_cunmr2(void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* info)  __attribute__((alias("flexiblas_chain_cunmr2_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_cunmr2(void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* info) __attribute__((alias("flexiblas_chain_cunmr2_")));
+#else
+void flexiblas_chain_cunmr2(void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* info){flexiblas_chain_cunmr2_((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) info);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(clar2v,CLAR2V)(blasint* n, float complex* x, float complex* y, fl
 #ifdef FLEXIBLAS_ABI_IBM
 void clar2v_(blasint* n, float complex* x, float complex* y, float complex* z, blasint* incx, float* c, float complex* s, blasint* incc) __attribute__((alias(MTS(FC_GLOBAL(clar2v,CLAR2V)))));
 #else
+#ifndef __APPLE__
 void clar2v(blasint* n, float complex* x, float complex* y, float complex* z, blasint* incx, float* c, float complex* s, blasint* incc) __attribute__((alias(MTS(FC_GLOBAL(clar2v,CLAR2V)))));
+#else
+void clar2v(blasint* n, float complex* x, float complex* y, float complex* z, blasint* incx, float* c, float complex* s, blasint* incc){ FC_GLOBAL(clar2v,CLAR2V)((void*) n, (void*) x, (void*) y, (void*) z, (void*) incx, (void*) c, (void*) s, (void*) incc); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_clar2v_(void* n, void* x, void* y, void* z, void* incx, void
 
 	return;
 }
-
-void flexiblas_real_clar2v(void* n, void* x, void* y, void* z, void* incx, void* c, void* s, void* incc)  __attribute__((alias("flexiblas_real_clar2v_")));
-
+#ifndef __APPLE__
+void flexiblas_real_clar2v(void* n, void* x, void* y, void* z, void* incx, void* c, void* s, void* incc) __attribute__((alias("flexiblas_real_clar2v_")));
+#else
+void flexiblas_real_clar2v(void* n, void* x, void* y, void* z, void* incx, void* c, void* s, void* incc){flexiblas_real_clar2v_((void*) n, (void*) x, (void*) y, (void*) z, (void*) incx, (void*) c, (void*) s, (void*) incc);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_clar2v_(void* n, void* x, void* y, void* z, void* incx, voi
 	}
 	return;
 }
-
-void flexiblas_chain_clar2v(void* n, void* x, void* y, void* z, void* incx, void* c, void* s, void* incc)  __attribute__((alias("flexiblas_chain_clar2v_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_clar2v(void* n, void* x, void* y, void* z, void* incx, void* c, void* s, void* incc) __attribute__((alias("flexiblas_chain_clar2v_")));
+#else
+void flexiblas_chain_clar2v(void* n, void* x, void* y, void* z, void* incx, void* c, void* s, void* incc){flexiblas_chain_clar2v_((void*) n, (void*) x, (void*) y, (void*) z, (void*) incx, (void*) c, (void*) s, (void*) incc);}
+#endif
 
 
 

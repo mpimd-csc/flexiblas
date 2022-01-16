@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ float FC_GLOBAL(clantb,CLANTB)(char* norm, char* uplo, char* diag, blasint* n, b
 #ifdef FLEXIBLAS_ABI_IBM
 float clantb_(char* norm, char* uplo, char* diag, blasint* n, blasint* k, float complex* ab, blasint* ldab, float* work) __attribute__((alias(MTS(FC_GLOBAL(clantb,CLANTB)))));
 #else
+#ifndef __APPLE__
 float clantb(char* norm, char* uplo, char* diag, blasint* n, blasint* k, float complex* ab, blasint* ldab, float* work) __attribute__((alias(MTS(FC_GLOBAL(clantb,CLANTB)))));
+#else
+float clantb(char* norm, char* uplo, char* diag, blasint* n, blasint* k, float complex* ab, blasint* ldab, float* work){ return FC_GLOBAL(clantb,CLANTB)((void*) norm, (void*) uplo, (void*) diag, (void*) n, (void*) k, (void*) ab, (void*) ldab, (void*) work); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ float flexiblas_real_clantb_(void* norm, void* uplo, void* diag, void* n, void* 
 
 	return ret ;
 }
-
-float flexiblas_real_clantb(void* norm, void* uplo, void* diag, void* n, void* k, void* ab, void* ldab, void* work)  __attribute__((alias("flexiblas_real_clantb_")));
-
+#ifndef __APPLE__
+float flexiblas_real_clantb(void* norm, void* uplo, void* diag, void* n, void* k, void* ab, void* ldab, void* work) __attribute__((alias("flexiblas_real_clantb_")));
+#else
+float flexiblas_real_clantb(void* norm, void* uplo, void* diag, void* n, void* k, void* ab, void* ldab, void* work){return flexiblas_real_clantb_((void*) norm, (void*) uplo, (void*) diag, (void*) n, (void*) k, (void*) ab, (void*) ldab, (void*) work);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ float flexiblas_chain_clantb_(void* norm, void* uplo, void* diag, void* n, void*
 	}
 	return ret ;
 }
-
-float flexiblas_chain_clantb(void* norm, void* uplo, void* diag, void* n, void* k, void* ab, void* ldab, void* work)  __attribute__((alias("flexiblas_chain_clantb_")));
-
+#ifndef __APPLE__
+float flexiblas_chain_clantb(void* norm, void* uplo, void* diag, void* n, void* k, void* ab, void* ldab, void* work) __attribute__((alias("flexiblas_chain_clantb_")));
+#else
+float flexiblas_chain_clantb(void* norm, void* uplo, void* diag, void* n, void* k, void* ab, void* ldab, void* work){return flexiblas_chain_clantb_((void*) norm, (void*) uplo, (void*) diag, (void*) n, (void*) k, (void*) ab, (void*) ldab, (void*) work);}
+#endif
 
 
 

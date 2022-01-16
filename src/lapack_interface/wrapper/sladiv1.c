@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(sladiv1,SLADIV1)(float* a, float* b, float* c, float* d, float* p
 #ifdef FLEXIBLAS_ABI_IBM
 void sladiv1_(float* a, float* b, float* c, float* d, float* p, float* q) __attribute__((alias(MTS(FC_GLOBAL(sladiv1,SLADIV1)))));
 #else
+#ifndef __APPLE__
 void sladiv1(float* a, float* b, float* c, float* d, float* p, float* q) __attribute__((alias(MTS(FC_GLOBAL(sladiv1,SLADIV1)))));
+#else
+void sladiv1(float* a, float* b, float* c, float* d, float* p, float* q){ FC_GLOBAL(sladiv1,SLADIV1)((void*) a, (void*) b, (void*) c, (void*) d, (void*) p, (void*) q); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_sladiv1_(void* a, void* b, void* c, void* d, void* p, void* 
 
 	return;
 }
-
-void flexiblas_real_sladiv1(void* a, void* b, void* c, void* d, void* p, void* q)  __attribute__((alias("flexiblas_real_sladiv1_")));
-
+#ifndef __APPLE__
+void flexiblas_real_sladiv1(void* a, void* b, void* c, void* d, void* p, void* q) __attribute__((alias("flexiblas_real_sladiv1_")));
+#else
+void flexiblas_real_sladiv1(void* a, void* b, void* c, void* d, void* p, void* q){flexiblas_real_sladiv1_((void*) a, (void*) b, (void*) c, (void*) d, (void*) p, (void*) q);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_sladiv1_(void* a, void* b, void* c, void* d, void* p, void*
 	}
 	return;
 }
-
-void flexiblas_chain_sladiv1(void* a, void* b, void* c, void* d, void* p, void* q)  __attribute__((alias("flexiblas_chain_sladiv1_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_sladiv1(void* a, void* b, void* c, void* d, void* p, void* q) __attribute__((alias("flexiblas_chain_sladiv1_")));
+#else
+void flexiblas_chain_sladiv1(void* a, void* b, void* c, void* d, void* p, void* q){flexiblas_chain_sladiv1_((void*) a, (void*) b, (void*) c, (void*) d, (void*) p, (void*) q);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(slatzm,SLATZM)(char* side, blasint* m, blasint* n, float* v, blas
 #ifdef FLEXIBLAS_ABI_IBM
 void slatzm_(char* side, blasint* m, blasint* n, float* v, blasint* incv, float* tau, float* c1, float* c2, blasint* ldc, float* work) __attribute__((alias(MTS(FC_GLOBAL(slatzm,SLATZM)))));
 #else
+#ifndef __APPLE__
 void slatzm(char* side, blasint* m, blasint* n, float* v, blasint* incv, float* tau, float* c1, float* c2, blasint* ldc, float* work) __attribute__((alias(MTS(FC_GLOBAL(slatzm,SLATZM)))));
+#else
+void slatzm(char* side, blasint* m, blasint* n, float* v, blasint* incv, float* tau, float* c1, float* c2, blasint* ldc, float* work){ FC_GLOBAL(slatzm,SLATZM)((void*) side, (void*) m, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c1, (void*) c2, (void*) ldc, (void*) work); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_slatzm_(void* side, void* m, void* n, void* v, void* incv, v
 
 	return;
 }
-
-void flexiblas_real_slatzm(void* side, void* m, void* n, void* v, void* incv, void* tau, void* c1, void* c2, void* ldc, void* work)  __attribute__((alias("flexiblas_real_slatzm_")));
-
+#ifndef __APPLE__
+void flexiblas_real_slatzm(void* side, void* m, void* n, void* v, void* incv, void* tau, void* c1, void* c2, void* ldc, void* work) __attribute__((alias("flexiblas_real_slatzm_")));
+#else
+void flexiblas_real_slatzm(void* side, void* m, void* n, void* v, void* incv, void* tau, void* c1, void* c2, void* ldc, void* work){flexiblas_real_slatzm_((void*) side, (void*) m, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c1, (void*) c2, (void*) ldc, (void*) work);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_slatzm_(void* side, void* m, void* n, void* v, void* incv, 
 	}
 	return;
 }
-
-void flexiblas_chain_slatzm(void* side, void* m, void* n, void* v, void* incv, void* tau, void* c1, void* c2, void* ldc, void* work)  __attribute__((alias("flexiblas_chain_slatzm_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_slatzm(void* side, void* m, void* n, void* v, void* incv, void* tau, void* c1, void* c2, void* ldc, void* work) __attribute__((alias("flexiblas_chain_slatzm_")));
+#else
+void flexiblas_chain_slatzm(void* side, void* m, void* n, void* v, void* incv, void* tau, void* c1, void* c2, void* ldc, void* work){flexiblas_chain_slatzm_((void*) side, (void*) m, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c1, (void*) c2, (void*) ldc, (void*) work);}
+#endif
 
 
 

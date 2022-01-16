@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlauum,DLAUUM)(char* uplo, blasint* n, double* a, blasint* lda, b
 #ifdef FLEXIBLAS_ABI_IBM
 void dlauum_(char* uplo, blasint* n, double* a, blasint* lda, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlauum,DLAUUM)))));
 #else
+#ifndef __APPLE__
 void dlauum(char* uplo, blasint* n, double* a, blasint* lda, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlauum,DLAUUM)))));
+#else
+void dlauum(char* uplo, blasint* n, double* a, blasint* lda, blasint* info){ FC_GLOBAL(dlauum,DLAUUM)((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlauum_(void* uplo, void* n, void* a, void* lda, void* info)
 
 	return;
 }
-
-void flexiblas_real_dlauum(void* uplo, void* n, void* a, void* lda, void* info)  __attribute__((alias("flexiblas_real_dlauum_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlauum(void* uplo, void* n, void* a, void* lda, void* info) __attribute__((alias("flexiblas_real_dlauum_")));
+#else
+void flexiblas_real_dlauum(void* uplo, void* n, void* a, void* lda, void* info){flexiblas_real_dlauum_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlauum_(void* uplo, void* n, void* a, void* lda, void* info
 	}
 	return;
 }
-
-void flexiblas_chain_dlauum(void* uplo, void* n, void* a, void* lda, void* info)  __attribute__((alias("flexiblas_chain_dlauum_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlauum(void* uplo, void* n, void* a, void* lda, void* info) __attribute__((alias("flexiblas_chain_dlauum_")));
+#else
+void flexiblas_chain_dlauum(void* uplo, void* n, void* a, void* lda, void* info){flexiblas_chain_dlauum_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) info);}
+#endif
 
 
 

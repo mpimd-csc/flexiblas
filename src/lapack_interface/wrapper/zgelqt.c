@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zgelqt,ZGELQT)(blasint* m, blasint* n, blasint* mb, double comple
 #ifdef FLEXIBLAS_ABI_IBM
 void zgelqt_(blasint* m, blasint* n, blasint* mb, double complex* a, blasint* lda, double complex* t, blasint* ldt, double complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zgelqt,ZGELQT)))));
 #else
+#ifndef __APPLE__
 void zgelqt(blasint* m, blasint* n, blasint* mb, double complex* a, blasint* lda, double complex* t, blasint* ldt, double complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zgelqt,ZGELQT)))));
+#else
+void zgelqt(blasint* m, blasint* n, blasint* mb, double complex* a, blasint* lda, double complex* t, blasint* ldt, double complex* work, blasint* info){ FC_GLOBAL(zgelqt,ZGELQT)((void*) m, (void*) n, (void*) mb, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zgelqt_(void* m, void* n, void* mb, void* a, void* lda, void
 
 	return;
 }
-
-void flexiblas_real_zgelqt(void* m, void* n, void* mb, void* a, void* lda, void* t, void* ldt, void* work, void* info)  __attribute__((alias("flexiblas_real_zgelqt_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zgelqt(void* m, void* n, void* mb, void* a, void* lda, void* t, void* ldt, void* work, void* info) __attribute__((alias("flexiblas_real_zgelqt_")));
+#else
+void flexiblas_real_zgelqt(void* m, void* n, void* mb, void* a, void* lda, void* t, void* ldt, void* work, void* info){flexiblas_real_zgelqt_((void*) m, (void*) n, (void*) mb, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zgelqt_(void* m, void* n, void* mb, void* a, void* lda, voi
 	}
 	return;
 }
-
-void flexiblas_chain_zgelqt(void* m, void* n, void* mb, void* a, void* lda, void* t, void* ldt, void* work, void* info)  __attribute__((alias("flexiblas_chain_zgelqt_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zgelqt(void* m, void* n, void* mb, void* a, void* lda, void* t, void* ldt, void* work, void* info) __attribute__((alias("flexiblas_chain_zgelqt_")));
+#else
+void flexiblas_chain_zgelqt(void* m, void* n, void* mb, void* a, void* lda, void* t, void* ldt, void* work, void* info){flexiblas_chain_zgelqt_((void*) m, (void*) n, (void*) mb, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) work, (void*) info);}
+#endif
 
 
 

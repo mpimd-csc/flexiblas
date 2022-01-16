@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(ssyswapr,SSYSWAPR)(char* uplo, blasint* n, float* a, blasint* lda
 #ifdef FLEXIBLAS_ABI_IBM
 void ssyswapr_(char* uplo, blasint* n, float* a, blasint* lda, blasint* i1, blasint* i2) __attribute__((alias(MTS(FC_GLOBAL(ssyswapr,SSYSWAPR)))));
 #else
+#ifndef __APPLE__
 void ssyswapr(char* uplo, blasint* n, float* a, blasint* lda, blasint* i1, blasint* i2) __attribute__((alias(MTS(FC_GLOBAL(ssyswapr,SSYSWAPR)))));
+#else
+void ssyswapr(char* uplo, blasint* n, float* a, blasint* lda, blasint* i1, blasint* i2){ FC_GLOBAL(ssyswapr,SSYSWAPR)((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) i1, (void*) i2); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_ssyswapr_(void* uplo, void* n, void* a, void* lda, void* i1,
 
 	return;
 }
-
-void flexiblas_real_ssyswapr(void* uplo, void* n, void* a, void* lda, void* i1, void* i2)  __attribute__((alias("flexiblas_real_ssyswapr_")));
-
+#ifndef __APPLE__
+void flexiblas_real_ssyswapr(void* uplo, void* n, void* a, void* lda, void* i1, void* i2) __attribute__((alias("flexiblas_real_ssyswapr_")));
+#else
+void flexiblas_real_ssyswapr(void* uplo, void* n, void* a, void* lda, void* i1, void* i2){flexiblas_real_ssyswapr_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) i1, (void*) i2);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_ssyswapr_(void* uplo, void* n, void* a, void* lda, void* i1
 	}
 	return;
 }
-
-void flexiblas_chain_ssyswapr(void* uplo, void* n, void* a, void* lda, void* i1, void* i2)  __attribute__((alias("flexiblas_chain_ssyswapr_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_ssyswapr(void* uplo, void* n, void* a, void* lda, void* i1, void* i2) __attribute__((alias("flexiblas_chain_ssyswapr_")));
+#else
+void flexiblas_chain_ssyswapr(void* uplo, void* n, void* a, void* lda, void* i1, void* i2){flexiblas_chain_ssyswapr_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) i1, (void*) i2);}
+#endif
 
 
 

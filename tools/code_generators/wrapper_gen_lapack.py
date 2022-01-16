@@ -128,10 +128,9 @@ class FortranFunction(object):
             int_type = "int64_t"
         return int_type
 
-    def _callsequence(self, intwidth = 0, void = False ):
+    def _callsequence(self, intwidth = 0, void = False, typecast = False ):
         first = True
         s = ""
-
         for i in self._args:
             if not void:
                 if self._cvars[i] == "int":
@@ -141,12 +140,21 @@ class FortranFunction(object):
             else:
                 cdt = "void"
             if first:
-                s  += cdt + "* " + i
+                if typecast:
+                    s  += "("+cdt + "*) " + i
+                else:
+                    s  += cdt + "* " + i
                 first = False
             else:
-                s += ", " + cdt + "* " + i
+                if typecast:
+                    s += ", (" + cdt + "*) " + i
+                else:
+                    s += ", " + cdt + "* " + i
         for i in self._charaterargs:
-            s += ", " + self._inttype(intwidth) + " " + i
+            if typecast:
+                s +=  ", (fortran_charlen_t) " + i
+            else:
+                s += ", fortran_charlen_t " + i
         return s
 
     def _callfunction(self, transform_int_name = True, extraspace="", intwidth = 0 ):
@@ -165,7 +173,7 @@ class FortranFunction(object):
                     else:
                         s += "(void*) " + i
                 for i in self._charaterargs:
-                    s+= ", (" + self._inttype(intwidth) + ") " + i
+                    s+= ", ( fortran_charlen_t ) " + i
                 s += "); \n"
                 s += extraspace + "\t\t} else {\n"
                 s += extraspace + "\t\t\tfn_intel( &ret"
@@ -188,7 +196,7 @@ class FortranFunction(object):
                     else:
                         s += "(void*) " + i
                 for i in self._charaterargs:
-                    s+= ", (" + self._inttype(intwidth) + ") " + i
+                    s+= ", ( fortran_charlen_t ) " + i
                 s += "); \n"
         else:
             s += extraspace+ "\t\tfn("
@@ -202,7 +210,7 @@ class FortranFunction(object):
                 else:
                     s += "(void*) " + i
             for i in self._charaterargs:
-                s+= ", (" + self._inttype(intwidth) + ") " + i
+                s+= ", ( fortran_charlen_t ) " + i
             s += "); \n"
         return s
 
@@ -230,7 +238,7 @@ class FortranFunction(object):
                     else:
                         s += "(void*) " + i
                 for i in self._charaterargs:
-                    s+= ", (" + self._inttype(intwidth) + ") " + i
+                    s+= ", ( fortran_charlen_t )" + i
                 s += ");"
         else:
             s += extraspace+ "fn_hook("
@@ -244,13 +252,13 @@ class FortranFunction(object):
                 else:
                     s += "(void*) " + i
             for i in self._charaterargs:
-                s+= ", (" + self._inttype(intwidth) + ") " + i
+                s+= ", ( fortran_charlen_t ) " + i
             s += ");"
         return s
 
 
     def structure_declare(self):
-        s = "extern struct flexiblas_blasfn flexiblas_{name:s};" .format(name = self.funcname())
+        s = "struct flexiblas_blasfn {name:s};" .format(name = self.funcname())
         return s
     def structure_instance(self):
         s = "struct flexiblas_blasfn flexiblas_{name:s} = HOOK_INIT;" .format(name = self.funcname())
@@ -295,18 +303,40 @@ class FortranFunction(object):
         s += ")"+end
         return s
 
-    def c_header_real(self, suffix="_", end = ";", intel_interface= False):
+    def c_header_real(self, suffix="_", end = ";", intel_interface= False, call = False, xname="real"):
         if self._function:
             if intel_interface and is_complex(self._fvars[self._name]["typespec"]):
-                s = "void flexiblas_real_" + self.funcname(0)+suffix+"( " + self._returntype + "* returnvalue, "
+                if call:
+                    s = ""
+                else:
+                    s = "void "
+                s += "flexiblas_"+xname+"_" + self.funcname(0)+suffix+"( "
+                if call:
+                    s+="("
+                s += self._returntype + "*"
+                if call:
+                    s+=")"
+                s +="returnvalue, "
             else:
                 if self._returntype == "int":
-                    s = "blasint flexiblas_real_" + self.funcname(0) +suffix+ "("
+                    if call:
+                        s = "return "
+                    else:
+                        s = "blasint "
+                    s += "flexiblas_"+xname+"_" + self.funcname(0) +suffix+ "("
                 else:
-                    s = self._returntype + " flexiblas_real_" + self.funcname(0) +suffix+ "("
+                    if call:
+                        s = "return "
+                    else:
+                        s = self._returntype + " "
+                    s += "flexiblas_"+xname+"_" + self.funcname(0) +suffix+ "("
         else:
-            s = "void flexiblas_real_" + self.funcname(0) +suffix+ "("
-        s += self._callsequence(intwidth = 0,  void = True)
+            if call:
+                s = ""
+            else:
+                s = "void "
+            s += "flexiblas_"+xname+"_" + self.funcname(0) +suffix+ "("
+        s += self._callsequence(intwidth = 0,  void = True, typecast = call)
         s += ")"+end
         return s
 
@@ -367,12 +397,13 @@ class FortranFunction(object):
 
         # Add alias
         if ( suffix == "_"):
-             s += """
-{header_alias_intel:s}  __attribute__((alias(\"flexiblas_real_{name:s}_\")));\n
-""".format(header_alias_intel = self.c_header_real(suffix="", intel_interface=True, end=""),
-                   name = self.funcname(0))
-             #  s += self.c_header_real(suffix="", intel_interface=intel_interface, end="")
-             #  s += " __attribute__((alias(\"flexiblas_real_{name:s}_\")));\n".format(name=self.funcname(0))
+             s += "#ifndef __APPLE__\n"
+             s += self.c_header_real(suffix="", intel_interface=True, end="")
+             s += " __attribute__((alias(\"flexiblas_real_{name:s}_\")));\n".format(name=self.funcname(0))
+             s += "#else\n"
+             s += self.c_header_real(suffix="", intel_interface=True, end="") + "{"
+             s += self.c_header_real(suffix="_", intel_interface=True, end = ";", call = True) + "}\n"
+             s += "#endif\n"
         s +="\n"
 
         return s
@@ -430,12 +461,13 @@ class FortranFunction(object):
 
         # Add alias
         if ( suffix == "_"):
-             s += """
-{header_alias_intel:s}  __attribute__((alias(\"flexiblas_chain_{name:s}_\")));\n
-""".format(header_alias_intel = self.c_header_chain(suffix="", intel_interface=True, end=""),
-                   name = self.funcname(0))
-             #  s += self.c_header_real(suffix="", intel_interface=intel_interface, end="")
-             #  s += " __attribute__((alias(\"flexiblas_real_{name:s}_\")));\n".format(name=self.funcname(0))
+             s += "#ifndef __APPLE__\n"
+             s += self.c_header_real(suffix="", intel_interface=True, end="", xname = "chain")
+             s += " __attribute__((alias(\"flexiblas_chain_{name:s}_\")));\n".format(name=self.funcname(0))
+             s += "#else\n"
+             s += self.c_header_real(suffix="", intel_interface=True, end="", xname = "chain") + "{"
+             s += self.c_header_real(suffix="_", intel_interface=True, end = ";", call = True, xname = "chain") + "}\n"
+             s += "#endif\n"
         s +="\n"
 
         return s
@@ -584,7 +616,7 @@ static TLS_STORE uint8_t hook_pos_{funcname:s} = 0;
                     s += ", "
                     s += "(void*) " + i
                 for i in self._charaterargs:
-                    s+= ", (" + self._inttype(intwidth) + ") " + i
+                    s+= ", ( fortran_charlen_t ) " + i
 
                 s += ");\n"
                 s += """
@@ -604,7 +636,7 @@ static TLS_STORE uint8_t hook_pos_{funcname:s} = 0;
                     f = True
                     s += "(void*) " + i
                 for i in self._charaterargs:
-                    s+= ", (" + self._inttype(intwidth) + ") " + i
+                    s+= ", ( fortran_charlen_t ) " + i
 
                 s += ");\n"
                 s += "\t\treturn ret;\n";
@@ -617,7 +649,7 @@ static TLS_STORE uint8_t hook_pos_{funcname:s} = 0;
                     f = True
                     s += "(void*) " + i
                 for i in self._charaterargs:
-                    s+= ", (" + self._inttype(intwidth) + ") " + i
+                    s+= ", ( fortran_charlen_t ) " + i
                 s += ");\n"
                 s += "\t\treturn;\n";
 
@@ -631,8 +663,19 @@ static TLS_STORE uint8_t hook_pos_{funcname:s} = 0;
             s += self.c_headerx(intwidth = intwidth, suffix="_", intel_interface=intel_interface, end="")
             s += " __attribute__((alias(MTS({name:s}))));\n".format(name=self.funcnamex(intwidth=intwidth))
             s += "#else\n"
+            s += "#ifndef __APPLE__\n"
             s += self.c_headerx(intwidth = intwidth, suffix="", intel_interface=intel_interface, end="")
             s += " __attribute__((alias(MTS({name:s}))));\n".format(name=self.funcnamex(intwidth=intwidth))
+            s += "#else\n"
+            s += self.c_headerx(intwidth = intwidth, suffix="", intel_interface=intel_interface, end="")
+            if self._function:
+                if intel_interface and is_complex(self._fvars[self._name]["typespec"]):
+                    s += "{ "+ self.funcnamex(intwidth = intwidth) + "( (void*) returnvalue, "+self._callsequence(intwidth = intwidth, void=True, typecast = True)+"); }\n"
+                else:
+                    s += "{ return "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, void=True, typecast = True)+"); }\n"
+            else:
+                s += "{ "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, void=True, typecast = True)+"); }\n"
+            s += "#endif\n"
             s += "#endif\n"
         s +="\n"
 
@@ -741,7 +784,7 @@ class Wrapper(object):
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         """.format(date =  datetime.now().ctime())
         return s
@@ -785,12 +828,18 @@ class Wrapper(object):
         self._header_fence_end(fn)
         fn.close()
 
-    def write_structure_declares(self, filename, headername):
+    def write_structure_declares(self, filename, headername, major, minor, patch, extra):
         fn = open(filename, "w")
         self._header_fence_start(fn, headername)
-        fn.write("#ifndef blasint\n#warning blasint is not defined. Use int\n#endif\n\n")
+
+        fn.write("#define FLEXIBLAS_LAPACK_MAJOR " + str(major) + "\n")
+        fn.write("#define FLEXIBLAS_LAPACK_MINOR " + str(minor) + "\n")
+        fn.write("#define FLEXIBLAS_LAPACK_PATCH " + str(patch) + "\n")
+        fn.write("#define FLEXIBLAS_LAPACK_EXTRA \"" + extra + "\"\n\n")
+        fn.write("typedef struct _flexiblas_lapack_backend {\n");
         for i,f in self.functions.items():
-            fn.write(f.structure_declare()+"\n")
+            fn.write("    " + f.structure_declare()+"\n")
+        fn.write("} flexiblas_lapack_backend_t; \n")
         self._header_fence_end(fn)
         fn.close()
 
@@ -804,6 +853,12 @@ class Wrapper(object):
         fn.write("#include \"fortran_mangle.h\"\n\n")
         fn.write("#include \"flexiblas.h\"\n\n")
         fn.write("""
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
+
 #ifdef INTEGER8
 #define blasint int64_t
 #else

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(ctrexc,CTREXC)(char* compq, blasint* n, float complex* t, blasint
 #ifdef FLEXIBLAS_ABI_IBM
 void ctrexc_(char* compq, blasint* n, float complex* t, blasint* ldt, float complex* q, blasint* ldq, blasint* ifst, blasint* ilst, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ctrexc,CTREXC)))));
 #else
+#ifndef __APPLE__
 void ctrexc(char* compq, blasint* n, float complex* t, blasint* ldt, float complex* q, blasint* ldq, blasint* ifst, blasint* ilst, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ctrexc,CTREXC)))));
+#else
+void ctrexc(char* compq, blasint* n, float complex* t, blasint* ldt, float complex* q, blasint* ldq, blasint* ifst, blasint* ilst, blasint* info){ FC_GLOBAL(ctrexc,CTREXC)((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_ctrexc_(void* compq, void* n, void* t, void* ldt, void* q, v
 
 	return;
 }
-
-void flexiblas_real_ctrexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* info)  __attribute__((alias("flexiblas_real_ctrexc_")));
-
+#ifndef __APPLE__
+void flexiblas_real_ctrexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* info) __attribute__((alias("flexiblas_real_ctrexc_")));
+#else
+void flexiblas_real_ctrexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* info){flexiblas_real_ctrexc_((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_ctrexc_(void* compq, void* n, void* t, void* ldt, void* q, 
 	}
 	return;
 }
-
-void flexiblas_chain_ctrexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* info)  __attribute__((alias("flexiblas_chain_ctrexc_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_ctrexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* info) __attribute__((alias("flexiblas_chain_ctrexc_")));
+#else
+void flexiblas_chain_ctrexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* info){flexiblas_chain_ctrexc_((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) info);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(clatrz,CLATRZ)(blasint* m, blasint* n, blasint* l, float complex*
 #ifdef FLEXIBLAS_ABI_IBM
 void clatrz_(blasint* m, blasint* n, blasint* l, float complex* a, blasint* lda, float complex* tau, float complex* work) __attribute__((alias(MTS(FC_GLOBAL(clatrz,CLATRZ)))));
 #else
+#ifndef __APPLE__
 void clatrz(blasint* m, blasint* n, blasint* l, float complex* a, blasint* lda, float complex* tau, float complex* work) __attribute__((alias(MTS(FC_GLOBAL(clatrz,CLATRZ)))));
+#else
+void clatrz(blasint* m, blasint* n, blasint* l, float complex* a, blasint* lda, float complex* tau, float complex* work){ FC_GLOBAL(clatrz,CLATRZ)((void*) m, (void*) n, (void*) l, (void*) a, (void*) lda, (void*) tau, (void*) work); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_clatrz_(void* m, void* n, void* l, void* a, void* lda, void*
 
 	return;
 }
-
-void flexiblas_real_clatrz(void* m, void* n, void* l, void* a, void* lda, void* tau, void* work)  __attribute__((alias("flexiblas_real_clatrz_")));
-
+#ifndef __APPLE__
+void flexiblas_real_clatrz(void* m, void* n, void* l, void* a, void* lda, void* tau, void* work) __attribute__((alias("flexiblas_real_clatrz_")));
+#else
+void flexiblas_real_clatrz(void* m, void* n, void* l, void* a, void* lda, void* tau, void* work){flexiblas_real_clatrz_((void*) m, (void*) n, (void*) l, (void*) a, (void*) lda, (void*) tau, (void*) work);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_clatrz_(void* m, void* n, void* l, void* a, void* lda, void
 	}
 	return;
 }
-
-void flexiblas_chain_clatrz(void* m, void* n, void* l, void* a, void* lda, void* tau, void* work)  __attribute__((alias("flexiblas_chain_clatrz_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_clatrz(void* m, void* n, void* l, void* a, void* lda, void* tau, void* work) __attribute__((alias("flexiblas_chain_clatrz_")));
+#else
+void flexiblas_chain_clatrz(void* m, void* n, void* l, void* a, void* lda, void* tau, void* work){flexiblas_chain_clatrz_((void*) m, (void*) n, (void*) l, (void*) a, (void*) lda, (void*) tau, (void*) work);}
+#endif
 
 
 

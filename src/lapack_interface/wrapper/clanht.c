@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ float FC_GLOBAL(clanht,CLANHT)(char* norm, blasint* n, float* d, float complex* 
 #ifdef FLEXIBLAS_ABI_IBM
 float clanht_(char* norm, blasint* n, float* d, float complex* e) __attribute__((alias(MTS(FC_GLOBAL(clanht,CLANHT)))));
 #else
+#ifndef __APPLE__
 float clanht(char* norm, blasint* n, float* d, float complex* e) __attribute__((alias(MTS(FC_GLOBAL(clanht,CLANHT)))));
+#else
+float clanht(char* norm, blasint* n, float* d, float complex* e){ return FC_GLOBAL(clanht,CLANHT)((void*) norm, (void*) n, (void*) d, (void*) e); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ float flexiblas_real_clanht_(void* norm, void* n, void* d, void* e)
 
 	return ret ;
 }
-
-float flexiblas_real_clanht(void* norm, void* n, void* d, void* e)  __attribute__((alias("flexiblas_real_clanht_")));
-
+#ifndef __APPLE__
+float flexiblas_real_clanht(void* norm, void* n, void* d, void* e) __attribute__((alias("flexiblas_real_clanht_")));
+#else
+float flexiblas_real_clanht(void* norm, void* n, void* d, void* e){return flexiblas_real_clanht_((void*) norm, (void*) n, (void*) d, (void*) e);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ float flexiblas_chain_clanht_(void* norm, void* n, void* d, void* e)
 	}
 	return ret ;
 }
-
-float flexiblas_chain_clanht(void* norm, void* n, void* d, void* e)  __attribute__((alias("flexiblas_chain_clanht_")));
-
+#ifndef __APPLE__
+float flexiblas_chain_clanht(void* norm, void* n, void* d, void* e) __attribute__((alias("flexiblas_chain_clanht_")));
+#else
+float flexiblas_chain_clanht(void* norm, void* n, void* d, void* e){return flexiblas_chain_clanht_((void*) norm, (void*) n, (void*) d, (void*) e);}
+#endif
 
 
 

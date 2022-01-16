@@ -1,25 +1,25 @@
-# - Find BLAS library
-# This module finds an installed fortran library that implements the BLAS
+# - Find BLAS64 library
+# This module finds an installed fortran library that implements the BLAS64
 # linear-algebra interface (see http://www.netlib.org/blas/).
 # The list of libraries searched for is taken
 # from the autoconf macro file, acx_blas.m4 (distributed at
 # http://ac-archive.sourceforge.net/ac-archive/acx_blas.html).
 #
 # This module sets the following variables:
-#  BLAS_FOUND - set to true if a library implementing the BLAS interface
+#  BLAS64_FOUND - set to true if a library implementing the BLAS64 interface
 #    is found
-#  BLAS_LINKER_FLAGS - uncached list of required linker flags (excluding -l
+#  BLAS64_LINKER_FLAGS - uncached list of required linker flags (excluding -l
 #    and -L).
-#  BLAS_LIBRARIES - uncached list of libraries (using full path name) to
-#    link against to use BLAS
+#  BLAS64_LIBRARIES - uncached list of libraries (using full path name) to
+#    link against to use BLAS64
 #  BLA_STATIC  if set on this determines what kind of linkage we do (static)
-#  BLA_VENDOR  if set checks only the specified vendor, if not set checks
+#  BLA64_VENDOR  if set checks only the specified vendor, if not set checks
 #     all the possibilities
 ##########
-# List of vendors (BLA_VENDOR) valid in this module:
-# - OpenBLAS
-# - OpenBLAS-PThread
-# - OpenBLAS-OpenMP
+# List of vendors (BLA64_VENDOR) valid in this module:
+# - OpenBLAS64
+# - OpenBLAS64-PThread
+# - OpenBLAS64-OpenMP
 # - Intel (search a default one)
 # - Intel_64ilp   (Intel64, parallel, 4Byte Int, 8 Byte Long+Pointer)
 # - Intel_64ilp_seq (Intel64, sequential)
@@ -64,10 +64,10 @@ if(_LANGUAGES_ MATCHES Fortran)
 elseif((_LANGUAGES_ MATCHES C) OR (_LANGUAGES_ MATCHES CXX))
     set( _CHECK_FORTRAN FALSE )
 else()
-    if(BLAS_FIND_REQUIRED)
-        message(FATAL_ERROR "FindBLAS requires Fortran, C, or C++ to be enabled.")
+    if(BLAS64_FIND_REQUIRED)
+        message(FATAL_ERROR "FindBLAS64 requires Fortran, C, or C++ to be enabled.")
     else()
-        message(STATUS "Looking for BLAS... - NOT found (Unsupported languages)")
+        message(STATUS "Looking for BLAS64... - NOT found (Unsupported languages)")
         return()
     endif()
 endif()
@@ -155,23 +155,23 @@ endmacro()
 #
 # PREPARATION
 #
-set(BLAS_LINKER_FLAGS)
-set(BLAS_LIBRARIES)
-if($ENV{BLA_VENDOR} MATCHES ".+")
-    set(BLA_VENDOR $ENV{BLA_VENDOR})
+set(BLAS64_LINKER_FLAGS)
+set(BLAS64_LIBRARIES)
+if($ENV{BLA64_VENDOR} MATCHES ".+")
+    set(BLA64_VENDOR $ENV{BLA64_VENDOR})
 else()
-    if(NOT BLA_VENDOR)
-        set(BLA_VENDOR "All")
+    if(NOT BLA64_VENDOR)
+        set(BLA64_VENDOR "All")
     endif()
 endif()
 
-# Check for a generic BLAS first. This enables us to use the system wide
-# default setting on systems which provide the BLAS implementation via
+# Check for a generic BLAS64 first. This enables us to use the system wide
+# default setting on systems which provide the BLAS64 implementation via
 # the updates-alternatives system or similar techniques.
-if(BLA_VENDOR STREQUAL "Generic" OR BLA_VENDOR STREQUAL "All")
-    if(NOT BLAS_LIBRARIES)
+if(BLA64_VENDOR STREQUAL "Generic" OR BLA64_VENDOR STREQUAL "All")
+    if(NOT BLAS64_LIBRARIES)
         check_fortran_libraries(
-            BLAS_LIBRARIES
+            BLAS64_LIBRARIES
             BLAS64
             sgemm
             ""
@@ -179,18 +179,18 @@ if(BLA_VENDOR STREQUAL "Generic" OR BLA_VENDOR STREQUAL "All")
             ""
             )
     endif()
-    if(BLAS_LIBRARIES)
-        set(BLA_VENDOR "Generic")
+    if(BLAS64_LIBRARIES)
+        set(BLA64_VENDOR "Generic")
     endif()
 endif()
 
 #
-# Search for the FlexiBLAS
+# Search for the FlexiBLAS64
 #
-if(BLA_VENDOR STREQUAL "FlexiBLAS" OR BLA_VENDOR STREQUAL "All")
-    if(NOT BLAS_LIBRARIES)
+if(BLA64_VENDOR STREQUAL "FlexiBLAS64" OR BLA64_VENDOR STREQUAL "All")
+    if(NOT BLAS64_LIBRARIES)
         check_fortran_libraries(
-            BLAS_LIBRARIES
+            BLAS64_LIBRARIES
             BLAS64
             sgemm
             ""
@@ -198,26 +198,26 @@ if(BLA_VENDOR STREQUAL "FlexiBLAS" OR BLA_VENDOR STREQUAL "All")
             ""
             )
     endif()
-    if(BLAS_LIBRARIES)
-        set(BLA_VENDOR "FlexiBLAS")
+    if(BLAS64_LIBRARIES)
+        set(BLA64_VENDOR "FlexiBLAS64")
     endif()
 endif()
 
-# BLAS in IBM ESSL library? (requires generic BLAS lib, too)
-if(BLA_VENDOR STREQUAL "IBMESSL" OR BLA_VENDOR STREQUAL "ESSL" OR BLA_VENDOR STREQUAL "All")
-    if(NOT BLAS_LIBRARIES)
-        set(BLAS_SEARCH_LIBS "")
+# BLAS64 in IBM ESSL library? (requires generic BLAS64 lib, too)
+if(BLA64_VENDOR STREQUAL "IBMESSL" OR BLA64_VENDOR STREQUAL "ESSL" OR BLA64_VENDOR STREQUAL "All")
+    if(NOT BLAS64_LIBRARIES)
+        set(BLAS64_SEARCH_LIBS "")
 
-        list(APPEND BLAS_SEARCH_LIBS "esslsmp6464")
-        list(APPEND BLAS_SEARCH_LIBS "essl6464")
+        list(APPEND BLAS64_SEARCH_LIBS "esslsmp6464")
+        list(APPEND BLAS64_SEARCH_LIBS "essl6464")
 
-        foreach(IT ${BLAS_SEARCH_LIBS})
+        foreach(IT ${BLAS64_SEARCH_LIBS})
             string(REPLACE " " ";" SEARCH_LIBS ${IT})
-            if(BLAS_LIBRARIES)
+            if(BLAS64_LIBRARIES)
             else()
                 check_fortran_libraries(
-                    BLAS_LIBRARIES
-                    BLAS
+                    BLAS64_LIBRARIES
+                    BLAS64
                     sgemm
                     ""
                     "${SEARCH_LIBS}"
@@ -225,57 +225,57 @@ if(BLA_VENDOR STREQUAL "IBMESSL" OR BLA_VENDOR STREQUAL "ESSL" OR BLA_VENDOR STR
                     )
             endif()
         endforeach()
-        if(BLAS_LIBRARIES)
-            set(BLA_VENDOR "IBMESSL")
-            set(BLAS_LIBRARIES "${BLAS_LIBRARIES}")
+        if(BLAS64_LIBRARIES)
+            set(BLA64_VENDOR "IBMESSL")
+            set(BLAS64_LIBRARIES "${BLAS64_LIBRARIES}")
         endif()
     endif()
 
-    if(NOT BLAS_LIBRARIES)
+    if(NOT BLAS64_LIBRARIES)
         check_fortran_libraries(
-            BLAS_LIBRARIES
-            BLAS
+            BLAS64_LIBRARIES
+            BLAS64
             sgemm
             ""
             "essl;blas"
             ""
             )
     endif()
-    if(BLAS_LIBRARIES)
-        set(BLA_VENDOR "IBMESSL")
+    if(BLAS64_LIBRARIES)
+        set(BLA64_VENDOR "IBMESSL")
     endif()
 
 endif()
 
 #
-# Find OpenBLAS
+# Find OpenBLAS64
 #
-if(BLA_VENDOR MATCHES "OpenBLAS.*" OR BLA_VENDOR STREQUAL "All")
-    if(NOT BLAS_LIBRARIES)
-        set(BLAS_SEARCH_LIBS "")
+if(BLA64_VENDOR MATCHES "OpenBLAS64.*" OR BLA64_VENDOR STREQUAL "All")
+    if(NOT BLAS64_LIBRARIES)
+        set(BLAS64_SEARCH_LIBS "")
         find_package(OpenMP)
         find_package(Threads)
-        if(BLA_VENDOR STREQUAL "OpenBLAS")
-            list(APPEND BLAS_SEARCH_LIBS "openblas64")
-            set(XVENDOR "OpenBLAS")
+        if(BLA64_VENDOR STREQUAL "OpenBLAS64")
+            list(APPEND BLAS64_SEARCH_LIBS "openblas64")
+            set(XVENDOR "OpenBLAS64")
         endif()
-        if(BLA_VENDOR MATCHES "OpenBLAS-P.*")
-            list(APPEND BLAS_SEARCH_LIBS "openblasp64")
-            list(APPEND BLAS_SEARCH_LIBS "openblas64p")
-            set(XVENDOR "OpenBLAS-Pthreads")
+        if(BLA64_VENDOR MATCHES "OpenBLAS64-P.*")
+            list(APPEND BLAS64_SEARCH_LIBS "openblasp64")
+            list(APPEND BLAS64_SEARCH_LIBS "openblas64p")
+            set(XVENDOR "OpenBLAS64-Pthreads")
         endif()
-        if(BLA_VENDOR STREQUAL "OpenBLAS-OpenMP" OR BLA_VENDOR STREQUAL "OpenBLAS-OpenMP")
-            list(APPEND BLAS_SEARCH_LIBS "openblaso64")
-            list(APPEND BLAS_SEARCH_LIBS "openblas64o")
-            set(XVENDOR "OpenBLAS-OpenMP")
+        if(BLA64_VENDOR STREQUAL "OpenBLAS64-OpenMP" OR BLA64_VENDOR STREQUAL "OpenBLAS64-OpenMP")
+            list(APPEND BLAS64_SEARCH_LIBS "openblaso64")
+            list(APPEND BLAS64_SEARCH_LIBS "openblas64o")
+            set(XVENDOR "OpenBLAS64-OpenMP")
         endif()
 
-        foreach(IT ${BLAS_SEARCH_LIBS})
+        foreach(IT ${BLAS64_SEARCH_LIBS})
             string(REPLACE " " ";" SEARCH_LIBS ${IT})
-            if(BLAS_LIBRARIES)
+            if(BLAS64_LIBRARIES)
             else()
                 check_fortran_libraries(
-                    BLAS_LIBRARIES
+                    BLAS64_LIBRARIES
                     BLAS64
                     sgemm
                     "${OpenMP_LD_FLAGS}"
@@ -285,18 +285,18 @@ if(BLA_VENDOR MATCHES "OpenBLAS.*" OR BLA_VENDOR STREQUAL "All")
             endif()
         endforeach()
 
-        if(BLAS_LIBRARIES)
-            set(BLA_VENDOR ${XVENDOR})
+        if(BLAS64_LIBRARIES)
+            set(BLA64_VENDOR ${XVENDOR})
         endif()
     endif()
 endif()
 
 
-#BLAS in acml library?
-if(BLA_VENDOR MATCHES "ACML.*" OR BLA_VENDOR STREQUAL "All")
-    if(((BLA_VENDOR STREQUAL "ACML") AND (NOT BLAS_ACML_LIB_DIRS)) OR
-        ((BLA_VENDOR STREQUAL "ACML_MP") AND (NOT BLAS_ACML_MP_LIB_DIRS)) OR
-        ((BLA_VENDOR STREQUAL "ACML_GPU") AND (NOT BLAS_ACML_GPU_LIB_DIRS))
+#BLAS64 in acml library?
+if(BLA64_VENDOR MATCHES "ACML.*" OR BLA64_VENDOR STREQUAL "All")
+    if(((BLA64_VENDOR STREQUAL "ACML") AND (NOT BLAS64_ACML_LIB_DIRS)) OR
+        ((BLA64_VENDOR STREQUAL "ACML_MP") AND (NOT BLAS64_ACML_MP_LIB_DIRS)) OR
+        ((BLA64_VENDOR STREQUAL "ACML_GPU") AND (NOT BLAS64_ACML_GPU_LIB_DIRS))
         )
     # try to find acml in "standard" paths
     if(NOT DEFINED ACML_ROOT)
@@ -348,7 +348,7 @@ if(BLA_VENDOR MATCHES "ACML.*" OR BLA_VENDOR STREQUAL "All")
             set( _ACML_COMPILER64 "gfortran64" )
         endif()
 
-        if(BLA_VENDOR STREQUAL "ACML_MP")
+        if(BLA64_VENDOR STREQUAL "ACML_MP")
             set(_ACML_MP_LIB_DIRS
                 "${_ACML_ROOT}/${_ACML_COMPILER32}_mp${_ACML_PATH_SUFFIX}/lib"
                 "${_ACML_ROOT}/${_ACML_COMPILER64}_mp${_ACML_PATH_SUFFIX}/lib")
@@ -358,84 +358,84 @@ if(BLA_VENDOR MATCHES "ACML.*" OR BLA_VENDOR STREQUAL "All")
                 "${_ACML_ROOT}/${_ACML_COMPILER64}${_ACML_PATH_SUFFIX}/lib")
         endif()
     endif()
-elseif(BLAS_${BLA_VENDOR}_LIB_DIRS)
-    set(_${BLA_VENDOR}_LIB_DIRS ${BLAS_${BLA_VENDOR}_LIB_DIRS})
+elseif(BLAS64_${BLA64_VENDOR}_LIB_DIRS)
+    set(_${BLA64_VENDOR}_LIB_DIRS ${BLAS64_${BLA64_VENDOR}_LIB_DIRS})
 endif()
 
-if( BLA_VENDOR STREQUAL "ACML_MP" )
-    foreach(BLAS_ACML_MP_LIB_DIRS ${_ACML_MP_LIB_DIRS})
+if( BLA64_VENDOR STREQUAL "ACML_MP" )
+    foreach(BLAS64_ACML_MP_LIB_DIRS ${_ACML_MP_LIB_DIRS})
         set(__CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES})
         set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
 
         check_fortran_libraries(
-            BLAS_LIBRARIES
+            BLAS64_LIBRARIES
             BLAS64
             sgemm
             ""
             "acml_mp"
             "-lgomp"
-            ${BLAS_ACML_MP_LIB_DIRS}
+            ${BLAS64_ACML_MP_LIB_DIRS}
             )
         set(CMAKE_FIND_LIBRARY_SUFFIXES ${__CMAKE_FIND_LIBRARY_SUFFIXES})
 
-        if( BLAS_LIBRARIES )
-            set(BLAS_LIBRARIES "${BLAS_LIBRARIES};-lgomp")
+        if( BLAS64_LIBRARIES )
+            set(BLAS64_LIBRARIES "${BLAS64_LIBRARIES};-lgomp")
             break()
         endif()
 
         check_fortran_libraries(
-            BLAS_LIBRARIES
+            BLAS64_LIBRARIES
             BLAS64
             sgemm
             ""
             "acml_mp"
             "-lgomp"
-            ${BLAS_ACML_MP_LIB_DIRS}
+            ${BLAS64_ACML_MP_LIB_DIRS}
             )
 
-        if( BLAS_LIBRARIES )
-            set(BLAS_LIBRARIES "${BLAS_LIBRARIES};-lgomp")
+        if( BLAS64_LIBRARIES )
+            set(BLAS64_LIBRARIES "${BLAS64_LIBRARIES};-lgomp")
             break()
         endif()
 
     endforeach()
 else()
-    foreach(BLAS_ACML_LIB_DIRS ${_ACML_LIB_DIRS})
+    foreach(BLAS64_ACML_LIB_DIRS ${_ACML_LIB_DIRS})
         set(__CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES})
         set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
         check_fortran_libraries(
-            BLAS_LIBRARIES
+            BLAS64_LIBRARIES
             BLAS64
             sgemm
             ""
             "acml;acml_mv;"
             ""
-            ${BLAS_ACML_LIB_DIRS}
+            ${BLAS64_ACML_LIB_DIRS}
             )
         set(CMAKE_FIND_LIBRARY_SUFFIXES ${__CMAKE_FIND_LIBRARY_SUFFIXES})
-        if(BLAS_LIBRARIES)
+        if(BLAS64_LIBRARIES)
             break()
         endif()
 
         check_fortran_libraries(
-            BLAS_LIBRARIES
+            BLAS64_LIBRARIES
             BLAS64
             sgemm
             ""
             "acml"
             ""
-            ${BLAS_ACML_LIB_DIRS}
+            ${BLAS64_ACML_LIB_DIRS}
             )
-        if( BLAS_LIBRARIES )
+        if( BLAS64_LIBRARIES )
             break()
         endif()
     endforeach()
 endif()
 
 # Either acml or acml_mp should be in LD_LIBRARY_PATH but not both
-if(NOT BLAS_LIBRARIES)
+if(NOT BLAS64_LIBRARIES)
     check_fortran_libraries(
-        BLAS_LIBRARIES
+        BLAS64_LIBRARIES
         BLAS64
         sgemm
         ""
@@ -444,9 +444,9 @@ if(NOT BLAS_LIBRARIES)
         )
 endif()
 
-if(NOT BLAS_LIBRARIES)
+if(NOT BLAS64_LIBRARIES)
     check_fortran_libraries(
-        BLAS_LIBRARIES
+        BLAS64_LIBRARIES
         BLAS64
         sgemm
         ""
@@ -454,15 +454,15 @@ if(NOT BLAS_LIBRARIES)
         ""
         )
 endif()
-if(BLAS_LIBRARIES)
-    set(BLA_VENDOR "ACML")
+if(BLAS64_LIBRARIES)
+    set(BLA64_VENDOR "ACML")
 endif()
 endif() # ACML
 
 #
-# BLAS in Intel MKL
+# BLAS64 in Intel MKL
 #
-if(BLA_VENDOR MATCHES "Intel*" OR BLA_VENDOR STREQUAL "All")
+if(BLA64_VENDOR MATCHES "Intel*" OR BLA64_VENDOR STREQUAL "All")
     if(NOT WIN32)
         set(LM "-lm")
     endif()
@@ -473,64 +473,64 @@ if(BLA_VENDOR MATCHES "Intel*" OR BLA_VENDOR STREQUAL "All")
     find_package(Threads REQUIRED)
     find_package(OpenMP)
 
-    set(BLAS_SEARCH_LIBS "")
+    set(BLAS64_SEARCH_LIBS "")
 
-    set(BLAS_mkl_SEARCH_SYMBOL sgemm)
-    set(_LIBRARIES BLAS_LIBRARIES)
+    set(BLAS64_mkl_SEARCH_SYMBOL sgemm)
+    set(_LIBRARIES BLAS64_LIBRARIES)
     if(WIN32)
-        list(APPEND BLAS_SEARCH_LIBS "mkl_intel_c mkl_intel_thread mkl_core libguide40")
+        list(APPEND BLAS64_SEARCH_LIBS "mkl_intel_c mkl_intel_thread mkl_core libguide40")
     else() #WIN32
-        if(BLA_VENDOR STREQUAL "Intel_64lp" OR BLA_VENDOR STREQUAL "All")
+        if(BLA64_VENDOR STREQUAL "Intel_64lp" OR BLA64_VENDOR STREQUAL "All")
             # old version
-            list(APPEND BLAS_SEARCH_LIBS "mkl_intel_ilp64 mkl_intel_thread mkl_core guide")
+            list(APPEND BLAS64_SEARCH_LIBS "mkl_intel_ilp64 mkl_intel_thread mkl_core guide")
             # mkl >= 10.3
             if(CMAKE_C_COMPILER_ID MATCHES ".*GNU.*")
-                list(APPEND BLAS_SEARCH_LIBS "mkl_gf_ilp64 mkl_intel_thread mkl_core pthread iomp5 dl m")
-                list(APPEND BLAS_SEARCH_LIBS "mkl_gf_ilp64 mkl_gnu_thread mkl_core pthread gomp dl m")
+                list(APPEND BLAS64_SEARCH_LIBS "mkl_gf_ilp64 mkl_intel_thread mkl_core pthread iomp5 dl m")
+                list(APPEND BLAS64_SEARCH_LIBS "mkl_gf_ilp64 mkl_gnu_thread mkl_core pthread gomp dl m")
             else()
-                list(APPEND BLAS_SEARCH_LIBS "mkl_intel_ilp64 mkl_intel_thread mkl_core iomp5 dl")
+                list(APPEND BLAS64_SEARCH_LIBS "mkl_intel_ilp64 mkl_intel_thread mkl_core iomp5 dl")
             endif()
         endif() #Intel64_lp
 
 
-        if(BLA_VENDOR STREQUAL "Intel_64lp_seq" OR BLA_VENDOR STREQUAL "All")
+        if(BLA64_VENDOR STREQUAL "Intel_64lp_seq" OR BLA64_VENDOR STREQUAL "All")
             # mkl >= 10.3
             if(CMAKE_C_COMPILER_ID MATCHES ".*GNU.*")
-                list(APPEND BLAS_SEARCH_LIBS "mkl_gf_ilp64 mkl_sequential mkl_core pthread dl m")
+                list(APPEND BLAS64_SEARCH_LIBS "mkl_gf_ilp64 mkl_sequential mkl_core pthread dl m")
             else()
-                list(APPEND BLAS_SEARCH_LIBS "mkl_intel_ilp64 mkl_sequential mkl_core dl m")
+                list(APPEND BLAS64_SEARCH_LIBS "mkl_intel_ilp64 mkl_sequential mkl_core dl m")
             endif()
         endif() # Intel64_lp_seq
     endif() # Win32
 
-    foreach(IT ${BLAS_SEARCH_LIBS})
+    foreach(IT ${BLAS64_SEARCH_LIBS})
         string(REPLACE " " ";" SEARCH_LIBS ${IT})
         if(${_LIBRARIES})
         else()
             check_fortran_libraries(
                 ${_LIBRARIES}
                 BLAS64
-                ${BLAS_mkl_SEARCH_SYMBOL}
+                ${BLAS64_mkl_SEARCH_SYMBOL}
                 "${OpenMP_LD_FLAGS}"
                 "${SEARCH_LIBS}"
                 "${OpenMP_C_FLAGS};${CMAKE_THREAD_LIBS_INIT};${LM}"
                 )
         endif()
     endforeach()
-    if(BLAS_LIBRARIES)
-        set(BLA_VENDOR "Intel")
-        set(BLAS_LIBRARIES "${BLAS_LIBRARIES}" ${OPENMP_C_FLAGS} ${CMAKE_THREAD_LIBS_INIT} ${LM})
-        set(BLAS_LINKER_FLAGS "${OpenMP_LD_FLAGS}")
+    if(BLAS64_LIBRARIES)
+        set(BLA64_VENDOR "Intel")
+        set(BLAS64_LIBRARIES "${BLAS64_LIBRARIES}" ${OPENMP_C_FLAGS} ${CMAKE_THREAD_LIBS_INIT} ${LM})
+        set(BLAS64_LINKER_FLAGS "${OpenMP_LD_FLAGS}")
     endif()
 endif()
 
 
 ### Check 64bit
-if(BLAS_LIBRARIES)
-    if( BLA_VENDOR MATCHES ".*ESSL.*" )
-        set(BLAS_INTERFACE64 TRUE)
+if(BLAS64_LIBRARIES)
+    if( BLA64_VENDOR MATCHES ".*ESSL.*" )
+        set(BLAS64_INTERFACE64 TRUE)
     else()
-        set(CHECK_FUNCTION_EXISTS_ADD_LIBRARIES "-DLINK_LIBRARIES:STRING=${BLAS_LIBRARIES}")
+        set(CHECK_FUNCTION_EXISTS_ADD_LIBRARIES "-DLINK_LIBRARIES:STRING=${BLAS64_LIBRARIES}")
         file(WRITE
             ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeTmp/testBLAS64.f90
             "
@@ -547,7 +547,7 @@ if(BLAS_LIBRARIES)
             n = n + 1
             write(*,*) n
             if (n >= 0) stop 1
-            ! This means we're on 64-bit integers. Check whether the BLAS is, too.
+            ! This means we're on 64-bit integers. Check whether the BLAS64 is, too.
             s = sdot(n,a,1,b,1)
             write(*,*) 'S1 = ', s
             if (s .ne. 0.0) stop 1
@@ -560,11 +560,11 @@ if(BLAS_LIBRARIES)
                     CMAKE_FLAGS "${CHECK_FUNCTION_EXISTS_ADD_LIBRARIES}")
                 message(STATUS "Check for BLAS64 interface: ${RUN_RESULT} ${COMPILE_RESULT}")
                 if(RUN_RESULT EQUAL 0)
-                    message(STATUS "BLAS Library ${BLA_VENDOR} works with 64bit integers")
-                    set(BLAS_INTERFACE64 TRUE)
+                    message(STATUS "BLAS64 Library ${BLA64_VENDOR} works with 64bit integers")
+                    set(BLAS64_INTERFACE64 TRUE)
                 else()
-                    message(STATUS "BLAS Library ${BLA_VENDOR} does not work with 64bit integers")
-                    set(BLAS_INTERFACE64 FALSE)
+                    message(STATUS "BLAS64 Library ${BLA64_VENDOR} does not work with 64bit integers")
+                    set(BLAS64_INTERFACE64 FALSE)
                 endif()
 
             endif()
@@ -573,21 +573,21 @@ if(BLAS_LIBRARIES)
         endif()
 
 
-        if(BLAS_LIBRARIES AND BLAS_INTERFACE64)
-            set(BLAS_FOUND TRUE)
-            set(BLAS_LIBRARIES ${BLAS_LIBRARIES} CACHE STRING "BLAS LIBRARIES")
-            set(BLAS_LINKER_FLAGS ${BLAS_LINKER_FLAGS} CACHE STRING "BLAS Linker Flags")
-            set(BLAS_FOUND     ${BLAS_FOUND}     CACHE BOOL "Found BLAS Libary")
-            set(BLA_VENDOR     ${BLA_VENDOR}     CACHE STRING "BLAS Vendor")
+        if(BLAS64_LIBRARIES AND BLAS64_INTERFACE64)
+            set(BLAS64_FOUND TRUE)
+            set(BLAS64_LIBRARIES ${BLAS64_LIBRARIES} CACHE STRING "BLAS64 LIBRARIES")
+            set(BLAS64_LINKER_FLAGS ${BLAS64_LINKER_FLAGS} CACHE STRING "BLAS64 Linker Flags")
+            set(BLAS64_FOUND     ${BLAS64_FOUND}     CACHE BOOL "Found BLAS64 Libary")
+            set(BLA64_VENDOR     ${BLA64_VENDOR}     CACHE STRING "BLAS64 Vendor")
         else()
-            set(BLAS_FOUND FALSE)
+            set(BLAS64_FOUND FALSE)
         endif()
 
-        if(NOT BLAS_FIND_QUIETLY)
-            if(BLAS_FOUND)
-                message(STATUS "Found BLAS64: ${BLA_VENDOR} (${BLAS_LIBRARIES})")
+        if(NOT BLAS64_FIND_QUIETLY)
+            if(BLAS64_FOUND)
+                message(STATUS "Found BLAS64: ${BLA64_VENDOR} (${BLAS64_LIBRARIES})")
             else()
-                if(BLAS_FIND_REQUIRED)
+                if(BLAS64_FIND_REQUIRED)
                     message(FATAL_ERROR "A required library with BLAS64 API not found. Please specify library location.")
                 else()
                     message(STATUS   "A library with BLAS64 API not found. Please specify library location.")

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(slarrb,SLARRB)(blasint* n, float* d, float* lld, blasint* ifirst,
 #ifdef FLEXIBLAS_ABI_IBM
 void slarrb_(blasint* n, float* d, float* lld, blasint* ifirst, blasint* ilast, float* rtol1, float* rtol2, blasint* offset, float* w, float* wgap, float* werr, float* work, blasint* iwork, float* pivmin, float* spdiam, blasint* twist, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(slarrb,SLARRB)))));
 #else
+#ifndef __APPLE__
 void slarrb(blasint* n, float* d, float* lld, blasint* ifirst, blasint* ilast, float* rtol1, float* rtol2, blasint* offset, float* w, float* wgap, float* werr, float* work, blasint* iwork, float* pivmin, float* spdiam, blasint* twist, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(slarrb,SLARRB)))));
+#else
+void slarrb(blasint* n, float* d, float* lld, blasint* ifirst, blasint* ilast, float* rtol1, float* rtol2, blasint* offset, float* w, float* wgap, float* werr, float* work, blasint* iwork, float* pivmin, float* spdiam, blasint* twist, blasint* info){ FC_GLOBAL(slarrb,SLARRB)((void*) n, (void*) d, (void*) lld, (void*) ifirst, (void*) ilast, (void*) rtol1, (void*) rtol2, (void*) offset, (void*) w, (void*) wgap, (void*) werr, (void*) work, (void*) iwork, (void*) pivmin, (void*) spdiam, (void*) twist, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_slarrb_(void* n, void* d, void* lld, void* ifirst, void* ila
 
 	return;
 }
-
-void flexiblas_real_slarrb(void* n, void* d, void* lld, void* ifirst, void* ilast, void* rtol1, void* rtol2, void* offset, void* w, void* wgap, void* werr, void* work, void* iwork, void* pivmin, void* spdiam, void* twist, void* info)  __attribute__((alias("flexiblas_real_slarrb_")));
-
+#ifndef __APPLE__
+void flexiblas_real_slarrb(void* n, void* d, void* lld, void* ifirst, void* ilast, void* rtol1, void* rtol2, void* offset, void* w, void* wgap, void* werr, void* work, void* iwork, void* pivmin, void* spdiam, void* twist, void* info) __attribute__((alias("flexiblas_real_slarrb_")));
+#else
+void flexiblas_real_slarrb(void* n, void* d, void* lld, void* ifirst, void* ilast, void* rtol1, void* rtol2, void* offset, void* w, void* wgap, void* werr, void* work, void* iwork, void* pivmin, void* spdiam, void* twist, void* info){flexiblas_real_slarrb_((void*) n, (void*) d, (void*) lld, (void*) ifirst, (void*) ilast, (void*) rtol1, (void*) rtol2, (void*) offset, (void*) w, (void*) wgap, (void*) werr, (void*) work, (void*) iwork, (void*) pivmin, (void*) spdiam, (void*) twist, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_slarrb_(void* n, void* d, void* lld, void* ifirst, void* il
 	}
 	return;
 }
-
-void flexiblas_chain_slarrb(void* n, void* d, void* lld, void* ifirst, void* ilast, void* rtol1, void* rtol2, void* offset, void* w, void* wgap, void* werr, void* work, void* iwork, void* pivmin, void* spdiam, void* twist, void* info)  __attribute__((alias("flexiblas_chain_slarrb_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_slarrb(void* n, void* d, void* lld, void* ifirst, void* ilast, void* rtol1, void* rtol2, void* offset, void* w, void* wgap, void* werr, void* work, void* iwork, void* pivmin, void* spdiam, void* twist, void* info) __attribute__((alias("flexiblas_chain_slarrb_")));
+#else
+void flexiblas_chain_slarrb(void* n, void* d, void* lld, void* ifirst, void* ilast, void* rtol1, void* rtol2, void* offset, void* w, void* wgap, void* werr, void* work, void* iwork, void* pivmin, void* spdiam, void* twist, void* info){flexiblas_chain_slarrb_((void*) n, (void*) d, (void*) lld, (void*) ifirst, (void*) ilast, (void*) rtol1, (void*) rtol2, (void*) offset, (void*) w, (void*) wgap, (void*) werr, (void*) work, (void*) iwork, (void*) pivmin, (void*) spdiam, (void*) twist, (void*) info);}
+#endif
 
 
 

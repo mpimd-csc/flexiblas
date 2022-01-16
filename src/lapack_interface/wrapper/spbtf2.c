@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(spbtf2,SPBTF2)(char* uplo, blasint* n, blasint* kd, float* ab, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void spbtf2_(char* uplo, blasint* n, blasint* kd, float* ab, blasint* ldab, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(spbtf2,SPBTF2)))));
 #else
+#ifndef __APPLE__
 void spbtf2(char* uplo, blasint* n, blasint* kd, float* ab, blasint* ldab, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(spbtf2,SPBTF2)))));
+#else
+void spbtf2(char* uplo, blasint* n, blasint* kd, float* ab, blasint* ldab, blasint* info){ FC_GLOBAL(spbtf2,SPBTF2)((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_spbtf2_(void* uplo, void* n, void* kd, void* ab, void* ldab,
 
 	return;
 }
-
-void flexiblas_real_spbtf2(void* uplo, void* n, void* kd, void* ab, void* ldab, void* info)  __attribute__((alias("flexiblas_real_spbtf2_")));
-
+#ifndef __APPLE__
+void flexiblas_real_spbtf2(void* uplo, void* n, void* kd, void* ab, void* ldab, void* info) __attribute__((alias("flexiblas_real_spbtf2_")));
+#else
+void flexiblas_real_spbtf2(void* uplo, void* n, void* kd, void* ab, void* ldab, void* info){flexiblas_real_spbtf2_((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_spbtf2_(void* uplo, void* n, void* kd, void* ab, void* ldab
 	}
 	return;
 }
-
-void flexiblas_chain_spbtf2(void* uplo, void* n, void* kd, void* ab, void* ldab, void* info)  __attribute__((alias("flexiblas_chain_spbtf2_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_spbtf2(void* uplo, void* n, void* kd, void* ab, void* ldab, void* info) __attribute__((alias("flexiblas_chain_spbtf2_")));
+#else
+void flexiblas_chain_spbtf2(void* uplo, void* n, void* kd, void* ab, void* ldab, void* info){flexiblas_chain_spbtf2_((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) info);}
+#endif
 
 
 

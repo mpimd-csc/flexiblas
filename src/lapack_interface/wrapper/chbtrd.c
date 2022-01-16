@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(chbtrd,CHBTRD)(char* vect, char* uplo, blasint* n, blasint* kd, f
 #ifdef FLEXIBLAS_ABI_IBM
 void chbtrd_(char* vect, char* uplo, blasint* n, blasint* kd, float complex* ab, blasint* ldab, float* d, float* e, float complex* q, blasint* ldq, float complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(chbtrd,CHBTRD)))));
 #else
+#ifndef __APPLE__
 void chbtrd(char* vect, char* uplo, blasint* n, blasint* kd, float complex* ab, blasint* ldab, float* d, float* e, float complex* q, blasint* ldq, float complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(chbtrd,CHBTRD)))));
+#else
+void chbtrd(char* vect, char* uplo, blasint* n, blasint* kd, float complex* ab, blasint* ldab, float* d, float* e, float complex* q, blasint* ldq, float complex* work, blasint* info){ FC_GLOBAL(chbtrd,CHBTRD)((void*) vect, (void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) d, (void*) e, (void*) q, (void*) ldq, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_chbtrd_(void* vect, void* uplo, void* n, void* kd, void* ab,
 
 	return;
 }
-
-void flexiblas_real_chbtrd(void* vect, void* uplo, void* n, void* kd, void* ab, void* ldab, void* d, void* e, void* q, void* ldq, void* work, void* info)  __attribute__((alias("flexiblas_real_chbtrd_")));
-
+#ifndef __APPLE__
+void flexiblas_real_chbtrd(void* vect, void* uplo, void* n, void* kd, void* ab, void* ldab, void* d, void* e, void* q, void* ldq, void* work, void* info) __attribute__((alias("flexiblas_real_chbtrd_")));
+#else
+void flexiblas_real_chbtrd(void* vect, void* uplo, void* n, void* kd, void* ab, void* ldab, void* d, void* e, void* q, void* ldq, void* work, void* info){flexiblas_real_chbtrd_((void*) vect, (void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) d, (void*) e, (void*) q, (void*) ldq, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_chbtrd_(void* vect, void* uplo, void* n, void* kd, void* ab
 	}
 	return;
 }
-
-void flexiblas_chain_chbtrd(void* vect, void* uplo, void* n, void* kd, void* ab, void* ldab, void* d, void* e, void* q, void* ldq, void* work, void* info)  __attribute__((alias("flexiblas_chain_chbtrd_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_chbtrd(void* vect, void* uplo, void* n, void* kd, void* ab, void* ldab, void* d, void* e, void* q, void* ldq, void* work, void* info) __attribute__((alias("flexiblas_chain_chbtrd_")));
+#else
+void flexiblas_chain_chbtrd(void* vect, void* uplo, void* n, void* kd, void* ab, void* ldab, void* d, void* e, void* q, void* ldq, void* work, void* info){flexiblas_chain_chbtrd_((void*) vect, (void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) d, (void*) e, (void*) q, (void*) ldq, (void*) work, (void*) info);}
+#endif
 
 
 

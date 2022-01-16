@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zlartg,ZLARTG)(double complex* f, double complex* g, double* cs, 
 #ifdef FLEXIBLAS_ABI_IBM
 void zlartg_(double complex* f, double complex* g, double* cs, double complex* sn, double complex* r) __attribute__((alias(MTS(FC_GLOBAL(zlartg,ZLARTG)))));
 #else
+#ifndef __APPLE__
 void zlartg(double complex* f, double complex* g, double* cs, double complex* sn, double complex* r) __attribute__((alias(MTS(FC_GLOBAL(zlartg,ZLARTG)))));
+#else
+void zlartg(double complex* f, double complex* g, double* cs, double complex* sn, double complex* r){ FC_GLOBAL(zlartg,ZLARTG)((void*) f, (void*) g, (void*) cs, (void*) sn, (void*) r); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zlartg_(void* f, void* g, void* cs, void* sn, void* r)
 
 	return;
 }
-
-void flexiblas_real_zlartg(void* f, void* g, void* cs, void* sn, void* r)  __attribute__((alias("flexiblas_real_zlartg_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zlartg(void* f, void* g, void* cs, void* sn, void* r) __attribute__((alias("flexiblas_real_zlartg_")));
+#else
+void flexiblas_real_zlartg(void* f, void* g, void* cs, void* sn, void* r){flexiblas_real_zlartg_((void*) f, (void*) g, (void*) cs, (void*) sn, (void*) r);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zlartg_(void* f, void* g, void* cs, void* sn, void* r)
 	}
 	return;
 }
-
-void flexiblas_chain_zlartg(void* f, void* g, void* cs, void* sn, void* r)  __attribute__((alias("flexiblas_chain_zlartg_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zlartg(void* f, void* g, void* cs, void* sn, void* r) __attribute__((alias("flexiblas_chain_zlartg_")));
+#else
+void flexiblas_chain_zlartg(void* f, void* g, void* cs, void* sn, void* r){flexiblas_chain_zlartg_((void*) f, (void*) g, (void*) cs, (void*) sn, (void*) r);}
+#endif
 
 
 

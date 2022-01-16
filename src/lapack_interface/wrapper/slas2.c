@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(slas2,SLAS2)(float* f, float* g, float* h, float* ssmin, float* s
 #ifdef FLEXIBLAS_ABI_IBM
 void slas2_(float* f, float* g, float* h, float* ssmin, float* ssmax) __attribute__((alias(MTS(FC_GLOBAL(slas2,SLAS2)))));
 #else
+#ifndef __APPLE__
 void slas2(float* f, float* g, float* h, float* ssmin, float* ssmax) __attribute__((alias(MTS(FC_GLOBAL(slas2,SLAS2)))));
+#else
+void slas2(float* f, float* g, float* h, float* ssmin, float* ssmax){ FC_GLOBAL(slas2,SLAS2)((void*) f, (void*) g, (void*) h, (void*) ssmin, (void*) ssmax); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_slas2_(void* f, void* g, void* h, void* ssmin, void* ssmax)
 
 	return;
 }
-
-void flexiblas_real_slas2(void* f, void* g, void* h, void* ssmin, void* ssmax)  __attribute__((alias("flexiblas_real_slas2_")));
-
+#ifndef __APPLE__
+void flexiblas_real_slas2(void* f, void* g, void* h, void* ssmin, void* ssmax) __attribute__((alias("flexiblas_real_slas2_")));
+#else
+void flexiblas_real_slas2(void* f, void* g, void* h, void* ssmin, void* ssmax){flexiblas_real_slas2_((void*) f, (void*) g, (void*) h, (void*) ssmin, (void*) ssmax);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_slas2_(void* f, void* g, void* h, void* ssmin, void* ssmax)
 	}
 	return;
 }
-
-void flexiblas_chain_slas2(void* f, void* g, void* h, void* ssmin, void* ssmax)  __attribute__((alias("flexiblas_chain_slas2_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_slas2(void* f, void* g, void* h, void* ssmin, void* ssmax) __attribute__((alias("flexiblas_chain_slas2_")));
+#else
+void flexiblas_chain_slas2(void* f, void* g, void* h, void* ssmin, void* ssmax){flexiblas_chain_slas2_((void*) f, (void*) g, (void*) h, (void*) ssmin, (void*) ssmax);}
+#endif
 
 
 

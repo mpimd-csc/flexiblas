@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
 
 
@@ -74,7 +74,7 @@ HIDDEN int __flexiblas_load_cblas(flexiblas_backend_t *backend)
 	LOAD_CBLAS(backend,blas.idamax,idamax);
 	LOAD_CBLAS(backend,blas.isamax,isamax);
 	LOAD_CBLAS(backend,blas.izamax,izamax);
-    LOAD_CBLAS(backend,xerbla,xerbla);
+    // LOAD_CBLAS(backend,xerbla,xerbla);
 
 	/*-----------------------------------------------------------------------------
 	 *  Single Precision Routines

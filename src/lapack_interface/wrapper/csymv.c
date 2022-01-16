@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(csymv,CSYMV)(char* uplo, blasint* n, float complex* alpha, float 
 #ifdef FLEXIBLAS_ABI_IBM
 void csymv_(char* uplo, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(csymv,CSYMV)))));
 #else
+#ifndef __APPLE__
 void csymv(char* uplo, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(csymv,CSYMV)))));
+#else
+void csymv(char* uplo, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy){ FC_GLOBAL(csymv,CSYMV)((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_csymv_(void* uplo, void* n, void* alpha, void* a, void* lda,
 
 	return;
 }
-
-void flexiblas_real_csymv(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy)  __attribute__((alias("flexiblas_real_csymv_")));
-
+#ifndef __APPLE__
+void flexiblas_real_csymv(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_real_csymv_")));
+#else
+void flexiblas_real_csymv(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_real_csymv_((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_csymv_(void* uplo, void* n, void* alpha, void* a, void* lda
 	}
 	return;
 }
-
-void flexiblas_chain_csymv(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy)  __attribute__((alias("flexiblas_chain_csymv_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_csymv(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy) __attribute__((alias("flexiblas_chain_csymv_")));
+#else
+void flexiblas_chain_csymv(void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy){flexiblas_chain_csymv_((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);}
+#endif
 
 
 

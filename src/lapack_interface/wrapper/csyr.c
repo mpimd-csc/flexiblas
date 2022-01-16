@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(csyr,CSYR)(char* uplo, blasint* n, float complex* alpha, float co
 #ifdef FLEXIBLAS_ABI_IBM
 void csyr_(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(csyr,CSYR)))));
 #else
+#ifndef __APPLE__
 void csyr(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(csyr,CSYR)))));
+#else
+void csyr(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* a, blasint* lda){ FC_GLOBAL(csyr,CSYR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_csyr_(void* uplo, void* n, void* alpha, void* x, void* incx,
 
 	return;
 }
-
-void flexiblas_real_csyr(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda)  __attribute__((alias("flexiblas_real_csyr_")));
-
+#ifndef __APPLE__
+void flexiblas_real_csyr(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda) __attribute__((alias("flexiblas_real_csyr_")));
+#else
+void flexiblas_real_csyr(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda){flexiblas_real_csyr_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_csyr_(void* uplo, void* n, void* alpha, void* x, void* incx
 	}
 	return;
 }
-
-void flexiblas_chain_csyr(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda)  __attribute__((alias("flexiblas_chain_csyr_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_csyr(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda) __attribute__((alias("flexiblas_chain_csyr_")));
+#else
+void flexiblas_chain_csyr(void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda){flexiblas_chain_csyr_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda);}
+#endif
 
 
 

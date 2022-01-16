@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ float FC_GLOBAL(clangb,CLANGB)(char* norm, blasint* n, blasint* kl, blasint* ku,
 #ifdef FLEXIBLAS_ABI_IBM
 float clangb_(char* norm, blasint* n, blasint* kl, blasint* ku, float complex* ab, blasint* ldab, float* work) __attribute__((alias(MTS(FC_GLOBAL(clangb,CLANGB)))));
 #else
+#ifndef __APPLE__
 float clangb(char* norm, blasint* n, blasint* kl, blasint* ku, float complex* ab, blasint* ldab, float* work) __attribute__((alias(MTS(FC_GLOBAL(clangb,CLANGB)))));
+#else
+float clangb(char* norm, blasint* n, blasint* kl, blasint* ku, float complex* ab, blasint* ldab, float* work){ return FC_GLOBAL(clangb,CLANGB)((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) work); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ float flexiblas_real_clangb_(void* norm, void* n, void* kl, void* ku, void* ab, 
 
 	return ret ;
 }
-
-float flexiblas_real_clangb(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work)  __attribute__((alias("flexiblas_real_clangb_")));
-
+#ifndef __APPLE__
+float flexiblas_real_clangb(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work) __attribute__((alias("flexiblas_real_clangb_")));
+#else
+float flexiblas_real_clangb(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work){return flexiblas_real_clangb_((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) work);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ float flexiblas_chain_clangb_(void* norm, void* n, void* kl, void* ku, void* ab,
 	}
 	return ret ;
 }
-
-float flexiblas_chain_clangb(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work)  __attribute__((alias("flexiblas_chain_clangb_")));
-
+#ifndef __APPLE__
+float flexiblas_chain_clangb(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work) __attribute__((alias("flexiblas_chain_clangb_")));
+#else
+float flexiblas_chain_clangb(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work){return flexiblas_chain_clangb_((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) work);}
+#endif
 
 
 

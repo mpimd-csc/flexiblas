@@ -64,7 +64,7 @@ file_header = """
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
 
 
@@ -158,6 +158,13 @@ def main(version):
 
 
 if __name__ == "__main__":
+    main("3.10.0")
+    main("3.10.0-wodprc")
+
+
+    main("3.9.1")
+    main("3.9.1-wodprc")
+
     main("3.9.0")
     main("3.9.0-wodprc")
 

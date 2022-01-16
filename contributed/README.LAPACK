@@ -1,0 +1,8 @@
+Modifications
+=============
+
+src/iparam2stage.F
+------------------
+line 210:          SUBNAM(1:MIN(LEN(NAME),12)) = NAME(1:MIN(LEN(NAME),12))
+ 
+

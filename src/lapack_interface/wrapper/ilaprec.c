@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ int FC_GLOBAL(ilaprec,ILAPREC)(char* prec)
 #ifdef FLEXIBLAS_ABI_IBM
 int ilaprec_(char* prec) __attribute__((alias(MTS(FC_GLOBAL(ilaprec,ILAPREC)))));
 #else
+#ifndef __APPLE__
 int ilaprec(char* prec) __attribute__((alias(MTS(FC_GLOBAL(ilaprec,ILAPREC)))));
+#else
+int ilaprec(char* prec){ return FC_GLOBAL(ilaprec,ILAPREC)((void*) prec); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ blasint flexiblas_real_ilaprec_(void* prec)
 
 	return ret ;
 }
-
-blasint flexiblas_real_ilaprec(void* prec)  __attribute__((alias("flexiblas_real_ilaprec_")));
-
+#ifndef __APPLE__
+blasint flexiblas_real_ilaprec(void* prec) __attribute__((alias("flexiblas_real_ilaprec_")));
+#else
+blasint flexiblas_real_ilaprec(void* prec){return flexiblas_real_ilaprec_((void*) prec);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ blasint flexiblas_chain_ilaprec_(void* prec)
 	}
 	return ret ;
 }
-
-blasint flexiblas_chain_ilaprec(void* prec)  __attribute__((alias("flexiblas_chain_ilaprec_")));
-
+#ifndef __APPLE__
+blasint flexiblas_chain_ilaprec(void* prec) __attribute__((alias("flexiblas_chain_ilaprec_")));
+#else
+blasint flexiblas_chain_ilaprec(void* prec){return flexiblas_chain_ilaprec_((void*) prec);}
+#endif
 
 
 

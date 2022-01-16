@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL_(chetri_3x,CHETRI_3X)(char* uplo, blasint* n, float complex* a, b
 #ifdef FLEXIBLAS_ABI_IBM
 void chetri_3x_(char* uplo, blasint* n, float complex* a, blasint* lda, float complex* e, blasint* ipiv, float complex* work, blasint* nb, blasint* info) __attribute__((alias(MTS(FC_GLOBAL_(chetri_3x,CHETRI_3X)))));
 #else
+#ifndef __APPLE__
 void chetri_3x(char* uplo, blasint* n, float complex* a, blasint* lda, float complex* e, blasint* ipiv, float complex* work, blasint* nb, blasint* info) __attribute__((alias(MTS(FC_GLOBAL_(chetri_3x,CHETRI_3X)))));
+#else
+void chetri_3x(char* uplo, blasint* n, float complex* a, blasint* lda, float complex* e, blasint* ipiv, float complex* work, blasint* nb, blasint* info){ FC_GLOBAL_(chetri_3x,CHETRI_3X)((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) work, (void*) nb, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_chetri_3x_(void* uplo, void* n, void* a, void* lda, void* e,
 
 	return;
 }
-
-void flexiblas_real_chetri_3x(void* uplo, void* n, void* a, void* lda, void* e, void* ipiv, void* work, void* nb, void* info)  __attribute__((alias("flexiblas_real_chetri_3x_")));
-
+#ifndef __APPLE__
+void flexiblas_real_chetri_3x(void* uplo, void* n, void* a, void* lda, void* e, void* ipiv, void* work, void* nb, void* info) __attribute__((alias("flexiblas_real_chetri_3x_")));
+#else
+void flexiblas_real_chetri_3x(void* uplo, void* n, void* a, void* lda, void* e, void* ipiv, void* work, void* nb, void* info){flexiblas_real_chetri_3x_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) work, (void*) nb, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_chetri_3x_(void* uplo, void* n, void* a, void* lda, void* e
 	}
 	return;
 }
-
-void flexiblas_chain_chetri_3x(void* uplo, void* n, void* a, void* lda, void* e, void* ipiv, void* work, void* nb, void* info)  __attribute__((alias("flexiblas_chain_chetri_3x_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_chetri_3x(void* uplo, void* n, void* a, void* lda, void* e, void* ipiv, void* work, void* nb, void* info) __attribute__((alias("flexiblas_chain_chetri_3x_")));
+#else
+void flexiblas_chain_chetri_3x(void* uplo, void* n, void* a, void* lda, void* e, void* ipiv, void* work, void* nb, void* info){flexiblas_chain_chetri_3x_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) work, (void*) nb, (void*) info);}
+#endif
 
 
 

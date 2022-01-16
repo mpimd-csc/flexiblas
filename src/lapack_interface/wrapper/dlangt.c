@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ double FC_GLOBAL(dlangt,DLANGT)(char* norm, blasint* n, double* dl, double* d, d
 #ifdef FLEXIBLAS_ABI_IBM
 double dlangt_(char* norm, blasint* n, double* dl, double* d, double* du) __attribute__((alias(MTS(FC_GLOBAL(dlangt,DLANGT)))));
 #else
+#ifndef __APPLE__
 double dlangt(char* norm, blasint* n, double* dl, double* d, double* du) __attribute__((alias(MTS(FC_GLOBAL(dlangt,DLANGT)))));
+#else
+double dlangt(char* norm, blasint* n, double* dl, double* d, double* du){ return FC_GLOBAL(dlangt,DLANGT)((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ double flexiblas_real_dlangt_(void* norm, void* n, void* dl, void* d, void* du)
 
 	return ret ;
 }
-
-double flexiblas_real_dlangt(void* norm, void* n, void* dl, void* d, void* du)  __attribute__((alias("flexiblas_real_dlangt_")));
-
+#ifndef __APPLE__
+double flexiblas_real_dlangt(void* norm, void* n, void* dl, void* d, void* du) __attribute__((alias("flexiblas_real_dlangt_")));
+#else
+double flexiblas_real_dlangt(void* norm, void* n, void* dl, void* d, void* du){return flexiblas_real_dlangt_((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ double flexiblas_chain_dlangt_(void* norm, void* n, void* dl, void* d, void* du)
 	}
 	return ret ;
 }
-
-double flexiblas_chain_dlangt(void* norm, void* n, void* dl, void* d, void* du)  __attribute__((alias("flexiblas_chain_dlangt_")));
-
+#ifndef __APPLE__
+double flexiblas_chain_dlangt(void* norm, void* n, void* dl, void* d, void* du) __attribute__((alias("flexiblas_chain_dlangt_")));
+#else
+double flexiblas_chain_dlangt(void* norm, void* n, void* dl, void* d, void* du){return flexiblas_chain_dlangt_((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du);}
+#endif
 
 
 

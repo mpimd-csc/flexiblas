@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(sbdsvdx,SBDSVDX)(char* uplo, char* jobz, char* range, blasint* n,
 #ifdef FLEXIBLAS_ABI_IBM
 void sbdsvdx_(char* uplo, char* jobz, char* range, blasint* n, float* d, float* e, float* vl, float* vu, blasint* il, blasint* iu, blasint* ns, float* s, float* z, blasint* ldz, float* work, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sbdsvdx,SBDSVDX)))));
 #else
+#ifndef __APPLE__
 void sbdsvdx(char* uplo, char* jobz, char* range, blasint* n, float* d, float* e, float* vl, float* vu, blasint* il, blasint* iu, blasint* ns, float* s, float* z, blasint* ldz, float* work, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sbdsvdx,SBDSVDX)))));
+#else
+void sbdsvdx(char* uplo, char* jobz, char* range, blasint* n, float* d, float* e, float* vl, float* vu, blasint* il, blasint* iu, blasint* ns, float* s, float* z, blasint* ldz, float* work, blasint* iwork, blasint* info){ FC_GLOBAL(sbdsvdx,SBDSVDX)((void*) uplo, (void*) jobz, (void*) range, (void*) n, (void*) d, (void*) e, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) ns, (void*) s, (void*) z, (void*) ldz, (void*) work, (void*) iwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_sbdsvdx_(void* uplo, void* jobz, void* range, void* n, void*
 
 	return;
 }
-
-void flexiblas_real_sbdsvdx(void* uplo, void* jobz, void* range, void* n, void* d, void* e, void* vl, void* vu, void* il, void* iu, void* ns, void* s, void* z, void* ldz, void* work, void* iwork, void* info)  __attribute__((alias("flexiblas_real_sbdsvdx_")));
-
+#ifndef __APPLE__
+void flexiblas_real_sbdsvdx(void* uplo, void* jobz, void* range, void* n, void* d, void* e, void* vl, void* vu, void* il, void* iu, void* ns, void* s, void* z, void* ldz, void* work, void* iwork, void* info) __attribute__((alias("flexiblas_real_sbdsvdx_")));
+#else
+void flexiblas_real_sbdsvdx(void* uplo, void* jobz, void* range, void* n, void* d, void* e, void* vl, void* vu, void* il, void* iu, void* ns, void* s, void* z, void* ldz, void* work, void* iwork, void* info){flexiblas_real_sbdsvdx_((void*) uplo, (void*) jobz, (void*) range, (void*) n, (void*) d, (void*) e, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) ns, (void*) s, (void*) z, (void*) ldz, (void*) work, (void*) iwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_sbdsvdx_(void* uplo, void* jobz, void* range, void* n, void
 	}
 	return;
 }
-
-void flexiblas_chain_sbdsvdx(void* uplo, void* jobz, void* range, void* n, void* d, void* e, void* vl, void* vu, void* il, void* iu, void* ns, void* s, void* z, void* ldz, void* work, void* iwork, void* info)  __attribute__((alias("flexiblas_chain_sbdsvdx_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_sbdsvdx(void* uplo, void* jobz, void* range, void* n, void* d, void* e, void* vl, void* vu, void* il, void* iu, void* ns, void* s, void* z, void* ldz, void* work, void* iwork, void* info) __attribute__((alias("flexiblas_chain_sbdsvdx_")));
+#else
+void flexiblas_chain_sbdsvdx(void* uplo, void* jobz, void* range, void* n, void* d, void* e, void* vl, void* vu, void* il, void* iu, void* ns, void* s, void* z, void* ldz, void* work, void* iwork, void* info){flexiblas_chain_sbdsvdx_((void*) uplo, (void*) jobz, (void*) range, (void*) n, (void*) d, (void*) e, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) ns, (void*) s, (void*) z, (void*) ldz, (void*) work, (void*) iwork, (void*) info);}
+#endif
 
 
 

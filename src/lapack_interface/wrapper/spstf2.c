@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(spstf2,SPSTF2)(char* uplo, blasint* n, float* a, blasint* lda, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void spstf2_(char* uplo, blasint* n, float* a, blasint* lda, blasint* piv, blasint* rank_bn, float* tol, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(spstf2,SPSTF2)))));
 #else
+#ifndef __APPLE__
 void spstf2(char* uplo, blasint* n, float* a, blasint* lda, blasint* piv, blasint* rank_bn, float* tol, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(spstf2,SPSTF2)))));
+#else
+void spstf2(char* uplo, blasint* n, float* a, blasint* lda, blasint* piv, blasint* rank_bn, float* tol, float* work, blasint* info){ FC_GLOBAL(spstf2,SPSTF2)((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) piv, (void*) rank_bn, (void*) tol, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_spstf2_(void* uplo, void* n, void* a, void* lda, void* piv, 
 
 	return;
 }
-
-void flexiblas_real_spstf2(void* uplo, void* n, void* a, void* lda, void* piv, void* rank_bn, void* tol, void* work, void* info)  __attribute__((alias("flexiblas_real_spstf2_")));
-
+#ifndef __APPLE__
+void flexiblas_real_spstf2(void* uplo, void* n, void* a, void* lda, void* piv, void* rank_bn, void* tol, void* work, void* info) __attribute__((alias("flexiblas_real_spstf2_")));
+#else
+void flexiblas_real_spstf2(void* uplo, void* n, void* a, void* lda, void* piv, void* rank_bn, void* tol, void* work, void* info){flexiblas_real_spstf2_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) piv, (void*) rank_bn, (void*) tol, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_spstf2_(void* uplo, void* n, void* a, void* lda, void* piv,
 	}
 	return;
 }
-
-void flexiblas_chain_spstf2(void* uplo, void* n, void* a, void* lda, void* piv, void* rank_bn, void* tol, void* work, void* info)  __attribute__((alias("flexiblas_chain_spstf2_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_spstf2(void* uplo, void* n, void* a, void* lda, void* piv, void* rank_bn, void* tol, void* work, void* info) __attribute__((alias("flexiblas_chain_spstf2_")));
+#else
+void flexiblas_chain_spstf2(void* uplo, void* n, void* a, void* lda, void* piv, void* rank_bn, void* tol, void* work, void* info){flexiblas_chain_spstf2_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) piv, (void*) rank_bn, (void*) tol, (void*) work, (void*) info);}
+#endif
 
 
 

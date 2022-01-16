@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zgebal,ZGEBAL)(char* job, blasint* n, double complex* a, blasint*
 #ifdef FLEXIBLAS_ABI_IBM
 void zgebal_(char* job, blasint* n, double complex* a, blasint* lda, blasint* ilo, blasint* ihi, double* scale, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zgebal,ZGEBAL)))));
 #else
+#ifndef __APPLE__
 void zgebal(char* job, blasint* n, double complex* a, blasint* lda, blasint* ilo, blasint* ihi, double* scale, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zgebal,ZGEBAL)))));
+#else
+void zgebal(char* job, blasint* n, double complex* a, blasint* lda, blasint* ilo, blasint* ihi, double* scale, blasint* info){ FC_GLOBAL(zgebal,ZGEBAL)((void*) job, (void*) n, (void*) a, (void*) lda, (void*) ilo, (void*) ihi, (void*) scale, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zgebal_(void* job, void* n, void* a, void* lda, void* ilo, v
 
 	return;
 }
-
-void flexiblas_real_zgebal(void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info)  __attribute__((alias("flexiblas_real_zgebal_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zgebal(void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info) __attribute__((alias("flexiblas_real_zgebal_")));
+#else
+void flexiblas_real_zgebal(void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info){flexiblas_real_zgebal_((void*) job, (void*) n, (void*) a, (void*) lda, (void*) ilo, (void*) ihi, (void*) scale, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zgebal_(void* job, void* n, void* a, void* lda, void* ilo, 
 	}
 	return;
 }
-
-void flexiblas_chain_zgebal(void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info)  __attribute__((alias("flexiblas_chain_zgebal_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zgebal(void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info) __attribute__((alias("flexiblas_chain_zgebal_")));
+#else
+void flexiblas_chain_zgebal(void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info){flexiblas_chain_zgebal_((void*) job, (void*) n, (void*) a, (void*) lda, (void*) ilo, (void*) ihi, (void*) scale, (void*) info);}
+#endif
 
 
 

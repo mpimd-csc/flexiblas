@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(cgetrf,CGETRF)(blasint* m, blasint* n, float complex* a, blasint*
 #ifdef FLEXIBLAS_ABI_IBM
 void cgetrf_(blasint* m, blasint* n, float complex* a, blasint* lda, blasint* ipiv, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cgetrf,CGETRF)))));
 #else
+#ifndef __APPLE__
 void cgetrf(blasint* m, blasint* n, float complex* a, blasint* lda, blasint* ipiv, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cgetrf,CGETRF)))));
+#else
+void cgetrf(blasint* m, blasint* n, float complex* a, blasint* lda, blasint* ipiv, blasint* info){ FC_GLOBAL(cgetrf,CGETRF)((void*) m, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_cgetrf_(void* m, void* n, void* a, void* lda, void* ipiv, vo
 
 	return;
 }
-
-void flexiblas_real_cgetrf(void* m, void* n, void* a, void* lda, void* ipiv, void* info)  __attribute__((alias("flexiblas_real_cgetrf_")));
-
+#ifndef __APPLE__
+void flexiblas_real_cgetrf(void* m, void* n, void* a, void* lda, void* ipiv, void* info) __attribute__((alias("flexiblas_real_cgetrf_")));
+#else
+void flexiblas_real_cgetrf(void* m, void* n, void* a, void* lda, void* ipiv, void* info){flexiblas_real_cgetrf_((void*) m, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_cgetrf_(void* m, void* n, void* a, void* lda, void* ipiv, v
 	}
 	return;
 }
-
-void flexiblas_chain_cgetrf(void* m, void* n, void* a, void* lda, void* ipiv, void* info)  __attribute__((alias("flexiblas_chain_cgetrf_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_cgetrf(void* m, void* n, void* a, void* lda, void* ipiv, void* info) __attribute__((alias("flexiblas_chain_cgetrf_")));
+#else
+void flexiblas_chain_cgetrf(void* m, void* n, void* a, void* lda, void* ipiv, void* info){flexiblas_chain_cgetrf_((void*) m, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) info);}
+#endif
 
 
 

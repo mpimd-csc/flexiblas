@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zlacrt,ZLACRT)(blasint* n, double complex* cx, blasint* incx, dou
 #ifdef FLEXIBLAS_ABI_IBM
 void zlacrt_(blasint* n, double complex* cx, blasint* incx, double complex* cy, blasint* incy, double complex* c, double complex* s) __attribute__((alias(MTS(FC_GLOBAL(zlacrt,ZLACRT)))));
 #else
+#ifndef __APPLE__
 void zlacrt(blasint* n, double complex* cx, blasint* incx, double complex* cy, blasint* incy, double complex* c, double complex* s) __attribute__((alias(MTS(FC_GLOBAL(zlacrt,ZLACRT)))));
+#else
+void zlacrt(blasint* n, double complex* cx, blasint* incx, double complex* cy, blasint* incy, double complex* c, double complex* s){ FC_GLOBAL(zlacrt,ZLACRT)((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zlacrt_(void* n, void* cx, void* incx, void* cy, void* incy,
 
 	return;
 }
-
-void flexiblas_real_zlacrt(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s)  __attribute__((alias("flexiblas_real_zlacrt_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zlacrt(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s) __attribute__((alias("flexiblas_real_zlacrt_")));
+#else
+void flexiblas_real_zlacrt(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s){flexiblas_real_zlacrt_((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zlacrt_(void* n, void* cx, void* incx, void* cy, void* incy
 	}
 	return;
 }
-
-void flexiblas_chain_zlacrt(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s)  __attribute__((alias("flexiblas_chain_zlacrt_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zlacrt(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s) __attribute__((alias("flexiblas_chain_zlacrt_")));
+#else
+void flexiblas_chain_zlacrt(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s){flexiblas_chain_zlacrt_((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s);}
+#endif
 
 
 

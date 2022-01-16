@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dopgtr,DOPGTR)(char* uplo, blasint* n, double* ap, double* tau, d
 #ifdef FLEXIBLAS_ABI_IBM
 void dopgtr_(char* uplo, blasint* n, double* ap, double* tau, double* q, blasint* ldq, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dopgtr,DOPGTR)))));
 #else
+#ifndef __APPLE__
 void dopgtr(char* uplo, blasint* n, double* ap, double* tau, double* q, blasint* ldq, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dopgtr,DOPGTR)))));
+#else
+void dopgtr(char* uplo, blasint* n, double* ap, double* tau, double* q, blasint* ldq, double* work, blasint* info){ FC_GLOBAL(dopgtr,DOPGTR)((void*) uplo, (void*) n, (void*) ap, (void*) tau, (void*) q, (void*) ldq, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dopgtr_(void* uplo, void* n, void* ap, void* tau, void* q, v
 
 	return;
 }
-
-void flexiblas_real_dopgtr(void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info)  __attribute__((alias("flexiblas_real_dopgtr_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dopgtr(void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info) __attribute__((alias("flexiblas_real_dopgtr_")));
+#else
+void flexiblas_real_dopgtr(void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info){flexiblas_real_dopgtr_((void*) uplo, (void*) n, (void*) ap, (void*) tau, (void*) q, (void*) ldq, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dopgtr_(void* uplo, void* n, void* ap, void* tau, void* q, 
 	}
 	return;
 }
-
-void flexiblas_chain_dopgtr(void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info)  __attribute__((alias("flexiblas_chain_dopgtr_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dopgtr(void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info) __attribute__((alias("flexiblas_chain_dopgtr_")));
+#else
+void flexiblas_chain_dopgtr(void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info){flexiblas_chain_dopgtr_((void*) uplo, (void*) n, (void*) ap, (void*) tau, (void*) q, (void*) ldq, (void*) work, (void*) info);}
+#endif
 
 
 

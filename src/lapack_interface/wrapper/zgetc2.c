@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zgetc2,ZGETC2)(blasint* n, double complex* a, blasint* lda, blasi
 #ifdef FLEXIBLAS_ABI_IBM
 void zgetc2_(blasint* n, double complex* a, blasint* lda, blasint* ipiv, blasint* jpiv, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zgetc2,ZGETC2)))));
 #else
+#ifndef __APPLE__
 void zgetc2(blasint* n, double complex* a, blasint* lda, blasint* ipiv, blasint* jpiv, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zgetc2,ZGETC2)))));
+#else
+void zgetc2(blasint* n, double complex* a, blasint* lda, blasint* ipiv, blasint* jpiv, blasint* info){ FC_GLOBAL(zgetc2,ZGETC2)((void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) jpiv, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zgetc2_(void* n, void* a, void* lda, void* ipiv, void* jpiv,
 
 	return;
 }
-
-void flexiblas_real_zgetc2(void* n, void* a, void* lda, void* ipiv, void* jpiv, void* info)  __attribute__((alias("flexiblas_real_zgetc2_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zgetc2(void* n, void* a, void* lda, void* ipiv, void* jpiv, void* info) __attribute__((alias("flexiblas_real_zgetc2_")));
+#else
+void flexiblas_real_zgetc2(void* n, void* a, void* lda, void* ipiv, void* jpiv, void* info){flexiblas_real_zgetc2_((void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) jpiv, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zgetc2_(void* n, void* a, void* lda, void* ipiv, void* jpiv
 	}
 	return;
 }
-
-void flexiblas_chain_zgetc2(void* n, void* a, void* lda, void* ipiv, void* jpiv, void* info)  __attribute__((alias("flexiblas_chain_zgetc2_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zgetc2(void* n, void* a, void* lda, void* ipiv, void* jpiv, void* info) __attribute__((alias("flexiblas_chain_zgetc2_")));
+#else
+void flexiblas_chain_zgetc2(void* n, void* a, void* lda, void* ipiv, void* jpiv, void* info){flexiblas_chain_zgetc2_((void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) jpiv, (void*) info);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(slacon,SLACON)(blasint* n, float* v, float* x, blasint* isgn, flo
 #ifdef FLEXIBLAS_ABI_IBM
 void slacon_(blasint* n, float* v, float* x, blasint* isgn, float* est, blasint* kase) __attribute__((alias(MTS(FC_GLOBAL(slacon,SLACON)))));
 #else
+#ifndef __APPLE__
 void slacon(blasint* n, float* v, float* x, blasint* isgn, float* est, blasint* kase) __attribute__((alias(MTS(FC_GLOBAL(slacon,SLACON)))));
+#else
+void slacon(blasint* n, float* v, float* x, blasint* isgn, float* est, blasint* kase){ FC_GLOBAL(slacon,SLACON)((void*) n, (void*) v, (void*) x, (void*) isgn, (void*) est, (void*) kase); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_slacon_(void* n, void* v, void* x, void* isgn, void* est, vo
 
 	return;
 }
-
-void flexiblas_real_slacon(void* n, void* v, void* x, void* isgn, void* est, void* kase)  __attribute__((alias("flexiblas_real_slacon_")));
-
+#ifndef __APPLE__
+void flexiblas_real_slacon(void* n, void* v, void* x, void* isgn, void* est, void* kase) __attribute__((alias("flexiblas_real_slacon_")));
+#else
+void flexiblas_real_slacon(void* n, void* v, void* x, void* isgn, void* est, void* kase){flexiblas_real_slacon_((void*) n, (void*) v, (void*) x, (void*) isgn, (void*) est, (void*) kase);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_slacon_(void* n, void* v, void* x, void* isgn, void* est, v
 	}
 	return;
 }
-
-void flexiblas_chain_slacon(void* n, void* v, void* x, void* isgn, void* est, void* kase)  __attribute__((alias("flexiblas_chain_slacon_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_slacon(void* n, void* v, void* x, void* isgn, void* est, void* kase) __attribute__((alias("flexiblas_chain_slacon_")));
+#else
+void flexiblas_chain_slacon(void* n, void* v, void* x, void* isgn, void* est, void* kase){flexiblas_chain_slacon_((void*) n, (void*) v, (void*) x, (void*) isgn, (void*) est, (void*) kase);}
+#endif
 
 
 

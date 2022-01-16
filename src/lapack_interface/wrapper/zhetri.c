@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zhetri,ZHETRI)(char* uplo, blasint* n, double complex* a, blasint
 #ifdef FLEXIBLAS_ABI_IBM
 void zhetri_(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* ipiv, double complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zhetri,ZHETRI)))));
 #else
+#ifndef __APPLE__
 void zhetri(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* ipiv, double complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zhetri,ZHETRI)))));
+#else
+void zhetri(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* ipiv, double complex* work, blasint* info){ FC_GLOBAL(zhetri,ZHETRI)((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zhetri_(void* uplo, void* n, void* a, void* lda, void* ipiv,
 
 	return;
 }
-
-void flexiblas_real_zhetri(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* info)  __attribute__((alias("flexiblas_real_zhetri_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zhetri(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* info) __attribute__((alias("flexiblas_real_zhetri_")));
+#else
+void flexiblas_real_zhetri(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* info){flexiblas_real_zhetri_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zhetri_(void* uplo, void* n, void* a, void* lda, void* ipiv
 	}
 	return;
 }
-
-void flexiblas_chain_zhetri(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* info)  __attribute__((alias("flexiblas_chain_zhetri_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zhetri(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* info) __attribute__((alias("flexiblas_chain_zhetri_")));
+#else
+void flexiblas_chain_zhetri(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* info){flexiblas_chain_zhetri_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) info);}
+#endif
 
 
 

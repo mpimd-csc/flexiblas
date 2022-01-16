@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(spftri,SPFTRI)(char* transr, char* uplo, blasint* n, float* a, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void spftri_(char* transr, char* uplo, blasint* n, float* a, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(spftri,SPFTRI)))));
 #else
+#ifndef __APPLE__
 void spftri(char* transr, char* uplo, blasint* n, float* a, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(spftri,SPFTRI)))));
+#else
+void spftri(char* transr, char* uplo, blasint* n, float* a, blasint* info){ FC_GLOBAL(spftri,SPFTRI)((void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_spftri_(void* transr, void* uplo, void* n, void* a, void* in
 
 	return;
 }
-
-void flexiblas_real_spftri(void* transr, void* uplo, void* n, void* a, void* info)  __attribute__((alias("flexiblas_real_spftri_")));
-
+#ifndef __APPLE__
+void flexiblas_real_spftri(void* transr, void* uplo, void* n, void* a, void* info) __attribute__((alias("flexiblas_real_spftri_")));
+#else
+void flexiblas_real_spftri(void* transr, void* uplo, void* n, void* a, void* info){flexiblas_real_spftri_((void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_spftri_(void* transr, void* uplo, void* n, void* a, void* i
 	}
 	return;
 }
-
-void flexiblas_chain_spftri(void* transr, void* uplo, void* n, void* a, void* info)  __attribute__((alias("flexiblas_chain_spftri_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_spftri(void* transr, void* uplo, void* n, void* a, void* info) __attribute__((alias("flexiblas_chain_spftri_")));
+#else
+void flexiblas_chain_spftri(void* transr, void* uplo, void* n, void* a, void* info){flexiblas_chain_spftri_((void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) info);}
+#endif
 
 
 

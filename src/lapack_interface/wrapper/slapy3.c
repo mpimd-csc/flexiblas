@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ float FC_GLOBAL(slapy3,SLAPY3)(float* x, float* y, float* z)
 #ifdef FLEXIBLAS_ABI_IBM
 float slapy3_(float* x, float* y, float* z) __attribute__((alias(MTS(FC_GLOBAL(slapy3,SLAPY3)))));
 #else
+#ifndef __APPLE__
 float slapy3(float* x, float* y, float* z) __attribute__((alias(MTS(FC_GLOBAL(slapy3,SLAPY3)))));
+#else
+float slapy3(float* x, float* y, float* z){ return FC_GLOBAL(slapy3,SLAPY3)((void*) x, (void*) y, (void*) z); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ float flexiblas_real_slapy3_(void* x, void* y, void* z)
 
 	return ret ;
 }
-
-float flexiblas_real_slapy3(void* x, void* y, void* z)  __attribute__((alias("flexiblas_real_slapy3_")));
-
+#ifndef __APPLE__
+float flexiblas_real_slapy3(void* x, void* y, void* z) __attribute__((alias("flexiblas_real_slapy3_")));
+#else
+float flexiblas_real_slapy3(void* x, void* y, void* z){return flexiblas_real_slapy3_((void*) x, (void*) y, (void*) z);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ float flexiblas_chain_slapy3_(void* x, void* y, void* z)
 	}
 	return ret ;
 }
-
-float flexiblas_chain_slapy3(void* x, void* y, void* z)  __attribute__((alias("flexiblas_chain_slapy3_")));
-
+#ifndef __APPLE__
+float flexiblas_chain_slapy3(void* x, void* y, void* z) __attribute__((alias("flexiblas_chain_slapy3_")));
+#else
+float flexiblas_chain_slapy3(void* x, void* y, void* z){return flexiblas_chain_slapy3_((void*) x, (void*) y, (void*) z);}
+#endif
 
 
 

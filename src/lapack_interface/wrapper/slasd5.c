@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(slasd5,SLASD5)(blasint* i, float* d, float* z, float* delta, floa
 #ifdef FLEXIBLAS_ABI_IBM
 void slasd5_(blasint* i, float* d, float* z, float* delta, float* rho, float* dsigma, float* work) __attribute__((alias(MTS(FC_GLOBAL(slasd5,SLASD5)))));
 #else
+#ifndef __APPLE__
 void slasd5(blasint* i, float* d, float* z, float* delta, float* rho, float* dsigma, float* work) __attribute__((alias(MTS(FC_GLOBAL(slasd5,SLASD5)))));
+#else
+void slasd5(blasint* i, float* d, float* z, float* delta, float* rho, float* dsigma, float* work){ FC_GLOBAL(slasd5,SLASD5)((void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) dsigma, (void*) work); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_slasd5_(void* i, void* d, void* z, void* delta, void* rho, v
 
 	return;
 }
-
-void flexiblas_real_slasd5(void* i, void* d, void* z, void* delta, void* rho, void* dsigma, void* work)  __attribute__((alias("flexiblas_real_slasd5_")));
-
+#ifndef __APPLE__
+void flexiblas_real_slasd5(void* i, void* d, void* z, void* delta, void* rho, void* dsigma, void* work) __attribute__((alias("flexiblas_real_slasd5_")));
+#else
+void flexiblas_real_slasd5(void* i, void* d, void* z, void* delta, void* rho, void* dsigma, void* work){flexiblas_real_slasd5_((void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) dsigma, (void*) work);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_slasd5_(void* i, void* d, void* z, void* delta, void* rho, 
 	}
 	return;
 }
-
-void flexiblas_chain_slasd5(void* i, void* d, void* z, void* delta, void* rho, void* dsigma, void* work)  __attribute__((alias("flexiblas_chain_slasd5_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_slasd5(void* i, void* d, void* z, void* delta, void* rho, void* dsigma, void* work) __attribute__((alias("flexiblas_chain_slasd5_")));
+#else
+void flexiblas_chain_slasd5(void* i, void* d, void* z, void* delta, void* rho, void* dsigma, void* work){flexiblas_chain_slasd5_((void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) dsigma, (void*) work);}
+#endif
 
 
 

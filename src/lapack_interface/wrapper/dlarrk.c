@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlarrk,DLARRK)(blasint* n, blasint* iw, double* gl, double* gu, d
 #ifdef FLEXIBLAS_ABI_IBM
 void dlarrk_(blasint* n, blasint* iw, double* gl, double* gu, double* d, double* e2, double* pivmin, double* reltol, double* w, double* werr, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlarrk,DLARRK)))));
 #else
+#ifndef __APPLE__
 void dlarrk(blasint* n, blasint* iw, double* gl, double* gu, double* d, double* e2, double* pivmin, double* reltol, double* w, double* werr, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlarrk,DLARRK)))));
+#else
+void dlarrk(blasint* n, blasint* iw, double* gl, double* gu, double* d, double* e2, double* pivmin, double* reltol, double* w, double* werr, blasint* info){ FC_GLOBAL(dlarrk,DLARRK)((void*) n, (void*) iw, (void*) gl, (void*) gu, (void*) d, (void*) e2, (void*) pivmin, (void*) reltol, (void*) w, (void*) werr, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlarrk_(void* n, void* iw, void* gl, void* gu, void* d, void
 
 	return;
 }
-
-void flexiblas_real_dlarrk(void* n, void* iw, void* gl, void* gu, void* d, void* e2, void* pivmin, void* reltol, void* w, void* werr, void* info)  __attribute__((alias("flexiblas_real_dlarrk_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlarrk(void* n, void* iw, void* gl, void* gu, void* d, void* e2, void* pivmin, void* reltol, void* w, void* werr, void* info) __attribute__((alias("flexiblas_real_dlarrk_")));
+#else
+void flexiblas_real_dlarrk(void* n, void* iw, void* gl, void* gu, void* d, void* e2, void* pivmin, void* reltol, void* w, void* werr, void* info){flexiblas_real_dlarrk_((void*) n, (void*) iw, (void*) gl, (void*) gu, (void*) d, (void*) e2, (void*) pivmin, (void*) reltol, (void*) w, (void*) werr, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlarrk_(void* n, void* iw, void* gl, void* gu, void* d, voi
 	}
 	return;
 }
-
-void flexiblas_chain_dlarrk(void* n, void* iw, void* gl, void* gu, void* d, void* e2, void* pivmin, void* reltol, void* w, void* werr, void* info)  __attribute__((alias("flexiblas_chain_dlarrk_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlarrk(void* n, void* iw, void* gl, void* gu, void* d, void* e2, void* pivmin, void* reltol, void* w, void* werr, void* info) __attribute__((alias("flexiblas_chain_dlarrk_")));
+#else
+void flexiblas_chain_dlarrk(void* n, void* iw, void* gl, void* gu, void* d, void* e2, void* pivmin, void* reltol, void* w, void* werr, void* info){flexiblas_chain_dlarrk_((void*) n, (void*) iw, (void*) gl, (void*) gu, (void*) d, (void*) e2, (void*) pivmin, (void*) reltol, (void*) w, (void*) werr, (void*) info);}
+#endif
 
 
 

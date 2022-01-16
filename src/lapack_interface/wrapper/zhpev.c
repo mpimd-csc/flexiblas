@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zhpev,ZHPEV)(char* jobz, char* uplo, blasint* n, double complex* 
 #ifdef FLEXIBLAS_ABI_IBM
 void zhpev_(char* jobz, char* uplo, blasint* n, double complex* ap, double* w, double complex* z, blasint* ldz, double complex* work, double* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zhpev,ZHPEV)))));
 #else
+#ifndef __APPLE__
 void zhpev(char* jobz, char* uplo, blasint* n, double complex* ap, double* w, double complex* z, blasint* ldz, double complex* work, double* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zhpev,ZHPEV)))));
+#else
+void zhpev(char* jobz, char* uplo, blasint* n, double complex* ap, double* w, double complex* z, blasint* ldz, double complex* work, double* rwork, blasint* info){ FC_GLOBAL(zhpev,ZHPEV)((void*) jobz, (void*) uplo, (void*) n, (void*) ap, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) rwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zhpev_(void* jobz, void* uplo, void* n, void* ap, void* w, v
 
 	return;
 }
-
-void flexiblas_real_zhpev(void* jobz, void* uplo, void* n, void* ap, void* w, void* z, void* ldz, void* work, void* rwork, void* info)  __attribute__((alias("flexiblas_real_zhpev_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zhpev(void* jobz, void* uplo, void* n, void* ap, void* w, void* z, void* ldz, void* work, void* rwork, void* info) __attribute__((alias("flexiblas_real_zhpev_")));
+#else
+void flexiblas_real_zhpev(void* jobz, void* uplo, void* n, void* ap, void* w, void* z, void* ldz, void* work, void* rwork, void* info){flexiblas_real_zhpev_((void*) jobz, (void*) uplo, (void*) n, (void*) ap, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) rwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zhpev_(void* jobz, void* uplo, void* n, void* ap, void* w, 
 	}
 	return;
 }
-
-void flexiblas_chain_zhpev(void* jobz, void* uplo, void* n, void* ap, void* w, void* z, void* ldz, void* work, void* rwork, void* info)  __attribute__((alias("flexiblas_chain_zhpev_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zhpev(void* jobz, void* uplo, void* n, void* ap, void* w, void* z, void* ldz, void* work, void* rwork, void* info) __attribute__((alias("flexiblas_chain_zhpev_")));
+#else
+void flexiblas_chain_zhpev(void* jobz, void* uplo, void* n, void* ap, void* w, void* z, void* ldz, void* work, void* rwork, void* info){flexiblas_chain_zhpev_((void*) jobz, (void*) uplo, (void*) n, (void*) ap, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) rwork, (void*) info);}
+#endif
 
 
 

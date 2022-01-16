@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL_(zhbev_2stage,ZHBEV_2STAGE)(char* jobz, char* uplo, blasint* n, b
 #ifdef FLEXIBLAS_ABI_IBM
 void zhbev_2stage_(char* jobz, char* uplo, blasint* n, blasint* kd, double complex* ab, blasint* ldab, double* w, double complex* z, blasint* ldz, double complex* work, blasint* lwork, double* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL_(zhbev_2stage,ZHBEV_2STAGE)))));
 #else
+#ifndef __APPLE__
 void zhbev_2stage(char* jobz, char* uplo, blasint* n, blasint* kd, double complex* ab, blasint* ldab, double* w, double complex* z, blasint* ldz, double complex* work, blasint* lwork, double* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL_(zhbev_2stage,ZHBEV_2STAGE)))));
+#else
+void zhbev_2stage(char* jobz, char* uplo, blasint* n, blasint* kd, double complex* ab, blasint* ldab, double* w, double complex* z, blasint* ldz, double complex* work, blasint* lwork, double* rwork, blasint* info){ FC_GLOBAL_(zhbev_2stage,ZHBEV_2STAGE)((void*) jobz, (void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) rwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zhbev_2stage_(void* jobz, void* uplo, void* n, void* kd, voi
 
 	return;
 }
-
-void flexiblas_real_zhbev_2stage(void* jobz, void* uplo, void* n, void* kd, void* ab, void* ldab, void* w, void* z, void* ldz, void* work, void* lwork, void* rwork, void* info)  __attribute__((alias("flexiblas_real_zhbev_2stage_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zhbev_2stage(void* jobz, void* uplo, void* n, void* kd, void* ab, void* ldab, void* w, void* z, void* ldz, void* work, void* lwork, void* rwork, void* info) __attribute__((alias("flexiblas_real_zhbev_2stage_")));
+#else
+void flexiblas_real_zhbev_2stage(void* jobz, void* uplo, void* n, void* kd, void* ab, void* ldab, void* w, void* z, void* ldz, void* work, void* lwork, void* rwork, void* info){flexiblas_real_zhbev_2stage_((void*) jobz, (void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) rwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zhbev_2stage_(void* jobz, void* uplo, void* n, void* kd, vo
 	}
 	return;
 }
-
-void flexiblas_chain_zhbev_2stage(void* jobz, void* uplo, void* n, void* kd, void* ab, void* ldab, void* w, void* z, void* ldz, void* work, void* lwork, void* rwork, void* info)  __attribute__((alias("flexiblas_chain_zhbev_2stage_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zhbev_2stage(void* jobz, void* uplo, void* n, void* kd, void* ab, void* ldab, void* w, void* z, void* ldz, void* work, void* lwork, void* rwork, void* info) __attribute__((alias("flexiblas_chain_zhbev_2stage_")));
+#else
+void flexiblas_chain_zhbev_2stage(void* jobz, void* uplo, void* n, void* kd, void* ab, void* ldab, void* w, void* z, void* ldz, void* work, void* lwork, void* rwork, void* info){flexiblas_chain_zhbev_2stage_((void*) jobz, (void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) rwork, (void*) info);}
+#endif
 
 
 

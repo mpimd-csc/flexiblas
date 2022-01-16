@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ float FC_GLOBAL(clansy,CLANSY)(char* norm, char* uplo, blasint* n, float complex
 #ifdef FLEXIBLAS_ABI_IBM
 float clansy_(char* norm, char* uplo, blasint* n, float complex* a, blasint* lda, float* work) __attribute__((alias(MTS(FC_GLOBAL(clansy,CLANSY)))));
 #else
+#ifndef __APPLE__
 float clansy(char* norm, char* uplo, blasint* n, float complex* a, blasint* lda, float* work) __attribute__((alias(MTS(FC_GLOBAL(clansy,CLANSY)))));
+#else
+float clansy(char* norm, char* uplo, blasint* n, float complex* a, blasint* lda, float* work){ return FC_GLOBAL(clansy,CLANSY)((void*) norm, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) work); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ float flexiblas_real_clansy_(void* norm, void* uplo, void* n, void* a, void* lda
 
 	return ret ;
 }
-
-float flexiblas_real_clansy(void* norm, void* uplo, void* n, void* a, void* lda, void* work)  __attribute__((alias("flexiblas_real_clansy_")));
-
+#ifndef __APPLE__
+float flexiblas_real_clansy(void* norm, void* uplo, void* n, void* a, void* lda, void* work) __attribute__((alias("flexiblas_real_clansy_")));
+#else
+float flexiblas_real_clansy(void* norm, void* uplo, void* n, void* a, void* lda, void* work){return flexiblas_real_clansy_((void*) norm, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) work);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ float flexiblas_chain_clansy_(void* norm, void* uplo, void* n, void* a, void* ld
 	}
 	return ret ;
 }
-
-float flexiblas_chain_clansy(void* norm, void* uplo, void* n, void* a, void* lda, void* work)  __attribute__((alias("flexiblas_chain_clansy_")));
-
+#ifndef __APPLE__
+float flexiblas_chain_clansy(void* norm, void* uplo, void* n, void* a, void* lda, void* work) __attribute__((alias("flexiblas_chain_clansy_")));
+#else
+float flexiblas_chain_clansy(void* norm, void* uplo, void* n, void* a, void* lda, void* work){return flexiblas_chain_clansy_((void*) norm, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) work);}
+#endif
 
 
 

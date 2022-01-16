@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlarfg,DLARFG)(blasint* n, double* alpha, double* x, blasint* inc
 #ifdef FLEXIBLAS_ABI_IBM
 void dlarfg_(blasint* n, double* alpha, double* x, blasint* incx, double* tau) __attribute__((alias(MTS(FC_GLOBAL(dlarfg,DLARFG)))));
 #else
+#ifndef __APPLE__
 void dlarfg(blasint* n, double* alpha, double* x, blasint* incx, double* tau) __attribute__((alias(MTS(FC_GLOBAL(dlarfg,DLARFG)))));
+#else
+void dlarfg(blasint* n, double* alpha, double* x, blasint* incx, double* tau){ FC_GLOBAL(dlarfg,DLARFG)((void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) tau); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlarfg_(void* n, void* alpha, void* x, void* incx, void* tau
 
 	return;
 }
-
-void flexiblas_real_dlarfg(void* n, void* alpha, void* x, void* incx, void* tau)  __attribute__((alias("flexiblas_real_dlarfg_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlarfg(void* n, void* alpha, void* x, void* incx, void* tau) __attribute__((alias("flexiblas_real_dlarfg_")));
+#else
+void flexiblas_real_dlarfg(void* n, void* alpha, void* x, void* incx, void* tau){flexiblas_real_dlarfg_((void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) tau);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlarfg_(void* n, void* alpha, void* x, void* incx, void* ta
 	}
 	return;
 }
-
-void flexiblas_chain_dlarfg(void* n, void* alpha, void* x, void* incx, void* tau)  __attribute__((alias("flexiblas_chain_dlarfg_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlarfg(void* n, void* alpha, void* x, void* incx, void* tau) __attribute__((alias("flexiblas_chain_dlarfg_")));
+#else
+void flexiblas_chain_dlarfg(void* n, void* alpha, void* x, void* incx, void* tau){flexiblas_chain_dlarfg_((void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) tau);}
+#endif
 
 
 

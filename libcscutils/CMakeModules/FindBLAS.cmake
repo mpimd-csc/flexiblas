@@ -592,22 +592,21 @@ endif()
 endif() # ACML
 
 # Apple BLAS library?
-if(BLA_VENDOR STREQUAL "Apple" OR BLA_VENDOR STREQUAL "All")
-    if(NOT BLAS_LIBRARIES)
-        check_fortran_libraries(
-            BLAS_LIBRARIES
-            BLAS
-            dgemm
-            ""
-            "Accelerate"
-            ""
-            )
-    endif()
-    if(BLAS_LIBRARIES)
-        set(BLA_VENDOR "Apple")
-    endif()
-endif()
-
+ if(BLA_VENDOR STREQUAL "Apple" OR BLA_VENDOR STREQUAL "All")
+     if(NOT BLAS_LIBRARIES)
+         check_fortran_libraries(
+             BLAS_LIBRARIES
+             BLAS
+             dgemm
+             ""
+             "Accelerate"
+             ""
+             )
+     endif()
+     if(BLAS_LIBRARIES)
+         set(BLA_VENDOR "Apple")
+     endif()
+ endif()
 #
 # BLAS in Intel MKL
 #

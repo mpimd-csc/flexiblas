@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ double FC_GLOBAL(dsecnd,DSECND)()
 #ifdef FLEXIBLAS_ABI_IBM
 double dsecnd_() __attribute__((alias(MTS(FC_GLOBAL(dsecnd,DSECND)))));
 #else
+#ifndef __APPLE__
 double dsecnd() __attribute__((alias(MTS(FC_GLOBAL(dsecnd,DSECND)))));
+#else
+double dsecnd(){ return FC_GLOBAL(dsecnd,DSECND)(); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ double flexiblas_real_dsecnd_()
 
 	return ret ;
 }
-
-double flexiblas_real_dsecnd()  __attribute__((alias("flexiblas_real_dsecnd_")));
-
+#ifndef __APPLE__
+double flexiblas_real_dsecnd() __attribute__((alias("flexiblas_real_dsecnd_")));
+#else
+double flexiblas_real_dsecnd(){return flexiblas_real_dsecnd_();}
+#endif
 
 
 
@@ -137,9 +149,11 @@ double flexiblas_chain_dsecnd_()
 	}
 	return ret ;
 }
-
-double flexiblas_chain_dsecnd()  __attribute__((alias("flexiblas_chain_dsecnd_")));
-
+#ifndef __APPLE__
+double flexiblas_chain_dsecnd() __attribute__((alias("flexiblas_chain_dsecnd_")));
+#else
+double flexiblas_chain_dsecnd(){return flexiblas_chain_dsecnd_();}
+#endif
 
 
 

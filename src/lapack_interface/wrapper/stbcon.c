@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(stbcon,STBCON)(char* norm, char* uplo, char* diag, blasint* n, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void stbcon_(char* norm, char* uplo, char* diag, blasint* n, blasint* kd, float* ab, blasint* ldab, float* rcond, float* work, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(stbcon,STBCON)))));
 #else
+#ifndef __APPLE__
 void stbcon(char* norm, char* uplo, char* diag, blasint* n, blasint* kd, float* ab, blasint* ldab, float* rcond, float* work, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(stbcon,STBCON)))));
+#else
+void stbcon(char* norm, char* uplo, char* diag, blasint* n, blasint* kd, float* ab, blasint* ldab, float* rcond, float* work, blasint* iwork, blasint* info){ FC_GLOBAL(stbcon,STBCON)((void*) norm, (void*) uplo, (void*) diag, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) rcond, (void*) work, (void*) iwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_stbcon_(void* norm, void* uplo, void* diag, void* n, void* k
 
 	return;
 }
-
-void flexiblas_real_stbcon(void* norm, void* uplo, void* diag, void* n, void* kd, void* ab, void* ldab, void* rcond, void* work, void* iwork, void* info)  __attribute__((alias("flexiblas_real_stbcon_")));
-
+#ifndef __APPLE__
+void flexiblas_real_stbcon(void* norm, void* uplo, void* diag, void* n, void* kd, void* ab, void* ldab, void* rcond, void* work, void* iwork, void* info) __attribute__((alias("flexiblas_real_stbcon_")));
+#else
+void flexiblas_real_stbcon(void* norm, void* uplo, void* diag, void* n, void* kd, void* ab, void* ldab, void* rcond, void* work, void* iwork, void* info){flexiblas_real_stbcon_((void*) norm, (void*) uplo, (void*) diag, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) rcond, (void*) work, (void*) iwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_stbcon_(void* norm, void* uplo, void* diag, void* n, void* 
 	}
 	return;
 }
-
-void flexiblas_chain_stbcon(void* norm, void* uplo, void* diag, void* n, void* kd, void* ab, void* ldab, void* rcond, void* work, void* iwork, void* info)  __attribute__((alias("flexiblas_chain_stbcon_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_stbcon(void* norm, void* uplo, void* diag, void* n, void* kd, void* ab, void* ldab, void* rcond, void* work, void* iwork, void* info) __attribute__((alias("flexiblas_chain_stbcon_")));
+#else
+void flexiblas_chain_stbcon(void* norm, void* uplo, void* diag, void* n, void* kd, void* ab, void* ldab, void* rcond, void* work, void* iwork, void* info){flexiblas_chain_stbcon_((void*) norm, (void*) uplo, (void*) diag, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) rcond, (void*) work, (void*) iwork, (void*) info);}
+#endif
 
 
 

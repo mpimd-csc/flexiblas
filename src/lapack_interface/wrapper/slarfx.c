@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(slarfx,SLARFX)(char* side, blasint* m, blasint* n, float* v, floa
 #ifdef FLEXIBLAS_ABI_IBM
 void slarfx_(char* side, blasint* m, blasint* n, float* v, float* tau, float* c, blasint* ldc, float* work) __attribute__((alias(MTS(FC_GLOBAL(slarfx,SLARFX)))));
 #else
+#ifndef __APPLE__
 void slarfx(char* side, blasint* m, blasint* n, float* v, float* tau, float* c, blasint* ldc, float* work) __attribute__((alias(MTS(FC_GLOBAL(slarfx,SLARFX)))));
+#else
+void slarfx(char* side, blasint* m, blasint* n, float* v, float* tau, float* c, blasint* ldc, float* work){ FC_GLOBAL(slarfx,SLARFX)((void*) side, (void*) m, (void*) n, (void*) v, (void*) tau, (void*) c, (void*) ldc, (void*) work); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_slarfx_(void* side, void* m, void* n, void* v, void* tau, vo
 
 	return;
 }
-
-void flexiblas_real_slarfx(void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work)  __attribute__((alias("flexiblas_real_slarfx_")));
-
+#ifndef __APPLE__
+void flexiblas_real_slarfx(void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work) __attribute__((alias("flexiblas_real_slarfx_")));
+#else
+void flexiblas_real_slarfx(void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work){flexiblas_real_slarfx_((void*) side, (void*) m, (void*) n, (void*) v, (void*) tau, (void*) c, (void*) ldc, (void*) work);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_slarfx_(void* side, void* m, void* n, void* v, void* tau, v
 	}
 	return;
 }
-
-void flexiblas_chain_slarfx(void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work)  __attribute__((alias("flexiblas_chain_slarfx_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_slarfx(void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work) __attribute__((alias("flexiblas_chain_slarfx_")));
+#else
+void flexiblas_chain_slarfx(void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work){flexiblas_chain_slarfx_((void*) side, (void*) m, (void*) n, (void*) v, (void*) tau, (void*) c, (void*) ldc, (void*) work);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zgtsv,ZGTSV)(blasint* n, blasint* nrhs, double complex* dl, doubl
 #ifdef FLEXIBLAS_ABI_IBM
 void zgtsv_(blasint* n, blasint* nrhs, double complex* dl, double complex* d, double complex* du, double complex* b, blasint* ldb, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zgtsv,ZGTSV)))));
 #else
+#ifndef __APPLE__
 void zgtsv(blasint* n, blasint* nrhs, double complex* dl, double complex* d, double complex* du, double complex* b, blasint* ldb, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zgtsv,ZGTSV)))));
+#else
+void zgtsv(blasint* n, blasint* nrhs, double complex* dl, double complex* d, double complex* du, double complex* b, blasint* ldb, blasint* info){ FC_GLOBAL(zgtsv,ZGTSV)((void*) n, (void*) nrhs, (void*) dl, (void*) d, (void*) du, (void*) b, (void*) ldb, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zgtsv_(void* n, void* nrhs, void* dl, void* d, void* du, voi
 
 	return;
 }
-
-void flexiblas_real_zgtsv(void* n, void* nrhs, void* dl, void* d, void* du, void* b, void* ldb, void* info)  __attribute__((alias("flexiblas_real_zgtsv_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zgtsv(void* n, void* nrhs, void* dl, void* d, void* du, void* b, void* ldb, void* info) __attribute__((alias("flexiblas_real_zgtsv_")));
+#else
+void flexiblas_real_zgtsv(void* n, void* nrhs, void* dl, void* d, void* du, void* b, void* ldb, void* info){flexiblas_real_zgtsv_((void*) n, (void*) nrhs, (void*) dl, (void*) d, (void*) du, (void*) b, (void*) ldb, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zgtsv_(void* n, void* nrhs, void* dl, void* d, void* du, vo
 	}
 	return;
 }
-
-void flexiblas_chain_zgtsv(void* n, void* nrhs, void* dl, void* d, void* du, void* b, void* ldb, void* info)  __attribute__((alias("flexiblas_chain_zgtsv_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zgtsv(void* n, void* nrhs, void* dl, void* d, void* du, void* b, void* ldb, void* info) __attribute__((alias("flexiblas_chain_zgtsv_")));
+#else
+void flexiblas_chain_zgtsv(void* n, void* nrhs, void* dl, void* d, void* du, void* b, void* ldb, void* info){flexiblas_chain_zgtsv_((void*) n, (void*) nrhs, (void*) dl, (void*) d, (void*) du, (void*) b, (void*) ldb, (void*) info);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL_(chegv_2stage,CHEGV_2STAGE)(blasint* itype, char* jobz, char* upl
 #ifdef FLEXIBLAS_ABI_IBM
 void chegv_2stage_(blasint* itype, char* jobz, char* uplo, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* w, float complex* work, blasint* lwork, float* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL_(chegv_2stage,CHEGV_2STAGE)))));
 #else
+#ifndef __APPLE__
 void chegv_2stage(blasint* itype, char* jobz, char* uplo, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* w, float complex* work, blasint* lwork, float* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL_(chegv_2stage,CHEGV_2STAGE)))));
+#else
+void chegv_2stage(blasint* itype, char* jobz, char* uplo, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* w, float complex* work, blasint* lwork, float* rwork, blasint* info){ FC_GLOBAL_(chegv_2stage,CHEGV_2STAGE)((void*) itype, (void*) jobz, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) w, (void*) work, (void*) lwork, (void*) rwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_chegv_2stage_(void* itype, void* jobz, void* uplo, void* n, 
 
 	return;
 }
-
-void flexiblas_real_chegv_2stage(void* itype, void* jobz, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* w, void* work, void* lwork, void* rwork, void* info)  __attribute__((alias("flexiblas_real_chegv_2stage_")));
-
+#ifndef __APPLE__
+void flexiblas_real_chegv_2stage(void* itype, void* jobz, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* w, void* work, void* lwork, void* rwork, void* info) __attribute__((alias("flexiblas_real_chegv_2stage_")));
+#else
+void flexiblas_real_chegv_2stage(void* itype, void* jobz, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* w, void* work, void* lwork, void* rwork, void* info){flexiblas_real_chegv_2stage_((void*) itype, (void*) jobz, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) w, (void*) work, (void*) lwork, (void*) rwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_chegv_2stage_(void* itype, void* jobz, void* uplo, void* n,
 	}
 	return;
 }
-
-void flexiblas_chain_chegv_2stage(void* itype, void* jobz, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* w, void* work, void* lwork, void* rwork, void* info)  __attribute__((alias("flexiblas_chain_chegv_2stage_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_chegv_2stage(void* itype, void* jobz, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* w, void* work, void* lwork, void* rwork, void* info) __attribute__((alias("flexiblas_chain_chegv_2stage_")));
+#else
+void flexiblas_chain_chegv_2stage(void* itype, void* jobz, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* w, void* work, void* lwork, void* rwork, void* info){flexiblas_chain_chegv_2stage_((void*) itype, (void*) jobz, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) w, (void*) work, (void*) lwork, (void*) rwork, (void*) info);}
+#endif
 
 
 

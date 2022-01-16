@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(slapmt,SLAPMT)(blasint* forwrd, blasint* m, blasint* n, float* x,
 #ifdef FLEXIBLAS_ABI_IBM
 void slapmt_(blasint* forwrd, blasint* m, blasint* n, float* x, blasint* ldx, blasint* k) __attribute__((alias(MTS(FC_GLOBAL(slapmt,SLAPMT)))));
 #else
+#ifndef __APPLE__
 void slapmt(blasint* forwrd, blasint* m, blasint* n, float* x, blasint* ldx, blasint* k) __attribute__((alias(MTS(FC_GLOBAL(slapmt,SLAPMT)))));
+#else
+void slapmt(blasint* forwrd, blasint* m, blasint* n, float* x, blasint* ldx, blasint* k){ FC_GLOBAL(slapmt,SLAPMT)((void*) forwrd, (void*) m, (void*) n, (void*) x, (void*) ldx, (void*) k); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_slapmt_(void* forwrd, void* m, void* n, void* x, void* ldx, 
 
 	return;
 }
-
-void flexiblas_real_slapmt(void* forwrd, void* m, void* n, void* x, void* ldx, void* k)  __attribute__((alias("flexiblas_real_slapmt_")));
-
+#ifndef __APPLE__
+void flexiblas_real_slapmt(void* forwrd, void* m, void* n, void* x, void* ldx, void* k) __attribute__((alias("flexiblas_real_slapmt_")));
+#else
+void flexiblas_real_slapmt(void* forwrd, void* m, void* n, void* x, void* ldx, void* k){flexiblas_real_slapmt_((void*) forwrd, (void*) m, (void*) n, (void*) x, (void*) ldx, (void*) k);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_slapmt_(void* forwrd, void* m, void* n, void* x, void* ldx,
 	}
 	return;
 }
-
-void flexiblas_chain_slapmt(void* forwrd, void* m, void* n, void* x, void* ldx, void* k)  __attribute__((alias("flexiblas_chain_slapmt_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_slapmt(void* forwrd, void* m, void* n, void* x, void* ldx, void* k) __attribute__((alias("flexiblas_chain_slapmt_")));
+#else
+void flexiblas_chain_slapmt(void* forwrd, void* m, void* n, void* x, void* ldx, void* k){flexiblas_chain_slapmt_((void*) forwrd, (void*) m, (void*) n, (void*) x, (void*) ldx, (void*) k);}
+#endif
 
 
 

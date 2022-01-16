@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlanv2,DLANV2)(double* a, double* b, double* c, double* d, double
 #ifdef FLEXIBLAS_ABI_IBM
 void dlanv2_(double* a, double* b, double* c, double* d, double* rt1r, double* rt1i, double* rt2r, double* rt2i, double* cs, double* sn) __attribute__((alias(MTS(FC_GLOBAL(dlanv2,DLANV2)))));
 #else
+#ifndef __APPLE__
 void dlanv2(double* a, double* b, double* c, double* d, double* rt1r, double* rt1i, double* rt2r, double* rt2i, double* cs, double* sn) __attribute__((alias(MTS(FC_GLOBAL(dlanv2,DLANV2)))));
+#else
+void dlanv2(double* a, double* b, double* c, double* d, double* rt1r, double* rt1i, double* rt2r, double* rt2i, double* cs, double* sn){ FC_GLOBAL(dlanv2,DLANV2)((void*) a, (void*) b, (void*) c, (void*) d, (void*) rt1r, (void*) rt1i, (void*) rt2r, (void*) rt2i, (void*) cs, (void*) sn); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlanv2_(void* a, void* b, void* c, void* d, void* rt1r, void
 
 	return;
 }
-
-void flexiblas_real_dlanv2(void* a, void* b, void* c, void* d, void* rt1r, void* rt1i, void* rt2r, void* rt2i, void* cs, void* sn)  __attribute__((alias("flexiblas_real_dlanv2_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlanv2(void* a, void* b, void* c, void* d, void* rt1r, void* rt1i, void* rt2r, void* rt2i, void* cs, void* sn) __attribute__((alias("flexiblas_real_dlanv2_")));
+#else
+void flexiblas_real_dlanv2(void* a, void* b, void* c, void* d, void* rt1r, void* rt1i, void* rt2r, void* rt2i, void* cs, void* sn){flexiblas_real_dlanv2_((void*) a, (void*) b, (void*) c, (void*) d, (void*) rt1r, (void*) rt1i, (void*) rt2r, (void*) rt2i, (void*) cs, (void*) sn);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlanv2_(void* a, void* b, void* c, void* d, void* rt1r, voi
 	}
 	return;
 }
-
-void flexiblas_chain_dlanv2(void* a, void* b, void* c, void* d, void* rt1r, void* rt1i, void* rt2r, void* rt2i, void* cs, void* sn)  __attribute__((alias("flexiblas_chain_dlanv2_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlanv2(void* a, void* b, void* c, void* d, void* rt1r, void* rt1i, void* rt2r, void* rt2i, void* cs, void* sn) __attribute__((alias("flexiblas_chain_dlanv2_")));
+#else
+void flexiblas_chain_dlanv2(void* a, void* b, void* c, void* d, void* rt1r, void* rt1i, void* rt2r, void* rt2i, void* cs, void* sn){flexiblas_chain_dlanv2_((void*) a, (void*) b, (void*) c, (void*) d, (void*) rt1r, (void*) rt1i, (void*) rt2r, (void*) rt2i, (void*) cs, (void*) sn);}
+#endif
 
 
 

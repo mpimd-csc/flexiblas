@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(clacn2,CLACN2)(blasint* n, float complex* v, float complex* x, fl
 #ifdef FLEXIBLAS_ABI_IBM
 void clacn2_(blasint* n, float complex* v, float complex* x, float* est, blasint* kase, blasint* isave) __attribute__((alias(MTS(FC_GLOBAL(clacn2,CLACN2)))));
 #else
+#ifndef __APPLE__
 void clacn2(blasint* n, float complex* v, float complex* x, float* est, blasint* kase, blasint* isave) __attribute__((alias(MTS(FC_GLOBAL(clacn2,CLACN2)))));
+#else
+void clacn2(blasint* n, float complex* v, float complex* x, float* est, blasint* kase, blasint* isave){ FC_GLOBAL(clacn2,CLACN2)((void*) n, (void*) v, (void*) x, (void*) est, (void*) kase, (void*) isave); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_clacn2_(void* n, void* v, void* x, void* est, void* kase, vo
 
 	return;
 }
-
-void flexiblas_real_clacn2(void* n, void* v, void* x, void* est, void* kase, void* isave)  __attribute__((alias("flexiblas_real_clacn2_")));
-
+#ifndef __APPLE__
+void flexiblas_real_clacn2(void* n, void* v, void* x, void* est, void* kase, void* isave) __attribute__((alias("flexiblas_real_clacn2_")));
+#else
+void flexiblas_real_clacn2(void* n, void* v, void* x, void* est, void* kase, void* isave){flexiblas_real_clacn2_((void*) n, (void*) v, (void*) x, (void*) est, (void*) kase, (void*) isave);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_clacn2_(void* n, void* v, void* x, void* est, void* kase, v
 	}
 	return;
 }
-
-void flexiblas_chain_clacn2(void* n, void* v, void* x, void* est, void* kase, void* isave)  __attribute__((alias("flexiblas_chain_clacn2_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_clacn2(void* n, void* v, void* x, void* est, void* kase, void* isave) __attribute__((alias("flexiblas_chain_clacn2_")));
+#else
+void flexiblas_chain_clacn2(void* n, void* v, void* x, void* est, void* kase, void* isave){flexiblas_chain_clacn2_((void*) n, (void*) v, (void*) x, (void*) est, (void*) kase, (void*) isave);}
+#endif
 
 
 

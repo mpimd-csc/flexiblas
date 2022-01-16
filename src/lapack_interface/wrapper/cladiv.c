@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -107,7 +113,11 @@ float complex FC_GLOBAL(cladiv,CLADIV)(float complex* x, float complex* y)
 #ifdef FLEXIBLAS_ABI_IBM
 float complex cladiv_(float complex* x, float complex* y) __attribute__((alias(MTS(FC_GLOBAL(cladiv,CLADIV)))));
 #else
+#ifndef __APPLE__
 float complex cladiv(float complex* x, float complex* y) __attribute__((alias(MTS(FC_GLOBAL(cladiv,CLADIV)))));
+#else
+float complex cladiv(float complex* x, float complex* y){ return FC_GLOBAL(cladiv,CLADIV)((void*) x, (void*) y); }
+#endif
 #endif
 
 
@@ -116,7 +126,7 @@ float complex cladiv(float complex* x, float complex* y) __attribute__((alias(MT
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_cladiv_( float complex* returnvalue, void* x, void* y)
+void flexiblas_real_cladiv_( float complex*returnvalue, void* x, void* y)
 {
 	float complex (*fn) (void* x, void* y);
 	void (*fn_intel) (float complex *ret, void* x, void* y);
@@ -135,9 +145,11 @@ void flexiblas_real_cladiv_( float complex* returnvalue, void* x, void* y)
     *((float complex *)returnvalue) = ret;
     return;
 }
-
-void flexiblas_real_cladiv( float complex* returnvalue, void* x, void* y)  __attribute__((alias("flexiblas_real_cladiv_")));
-
+#ifndef __APPLE__
+void flexiblas_real_cladiv( float complex*returnvalue, void* x, void* y) __attribute__((alias("flexiblas_real_cladiv_")));
+#else
+void flexiblas_real_cladiv( float complex*returnvalue, void* x, void* y){flexiblas_real_cladiv_( (float complex*)returnvalue, (void*) x, (void*) y);}
+#endif
 
 
 
@@ -171,9 +183,11 @@ void flexiblas_chain_cladiv_( float complex* returnvalue, void* x, void* y)
     *((float complex *)returnvalue) = ret;
     return;
 }
-
-void flexiblas_chain_cladiv( float complex* returnvalue, void* x, void* y)  __attribute__((alias("flexiblas_chain_cladiv_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_cladiv( float complex*returnvalue, void* x, void* y) __attribute__((alias("flexiblas_chain_cladiv_")));
+#else
+void flexiblas_chain_cladiv( float complex*returnvalue, void* x, void* y){flexiblas_chain_cladiv_( (float complex*)returnvalue, (void*) x, (void*) y);}
+#endif
 
 
 

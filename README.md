@@ -1,13 +1,13 @@
 FlexiBLAS - A BLAS and LAPACK wrapper library with runtime exchangeable backends
 ================================================================================
 
-**Version 3.0.4** https://doi.org/10.5281/zenodo.3949804
+**Version 3.1.0** https://doi.org/10.5281/zenodo.3949804
 
 **Project Website:** https://www.mpi-magdeburg.mpg.de/projects/flexiblas
 
 **Git Repository:** https://gitlab.mpi-magdeburg.mpg.de/software/flexiblas-release
 
-Copyright 2013-2020 by *Martin Köhler* (0000-0003-2338-9904)
+Copyright 2013-2022 by *Martin Köhler* (0000-0003-2338-9904)
                    and *Jens Saak* (0000-0001-5567-9637)
 
 **FlexiBLAS** is a wrapper library that enables the exchange of the
@@ -96,7 +96,7 @@ options:
     Add an additional list of *BLAS* libraries to the default setup of
     **FlexiBLAS**. See below for details.
 
-* `-DMKL_CUSTOM=ON/OFF`
+* `-DMKL_BUILDER=ON/OFF`
 
     Turn `ON`/`OFF` the build of an *Intel MKL* custom library instead of
     searching for the *MKL* directly. This is necessary if you plan to switch
@@ -121,7 +121,7 @@ options:
 
 * `-DLAPACK=ON/OFF`
 
-    Turn `ON/OFF` the *LAPACK* support of **FlexiBLAS**. If enabled
+    Turn `ON`/`OFF` the *LAPACK* support of **FlexiBLAS**. If enabled
     **FlexiBLAS** also includes the wrappers around *LAPACK*. Default value is
     `ON`.
 
@@ -134,6 +134,10 @@ options:
 
     | LAPACK_API_VERSION |                                          | Testing |
     |--------------------|------------------------------------------|---------|
+    | 3.10.0             | LAPACK 3.10.0                            |   yes   |
+    | 3.10.0-wodprc      | LAPACK 3.10.0 without deprecated routines|   yes   |
+    | 3.9.1              | LAPACK 3.9.1                             |   yes   |
+    | 3.9.1-wodprc       | LAPACK 3.9.1 without deprecated routines |   yes   |
     | 3.9.0              | LAPACK 3.9.0                             |   yes   |
     | 3.9.0-wodprc       | LAPACK 3.9.0 without deprecated routines |   yes   |
     | 3.8.0              | LAPACK 3.8.0                             |   yes   |
@@ -157,6 +161,14 @@ options:
 
     Set the default *BLAS* at compile time. If the option is not set `NETLIB` is
     used by default.
+
+* `-DLINK_OPENMP=OFF/ON`
+    Link FlexiBLAS against the compiler's OpenMP implementation. This might be
+    necessary if Python/NumPy and OpenMP flags like OMP_PROC_BIND are used. Be
+    default this is avoided in order to avoid OpenMP as cross dependency in
+    application that do not required OpenMP. If the OS does not support the
+    `RTLD_NODELETE` flag in its `dlopen` call, setting this option to `ON` can
+    be helpful.
 
 The `PROFILE=ON/OFF` option was removed from version 1.1.0 onwards. Beginning
 with version 3.0.0 profiling is done using a hook functionality and is not
@@ -194,9 +206,9 @@ The *LAPACK* fallback implementation can be provided in the same way via
 The *LAPACK* library must provide all symbols that the reference implementation
 from *NETLIB* with the given version provides. A list of supported *LAPACK*
 versions is given above.
-If the version is not specified *cmake* tries to obtain it with a
-call to *LAPACK*'s `ILAVER`. Note that the path must be absolute, the
-`~`-operator to reference the home directory is not allowed.
+If the version is not specified *cmake* tries to obtain it with a call to
+*LAPACK*'s `ILAVER`. Note that the path must be absolute, the `~`-operator to
+reference the home directory is not allowed.
 
 ### Setup with Custom *BLAS* and *LAPACK* Implementations.
 
@@ -363,7 +375,6 @@ The `flexiblas` tool can be used for example to:
 
         flexiblas list
 
-
 * Set the default backend:
 
         flexiblas default NAME_OF_THE_BACKEND
@@ -522,6 +533,12 @@ can get an overview about the installed functions by calling:
 
 from the *GNU Octave* command-line prompt. This package only works on *Linux*
 and *BSD* versions of *GNU Octave*, but **NOT** on any version of *MS-Windows*!
+
+## Backend Builder
+
+In order to build backends later without reconfiguring or rebuilding FlexiBLAS,
+a CMake helper tool exists in `tools/backend_builder`. This tool can be used to
+build your own backends individually.
 
 ## Cite As
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(ztrtrs,ZTRTRS)(char* uplo, char* trans, char* diag, blasint* n, b
 #ifdef FLEXIBLAS_ABI_IBM
 void ztrtrs_(char* uplo, char* trans, char* diag, blasint* n, blasint* nrhs, double complex* a, blasint* lda, double complex* b, blasint* ldb, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ztrtrs,ZTRTRS)))));
 #else
+#ifndef __APPLE__
 void ztrtrs(char* uplo, char* trans, char* diag, blasint* n, blasint* nrhs, double complex* a, blasint* lda, double complex* b, blasint* ldb, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ztrtrs,ZTRTRS)))));
+#else
+void ztrtrs(char* uplo, char* trans, char* diag, blasint* n, blasint* nrhs, double complex* a, blasint* lda, double complex* b, blasint* ldb, blasint* info){ FC_GLOBAL(ztrtrs,ZTRTRS)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_ztrtrs_(void* uplo, void* trans, void* diag, void* n, void* 
 
 	return;
 }
-
-void flexiblas_real_ztrtrs(void* uplo, void* trans, void* diag, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* info)  __attribute__((alias("flexiblas_real_ztrtrs_")));
-
+#ifndef __APPLE__
+void flexiblas_real_ztrtrs(void* uplo, void* trans, void* diag, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* info) __attribute__((alias("flexiblas_real_ztrtrs_")));
+#else
+void flexiblas_real_ztrtrs(void* uplo, void* trans, void* diag, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* info){flexiblas_real_ztrtrs_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_ztrtrs_(void* uplo, void* trans, void* diag, void* n, void*
 	}
 	return;
 }
-
-void flexiblas_chain_ztrtrs(void* uplo, void* trans, void* diag, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* info)  __attribute__((alias("flexiblas_chain_ztrtrs_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_ztrtrs(void* uplo, void* trans, void* diag, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* info) __attribute__((alias("flexiblas_chain_ztrtrs_")));
+#else
+void flexiblas_chain_ztrtrs(void* uplo, void* trans, void* diag, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* info){flexiblas_chain_ztrtrs_((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info);}
+#endif
 
 
 

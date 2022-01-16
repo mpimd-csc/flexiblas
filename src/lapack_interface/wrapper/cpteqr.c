@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(cpteqr,CPTEQR)(char* compz, blasint* n, float* d, float* e, float
 #ifdef FLEXIBLAS_ABI_IBM
 void cpteqr_(char* compz, blasint* n, float* d, float* e, float complex* z, blasint* ldz, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cpteqr,CPTEQR)))));
 #else
+#ifndef __APPLE__
 void cpteqr(char* compz, blasint* n, float* d, float* e, float complex* z, blasint* ldz, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cpteqr,CPTEQR)))));
+#else
+void cpteqr(char* compz, blasint* n, float* d, float* e, float complex* z, blasint* ldz, float* work, blasint* info){ FC_GLOBAL(cpteqr,CPTEQR)((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_cpteqr_(void* compz, void* n, void* d, void* e, void* z, voi
 
 	return;
 }
-
-void flexiblas_real_cpteqr(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info)  __attribute__((alias("flexiblas_real_cpteqr_")));
-
+#ifndef __APPLE__
+void flexiblas_real_cpteqr(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info) __attribute__((alias("flexiblas_real_cpteqr_")));
+#else
+void flexiblas_real_cpteqr(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info){flexiblas_real_cpteqr_((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_cpteqr_(void* compz, void* n, void* d, void* e, void* z, vo
 	}
 	return;
 }
-
-void flexiblas_chain_cpteqr(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info)  __attribute__((alias("flexiblas_chain_cpteqr_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_cpteqr(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info) __attribute__((alias("flexiblas_chain_cpteqr_")));
+#else
+void flexiblas_chain_cpteqr(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info){flexiblas_chain_cpteqr_((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info);}
+#endif
 
 
 

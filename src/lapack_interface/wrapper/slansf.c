@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ float FC_GLOBAL(slansf,SLANSF)(char* norm, char* transr, char* uplo, blasint* n,
 #ifdef FLEXIBLAS_ABI_IBM
 float slansf_(char* norm, char* transr, char* uplo, blasint* n, float* a, float* work) __attribute__((alias(MTS(FC_GLOBAL(slansf,SLANSF)))));
 #else
+#ifndef __APPLE__
 float slansf(char* norm, char* transr, char* uplo, blasint* n, float* a, float* work) __attribute__((alias(MTS(FC_GLOBAL(slansf,SLANSF)))));
+#else
+float slansf(char* norm, char* transr, char* uplo, blasint* n, float* a, float* work){ return FC_GLOBAL(slansf,SLANSF)((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ float flexiblas_real_slansf_(void* norm, void* transr, void* uplo, void* n, void
 
 	return ret ;
 }
-
-float flexiblas_real_slansf(void* norm, void* transr, void* uplo, void* n, void* a, void* work)  __attribute__((alias("flexiblas_real_slansf_")));
-
+#ifndef __APPLE__
+float flexiblas_real_slansf(void* norm, void* transr, void* uplo, void* n, void* a, void* work) __attribute__((alias("flexiblas_real_slansf_")));
+#else
+float flexiblas_real_slansf(void* norm, void* transr, void* uplo, void* n, void* a, void* work){return flexiblas_real_slansf_((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ float flexiblas_chain_slansf_(void* norm, void* transr, void* uplo, void* n, voi
 	}
 	return ret ;
 }
-
-float flexiblas_chain_slansf(void* norm, void* transr, void* uplo, void* n, void* a, void* work)  __attribute__((alias("flexiblas_chain_slansf_")));
-
+#ifndef __APPLE__
+float flexiblas_chain_slansf(void* norm, void* transr, void* uplo, void* n, void* a, void* work) __attribute__((alias("flexiblas_chain_slansf_")));
+#else
+float flexiblas_chain_slansf(void* norm, void* transr, void* uplo, void* n, void* a, void* work){return flexiblas_chain_slansf_((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work);}
+#endif
 
 
 

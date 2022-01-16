@@ -40,7 +40,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
 
 
@@ -2464,6 +2464,27 @@ float hook_slamch(char* cmach)
 
     data->slamch.timings[0] += (helpTimeStop - helpTime);
     data->slamch.calls[0]++;
+
+    return v;
+}
+
+
+
+extern float flexiblas_chain_slamc3 (float* a, float* b);
+float hook_slamc3(float* a, float* b)
+{
+    float v;
+    double helpTime;
+    double helpTimeStop;
+
+    helpTime = flexiblas_wtime();
+
+    v = flexiblas_chain_slamc3((void*) a, (void*) b);
+
+    helpTimeStop = flexiblas_wtime();
+
+    data->slamc3.timings[0] += (helpTimeStop - helpTime);
+    data->slamc3.calls[0]++;
 
     return v;
 }
@@ -20992,6 +21013,27 @@ double hook_dlamch(char* cmach)
 
 
 
+extern double flexiblas_chain_dlamc3 (double* a, double* b);
+double hook_dlamc3(double* a, double* b)
+{
+    double v;
+    double helpTime;
+    double helpTimeStop;
+
+    helpTime = flexiblas_wtime();
+
+    v = flexiblas_chain_dlamc3((void*) a, (void*) b);
+
+    helpTimeStop = flexiblas_wtime();
+
+    data->dlamc3.timings[0] += (helpTimeStop - helpTime);
+    data->dlamc3.calls[0]++;
+
+    return v;
+}
+
+
+
 extern void flexiblas_chain_sgeqrt2 (Int * m, Int * n, float* a, Int * lda, float* t, Int * ldt, Int * info);
 void hook_sgeqrt2(Int * m, Int * n, float* a, Int * lda, float* t, Int * ldt, Int * info)
 {
@@ -39293,6 +39335,7 @@ void profile_lapack_add(csc_table_t *tab, int col_name, int col_calls, int col_t
     ADD_BLAS_ENTRY(sorgqr);
     ADD_BLAS_ENTRY(cggsvd3);
     ADD_BLAS_ENTRY(slamch);
+    ADD_BLAS_ENTRY(slamc3);
     ADD_BLAS_ENTRY(ctrcon);
     ADD_BLAS_ENTRY(cgttrf);
     ADD_BLAS_ENTRY(clanhe);
@@ -40175,6 +40218,7 @@ void profile_lapack_add(csc_table_t *tab, int col_name, int col_calls, int col_t
     ADD_BLAS_ENTRY(zunglq);
     ADD_BLAS_ENTRY(dsytrf);
     ADD_BLAS_ENTRY(dlamch);
+    ADD_BLAS_ENTRY(dlamc3);
     ADD_BLAS_ENTRY(sgeqrt2);
     ADD_BLAS_ENTRY(dlasd7);
     ADD_BLAS_ENTRY(csyswapr);

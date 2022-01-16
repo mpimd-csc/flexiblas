@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL_(dlaorhr_col_getrfnp2,DLAORHR_COL_GETRFNP2)(blasint* m, blasint* 
 #ifdef FLEXIBLAS_ABI_IBM
 void dlaorhr_col_getrfnp2_(blasint* m, blasint* n, double* a, blasint* lda, double* d, blasint* info) __attribute__((alias(MTS(FC_GLOBAL_(dlaorhr_col_getrfnp2,DLAORHR_COL_GETRFNP2)))));
 #else
+#ifndef __APPLE__
 void dlaorhr_col_getrfnp2(blasint* m, blasint* n, double* a, blasint* lda, double* d, blasint* info) __attribute__((alias(MTS(FC_GLOBAL_(dlaorhr_col_getrfnp2,DLAORHR_COL_GETRFNP2)))));
+#else
+void dlaorhr_col_getrfnp2(blasint* m, blasint* n, double* a, blasint* lda, double* d, blasint* info){ FC_GLOBAL_(dlaorhr_col_getrfnp2,DLAORHR_COL_GETRFNP2)((void*) m, (void*) n, (void*) a, (void*) lda, (void*) d, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlaorhr_col_getrfnp2_(void* m, void* n, void* a, void* lda, 
 
 	return;
 }
-
-void flexiblas_real_dlaorhr_col_getrfnp2(void* m, void* n, void* a, void* lda, void* d, void* info)  __attribute__((alias("flexiblas_real_dlaorhr_col_getrfnp2_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlaorhr_col_getrfnp2(void* m, void* n, void* a, void* lda, void* d, void* info) __attribute__((alias("flexiblas_real_dlaorhr_col_getrfnp2_")));
+#else
+void flexiblas_real_dlaorhr_col_getrfnp2(void* m, void* n, void* a, void* lda, void* d, void* info){flexiblas_real_dlaorhr_col_getrfnp2_((void*) m, (void*) n, (void*) a, (void*) lda, (void*) d, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlaorhr_col_getrfnp2_(void* m, void* n, void* a, void* lda,
 	}
 	return;
 }
-
-void flexiblas_chain_dlaorhr_col_getrfnp2(void* m, void* n, void* a, void* lda, void* d, void* info)  __attribute__((alias("flexiblas_chain_dlaorhr_col_getrfnp2_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlaorhr_col_getrfnp2(void* m, void* n, void* a, void* lda, void* d, void* info) __attribute__((alias("flexiblas_chain_dlaorhr_col_getrfnp2_")));
+#else
+void flexiblas_chain_dlaorhr_col_getrfnp2(void* m, void* n, void* a, void* lda, void* d, void* info){flexiblas_chain_dlaorhr_col_getrfnp2_((void*) m, (void*) n, (void*) a, (void*) lda, (void*) d, (void*) info);}
+#endif
 
 
 

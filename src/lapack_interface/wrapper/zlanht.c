@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ double FC_GLOBAL(zlanht,ZLANHT)(char* norm, blasint* n, double* d, double comple
 #ifdef FLEXIBLAS_ABI_IBM
 double zlanht_(char* norm, blasint* n, double* d, double complex* e) __attribute__((alias(MTS(FC_GLOBAL(zlanht,ZLANHT)))));
 #else
+#ifndef __APPLE__
 double zlanht(char* norm, blasint* n, double* d, double complex* e) __attribute__((alias(MTS(FC_GLOBAL(zlanht,ZLANHT)))));
+#else
+double zlanht(char* norm, blasint* n, double* d, double complex* e){ return FC_GLOBAL(zlanht,ZLANHT)((void*) norm, (void*) n, (void*) d, (void*) e); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ double flexiblas_real_zlanht_(void* norm, void* n, void* d, void* e)
 
 	return ret ;
 }
-
-double flexiblas_real_zlanht(void* norm, void* n, void* d, void* e)  __attribute__((alias("flexiblas_real_zlanht_")));
-
+#ifndef __APPLE__
+double flexiblas_real_zlanht(void* norm, void* n, void* d, void* e) __attribute__((alias("flexiblas_real_zlanht_")));
+#else
+double flexiblas_real_zlanht(void* norm, void* n, void* d, void* e){return flexiblas_real_zlanht_((void*) norm, (void*) n, (void*) d, (void*) e);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ double flexiblas_chain_zlanht_(void* norm, void* n, void* d, void* e)
 	}
 	return ret ;
 }
-
-double flexiblas_chain_zlanht(void* norm, void* n, void* d, void* e)  __attribute__((alias("flexiblas_chain_zlanht_")));
-
+#ifndef __APPLE__
+double flexiblas_chain_zlanht(void* norm, void* n, void* d, void* e) __attribute__((alias("flexiblas_chain_zlanht_")));
+#else
+double flexiblas_chain_zlanht(void* norm, void* n, void* d, void* e){return flexiblas_chain_zlanht_((void*) norm, (void*) n, (void*) d, (void*) e);}
+#endif
 
 
 

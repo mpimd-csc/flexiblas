@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlags2,DLAGS2)(blasint* upper, double* a1, double* a2, double* a3
 #ifdef FLEXIBLAS_ABI_IBM
 void dlags2_(blasint* upper, double* a1, double* a2, double* a3, double* b1, double* b2, double* b3, double* csu, double* snu, double* csv, double* snv, double* csq, double* snq) __attribute__((alias(MTS(FC_GLOBAL(dlags2,DLAGS2)))));
 #else
+#ifndef __APPLE__
 void dlags2(blasint* upper, double* a1, double* a2, double* a3, double* b1, double* b2, double* b3, double* csu, double* snu, double* csv, double* snv, double* csq, double* snq) __attribute__((alias(MTS(FC_GLOBAL(dlags2,DLAGS2)))));
+#else
+void dlags2(blasint* upper, double* a1, double* a2, double* a3, double* b1, double* b2, double* b3, double* csu, double* snu, double* csv, double* snv, double* csq, double* snq){ FC_GLOBAL(dlags2,DLAGS2)((void*) upper, (void*) a1, (void*) a2, (void*) a3, (void*) b1, (void*) b2, (void*) b3, (void*) csu, (void*) snu, (void*) csv, (void*) snv, (void*) csq, (void*) snq); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlags2_(void* upper, void* a1, void* a2, void* a3, void* b1,
 
 	return;
 }
-
-void flexiblas_real_dlags2(void* upper, void* a1, void* a2, void* a3, void* b1, void* b2, void* b3, void* csu, void* snu, void* csv, void* snv, void* csq, void* snq)  __attribute__((alias("flexiblas_real_dlags2_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlags2(void* upper, void* a1, void* a2, void* a3, void* b1, void* b2, void* b3, void* csu, void* snu, void* csv, void* snv, void* csq, void* snq) __attribute__((alias("flexiblas_real_dlags2_")));
+#else
+void flexiblas_real_dlags2(void* upper, void* a1, void* a2, void* a3, void* b1, void* b2, void* b3, void* csu, void* snu, void* csv, void* snv, void* csq, void* snq){flexiblas_real_dlags2_((void*) upper, (void*) a1, (void*) a2, (void*) a3, (void*) b1, (void*) b2, (void*) b3, (void*) csu, (void*) snu, (void*) csv, (void*) snv, (void*) csq, (void*) snq);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlags2_(void* upper, void* a1, void* a2, void* a3, void* b1
 	}
 	return;
 }
-
-void flexiblas_chain_dlags2(void* upper, void* a1, void* a2, void* a3, void* b1, void* b2, void* b3, void* csu, void* snu, void* csv, void* snv, void* csq, void* snq)  __attribute__((alias("flexiblas_chain_dlags2_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlags2(void* upper, void* a1, void* a2, void* a3, void* b1, void* b2, void* b3, void* csu, void* snu, void* csv, void* snv, void* csq, void* snq) __attribute__((alias("flexiblas_chain_dlags2_")));
+#else
+void flexiblas_chain_dlags2(void* upper, void* a1, void* a2, void* a3, void* b1, void* b2, void* b3, void* csu, void* snu, void* csv, void* snv, void* csq, void* snq){flexiblas_chain_dlags2_((void*) upper, (void*) a1, (void*) a2, (void*) a3, (void*) b1, (void*) b2, (void*) b3, (void*) csu, (void*) snu, (void*) csv, (void*) snv, (void*) csq, (void*) snq);}
+#endif
 
 
 

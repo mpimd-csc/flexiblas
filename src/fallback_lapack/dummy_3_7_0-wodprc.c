@@ -40,12 +40,14 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
 
 #include "flexiblas_config.h"
 #include "fortran_mangle.h"
 
+void FC_GLOBAL(slamc3,SLAMC3)(void);
+void FC_GLOBAL(dlamc3,DLAMC3)(void);
 void FC_GLOBAL(second,SECOND)(void);
 void FC_GLOBAL(dsecnd,DSECND)(void);
 void FC_GLOBAL(cbbcsd,CBBCSD)(void);
@@ -1871,6 +1873,8 @@ void FC_GLOBAL(zupmtr,ZUPMTR)(void);
 
 HIDDEN void flexiblas_lapack_dummy_function_not_called()
 {
+    FC_GLOBAL(slamc3,SLAMC3)();
+    FC_GLOBAL(dlamc3,DLAMC3)();
     FC_GLOBAL(second,SECOND)();
     FC_GLOBAL(dsecnd,DSECND)();
     FC_GLOBAL(cbbcsd,CBBCSD)();

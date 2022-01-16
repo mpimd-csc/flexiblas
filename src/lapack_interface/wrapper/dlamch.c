@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ double FC_GLOBAL(dlamch,DLAMCH)(char* cmach)
 #ifdef FLEXIBLAS_ABI_IBM
 double dlamch_(char* cmach) __attribute__((alias(MTS(FC_GLOBAL(dlamch,DLAMCH)))));
 #else
+#ifndef __APPLE__
 double dlamch(char* cmach) __attribute__((alias(MTS(FC_GLOBAL(dlamch,DLAMCH)))));
+#else
+double dlamch(char* cmach){ return FC_GLOBAL(dlamch,DLAMCH)((void*) cmach); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ double flexiblas_real_dlamch_(void* cmach)
 
 	return ret ;
 }
-
-double flexiblas_real_dlamch(void* cmach)  __attribute__((alias("flexiblas_real_dlamch_")));
-
+#ifndef __APPLE__
+double flexiblas_real_dlamch(void* cmach) __attribute__((alias("flexiblas_real_dlamch_")));
+#else
+double flexiblas_real_dlamch(void* cmach){return flexiblas_real_dlamch_((void*) cmach);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ double flexiblas_chain_dlamch_(void* cmach)
 	}
 	return ret ;
 }
-
-double flexiblas_chain_dlamch(void* cmach)  __attribute__((alias("flexiblas_chain_dlamch_")));
-
+#ifndef __APPLE__
+double flexiblas_chain_dlamch(void* cmach) __attribute__((alias("flexiblas_chain_dlamch_")));
+#else
+double flexiblas_chain_dlamch(void* cmach){return flexiblas_chain_dlamch_((void*) cmach);}
+#endif
 
 
 

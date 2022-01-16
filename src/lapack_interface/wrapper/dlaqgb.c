@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlaqgb,DLAQGB)(blasint* m, blasint* n, blasint* kl, blasint* ku, 
 #ifdef FLEXIBLAS_ABI_IBM
 void dlaqgb_(blasint* m, blasint* n, blasint* kl, blasint* ku, double* ab, blasint* ldab, double* r, double* c, double* rowcnd, double* colcnd, double* amax, char* equed) __attribute__((alias(MTS(FC_GLOBAL(dlaqgb,DLAQGB)))));
 #else
+#ifndef __APPLE__
 void dlaqgb(blasint* m, blasint* n, blasint* kl, blasint* ku, double* ab, blasint* ldab, double* r, double* c, double* rowcnd, double* colcnd, double* amax, char* equed) __attribute__((alias(MTS(FC_GLOBAL(dlaqgb,DLAQGB)))));
+#else
+void dlaqgb(blasint* m, blasint* n, blasint* kl, blasint* ku, double* ab, blasint* ldab, double* r, double* c, double* rowcnd, double* colcnd, double* amax, char* equed){ FC_GLOBAL(dlaqgb,DLAQGB)((void*) m, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) equed); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlaqgb_(void* m, void* n, void* kl, void* ku, void* ab, void
 
 	return;
 }
-
-void flexiblas_real_dlaqgb(void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* equed)  __attribute__((alias("flexiblas_real_dlaqgb_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlaqgb(void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* equed) __attribute__((alias("flexiblas_real_dlaqgb_")));
+#else
+void flexiblas_real_dlaqgb(void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* equed){flexiblas_real_dlaqgb_((void*) m, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) equed);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlaqgb_(void* m, void* n, void* kl, void* ku, void* ab, voi
 	}
 	return;
 }
-
-void flexiblas_chain_dlaqgb(void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* equed)  __attribute__((alias("flexiblas_chain_dlaqgb_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlaqgb(void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* equed) __attribute__((alias("flexiblas_chain_dlaqgb_")));
+#else
+void flexiblas_chain_dlaqgb(void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* equed){flexiblas_chain_dlaqgb_((void*) m, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) equed);}
+#endif
 
 
 

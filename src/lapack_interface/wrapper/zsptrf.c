@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zsptrf,ZSPTRF)(char* uplo, blasint* n, double complex* ap, blasin
 #ifdef FLEXIBLAS_ABI_IBM
 void zsptrf_(char* uplo, blasint* n, double complex* ap, blasint* ipiv, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zsptrf,ZSPTRF)))));
 #else
+#ifndef __APPLE__
 void zsptrf(char* uplo, blasint* n, double complex* ap, blasint* ipiv, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zsptrf,ZSPTRF)))));
+#else
+void zsptrf(char* uplo, blasint* n, double complex* ap, blasint* ipiv, blasint* info){ FC_GLOBAL(zsptrf,ZSPTRF)((void*) uplo, (void*) n, (void*) ap, (void*) ipiv, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zsptrf_(void* uplo, void* n, void* ap, void* ipiv, void* inf
 
 	return;
 }
-
-void flexiblas_real_zsptrf(void* uplo, void* n, void* ap, void* ipiv, void* info)  __attribute__((alias("flexiblas_real_zsptrf_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zsptrf(void* uplo, void* n, void* ap, void* ipiv, void* info) __attribute__((alias("flexiblas_real_zsptrf_")));
+#else
+void flexiblas_real_zsptrf(void* uplo, void* n, void* ap, void* ipiv, void* info){flexiblas_real_zsptrf_((void*) uplo, (void*) n, (void*) ap, (void*) ipiv, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zsptrf_(void* uplo, void* n, void* ap, void* ipiv, void* in
 	}
 	return;
 }
-
-void flexiblas_chain_zsptrf(void* uplo, void* n, void* ap, void* ipiv, void* info)  __attribute__((alias("flexiblas_chain_zsptrf_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zsptrf(void* uplo, void* n, void* ap, void* ipiv, void* info) __attribute__((alias("flexiblas_chain_zsptrf_")));
+#else
+void flexiblas_chain_zsptrf(void* uplo, void* n, void* ap, void* ipiv, void* info){flexiblas_chain_zsptrf_((void*) uplo, (void*) n, (void*) ap, (void*) ipiv, (void*) info);}
+#endif
 
 
 

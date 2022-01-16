@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zlartv,ZLARTV)(blasint* n, double complex* x, blasint* incx, doub
 #ifdef FLEXIBLAS_ABI_IBM
 void zlartv_(blasint* n, double complex* x, blasint* incx, double complex* y, blasint* incy, double* c, double complex* s, blasint* incc) __attribute__((alias(MTS(FC_GLOBAL(zlartv,ZLARTV)))));
 #else
+#ifndef __APPLE__
 void zlartv(blasint* n, double complex* x, blasint* incx, double complex* y, blasint* incy, double* c, double complex* s, blasint* incc) __attribute__((alias(MTS(FC_GLOBAL(zlartv,ZLARTV)))));
+#else
+void zlartv(blasint* n, double complex* x, blasint* incx, double complex* y, blasint* incy, double* c, double complex* s, blasint* incc){ FC_GLOBAL(zlartv,ZLARTV)((void*) n, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) c, (void*) s, (void*) incc); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zlartv_(void* n, void* x, void* incx, void* y, void* incy, v
 
 	return;
 }
-
-void flexiblas_real_zlartv(void* n, void* x, void* incx, void* y, void* incy, void* c, void* s, void* incc)  __attribute__((alias("flexiblas_real_zlartv_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zlartv(void* n, void* x, void* incx, void* y, void* incy, void* c, void* s, void* incc) __attribute__((alias("flexiblas_real_zlartv_")));
+#else
+void flexiblas_real_zlartv(void* n, void* x, void* incx, void* y, void* incy, void* c, void* s, void* incc){flexiblas_real_zlartv_((void*) n, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) c, (void*) s, (void*) incc);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zlartv_(void* n, void* x, void* incx, void* y, void* incy, 
 	}
 	return;
 }
-
-void flexiblas_chain_zlartv(void* n, void* x, void* incx, void* y, void* incy, void* c, void* s, void* incc)  __attribute__((alias("flexiblas_chain_zlartv_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zlartv(void* n, void* x, void* incx, void* y, void* incy, void* c, void* s, void* incc) __attribute__((alias("flexiblas_chain_zlartv_")));
+#else
+void flexiblas_chain_zlartv(void* n, void* x, void* incx, void* y, void* incy, void* c, void* s, void* incc){flexiblas_chain_zlartv_((void*) n, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) c, (void*) s, (void*) incc);}
+#endif
 
 
 

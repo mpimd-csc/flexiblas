@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(slabad,SLABAD)(float* small, float* large)
 #ifdef FLEXIBLAS_ABI_IBM
 void slabad_(float* small, float* large) __attribute__((alias(MTS(FC_GLOBAL(slabad,SLABAD)))));
 #else
+#ifndef __APPLE__
 void slabad(float* small, float* large) __attribute__((alias(MTS(FC_GLOBAL(slabad,SLABAD)))));
+#else
+void slabad(float* small, float* large){ FC_GLOBAL(slabad,SLABAD)((void*) small, (void*) large); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_slabad_(void* small, void* large)
 
 	return;
 }
-
-void flexiblas_real_slabad(void* small, void* large)  __attribute__((alias("flexiblas_real_slabad_")));
-
+#ifndef __APPLE__
+void flexiblas_real_slabad(void* small, void* large) __attribute__((alias("flexiblas_real_slabad_")));
+#else
+void flexiblas_real_slabad(void* small, void* large){flexiblas_real_slabad_((void*) small, (void*) large);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_slabad_(void* small, void* large)
 	}
 	return;
 }
-
-void flexiblas_chain_slabad(void* small, void* large)  __attribute__((alias("flexiblas_chain_slabad_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_slabad(void* small, void* large) __attribute__((alias("flexiblas_chain_slabad_")));
+#else
+void flexiblas_chain_slabad(void* small, void* large){flexiblas_chain_slabad_((void*) small, (void*) large);}
+#endif
 
 
 

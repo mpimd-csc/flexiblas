@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(clag2z,CLAG2Z)(blasint* m, blasint* n, float complex* sa, blasint
 #ifdef FLEXIBLAS_ABI_IBM
 void clag2z_(blasint* m, blasint* n, float complex* sa, blasint* ldsa, double complex* a, blasint* lda, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(clag2z,CLAG2Z)))));
 #else
+#ifndef __APPLE__
 void clag2z(blasint* m, blasint* n, float complex* sa, blasint* ldsa, double complex* a, blasint* lda, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(clag2z,CLAG2Z)))));
+#else
+void clag2z(blasint* m, blasint* n, float complex* sa, blasint* ldsa, double complex* a, blasint* lda, blasint* info){ FC_GLOBAL(clag2z,CLAG2Z)((void*) m, (void*) n, (void*) sa, (void*) ldsa, (void*) a, (void*) lda, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_clag2z_(void* m, void* n, void* sa, void* ldsa, void* a, voi
 
 	return;
 }
-
-void flexiblas_real_clag2z(void* m, void* n, void* sa, void* ldsa, void* a, void* lda, void* info)  __attribute__((alias("flexiblas_real_clag2z_")));
-
+#ifndef __APPLE__
+void flexiblas_real_clag2z(void* m, void* n, void* sa, void* ldsa, void* a, void* lda, void* info) __attribute__((alias("flexiblas_real_clag2z_")));
+#else
+void flexiblas_real_clag2z(void* m, void* n, void* sa, void* ldsa, void* a, void* lda, void* info){flexiblas_real_clag2z_((void*) m, (void*) n, (void*) sa, (void*) ldsa, (void*) a, (void*) lda, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_clag2z_(void* m, void* n, void* sa, void* ldsa, void* a, vo
 	}
 	return;
 }
-
-void flexiblas_chain_clag2z(void* m, void* n, void* sa, void* ldsa, void* a, void* lda, void* info)  __attribute__((alias("flexiblas_chain_clag2z_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_clag2z(void* m, void* n, void* sa, void* ldsa, void* a, void* lda, void* info) __attribute__((alias("flexiblas_chain_clag2z_")));
+#else
+void flexiblas_chain_clag2z(void* m, void* n, void* sa, void* ldsa, void* a, void* lda, void* info){flexiblas_chain_clag2z_((void*) m, (void*) n, (void*) sa, (void*) ldsa, (void*) a, (void*) lda, (void*) info);}
+#endif
 
 
 

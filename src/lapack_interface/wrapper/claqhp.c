@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(claqhp,CLAQHP)(char* uplo, blasint* n, float complex* ap, float* 
 #ifdef FLEXIBLAS_ABI_IBM
 void claqhp_(char* uplo, blasint* n, float complex* ap, float* s, float* scond, float* amax, char* equed) __attribute__((alias(MTS(FC_GLOBAL(claqhp,CLAQHP)))));
 #else
+#ifndef __APPLE__
 void claqhp(char* uplo, blasint* n, float complex* ap, float* s, float* scond, float* amax, char* equed) __attribute__((alias(MTS(FC_GLOBAL(claqhp,CLAQHP)))));
+#else
+void claqhp(char* uplo, blasint* n, float complex* ap, float* s, float* scond, float* amax, char* equed){ FC_GLOBAL(claqhp,CLAQHP)((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) equed); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_claqhp_(void* uplo, void* n, void* ap, void* s, void* scond,
 
 	return;
 }
-
-void flexiblas_real_claqhp(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* equed)  __attribute__((alias("flexiblas_real_claqhp_")));
-
+#ifndef __APPLE__
+void flexiblas_real_claqhp(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* equed) __attribute__((alias("flexiblas_real_claqhp_")));
+#else
+void flexiblas_real_claqhp(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* equed){flexiblas_real_claqhp_((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) equed);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_claqhp_(void* uplo, void* n, void* ap, void* s, void* scond
 	}
 	return;
 }
-
-void flexiblas_chain_claqhp(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* equed)  __attribute__((alias("flexiblas_chain_claqhp_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_claqhp(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* equed) __attribute__((alias("flexiblas_chain_claqhp_")));
+#else
+void flexiblas_chain_claqhp(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* equed){flexiblas_chain_claqhp_((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) equed);}
+#endif
 
 
 

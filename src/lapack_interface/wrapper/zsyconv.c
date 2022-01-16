@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zsyconv,ZSYCONV)(char* uplo, char* way, blasint* n, double comple
 #ifdef FLEXIBLAS_ABI_IBM
 void zsyconv_(char* uplo, char* way, blasint* n, double complex* a, blasint* lda, blasint* ipiv, double complex* e, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zsyconv,ZSYCONV)))));
 #else
+#ifndef __APPLE__
 void zsyconv(char* uplo, char* way, blasint* n, double complex* a, blasint* lda, blasint* ipiv, double complex* e, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zsyconv,ZSYCONV)))));
+#else
+void zsyconv(char* uplo, char* way, blasint* n, double complex* a, blasint* lda, blasint* ipiv, double complex* e, blasint* info){ FC_GLOBAL(zsyconv,ZSYCONV)((void*) uplo, (void*) way, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) e, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zsyconv_(void* uplo, void* way, void* n, void* a, void* lda,
 
 	return;
 }
-
-void flexiblas_real_zsyconv(void* uplo, void* way, void* n, void* a, void* lda, void* ipiv, void* e, void* info)  __attribute__((alias("flexiblas_real_zsyconv_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zsyconv(void* uplo, void* way, void* n, void* a, void* lda, void* ipiv, void* e, void* info) __attribute__((alias("flexiblas_real_zsyconv_")));
+#else
+void flexiblas_real_zsyconv(void* uplo, void* way, void* n, void* a, void* lda, void* ipiv, void* e, void* info){flexiblas_real_zsyconv_((void*) uplo, (void*) way, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) e, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zsyconv_(void* uplo, void* way, void* n, void* a, void* lda
 	}
 	return;
 }
-
-void flexiblas_chain_zsyconv(void* uplo, void* way, void* n, void* a, void* lda, void* ipiv, void* e, void* info)  __attribute__((alias("flexiblas_chain_zsyconv_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zsyconv(void* uplo, void* way, void* n, void* a, void* lda, void* ipiv, void* e, void* info) __attribute__((alias("flexiblas_chain_zsyconv_")));
+#else
+void flexiblas_chain_zsyconv(void* uplo, void* way, void* n, void* a, void* lda, void* ipiv, void* e, void* info){flexiblas_chain_zsyconv_((void*) uplo, (void*) way, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) e, (void*) info);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(ctrti2,CTRTI2)(char* uplo, char* diag, blasint* n, float complex*
 #ifdef FLEXIBLAS_ABI_IBM
 void ctrti2_(char* uplo, char* diag, blasint* n, float complex* a, blasint* lda, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ctrti2,CTRTI2)))));
 #else
+#ifndef __APPLE__
 void ctrti2(char* uplo, char* diag, blasint* n, float complex* a, blasint* lda, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ctrti2,CTRTI2)))));
+#else
+void ctrti2(char* uplo, char* diag, blasint* n, float complex* a, blasint* lda, blasint* info){ FC_GLOBAL(ctrti2,CTRTI2)((void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_ctrti2_(void* uplo, void* diag, void* n, void* a, void* lda,
 
 	return;
 }
-
-void flexiblas_real_ctrti2(void* uplo, void* diag, void* n, void* a, void* lda, void* info)  __attribute__((alias("flexiblas_real_ctrti2_")));
-
+#ifndef __APPLE__
+void flexiblas_real_ctrti2(void* uplo, void* diag, void* n, void* a, void* lda, void* info) __attribute__((alias("flexiblas_real_ctrti2_")));
+#else
+void flexiblas_real_ctrti2(void* uplo, void* diag, void* n, void* a, void* lda, void* info){flexiblas_real_ctrti2_((void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_ctrti2_(void* uplo, void* diag, void* n, void* a, void* lda
 	}
 	return;
 }
-
-void flexiblas_chain_ctrti2(void* uplo, void* diag, void* n, void* a, void* lda, void* info)  __attribute__((alias("flexiblas_chain_ctrti2_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_ctrti2(void* uplo, void* diag, void* n, void* a, void* lda, void* info) __attribute__((alias("flexiblas_chain_ctrti2_")));
+#else
+void flexiblas_chain_ctrti2(void* uplo, void* diag, void* n, void* a, void* lda, void* info){flexiblas_chain_ctrti2_((void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) info);}
+#endif
 
 
 

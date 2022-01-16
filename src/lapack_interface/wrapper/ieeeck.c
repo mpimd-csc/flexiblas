@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ int FC_GLOBAL(ieeeck,IEEECK)(blasint* ispec, float* zero, float* one)
 #ifdef FLEXIBLAS_ABI_IBM
 int ieeeck_(blasint* ispec, float* zero, float* one) __attribute__((alias(MTS(FC_GLOBAL(ieeeck,IEEECK)))));
 #else
+#ifndef __APPLE__
 int ieeeck(blasint* ispec, float* zero, float* one) __attribute__((alias(MTS(FC_GLOBAL(ieeeck,IEEECK)))));
+#else
+int ieeeck(blasint* ispec, float* zero, float* one){ return FC_GLOBAL(ieeeck,IEEECK)((void*) ispec, (void*) zero, (void*) one); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ blasint flexiblas_real_ieeeck_(void* ispec, void* zero, void* one)
 
 	return ret ;
 }
-
-blasint flexiblas_real_ieeeck(void* ispec, void* zero, void* one)  __attribute__((alias("flexiblas_real_ieeeck_")));
-
+#ifndef __APPLE__
+blasint flexiblas_real_ieeeck(void* ispec, void* zero, void* one) __attribute__((alias("flexiblas_real_ieeeck_")));
+#else
+blasint flexiblas_real_ieeeck(void* ispec, void* zero, void* one){return flexiblas_real_ieeeck_((void*) ispec, (void*) zero, (void*) one);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ blasint flexiblas_chain_ieeeck_(void* ispec, void* zero, void* one)
 	}
 	return ret ;
 }
-
-blasint flexiblas_chain_ieeeck(void* ispec, void* zero, void* one)  __attribute__((alias("flexiblas_chain_ieeeck_")));
-
+#ifndef __APPLE__
+blasint flexiblas_chain_ieeeck(void* ispec, void* zero, void* one) __attribute__((alias("flexiblas_chain_ieeeck_")));
+#else
+blasint flexiblas_chain_ieeeck(void* ispec, void* zero, void* one){return flexiblas_chain_ieeeck_((void*) ispec, (void*) zero, (void*) one);}
+#endif
 
 
 

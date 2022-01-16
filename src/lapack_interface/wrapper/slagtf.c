@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(slagtf,SLAGTF)(blasint* n, float* a, float* lambda, float* b, flo
 #ifdef FLEXIBLAS_ABI_IBM
 void slagtf_(blasint* n, float* a, float* lambda, float* b, float* c, float* tol, float* d, blasint* in, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(slagtf,SLAGTF)))));
 #else
+#ifndef __APPLE__
 void slagtf(blasint* n, float* a, float* lambda, float* b, float* c, float* tol, float* d, blasint* in, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(slagtf,SLAGTF)))));
+#else
+void slagtf(blasint* n, float* a, float* lambda, float* b, float* c, float* tol, float* d, blasint* in, blasint* info){ FC_GLOBAL(slagtf,SLAGTF)((void*) n, (void*) a, (void*) lambda, (void*) b, (void*) c, (void*) tol, (void*) d, (void*) in, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_slagtf_(void* n, void* a, void* lambda, void* b, void* c, vo
 
 	return;
 }
-
-void flexiblas_real_slagtf(void* n, void* a, void* lambda, void* b, void* c, void* tol, void* d, void* in, void* info)  __attribute__((alias("flexiblas_real_slagtf_")));
-
+#ifndef __APPLE__
+void flexiblas_real_slagtf(void* n, void* a, void* lambda, void* b, void* c, void* tol, void* d, void* in, void* info) __attribute__((alias("flexiblas_real_slagtf_")));
+#else
+void flexiblas_real_slagtf(void* n, void* a, void* lambda, void* b, void* c, void* tol, void* d, void* in, void* info){flexiblas_real_slagtf_((void*) n, (void*) a, (void*) lambda, (void*) b, (void*) c, (void*) tol, (void*) d, (void*) in, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_slagtf_(void* n, void* a, void* lambda, void* b, void* c, v
 	}
 	return;
 }
-
-void flexiblas_chain_slagtf(void* n, void* a, void* lambda, void* b, void* c, void* tol, void* d, void* in, void* info)  __attribute__((alias("flexiblas_chain_slagtf_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_slagtf(void* n, void* a, void* lambda, void* b, void* c, void* tol, void* d, void* in, void* info) __attribute__((alias("flexiblas_chain_slagtf_")));
+#else
+void flexiblas_chain_slagtf(void* n, void* a, void* lambda, void* b, void* c, void* tol, void* d, void* in, void* info){flexiblas_chain_slagtf_((void*) n, (void*) a, (void*) lambda, (void*) b, (void*) c, (void*) tol, (void*) d, (void*) in, (void*) info);}
+#endif
 
 
 

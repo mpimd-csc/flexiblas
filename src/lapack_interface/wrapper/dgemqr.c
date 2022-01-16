@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dgemqr,DGEMQR)(char* side, char* trans, blasint* m, blasint* n, b
 #ifdef FLEXIBLAS_ABI_IBM
 void dgemqr_(char* side, char* trans, blasint* m, blasint* n, blasint* k, double* a, blasint* lda, double* t, blasint* tsize, double* c, blasint* ldc, double* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dgemqr,DGEMQR)))));
 #else
+#ifndef __APPLE__
 void dgemqr(char* side, char* trans, blasint* m, blasint* n, blasint* k, double* a, blasint* lda, double* t, blasint* tsize, double* c, blasint* ldc, double* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dgemqr,DGEMQR)))));
+#else
+void dgemqr(char* side, char* trans, blasint* m, blasint* n, blasint* k, double* a, blasint* lda, double* t, blasint* tsize, double* c, blasint* ldc, double* work, blasint* lwork, blasint* info){ FC_GLOBAL(dgemqr,DGEMQR)((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) t, (void*) tsize, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dgemqr_(void* side, void* trans, void* m, void* n, void* k, 
 
 	return;
 }
-
-void flexiblas_real_dgemqr(void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* t, void* tsize, void* c, void* ldc, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_real_dgemqr_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dgemqr(void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* t, void* tsize, void* c, void* ldc, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_dgemqr_")));
+#else
+void flexiblas_real_dgemqr(void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* t, void* tsize, void* c, void* ldc, void* work, void* lwork, void* info){flexiblas_real_dgemqr_((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) t, (void*) tsize, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dgemqr_(void* side, void* trans, void* m, void* n, void* k,
 	}
 	return;
 }
-
-void flexiblas_chain_dgemqr(void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* t, void* tsize, void* c, void* ldc, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_chain_dgemqr_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dgemqr(void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* t, void* tsize, void* c, void* ldc, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_dgemqr_")));
+#else
+void flexiblas_chain_dgemqr(void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* t, void* tsize, void* c, void* ldc, void* work, void* lwork, void* info){flexiblas_chain_dgemqr_((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) t, (void*) tsize, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 

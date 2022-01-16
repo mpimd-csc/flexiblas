@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
 
 
@@ -60,7 +60,7 @@
 
 
 /*-----------------------------------------------------------------------------
- *  Set the numner of threads from C
+ *  Set the number of threads from C
  *-----------------------------------------------------------------------------*/
 void flexiblas_set_num_threads(int num)
 {
@@ -70,7 +70,8 @@ void flexiblas_set_num_threads(int num)
             (unsigned long) current_backend->set_num_threads_function[1]);
     if ( current_backend->set_num_threads_function[0] == NULL
          && current_backend->set_num_threads_function[1] != NULL ) {
-        flexiblas_set_num_threads_(&num);
+        Int nx = num;
+        flexiblas_set_num_threads_(&nx);
         return;
     }
     fn = current_backend->set_num_threads_function[0];
@@ -79,11 +80,18 @@ void flexiblas_set_num_threads(int num)
     return;
 }
 
+#ifndef __APPLE__
 void openblas_set_num_threads(int num) __attribute__((weak,alias("flexiblas_set_num_threads")));
 void mkl_set_num_threads(int num) __attribute__((weak,alias("flexiblas_set_num_threads")));
 void acmlsetnumthreads(int num) __attribute__((weak,alias("flexiblas_set_num_threads")));
 void blas_set_num_threads(int num) __attribute__((weak,alias("flexiblas_set_num_threads")));
+#else
+void openblas_set_num_threads(int num) { flexiblas_set_num_threads(num); }
+void mkl_set_num_threads(int num) { flexiblas_set_num_threads(num); }
+void acmlsetnumthreads(int num) { flexiblas_set_num_threads(num); }
+void blas_set_num_threads(int num)  { flexiblas_set_num_threads(num); }
 
+#endif
 /* BLIS Interface */
 void bli_thread_set_num_threads(Int num) {
     int _num = num;
@@ -109,10 +117,17 @@ int flexiblas_get_num_threads()
     return fn ();
 }
 
+#ifndef __APPLE__
 int  openblas_get_num_threads() __attribute__((weak,alias("flexiblas_get_num_threads")));
 int  mkl_get_num_threads() __attribute__((weak,alias("flexiblas_get_num_threads")));
 int  acmlgetnumthreads() __attribute__((weak,alias("flexiblas_get_num_threads")));
 int  blas_get_num_threads() __attribute__((weak,alias("flexiblas_get_num_threads")));
+#else
+int  openblas_get_num_threads() { return flexiblas_get_num_threads(); }
+int  mkl_get_num_threads()	{ return flexiblas_get_num_threads(); }
+int  acmlgetnumthreads() 	{ return flexiblas_get_num_threads(); }
+int  blas_get_num_threads() 	{ return flexiblas_get_num_threads(); }
+#endif
 
 /*  Blis Interface  */
 Int bli_thread_get_num_threads() {
@@ -124,7 +139,7 @@ Int bli_thread_get_num_threads() {
 /*-----------------------------------------------------------------------------
  *  Set the number of threads from Fortran
  *-----------------------------------------------------------------------------*/
-void flexiblas_set_num_threads_(int* num)
+void flexiblas_set_num_threads_(Int* num)
 {
     Int num_threads;
     flexiblas_set_num_threads_function_t fn;
@@ -146,11 +161,18 @@ void flexiblas_set_num_threads_(int* num)
     return;
 }
 
-void openblas_set_num_threads_(int *num) __attribute__((weak, alias("flexiblas_set_num_threads_")));
-void mkl_set_num_threads_(int *num) __attribute__((weak,alias("flexiblas_set_num_threads_")));
-void acmlsetnumthreads_(int *num) __attribute__((weak,alias("flexiblas_set_num_threads_")));
-void blas_set_num_threads_(int *num) __attribute__((weak,alias("flexiblas_set_num_threads_")));
+#ifndef __APPLE__
+void openblas_set_num_threads_(Int *num) __attribute__((weak, alias("flexiblas_set_num_threads_")));
+void mkl_set_num_threads_(Int *num) __attribute__((weak,alias("flexiblas_set_num_threads_")));
+void acmlsetnumthreads_(Int *num) __attribute__((weak,alias("flexiblas_set_num_threads_")));
+void blas_set_num_threads_(Int *num) __attribute__((weak,alias("flexiblas_set_num_threads_")));
+#else
+void openblas_set_num_threads_(Int *num) { flexiblas_set_num_threads_(num); }
+void mkl_set_num_threads_(Int *num)      { flexiblas_set_num_threads_(num); }
+void acmlsetnumthreads_(Int *num)        { flexiblas_set_num_threads_(num); }
+void blas_set_num_threads_(Int *num)     { flexiblas_set_num_threads_(num); }
 
+#endif
 
 /*-----------------------------------------------------------------------------
  *  Get number of threads from fortran
@@ -171,11 +193,18 @@ Int flexiblas_get_num_threads_()
     return fn ();
 }
 
+#ifndef __APPLE__
 Int  openblas_get_num_threads_() __attribute__((weak, alias("flexiblas_get_num_threads_")));
 Int  mkl_get_num_threads_() __attribute__((weak,alias("flexiblas_get_num_threads_")));
 Int  acmlgetnumthreads_() __attribute__((weak,alias("flexiblas_get_num_threads_")));
 Int  blas_get_num_threads_() __attribute__((weak,alias("flexiblas_get_num_threads_")));
+#else
+Int  openblas_get_num_threads_() { return flexiblas_get_num_threads_(); }
+Int  mkl_get_num_threads_()      { return flexiblas_get_num_threads_(); }
+Int  acmlgetnumthreads_()        { return flexiblas_get_num_threads_(); }
+Int  blas_get_num_threads_()     { return flexiblas_get_num_threads_(); }
 
+#endif
 
 
 /*-----------------------------------------------------------------------------

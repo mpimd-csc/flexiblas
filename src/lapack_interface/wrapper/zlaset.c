@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zlaset,ZLASET)(char* uplo, blasint* m, blasint* n, double complex
 #ifdef FLEXIBLAS_ABI_IBM
 void zlaset_(char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* beta, double complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(zlaset,ZLASET)))));
 #else
+#ifndef __APPLE__
 void zlaset(char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* beta, double complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(zlaset,ZLASET)))));
+#else
+void zlaset(char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* beta, double complex* a, blasint* lda){ FC_GLOBAL(zlaset,ZLASET)((void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) beta, (void*) a, (void*) lda); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zlaset_(void* uplo, void* m, void* n, void* alpha, void* bet
 
 	return;
 }
-
-void flexiblas_real_zlaset(void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda)  __attribute__((alias("flexiblas_real_zlaset_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zlaset(void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda) __attribute__((alias("flexiblas_real_zlaset_")));
+#else
+void flexiblas_real_zlaset(void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda){flexiblas_real_zlaset_((void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) beta, (void*) a, (void*) lda);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zlaset_(void* uplo, void* m, void* n, void* alpha, void* be
 	}
 	return;
 }
-
-void flexiblas_chain_zlaset(void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda)  __attribute__((alias("flexiblas_chain_zlaset_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zlaset(void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda) __attribute__((alias("flexiblas_chain_zlaset_")));
+#else
+void flexiblas_chain_zlaset(void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda){flexiblas_chain_zlaset_((void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) beta, (void*) a, (void*) lda);}
+#endif
 
 
 

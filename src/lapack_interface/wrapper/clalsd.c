@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(clalsd,CLALSD)(char* uplo, blasint* smlsiz, blasint* n, blasint* 
 #ifdef FLEXIBLAS_ABI_IBM
 void clalsd_(char* uplo, blasint* smlsiz, blasint* n, blasint* nrhs, float* d, float* e, float complex* b, blasint* ldb, float* rcond, blasint* rank_bn, float complex* work, float* rwork, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(clalsd,CLALSD)))));
 #else
+#ifndef __APPLE__
 void clalsd(char* uplo, blasint* smlsiz, blasint* n, blasint* nrhs, float* d, float* e, float complex* b, blasint* ldb, float* rcond, blasint* rank_bn, float complex* work, float* rwork, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(clalsd,CLALSD)))));
+#else
+void clalsd(char* uplo, blasint* smlsiz, blasint* n, blasint* nrhs, float* d, float* e, float complex* b, blasint* ldb, float* rcond, blasint* rank_bn, float complex* work, float* rwork, blasint* iwork, blasint* info){ FC_GLOBAL(clalsd,CLALSD)((void*) uplo, (void*) smlsiz, (void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) b, (void*) ldb, (void*) rcond, (void*) rank_bn, (void*) work, (void*) rwork, (void*) iwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_clalsd_(void* uplo, void* smlsiz, void* n, void* nrhs, void*
 
 	return;
 }
-
-void flexiblas_real_clalsd(void* uplo, void* smlsiz, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* rcond, void* rank_bn, void* work, void* rwork, void* iwork, void* info)  __attribute__((alias("flexiblas_real_clalsd_")));
-
+#ifndef __APPLE__
+void flexiblas_real_clalsd(void* uplo, void* smlsiz, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* rcond, void* rank_bn, void* work, void* rwork, void* iwork, void* info) __attribute__((alias("flexiblas_real_clalsd_")));
+#else
+void flexiblas_real_clalsd(void* uplo, void* smlsiz, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* rcond, void* rank_bn, void* work, void* rwork, void* iwork, void* info){flexiblas_real_clalsd_((void*) uplo, (void*) smlsiz, (void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) b, (void*) ldb, (void*) rcond, (void*) rank_bn, (void*) work, (void*) rwork, (void*) iwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_clalsd_(void* uplo, void* smlsiz, void* n, void* nrhs, void
 	}
 	return;
 }
-
-void flexiblas_chain_clalsd(void* uplo, void* smlsiz, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* rcond, void* rank_bn, void* work, void* rwork, void* iwork, void* info)  __attribute__((alias("flexiblas_chain_clalsd_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_clalsd(void* uplo, void* smlsiz, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* rcond, void* rank_bn, void* work, void* rwork, void* iwork, void* info) __attribute__((alias("flexiblas_chain_clalsd_")));
+#else
+void flexiblas_chain_clalsd(void* uplo, void* smlsiz, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* rcond, void* rank_bn, void* work, void* rwork, void* iwork, void* info){flexiblas_chain_clalsd_((void*) uplo, (void*) smlsiz, (void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) b, (void*) ldb, (void*) rcond, (void*) rank_bn, (void*) work, (void*) rwork, (void*) iwork, (void*) info);}
+#endif
 
 
 

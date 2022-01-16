@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dspgst,DSPGST)(blasint* itype, char* uplo, blasint* n, double* ap
 #ifdef FLEXIBLAS_ABI_IBM
 void dspgst_(blasint* itype, char* uplo, blasint* n, double* ap, double* bp, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dspgst,DSPGST)))));
 #else
+#ifndef __APPLE__
 void dspgst(blasint* itype, char* uplo, blasint* n, double* ap, double* bp, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dspgst,DSPGST)))));
+#else
+void dspgst(blasint* itype, char* uplo, blasint* n, double* ap, double* bp, blasint* info){ FC_GLOBAL(dspgst,DSPGST)((void*) itype, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dspgst_(void* itype, void* uplo, void* n, void* ap, void* bp
 
 	return;
 }
-
-void flexiblas_real_dspgst(void* itype, void* uplo, void* n, void* ap, void* bp, void* info)  __attribute__((alias("flexiblas_real_dspgst_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dspgst(void* itype, void* uplo, void* n, void* ap, void* bp, void* info) __attribute__((alias("flexiblas_real_dspgst_")));
+#else
+void flexiblas_real_dspgst(void* itype, void* uplo, void* n, void* ap, void* bp, void* info){flexiblas_real_dspgst_((void*) itype, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dspgst_(void* itype, void* uplo, void* n, void* ap, void* b
 	}
 	return;
 }
-
-void flexiblas_chain_dspgst(void* itype, void* uplo, void* n, void* ap, void* bp, void* info)  __attribute__((alias("flexiblas_chain_dspgst_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dspgst(void* itype, void* uplo, void* n, void* ap, void* bp, void* info) __attribute__((alias("flexiblas_chain_dspgst_")));
+#else
+void flexiblas_chain_dspgst(void* itype, void* uplo, void* n, void* ap, void* bp, void* info){flexiblas_chain_dspgst_((void*) itype, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) info);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
 
 
@@ -75,11 +75,12 @@ logical lsame_(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len)
 logical lsamen_(pint * n, char *ca, char *cb, ftnlen ca_len, ftnlen cb_len)
     __attribute__((alias(MTS(FC_GLOBAL(lsamen,LSAMEN)))));
 #else
+#ifndef __APPLE__
 logical lsame(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len)
     __attribute__((alias(MTS(FC_GLOBAL(lsame,LSAME)))));
 logical lsamen(pint * n, char *ca, char *cb, ftnlen ca_len, ftnlen cb_len)
     __attribute__((alias(MTS(FC_GLOBAL(lsamen,LSAMEN)))));
-
+#endif 
 #endif
 
 logical FC_GLOBAL(lsame,LSAME)(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len)

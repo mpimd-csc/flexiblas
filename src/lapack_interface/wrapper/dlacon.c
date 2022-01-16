@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlacon,DLACON)(blasint* n, double* v, double* x, blasint* isgn, d
 #ifdef FLEXIBLAS_ABI_IBM
 void dlacon_(blasint* n, double* v, double* x, blasint* isgn, double* est, blasint* kase) __attribute__((alias(MTS(FC_GLOBAL(dlacon,DLACON)))));
 #else
+#ifndef __APPLE__
 void dlacon(blasint* n, double* v, double* x, blasint* isgn, double* est, blasint* kase) __attribute__((alias(MTS(FC_GLOBAL(dlacon,DLACON)))));
+#else
+void dlacon(blasint* n, double* v, double* x, blasint* isgn, double* est, blasint* kase){ FC_GLOBAL(dlacon,DLACON)((void*) n, (void*) v, (void*) x, (void*) isgn, (void*) est, (void*) kase); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlacon_(void* n, void* v, void* x, void* isgn, void* est, vo
 
 	return;
 }
-
-void flexiblas_real_dlacon(void* n, void* v, void* x, void* isgn, void* est, void* kase)  __attribute__((alias("flexiblas_real_dlacon_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlacon(void* n, void* v, void* x, void* isgn, void* est, void* kase) __attribute__((alias("flexiblas_real_dlacon_")));
+#else
+void flexiblas_real_dlacon(void* n, void* v, void* x, void* isgn, void* est, void* kase){flexiblas_real_dlacon_((void*) n, (void*) v, (void*) x, (void*) isgn, (void*) est, (void*) kase);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlacon_(void* n, void* v, void* x, void* isgn, void* est, v
 	}
 	return;
 }
-
-void flexiblas_chain_dlacon(void* n, void* v, void* x, void* isgn, void* est, void* kase)  __attribute__((alias("flexiblas_chain_dlacon_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlacon(void* n, void* v, void* x, void* isgn, void* est, void* kase) __attribute__((alias("flexiblas_chain_dlacon_")));
+#else
+void flexiblas_chain_dlacon(void* n, void* v, void* x, void* isgn, void* est, void* kase){flexiblas_chain_dlacon_((void*) n, (void*) v, (void*) x, (void*) isgn, (void*) est, (void*) kase);}
+#endif
 
 
 

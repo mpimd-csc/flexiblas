@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dtrexc,DTREXC)(char* compq, blasint* n, double* t, blasint* ldt, 
 #ifdef FLEXIBLAS_ABI_IBM
 void dtrexc_(char* compq, blasint* n, double* t, blasint* ldt, double* q, blasint* ldq, blasint* ifst, blasint* ilst, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dtrexc,DTREXC)))));
 #else
+#ifndef __APPLE__
 void dtrexc(char* compq, blasint* n, double* t, blasint* ldt, double* q, blasint* ldq, blasint* ifst, blasint* ilst, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dtrexc,DTREXC)))));
+#else
+void dtrexc(char* compq, blasint* n, double* t, blasint* ldt, double* q, blasint* ldq, blasint* ifst, blasint* ilst, double* work, blasint* info){ FC_GLOBAL(dtrexc,DTREXC)((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dtrexc_(void* compq, void* n, void* t, void* ldt, void* q, v
 
 	return;
 }
-
-void flexiblas_real_dtrexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info)  __attribute__((alias("flexiblas_real_dtrexc_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dtrexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info) __attribute__((alias("flexiblas_real_dtrexc_")));
+#else
+void flexiblas_real_dtrexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info){flexiblas_real_dtrexc_((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dtrexc_(void* compq, void* n, void* t, void* ldt, void* q, 
 	}
 	return;
 }
-
-void flexiblas_chain_dtrexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info)  __attribute__((alias("flexiblas_chain_dtrexc_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dtrexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info) __attribute__((alias("flexiblas_chain_dtrexc_")));
+#else
+void flexiblas_chain_dtrexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info){flexiblas_chain_dtrexc_((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) work, (void*) info);}
+#endif
 
 
 

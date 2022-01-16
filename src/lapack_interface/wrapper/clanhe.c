@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ float FC_GLOBAL(clanhe,CLANHE)(char* norm, char* uplo, blasint* n, float complex
 #ifdef FLEXIBLAS_ABI_IBM
 float clanhe_(char* norm, char* uplo, blasint* n, float complex* a, blasint* lda, float* work) __attribute__((alias(MTS(FC_GLOBAL(clanhe,CLANHE)))));
 #else
+#ifndef __APPLE__
 float clanhe(char* norm, char* uplo, blasint* n, float complex* a, blasint* lda, float* work) __attribute__((alias(MTS(FC_GLOBAL(clanhe,CLANHE)))));
+#else
+float clanhe(char* norm, char* uplo, blasint* n, float complex* a, blasint* lda, float* work){ return FC_GLOBAL(clanhe,CLANHE)((void*) norm, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) work); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ float flexiblas_real_clanhe_(void* norm, void* uplo, void* n, void* a, void* lda
 
 	return ret ;
 }
-
-float flexiblas_real_clanhe(void* norm, void* uplo, void* n, void* a, void* lda, void* work)  __attribute__((alias("flexiblas_real_clanhe_")));
-
+#ifndef __APPLE__
+float flexiblas_real_clanhe(void* norm, void* uplo, void* n, void* a, void* lda, void* work) __attribute__((alias("flexiblas_real_clanhe_")));
+#else
+float flexiblas_real_clanhe(void* norm, void* uplo, void* n, void* a, void* lda, void* work){return flexiblas_real_clanhe_((void*) norm, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) work);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ float flexiblas_chain_clanhe_(void* norm, void* uplo, void* n, void* a, void* ld
 	}
 	return ret ;
 }
-
-float flexiblas_chain_clanhe(void* norm, void* uplo, void* n, void* a, void* lda, void* work)  __attribute__((alias("flexiblas_chain_clanhe_")));
-
+#ifndef __APPLE__
+float flexiblas_chain_clanhe(void* norm, void* uplo, void* n, void* a, void* lda, void* work) __attribute__((alias("flexiblas_chain_clanhe_")));
+#else
+float flexiblas_chain_clanhe(void* norm, void* uplo, void* n, void* a, void* lda, void* work){return flexiblas_chain_clanhe_((void*) norm, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) work);}
+#endif
 
 
 

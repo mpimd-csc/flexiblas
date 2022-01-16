@@ -221,7 +221,15 @@ ENDIF()
 #
 IF ( LAPACK )
 	# 3.7.1 and 3.7.0 share the same api/abi
-	IF(LAPACK_API_VERSION STREQUAL "3.9.0")
+	IF(LAPACK_API_VERSION STREQUAL "3.10.0")
+		SET(_LAPACK_FILE_SUFFIX 3_10_0)
+	ELSEIF (LAPACK_API_VERSION STREQUAL "3.10.0-wodprc")
+		SET(_LAPACK_FILE_SUFFIX 3_10_0-wodprc) #
+    ELSEIF(LAPACK_API_VERSION STREQUAL "3.9.1")
+		SET(_LAPACK_FILE_SUFFIX 3_9_1)
+	ELSEIF (LAPACK_API_VERSION STREQUAL "3.9.1-wodprc")
+		SET(_LAPACK_FILE_SUFFIX 3_9_1-wodprc) #
+    ELSEIF(LAPACK_API_VERSION STREQUAL "3.9.0")
 		SET(_LAPACK_FILE_SUFFIX 3_9_0)
 	ELSEIF (LAPACK_API_VERSION STREQUAL "3.9.0-wodprc")
 		SET(_LAPACK_FILE_SUFFIX 3_9_0-wodprc) #
@@ -272,22 +280,33 @@ IF ( LAPACK )
 
 ENDIF()
 
+FIND_PACKAGE(OpenMP)
 
 INCLUDE_DIRECTORIES(${INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
-add_library(flexiblas ${SRC}) #  $<TARGET_OBJECTS:cscutils_src>)
-TARGET_LINK_LIBRARIES(flexiblas ${LIBS} cscutils )
+add_library(flexiblas SHARED ${SRC}) #  $<TARGET_OBJECTS:cscutils_src>)
+add_executable(flexiblas-tool flexiblas_tool.c tool/hookhandling.c tool/blashandling.c ${COMMON_SRC} ) # $<TARGET_OBJECTS:cscutils_src>)
 
-add_library(flexiblas_mgmt ${FLEXIBLAS_MGMT_SRC}) # $<TARGET_OBJECTS:cscutils_src>)
+IF (LINK_OPENMP)
+    TARGET_LINK_LIBRARIES(flexiblas ${LIBS} cscutils OpenMP::OpenMP_C)
+    TARGET_LINK_LIBRARIES(flexiblas-tool PRIVATE flexiblas_mgmt ${LIBS} cscutils OpenMP::OpenMP_C)
+ELSE()
+    TARGET_LINK_LIBRARIES(flexiblas ${LIBS} cscutils) # OpenMP::OpenMP_C)
+    TARGET_LINK_LIBRARIES(flexiblas-tool PRIVATE flexiblas_mgmt ${LIBS} cscutils) # OpenMP::OpenMP_C)
+ENDIF()
+
+
+add_library(flexiblas_mgmt SHARED ${FLEXIBLAS_MGMT_SRC}) # $<TARGET_OBJECTS:cscutils_src>)
 TARGET_LINK_LIBRARIES(flexiblas_mgmt ${LIBS} cscutils )
 
-add_library(flexiblas_api ${FLEXIBLAS_API_SRC} ) # $<TARGET_OBJECTS:cscutils_src>)
+add_library(flexiblas_api SHARED ${FLEXIBLAS_API_SRC} ) # $<TARGET_OBJECTS:cscutils_src>)
 TARGET_LINK_LIBRARIES(flexiblas_api ${DL_LIB} cscutils c)
 
 set(GENERIC_LIB_VERSION "3.0")
 set(GENERIC_LIB_SOVERSION "3")
 
-add_executable(flexiblas-tool flexiblas_tool.c tool/hookhandling.c tool/blashandling.c ${COMMON_SRC} ) # $<TARGET_OBJECTS:cscutils_src>)
-TARGET_LINK_LIBRARIES(flexiblas-tool PRIVATE flexiblas_mgmt ${LIBS} cscutils)
+
+add_executable(flexiblas-config flexiblas-config.c)
+
 
 IF ( NOT ${CMAKE_C_COMPILER_ID} MATCHES "XL")
  	SET_TARGET_PROPERTIES(flexiblas PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} LINK_FLAGS "-Bsymbolic" )
@@ -311,6 +330,7 @@ IF(INTEGER8 STREQUAL ON)
 	SET_TARGET_PROPERTIES(flexiblas_api  PROPERTIES OUTPUT_NAME ${flexiblasname}_api)
 	SET_TARGET_PROPERTIES(flexiblas_mgmt PROPERTIES OUTPUT_NAME ${flexiblasname}_mgmt)
 	SET_TARGET_PROPERTIES(flexiblas-tool PROPERTIES OUTPUT_NAME ${flexiblasname})
+    SET_TARGET_PROPERTIES(flexiblas-config PROPERTIES OUTPUT_NAME ${flexiblas}-config)
 
 	IF (USE_INTERFACE_INTEL)
 		SET_TARGET_PROPERTIES(flexiblas PROPERTIES OUTPUT_NAME ${flexiblasname}_intel)
@@ -325,6 +345,7 @@ install(TARGETS flexiblas_mgmt LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR} 
 install(TARGETS flexiblas_api LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR} ARCHIVE  DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
 
 install(TARGETS flexiblas-tool RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
+install(TARGETS flexiblas-config RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
 
 INCLUDE(CheckBlasZdotcMKL)
 INCLUDE(CheckFortranFunctionExists)
@@ -429,6 +450,8 @@ MACRO(BuildFindPackage VENDOR BACKEND_CODE)
     	MESSAGE(STATUS "Build BLAS interface: ${VENDOR}")
         MESSAGE(STATUS "Libs: ${${VENDOR}_LIBRARY}")
         BuildBackendBlas(${VENDOR} ${BACKEND_CODE})
+    ELSEIF(NOT ${VENDOR}_FOUND)
+        MESSAGE(STATUS "${VENDOR} not found.")
     ELSE()
         MESSAGE(STATUS "Found ${VENDOR} but deactivated manually.")
     ENDIF()
@@ -444,6 +467,9 @@ MACRO(Build_Extra_BLAS VENDOR BACKEND_CODE)
 	UNSET(BLAS_LINKER_FLAGS CACHE)
 	SET(BLA_VENDOR ${VENDOR})
 	STRING(TOUPPER ${VENDOR} uvendor)
+	IF( "${uvendor}" STREQUAL "APPLE")
+		SET (uvendor APPLEACCELERATE)
+	ENDIF()
 	IF (DEFINED ${uvendor})
 		IF (${uvendor} STREQUAL OFF)
 			SET(BLAS_FOUND OFF)
@@ -476,7 +502,7 @@ MACRO(Build_Extra_BLAS VENDOR BACKEND_CODE)
 		UNSET(DAXPY CACHE)
 		UNSET(MKL_OMATCOPY CACHE)
 		UNSET(CBLAS_DAXPY CACHE)
-		#Check_Fortran_Function_Exists(SCABS1 SCABS1_EXIST)
+		Check_Fortran_Function_Exists(SCABS1 SCABS1_EXIST)
 		Check_Function_Exists(flexiblas_exit ISFLEXIBLAS)
 		Check_Fortran_Function_Exists(DAXPY  DAXPY)
 		Check_Fortran_Function_Exists(MKL_DOMATCOPY MKL_OMATCOPY)
@@ -500,10 +526,10 @@ MACRO(Build_Extra_BLAS VENDOR BACKEND_CODE)
 				MESSAGE(STATUS "${VENDOR} uses Intel ZDOTC")
 				SET(EXTRA_FLAGS "${EXTRA_FLAGS} -DZDOTC_MKL")
 			ENDIF (ZDOTC_MKL)
-			# IF (NOT SCABS1_EXIST)
-			#	MESSAGE(STATUS "${VENDOR} does not provide a scabs1 function")
-			#	SET(EXTRA_FLAGS "${EXTRA_FLAGS} -DSCABS_MISSING")
-			# ENDIF(NOT SCABS1_EXIST)
+			IF (NOT SCABS1_EXIST)
+				MESSAGE(STATUS "${VENDOR} does not provide a scabs1 function")
+				SET(EXTRA_FLAGS "${EXTRA_FLAGS} -DSCABS_MISSING")
+			ENDIF(NOT SCABS1_EXIST)
 			IF(CBLAS_DAXPY)
 				IF (CBLAS STREQUAL ON)
 					MESSAGE(STATUS "Add CBLAS in dummy library")
@@ -519,7 +545,7 @@ MACRO(Build_Extra_BLAS VENDOR BACKEND_CODE)
 			SET_TARGET_PROPERTIES(flexiblas_${ivendor} PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS}")
 			# SET_TARGET_PROPERTIES(blas_${ivendor} PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS}" LINK_FLAGS "${BLAS_LINKER_FLAGS}")
 
-			IF (CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+			IF (CMAKE_C_COMPILER_ID STREQUAL "GNU")
 				SET(BLAS_LIBRARIES ${BLAS_LIBRARIES} gfortran)
 			ENDIF()
 			TARGET_LINK_LIBRARIES(flexiblas_${ivendor} ${BLAS_LIBRARIES})
@@ -598,14 +624,7 @@ ELSE()
 
 ENDIF()
 
-# Build_Extra_BLAS(Goto 		backends/generic/backend.c)
-# Build_Extra_BLAS(OpenBLAS 	backends/generic/backend.c)
-# Build_Extra_BLAS(OpenBLAS-PThreads 	backends/generic/backend.c)
-# Build_Extra_BLAS(OpenBLAS-OpenMP 	backends/generic/backend.c)
 Build_Extra_BLAS(ATLAS  	backends/generic/backend.c)
-
-# Build_Extra_BLAS(ACML 		backends/generic/backend.c)
-# Build_Extra_BLAS(ACML_MP 	backends/amd_acml_mp/backend.c)
 Build_Extra_BLAS(Apple          backends/generic/backend.c)
 ENDIF()
 
@@ -630,7 +649,7 @@ ENDIF()
 #
 # MKL Custom
 #
-IF ( MKL_CUSTOM STREQUAL ON)
+IF ( MKL_BUILDER STREQUAL ON)
 	MESSAGE(STATUS "Build custom MKL from MKLROOT = $ENV{MKLROOT}")
 	IF(NOT DEFINED ENV{MKLROOT})
 		MESSAGE(FATAL_ERROR "MKLROOT must be set when building MKL backends.")
@@ -661,9 +680,9 @@ IF ( MKL_CUSTOM STREQUAL ON)
 	ADD_LIBRARY(flexiblas_intel_mkl_seq SHARED backends/intel_mkl/backend.c)
 
 	IF (INTEGER8 STREQUAL ON OR BLAS_INTERFACE64)
-		SET(EXTRA_FLAGS "-DMKL_CUSTOM -DBACKEND_INTEGER8")
+        SET(EXTRA_FLAGS "-DMKL_BUILDER -DBACKEND_INTEGER8")
 	ELSE ()
-		SET(EXTRA_FLAGS "-DMKL_CUSTOM")
+        SET(EXTRA_FLAGS "-DMKL_BUILDER")
 	ENDIF()
 	SET(EXTRA_FLAGS "${EXTRA_FLAGS} -DZDOTC_MKL")
 	SET_TARGET_PROPERTIES(flexiblas_intel_mkl PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS}")
@@ -675,6 +694,11 @@ IF ( MKL_CUSTOM STREQUAL ON)
 
 	LIST(APPEND EXTRA_BLAS "INTEL_MKL")
 	LIST(APPEND EXTRA_BLAS "INTEL_MKL_SEQ")
+
+    SET(INTEL_MKL_BLAS_LIBRARIES "flexiblas_intel_mkl" PARENT_SCOPE)
+    SET(INTEL_MKL_SEQ_BLAS_LIBRARIES "flexiblas_intel_mkl_seq" PARENT_SCOPE)
+
+
 
 	SET(LIBNAME "${CMAKE_SHARED_LIBRARY_PREFIX}flexiblas_intel_mkl${CMAKE_SHARED_LIBRARY_SUFFIX} ")
 	FILE(APPEND "${CMAKE_BINARY_DIR}/${FLEXIBLASRC}" "[INTEL_MKL]\nlibrary = ${LIBNAME}\n\n")

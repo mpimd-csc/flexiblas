@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(slarzt,SLARZT)(char* direct, char* storev, blasint* n, blasint* k
 #ifdef FLEXIBLAS_ABI_IBM
 void slarzt_(char* direct, char* storev, blasint* n, blasint* k, float* v, blasint* ldv, float* tau, float* t, blasint* ldt) __attribute__((alias(MTS(FC_GLOBAL(slarzt,SLARZT)))));
 #else
+#ifndef __APPLE__
 void slarzt(char* direct, char* storev, blasint* n, blasint* k, float* v, blasint* ldv, float* tau, float* t, blasint* ldt) __attribute__((alias(MTS(FC_GLOBAL(slarzt,SLARZT)))));
+#else
+void slarzt(char* direct, char* storev, blasint* n, blasint* k, float* v, blasint* ldv, float* tau, float* t, blasint* ldt){ FC_GLOBAL(slarzt,SLARZT)((void*) direct, (void*) storev, (void*) n, (void*) k, (void*) v, (void*) ldv, (void*) tau, (void*) t, (void*) ldt); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_slarzt_(void* direct, void* storev, void* n, void* k, void* 
 
 	return;
 }
-
-void flexiblas_real_slarzt(void* direct, void* storev, void* n, void* k, void* v, void* ldv, void* tau, void* t, void* ldt)  __attribute__((alias("flexiblas_real_slarzt_")));
-
+#ifndef __APPLE__
+void flexiblas_real_slarzt(void* direct, void* storev, void* n, void* k, void* v, void* ldv, void* tau, void* t, void* ldt) __attribute__((alias("flexiblas_real_slarzt_")));
+#else
+void flexiblas_real_slarzt(void* direct, void* storev, void* n, void* k, void* v, void* ldv, void* tau, void* t, void* ldt){flexiblas_real_slarzt_((void*) direct, (void*) storev, (void*) n, (void*) k, (void*) v, (void*) ldv, (void*) tau, (void*) t, (void*) ldt);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_slarzt_(void* direct, void* storev, void* n, void* k, void*
 	}
 	return;
 }
-
-void flexiblas_chain_slarzt(void* direct, void* storev, void* n, void* k, void* v, void* ldv, void* tau, void* t, void* ldt)  __attribute__((alias("flexiblas_chain_slarzt_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_slarzt(void* direct, void* storev, void* n, void* k, void* v, void* ldv, void* tau, void* t, void* ldt) __attribute__((alias("flexiblas_chain_slarzt_")));
+#else
+void flexiblas_chain_slarzt(void* direct, void* storev, void* n, void* k, void* v, void* ldv, void* tau, void* t, void* ldt){flexiblas_chain_slarzt_((void*) direct, (void*) storev, (void*) n, (void*) k, (void*) v, (void*) ldv, (void*) tau, (void*) t, (void*) ldt);}
+#endif
 
 
 

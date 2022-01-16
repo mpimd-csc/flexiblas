@@ -40,7 +40,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
 
 
@@ -38548,6 +38548,27 @@ double hook_dlamch(char* cmach)
 
 
 
+extern double flexiblas_chain_dlamc3 (double* a, double* b);
+double hook_dlamc3(double* a, double* b)
+{
+    double v;
+    double helpTime;
+    double helpTimeStop;
+
+    helpTime = flexiblas_wtime();
+
+    v = flexiblas_chain_dlamc3((void*) a, (void*) b);
+
+    helpTimeStop = flexiblas_wtime();
+
+    data->dlamc3.timings[0] += (helpTimeStop - helpTime);
+    data->dlamc3.calls[0]++;
+
+    return v;
+}
+
+
+
 extern double flexiblas_chain_dsecnd ();
 double hook_dsecnd()
 {
@@ -38605,6 +38626,27 @@ float hook_slamch(char* cmach)
 
     data->slamch.timings[0] += (helpTimeStop - helpTime);
     data->slamch.calls[0]++;
+
+    return v;
+}
+
+
+
+extern float flexiblas_chain_slamc3 (float* a, float* b);
+float hook_slamc3(float* a, float* b)
+{
+    float v;
+    double helpTime;
+    double helpTimeStop;
+
+    helpTime = flexiblas_wtime();
+
+    v = flexiblas_chain_slamc3((void*) a, (void*) b);
+
+    helpTimeStop = flexiblas_wtime();
+
+    data->slamc3.timings[0] += (helpTimeStop - helpTime);
+    data->slamc3.calls[0]++;
 
     return v;
 }
@@ -40549,9 +40591,11 @@ void profile_lapack_add(csc_table_t *tab, int col_name, int col_calls, int col_t
     ADD_BLAS_ENTRY(zupgtr);
     ADD_BLAS_ENTRY(zupmtr);
     ADD_BLAS_ENTRY(dlamch);
+    ADD_BLAS_ENTRY(dlamc3);
     ADD_BLAS_ENTRY(dsecnd);
     ADD_BLAS_ENTRY(second);
     ADD_BLAS_ENTRY(slamch);
+    ADD_BLAS_ENTRY(slamc3);
     ADD_BLAS_ENTRY(chetrd_hb2st);
     ADD_BLAS_ENTRY(dsytrd_sb2st);
     ADD_BLAS_ENTRY(iparam2stage);

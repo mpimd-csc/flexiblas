@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlasrt,DLASRT)(char* id, blasint* n, double* d, blasint* info)
 #ifdef FLEXIBLAS_ABI_IBM
 void dlasrt_(char* id, blasint* n, double* d, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlasrt,DLASRT)))));
 #else
+#ifndef __APPLE__
 void dlasrt(char* id, blasint* n, double* d, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlasrt,DLASRT)))));
+#else
+void dlasrt(char* id, blasint* n, double* d, blasint* info){ FC_GLOBAL(dlasrt,DLASRT)((void*) id, (void*) n, (void*) d, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlasrt_(void* id, void* n, void* d, void* info)
 
 	return;
 }
-
-void flexiblas_real_dlasrt(void* id, void* n, void* d, void* info)  __attribute__((alias("flexiblas_real_dlasrt_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlasrt(void* id, void* n, void* d, void* info) __attribute__((alias("flexiblas_real_dlasrt_")));
+#else
+void flexiblas_real_dlasrt(void* id, void* n, void* d, void* info){flexiblas_real_dlasrt_((void*) id, (void*) n, (void*) d, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlasrt_(void* id, void* n, void* d, void* info)
 	}
 	return;
 }
-
-void flexiblas_chain_dlasrt(void* id, void* n, void* d, void* info)  __attribute__((alias("flexiblas_chain_dlasrt_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlasrt(void* id, void* n, void* d, void* info) __attribute__((alias("flexiblas_chain_dlasrt_")));
+#else
+void flexiblas_chain_dlasrt(void* id, void* n, void* d, void* info){flexiblas_chain_dlasrt_((void*) id, (void*) n, (void*) d, (void*) info);}
+#endif
 
 
 

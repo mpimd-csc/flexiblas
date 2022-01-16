@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL_(ssytrf_aa,SSYTRF_AA)(char* uplo, blasint* n, float* a, blasint* 
 #ifdef FLEXIBLAS_ABI_IBM
 void ssytrf_aa_(char* uplo, blasint* n, float* a, blasint* lda, blasint* ipiv, float* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL_(ssytrf_aa,SSYTRF_AA)))));
 #else
+#ifndef __APPLE__
 void ssytrf_aa(char* uplo, blasint* n, float* a, blasint* lda, blasint* ipiv, float* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL_(ssytrf_aa,SSYTRF_AA)))));
+#else
+void ssytrf_aa(char* uplo, blasint* n, float* a, blasint* lda, blasint* ipiv, float* work, blasint* lwork, blasint* info){ FC_GLOBAL_(ssytrf_aa,SSYTRF_AA)((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) lwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_ssytrf_aa_(void* uplo, void* n, void* a, void* lda, void* ip
 
 	return;
 }
-
-void flexiblas_real_ssytrf_aa(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_real_ssytrf_aa_")));
-
+#ifndef __APPLE__
+void flexiblas_real_ssytrf_aa(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_ssytrf_aa_")));
+#else
+void flexiblas_real_ssytrf_aa(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* lwork, void* info){flexiblas_real_ssytrf_aa_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_ssytrf_aa_(void* uplo, void* n, void* a, void* lda, void* i
 	}
 	return;
 }
-
-void flexiblas_chain_ssytrf_aa(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_chain_ssytrf_aa_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_ssytrf_aa(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_ssytrf_aa_")));
+#else
+void flexiblas_chain_ssytrf_aa(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* lwork, void* info){flexiblas_chain_ssytrf_aa_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 

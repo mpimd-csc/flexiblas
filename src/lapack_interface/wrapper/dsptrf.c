@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dsptrf,DSPTRF)(char* uplo, blasint* n, double* ap, blasint* ipiv,
 #ifdef FLEXIBLAS_ABI_IBM
 void dsptrf_(char* uplo, blasint* n, double* ap, blasint* ipiv, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dsptrf,DSPTRF)))));
 #else
+#ifndef __APPLE__
 void dsptrf(char* uplo, blasint* n, double* ap, blasint* ipiv, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dsptrf,DSPTRF)))));
+#else
+void dsptrf(char* uplo, blasint* n, double* ap, blasint* ipiv, blasint* info){ FC_GLOBAL(dsptrf,DSPTRF)((void*) uplo, (void*) n, (void*) ap, (void*) ipiv, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dsptrf_(void* uplo, void* n, void* ap, void* ipiv, void* inf
 
 	return;
 }
-
-void flexiblas_real_dsptrf(void* uplo, void* n, void* ap, void* ipiv, void* info)  __attribute__((alias("flexiblas_real_dsptrf_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dsptrf(void* uplo, void* n, void* ap, void* ipiv, void* info) __attribute__((alias("flexiblas_real_dsptrf_")));
+#else
+void flexiblas_real_dsptrf(void* uplo, void* n, void* ap, void* ipiv, void* info){flexiblas_real_dsptrf_((void*) uplo, (void*) n, (void*) ap, (void*) ipiv, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dsptrf_(void* uplo, void* n, void* ap, void* ipiv, void* in
 	}
 	return;
 }
-
-void flexiblas_chain_dsptrf(void* uplo, void* n, void* ap, void* ipiv, void* info)  __attribute__((alias("flexiblas_chain_dsptrf_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dsptrf(void* uplo, void* n, void* ap, void* ipiv, void* info) __attribute__((alias("flexiblas_chain_dsptrf_")));
+#else
+void flexiblas_chain_dsptrf(void* uplo, void* n, void* ap, void* ipiv, void* info){flexiblas_chain_dsptrf_((void*) uplo, (void*) n, (void*) ap, (void*) ipiv, (void*) info);}
+#endif
 
 
 

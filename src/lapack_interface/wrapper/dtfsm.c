@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dtfsm,DTFSM)(char* transr, char* side, char* uplo, char* trans, c
 #ifdef FLEXIBLAS_ABI_IBM
 void dtfsm_(char* transr, char* side, char* uplo, char* trans, char* diag, blasint* m, blasint* n, double* alpha, double* a, double* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(dtfsm,DTFSM)))));
 #else
+#ifndef __APPLE__
 void dtfsm(char* transr, char* side, char* uplo, char* trans, char* diag, blasint* m, blasint* n, double* alpha, double* a, double* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(dtfsm,DTFSM)))));
+#else
+void dtfsm(char* transr, char* side, char* uplo, char* trans, char* diag, blasint* m, blasint* n, double* alpha, double* a, double* b, blasint* ldb){ FC_GLOBAL(dtfsm,DTFSM)((void*) transr, (void*) side, (void*) uplo, (void*) trans, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) b, (void*) ldb); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dtfsm_(void* transr, void* side, void* uplo, void* trans, vo
 
 	return;
 }
-
-void flexiblas_real_dtfsm(void* transr, void* side, void* uplo, void* trans, void* diag, void* m, void* n, void* alpha, void* a, void* b, void* ldb)  __attribute__((alias("flexiblas_real_dtfsm_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dtfsm(void* transr, void* side, void* uplo, void* trans, void* diag, void* m, void* n, void* alpha, void* a, void* b, void* ldb) __attribute__((alias("flexiblas_real_dtfsm_")));
+#else
+void flexiblas_real_dtfsm(void* transr, void* side, void* uplo, void* trans, void* diag, void* m, void* n, void* alpha, void* a, void* b, void* ldb){flexiblas_real_dtfsm_((void*) transr, (void*) side, (void*) uplo, (void*) trans, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) b, (void*) ldb);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dtfsm_(void* transr, void* side, void* uplo, void* trans, v
 	}
 	return;
 }
-
-void flexiblas_chain_dtfsm(void* transr, void* side, void* uplo, void* trans, void* diag, void* m, void* n, void* alpha, void* a, void* b, void* ldb)  __attribute__((alias("flexiblas_chain_dtfsm_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dtfsm(void* transr, void* side, void* uplo, void* trans, void* diag, void* m, void* n, void* alpha, void* a, void* b, void* ldb) __attribute__((alias("flexiblas_chain_dtfsm_")));
+#else
+void flexiblas_chain_dtfsm(void* transr, void* side, void* uplo, void* trans, void* diag, void* m, void* n, void* alpha, void* a, void* b, void* ldb){flexiblas_chain_dtfsm_((void*) transr, (void*) side, (void*) uplo, (void*) trans, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) b, (void*) ldb);}
+#endif
 
 
 

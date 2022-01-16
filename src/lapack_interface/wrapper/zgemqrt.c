@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zgemqrt,ZGEMQRT)(char* side, char* trans, blasint* m, blasint* n,
 #ifdef FLEXIBLAS_ABI_IBM
 void zgemqrt_(char* side, char* trans, blasint* m, blasint* n, blasint* k, blasint* nb, double complex* v, blasint* ldv, double complex* t, blasint* ldt, double complex* c, blasint* ldc, double complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zgemqrt,ZGEMQRT)))));
 #else
+#ifndef __APPLE__
 void zgemqrt(char* side, char* trans, blasint* m, blasint* n, blasint* k, blasint* nb, double complex* v, blasint* ldv, double complex* t, blasint* ldt, double complex* c, blasint* ldc, double complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zgemqrt,ZGEMQRT)))));
+#else
+void zgemqrt(char* side, char* trans, blasint* m, blasint* n, blasint* k, blasint* nb, double complex* v, blasint* ldv, double complex* t, blasint* ldt, double complex* c, blasint* ldc, double complex* work, blasint* info){ FC_GLOBAL(zgemqrt,ZGEMQRT)((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) nb, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zgemqrt_(void* side, void* trans, void* m, void* n, void* k,
 
 	return;
 }
-
-void flexiblas_real_zgemqrt(void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info)  __attribute__((alias("flexiblas_real_zgemqrt_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zgemqrt(void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info) __attribute__((alias("flexiblas_real_zgemqrt_")));
+#else
+void flexiblas_real_zgemqrt(void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info){flexiblas_real_zgemqrt_((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) nb, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zgemqrt_(void* side, void* trans, void* m, void* n, void* k
 	}
 	return;
 }
-
-void flexiblas_chain_zgemqrt(void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info)  __attribute__((alias("flexiblas_chain_zgemqrt_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zgemqrt(void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info) __attribute__((alias("flexiblas_chain_zgemqrt_")));
+#else
+void flexiblas_chain_zgemqrt(void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info){flexiblas_chain_zgemqrt_((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) nb, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) info);}
+#endif
 
 
 

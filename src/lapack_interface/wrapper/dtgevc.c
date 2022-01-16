@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dtgevc,DTGEVC)(char* side, char* howmny, blasint* select, blasint
 #ifdef FLEXIBLAS_ABI_IBM
 void dtgevc_(char* side, char* howmny, blasint* select, blasint* n, double* s, blasint* lds, double* p, blasint* ldp, double* vl, blasint* ldvl, double* vr, blasint* ldvr, blasint* mm, blasint* m, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dtgevc,DTGEVC)))));
 #else
+#ifndef __APPLE__
 void dtgevc(char* side, char* howmny, blasint* select, blasint* n, double* s, blasint* lds, double* p, blasint* ldp, double* vl, blasint* ldvl, double* vr, blasint* ldvr, blasint* mm, blasint* m, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dtgevc,DTGEVC)))));
+#else
+void dtgevc(char* side, char* howmny, blasint* select, blasint* n, double* s, blasint* lds, double* p, blasint* ldp, double* vl, blasint* ldvl, double* vr, blasint* ldvr, blasint* mm, blasint* m, double* work, blasint* info){ FC_GLOBAL(dtgevc,DTGEVC)((void*) side, (void*) howmny, (void*) select, (void*) n, (void*) s, (void*) lds, (void*) p, (void*) ldp, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) mm, (void*) m, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dtgevc_(void* side, void* howmny, void* select, void* n, voi
 
 	return;
 }
-
-void flexiblas_real_dtgevc(void* side, void* howmny, void* select, void* n, void* s, void* lds, void* p, void* ldp, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* info)  __attribute__((alias("flexiblas_real_dtgevc_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dtgevc(void* side, void* howmny, void* select, void* n, void* s, void* lds, void* p, void* ldp, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* info) __attribute__((alias("flexiblas_real_dtgevc_")));
+#else
+void flexiblas_real_dtgevc(void* side, void* howmny, void* select, void* n, void* s, void* lds, void* p, void* ldp, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* info){flexiblas_real_dtgevc_((void*) side, (void*) howmny, (void*) select, (void*) n, (void*) s, (void*) lds, (void*) p, (void*) ldp, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) mm, (void*) m, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dtgevc_(void* side, void* howmny, void* select, void* n, vo
 	}
 	return;
 }
-
-void flexiblas_chain_dtgevc(void* side, void* howmny, void* select, void* n, void* s, void* lds, void* p, void* ldp, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* info)  __attribute__((alias("flexiblas_chain_dtgevc_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dtgevc(void* side, void* howmny, void* select, void* n, void* s, void* lds, void* p, void* ldp, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* info) __attribute__((alias("flexiblas_chain_dtgevc_")));
+#else
+void flexiblas_chain_dtgevc(void* side, void* howmny, void* select, void* n, void* s, void* lds, void* p, void* ldp, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* info){flexiblas_chain_dtgevc_((void*) side, (void*) howmny, (void*) select, (void*) n, (void*) s, (void*) lds, (void*) p, (void*) ldp, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) mm, (void*) m, (void*) work, (void*) info);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dsgesv,DSGESV)(blasint* n, blasint* nrhs, double* a, blasint* lda
 #ifdef FLEXIBLAS_ABI_IBM
 void dsgesv_(blasint* n, blasint* nrhs, double* a, blasint* lda, blasint* ipiv, double* b, blasint* ldb, double* x, blasint* ldx, double* work, float* swork, blasint* iter, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dsgesv,DSGESV)))));
 #else
+#ifndef __APPLE__
 void dsgesv(blasint* n, blasint* nrhs, double* a, blasint* lda, blasint* ipiv, double* b, blasint* ldb, double* x, blasint* ldx, double* work, float* swork, blasint* iter, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dsgesv,DSGESV)))));
+#else
+void dsgesv(blasint* n, blasint* nrhs, double* a, blasint* lda, blasint* ipiv, double* b, blasint* ldb, double* x, blasint* ldx, double* work, float* swork, blasint* iter, blasint* info){ FC_GLOBAL(dsgesv,DSGESV)((void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) work, (void*) swork, (void*) iter, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dsgesv_(void* n, void* nrhs, void* a, void* lda, void* ipiv,
 
 	return;
 }
-
-void flexiblas_real_dsgesv(void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* work, void* swork, void* iter, void* info)  __attribute__((alias("flexiblas_real_dsgesv_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dsgesv(void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* work, void* swork, void* iter, void* info) __attribute__((alias("flexiblas_real_dsgesv_")));
+#else
+void flexiblas_real_dsgesv(void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* work, void* swork, void* iter, void* info){flexiblas_real_dsgesv_((void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) work, (void*) swork, (void*) iter, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dsgesv_(void* n, void* nrhs, void* a, void* lda, void* ipiv
 	}
 	return;
 }
-
-void flexiblas_chain_dsgesv(void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* work, void* swork, void* iter, void* info)  __attribute__((alias("flexiblas_chain_dsgesv_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dsgesv(void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* work, void* swork, void* iter, void* info) __attribute__((alias("flexiblas_chain_dsgesv_")));
+#else
+void flexiblas_chain_dsgesv(void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* work, void* swork, void* iter, void* info){flexiblas_chain_dsgesv_((void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) work, (void*) swork, (void*) iter, (void*) info);}
+#endif
 
 
 

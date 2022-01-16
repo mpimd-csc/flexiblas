@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(strexc,STREXC)(char* compq, blasint* n, float* t, blasint* ldt, f
 #ifdef FLEXIBLAS_ABI_IBM
 void strexc_(char* compq, blasint* n, float* t, blasint* ldt, float* q, blasint* ldq, blasint* ifst, blasint* ilst, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(strexc,STREXC)))));
 #else
+#ifndef __APPLE__
 void strexc(char* compq, blasint* n, float* t, blasint* ldt, float* q, blasint* ldq, blasint* ifst, blasint* ilst, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(strexc,STREXC)))));
+#else
+void strexc(char* compq, blasint* n, float* t, blasint* ldt, float* q, blasint* ldq, blasint* ifst, blasint* ilst, float* work, blasint* info){ FC_GLOBAL(strexc,STREXC)((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_strexc_(void* compq, void* n, void* t, void* ldt, void* q, v
 
 	return;
 }
-
-void flexiblas_real_strexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info)  __attribute__((alias("flexiblas_real_strexc_")));
-
+#ifndef __APPLE__
+void flexiblas_real_strexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info) __attribute__((alias("flexiblas_real_strexc_")));
+#else
+void flexiblas_real_strexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info){flexiblas_real_strexc_((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_strexc_(void* compq, void* n, void* t, void* ldt, void* q, 
 	}
 	return;
 }
-
-void flexiblas_chain_strexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info)  __attribute__((alias("flexiblas_chain_strexc_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_strexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info) __attribute__((alias("flexiblas_chain_strexc_")));
+#else
+void flexiblas_chain_strexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info){flexiblas_chain_strexc_((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) work, (void*) info);}
+#endif
 
 
 

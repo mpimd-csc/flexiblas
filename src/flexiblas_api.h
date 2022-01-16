@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
 
 
@@ -81,15 +81,15 @@ extern "C" {
 
     /* Set number of threads  */
     extern void flexiblas_set_num_threads(int num);
-    extern void flexiblas_set_num_threads_(int* num);
+    extern void flexiblas_set_num_threads_(Int* num);
     extern void openblas_set_num_threads(int num);
-    extern void openblas_set_num_threads_(int* num);
+    extern void openblas_set_num_threads_(Int* num);
     extern void mkl_set_num_threads(int num);
-    extern void mkl_set_num_threads_(int* num);
+    extern void mkl_set_num_threads_(Int* num);
     extern void blas_set_num_threads(int num);
-    extern void blas_set_num_threads_(int* num);
+    extern void blas_set_num_threads_(Int* num);
     extern void acmlsetnumthreads(int num);
-    extern void acmlsetnumthreads_(int* num);
+    extern void acmlsetnumthreads_(Int* num);
     extern void bli_thread_set_num_threads(Int num);
 
     /* Get number of threads  */

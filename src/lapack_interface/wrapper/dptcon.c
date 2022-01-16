@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dptcon,DPTCON)(blasint* n, double* d, double* e, double* anorm, d
 #ifdef FLEXIBLAS_ABI_IBM
 void dptcon_(blasint* n, double* d, double* e, double* anorm, double* rcond, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dptcon,DPTCON)))));
 #else
+#ifndef __APPLE__
 void dptcon(blasint* n, double* d, double* e, double* anorm, double* rcond, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dptcon,DPTCON)))));
+#else
+void dptcon(blasint* n, double* d, double* e, double* anorm, double* rcond, double* work, blasint* info){ FC_GLOBAL(dptcon,DPTCON)((void*) n, (void*) d, (void*) e, (void*) anorm, (void*) rcond, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dptcon_(void* n, void* d, void* e, void* anorm, void* rcond,
 
 	return;
 }
-
-void flexiblas_real_dptcon(void* n, void* d, void* e, void* anorm, void* rcond, void* work, void* info)  __attribute__((alias("flexiblas_real_dptcon_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dptcon(void* n, void* d, void* e, void* anorm, void* rcond, void* work, void* info) __attribute__((alias("flexiblas_real_dptcon_")));
+#else
+void flexiblas_real_dptcon(void* n, void* d, void* e, void* anorm, void* rcond, void* work, void* info){flexiblas_real_dptcon_((void*) n, (void*) d, (void*) e, (void*) anorm, (void*) rcond, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dptcon_(void* n, void* d, void* e, void* anorm, void* rcond
 	}
 	return;
 }
-
-void flexiblas_chain_dptcon(void* n, void* d, void* e, void* anorm, void* rcond, void* work, void* info)  __attribute__((alias("flexiblas_chain_dptcon_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dptcon(void* n, void* d, void* e, void* anorm, void* rcond, void* work, void* info) __attribute__((alias("flexiblas_chain_dptcon_")));
+#else
+void flexiblas_chain_dptcon(void* n, void* d, void* e, void* anorm, void* rcond, void* work, void* info){flexiblas_chain_dptcon_((void*) n, (void*) d, (void*) e, (void*) anorm, (void*) rcond, (void*) work, (void*) info);}
+#endif
 
 
 

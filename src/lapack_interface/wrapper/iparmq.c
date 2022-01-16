@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -52,6 +52,12 @@
 #include "flexiblas.h"
 
 
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
+
 #ifdef INTEGER8
 #define blasint int64_t
 #else
@@ -62,13 +68,13 @@
 
 static TLS_STORE uint8_t hook_pos_iparmq = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-int FC_GLOBAL(iparmq,IPARMQ)(blasint* ispec, char* name, char* opts, blasint* n, blasint* ilo, blasint* ihi, blasint* lwork, blasint len_name, blasint len_opts)
+int FC_GLOBAL(iparmq,IPARMQ)(blasint* ispec, char* name, char* opts, blasint* n, blasint* ilo, blasint* ihi, blasint* lwork, fortran_charlen_t len_name, fortran_charlen_t len_opts)
 #else
-int FC_GLOBAL(iparmq,IPARMQ)(blasint* ispec, char* name, char* opts, blasint* n, blasint* ilo, blasint* ihi, blasint* lwork, blasint len_name, blasint len_opts)
+int FC_GLOBAL(iparmq,IPARMQ)(blasint* ispec, char* name, char* opts, blasint* n, blasint* ilo, blasint* ihi, blasint* lwork, fortran_charlen_t len_name, fortran_charlen_t len_opts)
 #endif
 {
-	blasint (*fn) (void* ispec, void* name, void* opts, void* n, void* ilo, void* ihi, void* lwork, blasint len_name, blasint len_opts);
-	blasint (*fn_hook) (void* ispec, void* name, void* opts, void* n, void* ilo, void* ihi, void* lwork, blasint len_name, blasint len_opts);
+	blasint (*fn) (void* ispec, void* name, void* opts, void* n, void* ilo, void* ihi, void* lwork, fortran_charlen_t len_name, fortran_charlen_t len_opts);
+	blasint (*fn_hook) (void* ispec, void* name, void* opts, void* n, void* ilo, void* ihi, void* lwork, fortran_charlen_t len_name, fortran_charlen_t len_opts);
 	blasint ret;
 
     if ( current_backend->post_init != 0 ) {
@@ -78,18 +84,22 @@ int FC_GLOBAL(iparmq,IPARMQ)(blasint* ispec, char* name, char* opts, blasint* n,
 	fn = current_backend->lapack.iparmq.f77_blas_function; 
 	fn_hook = __flexiblas_hooks->iparmq.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		ret = fn((void*) ispec, (void*) name, (void*) opts, (void*) n, (void*) ilo, (void*) ihi, (void*) lwork, (blasint) len_name, (blasint) len_opts); 
+		ret = fn((void*) ispec, (void*) name, (void*) opts, (void*) n, (void*) ilo, (void*) ihi, (void*) lwork, ( fortran_charlen_t ) len_name, ( fortran_charlen_t ) len_opts); 
 		return ret; 
 	} else {
 		hook_pos_iparmq = 0;
-		ret=fn_hook((void*) ispec, (void*) name, (void*) opts, (void*) n, (void*) ilo, (void*) ihi, (void*) lwork, (blasint) len_name, (blasint) len_opts);
+		ret=fn_hook((void*) ispec, (void*) name, (void*) opts, (void*) n, (void*) ilo, (void*) ihi, (void*) lwork, ( fortran_charlen_t ) len_name, ( fortran_charlen_t ) len_opts);
 		return ret;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-int iparmq_(blasint* ispec, char* name, char* opts, blasint* n, blasint* ilo, blasint* ihi, blasint* lwork, blasint len_name, blasint len_opts) __attribute__((alias(MTS(FC_GLOBAL(iparmq,IPARMQ)))));
+int iparmq_(blasint* ispec, char* name, char* opts, blasint* n, blasint* ilo, blasint* ihi, blasint* lwork, fortran_charlen_t len_name, fortran_charlen_t len_opts) __attribute__((alias(MTS(FC_GLOBAL(iparmq,IPARMQ)))));
 #else
-int iparmq(blasint* ispec, char* name, char* opts, blasint* n, blasint* ilo, blasint* ihi, blasint* lwork, blasint len_name, blasint len_opts) __attribute__((alias(MTS(FC_GLOBAL(iparmq,IPARMQ)))));
+#ifndef __APPLE__
+int iparmq(blasint* ispec, char* name, char* opts, blasint* n, blasint* ilo, blasint* ihi, blasint* lwork, fortran_charlen_t len_name, fortran_charlen_t len_opts) __attribute__((alias(MTS(FC_GLOBAL(iparmq,IPARMQ)))));
+#else
+int iparmq(blasint* ispec, char* name, char* opts, blasint* n, blasint* ilo, blasint* ihi, blasint* lwork, fortran_charlen_t len_name, fortran_charlen_t len_opts){ return FC_GLOBAL(iparmq,IPARMQ)((void*) ispec, (void*) name, (void*) opts, (void*) n, (void*) ilo, (void*) ihi, (void*) lwork, (fortran_charlen_t) len_name, (fortran_charlen_t) len_opts); }
+#endif
 #endif
 
 
@@ -98,20 +108,22 @@ int iparmq(blasint* ispec, char* name, char* opts, blasint* n, blasint* ilo, bla
 /* Real Implementation for Hooks */
 
 
-blasint flexiblas_real_iparmq_(void* ispec, void* name, void* opts, void* n, void* ilo, void* ihi, void* lwork, blasint len_name, blasint len_opts)
+blasint flexiblas_real_iparmq_(void* ispec, void* name, void* opts, void* n, void* ilo, void* ihi, void* lwork, fortran_charlen_t len_name, fortran_charlen_t len_opts)
 {
-	blasint (*fn) (void* ispec, void* name, void* opts, void* n, void* ilo, void* ihi, void* lwork, blasint len_name, blasint len_opts);
+	blasint (*fn) (void* ispec, void* name, void* opts, void* n, void* ilo, void* ihi, void* lwork, fortran_charlen_t len_name, fortran_charlen_t len_opts);
 	blasint ret;
 
 	fn = current_backend->lapack.iparmq.f77_blas_function; 
 
-		ret = fn((void*) ispec, (void*) name, (void*) opts, (void*) n, (void*) ilo, (void*) ihi, (void*) lwork, (blasint) len_name, (blasint) len_opts); 
+		ret = fn((void*) ispec, (void*) name, (void*) opts, (void*) n, (void*) ilo, (void*) ihi, (void*) lwork, ( fortran_charlen_t ) len_name, ( fortran_charlen_t ) len_opts); 
 
 	return ret ;
 }
-
-blasint flexiblas_real_iparmq(void* ispec, void* name, void* opts, void* n, void* ilo, void* ihi, void* lwork, blasint len_name, blasint len_opts)  __attribute__((alias("flexiblas_real_iparmq_")));
-
+#ifndef __APPLE__
+blasint flexiblas_real_iparmq(void* ispec, void* name, void* opts, void* n, void* ilo, void* ihi, void* lwork, fortran_charlen_t len_name, fortran_charlen_t len_opts) __attribute__((alias("flexiblas_real_iparmq_")));
+#else
+blasint flexiblas_real_iparmq(void* ispec, void* name, void* opts, void* n, void* ilo, void* ihi, void* lwork, fortran_charlen_t len_name, fortran_charlen_t len_opts){return flexiblas_real_iparmq_((void*) ispec, (void*) name, (void*) opts, (void*) n, (void*) ilo, (void*) ihi, (void*) lwork, (fortran_charlen_t) len_name, (fortran_charlen_t) len_opts);}
+#endif
 
 
 
@@ -119,10 +131,10 @@ blasint flexiblas_real_iparmq(void* ispec, void* name, void* opts, void* n, void
 /* Chainloader for Hooks */
 
 
-blasint flexiblas_chain_iparmq_(void* ispec, void* name, void* opts, void* n, void* ilo, void* ihi, void* lwork, blasint len_name, blasint len_opts)
+blasint flexiblas_chain_iparmq_(void* ispec, void* name, void* opts, void* n, void* ilo, void* ihi, void* lwork, fortran_charlen_t len_name, fortran_charlen_t len_opts)
 {
-	blasint (*fn) (void* ispec, void* name, void* opts, void* n, void* ilo, void* ihi, void* lwork, blasint len_name, blasint len_opts);
-	blasint (*fn_hook) (void* ispec, void* name, void* opts, void* n, void* ilo, void* ihi, void* lwork, blasint len_name, blasint len_opts);
+	blasint (*fn) (void* ispec, void* name, void* opts, void* n, void* ilo, void* ihi, void* lwork, fortran_charlen_t len_name, fortran_charlen_t len_opts);
+	blasint (*fn_hook) (void* ispec, void* name, void* opts, void* n, void* ilo, void* ihi, void* lwork, fortran_charlen_t len_name, fortran_charlen_t len_opts);
 	blasint ret;
 
 	fn      = current_backend->lapack.iparmq.f77_blas_function; 
@@ -130,16 +142,18 @@ blasint flexiblas_chain_iparmq_(void* ispec, void* name, void* opts, void* n, vo
     hook_pos_iparmq ++;
     if( hook_pos_iparmq < __flexiblas_hooks->iparmq.nhook) {
         fn_hook = __flexiblas_hooks->iparmq.f77_hook_function[hook_pos_iparmq];
-        ret = fn_hook((void*) ispec, (void*) name, (void*) opts, (void*) n, (void*) ilo, (void*) ihi, (void*) lwork, (blasint) len_name, (blasint) len_opts);
+        ret = fn_hook((void*) ispec, (void*) name, (void*) opts, (void*) n, (void*) ilo, (void*) ihi, (void*) lwork, ( fortran_charlen_t )len_name, ( fortran_charlen_t )len_opts);
     } else {
         hook_pos_iparmq = 0;
-		ret = fn((void*) ispec, (void*) name, (void*) opts, (void*) n, (void*) ilo, (void*) ihi, (void*) lwork, (blasint) len_name, (blasint) len_opts); 
+		ret = fn((void*) ispec, (void*) name, (void*) opts, (void*) n, (void*) ilo, (void*) ihi, (void*) lwork, ( fortran_charlen_t ) len_name, ( fortran_charlen_t ) len_opts); 
 	}
 	return ret ;
 }
-
-blasint flexiblas_chain_iparmq(void* ispec, void* name, void* opts, void* n, void* ilo, void* ihi, void* lwork, blasint len_name, blasint len_opts)  __attribute__((alias("flexiblas_chain_iparmq_")));
-
+#ifndef __APPLE__
+blasint flexiblas_chain_iparmq(void* ispec, void* name, void* opts, void* n, void* ilo, void* ihi, void* lwork, fortran_charlen_t len_name, fortran_charlen_t len_opts) __attribute__((alias("flexiblas_chain_iparmq_")));
+#else
+blasint flexiblas_chain_iparmq(void* ispec, void* name, void* opts, void* n, void* ilo, void* ihi, void* lwork, fortran_charlen_t len_name, fortran_charlen_t len_opts){return flexiblas_chain_iparmq_((void*) ispec, (void*) name, (void*) opts, (void*) n, (void*) ilo, (void*) ihi, (void*) lwork, (fortran_charlen_t) len_name, (fortran_charlen_t) len_opts);}
+#endif
 
 
 

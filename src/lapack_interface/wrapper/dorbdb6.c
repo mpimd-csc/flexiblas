@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dorbdb6,DORBDB6)(blasint* m1, blasint* m2, blasint* n, double* x1
 #ifdef FLEXIBLAS_ABI_IBM
 void dorbdb6_(blasint* m1, blasint* m2, blasint* n, double* x1, blasint* incx1, double* x2, blasint* incx2, double* q1, blasint* ldq1, double* q2, blasint* ldq2, double* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dorbdb6,DORBDB6)))));
 #else
+#ifndef __APPLE__
 void dorbdb6(blasint* m1, blasint* m2, blasint* n, double* x1, blasint* incx1, double* x2, blasint* incx2, double* q1, blasint* ldq1, double* q2, blasint* ldq2, double* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dorbdb6,DORBDB6)))));
+#else
+void dorbdb6(blasint* m1, blasint* m2, blasint* n, double* x1, blasint* incx1, double* x2, blasint* incx2, double* q1, blasint* ldq1, double* q2, blasint* ldq2, double* work, blasint* lwork, blasint* info){ FC_GLOBAL(dorbdb6,DORBDB6)((void*) m1, (void*) m2, (void*) n, (void*) x1, (void*) incx1, (void*) x2, (void*) incx2, (void*) q1, (void*) ldq1, (void*) q2, (void*) ldq2, (void*) work, (void*) lwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dorbdb6_(void* m1, void* m2, void* n, void* x1, void* incx1,
 
 	return;
 }
-
-void flexiblas_real_dorbdb6(void* m1, void* m2, void* n, void* x1, void* incx1, void* x2, void* incx2, void* q1, void* ldq1, void* q2, void* ldq2, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_real_dorbdb6_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dorbdb6(void* m1, void* m2, void* n, void* x1, void* incx1, void* x2, void* incx2, void* q1, void* ldq1, void* q2, void* ldq2, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_dorbdb6_")));
+#else
+void flexiblas_real_dorbdb6(void* m1, void* m2, void* n, void* x1, void* incx1, void* x2, void* incx2, void* q1, void* ldq1, void* q2, void* ldq2, void* work, void* lwork, void* info){flexiblas_real_dorbdb6_((void*) m1, (void*) m2, (void*) n, (void*) x1, (void*) incx1, (void*) x2, (void*) incx2, (void*) q1, (void*) ldq1, (void*) q2, (void*) ldq2, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dorbdb6_(void* m1, void* m2, void* n, void* x1, void* incx1
 	}
 	return;
 }
-
-void flexiblas_chain_dorbdb6(void* m1, void* m2, void* n, void* x1, void* incx1, void* x2, void* incx2, void* q1, void* ldq1, void* q2, void* ldq2, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_chain_dorbdb6_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dorbdb6(void* m1, void* m2, void* n, void* x1, void* incx1, void* x2, void* incx2, void* q1, void* ldq1, void* q2, void* ldq2, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_dorbdb6_")));
+#else
+void flexiblas_chain_dorbdb6(void* m1, void* m2, void* n, void* x1, void* incx1, void* x2, void* incx2, void* q1, void* ldq1, void* q2, void* ldq2, void* work, void* lwork, void* info){flexiblas_chain_dorbdb6_((void*) m1, (void*) m2, (void*) n, (void*) x1, (void*) incx1, (void*) x2, (void*) incx2, (void*) q1, (void*) ldq1, (void*) q2, (void*) ldq2, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 

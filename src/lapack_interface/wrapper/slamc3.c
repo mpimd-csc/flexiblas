@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ float FC_GLOBAL(slamc3,SLAMC3)(float* a, float* b)
 #ifdef FLEXIBLAS_ABI_IBM
 float slamc3_(float* a, float* b) __attribute__((alias(MTS(FC_GLOBAL(slamc3,SLAMC3)))));
 #else
+#ifndef __APPLE__
 float slamc3(float* a, float* b) __attribute__((alias(MTS(FC_GLOBAL(slamc3,SLAMC3)))));
+#else
+float slamc3(float* a, float* b){ return FC_GLOBAL(slamc3,SLAMC3)((void*) a, (void*) b); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ float flexiblas_real_slamc3_(void* a, void* b)
 
 	return ret ;
 }
-
-float flexiblas_real_slamc3(void* a, void* b)  __attribute__((alias("flexiblas_real_slamc3_")));
-
+#ifndef __APPLE__
+float flexiblas_real_slamc3(void* a, void* b) __attribute__((alias("flexiblas_real_slamc3_")));
+#else
+float flexiblas_real_slamc3(void* a, void* b){return flexiblas_real_slamc3_((void*) a, (void*) b);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ float flexiblas_chain_slamc3_(void* a, void* b)
 	}
 	return ret ;
 }
-
-float flexiblas_chain_slamc3(void* a, void* b)  __attribute__((alias("flexiblas_chain_slamc3_")));
-
+#ifndef __APPLE__
+float flexiblas_chain_slamc3(void* a, void* b) __attribute__((alias("flexiblas_chain_slamc3_")));
+#else
+float flexiblas_chain_slamc3(void* a, void* b){return flexiblas_chain_slamc3_((void*) a, (void*) b);}
+#endif
 
 
 

@@ -201,7 +201,7 @@
 *     Convert NAME to upper case if the first character is lower case.
 *
       ILAENV = 1
-      SUBNAM = NAME
+      SUBNAM(1:6) = NAME(1:6)
       IC = ICHAR( SUBNAM( 1: 1 ) )
       IZ = ICHAR( 'Z' )
       IF( IZ.EQ.90 .OR. IZ.EQ.122 ) THEN

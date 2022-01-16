@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlaruv,DLARUV)(blasint* iseed, blasint* n, double* x)
 #ifdef FLEXIBLAS_ABI_IBM
 void dlaruv_(blasint* iseed, blasint* n, double* x) __attribute__((alias(MTS(FC_GLOBAL(dlaruv,DLARUV)))));
 #else
+#ifndef __APPLE__
 void dlaruv(blasint* iseed, blasint* n, double* x) __attribute__((alias(MTS(FC_GLOBAL(dlaruv,DLARUV)))));
+#else
+void dlaruv(blasint* iseed, blasint* n, double* x){ FC_GLOBAL(dlaruv,DLARUV)((void*) iseed, (void*) n, (void*) x); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlaruv_(void* iseed, void* n, void* x)
 
 	return;
 }
-
-void flexiblas_real_dlaruv(void* iseed, void* n, void* x)  __attribute__((alias("flexiblas_real_dlaruv_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlaruv(void* iseed, void* n, void* x) __attribute__((alias("flexiblas_real_dlaruv_")));
+#else
+void flexiblas_real_dlaruv(void* iseed, void* n, void* x){flexiblas_real_dlaruv_((void*) iseed, (void*) n, (void*) x);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlaruv_(void* iseed, void* n, void* x)
 	}
 	return;
 }
-
-void flexiblas_chain_dlaruv(void* iseed, void* n, void* x)  __attribute__((alias("flexiblas_chain_dlaruv_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlaruv(void* iseed, void* n, void* x) __attribute__((alias("flexiblas_chain_dlaruv_")));
+#else
+void flexiblas_chain_dlaruv(void* iseed, void* n, void* x){flexiblas_chain_dlaruv_((void*) iseed, (void*) n, (void*) x);}
+#endif
 
 
 

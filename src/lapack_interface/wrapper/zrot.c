@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zrot,ZROT)(blasint* n, double complex* cx, blasint* incx, double 
 #ifdef FLEXIBLAS_ABI_IBM
 void zrot_(blasint* n, double complex* cx, blasint* incx, double complex* cy, blasint* incy, double* c, double complex* s) __attribute__((alias(MTS(FC_GLOBAL(zrot,ZROT)))));
 #else
+#ifndef __APPLE__
 void zrot(blasint* n, double complex* cx, blasint* incx, double complex* cy, blasint* incy, double* c, double complex* s) __attribute__((alias(MTS(FC_GLOBAL(zrot,ZROT)))));
+#else
+void zrot(blasint* n, double complex* cx, blasint* incx, double complex* cy, blasint* incy, double* c, double complex* s){ FC_GLOBAL(zrot,ZROT)((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zrot_(void* n, void* cx, void* incx, void* cy, void* incy, v
 
 	return;
 }
-
-void flexiblas_real_zrot(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s)  __attribute__((alias("flexiblas_real_zrot_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zrot(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s) __attribute__((alias("flexiblas_real_zrot_")));
+#else
+void flexiblas_real_zrot(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s){flexiblas_real_zrot_((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zrot_(void* n, void* cx, void* incx, void* cy, void* incy, 
 	}
 	return;
 }
-
-void flexiblas_chain_zrot(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s)  __attribute__((alias("flexiblas_chain_zrot_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zrot(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s) __attribute__((alias("flexiblas_chain_zrot_")));
+#else
+void flexiblas_chain_zrot(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s){flexiblas_chain_zrot_((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s);}
+#endif
 
 
 

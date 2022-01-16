@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ float FC_GLOBAL(second,SECOND)()
 #ifdef FLEXIBLAS_ABI_IBM
 float second_() __attribute__((alias(MTS(FC_GLOBAL(second,SECOND)))));
 #else
+#ifndef __APPLE__
 float second() __attribute__((alias(MTS(FC_GLOBAL(second,SECOND)))));
+#else
+float second(){ return FC_GLOBAL(second,SECOND)(); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ float flexiblas_real_second_()
 
 	return ret ;
 }
-
-float flexiblas_real_second()  __attribute__((alias("flexiblas_real_second_")));
-
+#ifndef __APPLE__
+float flexiblas_real_second() __attribute__((alias("flexiblas_real_second_")));
+#else
+float flexiblas_real_second(){return flexiblas_real_second_();}
+#endif
 
 
 
@@ -137,9 +149,11 @@ float flexiblas_chain_second_()
 	}
 	return ret ;
 }
-
-float flexiblas_chain_second()  __attribute__((alias("flexiblas_chain_second_")));
-
+#ifndef __APPLE__
+float flexiblas_chain_second() __attribute__((alias("flexiblas_chain_second_")));
+#else
+float flexiblas_chain_second(){return flexiblas_chain_second_();}
+#endif
 
 
 

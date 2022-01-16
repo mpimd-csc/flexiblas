@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(spoequ,SPOEQU)(blasint* n, float* a, blasint* lda, float* s, floa
 #ifdef FLEXIBLAS_ABI_IBM
 void spoequ_(blasint* n, float* a, blasint* lda, float* s, float* scond, float* amax, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(spoequ,SPOEQU)))));
 #else
+#ifndef __APPLE__
 void spoequ(blasint* n, float* a, blasint* lda, float* s, float* scond, float* amax, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(spoequ,SPOEQU)))));
+#else
+void spoequ(blasint* n, float* a, blasint* lda, float* s, float* scond, float* amax, blasint* info){ FC_GLOBAL(spoequ,SPOEQU)((void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_spoequ_(void* n, void* a, void* lda, void* s, void* scond, v
 
 	return;
 }
-
-void flexiblas_real_spoequ(void* n, void* a, void* lda, void* s, void* scond, void* amax, void* info)  __attribute__((alias("flexiblas_real_spoequ_")));
-
+#ifndef __APPLE__
+void flexiblas_real_spoequ(void* n, void* a, void* lda, void* s, void* scond, void* amax, void* info) __attribute__((alias("flexiblas_real_spoequ_")));
+#else
+void flexiblas_real_spoequ(void* n, void* a, void* lda, void* s, void* scond, void* amax, void* info){flexiblas_real_spoequ_((void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_spoequ_(void* n, void* a, void* lda, void* s, void* scond, 
 	}
 	return;
 }
-
-void flexiblas_chain_spoequ(void* n, void* a, void* lda, void* s, void* scond, void* amax, void* info)  __attribute__((alias("flexiblas_chain_spoequ_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_spoequ(void* n, void* a, void* lda, void* s, void* scond, void* amax, void* info) __attribute__((alias("flexiblas_chain_spoequ_")));
+#else
+void flexiblas_chain_spoequ(void* n, void* a, void* lda, void* s, void* scond, void* amax, void* info){flexiblas_chain_spoequ_((void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) info);}
+#endif
 
 
 

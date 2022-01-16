@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ int FC_GLOBAL(slaisnan,SLAISNAN)(float* sin1, float* sin2)
 #ifdef FLEXIBLAS_ABI_IBM
 int slaisnan_(float* sin1, float* sin2) __attribute__((alias(MTS(FC_GLOBAL(slaisnan,SLAISNAN)))));
 #else
+#ifndef __APPLE__
 int slaisnan(float* sin1, float* sin2) __attribute__((alias(MTS(FC_GLOBAL(slaisnan,SLAISNAN)))));
+#else
+int slaisnan(float* sin1, float* sin2){ return FC_GLOBAL(slaisnan,SLAISNAN)((void*) sin1, (void*) sin2); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ blasint flexiblas_real_slaisnan_(void* sin1, void* sin2)
 
 	return ret ;
 }
-
-blasint flexiblas_real_slaisnan(void* sin1, void* sin2)  __attribute__((alias("flexiblas_real_slaisnan_")));
-
+#ifndef __APPLE__
+blasint flexiblas_real_slaisnan(void* sin1, void* sin2) __attribute__((alias("flexiblas_real_slaisnan_")));
+#else
+blasint flexiblas_real_slaisnan(void* sin1, void* sin2){return flexiblas_real_slaisnan_((void*) sin1, (void*) sin2);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ blasint flexiblas_chain_slaisnan_(void* sin1, void* sin2)
 	}
 	return ret ;
 }
-
-blasint flexiblas_chain_slaisnan(void* sin1, void* sin2)  __attribute__((alias("flexiblas_chain_slaisnan_")));
-
+#ifndef __APPLE__
+blasint flexiblas_chain_slaisnan(void* sin1, void* sin2) __attribute__((alias("flexiblas_chain_slaisnan_")));
+#else
+blasint flexiblas_chain_slaisnan(void* sin1, void* sin2){return flexiblas_chain_slaisnan_((void*) sin1, (void*) sin2);}
+#endif
 
 
 

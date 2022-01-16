@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -52,6 +52,12 @@
 #include "flexiblas.h"
 
 
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
+
 #ifdef INTEGER8
 #define blasint int64_t
 #else
@@ -62,13 +68,13 @@
 
 static TLS_STORE uint8_t hook_pos_zgesvj = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(zgesvj,ZGESVJ)(char* joba, char* jobu, char* jobv, blasint* m, blasint* n, double complex* a, blasint* lda, double* sva, blasint* mv, double complex* v, blasint* ldv, double complex* cwork, blasint* lwork, double* rwork, blasint* lrwork, blasint* info, blasint len_joba, blasint len_jobu, blasint len_jobv)
+void FC_GLOBAL(zgesvj,ZGESVJ)(char* joba, char* jobu, char* jobv, blasint* m, blasint* n, double complex* a, blasint* lda, double* sva, blasint* mv, double complex* v, blasint* ldv, double complex* cwork, blasint* lwork, double* rwork, blasint* lrwork, blasint* info, fortran_charlen_t len_joba, fortran_charlen_t len_jobu, fortran_charlen_t len_jobv)
 #else
-void FC_GLOBAL(zgesvj,ZGESVJ)(char* joba, char* jobu, char* jobv, blasint* m, blasint* n, double complex* a, blasint* lda, double* sva, blasint* mv, double complex* v, blasint* ldv, double complex* cwork, blasint* lwork, double* rwork, blasint* lrwork, blasint* info, blasint len_joba, blasint len_jobu, blasint len_jobv)
+void FC_GLOBAL(zgesvj,ZGESVJ)(char* joba, char* jobu, char* jobv, blasint* m, blasint* n, double complex* a, blasint* lda, double* sva, blasint* mv, double complex* v, blasint* ldv, double complex* cwork, blasint* lwork, double* rwork, blasint* lrwork, blasint* info, fortran_charlen_t len_joba, fortran_charlen_t len_jobu, fortran_charlen_t len_jobv)
 #endif
 {
-	void (*fn) (void* joba, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* sva, void* mv, void* v, void* ldv, void* cwork, void* lwork, void* rwork, void* lrwork, void* info, blasint len_joba, blasint len_jobu, blasint len_jobv);
-	void (*fn_hook) (void* joba, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* sva, void* mv, void* v, void* ldv, void* cwork, void* lwork, void* rwork, void* lrwork, void* info, blasint len_joba, blasint len_jobu, blasint len_jobv);
+	void (*fn) (void* joba, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* sva, void* mv, void* v, void* ldv, void* cwork, void* lwork, void* rwork, void* lrwork, void* info, fortran_charlen_t len_joba, fortran_charlen_t len_jobu, fortran_charlen_t len_jobv);
+	void (*fn_hook) (void* joba, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* sva, void* mv, void* v, void* ldv, void* cwork, void* lwork, void* rwork, void* lrwork, void* info, fortran_charlen_t len_joba, fortran_charlen_t len_jobu, fortran_charlen_t len_jobv);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -77,18 +83,22 @@ void FC_GLOBAL(zgesvj,ZGESVJ)(char* joba, char* jobu, char* jobv, blasint* m, bl
 	fn = current_backend->lapack.zgesvj.f77_blas_function; 
 	fn_hook = __flexiblas_hooks->zgesvj.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) joba, (void*) jobu, (void*) jobv, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) sva, (void*) mv, (void*) v, (void*) ldv, (void*) cwork, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) info, (blasint) len_joba, (blasint) len_jobu, (blasint) len_jobv); 
+		fn((void*) joba, (void*) jobu, (void*) jobv, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) sva, (void*) mv, (void*) v, (void*) ldv, (void*) cwork, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) info, ( fortran_charlen_t ) len_joba, ( fortran_charlen_t ) len_jobu, ( fortran_charlen_t ) len_jobv); 
 		return;
 	} else {
 		hook_pos_zgesvj = 0;
-		fn_hook((void*) joba, (void*) jobu, (void*) jobv, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) sva, (void*) mv, (void*) v, (void*) ldv, (void*) cwork, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) info, (blasint) len_joba, (blasint) len_jobu, (blasint) len_jobv);
+		fn_hook((void*) joba, (void*) jobu, (void*) jobv, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) sva, (void*) mv, (void*) v, (void*) ldv, (void*) cwork, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) info, ( fortran_charlen_t ) len_joba, ( fortran_charlen_t ) len_jobu, ( fortran_charlen_t ) len_jobv);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zgesvj_(char* joba, char* jobu, char* jobv, blasint* m, blasint* n, double complex* a, blasint* lda, double* sva, blasint* mv, double complex* v, blasint* ldv, double complex* cwork, blasint* lwork, double* rwork, blasint* lrwork, blasint* info, blasint len_joba, blasint len_jobu, blasint len_jobv) __attribute__((alias(MTS(FC_GLOBAL(zgesvj,ZGESVJ)))));
+void zgesvj_(char* joba, char* jobu, char* jobv, blasint* m, blasint* n, double complex* a, blasint* lda, double* sva, blasint* mv, double complex* v, blasint* ldv, double complex* cwork, blasint* lwork, double* rwork, blasint* lrwork, blasint* info, fortran_charlen_t len_joba, fortran_charlen_t len_jobu, fortran_charlen_t len_jobv) __attribute__((alias(MTS(FC_GLOBAL(zgesvj,ZGESVJ)))));
 #else
-void zgesvj(char* joba, char* jobu, char* jobv, blasint* m, blasint* n, double complex* a, blasint* lda, double* sva, blasint* mv, double complex* v, blasint* ldv, double complex* cwork, blasint* lwork, double* rwork, blasint* lrwork, blasint* info, blasint len_joba, blasint len_jobu, blasint len_jobv) __attribute__((alias(MTS(FC_GLOBAL(zgesvj,ZGESVJ)))));
+#ifndef __APPLE__
+void zgesvj(char* joba, char* jobu, char* jobv, blasint* m, blasint* n, double complex* a, blasint* lda, double* sva, blasint* mv, double complex* v, blasint* ldv, double complex* cwork, blasint* lwork, double* rwork, blasint* lrwork, blasint* info, fortran_charlen_t len_joba, fortran_charlen_t len_jobu, fortran_charlen_t len_jobv) __attribute__((alias(MTS(FC_GLOBAL(zgesvj,ZGESVJ)))));
+#else
+void zgesvj(char* joba, char* jobu, char* jobv, blasint* m, blasint* n, double complex* a, blasint* lda, double* sva, blasint* mv, double complex* v, blasint* ldv, double complex* cwork, blasint* lwork, double* rwork, blasint* lrwork, blasint* info, fortran_charlen_t len_joba, fortran_charlen_t len_jobu, fortran_charlen_t len_jobv){ FC_GLOBAL(zgesvj,ZGESVJ)((void*) joba, (void*) jobu, (void*) jobv, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) sva, (void*) mv, (void*) v, (void*) ldv, (void*) cwork, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) info, (fortran_charlen_t) len_joba, (fortran_charlen_t) len_jobu, (fortran_charlen_t) len_jobv); }
+#endif
 #endif
 
 
@@ -97,19 +107,21 @@ void zgesvj(char* joba, char* jobu, char* jobv, blasint* m, blasint* n, double c
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_zgesvj_(void* joba, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* sva, void* mv, void* v, void* ldv, void* cwork, void* lwork, void* rwork, void* lrwork, void* info, blasint len_joba, blasint len_jobu, blasint len_jobv)
+void flexiblas_real_zgesvj_(void* joba, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* sva, void* mv, void* v, void* ldv, void* cwork, void* lwork, void* rwork, void* lrwork, void* info, fortran_charlen_t len_joba, fortran_charlen_t len_jobu, fortran_charlen_t len_jobv)
 {
-	void (*fn) (void* joba, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* sva, void* mv, void* v, void* ldv, void* cwork, void* lwork, void* rwork, void* lrwork, void* info, blasint len_joba, blasint len_jobu, blasint len_jobv);
+	void (*fn) (void* joba, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* sva, void* mv, void* v, void* ldv, void* cwork, void* lwork, void* rwork, void* lrwork, void* info, fortran_charlen_t len_joba, fortran_charlen_t len_jobu, fortran_charlen_t len_jobv);
 
 	fn = current_backend->lapack.zgesvj.f77_blas_function; 
 
-		fn((void*) joba, (void*) jobu, (void*) jobv, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) sva, (void*) mv, (void*) v, (void*) ldv, (void*) cwork, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) info, (blasint) len_joba, (blasint) len_jobu, (blasint) len_jobv); 
+		fn((void*) joba, (void*) jobu, (void*) jobv, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) sva, (void*) mv, (void*) v, (void*) ldv, (void*) cwork, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) info, ( fortran_charlen_t ) len_joba, ( fortran_charlen_t ) len_jobu, ( fortran_charlen_t ) len_jobv); 
 
 	return;
 }
-
-void flexiblas_real_zgesvj(void* joba, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* sva, void* mv, void* v, void* ldv, void* cwork, void* lwork, void* rwork, void* lrwork, void* info, blasint len_joba, blasint len_jobu, blasint len_jobv)  __attribute__((alias("flexiblas_real_zgesvj_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zgesvj(void* joba, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* sva, void* mv, void* v, void* ldv, void* cwork, void* lwork, void* rwork, void* lrwork, void* info, fortran_charlen_t len_joba, fortran_charlen_t len_jobu, fortran_charlen_t len_jobv) __attribute__((alias("flexiblas_real_zgesvj_")));
+#else
+void flexiblas_real_zgesvj(void* joba, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* sva, void* mv, void* v, void* ldv, void* cwork, void* lwork, void* rwork, void* lrwork, void* info, fortran_charlen_t len_joba, fortran_charlen_t len_jobu, fortran_charlen_t len_jobv){flexiblas_real_zgesvj_((void*) joba, (void*) jobu, (void*) jobv, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) sva, (void*) mv, (void*) v, (void*) ldv, (void*) cwork, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) info, (fortran_charlen_t) len_joba, (fortran_charlen_t) len_jobu, (fortran_charlen_t) len_jobv);}
+#endif
 
 
 
@@ -117,26 +129,28 @@ void flexiblas_real_zgesvj(void* joba, void* jobu, void* jobv, void* m, void* n,
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_zgesvj_(void* joba, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* sva, void* mv, void* v, void* ldv, void* cwork, void* lwork, void* rwork, void* lrwork, void* info, blasint len_joba, blasint len_jobu, blasint len_jobv)
+void flexiblas_chain_zgesvj_(void* joba, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* sva, void* mv, void* v, void* ldv, void* cwork, void* lwork, void* rwork, void* lrwork, void* info, fortran_charlen_t len_joba, fortran_charlen_t len_jobu, fortran_charlen_t len_jobv)
 {
-	void (*fn) (void* joba, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* sva, void* mv, void* v, void* ldv, void* cwork, void* lwork, void* rwork, void* lrwork, void* info, blasint len_joba, blasint len_jobu, blasint len_jobv);
-	void (*fn_hook) (void* joba, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* sva, void* mv, void* v, void* ldv, void* cwork, void* lwork, void* rwork, void* lrwork, void* info, blasint len_joba, blasint len_jobu, blasint len_jobv);
+	void (*fn) (void* joba, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* sva, void* mv, void* v, void* ldv, void* cwork, void* lwork, void* rwork, void* lrwork, void* info, fortran_charlen_t len_joba, fortran_charlen_t len_jobu, fortran_charlen_t len_jobv);
+	void (*fn_hook) (void* joba, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* sva, void* mv, void* v, void* ldv, void* cwork, void* lwork, void* rwork, void* lrwork, void* info, fortran_charlen_t len_joba, fortran_charlen_t len_jobu, fortran_charlen_t len_jobv);
 
 	fn      = current_backend->lapack.zgesvj.f77_blas_function; 
 
     hook_pos_zgesvj ++;
     if( hook_pos_zgesvj < __flexiblas_hooks->zgesvj.nhook) {
         fn_hook = __flexiblas_hooks->zgesvj.f77_hook_function[hook_pos_zgesvj];
-        fn_hook((void*) joba, (void*) jobu, (void*) jobv, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) sva, (void*) mv, (void*) v, (void*) ldv, (void*) cwork, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) info, (blasint) len_joba, (blasint) len_jobu, (blasint) len_jobv);
+        fn_hook((void*) joba, (void*) jobu, (void*) jobv, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) sva, (void*) mv, (void*) v, (void*) ldv, (void*) cwork, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) info, ( fortran_charlen_t ) len_joba, ( fortran_charlen_t ) len_jobu, ( fortran_charlen_t ) len_jobv);
     } else {
         hook_pos_zgesvj = 0;
-		fn((void*) joba, (void*) jobu, (void*) jobv, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) sva, (void*) mv, (void*) v, (void*) ldv, (void*) cwork, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) info, (blasint) len_joba, (blasint) len_jobu, (blasint) len_jobv); 
+		fn((void*) joba, (void*) jobu, (void*) jobv, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) sva, (void*) mv, (void*) v, (void*) ldv, (void*) cwork, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) info, ( fortran_charlen_t ) len_joba, ( fortran_charlen_t ) len_jobu, ( fortran_charlen_t ) len_jobv); 
 	}
 	return;
 }
-
-void flexiblas_chain_zgesvj(void* joba, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* sva, void* mv, void* v, void* ldv, void* cwork, void* lwork, void* rwork, void* lrwork, void* info, blasint len_joba, blasint len_jobu, blasint len_jobv)  __attribute__((alias("flexiblas_chain_zgesvj_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zgesvj(void* joba, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* sva, void* mv, void* v, void* ldv, void* cwork, void* lwork, void* rwork, void* lrwork, void* info, fortran_charlen_t len_joba, fortran_charlen_t len_jobu, fortran_charlen_t len_jobv) __attribute__((alias("flexiblas_chain_zgesvj_")));
+#else
+void flexiblas_chain_zgesvj(void* joba, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* sva, void* mv, void* v, void* ldv, void* cwork, void* lwork, void* rwork, void* lrwork, void* info, fortran_charlen_t len_joba, fortran_charlen_t len_jobu, fortran_charlen_t len_jobv){flexiblas_chain_zgesvj_((void*) joba, (void*) jobu, (void*) jobv, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) sva, (void*) mv, (void*) v, (void*) ldv, (void*) cwork, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) info, (fortran_charlen_t) len_joba, (fortran_charlen_t) len_jobu, (fortran_charlen_t) len_jobv);}
+#endif
 
 
 

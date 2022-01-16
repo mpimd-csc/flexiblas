@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL_(dsb2st_kernels,DSB2ST_KERNELS)(char* uplo, blasint* wantz, blasi
 #ifdef FLEXIBLAS_ABI_IBM
 void dsb2st_kernels_(char* uplo, blasint* wantz, blasint* ttype, blasint* st, blasint* ed, blasint* sweep, blasint* n, blasint* nb, blasint* ib, double* a, blasint* lda, double* v, double* tau, blasint* ldvt, double* work) __attribute__((alias(MTS(FC_GLOBAL_(dsb2st_kernels,DSB2ST_KERNELS)))));
 #else
+#ifndef __APPLE__
 void dsb2st_kernels(char* uplo, blasint* wantz, blasint* ttype, blasint* st, blasint* ed, blasint* sweep, blasint* n, blasint* nb, blasint* ib, double* a, blasint* lda, double* v, double* tau, blasint* ldvt, double* work) __attribute__((alias(MTS(FC_GLOBAL_(dsb2st_kernels,DSB2ST_KERNELS)))));
+#else
+void dsb2st_kernels(char* uplo, blasint* wantz, blasint* ttype, blasint* st, blasint* ed, blasint* sweep, blasint* n, blasint* nb, blasint* ib, double* a, blasint* lda, double* v, double* tau, blasint* ldvt, double* work){ FC_GLOBAL_(dsb2st_kernels,DSB2ST_KERNELS)((void*) uplo, (void*) wantz, (void*) ttype, (void*) st, (void*) ed, (void*) sweep, (void*) n, (void*) nb, (void*) ib, (void*) a, (void*) lda, (void*) v, (void*) tau, (void*) ldvt, (void*) work); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dsb2st_kernels_(void* uplo, void* wantz, void* ttype, void* 
 
 	return;
 }
-
-void flexiblas_real_dsb2st_kernels(void* uplo, void* wantz, void* ttype, void* st, void* ed, void* sweep, void* n, void* nb, void* ib, void* a, void* lda, void* v, void* tau, void* ldvt, void* work)  __attribute__((alias("flexiblas_real_dsb2st_kernels_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dsb2st_kernels(void* uplo, void* wantz, void* ttype, void* st, void* ed, void* sweep, void* n, void* nb, void* ib, void* a, void* lda, void* v, void* tau, void* ldvt, void* work) __attribute__((alias("flexiblas_real_dsb2st_kernels_")));
+#else
+void flexiblas_real_dsb2st_kernels(void* uplo, void* wantz, void* ttype, void* st, void* ed, void* sweep, void* n, void* nb, void* ib, void* a, void* lda, void* v, void* tau, void* ldvt, void* work){flexiblas_real_dsb2st_kernels_((void*) uplo, (void*) wantz, (void*) ttype, (void*) st, (void*) ed, (void*) sweep, (void*) n, (void*) nb, (void*) ib, (void*) a, (void*) lda, (void*) v, (void*) tau, (void*) ldvt, (void*) work);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dsb2st_kernels_(void* uplo, void* wantz, void* ttype, void*
 	}
 	return;
 }
-
-void flexiblas_chain_dsb2st_kernels(void* uplo, void* wantz, void* ttype, void* st, void* ed, void* sweep, void* n, void* nb, void* ib, void* a, void* lda, void* v, void* tau, void* ldvt, void* work)  __attribute__((alias("flexiblas_chain_dsb2st_kernels_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dsb2st_kernels(void* uplo, void* wantz, void* ttype, void* st, void* ed, void* sweep, void* n, void* nb, void* ib, void* a, void* lda, void* v, void* tau, void* ldvt, void* work) __attribute__((alias("flexiblas_chain_dsb2st_kernels_")));
+#else
+void flexiblas_chain_dsb2st_kernels(void* uplo, void* wantz, void* ttype, void* st, void* ed, void* sweep, void* n, void* nb, void* ib, void* a, void* lda, void* v, void* tau, void* ldvt, void* work){flexiblas_chain_dsb2st_kernels_((void*) uplo, (void*) wantz, (void*) ttype, (void*) st, (void*) ed, (void*) sweep, (void*) n, (void*) nb, (void*) ib, (void*) a, (void*) lda, (void*) v, (void*) tau, (void*) ldvt, (void*) work);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(slartg,SLARTG)(float* f, float* g, float* cs, float* sn, float* r
 #ifdef FLEXIBLAS_ABI_IBM
 void slartg_(float* f, float* g, float* cs, float* sn, float* r) __attribute__((alias(MTS(FC_GLOBAL(slartg,SLARTG)))));
 #else
+#ifndef __APPLE__
 void slartg(float* f, float* g, float* cs, float* sn, float* r) __attribute__((alias(MTS(FC_GLOBAL(slartg,SLARTG)))));
+#else
+void slartg(float* f, float* g, float* cs, float* sn, float* r){ FC_GLOBAL(slartg,SLARTG)((void*) f, (void*) g, (void*) cs, (void*) sn, (void*) r); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_slartg_(void* f, void* g, void* cs, void* sn, void* r)
 
 	return;
 }
-
-void flexiblas_real_slartg(void* f, void* g, void* cs, void* sn, void* r)  __attribute__((alias("flexiblas_real_slartg_")));
-
+#ifndef __APPLE__
+void flexiblas_real_slartg(void* f, void* g, void* cs, void* sn, void* r) __attribute__((alias("flexiblas_real_slartg_")));
+#else
+void flexiblas_real_slartg(void* f, void* g, void* cs, void* sn, void* r){flexiblas_real_slartg_((void*) f, (void*) g, (void*) cs, (void*) sn, (void*) r);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_slartg_(void* f, void* g, void* cs, void* sn, void* r)
 	}
 	return;
 }
-
-void flexiblas_chain_slartg(void* f, void* g, void* cs, void* sn, void* r)  __attribute__((alias("flexiblas_chain_slartg_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_slartg(void* f, void* g, void* cs, void* sn, void* r) __attribute__((alias("flexiblas_chain_slartg_")));
+#else
+void flexiblas_chain_slartg(void* f, void* g, void* cs, void* sn, void* r){flexiblas_chain_slartg_((void*) f, (void*) g, (void*) cs, (void*) sn, (void*) r);}
+#endif
 
 
 

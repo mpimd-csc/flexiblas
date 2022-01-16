@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ double FC_GLOBAL(zlangb,ZLANGB)(char* norm, blasint* n, blasint* kl, blasint* ku
 #ifdef FLEXIBLAS_ABI_IBM
 double zlangb_(char* norm, blasint* n, blasint* kl, blasint* ku, double complex* ab, blasint* ldab, double* work) __attribute__((alias(MTS(FC_GLOBAL(zlangb,ZLANGB)))));
 #else
+#ifndef __APPLE__
 double zlangb(char* norm, blasint* n, blasint* kl, blasint* ku, double complex* ab, blasint* ldab, double* work) __attribute__((alias(MTS(FC_GLOBAL(zlangb,ZLANGB)))));
+#else
+double zlangb(char* norm, blasint* n, blasint* kl, blasint* ku, double complex* ab, blasint* ldab, double* work){ return FC_GLOBAL(zlangb,ZLANGB)((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) work); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ double flexiblas_real_zlangb_(void* norm, void* n, void* kl, void* ku, void* ab,
 
 	return ret ;
 }
-
-double flexiblas_real_zlangb(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work)  __attribute__((alias("flexiblas_real_zlangb_")));
-
+#ifndef __APPLE__
+double flexiblas_real_zlangb(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work) __attribute__((alias("flexiblas_real_zlangb_")));
+#else
+double flexiblas_real_zlangb(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work){return flexiblas_real_zlangb_((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) work);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ double flexiblas_chain_zlangb_(void* norm, void* n, void* kl, void* ku, void* ab
 	}
 	return ret ;
 }
-
-double flexiblas_chain_zlangb(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work)  __attribute__((alias("flexiblas_chain_zlangb_")));
-
+#ifndef __APPLE__
+double flexiblas_chain_zlangb(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work) __attribute__((alias("flexiblas_chain_zlangb_")));
+#else
+double flexiblas_chain_zlangb(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work){return flexiblas_chain_zlangb_((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) work);}
+#endif
 
 
 

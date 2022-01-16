@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlaed6,DLAED6)(blasint* kniter, blasint* orgati, double* rho, dou
 #ifdef FLEXIBLAS_ABI_IBM
 void dlaed6_(blasint* kniter, blasint* orgati, double* rho, double* d, double* z, double* finit, double* tau, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlaed6,DLAED6)))));
 #else
+#ifndef __APPLE__
 void dlaed6(blasint* kniter, blasint* orgati, double* rho, double* d, double* z, double* finit, double* tau, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlaed6,DLAED6)))));
+#else
+void dlaed6(blasint* kniter, blasint* orgati, double* rho, double* d, double* z, double* finit, double* tau, blasint* info){ FC_GLOBAL(dlaed6,DLAED6)((void*) kniter, (void*) orgati, (void*) rho, (void*) d, (void*) z, (void*) finit, (void*) tau, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlaed6_(void* kniter, void* orgati, void* rho, void* d, void
 
 	return;
 }
-
-void flexiblas_real_dlaed6(void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info)  __attribute__((alias("flexiblas_real_dlaed6_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlaed6(void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info) __attribute__((alias("flexiblas_real_dlaed6_")));
+#else
+void flexiblas_real_dlaed6(void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info){flexiblas_real_dlaed6_((void*) kniter, (void*) orgati, (void*) rho, (void*) d, (void*) z, (void*) finit, (void*) tau, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlaed6_(void* kniter, void* orgati, void* rho, void* d, voi
 	}
 	return;
 }
-
-void flexiblas_chain_dlaed6(void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info)  __attribute__((alias("flexiblas_chain_dlaed6_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlaed6(void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info) __attribute__((alias("flexiblas_chain_dlaed6_")));
+#else
+void flexiblas_chain_dlaed6(void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info){flexiblas_chain_dlaed6_((void*) kniter, (void*) orgati, (void*) rho, (void*) d, (void*) z, (void*) finit, (void*) tau, (void*) info);}
+#endif
 
 
 

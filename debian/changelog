@@ -1,3 +1,9 @@
+flexiblas (3.1.0) focal; urgency=medium
+
+  * See CHANGELOG
+
+ -- Martin Koehler <koehlerm@mpi-magdeburg.mpg.de>  Sun, 16 Jan 2021 12:00:00 +0100
+
 flexiblas (3.0.4) focal; urgency=medium
 
   * Closes #107: DCABS1 and SCABS1 missing
@@ -6,13 +12,13 @@ flexiblas (3.0.4) focal; urgency=medium
   * Closes #103: GH #7 - LAPACK decompositions do not run in parallel
   * Closes #102: GH #6 - Wrong return type.
 
- -- Martin Koehler <koehlerm@.mpi-magdeburg.mpg.de>  Thu, 22 Oct 2020 10:52:54 +0200
+ -- Martin Koehler <koehlerm@mpi-magdeburg.mpg.de>  Thu, 22 Oct 2020 10:52:54 +0200
 
 flexiblas (3.0.3) focal; urgency=medium
 
   * Close #101: DLAMC3 and SLAMC3 missing
 
- -- Martin Koehler <koehlerm@.mpi-magdeburg.mpg.de>  Fri, 28 Aug 2020 14:35:54 +0200
+ -- Martin Koehler <koehlerm@mpi-magdeburg.mpg.de>  Fri, 28 Aug 2020 14:35:54 +0200
 
 flexiblas (3.0.2) focal; urgency=medium
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlaexc,DLAEXC)(blasint* wantq, blasint* n, double* t, blasint* ld
 #ifdef FLEXIBLAS_ABI_IBM
 void dlaexc_(blasint* wantq, blasint* n, double* t, blasint* ldt, double* q, blasint* ldq, blasint* j1, blasint* n1, blasint* n2, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlaexc,DLAEXC)))));
 #else
+#ifndef __APPLE__
 void dlaexc(blasint* wantq, blasint* n, double* t, blasint* ldt, double* q, blasint* ldq, blasint* j1, blasint* n1, blasint* n2, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlaexc,DLAEXC)))));
+#else
+void dlaexc(blasint* wantq, blasint* n, double* t, blasint* ldt, double* q, blasint* ldq, blasint* j1, blasint* n1, blasint* n2, double* work, blasint* info){ FC_GLOBAL(dlaexc,DLAEXC)((void*) wantq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) j1, (void*) n1, (void*) n2, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlaexc_(void* wantq, void* n, void* t, void* ldt, void* q, v
 
 	return;
 }
-
-void flexiblas_real_dlaexc(void* wantq, void* n, void* t, void* ldt, void* q, void* ldq, void* j1, void* n1, void* n2, void* work, void* info)  __attribute__((alias("flexiblas_real_dlaexc_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlaexc(void* wantq, void* n, void* t, void* ldt, void* q, void* ldq, void* j1, void* n1, void* n2, void* work, void* info) __attribute__((alias("flexiblas_real_dlaexc_")));
+#else
+void flexiblas_real_dlaexc(void* wantq, void* n, void* t, void* ldt, void* q, void* ldq, void* j1, void* n1, void* n2, void* work, void* info){flexiblas_real_dlaexc_((void*) wantq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) j1, (void*) n1, (void*) n2, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlaexc_(void* wantq, void* n, void* t, void* ldt, void* q, 
 	}
 	return;
 }
-
-void flexiblas_chain_dlaexc(void* wantq, void* n, void* t, void* ldt, void* q, void* ldq, void* j1, void* n1, void* n2, void* work, void* info)  __attribute__((alias("flexiblas_chain_dlaexc_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlaexc(void* wantq, void* n, void* t, void* ldt, void* q, void* ldq, void* j1, void* n1, void* n2, void* work, void* info) __attribute__((alias("flexiblas_chain_dlaexc_")));
+#else
+void flexiblas_chain_dlaexc(void* wantq, void* n, void* t, void* ldt, void* q, void* ldq, void* j1, void* n1, void* n2, void* work, void* info){flexiblas_chain_dlaexc_((void*) wantq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) j1, (void*) n1, (void*) n2, (void*) work, (void*) info);}
+#endif
 
 
 

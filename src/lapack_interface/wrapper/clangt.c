@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ float FC_GLOBAL(clangt,CLANGT)(char* norm, blasint* n, float complex* dl, float 
 #ifdef FLEXIBLAS_ABI_IBM
 float clangt_(char* norm, blasint* n, float complex* dl, float complex* d, float complex* du) __attribute__((alias(MTS(FC_GLOBAL(clangt,CLANGT)))));
 #else
+#ifndef __APPLE__
 float clangt(char* norm, blasint* n, float complex* dl, float complex* d, float complex* du) __attribute__((alias(MTS(FC_GLOBAL(clangt,CLANGT)))));
+#else
+float clangt(char* norm, blasint* n, float complex* dl, float complex* d, float complex* du){ return FC_GLOBAL(clangt,CLANGT)((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ float flexiblas_real_clangt_(void* norm, void* n, void* dl, void* d, void* du)
 
 	return ret ;
 }
-
-float flexiblas_real_clangt(void* norm, void* n, void* dl, void* d, void* du)  __attribute__((alias("flexiblas_real_clangt_")));
-
+#ifndef __APPLE__
+float flexiblas_real_clangt(void* norm, void* n, void* dl, void* d, void* du) __attribute__((alias("flexiblas_real_clangt_")));
+#else
+float flexiblas_real_clangt(void* norm, void* n, void* dl, void* d, void* du){return flexiblas_real_clangt_((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ float flexiblas_chain_clangt_(void* norm, void* n, void* dl, void* d, void* du)
 	}
 	return ret ;
 }
-
-float flexiblas_chain_clangt(void* norm, void* n, void* dl, void* d, void* du)  __attribute__((alias("flexiblas_chain_clangt_")));
-
+#ifndef __APPLE__
+float flexiblas_chain_clangt(void* norm, void* n, void* dl, void* d, void* du) __attribute__((alias("flexiblas_chain_clangt_")));
+#else
+float flexiblas_chain_clangt(void* norm, void* n, void* dl, void* d, void* du){return flexiblas_chain_clangt_((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du);}
+#endif
 
 
 

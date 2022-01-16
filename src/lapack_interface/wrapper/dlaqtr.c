@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlaqtr,DLAQTR)(blasint* ltran, blasint* lreal, blasint* n, double
 #ifdef FLEXIBLAS_ABI_IBM
 void dlaqtr_(blasint* ltran, blasint* lreal, blasint* n, double* t, blasint* ldt, double* b, double* w, double* scale, double* x, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlaqtr,DLAQTR)))));
 #else
+#ifndef __APPLE__
 void dlaqtr(blasint* ltran, blasint* lreal, blasint* n, double* t, blasint* ldt, double* b, double* w, double* scale, double* x, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlaqtr,DLAQTR)))));
+#else
+void dlaqtr(blasint* ltran, blasint* lreal, blasint* n, double* t, blasint* ldt, double* b, double* w, double* scale, double* x, double* work, blasint* info){ FC_GLOBAL(dlaqtr,DLAQTR)((void*) ltran, (void*) lreal, (void*) n, (void*) t, (void*) ldt, (void*) b, (void*) w, (void*) scale, (void*) x, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlaqtr_(void* ltran, void* lreal, void* n, void* t, void* ld
 
 	return;
 }
-
-void flexiblas_real_dlaqtr(void* ltran, void* lreal, void* n, void* t, void* ldt, void* b, void* w, void* scale, void* x, void* work, void* info)  __attribute__((alias("flexiblas_real_dlaqtr_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlaqtr(void* ltran, void* lreal, void* n, void* t, void* ldt, void* b, void* w, void* scale, void* x, void* work, void* info) __attribute__((alias("flexiblas_real_dlaqtr_")));
+#else
+void flexiblas_real_dlaqtr(void* ltran, void* lreal, void* n, void* t, void* ldt, void* b, void* w, void* scale, void* x, void* work, void* info){flexiblas_real_dlaqtr_((void*) ltran, (void*) lreal, (void*) n, (void*) t, (void*) ldt, (void*) b, (void*) w, (void*) scale, (void*) x, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlaqtr_(void* ltran, void* lreal, void* n, void* t, void* l
 	}
 	return;
 }
-
-void flexiblas_chain_dlaqtr(void* ltran, void* lreal, void* n, void* t, void* ldt, void* b, void* w, void* scale, void* x, void* work, void* info)  __attribute__((alias("flexiblas_chain_dlaqtr_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlaqtr(void* ltran, void* lreal, void* n, void* t, void* ldt, void* b, void* w, void* scale, void* x, void* work, void* info) __attribute__((alias("flexiblas_chain_dlaqtr_")));
+#else
+void flexiblas_chain_dlaqtr(void* ltran, void* lreal, void* n, void* t, void* ldt, void* b, void* w, void* scale, void* x, void* work, void* info){flexiblas_chain_dlaqtr_((void*) ltran, (void*) lreal, (void*) n, (void*) t, (void*) ldt, (void*) b, (void*) w, (void*) scale, (void*) x, (void*) work, (void*) info);}
+#endif
 
 
 

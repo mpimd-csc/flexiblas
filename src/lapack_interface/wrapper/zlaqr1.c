@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zlaqr1,ZLAQR1)(blasint* n, double complex* h, blasint* ldh, doubl
 #ifdef FLEXIBLAS_ABI_IBM
 void zlaqr1_(blasint* n, double complex* h, blasint* ldh, double complex* s1, double complex* s2, double complex* v) __attribute__((alias(MTS(FC_GLOBAL(zlaqr1,ZLAQR1)))));
 #else
+#ifndef __APPLE__
 void zlaqr1(blasint* n, double complex* h, blasint* ldh, double complex* s1, double complex* s2, double complex* v) __attribute__((alias(MTS(FC_GLOBAL(zlaqr1,ZLAQR1)))));
+#else
+void zlaqr1(blasint* n, double complex* h, blasint* ldh, double complex* s1, double complex* s2, double complex* v){ FC_GLOBAL(zlaqr1,ZLAQR1)((void*) n, (void*) h, (void*) ldh, (void*) s1, (void*) s2, (void*) v); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zlaqr1_(void* n, void* h, void* ldh, void* s1, void* s2, voi
 
 	return;
 }
-
-void flexiblas_real_zlaqr1(void* n, void* h, void* ldh, void* s1, void* s2, void* v)  __attribute__((alias("flexiblas_real_zlaqr1_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zlaqr1(void* n, void* h, void* ldh, void* s1, void* s2, void* v) __attribute__((alias("flexiblas_real_zlaqr1_")));
+#else
+void flexiblas_real_zlaqr1(void* n, void* h, void* ldh, void* s1, void* s2, void* v){flexiblas_real_zlaqr1_((void*) n, (void*) h, (void*) ldh, (void*) s1, (void*) s2, (void*) v);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zlaqr1_(void* n, void* h, void* ldh, void* s1, void* s2, vo
 	}
 	return;
 }
-
-void flexiblas_chain_zlaqr1(void* n, void* h, void* ldh, void* s1, void* s2, void* v)  __attribute__((alias("flexiblas_chain_zlaqr1_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zlaqr1(void* n, void* h, void* ldh, void* s1, void* s2, void* v) __attribute__((alias("flexiblas_chain_zlaqr1_")));
+#else
+void flexiblas_chain_zlaqr1(void* n, void* h, void* ldh, void* s1, void* s2, void* v){flexiblas_chain_zlaqr1_((void*) n, (void*) h, (void*) ldh, (void*) s1, (void*) s2, (void*) v);}
+#endif
 
 
 

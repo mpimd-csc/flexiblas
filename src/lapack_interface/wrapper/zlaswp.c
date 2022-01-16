@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zlaswp,ZLASWP)(blasint* n, double complex* a, blasint* lda, blasi
 #ifdef FLEXIBLAS_ABI_IBM
 void zlaswp_(blasint* n, double complex* a, blasint* lda, blasint* k1, blasint* k2, blasint* ipiv, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(zlaswp,ZLASWP)))));
 #else
+#ifndef __APPLE__
 void zlaswp(blasint* n, double complex* a, blasint* lda, blasint* k1, blasint* k2, blasint* ipiv, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(zlaswp,ZLASWP)))));
+#else
+void zlaswp(blasint* n, double complex* a, blasint* lda, blasint* k1, blasint* k2, blasint* ipiv, blasint* incx){ FC_GLOBAL(zlaswp,ZLASWP)((void*) n, (void*) a, (void*) lda, (void*) k1, (void*) k2, (void*) ipiv, (void*) incx); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zlaswp_(void* n, void* a, void* lda, void* k1, void* k2, voi
 
 	return;
 }
-
-void flexiblas_real_zlaswp(void* n, void* a, void* lda, void* k1, void* k2, void* ipiv, void* incx)  __attribute__((alias("flexiblas_real_zlaswp_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zlaswp(void* n, void* a, void* lda, void* k1, void* k2, void* ipiv, void* incx) __attribute__((alias("flexiblas_real_zlaswp_")));
+#else
+void flexiblas_real_zlaswp(void* n, void* a, void* lda, void* k1, void* k2, void* ipiv, void* incx){flexiblas_real_zlaswp_((void*) n, (void*) a, (void*) lda, (void*) k1, (void*) k2, (void*) ipiv, (void*) incx);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zlaswp_(void* n, void* a, void* lda, void* k1, void* k2, vo
 	}
 	return;
 }
-
-void flexiblas_chain_zlaswp(void* n, void* a, void* lda, void* k1, void* k2, void* ipiv, void* incx)  __attribute__((alias("flexiblas_chain_zlaswp_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zlaswp(void* n, void* a, void* lda, void* k1, void* k2, void* ipiv, void* incx) __attribute__((alias("flexiblas_chain_zlaswp_")));
+#else
+void flexiblas_chain_zlaswp(void* n, void* a, void* lda, void* k1, void* k2, void* ipiv, void* incx){flexiblas_chain_zlaswp_((void*) n, (void*) a, (void*) lda, (void*) k1, (void*) k2, (void*) ipiv, (void*) incx);}
+#endif
 
 
 

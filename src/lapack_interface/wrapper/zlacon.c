@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zlacon,ZLACON)(blasint* n, double complex* v, double complex* x, 
 #ifdef FLEXIBLAS_ABI_IBM
 void zlacon_(blasint* n, double complex* v, double complex* x, double* est, blasint* kase) __attribute__((alias(MTS(FC_GLOBAL(zlacon,ZLACON)))));
 #else
+#ifndef __APPLE__
 void zlacon(blasint* n, double complex* v, double complex* x, double* est, blasint* kase) __attribute__((alias(MTS(FC_GLOBAL(zlacon,ZLACON)))));
+#else
+void zlacon(blasint* n, double complex* v, double complex* x, double* est, blasint* kase){ FC_GLOBAL(zlacon,ZLACON)((void*) n, (void*) v, (void*) x, (void*) est, (void*) kase); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zlacon_(void* n, void* v, void* x, void* est, void* kase)
 
 	return;
 }
-
-void flexiblas_real_zlacon(void* n, void* v, void* x, void* est, void* kase)  __attribute__((alias("flexiblas_real_zlacon_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zlacon(void* n, void* v, void* x, void* est, void* kase) __attribute__((alias("flexiblas_real_zlacon_")));
+#else
+void flexiblas_real_zlacon(void* n, void* v, void* x, void* est, void* kase){flexiblas_real_zlacon_((void*) n, (void*) v, (void*) x, (void*) est, (void*) kase);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zlacon_(void* n, void* v, void* x, void* est, void* kase)
 	}
 	return;
 }
-
-void flexiblas_chain_zlacon(void* n, void* v, void* x, void* est, void* kase)  __attribute__((alias("flexiblas_chain_zlacon_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zlacon(void* n, void* v, void* x, void* est, void* kase) __attribute__((alias("flexiblas_chain_zlacon_")));
+#else
+void flexiblas_chain_zlacon(void* n, void* v, void* x, void* est, void* kase){flexiblas_chain_zlacon_((void*) n, (void*) v, (void*) x, (void*) est, (void*) kase);}
+#endif
 
 
 

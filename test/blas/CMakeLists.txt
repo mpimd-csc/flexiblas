@@ -1,6 +1,8 @@
 macro(add_blas_test name src)
 	get_filename_component(baseNAME ${src} NAME_WE)
 	set(TEST_INPUT "${CMAKE_CURRENT_SOURCE_DIR}/${baseNAME}.in")
+    set(TEST_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${baseNAME}.out")
+
 
 	MESSAGE(STATUS "${TEST_INPUT}")
 	add_executable(${name} ${src})
@@ -9,6 +11,7 @@ macro(add_blas_test name src)
 		add_test(NAME BLAS-${name} COMMAND "${CMAKE_COMMAND}"
 			-DTEST=$<TARGET_FILE:${name}>
 			-DINPUT=${TEST_INPUT}
+            -DOUTPUT=${TEST_OUTPUT}
 			-DINTDIR=${CMAKE_CFG_INTDIR}
 			-P "${CMAKE_CURRENT_SOURCE_DIR}/runtest.cmake")
 	else()

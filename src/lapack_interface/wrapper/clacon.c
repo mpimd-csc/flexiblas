@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(clacon,CLACON)(blasint* n, float complex* v, float complex* x, fl
 #ifdef FLEXIBLAS_ABI_IBM
 void clacon_(blasint* n, float complex* v, float complex* x, float* est, blasint* kase) __attribute__((alias(MTS(FC_GLOBAL(clacon,CLACON)))));
 #else
+#ifndef __APPLE__
 void clacon(blasint* n, float complex* v, float complex* x, float* est, blasint* kase) __attribute__((alias(MTS(FC_GLOBAL(clacon,CLACON)))));
+#else
+void clacon(blasint* n, float complex* v, float complex* x, float* est, blasint* kase){ FC_GLOBAL(clacon,CLACON)((void*) n, (void*) v, (void*) x, (void*) est, (void*) kase); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_clacon_(void* n, void* v, void* x, void* est, void* kase)
 
 	return;
 }
-
-void flexiblas_real_clacon(void* n, void* v, void* x, void* est, void* kase)  __attribute__((alias("flexiblas_real_clacon_")));
-
+#ifndef __APPLE__
+void flexiblas_real_clacon(void* n, void* v, void* x, void* est, void* kase) __attribute__((alias("flexiblas_real_clacon_")));
+#else
+void flexiblas_real_clacon(void* n, void* v, void* x, void* est, void* kase){flexiblas_real_clacon_((void*) n, (void*) v, (void*) x, (void*) est, (void*) kase);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_clacon_(void* n, void* v, void* x, void* est, void* kase)
 	}
 	return;
 }
-
-void flexiblas_chain_clacon(void* n, void* v, void* x, void* est, void* kase)  __attribute__((alias("flexiblas_chain_clacon_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_clacon(void* n, void* v, void* x, void* est, void* kase) __attribute__((alias("flexiblas_chain_clacon_")));
+#else
+void flexiblas_chain_clacon(void* n, void* v, void* x, void* est, void* kase){flexiblas_chain_clacon_((void*) n, (void*) v, (void*) x, (void*) est, (void*) kase);}
+#endif
 
 
 

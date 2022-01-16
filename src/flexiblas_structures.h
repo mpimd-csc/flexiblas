@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
 
 
@@ -89,6 +89,21 @@ extern "C" {
     typedef int (*flexiblas_get_num_procs_function_t)(void);			// TODO is this procedure implemented yet, if so where and what EXACTLY does it return?
 
 #ifdef FLEXIBLAS_LAPACK
+
+#ifdef FLEXIBLAS_LAPACK_3_10_0
+#include "lapack_interface/structures_lapack_3_10_0.h"
+#endif
+#ifdef FLEXIBLAS_LAPACK_3_10_0_WODPRC
+#include "lapack_interface/structures_lapack_3_10_0-wodprc.h"
+#endif
+
+#ifdef FLEXIBLAS_LAPACK_3_9_1
+#include "lapack_interface/structures_lapack_3_9_1.h"
+#endif
+#ifdef FLEXIBLAS_LAPACK_3_9_1_WODPRC
+#include "lapack_interface/structures_lapack_3_9_1-wodprc.h"
+#endif
+
 #ifdef FLEXIBLAS_LAPACK_3_9_0
 #include "lapack_interface/structures_lapack_3_9_0.h"
 #endif
@@ -2397,6 +2412,43 @@ extern "C" {
         struct flexiblas_hook_fn zunmtr;
         struct flexiblas_hook_fn zupgtr;
         struct flexiblas_hook_fn zupmtr;
+
+        /* LAPACK 3.9.1 */
+
+        struct flexiblas_hook_fn cgetsqrhrt;
+        struct flexiblas_hook_fn clarfb_gett;
+        struct flexiblas_hook_fn cungtsqr_row;
+        struct flexiblas_hook_fn dgetsqrhrt;
+        struct flexiblas_hook_fn dlarfb_gett;
+        struct flexiblas_hook_fn dorgtsqr_row;
+        struct flexiblas_hook_fn sgetsqrhrt;
+        struct flexiblas_hook_fn slarfb_gett;
+        struct flexiblas_hook_fn sorgtsqr_row;
+        struct flexiblas_hook_fn zgetsqrhrt;
+        struct flexiblas_hook_fn zlarfb_gett;
+        struct flexiblas_hook_fn zungtsqr_row;
+
+        /* LAPACK 3.10.0 */
+        struct flexiblas_hook_fn claqz0;
+        struct flexiblas_hook_fn claqz1;
+        struct flexiblas_hook_fn claqz2;
+        struct flexiblas_hook_fn claqz3;
+        struct flexiblas_hook_fn zlaqz0;
+        struct flexiblas_hook_fn zlaqz1;
+        struct flexiblas_hook_fn zlaqz2;
+        struct flexiblas_hook_fn zlaqz3;
+        struct flexiblas_hook_fn dlaqz0;
+        struct flexiblas_hook_fn dlaqz1;
+        struct flexiblas_hook_fn dlaqz2;
+        struct flexiblas_hook_fn dlaqz3;
+        struct flexiblas_hook_fn dlaqz4;
+        struct flexiblas_hook_fn slaqz0;
+        struct flexiblas_hook_fn slaqz1;
+        struct flexiblas_hook_fn slaqz2;
+        struct flexiblas_hook_fn slaqz3;
+        struct flexiblas_hook_fn slaqz4;
+
+
 
 
     } flexiblas_hook_t;

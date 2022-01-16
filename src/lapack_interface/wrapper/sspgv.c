@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(sspgv,SSPGV)(blasint* itype, char* jobz, char* uplo, blasint* n, 
 #ifdef FLEXIBLAS_ABI_IBM
 void sspgv_(blasint* itype, char* jobz, char* uplo, blasint* n, float* ap, float* bp, float* w, float* z, blasint* ldz, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sspgv,SSPGV)))));
 #else
+#ifndef __APPLE__
 void sspgv(blasint* itype, char* jobz, char* uplo, blasint* n, float* ap, float* bp, float* w, float* z, blasint* ldz, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sspgv,SSPGV)))));
+#else
+void sspgv(blasint* itype, char* jobz, char* uplo, blasint* n, float* ap, float* bp, float* w, float* z, blasint* ldz, float* work, blasint* info){ FC_GLOBAL(sspgv,SSPGV)((void*) itype, (void*) jobz, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_sspgv_(void* itype, void* jobz, void* uplo, void* n, void* a
 
 	return;
 }
-
-void flexiblas_real_sspgv(void* itype, void* jobz, void* uplo, void* n, void* ap, void* bp, void* w, void* z, void* ldz, void* work, void* info)  __attribute__((alias("flexiblas_real_sspgv_")));
-
+#ifndef __APPLE__
+void flexiblas_real_sspgv(void* itype, void* jobz, void* uplo, void* n, void* ap, void* bp, void* w, void* z, void* ldz, void* work, void* info) __attribute__((alias("flexiblas_real_sspgv_")));
+#else
+void flexiblas_real_sspgv(void* itype, void* jobz, void* uplo, void* n, void* ap, void* bp, void* w, void* z, void* ldz, void* work, void* info){flexiblas_real_sspgv_((void*) itype, (void*) jobz, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_sspgv_(void* itype, void* jobz, void* uplo, void* n, void* 
 	}
 	return;
 }
-
-void flexiblas_chain_sspgv(void* itype, void* jobz, void* uplo, void* n, void* ap, void* bp, void* w, void* z, void* ldz, void* work, void* info)  __attribute__((alias("flexiblas_chain_sspgv_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_sspgv(void* itype, void* jobz, void* uplo, void* n, void* ap, void* bp, void* w, void* z, void* ldz, void* work, void* info) __attribute__((alias("flexiblas_chain_sspgv_")));
+#else
+void flexiblas_chain_sspgv(void* itype, void* jobz, void* uplo, void* n, void* ap, void* bp, void* w, void* z, void* ldz, void* work, void* info){flexiblas_chain_sspgv_((void*) itype, (void*) jobz, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) info);}
+#endif
 
 
 

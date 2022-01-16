@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(cgels,CGELS)(char* trans, blasint* m, blasint* n, blasint* nrhs, 
 #ifdef FLEXIBLAS_ABI_IBM
 void cgels_(char* trans, blasint* m, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cgels,CGELS)))));
 #else
+#ifndef __APPLE__
 void cgels(char* trans, blasint* m, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cgels,CGELS)))));
+#else
+void cgels(char* trans, blasint* m, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* work, blasint* lwork, blasint* info){ FC_GLOBAL(cgels,CGELS)((void*) trans, (void*) m, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) work, (void*) lwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_cgels_(void* trans, void* m, void* n, void* nrhs, void* a, v
 
 	return;
 }
-
-void flexiblas_real_cgels(void* trans, void* m, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_real_cgels_")));
-
+#ifndef __APPLE__
+void flexiblas_real_cgels(void* trans, void* m, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_cgels_")));
+#else
+void flexiblas_real_cgels(void* trans, void* m, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* work, void* lwork, void* info){flexiblas_real_cgels_((void*) trans, (void*) m, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_cgels_(void* trans, void* m, void* n, void* nrhs, void* a, 
 	}
 	return;
 }
-
-void flexiblas_chain_cgels(void* trans, void* m, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_chain_cgels_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_cgels(void* trans, void* m, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_cgels_")));
+#else
+void flexiblas_chain_cgels(void* trans, void* m, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* work, void* lwork, void* info){flexiblas_chain_cgels_((void*) trans, (void*) m, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 

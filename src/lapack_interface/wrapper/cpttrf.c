@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(cpttrf,CPTTRF)(blasint* n, float* d, float complex* e, blasint* i
 #ifdef FLEXIBLAS_ABI_IBM
 void cpttrf_(blasint* n, float* d, float complex* e, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cpttrf,CPTTRF)))));
 #else
+#ifndef __APPLE__
 void cpttrf(blasint* n, float* d, float complex* e, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cpttrf,CPTTRF)))));
+#else
+void cpttrf(blasint* n, float* d, float complex* e, blasint* info){ FC_GLOBAL(cpttrf,CPTTRF)((void*) n, (void*) d, (void*) e, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_cpttrf_(void* n, void* d, void* e, void* info)
 
 	return;
 }
-
-void flexiblas_real_cpttrf(void* n, void* d, void* e, void* info)  __attribute__((alias("flexiblas_real_cpttrf_")));
-
+#ifndef __APPLE__
+void flexiblas_real_cpttrf(void* n, void* d, void* e, void* info) __attribute__((alias("flexiblas_real_cpttrf_")));
+#else
+void flexiblas_real_cpttrf(void* n, void* d, void* e, void* info){flexiblas_real_cpttrf_((void*) n, (void*) d, (void*) e, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_cpttrf_(void* n, void* d, void* e, void* info)
 	}
 	return;
 }
-
-void flexiblas_chain_cpttrf(void* n, void* d, void* e, void* info)  __attribute__((alias("flexiblas_chain_cpttrf_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_cpttrf(void* n, void* d, void* e, void* info) __attribute__((alias("flexiblas_chain_cpttrf_")));
+#else
+void flexiblas_chain_cpttrf(void* n, void* d, void* e, void* info){flexiblas_chain_cpttrf_((void*) n, (void*) d, (void*) e, (void*) info);}
+#endif
 
 
 

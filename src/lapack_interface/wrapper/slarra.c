@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(slarra,SLARRA)(blasint* n, float* d, float* e, float* e2, float* 
 #ifdef FLEXIBLAS_ABI_IBM
 void slarra_(blasint* n, float* d, float* e, float* e2, float* spltol, float* tnrm, blasint* nsplit, blasint* isplit, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(slarra,SLARRA)))));
 #else
+#ifndef __APPLE__
 void slarra(blasint* n, float* d, float* e, float* e2, float* spltol, float* tnrm, blasint* nsplit, blasint* isplit, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(slarra,SLARRA)))));
+#else
+void slarra(blasint* n, float* d, float* e, float* e2, float* spltol, float* tnrm, blasint* nsplit, blasint* isplit, blasint* info){ FC_GLOBAL(slarra,SLARRA)((void*) n, (void*) d, (void*) e, (void*) e2, (void*) spltol, (void*) tnrm, (void*) nsplit, (void*) isplit, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_slarra_(void* n, void* d, void* e, void* e2, void* spltol, v
 
 	return;
 }
-
-void flexiblas_real_slarra(void* n, void* d, void* e, void* e2, void* spltol, void* tnrm, void* nsplit, void* isplit, void* info)  __attribute__((alias("flexiblas_real_slarra_")));
-
+#ifndef __APPLE__
+void flexiblas_real_slarra(void* n, void* d, void* e, void* e2, void* spltol, void* tnrm, void* nsplit, void* isplit, void* info) __attribute__((alias("flexiblas_real_slarra_")));
+#else
+void flexiblas_real_slarra(void* n, void* d, void* e, void* e2, void* spltol, void* tnrm, void* nsplit, void* isplit, void* info){flexiblas_real_slarra_((void*) n, (void*) d, (void*) e, (void*) e2, (void*) spltol, (void*) tnrm, (void*) nsplit, (void*) isplit, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_slarra_(void* n, void* d, void* e, void* e2, void* spltol, 
 	}
 	return;
 }
-
-void flexiblas_chain_slarra(void* n, void* d, void* e, void* e2, void* spltol, void* tnrm, void* nsplit, void* isplit, void* info)  __attribute__((alias("flexiblas_chain_slarra_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_slarra(void* n, void* d, void* e, void* e2, void* spltol, void* tnrm, void* nsplit, void* isplit, void* info) __attribute__((alias("flexiblas_chain_slarra_")));
+#else
+void flexiblas_chain_slarra(void* n, void* d, void* e, void* e2, void* spltol, void* tnrm, void* nsplit, void* isplit, void* info){flexiblas_chain_slarra_((void*) n, (void*) d, (void*) e, (void*) e2, (void*) spltol, (void*) tnrm, (void*) nsplit, (void*) isplit, (void*) info);}
+#endif
 
 
 

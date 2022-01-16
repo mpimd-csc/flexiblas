@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(slartv,SLARTV)(blasint* n, float* x, blasint* incx, float* y, bla
 #ifdef FLEXIBLAS_ABI_IBM
 void slartv_(blasint* n, float* x, blasint* incx, float* y, blasint* incy, float* c, float* s, blasint* incc) __attribute__((alias(MTS(FC_GLOBAL(slartv,SLARTV)))));
 #else
+#ifndef __APPLE__
 void slartv(blasint* n, float* x, blasint* incx, float* y, blasint* incy, float* c, float* s, blasint* incc) __attribute__((alias(MTS(FC_GLOBAL(slartv,SLARTV)))));
+#else
+void slartv(blasint* n, float* x, blasint* incx, float* y, blasint* incy, float* c, float* s, blasint* incc){ FC_GLOBAL(slartv,SLARTV)((void*) n, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) c, (void*) s, (void*) incc); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_slartv_(void* n, void* x, void* incx, void* y, void* incy, v
 
 	return;
 }
-
-void flexiblas_real_slartv(void* n, void* x, void* incx, void* y, void* incy, void* c, void* s, void* incc)  __attribute__((alias("flexiblas_real_slartv_")));
-
+#ifndef __APPLE__
+void flexiblas_real_slartv(void* n, void* x, void* incx, void* y, void* incy, void* c, void* s, void* incc) __attribute__((alias("flexiblas_real_slartv_")));
+#else
+void flexiblas_real_slartv(void* n, void* x, void* incx, void* y, void* incy, void* c, void* s, void* incc){flexiblas_real_slartv_((void*) n, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) c, (void*) s, (void*) incc);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_slartv_(void* n, void* x, void* incx, void* y, void* incy, 
 	}
 	return;
 }
-
-void flexiblas_chain_slartv(void* n, void* x, void* incx, void* y, void* incy, void* c, void* s, void* incc)  __attribute__((alias("flexiblas_chain_slartv_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_slartv(void* n, void* x, void* incx, void* y, void* incy, void* c, void* s, void* incc) __attribute__((alias("flexiblas_chain_slartv_")));
+#else
+void flexiblas_chain_slartv(void* n, void* x, void* incx, void* y, void* incy, void* c, void* s, void* incc){flexiblas_chain_slartv_((void*) n, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) c, (void*) s, (void*) incc);}
+#endif
 
 
 

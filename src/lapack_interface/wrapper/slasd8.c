@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(slasd8,SLASD8)(blasint* icompq, blasint* k, float* d, float* z, f
 #ifdef FLEXIBLAS_ABI_IBM
 void slasd8_(blasint* icompq, blasint* k, float* d, float* z, float* vf, float* vl, float* difl, float* difr, blasint* lddifr, float* dsigma, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(slasd8,SLASD8)))));
 #else
+#ifndef __APPLE__
 void slasd8(blasint* icompq, blasint* k, float* d, float* z, float* vf, float* vl, float* difl, float* difr, blasint* lddifr, float* dsigma, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(slasd8,SLASD8)))));
+#else
+void slasd8(blasint* icompq, blasint* k, float* d, float* z, float* vf, float* vl, float* difl, float* difr, blasint* lddifr, float* dsigma, float* work, blasint* info){ FC_GLOBAL(slasd8,SLASD8)((void*) icompq, (void*) k, (void*) d, (void*) z, (void*) vf, (void*) vl, (void*) difl, (void*) difr, (void*) lddifr, (void*) dsigma, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_slasd8_(void* icompq, void* k, void* d, void* z, void* vf, v
 
 	return;
 }
-
-void flexiblas_real_slasd8(void* icompq, void* k, void* d, void* z, void* vf, void* vl, void* difl, void* difr, void* lddifr, void* dsigma, void* work, void* info)  __attribute__((alias("flexiblas_real_slasd8_")));
-
+#ifndef __APPLE__
+void flexiblas_real_slasd8(void* icompq, void* k, void* d, void* z, void* vf, void* vl, void* difl, void* difr, void* lddifr, void* dsigma, void* work, void* info) __attribute__((alias("flexiblas_real_slasd8_")));
+#else
+void flexiblas_real_slasd8(void* icompq, void* k, void* d, void* z, void* vf, void* vl, void* difl, void* difr, void* lddifr, void* dsigma, void* work, void* info){flexiblas_real_slasd8_((void*) icompq, (void*) k, (void*) d, (void*) z, (void*) vf, (void*) vl, (void*) difl, (void*) difr, (void*) lddifr, (void*) dsigma, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_slasd8_(void* icompq, void* k, void* d, void* z, void* vf, 
 	}
 	return;
 }
-
-void flexiblas_chain_slasd8(void* icompq, void* k, void* d, void* z, void* vf, void* vl, void* difl, void* difr, void* lddifr, void* dsigma, void* work, void* info)  __attribute__((alias("flexiblas_chain_slasd8_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_slasd8(void* icompq, void* k, void* d, void* z, void* vf, void* vl, void* difl, void* difr, void* lddifr, void* dsigma, void* work, void* info) __attribute__((alias("flexiblas_chain_slasd8_")));
+#else
+void flexiblas_chain_slasd8(void* icompq, void* k, void* d, void* z, void* vf, void* vl, void* difl, void* difr, void* lddifr, void* dsigma, void* work, void* info){flexiblas_chain_slasd8_((void*) icompq, (void*) k, (void*) d, (void*) z, (void*) vf, (void*) vl, (void*) difl, (void*) difr, (void*) lddifr, (void*) dsigma, (void*) work, (void*) info);}
+#endif
 
 
 

@@ -1,0 +1,13 @@
+Name: flexiblas
+Version: 3.1.0
+Date: 2022-01-16
+Author: Martin Koehler <koehlerm@mpi-magdeburg.mpg.de>
+Maintainer: Martin Koehler <koehlerm@mpi-magdeburg.mpg.de>
+Title: FlexiBLAS API Interface for Octave
+Description: FlexiBLAS is a BLAS wrapper library which allows to change the BLAS
+ without recompiling the programs.
+Depends: octave (>= 5.1.0)
+Autoload: yes
+License: GPLv3+
+Categories: Utility
+Url: http://www.mpi-magdeburg.mpg.de/projects/flexiblas

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(cspr,CSPR)(char* uplo, blasint* n, float complex* alpha, float co
 #ifdef FLEXIBLAS_ABI_IBM
 void cspr_(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* ap) __attribute__((alias(MTS(FC_GLOBAL(cspr,CSPR)))));
 #else
+#ifndef __APPLE__
 void cspr(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* ap) __attribute__((alias(MTS(FC_GLOBAL(cspr,CSPR)))));
+#else
+void cspr(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* ap){ FC_GLOBAL(cspr,CSPR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_cspr_(void* uplo, void* n, void* alpha, void* x, void* incx,
 
 	return;
 }
-
-void flexiblas_real_cspr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap)  __attribute__((alias("flexiblas_real_cspr_")));
-
+#ifndef __APPLE__
+void flexiblas_real_cspr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap) __attribute__((alias("flexiblas_real_cspr_")));
+#else
+void flexiblas_real_cspr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap){flexiblas_real_cspr_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_cspr_(void* uplo, void* n, void* alpha, void* x, void* incx
 	}
 	return;
 }
-
-void flexiblas_chain_cspr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap)  __attribute__((alias("flexiblas_chain_cspr_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_cspr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap) __attribute__((alias("flexiblas_chain_cspr_")));
+#else
+void flexiblas_chain_cspr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap){flexiblas_chain_cspr_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap);}
+#endif
 
 
 

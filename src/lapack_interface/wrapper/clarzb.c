@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(clarzb,CLARZB)(char* side, char* trans, char* direct, char* store
 #ifdef FLEXIBLAS_ABI_IBM
 void clarzb_(char* side, char* trans, char* direct, char* storev, blasint* m, blasint* n, blasint* k, blasint* l, float complex* v, blasint* ldv, float complex* t, blasint* ldt, float complex* c, blasint* ldc, float complex* work, blasint* ldwork) __attribute__((alias(MTS(FC_GLOBAL(clarzb,CLARZB)))));
 #else
+#ifndef __APPLE__
 void clarzb(char* side, char* trans, char* direct, char* storev, blasint* m, blasint* n, blasint* k, blasint* l, float complex* v, blasint* ldv, float complex* t, blasint* ldt, float complex* c, blasint* ldc, float complex* work, blasint* ldwork) __attribute__((alias(MTS(FC_GLOBAL(clarzb,CLARZB)))));
+#else
+void clarzb(char* side, char* trans, char* direct, char* storev, blasint* m, blasint* n, blasint* k, blasint* l, float complex* v, blasint* ldv, float complex* t, blasint* ldt, float complex* c, blasint* ldc, float complex* work, blasint* ldwork){ FC_GLOBAL(clarzb,CLARZB)((void*) side, (void*) trans, (void*) direct, (void*) storev, (void*) m, (void*) n, (void*) k, (void*) l, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) ldwork); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_clarzb_(void* side, void* trans, void* direct, void* storev,
 
 	return;
 }
-
-void flexiblas_real_clarzb(void* side, void* trans, void* direct, void* storev, void* m, void* n, void* k, void* l, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* ldwork)  __attribute__((alias("flexiblas_real_clarzb_")));
-
+#ifndef __APPLE__
+void flexiblas_real_clarzb(void* side, void* trans, void* direct, void* storev, void* m, void* n, void* k, void* l, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* ldwork) __attribute__((alias("flexiblas_real_clarzb_")));
+#else
+void flexiblas_real_clarzb(void* side, void* trans, void* direct, void* storev, void* m, void* n, void* k, void* l, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* ldwork){flexiblas_real_clarzb_((void*) side, (void*) trans, (void*) direct, (void*) storev, (void*) m, (void*) n, (void*) k, (void*) l, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) ldwork);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_clarzb_(void* side, void* trans, void* direct, void* storev
 	}
 	return;
 }
-
-void flexiblas_chain_clarzb(void* side, void* trans, void* direct, void* storev, void* m, void* n, void* k, void* l, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* ldwork)  __attribute__((alias("flexiblas_chain_clarzb_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_clarzb(void* side, void* trans, void* direct, void* storev, void* m, void* n, void* k, void* l, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* ldwork) __attribute__((alias("flexiblas_chain_clarzb_")));
+#else
+void flexiblas_chain_clarzb(void* side, void* trans, void* direct, void* storev, void* m, void* n, void* k, void* l, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* ldwork){flexiblas_chain_clarzb_((void*) side, (void*) trans, (void*) direct, (void*) storev, (void*) m, (void*) n, (void*) k, (void*) l, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) ldwork);}
+#endif
 
 
 

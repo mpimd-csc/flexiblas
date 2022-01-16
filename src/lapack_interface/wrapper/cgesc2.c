@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(cgesc2,CGESC2)(blasint* n, float complex* a, blasint* lda, float 
 #ifdef FLEXIBLAS_ABI_IBM
 void cgesc2_(blasint* n, float complex* a, blasint* lda, float complex* rhs, blasint* ipiv, blasint* jpiv, float* scale) __attribute__((alias(MTS(FC_GLOBAL(cgesc2,CGESC2)))));
 #else
+#ifndef __APPLE__
 void cgesc2(blasint* n, float complex* a, blasint* lda, float complex* rhs, blasint* ipiv, blasint* jpiv, float* scale) __attribute__((alias(MTS(FC_GLOBAL(cgesc2,CGESC2)))));
+#else
+void cgesc2(blasint* n, float complex* a, blasint* lda, float complex* rhs, blasint* ipiv, blasint* jpiv, float* scale){ FC_GLOBAL(cgesc2,CGESC2)((void*) n, (void*) a, (void*) lda, (void*) rhs, (void*) ipiv, (void*) jpiv, (void*) scale); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_cgesc2_(void* n, void* a, void* lda, void* rhs, void* ipiv, 
 
 	return;
 }
-
-void flexiblas_real_cgesc2(void* n, void* a, void* lda, void* rhs, void* ipiv, void* jpiv, void* scale)  __attribute__((alias("flexiblas_real_cgesc2_")));
-
+#ifndef __APPLE__
+void flexiblas_real_cgesc2(void* n, void* a, void* lda, void* rhs, void* ipiv, void* jpiv, void* scale) __attribute__((alias("flexiblas_real_cgesc2_")));
+#else
+void flexiblas_real_cgesc2(void* n, void* a, void* lda, void* rhs, void* ipiv, void* jpiv, void* scale){flexiblas_real_cgesc2_((void*) n, (void*) a, (void*) lda, (void*) rhs, (void*) ipiv, (void*) jpiv, (void*) scale);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_cgesc2_(void* n, void* a, void* lda, void* rhs, void* ipiv,
 	}
 	return;
 }
-
-void flexiblas_chain_cgesc2(void* n, void* a, void* lda, void* rhs, void* ipiv, void* jpiv, void* scale)  __attribute__((alias("flexiblas_chain_cgesc2_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_cgesc2(void* n, void* a, void* lda, void* rhs, void* ipiv, void* jpiv, void* scale) __attribute__((alias("flexiblas_chain_cgesc2_")));
+#else
+void flexiblas_chain_cgesc2(void* n, void* a, void* lda, void* rhs, void* ipiv, void* jpiv, void* scale){flexiblas_chain_cgesc2_((void*) n, (void*) a, (void*) lda, (void*) rhs, (void*) ipiv, (void*) jpiv, (void*) scale);}
+#endif
 
 
 

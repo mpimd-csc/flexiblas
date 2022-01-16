@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zbdsqr,ZBDSQR)(char* uplo, blasint* n, blasint* ncvt, blasint* nr
 #ifdef FLEXIBLAS_ABI_IBM
 void zbdsqr_(char* uplo, blasint* n, blasint* ncvt, blasint* nru, blasint* ncc, double* d, double* e, double complex* vt, blasint* ldvt, double complex* u, blasint* ldu, double complex* c, blasint* ldc, double* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zbdsqr,ZBDSQR)))));
 #else
+#ifndef __APPLE__
 void zbdsqr(char* uplo, blasint* n, blasint* ncvt, blasint* nru, blasint* ncc, double* d, double* e, double complex* vt, blasint* ldvt, double complex* u, blasint* ldu, double complex* c, blasint* ldc, double* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zbdsqr,ZBDSQR)))));
+#else
+void zbdsqr(char* uplo, blasint* n, blasint* ncvt, blasint* nru, blasint* ncc, double* d, double* e, double complex* vt, blasint* ldvt, double complex* u, blasint* ldu, double complex* c, blasint* ldc, double* rwork, blasint* info){ FC_GLOBAL(zbdsqr,ZBDSQR)((void*) uplo, (void*) n, (void*) ncvt, (void*) nru, (void*) ncc, (void*) d, (void*) e, (void*) vt, (void*) ldvt, (void*) u, (void*) ldu, (void*) c, (void*) ldc, (void*) rwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zbdsqr_(void* uplo, void* n, void* ncvt, void* nru, void* nc
 
 	return;
 }
-
-void flexiblas_real_zbdsqr(void* uplo, void* n, void* ncvt, void* nru, void* ncc, void* d, void* e, void* vt, void* ldvt, void* u, void* ldu, void* c, void* ldc, void* rwork, void* info)  __attribute__((alias("flexiblas_real_zbdsqr_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zbdsqr(void* uplo, void* n, void* ncvt, void* nru, void* ncc, void* d, void* e, void* vt, void* ldvt, void* u, void* ldu, void* c, void* ldc, void* rwork, void* info) __attribute__((alias("flexiblas_real_zbdsqr_")));
+#else
+void flexiblas_real_zbdsqr(void* uplo, void* n, void* ncvt, void* nru, void* ncc, void* d, void* e, void* vt, void* ldvt, void* u, void* ldu, void* c, void* ldc, void* rwork, void* info){flexiblas_real_zbdsqr_((void*) uplo, (void*) n, (void*) ncvt, (void*) nru, (void*) ncc, (void*) d, (void*) e, (void*) vt, (void*) ldvt, (void*) u, (void*) ldu, (void*) c, (void*) ldc, (void*) rwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zbdsqr_(void* uplo, void* n, void* ncvt, void* nru, void* n
 	}
 	return;
 }
-
-void flexiblas_chain_zbdsqr(void* uplo, void* n, void* ncvt, void* nru, void* ncc, void* d, void* e, void* vt, void* ldvt, void* u, void* ldu, void* c, void* ldc, void* rwork, void* info)  __attribute__((alias("flexiblas_chain_zbdsqr_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zbdsqr(void* uplo, void* n, void* ncvt, void* nru, void* ncc, void* d, void* e, void* vt, void* ldvt, void* u, void* ldu, void* c, void* ldc, void* rwork, void* info) __attribute__((alias("flexiblas_chain_zbdsqr_")));
+#else
+void flexiblas_chain_zbdsqr(void* uplo, void* n, void* ncvt, void* nru, void* ncc, void* d, void* e, void* vt, void* ldvt, void* u, void* ldu, void* c, void* ldc, void* rwork, void* info){flexiblas_chain_zbdsqr_((void*) uplo, (void*) n, (void*) ncvt, (void*) nru, (void*) ncc, (void*) d, (void*) e, (void*) vt, (void*) ldvt, (void*) u, (void*) ldu, (void*) c, (void*) ldc, (void*) rwork, (void*) info);}
+#endif
 
 
 

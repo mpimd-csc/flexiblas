@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlaed8,DLAED8)(blasint* icompq, blasint* k, blasint* n, blasint* 
 #ifdef FLEXIBLAS_ABI_IBM
 void dlaed8_(blasint* icompq, blasint* k, blasint* n, blasint* qsiz, double* d, double* q, blasint* ldq, blasint* indxq, double* rho, blasint* cutpnt, double* z, double* dlamda, double* q2, blasint* ldq2, double* w, blasint* perm, blasint* givptr, blasint* givcol, double* givnum, blasint* indxp, blasint* indx, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlaed8,DLAED8)))));
 #else
+#ifndef __APPLE__
 void dlaed8(blasint* icompq, blasint* k, blasint* n, blasint* qsiz, double* d, double* q, blasint* ldq, blasint* indxq, double* rho, blasint* cutpnt, double* z, double* dlamda, double* q2, blasint* ldq2, double* w, blasint* perm, blasint* givptr, blasint* givcol, double* givnum, blasint* indxp, blasint* indx, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlaed8,DLAED8)))));
+#else
+void dlaed8(blasint* icompq, blasint* k, blasint* n, blasint* qsiz, double* d, double* q, blasint* ldq, blasint* indxq, double* rho, blasint* cutpnt, double* z, double* dlamda, double* q2, blasint* ldq2, double* w, blasint* perm, blasint* givptr, blasint* givcol, double* givnum, blasint* indxp, blasint* indx, blasint* info){ FC_GLOBAL(dlaed8,DLAED8)((void*) icompq, (void*) k, (void*) n, (void*) qsiz, (void*) d, (void*) q, (void*) ldq, (void*) indxq, (void*) rho, (void*) cutpnt, (void*) z, (void*) dlamda, (void*) q2, (void*) ldq2, (void*) w, (void*) perm, (void*) givptr, (void*) givcol, (void*) givnum, (void*) indxp, (void*) indx, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlaed8_(void* icompq, void* k, void* n, void* qsiz, void* d,
 
 	return;
 }
-
-void flexiblas_real_dlaed8(void* icompq, void* k, void* n, void* qsiz, void* d, void* q, void* ldq, void* indxq, void* rho, void* cutpnt, void* z, void* dlamda, void* q2, void* ldq2, void* w, void* perm, void* givptr, void* givcol, void* givnum, void* indxp, void* indx, void* info)  __attribute__((alias("flexiblas_real_dlaed8_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlaed8(void* icompq, void* k, void* n, void* qsiz, void* d, void* q, void* ldq, void* indxq, void* rho, void* cutpnt, void* z, void* dlamda, void* q2, void* ldq2, void* w, void* perm, void* givptr, void* givcol, void* givnum, void* indxp, void* indx, void* info) __attribute__((alias("flexiblas_real_dlaed8_")));
+#else
+void flexiblas_real_dlaed8(void* icompq, void* k, void* n, void* qsiz, void* d, void* q, void* ldq, void* indxq, void* rho, void* cutpnt, void* z, void* dlamda, void* q2, void* ldq2, void* w, void* perm, void* givptr, void* givcol, void* givnum, void* indxp, void* indx, void* info){flexiblas_real_dlaed8_((void*) icompq, (void*) k, (void*) n, (void*) qsiz, (void*) d, (void*) q, (void*) ldq, (void*) indxq, (void*) rho, (void*) cutpnt, (void*) z, (void*) dlamda, (void*) q2, (void*) ldq2, (void*) w, (void*) perm, (void*) givptr, (void*) givcol, (void*) givnum, (void*) indxp, (void*) indx, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlaed8_(void* icompq, void* k, void* n, void* qsiz, void* d
 	}
 	return;
 }
-
-void flexiblas_chain_dlaed8(void* icompq, void* k, void* n, void* qsiz, void* d, void* q, void* ldq, void* indxq, void* rho, void* cutpnt, void* z, void* dlamda, void* q2, void* ldq2, void* w, void* perm, void* givptr, void* givcol, void* givnum, void* indxp, void* indx, void* info)  __attribute__((alias("flexiblas_chain_dlaed8_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlaed8(void* icompq, void* k, void* n, void* qsiz, void* d, void* q, void* ldq, void* indxq, void* rho, void* cutpnt, void* z, void* dlamda, void* q2, void* ldq2, void* w, void* perm, void* givptr, void* givcol, void* givnum, void* indxp, void* indx, void* info) __attribute__((alias("flexiblas_chain_dlaed8_")));
+#else
+void flexiblas_chain_dlaed8(void* icompq, void* k, void* n, void* qsiz, void* d, void* q, void* ldq, void* indxq, void* rho, void* cutpnt, void* z, void* dlamda, void* q2, void* ldq2, void* w, void* perm, void* givptr, void* givcol, void* givnum, void* indxp, void* indx, void* info){flexiblas_chain_dlaed8_((void*) icompq, (void*) k, (void*) n, (void*) qsiz, (void*) d, (void*) q, (void*) ldq, (void*) indxq, (void*) rho, (void*) cutpnt, (void*) z, (void*) dlamda, (void*) q2, (void*) ldq2, (void*) w, (void*) perm, (void*) givptr, (void*) givcol, (void*) givnum, (void*) indxp, (void*) indx, (void*) info);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dptsvx,DPTSVX)(char* fact, blasint* n, blasint* nrhs, double* d, 
 #ifdef FLEXIBLAS_ABI_IBM
 void dptsvx_(char* fact, blasint* n, blasint* nrhs, double* d, double* e, double* df, double* ef, double* b, blasint* ldb, double* x, blasint* ldx, double* rcond, double* ferr, double* berr, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dptsvx,DPTSVX)))));
 #else
+#ifndef __APPLE__
 void dptsvx(char* fact, blasint* n, blasint* nrhs, double* d, double* e, double* df, double* ef, double* b, blasint* ldb, double* x, blasint* ldx, double* rcond, double* ferr, double* berr, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dptsvx,DPTSVX)))));
+#else
+void dptsvx(char* fact, blasint* n, blasint* nrhs, double* d, double* e, double* df, double* ef, double* b, blasint* ldb, double* x, blasint* ldx, double* rcond, double* ferr, double* berr, double* work, blasint* info){ FC_GLOBAL(dptsvx,DPTSVX)((void*) fact, (void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) df, (void*) ef, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) rcond, (void*) ferr, (void*) berr, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dptsvx_(void* fact, void* n, void* nrhs, void* d, void* e, v
 
 	return;
 }
-
-void flexiblas_real_dptsvx(void* fact, void* n, void* nrhs, void* d, void* e, void* df, void* ef, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* info)  __attribute__((alias("flexiblas_real_dptsvx_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dptsvx(void* fact, void* n, void* nrhs, void* d, void* e, void* df, void* ef, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* info) __attribute__((alias("flexiblas_real_dptsvx_")));
+#else
+void flexiblas_real_dptsvx(void* fact, void* n, void* nrhs, void* d, void* e, void* df, void* ef, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* info){flexiblas_real_dptsvx_((void*) fact, (void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) df, (void*) ef, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) rcond, (void*) ferr, (void*) berr, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dptsvx_(void* fact, void* n, void* nrhs, void* d, void* e, 
 	}
 	return;
 }
-
-void flexiblas_chain_dptsvx(void* fact, void* n, void* nrhs, void* d, void* e, void* df, void* ef, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* info)  __attribute__((alias("flexiblas_chain_dptsvx_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dptsvx(void* fact, void* n, void* nrhs, void* d, void* e, void* df, void* ef, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* info) __attribute__((alias("flexiblas_chain_dptsvx_")));
+#else
+void flexiblas_chain_dptsvx(void* fact, void* n, void* nrhs, void* d, void* e, void* df, void* ef, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* info){flexiblas_chain_dptsvx_((void*) fact, (void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) df, (void*) ef, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) rcond, (void*) ferr, (void*) berr, (void*) work, (void*) info);}
+#endif
 
 
 

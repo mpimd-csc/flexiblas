@@ -372,9 +372,32 @@ void benchmark_daxpy_latency(Int n, Int Runs, double *rtime, double *gflops)
 }
 
 
+void print_usage(char **argv)
+{
+    printf("FlexiBLAS Benchmark");
+    printf("\n");
+    printf("Usage: %s [--help|-h] [--dim|-d N] [--runs|-r R] [--benchmark|-b NAME]\n", argv[0]);
+#ifndef STANDALONE
+    printf("           [--skip|-s BLAS1,BLAS2,...] [--only|-o BLAS1,BLAS2,...] [--version|-v]\n");
+#endif
+    printf("\n");
+    printf("The options are:\n");
+    printf(" [--help|-h]        Print this help.\n");
+    printf(" [--dim|-d N]       Dimension of the example.\n");
+    printf(" [--runs|-r RUNS]   Number of runs to perform.\n");
+    printf(" [--benchmark|-b NAME] Name of the Benchmark\n");
+#ifndef STANDALONE
+    printf(" [--version|-v]     Version of the FlexiBLAS library.\n");
+    printf(" [--skip|-s BLAS1,BLAS2, ...]   List of BLAS backends to skip.\n");
+    printf(" [--only|-o BLAS1,BLAS2, ...]   List of BLAS backends to run the benchmark on.\n");
+#endif
+    printf("\n");
+
+}
+
 
 int main (int argc, char **argv) {
-	Int n=-1, runs=-1;
+    Int n=-1, runs=-1;
     double rtime = 0, flops =0;
     int choice, skip=0, only=0;
     char *skip_str = NULL;
@@ -389,7 +412,7 @@ int main (int argc, char **argv) {
         static struct option long_options[] =
         {
             /* Use flags like so:
-            {"verbose",    no_argument,    &verbose_flag, 'V'}*/
+               {"verbose",    no_argument,    &verbose_flag, 'V'}*/
             /* Argument styles: no_argument, required_argument, optional_argument */
 #ifndef STANDALONE
             {"version", no_argument,    0,    'v'},
@@ -443,24 +466,7 @@ int main (int argc, char **argv) {
 #endif
             case 'h':
                 {
-                    printf("FlexiBLAS Benchmark");
-                    printf("\n");
-                    printf("Usage: %s [--help|-h] [--dim|-d N] [--runs|-r R] [--benchmark|-b NAME]\n", argv[0]);
-#ifndef STANDALONE
-                    printf("           [--skip|-s BLAS1,BLAS2,...] [--only|-o BLAS1,BLAS2,...] [--version|-v]\n");
-#endif
-                    printf("\n");
-                    printf("The options are:\n");
-                    printf(" [--help|-h]        Print this help.\n");
-                    printf(" [--dim|-d N]       Dimension of the example.\n");
-                    printf(" [--runs|-r RUNS]   Number of runs to perform.\n");
-                    printf(" [--benchmark|-b NAME] Name of the Benchmark\n");
-#ifndef STANDALONE
-                    printf(" [--version|-v]     Version of the FlexiBLAS library.\n");
-                    printf(" [--skip|-s BLAS1,BLAS2, ...]   List of BLAS backends to skip.\n");
-                    printf(" [--only|-o BLAS1,BLAS2, ...]   List of BLAS backends to run the benchmark on.\n");
-#endif
-                    printf("\n");
+                    print_usage(argv);
                     exit(0);
 
                 }
@@ -521,19 +527,23 @@ int main (int argc, char **argv) {
 
     if ( n < 0 ) {
         printf("The dimension has to be set to a positive integer.\n");
+        print_usage(argv);
         exit(1);
     }
     if ( runs < 0 ) {
         printf("The number of runs has to be set to a postive integer.\n");
+        print_usage(argv);
         exit(1);
     }
     if ( skip && only ){
         printf("Either --skip or --only can be defined. Not both of them.\n");
+        print_usage(argv);
         exit(1);
     }
 
     if (benchmark == NULL) {
         printf("No benchmark selected.\n");
+        print_usage(argv);
         exit(1);
     }
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(sggbal,SGGBAL)(char* job, blasint* n, float* a, blasint* lda, flo
 #ifdef FLEXIBLAS_ABI_IBM
 void sggbal_(char* job, blasint* n, float* a, blasint* lda, float* b, blasint* ldb, blasint* ilo, blasint* ihi, float* lscale, float* rscale, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sggbal,SGGBAL)))));
 #else
+#ifndef __APPLE__
 void sggbal(char* job, blasint* n, float* a, blasint* lda, float* b, blasint* ldb, blasint* ilo, blasint* ihi, float* lscale, float* rscale, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sggbal,SGGBAL)))));
+#else
+void sggbal(char* job, blasint* n, float* a, blasint* lda, float* b, blasint* ldb, blasint* ilo, blasint* ihi, float* lscale, float* rscale, float* work, blasint* info){ FC_GLOBAL(sggbal,SGGBAL)((void*) job, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) ilo, (void*) ihi, (void*) lscale, (void*) rscale, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_sggbal_(void* job, void* n, void* a, void* lda, void* b, voi
 
 	return;
 }
-
-void flexiblas_real_sggbal(void* job, void* n, void* a, void* lda, void* b, void* ldb, void* ilo, void* ihi, void* lscale, void* rscale, void* work, void* info)  __attribute__((alias("flexiblas_real_sggbal_")));
-
+#ifndef __APPLE__
+void flexiblas_real_sggbal(void* job, void* n, void* a, void* lda, void* b, void* ldb, void* ilo, void* ihi, void* lscale, void* rscale, void* work, void* info) __attribute__((alias("flexiblas_real_sggbal_")));
+#else
+void flexiblas_real_sggbal(void* job, void* n, void* a, void* lda, void* b, void* ldb, void* ilo, void* ihi, void* lscale, void* rscale, void* work, void* info){flexiblas_real_sggbal_((void*) job, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) ilo, (void*) ihi, (void*) lscale, (void*) rscale, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_sggbal_(void* job, void* n, void* a, void* lda, void* b, vo
 	}
 	return;
 }
-
-void flexiblas_chain_sggbal(void* job, void* n, void* a, void* lda, void* b, void* ldb, void* ilo, void* ihi, void* lscale, void* rscale, void* work, void* info)  __attribute__((alias("flexiblas_chain_sggbal_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_sggbal(void* job, void* n, void* a, void* lda, void* b, void* ldb, void* ilo, void* ihi, void* lscale, void* rscale, void* work, void* info) __attribute__((alias("flexiblas_chain_sggbal_")));
+#else
+void flexiblas_chain_sggbal(void* job, void* n, void* a, void* lda, void* b, void* ldb, void* ilo, void* ihi, void* lscale, void* rscale, void* work, void* info){flexiblas_chain_sggbal_((void*) job, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) ilo, (void*) ihi, (void*) lscale, (void*) rscale, (void*) work, (void*) info);}
+#endif
 
 
 

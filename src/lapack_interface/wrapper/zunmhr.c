@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zunmhr,ZUNMHR)(char* side, char* trans, blasint* m, blasint* n, b
 #ifdef FLEXIBLAS_ABI_IBM
 void zunmhr_(char* side, char* trans, blasint* m, blasint* n, blasint* ilo, blasint* ihi, double complex* a, blasint* lda, double complex* tau, double complex* c, blasint* ldc, double complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zunmhr,ZUNMHR)))));
 #else
+#ifndef __APPLE__
 void zunmhr(char* side, char* trans, blasint* m, blasint* n, blasint* ilo, blasint* ihi, double complex* a, blasint* lda, double complex* tau, double complex* c, blasint* ldc, double complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zunmhr,ZUNMHR)))));
+#else
+void zunmhr(char* side, char* trans, blasint* m, blasint* n, blasint* ilo, blasint* ihi, double complex* a, blasint* lda, double complex* tau, double complex* c, blasint* ldc, double complex* work, blasint* lwork, blasint* info){ FC_GLOBAL(zunmhr,ZUNMHR)((void*) side, (void*) trans, (void*) m, (void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zunmhr_(void* side, void* trans, void* m, void* n, void* ilo
 
 	return;
 }
-
-void flexiblas_real_zunmhr(void* side, void* trans, void* m, void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_real_zunmhr_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zunmhr(void* side, void* trans, void* m, void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_zunmhr_")));
+#else
+void flexiblas_real_zunmhr(void* side, void* trans, void* m, void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* lwork, void* info){flexiblas_real_zunmhr_((void*) side, (void*) trans, (void*) m, (void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zunmhr_(void* side, void* trans, void* m, void* n, void* il
 	}
 	return;
 }
-
-void flexiblas_chain_zunmhr(void* side, void* trans, void* m, void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_chain_zunmhr_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zunmhr(void* side, void* trans, void* m, void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_zunmhr_")));
+#else
+void flexiblas_chain_zunmhr(void* side, void* trans, void* m, void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* lwork, void* info){flexiblas_chain_zunmhr_((void*) side, (void*) trans, (void*) m, (void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dlarfy,DLARFY)(char* uplo, blasint* n, double* v, blasint* incv, 
 #ifdef FLEXIBLAS_ABI_IBM
 void dlarfy_(char* uplo, blasint* n, double* v, blasint* incv, double* tau, double* c, blasint* ldc, double* work) __attribute__((alias(MTS(FC_GLOBAL(dlarfy,DLARFY)))));
 #else
+#ifndef __APPLE__
 void dlarfy(char* uplo, blasint* n, double* v, blasint* incv, double* tau, double* c, blasint* ldc, double* work) __attribute__((alias(MTS(FC_GLOBAL(dlarfy,DLARFY)))));
+#else
+void dlarfy(char* uplo, blasint* n, double* v, blasint* incv, double* tau, double* c, blasint* ldc, double* work){ FC_GLOBAL(dlarfy,DLARFY)((void*) uplo, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c, (void*) ldc, (void*) work); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dlarfy_(void* uplo, void* n, void* v, void* incv, void* tau,
 
 	return;
 }
-
-void flexiblas_real_dlarfy(void* uplo, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work)  __attribute__((alias("flexiblas_real_dlarfy_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dlarfy(void* uplo, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work) __attribute__((alias("flexiblas_real_dlarfy_")));
+#else
+void flexiblas_real_dlarfy(void* uplo, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work){flexiblas_real_dlarfy_((void*) uplo, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c, (void*) ldc, (void*) work);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dlarfy_(void* uplo, void* n, void* v, void* incv, void* tau
 	}
 	return;
 }
-
-void flexiblas_chain_dlarfy(void* uplo, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work)  __attribute__((alias("flexiblas_chain_dlarfy_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dlarfy(void* uplo, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work) __attribute__((alias("flexiblas_chain_dlarfy_")));
+#else
+void flexiblas_chain_dlarfy(void* uplo, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work){flexiblas_chain_dlarfy_((void*) uplo, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c, (void*) ldc, (void*) work);}
+#endif
 
 
 

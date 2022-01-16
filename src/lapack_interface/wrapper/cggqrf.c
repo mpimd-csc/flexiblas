@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(cggqrf,CGGQRF)(blasint* n, blasint* m, blasint* p, float complex*
 #ifdef FLEXIBLAS_ABI_IBM
 void cggqrf_(blasint* n, blasint* m, blasint* p, float complex* a, blasint* lda, float complex* taua, float complex* b, blasint* ldb, float complex* taub, float complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cggqrf,CGGQRF)))));
 #else
+#ifndef __APPLE__
 void cggqrf(blasint* n, blasint* m, blasint* p, float complex* a, blasint* lda, float complex* taua, float complex* b, blasint* ldb, float complex* taub, float complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cggqrf,CGGQRF)))));
+#else
+void cggqrf(blasint* n, blasint* m, blasint* p, float complex* a, blasint* lda, float complex* taua, float complex* b, blasint* ldb, float complex* taub, float complex* work, blasint* lwork, blasint* info){ FC_GLOBAL(cggqrf,CGGQRF)((void*) n, (void*) m, (void*) p, (void*) a, (void*) lda, (void*) taua, (void*) b, (void*) ldb, (void*) taub, (void*) work, (void*) lwork, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_cggqrf_(void* n, void* m, void* p, void* a, void* lda, void*
 
 	return;
 }
-
-void flexiblas_real_cggqrf(void* n, void* m, void* p, void* a, void* lda, void* taua, void* b, void* ldb, void* taub, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_real_cggqrf_")));
-
+#ifndef __APPLE__
+void flexiblas_real_cggqrf(void* n, void* m, void* p, void* a, void* lda, void* taua, void* b, void* ldb, void* taub, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_cggqrf_")));
+#else
+void flexiblas_real_cggqrf(void* n, void* m, void* p, void* a, void* lda, void* taua, void* b, void* ldb, void* taub, void* work, void* lwork, void* info){flexiblas_real_cggqrf_((void*) n, (void*) m, (void*) p, (void*) a, (void*) lda, (void*) taua, (void*) b, (void*) ldb, (void*) taub, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_cggqrf_(void* n, void* m, void* p, void* a, void* lda, void
 	}
 	return;
 }
-
-void flexiblas_chain_cggqrf(void* n, void* m, void* p, void* a, void* lda, void* taua, void* b, void* ldb, void* taub, void* work, void* lwork, void* info)  __attribute__((alias("flexiblas_chain_cggqrf_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_cggqrf(void* n, void* m, void* p, void* a, void* lda, void* taua, void* b, void* ldb, void* taub, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_cggqrf_")));
+#else
+void flexiblas_chain_cggqrf(void* n, void* m, void* p, void* a, void* lda, void* taua, void* b, void* ldb, void* taub, void* work, void* lwork, void* info){flexiblas_chain_cggqrf_((void*) n, (void*) m, (void*) p, (void*) a, (void*) lda, (void*) taua, (void*) b, (void*) ldb, (void*) taub, (void*) work, (void*) lwork, (void*) info);}
+#endif
 
 
 

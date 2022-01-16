@@ -24,6 +24,10 @@ IF ( LAPACK )
 	SET (SRC ${SRC} benchmark_dgetrf)
 ENDIF ()
 
+IF (CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+    SET (SRC ${SRC} benchmark_overhead_quickreturn)
+ENDIF()
+
 IF ( CMAKE_C_COMPILER_ID STREQUAL "GNU")
 	SET (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-parameter")
 ENDIF()
@@ -63,6 +67,13 @@ add_executable (benchmark.NETLIB benchmark.c)
 target_link_libraries (benchmark.NETLIB flexiblas_netlib cscutils ${LIBS})
 SET_TARGET_PROPERTIES (benchmark.NETLIB PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS} -DSTANDALONE -DBACKEND=\\\"NETLIB\\\"")
 
+
+IF (CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+add_executable (benchmark_overhead_quickreturn.NETLIB benchmark_overhead_quickreturn.c)
+target_link_libraries (benchmark_overhead_quickreturn.NETLIB flexiblas_netlib cscutils ${LIBS})
+SET_TARGET_PROPERTIES (benchmark_overhead_quickreturn.NETLIB PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS} -DSTANDALONE -DBACKEND=\\\"NETLIB\\\"")
+ENDIF()
+
 MESSAGE(STATUS "Build Extra Benchmarks")
 FOREACH(EBLAS ${EXTRA_BLAS})
 	UNSET(BLAS_LIBS)
@@ -78,6 +89,13 @@ FOREACH(EBLAS ${EXTRA_BLAS})
 	target_link_libraries (benchmark.${EBLAS} ${BLAS_LIBS} cscutils ${LIBS})
 	SET_TARGET_PROPERTIES (benchmark.${EBLAS} PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS} -DSTANDALONE -DBACKEND=\\\"${EBLAS}\\\"" LINK_FLAGS "${LINKER_FLAGS}")
 	# MESSAGE(STATUS " - ${EBLAS}")
+
+
+    IF (CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+        add_executable (benchmark_overhead_quickreturn.${EBLAS} benchmark_overhead_quickreturn.c)
+    	target_link_libraries (benchmark_overhead_quickreturn.${EBLAS} ${BLAS_LIBS} cscutils ${LIBS})
+	    SET_TARGET_PROPERTIES (benchmark_overhead_quickreturn.${EBLAS} PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS} -DSTANDALONE -DBACKEND=\\\"${EBLAS}\\\"" LINK_FLAGS "${LINKER_FLAGS}")
+    ENDIF()
 
 ENDFOREACH()
 

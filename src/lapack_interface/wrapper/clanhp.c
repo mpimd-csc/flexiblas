@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -89,7 +95,11 @@ float FC_GLOBAL(clanhp,CLANHP)(char* norm, char* uplo, blasint* n, float complex
 #ifdef FLEXIBLAS_ABI_IBM
 float clanhp_(char* norm, char* uplo, blasint* n, float complex* ap, float* work) __attribute__((alias(MTS(FC_GLOBAL(clanhp,CLANHP)))));
 #else
+#ifndef __APPLE__
 float clanhp(char* norm, char* uplo, blasint* n, float complex* ap, float* work) __attribute__((alias(MTS(FC_GLOBAL(clanhp,CLANHP)))));
+#else
+float clanhp(char* norm, char* uplo, blasint* n, float complex* ap, float* work){ return FC_GLOBAL(clanhp,CLANHP)((void*) norm, (void*) uplo, (void*) n, (void*) ap, (void*) work); }
+#endif
 #endif
 
 
@@ -109,9 +119,11 @@ float flexiblas_real_clanhp_(void* norm, void* uplo, void* n, void* ap, void* wo
 
 	return ret ;
 }
-
-float flexiblas_real_clanhp(void* norm, void* uplo, void* n, void* ap, void* work)  __attribute__((alias("flexiblas_real_clanhp_")));
-
+#ifndef __APPLE__
+float flexiblas_real_clanhp(void* norm, void* uplo, void* n, void* ap, void* work) __attribute__((alias("flexiblas_real_clanhp_")));
+#else
+float flexiblas_real_clanhp(void* norm, void* uplo, void* n, void* ap, void* work){return flexiblas_real_clanhp_((void*) norm, (void*) uplo, (void*) n, (void*) ap, (void*) work);}
+#endif
 
 
 
@@ -137,9 +149,11 @@ float flexiblas_chain_clanhp_(void* norm, void* uplo, void* n, void* ap, void* w
 	}
 	return ret ;
 }
-
-float flexiblas_chain_clanhp(void* norm, void* uplo, void* n, void* ap, void* work)  __attribute__((alias("flexiblas_chain_clanhp_")));
-
+#ifndef __APPLE__
+float flexiblas_chain_clanhp(void* norm, void* uplo, void* n, void* ap, void* work) __attribute__((alias("flexiblas_chain_clanhp_")));
+#else
+float flexiblas_chain_clanhp(void* norm, void* uplo, void* n, void* ap, void* work){return flexiblas_chain_clanhp_((void*) norm, (void*) uplo, (void*) n, (void*) ap, (void*) work);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zlaic1,ZLAIC1)(blasint* job, blasint* j, double complex* x, doubl
 #ifdef FLEXIBLAS_ABI_IBM
 void zlaic1_(blasint* job, blasint* j, double complex* x, double* sest, double complex* w, double complex* gamma, double* sestpr, double complex* s, double complex* c) __attribute__((alias(MTS(FC_GLOBAL(zlaic1,ZLAIC1)))));
 #else
+#ifndef __APPLE__
 void zlaic1(blasint* job, blasint* j, double complex* x, double* sest, double complex* w, double complex* gamma, double* sestpr, double complex* s, double complex* c) __attribute__((alias(MTS(FC_GLOBAL(zlaic1,ZLAIC1)))));
+#else
+void zlaic1(blasint* job, blasint* j, double complex* x, double* sest, double complex* w, double complex* gamma, double* sestpr, double complex* s, double complex* c){ FC_GLOBAL(zlaic1,ZLAIC1)((void*) job, (void*) j, (void*) x, (void*) sest, (void*) w, (void*) gamma, (void*) sestpr, (void*) s, (void*) c); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zlaic1_(void* job, void* j, void* x, void* sest, void* w, vo
 
 	return;
 }
-
-void flexiblas_real_zlaic1(void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c)  __attribute__((alias("flexiblas_real_zlaic1_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zlaic1(void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c) __attribute__((alias("flexiblas_real_zlaic1_")));
+#else
+void flexiblas_real_zlaic1(void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c){flexiblas_real_zlaic1_((void*) job, (void*) j, (void*) x, (void*) sest, (void*) w, (void*) gamma, (void*) sestpr, (void*) s, (void*) c);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zlaic1_(void* job, void* j, void* x, void* sest, void* w, v
 	}
 	return;
 }
-
-void flexiblas_chain_zlaic1(void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c)  __attribute__((alias("flexiblas_chain_zlaic1_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zlaic1(void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c) __attribute__((alias("flexiblas_chain_zlaic1_")));
+#else
+void flexiblas_chain_zlaic1(void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c){flexiblas_chain_zlaic1_((void*) job, (void*) j, (void*) x, (void*) sest, (void*) w, (void*) gamma, (void*) sestpr, (void*) s, (void*) c);}
+#endif
 
 
 

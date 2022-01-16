@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(ssyconvf,SSYCONVF)(char* uplo, char* way, blasint* n, float* a, b
 #ifdef FLEXIBLAS_ABI_IBM
 void ssyconvf_(char* uplo, char* way, blasint* n, float* a, blasint* lda, float* e, blasint* ipiv, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ssyconvf,SSYCONVF)))));
 #else
+#ifndef __APPLE__
 void ssyconvf(char* uplo, char* way, blasint* n, float* a, blasint* lda, float* e, blasint* ipiv, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ssyconvf,SSYCONVF)))));
+#else
+void ssyconvf(char* uplo, char* way, blasint* n, float* a, blasint* lda, float* e, blasint* ipiv, blasint* info){ FC_GLOBAL(ssyconvf,SSYCONVF)((void*) uplo, (void*) way, (void*) n, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_ssyconvf_(void* uplo, void* way, void* n, void* a, void* lda
 
 	return;
 }
-
-void flexiblas_real_ssyconvf(void* uplo, void* way, void* n, void* a, void* lda, void* e, void* ipiv, void* info)  __attribute__((alias("flexiblas_real_ssyconvf_")));
-
+#ifndef __APPLE__
+void flexiblas_real_ssyconvf(void* uplo, void* way, void* n, void* a, void* lda, void* e, void* ipiv, void* info) __attribute__((alias("flexiblas_real_ssyconvf_")));
+#else
+void flexiblas_real_ssyconvf(void* uplo, void* way, void* n, void* a, void* lda, void* e, void* ipiv, void* info){flexiblas_real_ssyconvf_((void*) uplo, (void*) way, (void*) n, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_ssyconvf_(void* uplo, void* way, void* n, void* a, void* ld
 	}
 	return;
 }
-
-void flexiblas_chain_ssyconvf(void* uplo, void* way, void* n, void* a, void* lda, void* e, void* ipiv, void* info)  __attribute__((alias("flexiblas_chain_ssyconvf_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_ssyconvf(void* uplo, void* way, void* n, void* a, void* lda, void* e, void* ipiv, void* info) __attribute__((alias("flexiblas_chain_ssyconvf_")));
+#else
+void flexiblas_chain_ssyconvf(void* uplo, void* way, void* n, void* a, void* lda, void* e, void* ipiv, void* info){flexiblas_chain_ssyconvf_((void*) uplo, (void*) way, (void*) n, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) info);}
+#endif
 
 
 

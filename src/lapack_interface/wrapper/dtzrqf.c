@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dtzrqf,DTZRQF)(blasint* m, blasint* n, double* a, blasint* lda, d
 #ifdef FLEXIBLAS_ABI_IBM
 void dtzrqf_(blasint* m, blasint* n, double* a, blasint* lda, double* tau, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dtzrqf,DTZRQF)))));
 #else
+#ifndef __APPLE__
 void dtzrqf(blasint* m, blasint* n, double* a, blasint* lda, double* tau, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dtzrqf,DTZRQF)))));
+#else
+void dtzrqf(blasint* m, blasint* n, double* a, blasint* lda, double* tau, blasint* info){ FC_GLOBAL(dtzrqf,DTZRQF)((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dtzrqf_(void* m, void* n, void* a, void* lda, void* tau, voi
 
 	return;
 }
-
-void flexiblas_real_dtzrqf(void* m, void* n, void* a, void* lda, void* tau, void* info)  __attribute__((alias("flexiblas_real_dtzrqf_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dtzrqf(void* m, void* n, void* a, void* lda, void* tau, void* info) __attribute__((alias("flexiblas_real_dtzrqf_")));
+#else
+void flexiblas_real_dtzrqf(void* m, void* n, void* a, void* lda, void* tau, void* info){flexiblas_real_dtzrqf_((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dtzrqf_(void* m, void* n, void* a, void* lda, void* tau, vo
 	}
 	return;
 }
-
-void flexiblas_chain_dtzrqf(void* m, void* n, void* a, void* lda, void* tau, void* info)  __attribute__((alias("flexiblas_chain_dtzrqf_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dtzrqf(void* m, void* n, void* a, void* lda, void* tau, void* info) __attribute__((alias("flexiblas_chain_dtzrqf_")));
+#else
+void flexiblas_chain_dtzrqf(void* m, void* n, void* a, void* lda, void* tau, void* info){flexiblas_chain_dtzrqf_((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) info);}
+#endif
 
 
 

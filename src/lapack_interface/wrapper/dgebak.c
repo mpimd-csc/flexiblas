@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dgebak,DGEBAK)(char* job, char* side, blasint* n, blasint* ilo, b
 #ifdef FLEXIBLAS_ABI_IBM
 void dgebak_(char* job, char* side, blasint* n, blasint* ilo, blasint* ihi, double* scale, blasint* m, double* v, blasint* ldv, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dgebak,DGEBAK)))));
 #else
+#ifndef __APPLE__
 void dgebak(char* job, char* side, blasint* n, blasint* ilo, blasint* ihi, double* scale, blasint* m, double* v, blasint* ldv, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dgebak,DGEBAK)))));
+#else
+void dgebak(char* job, char* side, blasint* n, blasint* ilo, blasint* ihi, double* scale, blasint* m, double* v, blasint* ldv, blasint* info){ FC_GLOBAL(dgebak,DGEBAK)((void*) job, (void*) side, (void*) n, (void*) ilo, (void*) ihi, (void*) scale, (void*) m, (void*) v, (void*) ldv, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dgebak_(void* job, void* side, void* n, void* ilo, void* ihi
 
 	return;
 }
-
-void flexiblas_real_dgebak(void* job, void* side, void* n, void* ilo, void* ihi, void* scale, void* m, void* v, void* ldv, void* info)  __attribute__((alias("flexiblas_real_dgebak_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dgebak(void* job, void* side, void* n, void* ilo, void* ihi, void* scale, void* m, void* v, void* ldv, void* info) __attribute__((alias("flexiblas_real_dgebak_")));
+#else
+void flexiblas_real_dgebak(void* job, void* side, void* n, void* ilo, void* ihi, void* scale, void* m, void* v, void* ldv, void* info){flexiblas_real_dgebak_((void*) job, (void*) side, (void*) n, (void*) ilo, (void*) ihi, (void*) scale, (void*) m, (void*) v, (void*) ldv, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dgebak_(void* job, void* side, void* n, void* ilo, void* ih
 	}
 	return;
 }
-
-void flexiblas_chain_dgebak(void* job, void* side, void* n, void* ilo, void* ihi, void* scale, void* m, void* v, void* ldv, void* info)  __attribute__((alias("flexiblas_chain_dgebak_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dgebak(void* job, void* side, void* n, void* ilo, void* ihi, void* scale, void* m, void* v, void* ldv, void* info) __attribute__((alias("flexiblas_chain_dgebak_")));
+#else
+void flexiblas_chain_dgebak(void* job, void* side, void* n, void* ilo, void* ihi, void* scale, void* m, void* v, void* ldv, void* info){flexiblas_chain_dgebak_((void*) job, (void*) side, (void*) n, (void*) ilo, (void*) ihi, (void*) scale, (void*) m, (void*) v, (void*) ldv, (void*) info);}
+#endif
 
 
 

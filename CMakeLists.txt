@@ -1,4 +1,7 @@
-PROJECT(FlexiBLAS LANGUAGES C)
+INCLUDE(libcscutils/CMakeModules/CheckPolicy.cmake)
+CheckPolicy(CMP0048 NEW)
+
+PROJECT(FlexiBLAS LANGUAGES C Fortran VERSION 3.1.0)
 ENABLE_LANGUAGE(Fortran)
 cmake_minimum_required(VERSION 3.3.0)
 
@@ -9,11 +12,15 @@ ENDIF()
 #
 # FlexiBLAS version setup
 #
-SET(FLEXIBLAS_VERSION "3.0.4")
-SET(FLEXIBLAS_VERSION_MAJOR  3)
-SET(FLEXIBLAS_VERSION_MINOR  0)
-SET(FLEXIBLAS_VERSION_PATCH  4)
-
+SET(FLEXIBLAS_VERSION "${FlexiBLAS_VERSION}")
+SET(FLEXIBLAS_VERSION_MAJOR  ${FlexiBLAS_VERSION_MAJOR})
+SET(FLEXIBLAS_VERSION_MINOR  ${FlexiBLAS_VERSION_MINOR})
+SET(FLEXIBLAS_VERSION_PATCH  ${FlexiBLAS_VERSION_PATCH})
+IF ( NOT FLEXIBLAS_VERSION_PATCH )
+    SET(FLEXIBLAS_VERSION_PATCH "0")
+ENDIF()
+SET(FLEXIBLAS_YEARS "2013-2021")
+MESSAGE(STATUS "Configuring FlexiBLAS ${FlexiBLAS_VERSION_MAJOR}.${FlexiBLAS_VERSION_MINOR}.${FlexiBLAS_VERSION_PATCH}")
 
 
 SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/libcscutils/CMakeModules ${PROJECT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
@@ -34,9 +41,10 @@ OPTION(INTEGER8 "Use 8 Byte Integer" OFF)
 OPTION(BUILD_SHARED_LIBS "Enable Shared Library" ON)
 OPTION(LAPACK "Enable LAPACK Support" ON)
 OPTION(DEV "Development Build" OFF)
-OPTION(MKL_CUSTOM "Build MKL support with Intel MKLs Custom library builder" OFF)
+OPTION(MKL_BUILDER "Build MKL support with Intel MKLs Custom library builder" OFF)
 OPTION(EXAMPLES "Build Examples" ON)
 OPTION(BLAS_AUTO_DETECT "Enabled the BLAS auto detection during configuration" ON)
+OPTION(LINK_OPENMP "Link OpenMP to FlexiBLAS" OFF)
 
 IF (NOT DEFINED FLEXIBLAS_DEFAULT_BLAS)
     SET(FLEXIBLAS_DEFAULT_BLAS "NETLIB")
@@ -93,9 +101,29 @@ INCLUDE(ccache)
 
 #SET(BUILD_SHARED_LIBS ON)
 SET(LIBS m)
+INCLUDE(CheckCCompilerFlag)
+INCLUDE(CheckFortranCompilerFlag)
 
 IF ( ${CMAKE_C_COMPILER_ID} STREQUAL "GNU")
-	SET( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
+    check_c_compiler_flag("-fstack-protector-strong" C_STACK_PROTECTOR)
+    check_c_compiler_flag("-fstack-clash-protection" C_STACK_CLASH)
+    check_fortran_compiler_flag("-fstack-protector-strong" FC_STACK_PROTECTOR)
+    check_fortran_compiler_flag("-fstack-clash-protection" FC_STACK_CLASH)
+
+
+    SET( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
+    IF(C_STACK_PROTECTOR)
+        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fstack-protector-strong")
+    ENDIF()
+    IF (C_STACK_CLASH)
+        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fstack-clash-protection")
+    ENDIF()
+    IF(FC_STACK_PROTECTOR)
+        SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fstack-protector-strong")
+    ENDIF()
+    IF (FC_STACK_CLASH)
+        SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fstack-clash-protection")
+    ENDIF()
 ENDIF()
 
 IF (DEBUG STREQUAL ON)
@@ -104,7 +132,18 @@ IF (DEBUG STREQUAL ON)
 	SET( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DDEBUG")
 ENDIF (DEBUG STREQUAL ON )
 
-
+IF (LINK_OPENMP)
+    FIND_PACKAGE(OpenMP REQUIRED)
+	if(NOT TARGET OpenMP::OpenMP_C)
+		find_package(Threads REQUIRED)
+		add_library(OpenMP::OpenMP_C IMPORTED INTERFACE)
+		set_property(TARGET OpenMP::OpenMP_C
+			PROPERTY INTERFACE_COMPILE_OPTIONS ${OpenMP_C_FLAGS})
+		# Only works if the same flag is passed to the linker; use CMake 3.9+ otherwise (Intel, AppleClang)
+		set_property(TARGET OpenMP::OpenMP_C
+			PROPERTY INTERFACE_LINK_LIBRARIES ${OpenMP_C_FLAGS} Threads::Threads)
+	endif()
+ENDIF()
 
 
 
@@ -196,6 +235,7 @@ ELSE()
 	CHECK_SYMBOL_EXISTS(RTLD_GLOBAL   "dlfcn.h" HAVE_RTLD_GLOBAL)
 	CHECK_SYMBOL_EXISTS(RTLD_DEEPBIND "dlfcn.h" HAVE_RTLD_DEEPBIND)
 	CHECK_SYMBOL_EXISTS(RTLD_NOW	  "dlfcn.h" HAVE_RTLD_NOW)
+    CHECK_SYMBOL_EXISTS(RTLD_NODELETE "dlfcn.h" HAVE_RTLD_NODELETE)
 
 	INCLUDE (CheckFunctionExists)
 	CHECK_FUNCTION_EXISTS(dlopen DLOPEN_C)
@@ -215,6 +255,10 @@ ELSE()
 	IF ( NOT HAVE_DLFCN_H )
 		MESSAGE(FATAL_ERROR "dlfcn.h not found, aborting")
 	ENDIF()
+
+    IF ( NOT HAVE_RTLD_NODELETE )
+        MESSAGE(WARNING "RTLD_NODELETE not found in your C library. Consider setting -DLINK_OPENMP=ON")
+    ENDIF()
 ENDIF()
 
 INCLUDE(CheckAttributeExists)
@@ -246,7 +290,7 @@ IF ( INTEGER8 STREQUAL ON )
 	SET(FLEXIBLAS_LIBRARY_DIR "flexiblas64")
 	SET(FLEXIBLAS_PKG_CONFIG "flexiblas64.pc")
     SET(FLEXIBLAS_API_PKG_CONFIG "flexiblas64_api.pc")
-
+    SET(FLEXIBLAS_LIBRARY_NAME "flexiblas64")
     set(flexiblasname flexiblas64)
 	SET (FLEXIBLASRC flexiblas64rc)
 	SET (FLEXIBLAS_RC "flexiblas64rc")
@@ -262,14 +306,15 @@ IF ( INTEGER8 STREQUAL ON )
 		SET ( I8_FLAGS "-i8 ")
 	ENDIF()
 	SET (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${I8_FLAGS}")
-
+    SET (FLEXIBLAS_FC_I8FLAG "${I8_FLAGS}")
 ELSE()
 	SET(FLEXIBLAS_INTEGER8 FALSE)
 	SET(FLEXIBLAS_INCLUDE_PREFIX "flexiblas")
 	SET(FLEXIBLAS_PKG_CONFIG "flexiblas.pc")
     SET(FLEXIBLAS_API_PKG_CONFIG "flexiblas_api.pc")
 	SET(FLEXIBLAS_LIBRARY_DIR "flexiblas")
-	set(flexiblasname flexiblas)
+    SET(FLEXIBLAS_LIBRARY_NAME "flexiblas")
+    set(flexiblasname flexiblas)
 	SET (FLEXIBLASRC flexiblasrc)
     SET (FLEXIBLAS_RC "flexiblasrc")
     SET (FLEXIBLAS_RC_DIR "flexiblasrc.d")
@@ -301,10 +346,6 @@ ELSE ()
 ENDIF()
 
 ### Add Source
-
-IF(NOT SYS_BLAS_LIBRARY)
-    add_subdirectory(contributed/netlib-blas/)
-ENDIF()
 
 INCLUDE(lapack)
 
@@ -374,30 +415,43 @@ IF (INTEGER8 STREQUAL ON)
 ENDIF()
 
 IF ( TESTS )
+	SET(PYTHON_IGNORE_LIBRARY ON)
 	MESSAGE( STATUS "Enable Testing...")
 	ENABLE_TESTING()
 	add_subdirectory(test/blas)
 	IF ( LAPACK AND (LAPACK_API_VERSION STREQUAL "3.6.1" OR LAPACK_API_VERSION STREQUAL "3.6.1-wodprc"))
-		FIND_PACKAGE(PythonInterp REQUIRED)
+        FIND_PACKAGE(PythonInterp)
 		add_subdirectory(test/lapack-3.6.1)
 	ENDIF()
 	IF ( LAPACK AND (LAPACK_API_VERSION STREQUAL "3.7.0" OR LAPACK_API_VERSION STREQUAL "3.7.0-wodprc"))
-		FIND_PACKAGE(PythonInterp REQUIRED)
+        FIND_PACKAGE(PythonInterp)
 		add_subdirectory(test/lapack-3.7.0)
 	ENDIF()
 	IF ( LAPACK AND (LAPACK_API_VERSION STREQUAL "3.7.1" OR LAPACK_API_VERSION STREQUAL "3.7.1-wodprc"))
-		FIND_PACKAGE(PythonInterp REQUIRED)
+		FIND_PACKAGE(PythonInterp)
 		add_subdirectory(test/lapack-3.7.0)
 	ENDIF()
 	IF ( LAPACK AND (LAPACK_API_VERSION STREQUAL "3.8.0" OR LAPACK_API_VERSION STREQUAL "3.8.0-wodprc"))
-		FIND_PACKAGE(PythonInterp REQUIRED)
+		FIND_PACKAGE(PythonInterp)
 		add_subdirectory(test/lapack-3.8.0)
 	ENDIF()
 
     IF ( LAPACK AND (LAPACK_API_VERSION STREQUAL "3.9.0" OR LAPACK_API_VERSION STREQUAL "3.9.0-wodprc"))
-		FIND_PACKAGE(PythonInterp REQUIRED)
+		FIND_PACKAGE(PythonInterp)
 		add_subdirectory(test/lapack-3.9.0)
 	ENDIF()
+
+    IF ( LAPACK AND (LAPACK_API_VERSION STREQUAL "3.9.1" OR LAPACK_API_VERSION STREQUAL "3.9.1-wodprc"))
+		FIND_PACKAGE(PythonInterp)
+		add_subdirectory(test/lapack-3.9.1)
+	ENDIF()
+
+    IF ( LAPACK AND (LAPACK_API_VERSION STREQUAL "3.10.0" OR LAPACK_API_VERSION STREQUAL "3.10.0-wodprc"))
+		FIND_PACKAGE(PythonInterp)
+		add_subdirectory(test/lapack-3.10.0)
+	ENDIF()
+
+
 
 ENDIF (TESTS)
 

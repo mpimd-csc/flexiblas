@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(clarfy,CLARFY)(char* uplo, blasint* n, float complex* v, blasint*
 #ifdef FLEXIBLAS_ABI_IBM
 void clarfy_(char* uplo, blasint* n, float complex* v, blasint* incv, float complex* tau, float complex* c, blasint* ldc, float complex* work) __attribute__((alias(MTS(FC_GLOBAL(clarfy,CLARFY)))));
 #else
+#ifndef __APPLE__
 void clarfy(char* uplo, blasint* n, float complex* v, blasint* incv, float complex* tau, float complex* c, blasint* ldc, float complex* work) __attribute__((alias(MTS(FC_GLOBAL(clarfy,CLARFY)))));
+#else
+void clarfy(char* uplo, blasint* n, float complex* v, blasint* incv, float complex* tau, float complex* c, blasint* ldc, float complex* work){ FC_GLOBAL(clarfy,CLARFY)((void*) uplo, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c, (void*) ldc, (void*) work); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_clarfy_(void* uplo, void* n, void* v, void* incv, void* tau,
 
 	return;
 }
-
-void flexiblas_real_clarfy(void* uplo, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work)  __attribute__((alias("flexiblas_real_clarfy_")));
-
+#ifndef __APPLE__
+void flexiblas_real_clarfy(void* uplo, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work) __attribute__((alias("flexiblas_real_clarfy_")));
+#else
+void flexiblas_real_clarfy(void* uplo, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work){flexiblas_real_clarfy_((void*) uplo, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c, (void*) ldc, (void*) work);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_clarfy_(void* uplo, void* n, void* v, void* incv, void* tau
 	}
 	return;
 }
-
-void flexiblas_chain_clarfy(void* uplo, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work)  __attribute__((alias("flexiblas_chain_clarfy_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_clarfy(void* uplo, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work) __attribute__((alias("flexiblas_chain_clarfy_")));
+#else
+void flexiblas_chain_clarfy(void* uplo, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work){flexiblas_chain_clarfy_((void*) uplo, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c, (void*) ldc, (void*) work);}
+#endif
 
 
 

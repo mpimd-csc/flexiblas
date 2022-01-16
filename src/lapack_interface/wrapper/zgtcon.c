@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zgtcon,ZGTCON)(char* norm, blasint* n, double complex* dl, double
 #ifdef FLEXIBLAS_ABI_IBM
 void zgtcon_(char* norm, blasint* n, double complex* dl, double complex* d, double complex* du, double complex* du2, blasint* ipiv, double* anorm, double* rcond, double complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zgtcon,ZGTCON)))));
 #else
+#ifndef __APPLE__
 void zgtcon(char* norm, blasint* n, double complex* dl, double complex* d, double complex* du, double complex* du2, blasint* ipiv, double* anorm, double* rcond, double complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zgtcon,ZGTCON)))));
+#else
+void zgtcon(char* norm, blasint* n, double complex* dl, double complex* d, double complex* du, double complex* du2, blasint* ipiv, double* anorm, double* rcond, double complex* work, blasint* info){ FC_GLOBAL(zgtcon,ZGTCON)((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du, (void*) du2, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zgtcon_(void* norm, void* n, void* dl, void* d, void* du, vo
 
 	return;
 }
-
-void flexiblas_real_zgtcon(void* norm, void* n, void* dl, void* d, void* du, void* du2, void* ipiv, void* anorm, void* rcond, void* work, void* info)  __attribute__((alias("flexiblas_real_zgtcon_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zgtcon(void* norm, void* n, void* dl, void* d, void* du, void* du2, void* ipiv, void* anorm, void* rcond, void* work, void* info) __attribute__((alias("flexiblas_real_zgtcon_")));
+#else
+void flexiblas_real_zgtcon(void* norm, void* n, void* dl, void* d, void* du, void* du2, void* ipiv, void* anorm, void* rcond, void* work, void* info){flexiblas_real_zgtcon_((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du, (void*) du2, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zgtcon_(void* norm, void* n, void* dl, void* d, void* du, v
 	}
 	return;
 }
-
-void flexiblas_chain_zgtcon(void* norm, void* n, void* dl, void* d, void* du, void* du2, void* ipiv, void* anorm, void* rcond, void* work, void* info)  __attribute__((alias("flexiblas_chain_zgtcon_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zgtcon(void* norm, void* n, void* dl, void* d, void* du, void* du2, void* ipiv, void* anorm, void* rcond, void* work, void* info) __attribute__((alias("flexiblas_chain_zgtcon_")));
+#else
+void flexiblas_chain_zgtcon(void* norm, void* n, void* dl, void* d, void* du, void* du2, void* ipiv, void* anorm, void* rcond, void* work, void* info){flexiblas_chain_zgtcon_((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du, (void*) du2, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) info);}
+#endif
 
 
 

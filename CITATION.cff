@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Köhler"
+    given-names: "Martin"
+    orcid: "https://orcid.org/00000-0003-2338-9904"
+  - family-names: "Saak"
+    given-names: "Jens"
+    orcid: "https://orcid.org/0000-0001-5567-9637"
+title: "FlexiBLAS - A BLAS and LAPACK wrapper library with runtime exchangable backends"
+version: 3.1.0
+doi: 10.5281/zenodo.798186
+date-released: 2022-01-16
+url: "https://github.com/mpimd-csc/flexiblas"
+license: GPL-3.0-or-later
+keywords:
+ - "BLAS"
+ - "LAPACK"

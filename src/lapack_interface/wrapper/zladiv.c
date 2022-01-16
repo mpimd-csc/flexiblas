@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -107,7 +113,11 @@ double complex FC_GLOBAL(zladiv,ZLADIV)(double complex* x, double complex* y)
 #ifdef FLEXIBLAS_ABI_IBM
 double complex zladiv_(double complex* x, double complex* y) __attribute__((alias(MTS(FC_GLOBAL(zladiv,ZLADIV)))));
 #else
+#ifndef __APPLE__
 double complex zladiv(double complex* x, double complex* y) __attribute__((alias(MTS(FC_GLOBAL(zladiv,ZLADIV)))));
+#else
+double complex zladiv(double complex* x, double complex* y){ return FC_GLOBAL(zladiv,ZLADIV)((void*) x, (void*) y); }
+#endif
 #endif
 
 
@@ -116,7 +126,7 @@ double complex zladiv(double complex* x, double complex* y) __attribute__((alias
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_zladiv_( double complex* returnvalue, void* x, void* y)
+void flexiblas_real_zladiv_( double complex*returnvalue, void* x, void* y)
 {
 	double complex (*fn) (void* x, void* y);
 	void (*fn_intel) (double complex *ret, void* x, void* y);
@@ -135,9 +145,11 @@ void flexiblas_real_zladiv_( double complex* returnvalue, void* x, void* y)
     *((double complex *)returnvalue) = ret;
     return;
 }
-
-void flexiblas_real_zladiv( double complex* returnvalue, void* x, void* y)  __attribute__((alias("flexiblas_real_zladiv_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zladiv( double complex*returnvalue, void* x, void* y) __attribute__((alias("flexiblas_real_zladiv_")));
+#else
+void flexiblas_real_zladiv( double complex*returnvalue, void* x, void* y){flexiblas_real_zladiv_( (double complex*)returnvalue, (void*) x, (void*) y);}
+#endif
 
 
 
@@ -171,9 +183,11 @@ void flexiblas_chain_zladiv_( double complex* returnvalue, void* x, void* y)
     *((double complex *)returnvalue) = ret;
     return;
 }
-
-void flexiblas_chain_zladiv( double complex* returnvalue, void* x, void* y)  __attribute__((alias("flexiblas_chain_zladiv_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zladiv( double complex*returnvalue, void* x, void* y) __attribute__((alias("flexiblas_chain_zladiv_")));
+#else
+void flexiblas_chain_zladiv( double complex*returnvalue, void* x, void* y){flexiblas_chain_zladiv_( (double complex*)returnvalue, (void*) x, (void*) y);}
+#endif
 
 
 

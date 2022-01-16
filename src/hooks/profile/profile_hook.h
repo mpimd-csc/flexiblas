@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
 
 
@@ -2167,6 +2167,42 @@ extern "C" {
         profile_data_t zunmtr;
         profile_data_t zupgtr;
         profile_data_t zupmtr;
+
+        /* LAPACK 3.9.1 */
+        profile_data_t cgetsqrhrt;
+        profile_data_t clarfb_gett;
+        profile_data_t cungtsqr_row;
+        profile_data_t dgetsqrhrt;
+        profile_data_t dlarfb_gett;
+        profile_data_t dorgtsqr_row;
+        profile_data_t sgetsqrhrt;
+        profile_data_t slarfb_gett;
+        profile_data_t sorgtsqr_row;
+        profile_data_t zgetsqrhrt;
+        profile_data_t zlarfb_gett;
+        profile_data_t zungtsqr_row;
+
+
+        /* LAPACK 3.10.0 */
+        profile_data_t claqz0;
+        profile_data_t claqz1;
+        profile_data_t claqz2;
+        profile_data_t claqz3;
+        profile_data_t zlaqz0;
+        profile_data_t zlaqz1;
+        profile_data_t zlaqz2;
+        profile_data_t zlaqz3;
+        profile_data_t dlaqz0;
+        profile_data_t dlaqz1;
+        profile_data_t dlaqz2;
+        profile_data_t dlaqz3;
+        profile_data_t dlaqz4;
+        profile_data_t slaqz0;
+        profile_data_t slaqz1;
+        profile_data_t slaqz2;
+        profile_data_t slaqz3;
+        profile_data_t slaqz4;
+
     } blas_calls_t;
 
     extern blas_calls_t *data;

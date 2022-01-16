@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(stftri,STFTRI)(char* transr, char* uplo, char* diag, blasint* n, 
 #ifdef FLEXIBLAS_ABI_IBM
 void stftri_(char* transr, char* uplo, char* diag, blasint* n, float* a, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(stftri,STFTRI)))));
 #else
+#ifndef __APPLE__
 void stftri(char* transr, char* uplo, char* diag, blasint* n, float* a, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(stftri,STFTRI)))));
+#else
+void stftri(char* transr, char* uplo, char* diag, blasint* n, float* a, blasint* info){ FC_GLOBAL(stftri,STFTRI)((void*) transr, (void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_stftri_(void* transr, void* uplo, void* diag, void* n, void*
 
 	return;
 }
-
-void flexiblas_real_stftri(void* transr, void* uplo, void* diag, void* n, void* a, void* info)  __attribute__((alias("flexiblas_real_stftri_")));
-
+#ifndef __APPLE__
+void flexiblas_real_stftri(void* transr, void* uplo, void* diag, void* n, void* a, void* info) __attribute__((alias("flexiblas_real_stftri_")));
+#else
+void flexiblas_real_stftri(void* transr, void* uplo, void* diag, void* n, void* a, void* info){flexiblas_real_stftri_((void*) transr, (void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_stftri_(void* transr, void* uplo, void* diag, void* n, void
 	}
 	return;
 }
-
-void flexiblas_chain_stftri(void* transr, void* uplo, void* diag, void* n, void* a, void* info)  __attribute__((alias("flexiblas_chain_stftri_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_stftri(void* transr, void* uplo, void* diag, void* n, void* a, void* info) __attribute__((alias("flexiblas_chain_stftri_")));
+#else
+void flexiblas_chain_stftri(void* transr, void* uplo, void* diag, void* n, void* a, void* info){flexiblas_chain_stftri_((void*) transr, (void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) info);}
+#endif
 
 
 

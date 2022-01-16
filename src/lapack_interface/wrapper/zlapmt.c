@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(zlapmt,ZLAPMT)(blasint* forwrd, blasint* m, blasint* n, double co
 #ifdef FLEXIBLAS_ABI_IBM
 void zlapmt_(blasint* forwrd, blasint* m, blasint* n, double complex* x, blasint* ldx, blasint* k) __attribute__((alias(MTS(FC_GLOBAL(zlapmt,ZLAPMT)))));
 #else
+#ifndef __APPLE__
 void zlapmt(blasint* forwrd, blasint* m, blasint* n, double complex* x, blasint* ldx, blasint* k) __attribute__((alias(MTS(FC_GLOBAL(zlapmt,ZLAPMT)))));
+#else
+void zlapmt(blasint* forwrd, blasint* m, blasint* n, double complex* x, blasint* ldx, blasint* k){ FC_GLOBAL(zlapmt,ZLAPMT)((void*) forwrd, (void*) m, (void*) n, (void*) x, (void*) ldx, (void*) k); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zlapmt_(void* forwrd, void* m, void* n, void* x, void* ldx, 
 
 	return;
 }
-
-void flexiblas_real_zlapmt(void* forwrd, void* m, void* n, void* x, void* ldx, void* k)  __attribute__((alias("flexiblas_real_zlapmt_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zlapmt(void* forwrd, void* m, void* n, void* x, void* ldx, void* k) __attribute__((alias("flexiblas_real_zlapmt_")));
+#else
+void flexiblas_real_zlapmt(void* forwrd, void* m, void* n, void* x, void* ldx, void* k){flexiblas_real_zlapmt_((void*) forwrd, (void*) m, (void*) n, (void*) x, (void*) ldx, (void*) k);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zlapmt_(void* forwrd, void* m, void* n, void* x, void* ldx,
 	}
 	return;
 }
-
-void flexiblas_chain_zlapmt(void* forwrd, void* m, void* n, void* x, void* ldx, void* k)  __attribute__((alias("flexiblas_chain_zlapmt_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zlapmt(void* forwrd, void* m, void* n, void* x, void* ldx, void* k) __attribute__((alias("flexiblas_chain_zlapmt_")));
+#else
+void flexiblas_chain_zlapmt(void* forwrd, void* m, void* n, void* x, void* ldx, void* k){flexiblas_chain_zlapmt_((void*) forwrd, (void*) m, (void*) n, (void*) x, (void*) ldx, (void*) k);}
+#endif
 
 
 

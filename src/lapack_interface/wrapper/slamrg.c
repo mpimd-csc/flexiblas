@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(slamrg,SLAMRG)(blasint* n1, blasint* n2, float* a, blasint* strd1
 #ifdef FLEXIBLAS_ABI_IBM
 void slamrg_(blasint* n1, blasint* n2, float* a, blasint* strd1, blasint* strd2, blasint* index_bn) __attribute__((alias(MTS(FC_GLOBAL(slamrg,SLAMRG)))));
 #else
+#ifndef __APPLE__
 void slamrg(blasint* n1, blasint* n2, float* a, blasint* strd1, blasint* strd2, blasint* index_bn) __attribute__((alias(MTS(FC_GLOBAL(slamrg,SLAMRG)))));
+#else
+void slamrg(blasint* n1, blasint* n2, float* a, blasint* strd1, blasint* strd2, blasint* index_bn){ FC_GLOBAL(slamrg,SLAMRG)((void*) n1, (void*) n2, (void*) a, (void*) strd1, (void*) strd2, (void*) index_bn); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_slamrg_(void* n1, void* n2, void* a, void* strd1, void* strd
 
 	return;
 }
-
-void flexiblas_real_slamrg(void* n1, void* n2, void* a, void* strd1, void* strd2, void* index_bn)  __attribute__((alias("flexiblas_real_slamrg_")));
-
+#ifndef __APPLE__
+void flexiblas_real_slamrg(void* n1, void* n2, void* a, void* strd1, void* strd2, void* index_bn) __attribute__((alias("flexiblas_real_slamrg_")));
+#else
+void flexiblas_real_slamrg(void* n1, void* n2, void* a, void* strd1, void* strd2, void* index_bn){flexiblas_real_slamrg_((void*) n1, (void*) n2, (void*) a, (void*) strd1, (void*) strd2, (void*) index_bn);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_slamrg_(void* n1, void* n2, void* a, void* strd1, void* str
 	}
 	return;
 }
-
-void flexiblas_chain_slamrg(void* n1, void* n2, void* a, void* strd1, void* strd2, void* index_bn)  __attribute__((alias("flexiblas_chain_slamrg_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_slamrg(void* n1, void* n2, void* a, void* strd1, void* strd2, void* index_bn) __attribute__((alias("flexiblas_chain_slamrg_")));
+#else
+void flexiblas_chain_slamrg(void* n1, void* n2, void* a, void* strd1, void* strd2, void* index_bn){flexiblas_chain_slamrg_((void*) n1, (void*) n2, (void*) a, (void*) strd1, (void*) strd2, (void*) index_bn);}
+#endif
 
 
 

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL_(zlasyf_rook,ZLASYF_ROOK)(char* uplo, blasint* n, blasint* nb, bl
 #ifdef FLEXIBLAS_ABI_IBM
 void zlasyf_rook_(char* uplo, blasint* n, blasint* nb, blasint* kb, double complex* a, blasint* lda, blasint* ipiv, double complex* w, blasint* ldw, blasint* info) __attribute__((alias(MTS(FC_GLOBAL_(zlasyf_rook,ZLASYF_ROOK)))));
 #else
+#ifndef __APPLE__
 void zlasyf_rook(char* uplo, blasint* n, blasint* nb, blasint* kb, double complex* a, blasint* lda, blasint* ipiv, double complex* w, blasint* ldw, blasint* info) __attribute__((alias(MTS(FC_GLOBAL_(zlasyf_rook,ZLASYF_ROOK)))));
+#else
+void zlasyf_rook(char* uplo, blasint* n, blasint* nb, blasint* kb, double complex* a, blasint* lda, blasint* ipiv, double complex* w, blasint* ldw, blasint* info){ FC_GLOBAL_(zlasyf_rook,ZLASYF_ROOK)((void*) uplo, (void*) n, (void*) nb, (void*) kb, (void*) a, (void*) lda, (void*) ipiv, (void*) w, (void*) ldw, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_zlasyf_rook_(void* uplo, void* n, void* nb, void* kb, void* 
 
 	return;
 }
-
-void flexiblas_real_zlasyf_rook(void* uplo, void* n, void* nb, void* kb, void* a, void* lda, void* ipiv, void* w, void* ldw, void* info)  __attribute__((alias("flexiblas_real_zlasyf_rook_")));
-
+#ifndef __APPLE__
+void flexiblas_real_zlasyf_rook(void* uplo, void* n, void* nb, void* kb, void* a, void* lda, void* ipiv, void* w, void* ldw, void* info) __attribute__((alias("flexiblas_real_zlasyf_rook_")));
+#else
+void flexiblas_real_zlasyf_rook(void* uplo, void* n, void* nb, void* kb, void* a, void* lda, void* ipiv, void* w, void* ldw, void* info){flexiblas_real_zlasyf_rook_((void*) uplo, (void*) n, (void*) nb, (void*) kb, (void*) a, (void*) lda, (void*) ipiv, (void*) w, (void*) ldw, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_zlasyf_rook_(void* uplo, void* n, void* nb, void* kb, void*
 	}
 	return;
 }
-
-void flexiblas_chain_zlasyf_rook(void* uplo, void* n, void* nb, void* kb, void* a, void* lda, void* ipiv, void* w, void* ldw, void* info)  __attribute__((alias("flexiblas_chain_zlasyf_rook_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_zlasyf_rook(void* uplo, void* n, void* nb, void* kb, void* a, void* lda, void* ipiv, void* w, void* ldw, void* info) __attribute__((alias("flexiblas_chain_zlasyf_rook_")));
+#else
+void flexiblas_chain_zlasyf_rook(void* uplo, void* n, void* nb, void* kb, void* a, void* lda, void* ipiv, void* w, void* ldw, void* info){flexiblas_chain_zlasyf_rook_((void*) uplo, (void*) n, (void*) nb, (void*) kb, (void*) a, (void*) lda, (void*) ipiv, (void*) w, (void*) ldw, (void*) info);}
+#endif
 
 
 

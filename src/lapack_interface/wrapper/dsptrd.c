@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2015-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
         
 #include <stdio.h>
@@ -51,6 +51,12 @@
 
 #include "flexiblas.h"
 
+
+#if __GNUC__ > 7
+typedef size_t fortran_charlen_t;
+#else
+typedef int fortran_charlen_t;
+#endif
 
 #ifdef INTEGER8
 #define blasint int64_t
@@ -88,7 +94,11 @@ void FC_GLOBAL(dsptrd,DSPTRD)(char* uplo, blasint* n, double* ap, double* d, dou
 #ifdef FLEXIBLAS_ABI_IBM
 void dsptrd_(char* uplo, blasint* n, double* ap, double* d, double* e, double* tau, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dsptrd,DSPTRD)))));
 #else
+#ifndef __APPLE__
 void dsptrd(char* uplo, blasint* n, double* ap, double* d, double* e, double* tau, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dsptrd,DSPTRD)))));
+#else
+void dsptrd(char* uplo, blasint* n, double* ap, double* d, double* e, double* tau, blasint* info){ FC_GLOBAL(dsptrd,DSPTRD)((void*) uplo, (void*) n, (void*) ap, (void*) d, (void*) e, (void*) tau, (void*) info); }
+#endif
 #endif
 
 
@@ -107,9 +117,11 @@ void flexiblas_real_dsptrd_(void* uplo, void* n, void* ap, void* d, void* e, voi
 
 	return;
 }
-
-void flexiblas_real_dsptrd(void* uplo, void* n, void* ap, void* d, void* e, void* tau, void* info)  __attribute__((alias("flexiblas_real_dsptrd_")));
-
+#ifndef __APPLE__
+void flexiblas_real_dsptrd(void* uplo, void* n, void* ap, void* d, void* e, void* tau, void* info) __attribute__((alias("flexiblas_real_dsptrd_")));
+#else
+void flexiblas_real_dsptrd(void* uplo, void* n, void* ap, void* d, void* e, void* tau, void* info){flexiblas_real_dsptrd_((void*) uplo, (void*) n, (void*) ap, (void*) d, (void*) e, (void*) tau, (void*) info);}
+#endif
 
 
 
@@ -134,9 +146,11 @@ void flexiblas_chain_dsptrd_(void* uplo, void* n, void* ap, void* d, void* e, vo
 	}
 	return;
 }
-
-void flexiblas_chain_dsptrd(void* uplo, void* n, void* ap, void* d, void* e, void* tau, void* info)  __attribute__((alias("flexiblas_chain_dsptrd_")));
-
+#ifndef __APPLE__
+void flexiblas_chain_dsptrd(void* uplo, void* n, void* ap, void* d, void* e, void* tau, void* info) __attribute__((alias("flexiblas_chain_dsptrd_")));
+#else
+void flexiblas_chain_dsptrd(void* uplo, void* n, void* ap, void* d, void* e, void* tau, void* info){flexiblas_chain_dsptrd_((void*) uplo, (void*) n, (void*) ap, (void*) d, (void*) e, (void*) tau, (void*) info);}
+#endif
 
 
 

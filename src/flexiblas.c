@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2020
+ * Copyright (C) Martin Koehler, 2013-2022
  */
 
 
@@ -143,7 +143,14 @@ HIDDEN void __flexiblas_backend_init( flexiblas_backend_t * backend) {
                 abort();
             }
         }
-        /*-----------------------------------------------------------------------------
+
+        /* Setup XERBLA */
+        __flexiblas_setup_xerbla(backend);
+#ifdef FLEXIBLAS_CBLAS
+        __flexiblas_setup_cblas_xerbla(backend);
+#endif
+
+	/*-----------------------------------------------------------------------------
          *  Load FBLAS
          *-----------------------------------------------------------------------------*/
         __flexiblas_load_fblas(backend, &load, &failed);
@@ -172,11 +179,6 @@ HIDDEN void __flexiblas_backend_init( flexiblas_backend_t * backend) {
         }
 #endif
 
-        /* Setup XERBLA */
-        __flexiblas_setup_xerbla(backend);
-#ifdef FLEXIBLAS_CBLAS
-        __flexiblas_setup_cblas_xerbla(backend);
-#endif
         backend->post_init = 0;
     }
 
