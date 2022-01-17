@@ -301,8 +301,8 @@ TARGET_LINK_LIBRARIES(flexiblas_mgmt ${LIBS} cscutils )
 add_library(flexiblas_api SHARED ${FLEXIBLAS_API_SRC} ) # $<TARGET_OBJECTS:cscutils_src>)
 TARGET_LINK_LIBRARIES(flexiblas_api ${DL_LIB} cscutils c)
 
-set(GENERIC_LIB_VERSION "3.0")
-set(GENERIC_LIB_SOVERSION "3")
+set(GENERIC_LIB_VERSION "${FLEXIBLAS_VERSION_MAJOR}.${FLEXIBLAS_VERSION_MINOR}")
+set(GENERIC_LIB_SOVERSION "${FLEXIBLAS_VERSION_MAJOR}")
 
 
 add_executable(flexiblas-config flexiblas-config.c)

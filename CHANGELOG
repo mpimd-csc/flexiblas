@@ -1,3 +1,7 @@
+3.1.1 (January 17, 2022)
+-----------------------
+- Fix wrong so-version for libflexiblas.so
+
 3.1.0 (January 16, 2022)
 -----------------------
 - Closes Github #19, added LINK_OPENMP option

@@ -1,7 +1,7 @@
 INCLUDE(libcscutils/CMakeModules/CheckPolicy.cmake)
 CheckPolicy(CMP0048 NEW)
 
-PROJECT(FlexiBLAS LANGUAGES C Fortran VERSION 3.1.0)
+PROJECT(FlexiBLAS LANGUAGES C Fortran VERSION 3.1.1)
 ENABLE_LANGUAGE(Fortran)
 cmake_minimum_required(VERSION 3.3.0)
 
