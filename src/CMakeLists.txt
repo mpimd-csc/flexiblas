@@ -330,7 +330,7 @@ IF(INTEGER8 STREQUAL ON)
 	SET_TARGET_PROPERTIES(flexiblas_api  PROPERTIES OUTPUT_NAME ${flexiblasname}_api)
 	SET_TARGET_PROPERTIES(flexiblas_mgmt PROPERTIES OUTPUT_NAME ${flexiblasname}_mgmt)
 	SET_TARGET_PROPERTIES(flexiblas-tool PROPERTIES OUTPUT_NAME ${flexiblasname})
-    SET_TARGET_PROPERTIES(flexiblas-config PROPERTIES OUTPUT_NAME ${flexiblas}-config)
+    SET_TARGET_PROPERTIES(flexiblas-config PROPERTIES OUTPUT_NAME ${flexiblasname}-config)
 
 	IF (USE_INTERFACE_INTEL)
 		SET_TARGET_PROPERTIES(flexiblas PROPERTIES OUTPUT_NAME ${flexiblasname}_intel)

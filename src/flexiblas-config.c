@@ -101,9 +101,9 @@ int main(int argc, char *argv[])
     if (strcmp(argv[1], "--cflags") == 0 ) {
         printf("-I%s/%s",CMAKE_INSTALL_FULL_INCLUDEDIR, FLEXIBLAS_LIBRARY_NAME);
         #ifdef FLEXIBLAS_INTEGER8
-        printf("-DFLEXIBLAS_INTEGER8");
+        printf(" -DFLEXIBLAS_INTEGER8");
         #else
-        printf("-UFLEXIBLAS_INTEGER8");
+        printf(" -UFLEXIBLAS_INTEGER8");
         #endif
 
     }
@@ -111,12 +111,12 @@ int main(int argc, char *argv[])
     if (strcmp(argv[1], "--fcflags") == 0 ) {
         printf("-I%s/%s",CMAKE_INSTALL_FULL_INCLUDEDIR, FLEXIBLAS_LIBRARY_NAME);
         #ifdef FLEXIBLAS_INTEGER8
-        printf("-DFLEXIBLAS_INTEGER8");
+        printf(" -DFLEXIBLAS_INTEGER8");
         #else
-        printf("-UFLEXIBLAS_INTEGER8");
+        printf(" -UFLEXIBLAS_INTEGER8");
         #endif
         #ifdef FLEXIBLAS_FC_I8FLAG
-        printf("%s", FLEXIBLAS_FC_I8FLAG);
+        printf(" %s", FLEXIBLAS_FC_I8FLAG);
         #else
         printf(" ");
         #endif
@@ -125,9 +125,9 @@ int main(int argc, char *argv[])
     /* 64 Bit integer related */
     if (strcmp(argv[1], "--i8cflag") == 0) {
         #ifdef FLEXIBLAS_INTEGER8
-        printf("-DFLEXIBLAS_INTEGER8");
+        printf(" -DFLEXIBLAS_INTEGER8");
         #else
-        printf("-UFLEXIBLAS_INTEGER8");
+        printf(" -UFLEXIBLAS_INTEGER8");
         #endif
     }
 

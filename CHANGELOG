@@ -1,3 +1,8 @@
+3.1.2 (January 17, 2022)
+-----------------------
+- flexiblas-config does not get the correct filename if -DINTEGER8=ON
+
+
 3.1.1 (January 17, 2022)
 -----------------------
 - Fix wrong so-version for libflexiblas.so
