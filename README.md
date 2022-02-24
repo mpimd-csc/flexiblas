@@ -10,6 +10,18 @@ FlexiBLAS - A BLAS and LAPACK wrapper library with runtime exchangeable backends
 Copyright 2013-2022 by *Martin Köhler* (0000-0003-2338-9904)
                    and *Jens Saak* (0000-0001-5567-9637)
 
+## Documentation
+
+[This Documentation includes](#documentation):
+  * [About FlexiBLAS](#about-flexiblas)
+  * [Installing FlexiBLAS](#install)
+  * [Linking with FlexiBLAS](#linking-a-program-against-flexiblas)
+  * [Setting up FlexiBLAS](#configuration-files)
+  * [Runtime useage of FlexiBLAS](#selecting-the-backend-at-runtime)
+  * [Profiling with FlexiBLAS](#profiling)
+
+## About Flexiblas
+
 **FlexiBLAS** is a wrapper library that enables the exchange of the
 [*BLAS*](https://en.wikipedia.org/wiki/BLAS) (Basic Linear Algebra System) and
 [*LAPACK*](https://en.wikipedia.org/wiki/LAPACK) (Linear Algebra PACKage)
@@ -421,6 +433,9 @@ one of the configuration files the application can be stated like:
 
         FLEXIBLAS=OpenBLAS ./yourapp
 
+Remember you can list all installed backends with:
+
+        flexiblas list
 ## Linking a Program Against **FlexiBLAS**
 
 By default **FlexiBLAS** produces a library called `libflexiblas.so`, which
