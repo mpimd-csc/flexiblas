@@ -18,7 +18,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
-#include "fortran_mangle.h"
+#include "flexiblas_fortran_mangle.h"
 /*-----------------------------------------------------------------------------
  *  Include the right header files 
  *-----------------------------------------------------------------------------*/

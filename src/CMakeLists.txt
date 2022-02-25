@@ -1,3 +1,7 @@
+
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/flexiblas_api.h.in ${CMAKE_BINARY_DIR}/include/flexiblas_api.h)
+
+
 ADD_SUBDIRECTORY(fallback_blas)
 
 IF(LAPACK)
@@ -182,7 +186,7 @@ SET ( CBLAS_SRC
 	cblas_interface/cblas_zdscal.c
 	cblas_interface/cblas_zswap.c
 	cblas_interface/cblas_zsymm.c
-	cblas_interface/cblas_zsyr2k.c
+    cblas_interface/cblas_zsyr2k.c
 	cblas_interface/cblas_zsyrk.c
 	cblas_interface/cblas_ztbmv.c
 	cblas_interface/cblas_ztbsv.c

@@ -17,7 +17,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "fortran_mangle.h"
+#include "flexiblas_fortran_mangle.h"
 #include "flexiblas_api.h"
 #include "blas_gnu.h"
 
@@ -36,36 +36,36 @@ int main(int argc, char **argv)
     flexiblas_print_current_backend(stdout);
 
     printf("Try the other backends.\n");
-    int nbackends = flexiblas_list(NULL, 0 , 0); 
+    int nbackends = flexiblas_list(NULL, 0 , 0);
     for (i = 0; i < nbackends; i++) {
-        flexiblas_list(fb_name, 128, i); 
+        flexiblas_list(fb_name, 128, i);
         printf("Load %s.\n", fb_name);
-        ids[i] = flexiblas_load_backend(fb_name); 
+        ids[i] = flexiblas_load_backend(fb_name);
         printf("Switch to %s - %d\n", fb_name, ids[i]);
-        flexiblas_switch(ids[i]); 
+        flexiblas_switch(ids[i]);
         printf("Current loaded backend:\n");
         flexiblas_print_current_backend(stdout);
         printf("\n");
 
     }
 
-    nbackends = flexiblas_list_loaded(NULL, 0 , 0); 
+    nbackends = flexiblas_list_loaded(NULL, 0 , 0);
     for (i = 0; i < nbackends; i++) {
-        flexiblas_list_loaded(fb_name, 128, i); 
+        flexiblas_list_loaded(fb_name, 128, i);
         printf("Loaded %s.\n", fb_name);
     }
 
 
 #ifdef LINK_BLAS
     {
-	double test1[]={1,2,3,4,5,6,7,8,9,10}; 
-	int N = 10;
-	int one = 1; 
+	double test1[]={1,2,3,4,5,6,7,8,9,10};
+	blasint N = 10;
+	blasint one = 1;
 	double ret = 0;
 
     printf("Generic Interface\n");
-	ret = FC_GLOBAL(dasum,DASUM)(&N, test1, &one); 
-	printf("dasum_(test)      = %lg\n", ret ); 
+	ret = FC_GLOBAL(dasum,DASUM)(&N, test1, &one);
+	printf("dasum_(test)      = %lg\n", ret );
     }
 #endif
 

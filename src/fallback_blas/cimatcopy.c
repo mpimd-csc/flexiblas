@@ -51,7 +51,7 @@
 #include <complex.h>
 #include <stdint.h>
 #include <string.h>
-#include "fortran_mangle.h"
+#include "flexiblas_fortran_mangle.h"
 #ifndef Int
 #ifndef INTEGER8
 #define Int 	int

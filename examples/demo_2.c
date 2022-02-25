@@ -24,7 +24,7 @@
 #include <unistd.h>
 #include <sys/time.h>
 
-#include "fortran_mangle.h"
+#include "flexiblas_fortran_mangle.h"
 
 #ifdef BLAS_INTERFACE_INTEL
 #include "blas_intel.h"

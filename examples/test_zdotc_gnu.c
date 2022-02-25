@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <complex.h>
 #include "cblas.h" 
-#include "fortran_mangle.h"
+#include "flexiblas_fortran_mangle.h"
 #ifdef BLAS_INTERFACE_INTEL 
 #include "blas_intel.h"
 #include "extblas_intel.h"

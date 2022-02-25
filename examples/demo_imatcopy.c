@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <complex.h>
-#include "fortran_mangle.h"
+#include "flexiblas_fortran_mangle.h"
 #ifdef INTEGER8
 #define Int int64_t
 #define USE_BLAS_64

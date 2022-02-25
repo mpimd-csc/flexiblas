@@ -46,7 +46,7 @@
 #define CBLAS_F77_H
 #include <stdlib.h>
 #include <complex.h>
-#include "fortran_mangle.h"
+#include "flexiblas_fortran_mangle.h"
 #include "flexiblas.h"
 
 #ifdef INTEGER8

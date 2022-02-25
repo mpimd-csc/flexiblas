@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "flexiblas_api.h"
-#include "fortran_mangle.h"
+#include "flexiblas_fortran_mangle.h"
 
 /*-----------------------------------------------------------------------------
  *  Include the right header files 

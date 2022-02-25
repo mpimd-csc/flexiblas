@@ -1,7 +1,7 @@
 INCLUDE(libcscutils/CMakeModules/CheckPolicy.cmake)
 CheckPolicy(CMP0048 NEW)
 
-PROJECT(FlexiBLAS LANGUAGES C Fortran VERSION 3.1.2)
+PROJECT(FlexiBLAS LANGUAGES C Fortran VERSION 3.1.3)
 ENABLE_LANGUAGE(Fortran)
 cmake_minimum_required(VERSION 3.3.0)
 
@@ -178,7 +178,7 @@ ENDIF()
 
 # Name Mangling
 include(FortranCInterface)
-FortranCInterface_HEADER(${PROJECT_BINARY_DIR}/include/fortran_mangle.h
+FortranCInterface_HEADER(${PROJECT_BINARY_DIR}/include/flexiblas_fortran_mangle.h
 	                 MACRO_NAMESPACE "FC_"
 			 SYMBOL_NAMESPACE "FC_")
 FortranCInterface_VERIFY()
@@ -367,9 +367,9 @@ ENDIF()
 INSTALL(FILES   ${CMAKE_CURRENT_BINARY_DIR}/${FLEXIBLASRC} DESTINATION ${CMAKE_INSTALL_FULL_SYSCONFDIR} PERMISSIONS OWNER_WRITE  OWNER_READ  GROUP_READ WORLD_READ )
 INSTALL(FILES   ${CMAKE_SOURCE_DIR}/include/blas_gnu.h
 		${CMAKE_SOURCE_DIR}/include/blas_intel.h
-		${CMAKE_SOURCE_DIR}/include/cblas.h
 		${CMAKE_BINARY_DIR}/include/flexiblas_config.h
-		${CMAKE_BINARY_DIR}/include/fortran_mangle.h
+        ${CMAKE_BINARY_DIR}/include/flexiblas_api.h
+		${CMAKE_BINARY_DIR}/include/flexiblas_fortran_mangle.h
 		DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/${FLEXIBLAS_INCLUDE_PREFIX}/)
 IF(LAPACK STREQUAL ON)
 	INSTALL(FILES   ${CMAKE_BINARY_DIR}/include/lapack.h
@@ -380,7 +380,6 @@ ENDIF()
 INSTALL(FILES   ${CMAKE_SOURCE_DIR}/src/flexiblas_backend.h
 		${CMAKE_SOURCE_DIR}/src/flexiblas_real_calls.h
         ${CMAKE_SOURCE_DIR}/src/flexiblas_real_cblas_calls.h
-		${CMAKE_SOURCE_DIR}/src/flexiblas_api.h
 		${CMAKE_SOURCE_DIR}/src/flexiblas_dummy_fortran.h
 		${CMAKE_SOURCE_DIR}/src/flexiblas_dummy_cblas.h
 		${CMAKE_SOURCE_DIR}/src/flexiblas_mgmt.h

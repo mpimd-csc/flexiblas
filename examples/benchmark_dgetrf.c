@@ -23,7 +23,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <sys/time.h>
-#include "fortran_mangle.h"
+#include "flexiblas_fortran_mangle.h"
 
 #ifdef INTEGER8
 	#define Int long

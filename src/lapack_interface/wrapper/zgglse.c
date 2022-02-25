@@ -47,7 +47,7 @@
 #include <stdint.h>
 #include <complex.h>
 
-#include "fortran_mangle.h"
+#include "flexiblas_fortran_mangle.h"
 
 #include "flexiblas.h"
 

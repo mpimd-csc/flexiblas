@@ -711,7 +711,7 @@ class Wrapper(object):
         fn.write("#ifndef " + headername + "\n")
         fn.write("#define " + headername + "\n")
         fn.write("\n#include <stdint.h>\n")
-        fn.write("\n#include \"fortran_mangle.h\"\n")
+        fn.write("\n#include \"flexiblas_fortran_mangle.h\"\n")
 
         fn.write("#include <complex.h>\n\n")
         fn.write("#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n")
@@ -850,7 +850,7 @@ class Wrapper(object):
         fn.write("#include <stdlib.h>\n")
         fn.write("#include <stdint.h>\n")
         fn.write("#include <complex.h>\n\n")
-        fn.write("#include \"fortran_mangle.h\"\n\n")
+        fn.write("#include \"flexiblas_fortran_mangle.h\"\n\n")
         fn.write("#include \"flexiblas.h\"\n\n")
         fn.write("""
 #if __GNUC__ > 7
@@ -900,7 +900,7 @@ typedef int fortran_charlen_t;
         fn.write("#include <stdlib.h>\n")
         fn.write("#include <stdint.h>\n")
         fn.write("#include <complex.h>\n\n")
-        fn.write("#include \"fortran_mangle.h\"\n\n")
+        fn.write("#include \"flexiblas_fortran_mangle.h\"\n\n")
         fn.write("#include \"flexiblas.h\"\n\n")
         fn.write("""
 

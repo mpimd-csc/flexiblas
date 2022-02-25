@@ -3,181 +3,21 @@
 
 #include <stdint.h>
 
-#include "fortran_mangle.h"
+#include "flexiblas_fortran_mangle.h"
 #include <complex.h>
+
+
+#ifndef blasint
+#include <stdint.h>
+#ifdef FLEXIBLAS_INTEGER8
+#define blasint int64_t
+#else
+#define blasint int32_t
+#endif
+#endif
 
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-#if defined(USE_BLAS_32) && defined(USE_BLAS_64)
-#error Either USE_BLAS_32 or USE_BLAS_64 must be defined!
-#endif
-
-#ifndef blasint 
-#define blasint int
-#define CAXPY    caxpy_  
-#define CCOPY    ccopy_  
-#define CDOTC    cdotc_  
-#define CDOTU    cdotu_  
-#define CGBMV    cgbmv_  
-#define CGEMM    cgemm_  
-#define CGEMV    cgemv_  
-#define CGERC    cgerc_  
-#define CGERU    cgeru_  
-#define CHBMV    chbmv_  
-#define CHEMM    chemm_  
-#define CHEMV    chemv_  
-#define CHER     cher_   
-#define CHER2    cher2_  
-#define CHER2K   cher2k_ 
-#define CHERK    cherk_  
-#define CHPMV    chpmv_  
-#define CHPR     chpr_   
-#define CHPR2    chpr2_  
-#define CROTG    crotg_  
-#define CSCAL    cscal_  
-#define CSROT    csrot_  
-#define CSSCAL   csscal_ 
-#define CSWAP    cswap_  
-#define CSYMM    csymm_  
-#define CSYR2K   csyr2k_ 
-#define CSYRK    csyrk_  
-#define CTBMV    ctbmv_  
-#define CTBSV    ctbsv_  
-#define CTPMV    ctpmv_  
-#define CTPSV    ctpsv_  
-#define CTRMM    ctrmm_  
-#define CTRMV    ctrmv_  
-#define CTRSM    ctrsm_  
-#define CTRSV    ctrsv_  
-#define DASUM    dasum_  
-#define DAXPY    daxpy_  
-#define DCOPY    dcopy_  
-#define DDOT     ddot_   
-#define DGBMV    dgbmv_  
-#define DGEMM    dgemm_  
-#define DGEMV    dgemv_  
-#define DGER     dger_   
-#define DNRM2    dnrm2_  
-#define DROT     drot_   
-#define DROTG    drotg_  
-#define DROTM    drotm_  
-#define DROTMG   drotmg_ 
-#define DSBMV    dsbmv_  
-#define DSCAL    dscal_  
-#define DSDOT    dsdot_  
-#define DSPMV    dspmv_  
-#define DSPR     dspr_   
-#define DSPR2    dspr2_  
-#define DSWAP    dswap_  
-#define DSYMM    dsymm_  
-#define DSYMV    dsymv_  
-#define DSYR     dsyr_   
-#define DSYR2    dsyr2_  
-#define DSYR2K   dsyr2k_ 
-#define DSYRK    dsyrk_  
-#define DTBMV    dtbmv_  
-#define DTBSV    dtbsv_  
-#define DTPMV    dtpmv_  
-#define DTPSV    dtpsv_  
-#define DTRMM    dtrmm_  
-#define DTRMV    dtrmv_  
-#define DTRSM    dtrsm_  
-#define DTRSV    dtrsv_  
-#define DZASUM   dzasum_ 
-#define DZNRM2   dznrm2_ 
-#define ICAMAX   icamax_ 
-#define IDAMAX   idamax_ 
-#define ISAMAX   isamax_ 
-#define IZAMAX   izamax_ 
-#define SASUM    sasum_  
-#define SAXPY    saxpy_  
-#define SCASUM   scasum_ 
-#define SCNRM2   scnrm2_ 
-#define SCOPY    scopy_  
-#define SDOT     sdot_   
-#define SDSDOT   sdsdot_ 
-#define SGBMV    sgbmv_  
-#define SGEMM    sgemm_  
-#define SGEMV    sgemv_  
-#define SGER     sger_   
-#define SNRM2    snrm2_  
-#define SROT     srot_   
-#define SROTG    srotg_  
-#define SROTM    srotm_  
-#define SROTMG   srotmg_ 
-#define SSBMV    ssbmv_  
-#define SSCAL    sscal_  
-#define SSPMV    sspmv_  
-#define SSPR     sspr_   
-#define SSPR2    sspr2_  
-#define SSWAP    sswap_  
-#define SSYMM    ssymm_  
-#define SSYMV    ssymv_  
-#define SSYR     ssyr_   
-#define SSYR2    ssyr2_  
-#define SSYR2K   ssyr2k_ 
-#define SSYRK    ssyrk_  
-#define STBMV    stbmv_  
-#define STBSV    stbsv_  
-#define STPMV    stpmv_  
-#define STPSV    stpsv_  
-#define STRMM    strmm_  
-#define STRMV    strmv_  
-#define STRSM    strsm_  
-#define STRSV    strsv_  
-#define ZAXPY    zaxpy_  
-#define ZCOPY    zcopy_  
-#define ZDOTC    zdotc_  
-#define ZDOTU    zdotu_  
-#define ZDROT    zdrot_  
-#define ZDSCAL   zdscal_ 
-#define ZGBMV    zgbmv_  
-#define ZGEMM    zgemm_  
-#define ZGEMV    zgemv_  
-#define ZGERC    zgerc_  
-#define ZGERU    zgeru_  
-#define ZHBMV    zhbmv_  
-#define ZHEMM    zhemm_  
-#define ZHEMV    zhemv_  
-#define ZHER     zher_   
-#define ZHER2    zher2_  
-#define ZHER2K   zher2k_ 
-#define ZHERK    zherk_  
-#define ZHPMV    zhpmv_  
-#define ZHPR     zhpr_   
-#define ZHPR2    zhpr2_  
-#define ZROTG    zrotg_  
-#define ZSCAL    zscal_  
-#define ZSWAP    zswap_  
-#define ZSYMM    zsymm_  
-#define ZSYR2K   zsyr2k_ 
-#define ZSYRK    zsyrk_  
-#define ZTBMV    ztbmv_  
-#define ZTBSV    ztbsv_  
-#define ZTPMV    ztpmv_  
-#define ZTPSV    ztpsv_  
-#define ZTRMM    ztrmm_  
-#define ZTRMV    ztrmv_  
-#define ZTRSM    ztrsm_  
-#define ZTRSV    ztrsv_  
-#define CAXPBY   caxpby_ 
-#define DAXPBY   daxpby_ 
-#define ZAXPBY   zaxpby_ 
-#define SAXPBY   saxpby_ 
-#define COMATCOPY comatcopy_
-#define ZOMATCOPY zomatcopy_
-#define DOMATCOPY domatcopy_
-#define SOMATCOPY somatcopy_
-#define CIMATCOPY cimatcopy_
-#define ZIMATCOPY zimatcopy_
-#define DIMATCOPY dimatcopy_
-#define SIMATCOPY simatcopy_
-#define SGEADD   sgeadd_ 
-#define DGEADD   dgeadd_ 
-#define CGEADD   cgeadd_ 
-#define ZGEADD   zgeadd_ 
 #endif
 
 void FC_GLOBAL(caxpy,CAXPY)(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cy, blasint* incy);

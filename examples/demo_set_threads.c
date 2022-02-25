@@ -20,7 +20,7 @@
 #include <math.h>
 #include <unistd.h>
 #include <sys/time.h>
-#include "fortran_mangle.h"
+#include "flexiblas_fortran_mangle.h"
 #include "flexiblas_api.h"
 
 extern void FC_GLOBAL(sgemm,SGEMM)(char* transa, char* transb, int* m, int* n, int* k, float* alpha, float* a, int* lda, float* b, int* ldb, float* beta, float* c, int* ldc);
@@ -32,7 +32,7 @@ double wtime()
 	return tv.tv_sec + tv.tv_usec / 1e6;
 }
 
-void gemm(int N, float *A, float *B, float *C) 
+void gemm(int N, float *A, float *B, float *C)
 {
     float fone = 1.0;
     double tic, toc;
@@ -49,7 +49,7 @@ void gemm(int N, float *A, float *B, float *C)
 int main(int argc, char **argv)
 {
     int N = 2000;
-    int i,j;
+    FLEXIBLAS_API_INT i,j;
 
     float *A, *B, *C;
 
@@ -67,26 +67,26 @@ int main(int argc, char **argv)
             A[j+i*N] = 1.0;
             B[j+i*N] = 1.0;
             C[j+i*N] = 0.0;
-        }   
+        }
     }
 
     printf("Using 1 Thread (C-Interface)\n");
     flexiblas_set_num_threads(1);
-    gemm(N, A, B, C);     
+    gemm(N, A, B, C);
 
     printf("Using 2 Thread (C-Interface)\n");
     flexiblas_set_num_threads(2);
-    gemm(N, A, B, C);     
+    gemm(N, A, B, C);
 
     printf("Using 1 Thread (F77-Interface)\n");
     i = 1;
     flexiblas_set_num_threads_(&i);
-    gemm(N, A, B, C);     
+    gemm(N, A, B, C);
 
     printf("Using 2 Thread (F77-Interface)\n");
     i =2;
     flexiblas_set_num_threads_(&i);
-    gemm(N, A, B, C);     
+    gemm(N, A, B, C);
 
     free(A);
     free(B);

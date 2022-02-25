@@ -42,7 +42,7 @@
  * Copyright (C) Martin Koehler, 2013-2022
  */
 
-#include "fortran_mangle.h"
+#include "flexiblas_fortran_mangle.h"
 
 
 

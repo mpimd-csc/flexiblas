@@ -14,4 +14,4 @@ usr/include/flexiblas/flexiblas_config.h
 usr/include/flexiblas/flexiblas_dummy_fortran.h
 usr/include/flexiblas/flexiblas_real_calls.h
 usr/include/flexiblas/flexiblas_real_cblas_calls.h
-usr/include/flexiblas/fortran_mangle.h
+usr/include/flexiblas/flexiblas_fortran_mangle.h

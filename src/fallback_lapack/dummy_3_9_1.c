@@ -44,7 +44,7 @@
  */
 
 #include "flexiblas_config.h"
-#include "fortran_mangle.h"
+#include "flexiblas_fortran_mangle.h"
 
 void FC_GLOBAL(dlamc3,DLAMC3)(void);
 void FC_GLOBAL(slamc3,SLAMC3)(void);

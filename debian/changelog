@@ -1,21 +1,26 @@
+flexiblas (3.1.3) focal; urgency=medium
+
+  * Bugfix release for 3.1.0
+
+ -- Martin Koehler <koehlerm@mpi-magdeburg.mpg.de>  Fri, 22 Jan 2022 20:00:00 +0100
+
 flexiblas (3.1.2) focal; urgency=medium
 
   * Bugfix release for 3.1.0
 
- -- Martin Koehler <koehlerm@mpi-magdeburg.mpg.de>  Mon, 17 Jan 2021 20:00:00 +0100
-
+ -- Martin Koehler <koehlerm@mpi-magdeburg.mpg.de>  Mon, 17 Jan 2022 20:00:00 +0100
 
 flexiblas (3.1.1) focal; urgency=medium
 
   * Bugfix release for 3.1.0
 
- -- Martin Koehler <koehlerm@mpi-magdeburg.mpg.de>  Mon, 17 Jan 2021 12:00:00 +0100
+ -- Martin Koehler <koehlerm@mpi-magdeburg.mpg.de>  Mon, 17 Jan 2022 12:00:00 +0100
 
 flexiblas (3.1.0) focal; urgency=medium
 
   * See CHANGELOG
 
- -- Martin Koehler <koehlerm@mpi-magdeburg.mpg.de>  Sun, 16 Jan 2021 12:00:00 +0100
+ -- Martin Koehler <koehlerm@mpi-magdeburg.mpg.de>  Sun, 16 Jan 2022 12:00:00 +0100
 
 flexiblas (3.0.4) focal; urgency=medium
 

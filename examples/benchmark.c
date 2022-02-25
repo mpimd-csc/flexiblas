@@ -48,10 +48,10 @@
 #endif
 
 #ifndef STANDALONE
-#include "../src/flexiblas_api.h"
+#include "flexiblas_api.h"
 #endif
 
-#include "fortran_mangle.h"
+#include "flexiblas_fortran_mangle.h"
 #include "cscutils/counter.h"
 
 typedef void (*benchmark_func_t) (Int n, Int runs, double *rtime, double *gflops);

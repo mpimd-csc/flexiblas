@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "fortran_mangle.h"
+#include "flexiblas_fortran_mangle.h"
 #ifndef Int
 #ifndef INTEGER8 
 #define Int 	int

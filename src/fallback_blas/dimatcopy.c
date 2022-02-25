@@ -54,7 +54,7 @@
 #include <ctype.h>
 
 #include <string.h>
-#include "fortran_mangle.h"
+#include "flexiblas_fortran_mangle.h"
 /* #include "flexiblas.h" */
 
 

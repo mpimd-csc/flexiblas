@@ -21,7 +21,7 @@
 #ifndef CBLAS_TEST_H
 #define CBLAS_TEST_H
 #include "cblas.h"
-#include "fortran_mangle.h"
+#include "flexiblas_fortran_mangle.h"
 
 #ifdef INTEGER8 
 	#include <stdint.h>

@@ -1,4 +1,4 @@
-.TH flexiblas 1 "2013-2020" "M. Koehler" "The FlexiBLAS Library"
+.TH flexiblas 1 "2013-2022" "M. Koehler" "The FlexiBLAS Library"
 .SH NAME
 flexiblas \- the FlexiBLAS administration tool
 .SH SYNOPSIS
@@ -19,6 +19,25 @@ The \fBflexiblas64\fR tool is used for the 64-bit integer variant of FlexiBLAS.
 
 Furthermore, it can be used to add or remove BLAS backends form
 the configuration files.
+
+.SS Usage Examples
+If application are build against FlexiBLAS, there are severval ways to select the
+active BLAS library. The installed (and known) BLAS backends can be listed via
+
+    flexiblas list
+
+The default BLAS backend can be set using 
+
+   flexiblas default NAME_OF_THE_LIBRARY
+
+If the BLAS backend should only be set temporary, this can be done via the \fIFLEXIBLAS\fR environment 
+variable. This can either be set to a name of a BLAS backend (from \fBflexiblas list\fP) 
+
+    FLEXIBLAS=NAME_OF_THE_LIBRARY  ./yourapp
+
+or to the path of a shared object containing a BLAS implementation
+
+    FLEXIBLAS="/usr/lib/libyourblas.so" ./yourapp
 
 .SS Hooks
 FlexiBLAS supports so called hooks to modify/extent/change the behavior of BLAS and

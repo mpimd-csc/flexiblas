@@ -48,7 +48,7 @@
 #include <ctype.h>
 #include <stdint.h>
 #include "flexiblas.h"
-#include "fortran_mangle.h"
+#include "flexiblas_fortran_mangle.h"
 
 /* #if defined(__alpha__) || defined(__sparc64__) || defined(__x86_64__) || defined(__ia64__)
 typedef int ftnlen;

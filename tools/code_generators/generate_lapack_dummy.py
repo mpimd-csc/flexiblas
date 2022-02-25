@@ -61,7 +61,7 @@ file_header = """
  */
 
 #include "flexiblas_config.h"
-#include "fortran_mangle.h"
+#include "flexiblas_fortran_mangle.h"
 
 """
 fn_head = """

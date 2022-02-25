@@ -49,8 +49,18 @@
 #ifndef FLEXIBLAS_API_H
 #define FLEXIBLAS_API_H
 
-#ifndef Int
-#define Int int
+#ifndef INTEGER8
+#cmakedefine INTEGER8
+#endif
+
+
+#include <stdint.h>
+#ifndef FLEXIBLAS_API_INT
+#ifdef INTEGER8
+#define FLEXIBLAS_API_INT int64_t
+#else
+#define FLEXIBLAS_API_INT int32_t
+#endif
 #endif
 
 #ifdef __cplusplus
@@ -81,29 +91,37 @@ extern "C" {
 
     /* Set number of threads  */
     extern void flexiblas_set_num_threads(int num);
-    extern void flexiblas_set_num_threads_(Int* num);
     extern void openblas_set_num_threads(int num);
-    extern void openblas_set_num_threads_(Int* num);
     extern void mkl_set_num_threads(int num);
-    extern void mkl_set_num_threads_(Int* num);
     extern void blas_set_num_threads(int num);
-    extern void blas_set_num_threads_(Int* num);
     extern void acmlsetnumthreads(int num);
-    extern void acmlsetnumthreads_(Int* num);
-    extern void bli_thread_set_num_threads(Int num);
+    extern void bli_thread_set_num_threads(FLEXIBLAS_API_INT num);
 
     /* Get number of threads  */
     extern int flexiblas_get_num_threads(void);
-    extern Int flexiblas_get_num_threads_(void);
     extern int openblas_get_num_threads(void);
-    extern Int openblas_get_num_threads_(void);
     extern int mkl_get_num_threads(void);
-    extern Int mkl_get_num_threads_(void);
     extern int blas_get_num_threads(void);
-    extern Int blas_get_num_threads_(void);
     extern int acmlgetnumthreads(void);
-    extern Int acmlgetnumthreads_(void);
-    extern Int bli_thread_get_num_threads(void);
+    extern FLEXIBLAS_API_INT bli_thread_get_num_threads(void);
+
+
+    /* Fortran Callable Routines, not intended to be called from C
+     *
+     * If these routines are called from C ensure that FLEXIBLAS_API_INT is defined
+     * as the default integer of your Fortran code. By default this is
+     * int, which corresponds to a 4 byte integer in Fortran on GNU Linux.*/
+
+    extern void flexiblas_set_num_threads_(FLEXIBLAS_API_INT* num);
+    extern FLEXIBLAS_API_INT acmlgetnumthreads_(void);
+    extern FLEXIBLAS_API_INT openblas_get_num_threads_(void);
+    extern FLEXIBLAS_API_INT mkl_get_num_threads_(void);
+    extern FLEXIBLAS_API_INT flexiblas_get_num_threads_(void);
+    extern FLEXIBLAS_API_INT blas_get_num_threads_(void);
+    extern void blas_set_num_threads_(FLEXIBLAS_API_INT* num);
+    extern void openblas_set_num_threads_(FLEXIBLAS_API_INT* num);
+    extern void mkl_set_num_threads_(FLEXIBLAS_API_INT* num);
+    extern void acmlsetnumthreads_(FLEXIBLAS_API_INT* num);
 
 #ifdef __cplusplus
 };

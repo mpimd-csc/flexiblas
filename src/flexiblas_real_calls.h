@@ -46,7 +46,7 @@
 
 #include <stdint.h>
 
-#include "fortran_mangle.h"
+#include "flexiblas_fortran_mangle.h"
 #include <complex.h>
 
 #ifdef __cplusplus

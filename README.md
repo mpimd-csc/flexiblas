@@ -1,7 +1,7 @@
 FlexiBLAS - A BLAS and LAPACK wrapper library with runtime exchangeable backends
 ================================================================================
 
-**Version 3.1.2** 10.5281/zenodo.798186
+**Version 3.1.3** 10.5281/zenodo.798186
 
 **Project Website:** https://www.mpi-magdeburg.mpg.de/projects/flexiblas
 
@@ -17,7 +17,7 @@ Copyright 2013-2022 by *Martin Köhler* (0000-0003-2338-9904)
   * [Installing FlexiBLAS](#install)
   * [Linking with FlexiBLAS](#linking-a-program-against-flexiblas)
   * [Setting up FlexiBLAS](#configuration-files)
-  * [Runtime useage of FlexiBLAS](#selecting-the-backend-at-runtime)
+  * [Runtime usage of FlexiBLAS](#selecting-the-backend-at-runtime)
   * [Profiling with FlexiBLAS](#profiling)
 
 ## About Flexiblas
@@ -272,6 +272,18 @@ level above. They are installed using:
 
 If you update from **FlexiBLAS** <= 2.0.0 please remove all related packages and
 configuration files before.
+
+### Setup on Fedora
+If your are using Fedora Linux, you can install FlexiBLAS easily using `dnf`
+since FlexiBLAS is part of Fedora Linux. Just type
+```
+dnf install flexiblas
+```
+This installs most likely one of the latest FlexiBLAS releases.
+
+Thanks Iñaki Ucar (https://src.fedoraproject.org/user/iucar) for packaging and
+mainting the Fedora integration.
+
 
 ### Caveats
 

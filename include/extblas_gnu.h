@@ -3,35 +3,22 @@
 
 #include <stdint.h>
 
-#include "fortran_mangle.h"
+#include "flexiblas_fortran_mangle.h"
 #include <complex.h>
+
+#ifndef blasint
+#include <stdint.h>
+#ifdef FLEXIBLAS_INTEGER8
+#define blasint int64_t
+#else
+#define blasint int32_t
+#endif
+#endif
+
+
 
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-#if defined(USE_BLAS_32) && defined(USE_BLAS_64)
-#error Either USE_BLAS_32 or USE_BLAS_64 must be defined!
-#endif
-
-#ifndef blasint 
-#define blasint int
-#define CAXPBY   caxpby_ 
-#define DAXPBY   daxpby_ 
-#define ZAXPBY   zaxpby_ 
-#define SAXPBY   saxpby_ 
-#define COMATCOPY comatcopy_
-#define ZOMATCOPY zomatcopy_
-#define DOMATCOPY domatcopy_
-#define SOMATCOPY somatcopy_
-#define CIMATCOPY cimatcopy_
-#define ZIMATCOPY zimatcopy_
-#define DIMATCOPY dimatcopy_
-#define SIMATCOPY simatcopy_
-#define SGEADD   sgeadd_ 
-#define DGEADD   dgeadd_ 
-#define CGEADD   cgeadd_ 
-#define ZGEADD   zgeadd_ 
 #endif
 
 void FC_GLOBAL(caxpby,CAXPBY)(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cb, float complex* cy, blasint* incy);

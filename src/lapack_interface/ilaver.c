@@ -45,7 +45,7 @@
 #include <ctype.h>
 #include <stdint.h>
 #include "flexiblas.h"
-#include "fortran_mangle.h"
+#include "flexiblas_fortran_mangle.h"
 
 void FC_GLOBAL(ilaver,ILAVER) ( Int *Major, Int * Minor, Int * Patch)
 {
