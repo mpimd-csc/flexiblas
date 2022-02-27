@@ -205,7 +205,7 @@ ELSE()
 	ELSE ()
 		SET ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_FILE_OFFSET_BITS=64")
 		IF  ( CMAKE_Fortran_COMPILER_ID STREQUAL "Intel" OR CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
-            set (CMAKE_SHARED_LINKER_FLAGS "-rdynamic -Wl,--export-dynamic")
+            set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -rdynamic -Wl,--export-dynamic")
 		ENDIF()
 		# SET ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_FILE_OFFSET_BITS=64 ")
 
