@@ -146,6 +146,8 @@ options:
 
     | LAPACK_API_VERSION |                                          | Testing |
     |--------------------|------------------------------------------|---------|
+    | 3.10.1             | LAPACK 3.10.1                            |   yes   |
+    | 3.10.1-wodprc      | LAPACK 3.10.1 without deprecated routines|   yes   |
     | 3.10.0             | LAPACK 3.10.0                            |   yes   |
     | 3.10.0-wodprc      | LAPACK 3.10.0 without deprecated routines|   yes   |
     | 3.9.1              | LAPACK 3.9.1                             |   yes   |
