@@ -59,10 +59,20 @@ int main(int argc, char **argv)
     printf("CPU-Name: '%s'\n", cpu);
     free(cpu);
 
+    int physical_cores, logical_cores, hyper_threading;
+
+    if (csc_sysinfo_cpuinfo(&logical_cores,&physical_cores,&hyper_threading)) {
+        printf("CPU Cores: Unknown\n");
+    } else {
+        if (hyper_threading) {
+            printf("CPU Cores: %d (%d logical)\n", physical_cores, logical_cores);
+        } else {
+            printf("CPU Cores: %d\n", physical_cores);
+        }
+    }
+
     char *comp = csc_sysinfo_ccompiler();
     printf("Compiler: %s\n", comp);
     free(comp);
     return 0;
 }
-
-

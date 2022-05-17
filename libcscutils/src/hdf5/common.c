@@ -26,7 +26,8 @@
 #include <time.h>
 #include <sys/time.h>
 
-#define H5_NO_DEPRECATED_SYMBOLS
+/* This macro causes problems when using libhdf5 > 1.10.4 */
+/* #define H5_NO_DEPRECATED_SYMBOLS */
 #include <hdf5.h>
 #include <hdf5_hl.h>
 

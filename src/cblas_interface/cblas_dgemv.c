@@ -53,16 +53,16 @@
 static TLS_STORE uint8_t hook_cblas_dgemv_pos = 0;
 
 void cblas_dgemv(const CBLAS_LAYOUT layout,
-        const CBLAS_TRANSPOSE TransA, const int M, const int N,
-        const double alpha, const double  *A, const int lda,
-        const double  *X, const int incX, const double beta,
-        double  *Y, const int incY)
+        const CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N,
+        const double alpha, const double  *A, const CBLAS_INT lda,
+        const double  *X, const CBLAS_INT incX, const double beta,
+        double  *Y, const CBLAS_INT incY)
 {
     void (*fn)(const CBLAS_LAYOUT layout,
-            const CBLAS_TRANSPOSE TransA, const int M, const int N,
-            const double alpha, const double  *A, const int lda,
-            const double  *X, const int incX, const double beta,
-            double  *Y, const int incY);
+            const CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N,
+            const double alpha, const double  *A, const CBLAS_INT lda,
+            const double  *X, const CBLAS_INT incX, const double beta,
+            double  *Y, const CBLAS_INT incY);
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(dgemv);
 
@@ -71,26 +71,26 @@ void cblas_dgemv(const CBLAS_LAYOUT layout,
 }
 
 void flexiblas_chain_cblas_dgemv(const CBLAS_LAYOUT layout,
-        const CBLAS_TRANSPOSE TransA, const int M, const int N,
-        const double alpha, const double  *A, const int lda,
-        const double  *X, const int incX, const double beta,
-        double  *Y, const int incY)
+        const CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N,
+        const double alpha, const double  *A, const CBLAS_INT lda,
+        const double  *X, const CBLAS_INT incX, const double beta,
+        double  *Y, const CBLAS_INT incY)
 {
     void (*fn)(const CBLAS_LAYOUT layout,
-            const CBLAS_TRANSPOSE TransA, const int M, const int N,
-            const double alpha, const double  *A, const int lda,
-            const double  *X, const int incX, const double beta,
-            double  *Y, const int incY);
+            const CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N,
+            const double alpha, const double  *A, const CBLAS_INT lda,
+            const double  *X, const CBLAS_INT incX, const double beta,
+            double  *Y, const CBLAS_INT incY);
     CBLAS_HOOK_ADVANCE(dgemv);
     fn ( layout, TransA, M, N, alpha, A, lda, X, incX, beta, Y,incY);
 
 }
 
 void flexiblas_real_cblas_dgemv(const CBLAS_LAYOUT layout,
-        const CBLAS_TRANSPOSE TransA, const int M, const int N,
-        const double alpha, const double  *A, const int lda,
-        const double  *X, const int incX, const double beta,
-        double  *Y, const int incY)
+        const CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N,
+        const double alpha, const double  *A, const CBLAS_INT lda,
+        const double  *X, const CBLAS_INT incX, const double beta,
+        double  *Y, const CBLAS_INT incY)
 {
     char TA;
 #define F77_TA &TA
@@ -105,10 +105,10 @@ void flexiblas_real_cblas_dgemv(const CBLAS_LAYOUT layout,
 #endif
     if ( current_backend->blas.dgemv.cblas_function != NULL ) {
         void (*fn)(const CBLAS_LAYOUT layout,
-                const CBLAS_TRANSPOSE TransA, const int M, const int N,
-                const double alpha, const double  *A, const int lda,
-                const double  *X, const int incX, const double beta,
-                double  *Y, const int incY) = current_backend->blas.dgemv.cblas_function;
+                const CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N,
+                const double alpha, const double  *A, const CBLAS_INT lda,
+                const double  *X, const CBLAS_INT incX, const double beta,
+                double  *Y, const CBLAS_INT incY) = current_backend->blas.dgemv.cblas_function;
         fn ( layout, TransA, M, N, alpha, A, lda, X, incX, beta, Y,incY);
     } else {
         extern int CBLAS_CallFromC;

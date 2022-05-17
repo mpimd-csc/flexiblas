@@ -52,13 +52,13 @@
 static TLS_STORE uint8_t hook_cblas_chpr_pos = 0;
 
 void cblas_chpr(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const int N, const float alpha, const void *X,
-        const int incX, void *A)
+        const CBLAS_INT N, const float alpha, const void *X,
+        const CBLAS_INT incX, void *A)
 {
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-             const int N, const float alpha, const void *X,
-             const int incX, void *A);
+             const CBLAS_INT N, const float alpha, const void *X,
+             const CBLAS_INT incX, void *A);
 
         CBLAS_BACKEND_INIT();
         CBLAS_HOOK_SELECT(chpr);
@@ -68,21 +68,21 @@ void cblas_chpr(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
 }
 
 void flexiblas_chain_cblas_chpr(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const int N, const float alpha, const void *X,
-        const int incX, void *A)
+        const CBLAS_INT N, const float alpha, const void *X,
+        const CBLAS_INT incX, void *A)
 {
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-             const int N, const float alpha, const void *X,
-             const int incX, void *A);
+             const CBLAS_INT N, const float alpha, const void *X,
+             const CBLAS_INT incX, void *A);
         CBLAS_HOOK_SELECT(chpr);
         fn(layout,Uplo,N,alpha,X,incX,A);
 
 }
 
 void flexiblas_real_cblas_chpr(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const int N, const float alpha, const void *X,
-        const int incX, void *A)
+        const CBLAS_INT N, const float alpha, const void *X,
+        const CBLAS_INT incX, void *A)
 {
     char UL;
 #define F77_UL &UL
@@ -96,13 +96,13 @@ void flexiblas_real_cblas_chpr(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
     if ( current_backend->blas.chpr.cblas_function != NULL ) {
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-             const int N, const float alpha, const void *X,
-             const int incX, void *A)
+             const CBLAS_INT N, const float alpha, const void *X,
+             const CBLAS_INT incX, void *A)
             = current_backend->blas.chpr.cblas_function;
         fn(layout,Uplo,N,alpha,X,incX,A);
 
     } else {
-        int n, i, tincx, incx=incX;
+        CBLAS_INT n, i, tincx, incx=incX;
         float *x, *xx, *tx, *st;
 
         extern int CBLAS_CallFromC;

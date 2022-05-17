@@ -52,17 +52,17 @@
 static TLS_STORE uint8_t hook_cblas_sspmv_pos = 0;
 
 void cblas_sspmv(const CBLAS_LAYOUT layout,
-        const CBLAS_UPLO Uplo, const int N,
+        const CBLAS_UPLO Uplo, const CBLAS_INT N,
         const float alpha, const float  *AP,
-        const float  *X, const int incX, const float beta,
-        float  *Y, const int incY)
+        const float  *X, const CBLAS_INT incX, const float beta,
+        float  *Y, const CBLAS_INT incY)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout,
-         const CBLAS_UPLO Uplo, const int N,
+         const CBLAS_UPLO Uplo, const CBLAS_INT N,
          const float alpha, const float  *AP,
-         const float  *X, const int incX, const float beta,
-         float  *Y, const int incY);
+         const float  *X, const CBLAS_INT incX, const float beta,
+         float  *Y, const CBLAS_INT incY);
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(sspmv);
     fn(layout,Uplo,N,alpha,AP,X,incX,beta,Y,incY);
@@ -70,27 +70,27 @@ void cblas_sspmv(const CBLAS_LAYOUT layout,
 }
 
 void flexiblas_chain_cblas_sspmv(const CBLAS_LAYOUT layout,
-        const CBLAS_UPLO Uplo, const int N,
+        const CBLAS_UPLO Uplo, const CBLAS_INT N,
         const float alpha, const float  *AP,
-        const float  *X, const int incX, const float beta,
-        float  *Y, const int incY)
+        const float  *X, const CBLAS_INT incX, const float beta,
+        float  *Y, const CBLAS_INT incY)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout,
-         const CBLAS_UPLO Uplo, const int N,
+         const CBLAS_UPLO Uplo, const CBLAS_INT N,
          const float alpha, const float  *AP,
-         const float  *X, const int incX, const float beta,
-         float  *Y, const int incY);
+         const float  *X, const CBLAS_INT incX, const float beta,
+         float  *Y, const CBLAS_INT incY);
     CBLAS_HOOK_ADVANCE(sspmv);
     fn(layout,Uplo,N,alpha,AP,X,incX,beta,Y,incY);
 
 }
 
 void flexiblas_real_cblas_sspmv(const CBLAS_LAYOUT layout,
-        const CBLAS_UPLO Uplo, const int N,
+        const CBLAS_UPLO Uplo, const CBLAS_INT N,
         const float alpha, const float  *AP,
-        const float  *X, const int incX, const float beta,
-        float  *Y, const int incY)
+        const float  *X, const CBLAS_INT incX, const float beta,
+        float  *Y, const CBLAS_INT incY)
 {
     char UL;
 #ifdef F77_CHAR
@@ -108,10 +108,10 @@ void flexiblas_real_cblas_sspmv(const CBLAS_LAYOUT layout,
     if ( current_backend->blas.sspmv.cblas_function != NULL ) {
         void (*fn)
             (const CBLAS_LAYOUT layout,
-             const CBLAS_UPLO Uplo, const int N,
+             const CBLAS_UPLO Uplo, const CBLAS_INT N,
              const float alpha, const float  *AP,
-             const float  *X, const int incX, const float beta,
-             float  *Y, const int incY)
+             const float  *X, const CBLAS_INT incX, const float beta,
+             float  *Y, const CBLAS_INT incY)
             = current_backend->blas.sspmv.cblas_function;
         fn(layout,Uplo,N,alpha,AP,X,incX,beta,Y,incY);
     } else {

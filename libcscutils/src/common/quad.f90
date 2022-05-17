@@ -1,5 +1,5 @@
 SUBROUTINE CSC_QUADEQR(A, B, C, X1, X2, IER)
-    ! LÖSUNG EINER QUADRATISCHEN GLEICHUNG DER GESTALT
+    ! Solution of a quadratic equation
     !   A*X**2 + B*X + C = 0
 
     IMPLICIT NONE

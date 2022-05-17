@@ -52,20 +52,20 @@
 
 static TLS_STORE uint8_t hook_cblas_saxpby_pos = 0;
 
-void cblas_saxpby( const int N, const float alpha, const float *X,
-                       const int incX, const float beta, float *Y, const int incY)
+void cblas_saxpby( const CBLAS_INT N, const float alpha, const float *X,
+                       const CBLAS_INT incX, const float beta, float *Y, const CBLAS_INT incY)
 {
-	   void (*fn)(const int , const float , const float *, const int, const float, float *Y, const int );
+	   void (*fn)(const CBLAS_INT , const float , const float *, const CBLAS_INT, const float, float *Y, const CBLAS_INT );
 	CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(saxpby);
        fn(N,alpha,X,incX,beta, Y,incY);
 
 }
 
-void flexiblas_chain_cblas_saxpby( const int N, const float alpha, const float *X,
-                       const int incX, const float beta, float *Y, const int incY)
+void flexiblas_chain_cblas_saxpby( const CBLAS_INT N, const float alpha, const float *X,
+                       const CBLAS_INT incX, const float beta, float *Y, const CBLAS_INT incY)
 {
-    void (*fn)(const int , const float , const float *, const int, const float, float *Y, const int );
+    void (*fn)(const CBLAS_INT , const float , const float *, const CBLAS_INT, const float, float *Y, const CBLAS_INT );
 	   CBLAS_HOOK_ADVANCE(saxpby);
        CBLAS_HOOK_ADVANCE(saxpby);
     fn(N,alpha,X,incX,beta, Y,incY);
@@ -73,8 +73,8 @@ void flexiblas_chain_cblas_saxpby( const int N, const float alpha, const float *
 
 }
 
-void flexiblas_real_cblas_saxpby( const int N, const float alpha, const float *X,
-                       const int incX, const float beta, float *Y, const int incY)
+void flexiblas_real_cblas_saxpby( const CBLAS_INT N, const float alpha, const float *X,
+                       const CBLAS_INT incX, const float beta, float *Y, const CBLAS_INT incY)
 {
 #ifdef F77_INT
    F77_INT F77_N=N, F77_incX=incX, F77_incY=incY;
@@ -84,7 +84,7 @@ void flexiblas_real_cblas_saxpby( const int N, const float alpha, const float *X
    #define F77_incY incY
 #endif
    if ( current_backend->blas.saxpby.cblas_function != NULL ) {
-	   void (*fn)(const int , const float , const float *, const int, const float, float *Y, const int ) = current_backend->blas.saxpby.cblas_function;
+	   void (*fn)(const CBLAS_INT , const float , const float *, const CBLAS_INT, const float, float *Y, const CBLAS_INT ) = current_backend->blas.saxpby.cblas_function;
 	   fn(N,alpha,X,incX,beta, Y,incY);
    } else {
    	FC_GLOBAL(saxpby,SAXPBY)( &F77_N, &alpha, X, &F77_incX, &beta, Y, &F77_incY);

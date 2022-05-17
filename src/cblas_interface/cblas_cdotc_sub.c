@@ -52,9 +52,9 @@
 static TLS_STORE uint8_t hook_cblas_cdotc_sub_pos = 0;
 
 
-void cblas_cdotc_sub( const int N, const void *X, const int incX, const void *Y, const int incY,void *dotc)
+void cblas_cdotc_sub( const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY,void *dotc)
 {
-    void (*fn)  ( const int N, const void *X, const int incX, const void *Y, const int incY,void *dotc);
+    void (*fn)  ( const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY,void *dotc);
 
     CBLAS_BACKEND_INIT();
 
@@ -68,9 +68,9 @@ void cblas_cdotc_sub( const int N, const void *X, const int incX, const void *Y,
     return;
 }
 
-void flexiblas_real_cblas_cdotc_sub( const int N, const void *X, const int incX, const void *Y, const int incY,void *dotc)
+void flexiblas_real_cblas_cdotc_sub( const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY,void *dotc)
 {
-    void (*fn)  ( const int N, const void *X, const int incX, const void *Y, const int incY,void *dotc);
+    void (*fn)  ( const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY,void *dotc);
 
     if ( current_backend->blas.cdotc_sub.cblas_function != NULL ) {
         fn = current_backend->blas.cdotc_sub.cblas_function;
@@ -88,9 +88,9 @@ void flexiblas_real_cblas_cdotc_sub( const int N, const void *X, const int incX,
     return;
 }
 
-void flexiblas_chain_cblas_cdotc_sub( const int N, const void *X, const int incX, const void *Y, const int incY,void *dotc)
+void flexiblas_chain_cblas_cdotc_sub( const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY,void *dotc)
 {
-    void (*fn)  ( const int N, const void *X, const int incX, const void *Y, const int incY,void *dotc);
+    void (*fn)  ( const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY,void *dotc);
     CBLAS_HOOK_ADVANCE(cdotc_sub);
     fn(N,X,incX,Y,incY,dotc);
 }

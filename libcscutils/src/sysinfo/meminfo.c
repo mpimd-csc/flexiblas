@@ -69,9 +69,9 @@ int csc_sysinfo_memory(size_t *total_ram, size_t *free_ram, size_t *total_swap, 
 /*-----------------------------------------------------------------------------
  *  FreeBSD and DragonFlyBSD implementation
  *-----------------------------------------------------------------------------*/
-#ifndef _BSD_SOURCE	
+#ifndef _BSD_SOURCE
 #define _BSD_SOURCE
-#endif 
+#endif
 
 typedef unsigned int u_int;
 #include <stdlib.h>
@@ -281,6 +281,35 @@ int csc_sysinfo_memory(size_t *total_ram, size_t *free_ram, size_t *total_swap, 
     return 0;
 }
 
+#elif defined(_WIN32) || defined(_WIN64)
+
+/*-----------------------------------------------------------------------------
+ *  Windows
+ *-----------------------------------------------------------------------------*/
+
+#include <windows.h>
+
+int csc_sysinfo_memory(size_t *total_ram, size_t *free_ram, size_t *total_swap, size_t *free_swap)
+{
+    MEMORYSTATUSEX statex;
+    statex.dwLength = sizeof(statex);
+    GlobalMemoryStatusEx(&statex);
+
+    if ( total_ram != NULL ) {
+        *total_ram = statex.ullTotalPhys;
+    }
+    if ( free_ram  != NULL ) {
+        *free_ram  = statex.ullAvailPhys;
+    }
+    if ( total_swap != NULL ) {
+        *total_swap = statex.ullTotalPageFile - statex.ullTotalPhys;
+    }
+
+    if ( free_swap != NULL ) {
+        *free_swap = statex.ullAvailPageFile - statex.ullAvailPhys;
+    }
+    return 0;
+}
 
 #else
 

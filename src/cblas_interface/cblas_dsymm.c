@@ -52,17 +52,17 @@
 
 static TLS_STORE uint8_t hook_cblas_dsymm_pos = 0;
 void cblas_dsymm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
-        const CBLAS_UPLO Uplo, const int M, const int N,
-        const double alpha, const double  *A, const int lda,
-        const double  *B, const int ldb, const double beta,
-        double  *C, const int ldc)
+        const CBLAS_UPLO Uplo, const CBLAS_INT M, const CBLAS_INT N,
+        const double alpha, const double  *A, const CBLAS_INT lda,
+        const double  *B, const CBLAS_INT ldb, const double beta,
+        double  *C, const CBLAS_INT ldc)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
-         const CBLAS_UPLO Uplo, const int M, const int N,
-         const double alpha, const double  *A, const int lda,
-         const double  *B, const int ldb, const double beta,
-         double  *C, const int ldc);
+         const CBLAS_UPLO Uplo, const CBLAS_INT M, const CBLAS_INT N,
+         const double alpha, const double  *A, const CBLAS_INT lda,
+         const double  *B, const CBLAS_INT ldb, const double beta,
+         double  *C, const CBLAS_INT ldc);
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(dsymm);
 
@@ -71,17 +71,17 @@ void cblas_dsymm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
 }
 
 void flexiblas_chain_cblas_dsymm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
-        const CBLAS_UPLO Uplo, const int M, const int N,
-        const double alpha, const double  *A, const int lda,
-        const double  *B, const int ldb, const double beta,
-        double  *C, const int ldc)
+        const CBLAS_UPLO Uplo, const CBLAS_INT M, const CBLAS_INT N,
+        const double alpha, const double  *A, const CBLAS_INT lda,
+        const double  *B, const CBLAS_INT ldb, const double beta,
+        double  *C, const CBLAS_INT ldc)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
-         const CBLAS_UPLO Uplo, const int M, const int N,
-         const double alpha, const double  *A, const int lda,
-         const double  *B, const int ldb, const double beta,
-         double  *C, const int ldc);
+         const CBLAS_UPLO Uplo, const CBLAS_INT M, const CBLAS_INT N,
+         const double alpha, const double  *A, const CBLAS_INT lda,
+         const double  *B, const CBLAS_INT ldb, const double beta,
+         double  *C, const CBLAS_INT ldc);
     CBLAS_HOOK_ADVANCE(dsymm);
 
     fn	(layout,Side,Uplo,M,N,alpha,A,lda,B,ldb,beta,C,ldc);
@@ -89,10 +89,10 @@ void flexiblas_chain_cblas_dsymm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Sid
 }
 
 void flexiblas_real_cblas_dsymm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
-        const CBLAS_UPLO Uplo, const int M, const int N,
-        const double alpha, const double  *A, const int lda,
-        const double  *B, const int ldb, const double beta,
-        double  *C, const int ldc)
+        const CBLAS_UPLO Uplo, const CBLAS_INT M, const CBLAS_INT N,
+        const double alpha, const double  *A, const CBLAS_INT lda,
+        const double  *B, const CBLAS_INT ldb, const double beta,
+        double  *C, const CBLAS_INT ldc)
 {
     char SD, UL;
 #define F77_SD &SD
@@ -111,10 +111,10 @@ void flexiblas_real_cblas_dsymm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side
     if ( current_backend->blas.dsymm.cblas_function != NULL ) {
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
-             const CBLAS_UPLO Uplo, const int M, const int N,
-             const double alpha, const double  *A, const int lda,
-             const double  *B, const int ldb, const double beta,
-             double  *C, const int ldc)
+             const CBLAS_UPLO Uplo, const CBLAS_INT M, const CBLAS_INT N,
+             const double alpha, const double  *A, const CBLAS_INT lda,
+             const double  *B, const CBLAS_INT ldb, const double beta,
+             double  *C, const CBLAS_INT ldc)
             = current_backend->blas.dsymm.cblas_function;
         fn	(layout,Side,Uplo,M,N,alpha,A,lda,B,ldb,beta,C,ldc);
     } else {

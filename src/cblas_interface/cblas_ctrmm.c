@@ -52,16 +52,16 @@
 static TLS_STORE uint8_t hook_cblas_ctrmm_pos = 0;
 void cblas_ctrmm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
         const CBLAS_UPLO Uplo, const  CBLAS_TRANSPOSE TransA,
-        const CBLAS_DIAG Diag, const int M, const int N,
-        const void *alpha, const void  *A, const int lda,
-        void  *B, const int ldb)
+        const CBLAS_DIAG Diag, const CBLAS_INT M, const CBLAS_INT N,
+        const void *alpha, const void  *A, const CBLAS_INT lda,
+        void  *B, const CBLAS_INT ldb)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
          const CBLAS_UPLO Uplo, const  CBLAS_TRANSPOSE TransA,
-         const CBLAS_DIAG Diag, const int M, const int N,
-         const void *alpha, const void  *A, const int lda,
-         void  *B, const int ldb);
+         const CBLAS_DIAG Diag, const CBLAS_INT M, const CBLAS_INT N,
+         const void *alpha, const void  *A, const CBLAS_INT lda,
+         void  *B, const CBLAS_INT ldb);
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(ctrmm);
 
@@ -71,16 +71,16 @@ void cblas_ctrmm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
 
 void flexiblas_chain_cblas_ctrmm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
         const CBLAS_UPLO Uplo, const  CBLAS_TRANSPOSE TransA,
-        const CBLAS_DIAG Diag, const int M, const int N,
-        const void *alpha, const void  *A, const int lda,
-        void  *B, const int ldb)
+        const CBLAS_DIAG Diag, const CBLAS_INT M, const CBLAS_INT N,
+        const void *alpha, const void  *A, const CBLAS_INT lda,
+        void  *B, const CBLAS_INT ldb)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
          const CBLAS_UPLO Uplo, const  CBLAS_TRANSPOSE TransA,
-         const CBLAS_DIAG Diag, const int M, const int N,
-         const void *alpha, const void  *A, const int lda,
-         void  *B, const int ldb);
+         const CBLAS_DIAG Diag, const CBLAS_INT M, const CBLAS_INT N,
+         const void *alpha, const void  *A, const CBLAS_INT lda,
+         void  *B, const CBLAS_INT ldb);
     CBLAS_HOOK_ADVANCE(ctrmm);
 
     fn(layout,Side,Uplo,TransA,Diag,M,N,alpha,A,lda,B,ldb);
@@ -89,9 +89,9 @@ void flexiblas_chain_cblas_ctrmm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Sid
 
 void flexiblas_real_cblas_ctrmm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
         const CBLAS_UPLO Uplo, const  CBLAS_TRANSPOSE TransA,
-        const CBLAS_DIAG Diag, const int M, const int N,
-        const void *alpha, const void  *A, const int lda,
-        void  *B, const int ldb)
+        const CBLAS_DIAG Diag, const CBLAS_INT M, const CBLAS_INT N,
+        const void *alpha, const void  *A, const CBLAS_INT lda,
+        void  *B, const CBLAS_INT ldb)
 {
     char UL, TA, SD, DI;
 #define F77_TA &TA
@@ -113,9 +113,9 @@ void flexiblas_real_cblas_ctrmm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
              const CBLAS_UPLO Uplo, const  CBLAS_TRANSPOSE TransA,
-             const CBLAS_DIAG Diag, const int M, const int N,
-             const void *alpha, const void  *A, const int lda,
-             void  *B, const int ldb)
+             const CBLAS_DIAG Diag, const CBLAS_INT M, const CBLAS_INT N,
+             const void *alpha, const void  *A, const CBLAS_INT lda,
+             void  *B, const CBLAS_INT ldb)
             = current_backend->blas.ctrmm.cblas_function;
         fn(layout,Side,Uplo,TransA,Diag,M,N,alpha,A,lda,B,ldb);
     } else {

@@ -50,10 +50,10 @@
 
 static TLS_STORE uint8_t hook_cblas_snrm2_pos = 0;
 
-float cblas_snrm2( const int N, const float *X, const int incX)
+float cblas_snrm2( const CBLAS_INT N, const float *X, const CBLAS_INT incX)
 {
     float nrm2;
-    float (*fn) ( const int N, const float *X, const int incX);
+    float (*fn) ( const CBLAS_INT N, const float *X, const CBLAS_INT incX);
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(snrm2);
 
@@ -61,16 +61,16 @@ float cblas_snrm2( const int N, const float *X, const int incX)
     return nrm2;
 }
 
-float flexiblas_chain_cblas_snrm2( const int N, const float *X, const int incX)
+float flexiblas_chain_cblas_snrm2( const CBLAS_INT N, const float *X, const CBLAS_INT incX)
 {
     float nrm2;
-    float (*fn) ( const int N, const float *X, const int incX);
+    float (*fn) ( const CBLAS_INT N, const float *X, const CBLAS_INT incX);
     CBLAS_HOOK_ADVANCE(snrm2);
     nrm2 = fn(N,X,incX);
     return nrm2;
 }
 
-float flexiblas_real_cblas_snrm2( const int N, const float *X, const int incX)
+float flexiblas_real_cblas_snrm2( const CBLAS_INT N, const float *X, const CBLAS_INT incX)
 {
     float nrm2;
 #ifdef F77_INT
@@ -80,7 +80,7 @@ float flexiblas_real_cblas_snrm2( const int N, const float *X, const int incX)
 #define F77_incX incX
 #endif
     if ( current_backend->blas.snrm2.cblas_function != NULL ) {
-        float (*fn) ( const int N, const float *X, const int incX)
+        float (*fn) ( const CBLAS_INT N, const float *X, const CBLAS_INT incX)
             = current_backend->blas.snrm2.cblas_function;
         nrm2 = fn(N,X,incX);
     } else {

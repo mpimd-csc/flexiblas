@@ -132,8 +132,8 @@ static void print_usage(const char *prgmname) {
     char * system_config_dir = __flexiblas_getenv(FLEXIBLAS_ENV_GLOBAL_RC_DIR);
 
 	printf("The flexiblas tool helps to set the user default BLAS backend for\n");
-	printf("FlexiBLAS. The tool modifies the FlexiBLAS configuration filesand sets the\n");
-	printf("appropritate default entry in it.\n");
+	printf("FlexiBLAS. The tool modifies the FlexiBLAS configuration files and sets the\n");
+	printf("appropriate default entry in it.\n");
 	printf("\n");
 	printf("Usage: \n");
 	printf(" %s <options> command\n", prgmname);
@@ -157,10 +157,10 @@ static void print_usage(const char *prgmname) {
     printf("                    reset to its default.\n");
     printf("\n");
     printf("Hook management commands (only for user and host config):\n");
-    printf("  hook list                 List all avialable hooks.\n");
+    printf("  hook list                 List all available hooks.\n");
     printf("  hook show hook-name       Show information about the hook. This includes\n");
     printf("                            all configuration options.\n");
-    printf("  hook enabled              List enabled hooks from all configs.\n");
+    printf("  hook enabled              List enabled hooks from all configurations.\n");
     printf("  hook active               List currently active hooks.\n");
     printf("  hook enable hook-name     Enable a hook.\n");
     printf("  hook disable hook-name    Disable a hook.\n");
@@ -182,7 +182,7 @@ static void print_usage(const char *prgmname) {
     printf(" -H, --host      Edit the host's flexiblasrc configuration\n");
     printf(" -p, --pipe      Pipe/Script compatible output.\n");
 	printf(" -h, --help      Print this information and exit.\n");
-	printf(" -v, --version   Print the versionformation and exit.\n");
+	printf(" -v, --version   Print the version information and exit.\n");
 	printf("\n");
 	printf("Possible properties are: \n");
 	printf(" verbose         Sets the verbosity of FlexiBLAS (integer, 0 = quiet) \n");
@@ -219,7 +219,7 @@ int print_config() {
 	printf("\n");
 
 
-	/* Load Configs  */
+	/* Load Configurations  */
 	system_config_file  = flexiblas_mgmt_location(FLEXIBLAS_GLOBAL);
 	user_config_file = flexiblas_mgmt_location(FLEXIBLAS_USER);
     host_config_file = flexiblas_mgmt_location(FLEXIBLAS_HOST);
@@ -272,13 +272,13 @@ int print_config() {
     printf("    System:       %s\n", default_system);
     printf("    User:         %s\n", default_user);
     printf("    Host:         %s\n", default_host);
-    if (env_config_file)  printf("    Enviroment:   %s\n", default_env);
+    if (env_config_file)  printf("    Environment:   %s\n", default_env);
 
     flexiblas_mgmt_get_active_default(config, &loc, default_system);
     printf("    Active Default: %s (%s)\n", default_system, flexiblas_mgmt_location_to_string(loc));
 
     /* Properties  */
-	printf("Runtime properties:\n");
+	printf("Run-time properties:\n");
     int prop_verbose;
     flexiblas_mgmt_get_active_property(config, &loc, FLEXIBLAS_PROP_VERBOSE, &prop_verbose);
     printf("   verbose = %d (%s) \n", prop_verbose, flexiblas_mgmt_location_to_string(loc));
@@ -526,7 +526,7 @@ int main(int argc, char **argv)
             ecode = print_config();
             break;
 
-        /* List all BLAS libaries.  */
+        /* List all BLAS libraries.  */
 		case TODO_LIST:
             ecode = list_all_blas();
 			break;
@@ -590,7 +590,7 @@ int main(int argc, char **argv)
 				break;
 			}
 
-        /* Remove a BLAS libary from config.  */
+        /* Remove a BLAS library from config.  */
 		case TODO_REMOVE:
 			{
 				char * blas;

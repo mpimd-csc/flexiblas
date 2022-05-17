@@ -52,12 +52,12 @@
 
 static TLS_STORE uint8_t hook_cblas_dzasum_pos = 0;
 
-double cblas_dzasum( const int N, const void *X, const int incX)
+double cblas_dzasum( const CBLAS_INT N, const void *X, const CBLAS_INT incX)
 {
     double asum;
 
     double  (*fn)
-        ( const int N, const void *X, const int incX);
+        ( const CBLAS_INT N, const void *X, const CBLAS_INT incX);
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(dzasum);
     asum  = fn(N,X,incX);
@@ -65,19 +65,19 @@ double cblas_dzasum( const int N, const void *X, const int incX)
     return asum;
 }
 
-double flexiblas_chain_cblas_dzasum( const int N, const void *X, const int incX)
+double flexiblas_chain_cblas_dzasum( const CBLAS_INT N, const void *X, const CBLAS_INT incX)
 {
     double asum;
 
     double  (*fn)
-        ( const int N, const void *X, const int incX);
+        ( const CBLAS_INT N, const void *X, const CBLAS_INT incX);
     CBLAS_HOOK_ADVANCE(dzasum);
     asum  = fn(N,X,incX);
     return asum;
 
 }
 
-double flexiblas_real_cblas_dzasum( const int N, const void *X, const int incX)
+double flexiblas_real_cblas_dzasum( const CBLAS_INT N, const void *X, const CBLAS_INT incX)
 {
     double asum;
 #ifdef F77_INT
@@ -88,7 +88,7 @@ double flexiblas_real_cblas_dzasum( const int N, const void *X, const int incX)
 #endif
     if ( current_backend->blas.dzasum.cblas_function != NULL ) {
         double  (*fn)
-            ( const int N, const void *X, const int incX)
+            ( const CBLAS_INT N, const void *X, const CBLAS_INT incX)
             = current_backend->blas.dzasum.cblas_function;
         asum  = fn(N,X,incX);
     } else {

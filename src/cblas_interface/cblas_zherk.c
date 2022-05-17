@@ -53,15 +53,15 @@
 static TLS_STORE uint8_t hook_cblas_zherk_pos = 0;
 
 void cblas_zherk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const CBLAS_TRANSPOSE Trans, const int N, const int K,
-        const double alpha, const void *A, const int lda,
-        const double beta, void *C, const int ldc)
+        const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
+        const double alpha, const void *A, const CBLAS_INT lda,
+        const double beta, void *C, const CBLAS_INT ldc)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-         const CBLAS_TRANSPOSE Trans, const int N, const int K,
-         const double alpha, const void *A, const int lda,
-         const double beta, void *C, const int ldc);
+         const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
+         const double alpha, const void *A, const CBLAS_INT lda,
+         const double beta, void *C, const CBLAS_INT ldc);
 
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(zherk);
@@ -71,15 +71,15 @@ void cblas_zherk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
 }
 
 void flexiblas_chain_cblas_zherk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const CBLAS_TRANSPOSE Trans, const int N, const int K,
-        const double alpha, const void *A, const int lda,
-        const double beta, void *C, const int ldc)
+        const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
+        const double alpha, const void *A, const CBLAS_INT lda,
+        const double beta, void *C, const CBLAS_INT ldc)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-         const CBLAS_TRANSPOSE Trans, const int N, const int K,
-         const double alpha, const void *A, const int lda,
-         const double beta, void *C, const int ldc);
+         const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
+         const double alpha, const void *A, const CBLAS_INT lda,
+         const double beta, void *C, const CBLAS_INT ldc);
     CBLAS_HOOK_ADVANCE(zherk);
     fn(layout,Uplo,Trans,N,K,alpha,A,lda,beta,C,ldc);
 
@@ -87,9 +87,9 @@ void flexiblas_chain_cblas_zherk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Upl
 
 
 void flexiblas_real_cblas_zherk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const CBLAS_TRANSPOSE Trans, const int N, const int K,
-        const double alpha, const void *A, const int lda,
-        const double beta, void *C, const int ldc)
+        const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
+        const double alpha, const void *A, const CBLAS_INT lda,
+        const double beta, void *C, const CBLAS_INT ldc)
 {
     char UL, TR;
 #define F77_TR &TR
@@ -109,9 +109,9 @@ void flexiblas_real_cblas_zherk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo
     if ( current_backend->blas.zherk.cblas_function != NULL ) {
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-             const CBLAS_TRANSPOSE Trans, const int N, const int K,
-             const double alpha, const void *A, const int lda,
-             const double beta, void *C, const int ldc)
+             const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
+             const double alpha, const void *A, const CBLAS_INT lda,
+             const double beta, void *C, const CBLAS_INT ldc)
             = current_backend->blas.zherk.cblas_function;
         fn(layout,Uplo,Trans,N,K,alpha,A,lda,beta,C,ldc);
     } else {

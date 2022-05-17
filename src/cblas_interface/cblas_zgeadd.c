@@ -54,10 +54,10 @@ static TLS_STORE uint8_t hook_cblas_zgeadd_pos = 0;
 
 
 void cblas_zgeadd(const CBLAS_ORDER CORDER,
-        const int crows, const int ccols, const void *alpha, void *ca, const int clda,
-        const void *beta, void *cb, const int cldb)
+        const CBLAS_INT crows, const CBLAS_INT ccols, const void *alpha, void *ca, const CBLAS_INT clda,
+        const void *beta, void *cb, const CBLAS_INT cldb)
 {
-    void (*fn)(const CBLAS_ORDER, const int, const int, const void *, void *, const int, const void *, void *, const int);
+    void (*fn)(const CBLAS_ORDER, const CBLAS_INT, const CBLAS_INT, const void *, void *, const CBLAS_INT, const void *, void *, const CBLAS_INT);
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(zgeadd);
 
@@ -66,10 +66,10 @@ void cblas_zgeadd(const CBLAS_ORDER CORDER,
 }
 
 void flexiblas_chain_cblas_zgeadd(const CBLAS_ORDER CORDER,
-        const int crows, const int ccols, const void *alpha, void *ca, const int clda,
-        const void *beta, void *cb, const int cldb)
+        const CBLAS_INT crows, const CBLAS_INT ccols, const void *alpha, void *ca, const CBLAS_INT clda,
+        const void *beta, void *cb, const CBLAS_INT cldb)
 {
-    void (*fn)(const CBLAS_ORDER, const int, const int, const void *, void *, const int, const void *, void *, const int);
+    void (*fn)(const CBLAS_ORDER, const CBLAS_INT, const CBLAS_INT, const void *, void *, const CBLAS_INT, const void *, void *, const CBLAS_INT);
     CBLAS_HOOK_ADVANCE(zgeadd);
 
     fn(CORDER, crows, ccols, alpha, ca, clda, beta, cb, cldb);
@@ -77,8 +77,8 @@ void flexiblas_chain_cblas_zgeadd(const CBLAS_ORDER CORDER,
 }
 
 void flexiblas_real_cblas_zgeadd(const CBLAS_ORDER CORDER,
-        const int crows, const int ccols, const void *alpha, void *ca, const int clda,
-        const void *beta, void *cb, const int cldb)
+        const CBLAS_INT crows, const CBLAS_INT ccols, const void *alpha, void *ca, const CBLAS_INT clda,
+        const void *beta, void *cb, const CBLAS_INT cldb)
 {
     const double complex *calpha = ((const double complex*) alpha);
     const double complex *cbeta  = ((const double complex*) beta);
@@ -95,7 +95,7 @@ void flexiblas_real_cblas_zgeadd(const CBLAS_ORDER CORDER,
 #endif
 
     if ( current_backend->blas.zgeadd.cblas_function != NULL ) {
-        void (*fn)(const CBLAS_ORDER, const int, const int, const double complex*, double complex *, const int, const double complex*, double complex *, const int)
+        void (*fn)(const CBLAS_ORDER, const CBLAS_INT, const CBLAS_INT, const double complex*, double complex *, const CBLAS_INT, const double complex*, double complex *, const CBLAS_INT)
             = current_backend->blas.zgeadd.cblas_function;
         fn(CORDER, crows, ccols, calpha, a, clda, cbeta, b, cldb);
     } else {
@@ -104,9 +104,9 @@ void flexiblas_real_cblas_zgeadd(const CBLAS_ORDER CORDER,
         F77_INT rows = crows;
         F77_INT cols = ccols;
 #else
-        int t = 0;
-        int rows = crows;
-        int cols = ccols;
+        CBLAS_INT t = 0;
+        CBLAS_INT rows = crows;
+        CBLAS_INT cols = ccols;
 #endif
 
         if ( CORDER == CblasRowMajor ) {

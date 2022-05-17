@@ -90,6 +90,14 @@ extern "C" {
 
 #ifdef FLEXIBLAS_LAPACK
 
+#ifdef FLEXIBLAS_LAPACK_3_10_1
+#include "lapack_interface/structures_lapack_3_10_1.h"
+#endif
+#ifdef FLEXIBLAS_LAPACK_3_10_1_WODPRC
+#include "lapack_interface/structures_lapack_3_10_1-wodprc.h"
+#endif
+
+
 #ifdef FLEXIBLAS_LAPACK_3_10_0
 #include "lapack_interface/structures_lapack_3_10_0.h"
 #endif
@@ -2448,8 +2456,9 @@ extern "C" {
         struct flexiblas_hook_fn slaqz3;
         struct flexiblas_hook_fn slaqz4;
 
-
-
+        /* LAPACK 3.10.1 */
+        struct flexiblas_hook_fn droundup_lwork;
+        struct flexiblas_hook_fn sroundup_lwork;
 
     } flexiblas_hook_t;
 

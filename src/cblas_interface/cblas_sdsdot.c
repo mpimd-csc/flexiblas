@@ -52,10 +52,10 @@
 
 static TLS_STORE uint8_t hook_cblas_sdsdot_pos = 0;
 
-float cblas_sdsdot( const int N, const float alpha, const float *X, const int incX, const float *Y, const int incY)
+float cblas_sdsdot( const CBLAS_INT N, const float alpha, const float *X, const CBLAS_INT incX, const float *Y, const CBLAS_INT incY)
 {
     float d;
-    float (*fn)  ( const int N, const float alpha, const float *X, const int incX, const float *Y, const int incY);
+    float (*fn)  ( const CBLAS_INT N, const float alpha, const float *X, const CBLAS_INT incX, const float *Y, const CBLAS_INT incY);
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(sdsdot);
 
@@ -63,20 +63,20 @@ float cblas_sdsdot( const int N, const float alpha, const float *X, const int in
     return d;
 }
 
-float flexiblas_chain_cblas_sdsdot( const int N, const float alpha, const float *X, const int incX, const float *Y, const int incY)
+float flexiblas_chain_cblas_sdsdot( const CBLAS_INT N, const float alpha, const float *X, const CBLAS_INT incX, const float *Y, const CBLAS_INT incY)
 {
     float d;
-    float (*fn)  ( const int N, const float alpha, const float *X, const int incX, const float *Y, const int incY);
+    float (*fn)  ( const CBLAS_INT N, const float alpha, const float *X, const CBLAS_INT incX, const float *Y, const CBLAS_INT incY);
     CBLAS_HOOK_ADVANCE(sdsdot);
     d = fn(N,alpha, X,incX,Y,incY);
     return d;
 }
 
 
-float flexiblas_real_cblas_sdsdot( const int N, const float alpha, const float *X, const int incX, const float *Y, const int incY)
+float flexiblas_real_cblas_sdsdot( const CBLAS_INT N, const float alpha, const float *X, const CBLAS_INT incX, const float *Y, const CBLAS_INT incY)
 {
     float d;
-    float (*fn)  ( const int N, const float alpha, const float *X, const int incX, const float *Y, const int incY);
+    float (*fn)  ( const CBLAS_INT N, const float alpha, const float *X, const CBLAS_INT incX, const float *Y, const CBLAS_INT incY);
 
     if ( current_backend->blas.sdsdot.cblas_function != NULL ) {
         fn = current_backend->blas.sdsdot.cblas_function;

@@ -54,12 +54,12 @@
 
 static TLS_STORE uint8_t hook_cblas_csscal_pos = 0;
 
-void cblas_csscal( const int N, const float alpha, void *X,
-                       const int incX)
+void cblas_csscal( const CBLAS_INT N, const float alpha, void *X,
+                       const CBLAS_INT incX)
 {
 
     void (*fn)
-	( const int N, const float alpha, void *X, const int incX);
+	( const CBLAS_INT N, const float alpha, void *X, const CBLAS_INT incX);
 
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(csscal);
@@ -69,12 +69,12 @@ void cblas_csscal( const int N, const float alpha, void *X,
 
 }
 
-void flexiblas_chain_cblas_csscal( const int N, const float alpha, void *X,
-                       const int incX)
+void flexiblas_chain_cblas_csscal( const CBLAS_INT N, const float alpha, void *X,
+                       const CBLAS_INT incX)
 {
 
     void (*fn)
-		  ( const int N, const float alpha, void *X, const int incX);
+		  ( const CBLAS_INT N, const float alpha, void *X, const CBLAS_INT incX);
 
     CBLAS_HOOK_ADVANCE(csscal);
 	fn(N,alpha,X,incX);
@@ -82,8 +82,8 @@ void flexiblas_chain_cblas_csscal( const int N, const float alpha, void *X,
 
 }
 
-void flexiblas_real_cblas_csscal( const int N, const float alpha, void *X,
-                       const int incX)
+void flexiblas_real_cblas_csscal( const CBLAS_INT N, const float alpha, void *X,
+                       const CBLAS_INT incX)
 {
 #ifdef F77_INT
    F77_INT F77_N=N, F77_incX=incX;
@@ -94,8 +94,8 @@ void flexiblas_real_cblas_csscal( const int N, const float alpha, void *X,
    if ( current_backend->blas.csscal.cblas_function != NULL ) {
 
 	   void (*fn)
-		  ( const int N, const float alpha, void *X,
-                       const int incX)
+		  ( const CBLAS_INT N, const float alpha, void *X,
+                       const CBLAS_INT incX)
 		   = current_backend->blas.csscal.cblas_function;
 	fn(N,alpha,X,incX);
    } else {

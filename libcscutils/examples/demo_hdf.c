@@ -21,7 +21,6 @@
 #include <complex.h>
 #include <string.h>
 #include <unistd.h>
-// #define H5_NO_DEPRECATED_SYMBOLS
 #include "cscutils/hdf.h"
 
 
@@ -87,6 +86,7 @@ void readvector()
 {
     hid_t h5file;
     hid_t vgroup;
+    csc_hdf5_options_t opts;
     double v1[10];
     double complex v2[10];
     long v3[5];
@@ -105,9 +105,8 @@ void readvector()
     printf("is_real(v2)   : %d\n", csc_hdf5_is_real(vgroup, "complex_vector"));
     printf("is_complex(v2): %d\n", csc_hdf5_is_complex(vgroup, "complex_vector"));
 
-
-    csc_hdf5_vector_read(CSC_HDF5_REAL, vgroup, "real_vector", (void *) v1);
-    csc_hdf5_vector_read(CSC_HDF5_COMPLEX, vgroup, "complex_vector", (void *) v2);
+    csc_hdf5_read_double_vector(vgroup, "real_vector", l1, v1, &opts);
+    csc_hdf5_read_double_complex_vector(vgroup, "complex_vector", l2, v2, &opts);
 
     for (i = 0; i <l1 ; i++) {
         printf("v1 [%2d] = %g\n", i, v1[i]);
@@ -115,7 +114,8 @@ void readvector()
     for (i = 0; i <l2 ; i++) {
         printf("v2 [%2d] = %g %g\n", i, creal(v2[i]), cimag(v2[i]));
     }
-    csc_hdf5_vector_read(CSC_HDF5_INTEGER64, vgroup, "integer_vector", (void *) v3);
+
+    csc_hdf5_read_long_vector(vgroup, "integer_vector", l3, v3, &opts);
 
     for (i = 0; i <l3 ; i++) {
         printf("v3 [%2d] = %ld\n", i, v3[i]);
@@ -135,7 +135,7 @@ void writematrix()
 
     // h5file = H5Fcreate("test.h5", H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
     h5file = csc_hdf5_open2("test.h5", "rw", csc_hdf5_matlab_header(NULL));
-    /* vgroup = csc_hdf5_group_open(h5file, "matrixtest"); */
+    vgroup = csc_hdf5_group_open(h5file, "matrixtest");
 
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
     if ( csc_hdf5_write_matrix(h5file, "A", 4, 2, v1, 8, NULL)) {
@@ -184,8 +184,8 @@ void writematrix()
 
 
 
-    /* csc_hdf5_matrix_write_real(vgroup, "real_matrix", 4,2,8, v1); */
-    /* csc_hdf5_matrix_write_complex(vgroup, "complex_matrix", 4,2,8, v2); */
+    csc_hdf5_matrix_write_real(vgroup, "real_matrix", 4,2,8, v1);
+    csc_hdf5_matrix_write_complex(vgroup, "complex_matrix", 4,2,8, v2);
 
     /* printf("Is matrix: %d\n", csc_hdf5_is_matrix(vgroup, "real_matrix")); */
     /* printf("Is matrix: %d\n", csc_hdf5_is_matrix(vgroup, "complex_matrix")); */
@@ -285,13 +285,11 @@ int main(int argc, char **argv)
     (void) argc;
     (void) argv;
 
-    /* csc_hdf5_set_compression(CSC_HDF5_COMPRESS_DEFLATE); */
-    /* writevector(); */
-    /* readvector(); */
-    /* unlink("test_sparse.h5"); */
-    /* writesparse(); */
-    /* writematrix(); */
-    /* readmatrix(); */
-    /* readsparse(); */
+    csc_hdf5_set_compression(CSC_HDF5_COMPRESS_DEFLATE);
+    writevector();
+    readvector();
+    unlink("test_sparse.h5");
+    writematrix();
+    readmatrix();
     return 0;
 }

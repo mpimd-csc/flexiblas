@@ -53,11 +53,11 @@ static TLS_STORE uint8_t hook_cblas_icamax_pos = 0;
 
 
 
-CBLAS_INDEX cblas_icamax( const int N, const void *X, const int incX)
+CBLAS_INDEX cblas_icamax( const CBLAS_INT N, const void *X, const CBLAS_INT incX)
 {
-    int iamax;
+    CBLAS_INDEX iamax;
 
-    CBLAS_INDEX (*fn) ( const int N, const void *X, const int incX);
+    CBLAS_INDEX (*fn) ( const CBLAS_INT N, const void *X, const CBLAS_INT incX);
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(icamax);
     iamax = fn(N,X,incX);
@@ -65,20 +65,20 @@ CBLAS_INDEX cblas_icamax( const int N, const void *X, const int incX)
     return iamax;
 }
 
-CBLAS_INDEX flexiblas_chain_cblas_icamax( const int N, const void *X, const int incX)
+CBLAS_INDEX flexiblas_chain_cblas_icamax( const CBLAS_INT N, const void *X, const CBLAS_INT incX)
 {
-    int iamax;
+    CBLAS_INDEX iamax;
 
-    CBLAS_INDEX (*fn) ( const int N, const void *X, const int incX);
+    CBLAS_INDEX (*fn) ( const CBLAS_INT N, const void *X, const CBLAS_INT incX);
     CBLAS_HOOK_ADVANCE(icamax);
     iamax = fn(N,X,incX);
     return iamax;
 
 }
 
-CBLAS_INDEX flexiblas_real_cblas_icamax( const int N, const void *X, const int incX)
+CBLAS_INDEX flexiblas_real_cblas_icamax( const CBLAS_INT N, const void *X, const CBLAS_INT incX)
 {
-    int iamax;
+    CBLAS_INDEX iamax;
 #ifdef F77_INT
     F77_INT F77_N=N, F77_incX=incX;
 #else
@@ -87,7 +87,7 @@ CBLAS_INDEX flexiblas_real_cblas_icamax( const int N, const void *X, const int i
 #endif
 
     if ( current_backend->blas.icamax.cblas_function != NULL ) {
-        CBLAS_INDEX (*fn) ( const int N, const void *X, const int incX)  = current_backend->blas.icamax.cblas_function;
+        CBLAS_INDEX (*fn) ( const CBLAS_INT N, const void *X, const CBLAS_INT incX)  = current_backend->blas.icamax.cblas_function;
         iamax = fn(N,X,incX);
 
     } else {

@@ -1,3 +1,15 @@
+3.2.0 (May 17, 2022)
+----------------------
+- Import LAPACK 3.10.1
+  This is the first LAPACK release, where two routines (dcombssq and scombssq)
+  are removed without being deprecated before. Normally, this should not be a
+  problem since these routines are only used internally.
+- The integers in the CBLAS interface are now represented by CBLAS_INT, which
+  is set to `int` by default.
+- Fix: executing the test summary code in the correct directory.
+- Fix: some typos in messages
+- Fix: GH #27 Paths in Find*.cmake scripts
+
 3.1.3 (February 25, 2022)
 -------------------------
 - Close GH #22: Wrong -verbose flag in CXXFLAGS
@@ -16,15 +28,15 @@
 
 3.1.0 (January 16, 2022)
 -----------------------
-- Closes Github #19, added LINK_OPENMP option
+- Closes GH #19, added LINK_OPENMP option
 - Import LAPACK 3.10.0
 - Closes #119: Make stack protection flags the default setting.
 - Add the backend builder tool in tool/backend_builder
 - Import LAPACK 3.9.1
-- Closes #108: Numpy-Scipy Test added.
-- Closes #112: Build failure on MacOS (Github: #10)
-- Closes Github #15: silly typo
-- Closes Github #16: MKL now searched in the MKLROOT.
+- Closes #108: NumPy-SciPy Test added.
+- Closes #112: Build failure on MacOS (GH: #10)
+- Closes GH #15: silly typo
+- Closes GH #16: MKL now searched in the MKLROOT.
    In order to make some command line options clearer MKL_CUSTOM is renamed
    to MKL_BUILDER
 - New example: quick return benchmark on x86_64
@@ -60,7 +72,7 @@
 - Remove useless NETLIB64 config option
 - Update to LAPACK 3.9.0
 - Update LAPACK 3.7.0 to 3.7.1 Due to the fact that the ABI is the same and
-  LAPACK 3.7.1 is only a bugfix release the LAPACK API Version 3.7.0 and 3.7.1
+  LAPACK 3.7.1 is only a bug fix release the LAPACK API Version 3.7.0 and 3.7.1
   will give the same interface and the same fallback backend from LAPACK 3.7.1
 - Fix #72 - Default BLAS can be set using FLEXIBLAS_DEFAULT_BLAS at compile time
 - Fix #74 - FLEXIBLAS_CONFIG environment variable to supply a local config
@@ -72,7 +84,7 @@
   and a full profile can be generated.
 - hooks handled via the flexiblas tool
 - 32 and 64 bit integer version does not shared binaries or configuration
-- A precompiled reference BLAS and LAPACK implementatiion can be used during
+- A precompiled reference BLAS and LAPACK implementation can be used during
   compilation.
 - libcscutils is now compiled and linked with -fvisibility=hidden to avoid
   linking libcscutils when linking with flexiblas
@@ -92,7 +104,7 @@
 - Add s/d/c/z geadd function from ATLAS/OpenBLAS
 - Allow to overload BLAS functions using hooks.
 - Runtime switching of BLAS libraries.
-- Profiling information in now held in the structure of the correponding BLAS
+- Profiling information in now held in the structure of the corresponding BLAS
   functions, but accumulated in the end.
 - Configuration is done using libcscutils/ini, i.e., we have an ini-file like
   configuration system.
@@ -106,7 +118,7 @@
   production code)
 - Code cleanup
 - Octave Interface
-- 32 and 64 bit version with separeted environment variables and configurations
+- 32 and 64 bit version with separated environment variables and configurations
 
 1.2.0 (November, 2014)
 -----------------------
@@ -127,7 +139,7 @@
 1.1.0 (September, 2014)
 -----------------------
 - rewrite internal function for handling the shared objects.
-- include first parts of the Win32 and Win64 compatability
+- include first parts of the Win32 and Win64 compatibility
 - integrated the profiling in the normal library.
 - Using -DABI=Intel the library is configured to provide an ifort
   compatible interface. The name of the library changes to libflexblas_intel.so

@@ -53,14 +53,14 @@
 static TLS_STORE uint8_t hook_cblas_stbmv_pos = 0;
 void cblas_stbmv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
         const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
-        const int N, const int K, const float  *A, const int lda,
-        float  *X, const int incX)
+        const CBLAS_INT N, const CBLAS_INT K, const float  *A, const CBLAS_INT lda,
+        float  *X, const CBLAS_INT incX)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
          const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
-         const int N, const int K, const float  *A, const int lda,
-         float  *X, const int incX);
+         const CBLAS_INT N, const CBLAS_INT K, const float  *A, const CBLAS_INT lda,
+         float  *X, const CBLAS_INT incX);
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(stbmv);
     fn(layout,Uplo,TransA,Diag,N,K,A,lda,X,incX);
@@ -69,14 +69,14 @@ void cblas_stbmv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
 
 void flexiblas_chain_cblas_stbmv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
         const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
-        const int N, const int K, const float  *A, const int lda,
-        float  *X, const int incX)
+        const CBLAS_INT N, const CBLAS_INT K, const float  *A, const CBLAS_INT lda,
+        float  *X, const CBLAS_INT incX)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
          const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
-         const int N, const int K, const float  *A, const int lda,
-         float  *X, const int incX);
+         const CBLAS_INT N, const CBLAS_INT K, const float  *A, const CBLAS_INT lda,
+         float  *X, const CBLAS_INT incX);
     CBLAS_HOOK_ADVANCE(stbmv);
     fn(layout,Uplo,TransA,Diag,N,K,A,lda,X,incX);
 
@@ -84,8 +84,8 @@ void flexiblas_chain_cblas_stbmv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Upl
 
 void flexiblas_real_cblas_stbmv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
         const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
-        const int N, const int K, const float  *A, const int lda,
-        float  *X, const int incX)
+        const CBLAS_INT N, const CBLAS_INT K, const float  *A, const CBLAS_INT lda,
+        float  *X, const CBLAS_INT incX)
 {
     char TA;
     char UL;
@@ -105,8 +105,8 @@ void flexiblas_real_cblas_stbmv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
              const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
-             const int N, const int K, const float  *A, const int lda,
-             float  *X, const int incX)
+             const CBLAS_INT N, const CBLAS_INT K, const float  *A, const CBLAS_INT lda,
+             float  *X, const CBLAS_INT incX)
             = current_backend->blas.stbmv.cblas_function;
         fn(layout,Uplo,TransA,Diag,N,K,A,lda,X,incX);
     } else {

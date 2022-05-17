@@ -54,10 +54,10 @@
 static TLS_STORE uint8_t hook_cblas_domatcopy_pos = 0;
 
 void cblas_domatcopy(const CBLAS_ORDER CORDER, const CBLAS_TRANSPOSE CTRANS,
-        const int crows, const int ccols, const double calpha, const double *a, const int clda,
-        double *b, const int cldb)
+        const CBLAS_INT crows, const CBLAS_INT ccols, const double calpha, const double *a, const CBLAS_INT clda,
+        double *b, const CBLAS_INT cldb)
 {
-    void (*fn)(const CBLAS_ORDER, const CBLAS_TRANSPOSE, const int, const int, const double, const double *, const int, double *, const int) ;
+    void (*fn)(const CBLAS_ORDER, const CBLAS_TRANSPOSE, const CBLAS_INT, const CBLAS_INT, const double, const double *, const CBLAS_INT, double *, const CBLAS_INT) ;
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(domatcopy);
 
@@ -66,18 +66,18 @@ void cblas_domatcopy(const CBLAS_ORDER CORDER, const CBLAS_TRANSPOSE CTRANS,
 }
 
 void flexiblas_chain_cblas_domatcopy(const CBLAS_ORDER CORDER, const CBLAS_TRANSPOSE CTRANS,
-        const int crows, const int ccols, const double calpha, const double *a, const int clda,
-        double *b, const int cldb)
+        const CBLAS_INT crows, const CBLAS_INT ccols, const double calpha, const double *a, const CBLAS_INT clda,
+        double *b, const CBLAS_INT cldb)
 {
-    void (*fn)(const CBLAS_ORDER, const CBLAS_TRANSPOSE, const int, const int, const double, const double *, const int, double *, const int);
+    void (*fn)(const CBLAS_ORDER, const CBLAS_TRANSPOSE, const CBLAS_INT, const CBLAS_INT, const double, const double *, const CBLAS_INT, double *, const CBLAS_INT);
     CBLAS_HOOK_ADVANCE(domatcopy);
     fn(CORDER, CTRANS, crows, ccols, calpha, a, clda, b, cldb);
 
 }
 
 void flexiblas_real_cblas_domatcopy(const CBLAS_ORDER CORDER, const CBLAS_TRANSPOSE CTRANS,
-        const int crows, const int ccols, const double calpha, const double *a, const int clda,
-        double *b, const int cldb)
+        const CBLAS_INT crows, const CBLAS_INT ccols, const double calpha, const double *a, const CBLAS_INT clda,
+        double *b, const CBLAS_INT cldb)
 {
 #ifdef F77_INT
     F77_INT F77_ROWS=crows;
@@ -92,7 +92,7 @@ void flexiblas_real_cblas_domatcopy(const CBLAS_ORDER CORDER, const CBLAS_TRANSP
 #endif
 
     if ( current_backend->blas.domatcopy.cblas_function != NULL ) {
-        void (*fn)(const CBLAS_ORDER, const CBLAS_TRANSPOSE, const int, const int, const double, const double *, const int, double *, const int) = current_backend->blas.domatcopy.cblas_function;
+        void (*fn)(const CBLAS_ORDER, const CBLAS_TRANSPOSE, const CBLAS_INT, const CBLAS_INT, const double, const double *, const CBLAS_INT, double *, const CBLAS_INT) = current_backend->blas.domatcopy.cblas_function;
         fn(CORDER, CTRANS, crows, ccols, calpha, a, clda, b, cldb);
     } else {
         char ORDER[2]=" ";

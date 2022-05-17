@@ -129,7 +129,7 @@ int  acmlgetnumthreads() 	{ return flexiblas_get_num_threads(); }
 int  blas_get_num_threads() 	{ return flexiblas_get_num_threads(); }
 #endif
 
-/*  Blis Interface  */
+/*  BLIS Interface  */
 Int bli_thread_get_num_threads() {
     Int _num;
     _num = (Int) flexiblas_get_num_threads();

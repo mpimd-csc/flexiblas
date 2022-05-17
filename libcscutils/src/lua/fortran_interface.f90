@@ -36,7 +36,7 @@
 !> @brief LUA Binding for Fortran
 !>
 !> The CSC_LUA module provides the bindings for the LUA interface for Fortran.
-!> @sa lua_fortran
+!> @see lua_fortran
 MODULE CSC_LUA
     USE ISO_C_BINDING
     IMPLICIT NONE
@@ -273,7 +273,7 @@ CONTAINS
     !> The CSC_LUA_FINALIZE subroutine clears a LUA interpreter addressed
     !> by LUA.
     !>
-    !> The INFO argument always returns 0 and only exists for compatability reasons.
+    !> The INFO argument always returns 0 and only exists for compatibility reasons.
     !>
     SUBROUTINE CSC_LUA_FINALIZE( LUA, INFO )
         IMPLICIT NONE
@@ -294,10 +294,10 @@ CONTAINS
     !> @param[out]  INFO    Status code
     !>
     !> The CSC_LUA_LOADFILE subroutine loads a LUA file into the LUA interpreter.
-    !> The file is not excetuted immediately. This requires a separate call to \ref csc_lua_run "CSC_LUA_RUN."
+    !> The file is not executed immediately. This requires a separate call to \ref csc_lua_run "CSC_LUA_RUN."
     !>
     !> The INFO argument returns:
-    !> @li 0, on sucess
+    !> @li 0, on success
     !> @li 1, if the LUA object is not initialized.
     !> @li 2, if the loading of the file failed.
     !>
@@ -335,8 +335,8 @@ CONTAINS
     !> Fortran style string. The code is not executed immediately. Therefore,
     !> a subsequent call to \ref csc_lua_run is required.
     !>
-    !> @sa csc_lua::csc_lua_loadstring
-    !> @sa csc_lua::csc_lua_loadstring::csc_lua_loadstring_cptr
+    !> @see csc_lua::csc_lua_loadstring
+    !> @see csc_lua::csc_lua_loadstring::csc_lua_loadstring_cptr
     !>
     SUBROUTINE CSC_LUA_LOADSTRING_FORTRAN(LUA, STRING, INFO)
         IMPLICIT NONE
@@ -372,9 +372,9 @@ CONTAINS
     !> The CSC_LUA_RUN subroutine executes the loaded LUA script.
     !>
     !> The INFO argument returns:
-    !> @li 0, on sucess
+    !> @li 0, on success
     !> @li 1, if the LUA object is not initialized.
-    !> @li 2, if the executing failes.
+    !> @li 2, if the executing fails.
     !>
     SUBROUTINE CSC_LUA_RUN( LUA, INFO )
         IMPLICIT NONE
@@ -409,13 +409,13 @@ CONTAINS
     !> The value must be an integer.
     !>
     !> The INFO argument returns:
-    !> @li 0, on sucess
+    !> @li 0, on success
     !> @li 1, if the LUA object is not initialized.
     !> @li 2, if the variable could not be set.
     !>
-    !> @sa csc_lua::csc_lua_global::csc_lua_global_double
-    !> @sa csc_lua::csc_lua_global::csc_lua_global_string
-    !> @sa csc_lua::csc_lua_global
+    !> @see csc_lua::csc_lua_global::csc_lua_global_double
+    !> @see csc_lua::csc_lua_global::csc_lua_global_string
+    !> @see csc_lua::csc_lua_global
     !>
     SUBROUTINE CSC_LUA_GLOBAL_INT( LUA, NAME, VAL, INFO)
         IMPLICIT NONE
@@ -454,13 +454,13 @@ CONTAINS
     !> The value must be a double precision value.
     !>
     !> The INFO argument returns:
-    !> @li 0, on sucess
+    !> @li 0, on success
     !> @li 1, if the LUA object is not initialized.
     !> @li 2, if the variable could not be set.
     !>
-    !> @sa csc_lua::csc_lua_global::csc_lua_global_int
-    !> @sa csc_lua::csc_lua_global::csc_lua_global_string
-    !> @sa csc_lua::csc_lua_global
+    !> @see csc_lua::csc_lua_global::csc_lua_global_int
+    !> @see csc_lua::csc_lua_global::csc_lua_global_string
+    !> @see csc_lua::csc_lua_global
     !>
     SUBROUTINE CSC_LUA_GLOBAL_DOUBLE( LUA, NAME, VAL, INFO)
         IMPLICIT NONE
@@ -496,13 +496,13 @@ CONTAINS
     !> The value must be a character array. The terminating C_NULL_CHAR is automatically added.
     !>
     !> The INFO argument returns:
-    !> @li 0, on sucess
+    !> @li 0, on success
     !> @li 1, if the LUA object is not initialized.
     !> @li 2, if the variable could not be set.
     !>
-    !> @sa csc_lua::csc_lua_global::csc_lua_global_int
-    !> @sa csc_lua::csc_lua_global::csc_lua_global_double
-    !> @sa csc_lua::csc_lua_global
+    !> @see csc_lua::csc_lua_global::csc_lua_global_int
+    !> @see csc_lua::csc_lua_global::csc_lua_global_double
+    !> @see csc_lua::csc_lua_global
     !>
     SUBROUTINE CSC_LUA_GLOBAL_STRING( LUA, NAME, VAL, INFO)
         IMPLICIT NONE
@@ -539,15 +539,15 @@ CONTAINS
     !> and returns a single integer value.
     !>
     !> The INFO argument returns:
-    !> @li 0, on sucess
+    !> @li 0, on success
     !> @li 1, if the LUA object is not initialized.
     !> @li 2, if the function executions fails.
     !>
-    !> @sa csc_lua::csc_lua_call_return_int::csc_lua_call_arg_i_ret_i
-    !> @sa csc_lua::csc_lua_call_return_int::csc_lua_call_arg_ii_ret_i
-    !> @sa csc_lua::csc_lua_call_return_int::csc_lua_call_arg_iii_ret_i
-    !> @sa csc_lua::csc_lua_call_return_int::csc_lua_call_arg_sii_ret_i
-    !> @sa csc_lua::csc_lua_call_return_int
+    !> @see csc_lua::csc_lua_call_return_int::csc_lua_call_arg_i_ret_i
+    !> @see csc_lua::csc_lua_call_return_int::csc_lua_call_arg_ii_ret_i
+    !> @see csc_lua::csc_lua_call_return_int::csc_lua_call_arg_iii_ret_i
+    !> @see csc_lua::csc_lua_call_return_int::csc_lua_call_arg_sii_ret_i
+    !> @see csc_lua::csc_lua_call_return_int
     !>
     SUBROUTINE CSC_LUA_CALL_ARG_0_RET_I( LUA, NAME, R1, INFO)
         IMPLICIT NONE
@@ -588,15 +588,15 @@ CONTAINS
     !> input argument and returns a single integer value.
     !>
     !> The INFO argument returns:
-    !> @li 0, on sucess
+    !> @li 0, on success
     !> @li 1, if the LUA object is not initialized.
     !> @li 2, if the function executions fails.
     !>
-    !> @sa csc_lua::csc_lua_call_return_int::csc_lua_call_arg_0_ret_i
-    !> @sa csc_lua::csc_lua_call_return_int::csc_lua_call_arg_ii_ret_i
-    !> @sa csc_lua::csc_lua_call_return_int::csc_lua_call_arg_iii_ret_i
-    !> @sa csc_lua::csc_lua_call_return_int::csc_lua_call_arg_sii_ret_i
-    !> @sa csc_lua::csc_lua_call_return_int
+    !> @see csc_lua::csc_lua_call_return_int::csc_lua_call_arg_0_ret_i
+    !> @see csc_lua::csc_lua_call_return_int::csc_lua_call_arg_ii_ret_i
+    !> @see csc_lua::csc_lua_call_return_int::csc_lua_call_arg_iii_ret_i
+    !> @see csc_lua::csc_lua_call_return_int::csc_lua_call_arg_sii_ret_i
+    !> @see csc_lua::csc_lua_call_return_int
     !>
     SUBROUTINE CSC_LUA_CALL_ARG_I_RET_I( LUA, NAME, I1, R1, INFO)
         IMPLICIT NONE
@@ -640,15 +640,15 @@ CONTAINS
     !> input arguments and returns a single integer value.
     !>
     !> The INFO argument returns:
-    !> @li 0, on sucess
+    !> @li 0, on success
     !> @li 1, if the LUA object is not initialized.
     !> @li 2, if the function executions fails.
     !>
-    !> @sa csc_lua::csc_lua_call_return_int::csc_lua_call_arg_0_ret_i
-    !> @sa csc_lua::csc_lua_call_return_int::csc_lua_call_arg_i_ret_i
-    !> @sa csc_lua::csc_lua_call_return_int::csc_lua_call_arg_iii_ret_i
-    !> @sa csc_lua::csc_lua_call_return_int::csc_lua_call_arg_sii_ret_i
-    !> @sa csc_lua::csc_lua_call_return_int
+    !> @see csc_lua::csc_lua_call_return_int::csc_lua_call_arg_0_ret_i
+    !> @see csc_lua::csc_lua_call_return_int::csc_lua_call_arg_i_ret_i
+    !> @see csc_lua::csc_lua_call_return_int::csc_lua_call_arg_iii_ret_i
+    !> @see csc_lua::csc_lua_call_return_int::csc_lua_call_arg_sii_ret_i
+    !> @see csc_lua::csc_lua_call_return_int
     !>
     SUBROUTINE CSC_LUA_CALL_ARG_II_RET_I( LUA, NAME, I1, I2, R1, INFO)
         IMPLICIT NONE
@@ -695,15 +695,15 @@ CONTAINS
     !> input arguments and returns a single integer value.
     !>
     !> The INFO argument returns:
-    !> @li 0, on sucess
+    !> @li 0, on success
     !> @li 1, if the LUA object is not initialized.
     !> @li 2, if the function executions fails.
     !>
-    !> @sa csc_lua::csc_lua_call_return_int::csc_lua_call_arg_0_ret_i
-    !> @sa csc_lua::csc_lua_call_return_int::csc_lua_call_arg_i_ret_i
-    !> @sa csc_lua::csc_lua_call_return_int::csc_lua_call_arg_ii_ret_i
-    !> @sa csc_lua::csc_lua_call_return_int::csc_lua_call_arg_sii_ret_i
-    !> @sa csc_lua::csc_lua_call_return_int
+    !> @see csc_lua::csc_lua_call_return_int::csc_lua_call_arg_0_ret_i
+    !> @see csc_lua::csc_lua_call_return_int::csc_lua_call_arg_i_ret_i
+    !> @see csc_lua::csc_lua_call_return_int::csc_lua_call_arg_ii_ret_i
+    !> @see csc_lua::csc_lua_call_return_int::csc_lua_call_arg_sii_ret_i
+    !> @see csc_lua::csc_lua_call_return_int
     !>
     SUBROUTINE CSC_LUA_CALL_ARG_III_RET_I( LUA, NAME, I1, I2, I3, R1, INFO)
         IMPLICIT NONE
@@ -750,15 +750,15 @@ CONTAINS
     !> and two integer input arguments and returns a single integer value.
     !>
     !> The INFO argument returns:
-    !> @li 0, on sucess
+    !> @li 0, on success
     !> @li 1, if the LUA object is not initialized.
     !> @li 2, if the function executions fails.
     !>
-    !> @sa csc_lua::csc_lua_call_return_int::csc_lua_call_arg_0_ret_i
-    !> @sa csc_lua::csc_lua_call_return_int::csc_lua_call_arg_i_ret_i
-    !> @sa csc_lua::csc_lua_call_return_int::csc_lua_call_arg_ii_ret_i
-    !> @sa csc_lua::csc_lua_call_return_int::csc_lua_call_arg_iii_ret_i
-    !> @sa csc_lua::csc_lua_call_return_int
+    !> @see csc_lua::csc_lua_call_return_int::csc_lua_call_arg_0_ret_i
+    !> @see csc_lua::csc_lua_call_return_int::csc_lua_call_arg_i_ret_i
+    !> @see csc_lua::csc_lua_call_return_int::csc_lua_call_arg_ii_ret_i
+    !> @see csc_lua::csc_lua_call_return_int::csc_lua_call_arg_iii_ret_i
+    !> @see csc_lua::csc_lua_call_return_int
     !>
     SUBROUTINE CSC_LUA_CALL_ARG_SII_RET_I( LUA, NAME, I1, I2, I3, R1, INFO)
         IMPLICIT NONE
@@ -801,11 +801,11 @@ CONTAINS
     !> input or output arguments.
     !>
     !> The INFO argument returns:
-    !> @li 0, on sucess
+    !> @li 0, on success
     !> @li 1, if the LUA object is not initialized.
     !> @li 2, if the function executions fails.
     !>
-    !> @sa csc_lua::csc_lua_call_return_null
+    !> @see csc_lua::csc_lua_call_return_null
     !>
     SUBROUTINE CSC_LUA_CALL_ARG_0_RET_0( LUA, NAME, INFO)
         IMPLICIT NONE
@@ -841,11 +841,11 @@ CONTAINS
     !> input and two integer return values.
     !>
     !> The INFO argument returns:
-    !> @li 0, on sucess
+    !> @li 0, on success
     !> @li 1, if the LUA object is not initialized.
     !> @li 2, if the function executions fails.
     !>
-    !> @sa csc_lua::csc_lua_call_return_2int
+    !> @see csc_lua::csc_lua_call_return_2int
     !>
     SUBROUTINE CSC_LUA_CALL_ARG_0_RET_II( LUA, NAME, R1, R2, INFO)
         IMPLICIT NONE

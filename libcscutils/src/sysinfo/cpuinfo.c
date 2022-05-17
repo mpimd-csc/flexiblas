@@ -22,99 +22,152 @@
 #include <string.h>
 #include <stdint.h>
 
-#if 0
-void cpuID(uint32_t op, uint32_t reg[4])
-{
+#include "cscutils/error_message.h"
 
-#ifdef _WIN32
-    __cpuid((int *)regs, (int)i);
-
-#else
-    asm volatile("pushl %%ebx      \n\t" /*  save %ebx */
-            "cpuid            \n\t"
-            "movl %%ebx, %1   \n\t" /*  save what cpuid just put in %ebx */
-            "popl %%ebx       \n\t" /*  restore the old %ebx */
-            : "=a"(reg[0]), "=r"(reg[1]), "=c"(reg[2]), "=d"(reg[3])
-            : "a"(op)
-            : "cc");
-
-#endif
-}
-#else
-
-/* static inline void cpuid2(int op, uint32_t *eax, uint32_t *ebx, uint32_t *ecx, uint32_t *edx){
-   __asm__ __volatile__
-   ("cpuid": "=a" (*eax), "=b" (*ebx), "=c" (*ecx), "=d" (*edx) : "a" (op) : "cc");
-
-   }
-   static inline void cpuID(int op, uint32_t reg[4]){
-   cpuid2(op, &(reg[0]), &(reg[1]), &(reg[2]), &(reg[3]));
-   } */
-static inline void cpuID(int op, uint32_t reg[4]){
-    reg[0]=0;
-    reg[1]=0;
-    reg[2]=0;
-    reg[3]=0;
-}
+#if defined(_WIN32) || defined(_WIN64)
+    #include <intrin.h>
 #endif
 
-/**
- * @brief Get information from CPU.
- * @param[in,out] lcpu number of logical CPUs
- * @param[in,out] pcpu number of physical CPUs
- * @param[in,out] ht  returns true if HyperThreading works
- * @return always zero
- *
- * The mess_cpuinfo function gets information from CPU, that means
- * <ul>
- * <li> number of logical CPUs \f$ lcpu \f$,
- * <li> number of physical CPUs \f$ pcpu \f$,
- * <li> information if HyperThreading works.
- * </ul>
- */
+#if defined(__amd64__) || defined(__amd64) || defined(__x86_64__) || defined(__x86_64) || defined(_M_AMD64)
 
-int mess_cpuinfo(int *lcpu, int *pcpu, int *ht){
+static inline void __cpuid_intrinsic(unsigned int* reg, unsigned int id, unsigned sub_id) {
+#if defined(_WIN32) || defined(_WIN64)
+    __cpuidex((int*)reg,(int)id,(int)sub_id);
+#elif defined(__GNUC__) || defined(__clang__) || defined(__INTEL_COMPILER)
+    unsigned int* eax = reg + 0;
+    unsigned int* ebx = reg + 1;
+    unsigned int* ecx = reg + 2;
+    unsigned int* edx = reg + 3;
+    __asm__ volatile("cpuid" : "=a"(*eax),"=b"(*ebx),"=c"(*ecx),"=d"(*edx) : "0"(id), "2"(sub_id));
+#else
+    reg[0] = 0;
+    reg[1] = 0;
+    reg[2] = 0;
+    reg[3] = 0;
+    (void)id;
+    (void)sub_id;
+#endif
+}
+
+int csc_sysinfo_cpuinfo(int *lcpu, int *pcpu, int *ht){
     uint32_t regs[4];
     // Get vendor
-    char vendor[12];
-    cpuID(0, regs);
-    ((uint32_t *)vendor)[0] = regs[1]; // EBX
-    ((uint32_t *)vendor)[1] = regs[3]; // EDX
-    ((uint32_t *)vendor)[2] = regs[2]; // ECX
+    uint32_t vendor[3];
+    __cpuid_intrinsic(regs, 0, 0);
+    vendor[0] = regs[1]; // EBX
+    vendor[1] = regs[3]; // EDX
+    vendor[2] = regs[2]; // ECX
 
-    // Get CPU features
-    cpuID(1, regs);
-    uint32_t cpuFeatures = regs[3]; // EDX
-    // Detect hyper-threads
-    int hyperThreads = 0;
+    int hyper_threading = 0;
     uint32_t logical = 1;
-    uint32_t cores = 1;
+    uint32_t physical = 1;
 
-    if ( strncmp(vendor,"GenuineIntel",12)==0  && cpuFeatures & (1 << 28)) { // HTT bit
-        // Logical core count per CPU
-        cpuID(1, regs);
-        logical = (regs[1] >> 16) & 0xff; // EBX[23:16]
-        cores = logical;
-    } else  if ( strncmp ( vendor, "GenuineIntel", 12) == 0) {
-        cpuID(1, regs);
-        logical = (regs[1] >> 16) & 0xff; // EBX[23:16]
-        cpuID(4, regs);
-        cores = ((regs[0] >> 26) & 0x3f) + 1; // EAX[31:26] + 1
-    }
-    if (strncmp(vendor,"AuthenticAMD",12)==0) {
-        // Get NC: Number of CPU cores - 1
-        cpuID(0x80000008, regs);
-        logical =  cores = ((unsigned)(regs[2] & 0xff)) + 1; // ECX[7:0] + 1
-    }
-    if (cores < logical) hyperThreads = 1;
+    if (strncmp((char*)vendor,"GenuineIntel",12) == 0) {
+        {
+            __cpuid_intrinsic(regs, 1, 0);
+            uint32_t eax = regs[0];
+            uint32_t model     = (eax >>  4) & 0xf;
+            uint32_t family    = (eax >>  8) & 0xf;
+            uint32_t ext_model = (eax >> 16) & 0xf;
 
-    logical = 24;
-    cores = 12;
-    hyperThreads = 1;
+            // Hybrid core architectures require special care
+            // as the two core types report different values
+            if (family == 0x6 && ext_model == 0x9 && (model == 0x7 || model == 0xa)) {
+                csc_warn_message("csc_cpuinfo does not work on Alder Lake.\n");
+                return 1;
+            }
+
+            uint32_t edx = regs[3];
+
+            hyper_threading = (edx >> 28) & 0x1;
+        }
+
+        /*
+         * Leaf 0x1f is an extension of 0x1b
+         * and the recommended leaf if it is available
+         * TODO: Use leaf 0x1f to identify logical cores on hybrid archs
+         * TODO: For this we may just use the level type 5 (Die)
+         */
+        uint32_t x1f_exists = 0;
+
+        {
+            __cpuid_intrinsic(regs, 0x1f, 42);
+            uint32_t ecx = regs[2];
+
+            if ((ecx & 0xff) == 42) {
+                x1f_exists = 1;
+            }
+        }
+
+        uint32_t smt_multiplier = 1;
+
+        uint32_t leaf = (x1f_exists) ? 0x1f : 0xb;
+
+        /*
+         * It is unclear how many levels there are, if necessary,
+         * check more levels
+         */
+        for (int i = 0; i < 16; i++) {
+            __cpuid_intrinsic(regs, leaf, i);
+            uint32_t ebx = regs[1];
+            uint32_t ecx = regs[2];
+
+            uint32_t level_type = (ecx >> 8) & 0xff;
+
+            switch (level_type) {
+                case 1:
+                    smt_multiplier = (ebx & 0xff);
+                    break;
+                case 2:
+                    logical = (ebx & 0xff);
+                    break;
+            }
+        }
+
+        physical = logical / smt_multiplier;
+
+    } else if (strncmp((char*)vendor,"AuthenticAMD",12) == 0) {
+        {
+            __cpuid_intrinsic(regs, 1, 0);
+            uint32_t ebx = regs[1];
+            uint32_t edx = regs[3];
+
+            hyper_threading = (edx >> 28) & 0x1;
+
+            if (hyper_threading) {
+                logical = (ebx >> 16) & 0xff;
+            }
+        }
+
+        {
+            __cpuid_intrinsic(regs, 8, 0);
+            uint32_t ecx = regs[2];
+
+            physical = 1 + (ecx & 0xff);
+
+            if (!hyper_threading) {
+                logical = physical;
+            }
+        }
+    } else {
+        csc_warn_message("csc_sysinfo_cpuinfo does not work on %*.*s.\n",12,12,(char*)vendor);
+        return 1;
+    }
+
     if ( lcpu != NULL ) *lcpu = (int) logical;
-    if ( pcpu != NULL ) *pcpu = (int) cores;
-    if ( ht !=NULL) *ht = hyperThreads;
+    if ( pcpu != NULL ) *pcpu = (int) physical;
+    if ( ht !=NULL) *ht = hyper_threading;
 
     return 0;
 }
 
+#else
+
+int csc_sysinfo_cpuinfo(int *lcpu, int *pcpu, int *ht){
+    (void)lcpu;
+    (void)pcpu;
+    (void)ht;
+    return 1;
+}
+
+#endif

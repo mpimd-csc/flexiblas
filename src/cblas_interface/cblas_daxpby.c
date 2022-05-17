@@ -51,20 +51,20 @@
 
 static TLS_STORE uint8_t hook_cblas_daxpby_pos = 0;
 
-void cblas_daxpby( const int N, const double alpha, const double *X,
-                       const int incX, const double beta, double *Y, const int incY)
+void cblas_daxpby( const CBLAS_INT N, const double alpha, const double *X,
+                       const CBLAS_INT incX, const double beta, double *Y, const CBLAS_INT incY)
 {
-	   void (*fn)(const int , const double , const double *, const int, const double, double *Y, const int );
+	   void (*fn)(const CBLAS_INT , const double , const double *, const CBLAS_INT, const double, double *Y, const CBLAS_INT );
 	CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(daxpby);
        fn(N,alpha,X,incX,beta, Y,incY);
 
 }
 
-void flexiblas_chain_cblas_daxpby( const int N, const double alpha, const double *X,
-                       const int incX, const double beta, double *Y, const int incY)
+void flexiblas_chain_cblas_daxpby( const CBLAS_INT N, const double alpha, const double *X,
+                       const CBLAS_INT incX, const double beta, double *Y, const CBLAS_INT incY)
 {
-    void (*fn)(const int , const double , const double *, const int, const double, double *Y, const int );
+    void (*fn)(const CBLAS_INT , const double , const double *, const CBLAS_INT, const double, double *Y, const CBLAS_INT );
 	   CBLAS_HOOK_ADVANCE(daxpby);
        CBLAS_HOOK_ADVANCE(daxpby);
     fn(N,alpha,X,incX,beta, Y,incY);
@@ -72,8 +72,8 @@ void flexiblas_chain_cblas_daxpby( const int N, const double alpha, const double
 
 }
 
-void flexiblas_real_cblas_daxpby( const int N, const double alpha, const double *X,
-                       const int incX, const double beta, double *Y, const int incY)
+void flexiblas_real_cblas_daxpby( const CBLAS_INT N, const double alpha, const double *X,
+                       const CBLAS_INT incX, const double beta, double *Y, const CBLAS_INT incY)
 {
 #ifdef F77_INT
    F77_INT F77_N=N, F77_incX=incX, F77_incY=incY;
@@ -83,7 +83,7 @@ void flexiblas_real_cblas_daxpby( const int N, const double alpha, const double 
    #define F77_incY incY
 #endif
    if ( current_backend->blas.daxpby.cblas_function != NULL ) {
-	   void (*fn)(const int , const double , const double *, const int, const double, double *Y, const int ) = current_backend->blas.daxpby.cblas_function;
+	   void (*fn)(const CBLAS_INT , const double , const double *, const CBLAS_INT, const double, double *Y, const CBLAS_INT ) = current_backend->blas.daxpby.cblas_function;
 	   fn(N,alpha,X,incX,beta, Y,incY);
    } else {
    	FC_GLOBAL(daxpby,DAXPBY)( &F77_N, &alpha, X, &F77_incX, &beta, Y, &F77_incY);

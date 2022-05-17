@@ -1,4 +1,4 @@
-! LIBCSCUTILS: DMEO
+! LIBCSCUTILS: LUA interface demonstration
 ! Copyright (C) Martin Koehler,
 !
 ! This library is free software; you can redistribute it and/or modify

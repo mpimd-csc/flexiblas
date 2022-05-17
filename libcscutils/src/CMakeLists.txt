@@ -7,8 +7,10 @@ SET(COMMON_SRC
     common/backtrace.c
     common/counter.c
     common/string.c
+    common/posix_impl.c
     common/fortran_api.f90
     common/statistics.f90
+
     table/table.c
     table/table_comment.c
     table/table_latex.c
@@ -22,12 +24,14 @@ SET(COMMON_SRC
     sysinfo/hostname.c
     sysinfo/uname.c
     sysinfo/cpu_name.c
+    sysinfo/cpuinfo.c
     sysinfo/compiler_info.c
     sysinfo/fortran_api.f90
     )
 
 IF( LUA_ENABLE)
     SET(LUA_SRC
+        common/error_message.c
         lua/interface.c
         lua/fortran_interface.f90
         )
@@ -110,17 +114,39 @@ INCLUDE_DIRECTORIES(${INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/src)
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include)
 
+IF ( LUA_ENABLE )
+    SET (SRC ${SRC})
+    ADD_LIBRARY(cscutils_lua_src OBJECT ${LUA_SRC})
+    SET_TARGET_PROPERTIES(cscutils_lua_src PROPERTIES C_STANDARD 11 C_VISIBILITY_PRESET hidden Fortran_VISIBILITY_PRESET hidden)
+    TARGET_INCLUDE_DIRECTORIES(cscutils_lua_src PUBLIC
+        ${INCLUDE_DIR}
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>
+        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
+        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include/cscutils>
+        )
+
+
+ENDIF()
 
 ADD_LIBRARY(cscutils_src OBJECT ${SRC})
 
+
+
 SET_TARGET_PROPERTIES(cscutils_src PROPERTIES C_STANDARD 11 C_VISIBILITY_PRESET hidden Fortran_VISIBILITY_PRESET hidden)
+
 
 # IF( INPROJECT AND CSCUTILS_OBJECT )
     # TARGET_LINK_LIBRARIES(cscutils_src PUBLIC ${LIBS})
 #
 # ELSE()
     ADD_LIBRARY(cscutils $<TARGET_OBJECTS:cscutils_src>)
-    TARGET_LINK_LIBRARIES(cscutils  ${LIBS})
+    IF(LUA_ENABLE)
+        TARGET_LINK_LIBRARIES(cscutils lua  ${LIBS})
+    ELSE()
+        TARGET_LINK_LIBRARIES(cscutils  ${LIBS})
+    ENDIF()
     TARGET_INCLUDE_DIRECTORIES(cscutils PUBLIC
         ${INCLUDE_DIR}
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
@@ -140,6 +166,11 @@ SET_TARGET_PROPERTIES(cscutils_src PROPERTIES C_STANDARD 11 C_VISIBILITY_PRESET 
 
     SET_TARGET_PROPERTIES(cscutils PROPERTIES OUTPUT_NAME "cscutils" C_STANDARD 11
         )
+
+    IF(WIN32)
+        TARGET_LINK_LIBRARIES(cscutils wsock32)
+        TARGET_LINK_LIBRARIES(cscutils ws2_32)
+    ENDIF()
 # ENDIF()
 
 # Build Shared Library if we do not use a stand alone build

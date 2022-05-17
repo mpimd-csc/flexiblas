@@ -54,11 +54,11 @@
 #include "../flexiblas.h"
 
 #ifdef __ELF__
-void internal_cblas_xerbla(int info, const char *rout, const char *form, ...);
-void cblas_xerbla(int info, const char *, const char *, ...) __attribute__ ((weak, alias ("internal_cblas_xerbla")));
-void internal_cblas_xerbla(int info, const char *rout, const char *form, ...)
+void internal_cblas_xerbla(CBLAS_INT info, const char *rout, const char *form, ...);
+void cblas_xerbla(CBLAS_INT info, const char *, const char *, ...) __attribute__ ((weak, alias ("internal_cblas_xerbla")));
+void internal_cblas_xerbla(CBLAS_INT info, const char *rout, const char *form, ...)
 #else
-void internal_cblas_xerbla(int info, const char *rout, const char *form, ...)
+void internal_cblas_xerbla(CBLAS_INT info, const char *rout, const char *form, ...)
 #endif
 {
    extern int RowMajorStrg;
@@ -126,11 +126,11 @@ void internal_cblas_xerbla(int info, const char *rout, const char *form, ...)
 
 
 #ifdef __ELF__
-int  internal_cblas_errprn(int ierr, int info, const char *form, ...);
-int  cblas_errprn(int ierr, int info, const char *, ...) __attribute__ ((weak, alias ("internal_cblas_errprn")));
-int  internal_cblas_errprn(int ierr, int info, const char *form, ...)
+CBLAS_INT  internal_cblas_errprn(CBLAS_INT ierr, CBLAS_INT info, const char *form, ...);
+CBLAS_INT  cblas_errprn(CBLAS_INT ierr, CBLAS_INT info, const char *, ...) __attribute__ ((weak, alias ("internal_cblas_errprn")));
+CBLAS_INT  internal_cblas_errprn(CBLAS_INT ierr, CBLAS_INT info, const char *form, ...)
 #else
-int cblas_errprn(int ierr, int info,const char *form, ...)
+CBLAS_INT cblas_errprn(CBLAS_INT ierr, CBLAS_INT info,const char *form, ...)
 #endif
 {
 

@@ -155,11 +155,11 @@ void flexiblas_internal_xerbla(char *SNAME, Int *Info, Int len)  {
 #ifndef __APPLE__
 extern void internal_cblas_xerbla(int info, const char *rout, const char *form, ...);
 #else
-/* This routine is designed for maxos */ 
+/* This routine is designed for MacOS */ 
 void internal_cblas_xerbla(int info, const char *rout, const char *form, ...);
 void cblas_xerbla(int info, const char *rout, const char *form, ...)
 {
-	// printf("Hier in xerblas.c (0x%lx) backend = 0x%lx \n", (unsigned long)(void*) & cblas_xerbla, (unsigned long) current_backend->xerbla.cblas_function);
+	// printf("Hier in xerbla.c (0x%lx) backend = 0x%lx \n", (unsigned long)(void*) & cblas_xerbla, (unsigned long) current_backend->xerbla.cblas_function);
 	if ( current_backend->xerbla.cblas_function != NULL) {
 		va_list ap;
 		void (*fn) ( int, const char*, const char*, ...);

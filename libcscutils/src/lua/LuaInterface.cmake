@@ -7,6 +7,7 @@ SET(CUR_DIR ${CMAKE_CURRENT_LIST_DIR})
 
 IF(NOT TARGET lua_include_gen)
     ADD_EXECUTABLE(lua_include_gen ${CMAKE_CURRENT_LIST_DIR}/lua_include_gen.c)
+    TARGET_LINK_LIBRARIES(lua_include_gen cscutils)
     SET_TARGET_PROPERTIES(lua_include_gen PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 ENDIF()
 
@@ -17,7 +18,6 @@ FUNCTION(CSC_LUA_ADD_INLINE_CODE TARGET LUA_SOURCE)
     SET(OneValueOpts VARNAME FUNCTIONNAME)
     SET(MultiValueOpts)
     cmake_parse_arguments(LUA_INTERFACE "${OPTIONS}" "${OneValueOpts}" "${MultiValueOpts}" ${ARGN})
-
 
     SET(LUA_C_SOURCE_NAME ${LUA_FILE_NAME}.c)
     SET(LUA_OUTDIR "${PROJECT_BINARY_DIR}/lua_interface_tmp_dir/")

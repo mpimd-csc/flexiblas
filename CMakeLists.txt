@@ -1,7 +1,7 @@
 INCLUDE(libcscutils/CMakeModules/CheckPolicy.cmake)
 CheckPolicy(CMP0048 NEW)
 
-PROJECT(FlexiBLAS LANGUAGES C Fortran VERSION 3.1.3)
+PROJECT(FlexiBLAS LANGUAGES C Fortran VERSION 3.2.0)
 ENABLE_LANGUAGE(Fortran)
 cmake_minimum_required(VERSION 3.3.0)
 
@@ -449,6 +449,11 @@ IF ( TESTS )
 		FIND_PACKAGE(PythonInterp)
 		add_subdirectory(test/lapack-3.10.0)
 	ENDIF()
+
+    IF ( LAPACK AND (LAPACK_API_VERSION STREQUAL "3.10.1" OR LAPACK_API_VERSION STREQUAL "3.10.1-wodprc"))
+        FIND_PACKAGE(PythonInterp)
+        add_subdirectory(test/lapack-3.10.1)
+    ENDIF()
 
 
 

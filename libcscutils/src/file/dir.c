@@ -36,6 +36,10 @@
 
 int csc_file_mkdir(const char *dir, mode_t m)
 {
+#if defined(_WIN32) || defined(_WIN64)
+    (void)m;
+#endif
+
     char tmp[16*2048];
     char *p = NULL;
     size_t len;

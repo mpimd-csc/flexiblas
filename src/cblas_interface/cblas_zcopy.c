@@ -51,9 +51,9 @@
 static TLS_STORE uint8_t hook_cblas_zcopy_pos = 0;
 
 
-void cblas_zcopy( const int N, const void *X,const int incX, void *Y, const int incY)
+void cblas_zcopy( const CBLAS_INT N, const void *X,const CBLAS_INT incX, void *Y, const CBLAS_INT incY)
 {
-    void (*fn)  ( const int N, const void *X, const int incX, void *Y, const int incY);
+    void (*fn)  ( const CBLAS_INT N, const void *X, const CBLAS_INT incX, void *Y, const CBLAS_INT incY);
 
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(zcopy);
@@ -61,10 +61,10 @@ void cblas_zcopy( const int N, const void *X,const int incX, void *Y, const int 
     return;
 }
 
-void flexiblas_real_cblas_zcopy( const int N, const void *X,const int incX, void *Y, const int incY)
+void flexiblas_real_cblas_zcopy( const CBLAS_INT N, const void *X,const CBLAS_INT incX, void *Y, const CBLAS_INT incY)
 {
     if ( current_backend->blas.zcopy.cblas_function != NULL ) {
-        void (*fn)  ( const int N, const void *X, const int incX, void *Y, const int incY);
+        void (*fn)  ( const CBLAS_INT N, const void *X, const CBLAS_INT incX, void *Y, const CBLAS_INT incY);
         fn = current_backend->blas.zcopy.cblas_function;
         fn(N,X,incX,Y,incY);
     } else {
@@ -74,10 +74,10 @@ void flexiblas_real_cblas_zcopy( const int N, const void *X,const int incX, void
     return;
 }
 
-void flexiblas_chain_cblas_zcopy( const int N, const void *X,const int incX, void *Y, const int incY)
+void flexiblas_chain_cblas_zcopy( const CBLAS_INT N, const void *X,const CBLAS_INT incX, void *Y, const CBLAS_INT incY)
 {
 
-    void (*fn)  ( const int N, const void *X, const int incX, void *Y, const int incY);
+    void (*fn)  ( const CBLAS_INT N, const void *X, const CBLAS_INT incX, void *Y, const CBLAS_INT incY);
     CBLAS_HOOK_ADVANCE(zcopy);
     fn(N,X,incX,Y,incY);
     return;

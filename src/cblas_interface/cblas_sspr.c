@@ -54,13 +54,13 @@
 static TLS_STORE uint8_t hook_cblas_sspr_pos = 0;
 
 void cblas_sspr(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const int N, const float alpha, const float *X,
-        const int incX, float *Ap)
+        const CBLAS_INT N, const float alpha, const float *X,
+        const CBLAS_INT incX, float *Ap)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-         const int N, const float alpha, const float *X,
-         const int incX, float *Ap);
+         const CBLAS_INT N, const float alpha, const float *X,
+         const CBLAS_INT incX, float *Ap);
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(sspr);
     fn(layout,Uplo,N,alpha,X,incX,Ap);
@@ -68,21 +68,21 @@ void cblas_sspr(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
 }
 
 void flexiblas_chain_cblas_sspr(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const int N, const float alpha, const float *X,
-        const int incX, float *Ap)
+        const CBLAS_INT N, const float alpha, const float *X,
+        const CBLAS_INT incX, float *Ap)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-         const int N, const float alpha, const float *X,
-         const int incX, float *Ap);
+         const CBLAS_INT N, const float alpha, const float *X,
+         const CBLAS_INT incX, float *Ap);
     CBLAS_HOOK_ADVANCE(sspr);
     fn(layout,Uplo,N,alpha,X,incX,Ap);
 
 }
 
 void flexiblas_real_cblas_sspr(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const int N, const float alpha, const float *X,
-        const int incX, float *Ap)
+        const CBLAS_INT N, const float alpha, const float *X,
+        const CBLAS_INT incX, float *Ap)
 {
     char UL;
 #define F77_UL &UL
@@ -96,8 +96,8 @@ void flexiblas_real_cblas_sspr(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
     if ( current_backend->blas.sspr.cblas_function != NULL ) {
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-             const int N, const float alpha, const float *X,
-             const int incX, float *Ap)
+             const CBLAS_INT N, const float alpha, const float *X,
+             const CBLAS_INT incX, float *Ap)
             = current_backend->blas.sspr.cblas_function;
         fn(layout,Uplo,N,alpha,X,incX,Ap);
     } else {

@@ -54,13 +54,13 @@
 static TLS_STORE uint8_t hook_cblas_dspr_pos = 0;
 
 void cblas_dspr(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const int N, const double alpha, const double *X,
-        const int incX, double *Ap)
+        const CBLAS_INT N, const double alpha, const double *X,
+        const CBLAS_INT incX, double *Ap)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-         const int N, const double alpha, const double *X,
-         const int incX, double *Ap);
+         const CBLAS_INT N, const double alpha, const double *X,
+         const CBLAS_INT incX, double *Ap);
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(dspr);
     fn(layout,Uplo,N,alpha,X,incX,Ap);
@@ -68,21 +68,21 @@ void cblas_dspr(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
 }
 
 void flexiblas_chain_cblas_dspr(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const int N, const double alpha, const double *X,
-        const int incX, double *Ap)
+        const CBLAS_INT N, const double alpha, const double *X,
+        const CBLAS_INT incX, double *Ap)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-         const int N, const double alpha, const double *X,
-         const int incX, double *Ap);
+         const CBLAS_INT N, const double alpha, const double *X,
+         const CBLAS_INT incX, double *Ap);
     CBLAS_HOOK_ADVANCE(dspr);
     fn(layout,Uplo,N,alpha,X,incX,Ap);
 
 }
 
 void flexiblas_real_cblas_dspr(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const int N, const double alpha, const double *X,
-        const int incX, double *Ap)
+        const CBLAS_INT N, const double alpha, const double *X,
+        const CBLAS_INT incX, double *Ap)
 {
     char UL;
 #define F77_UL &UL
@@ -96,8 +96,8 @@ void flexiblas_real_cblas_dspr(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
     if ( current_backend->blas.dspr.cblas_function != NULL ) {
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-             const int N, const double alpha, const double *X,
-             const int incX, double *Ap)
+             const CBLAS_INT N, const double alpha, const double *X,
+             const CBLAS_INT incX, double *Ap)
             = current_backend->blas.dspr.cblas_function;
         fn(layout,Uplo,N,alpha,X,incX,Ap);
     } else {

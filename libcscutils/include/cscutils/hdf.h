@@ -290,12 +290,20 @@ extern "C" {
                 double _Complex *: csc_hdf5_read_double_complex_matrix,  \
                 float _Complex *:  csc_hdf5_read_float_complex_matrix,\
                 double *: csc_hdf5_read_double_matrix, \
-                float *:  csc_hdf5_read_float_matrix)(root, dset_name, rows, cols, matrix, lda, opts)
+                float *:  csc_hdf5_read_float_matrix, \
+                char *: csc_hdf5_read_char_matrix, \
+                short *: csc_hdf5_read_short_matrix, \
+                int *: csc_hdf5_read_int_matrix, \
+                long *: csc_hdf5_read_long_matrix)(root, dset_name, rows, cols, matrix, lda, opts)
     #define csc_hdf5_read_vector(root,dset_name,rows,matrix,opts) _Generic((matrix), \
                 double _Complex *: csc_hdf5_read_double_complex_vector,  \
                 float _Complex *:  csc_hdf5_read_float_complex_vector,\
                 double *: csc_hdf5_read_double_vector, \
-                float *:  csc_hdf5_read_float_vector)(root, dset_name, rows, matrix, opts)
+                float *:  csc_hdf5_read_float_vector, \
+                char *: csc_hdf5_read_char_vector, \
+                short *: csc_hdf5_read_short_vector, \
+                int *: csc_hdf5_read_int_vector, \
+                long *: csc_hdf5_read_long_vector)(root, dset_name, rows, matrix, opts)
 
 #endif
 
@@ -303,12 +311,20 @@ extern "C" {
     int csc_hdf5_read_float_matrix( hid_t root, const char* dset_name, size_t rows, size_t cols, float * matrix, size_t lda , csc_hdf5_options_t * opts);
     int csc_hdf5_read_double_complex_matrix( hid_t root, const char* dset_name, size_t rows, size_t cols, double complex * matrix, size_t lda , csc_hdf5_options_t * opts);
     int csc_hdf5_read_float_complex_matrix( hid_t root, const char* dset_name, size_t rows, size_t cols, float complex * matrix, size_t lda , csc_hdf5_options_t * opts);
+    int csc_hdf5_read_char_matrix( hid_t root, const char* dset_name, size_t rows, size_t cols, char * matrix, size_t lda , csc_hdf5_options_t * opts);
+    int csc_hdf5_read_short_matrix( hid_t root, const char* dset_name, size_t rows, size_t cols, short * matrix, size_t lda , csc_hdf5_options_t * opts);
+    int csc_hdf5_read_int_matrix( hid_t root, const char* dset_name, size_t rows, size_t cols, int * matrix, size_t lda , csc_hdf5_options_t * opts);
+    int csc_hdf5_read_long_matrix( hid_t root, const char* dset_name, size_t rows, size_t cols, long * matrix, size_t lda , csc_hdf5_options_t * opts);
 
 
     int csc_hdf5_read_double_vector( hid_t root, const char* dset_name, size_t rows, double * matrix, csc_hdf5_options_t * opts);
     int csc_hdf5_read_float_vector( hid_t root, const char* dset_name, size_t rows, float * matrix, csc_hdf5_options_t * opts);
     int csc_hdf5_read_double_complex_vector( hid_t root, const char* dset_name, size_t rows, double complex * matrix, csc_hdf5_options_t * opts);
     int csc_hdf5_read_float_complex_vector( hid_t root, const char* dset_name, size_t rows, float complex * matrix, csc_hdf5_options_t * opts);
+    int csc_hdf5_read_char_vector( hid_t root, const char* dset_name, size_t rows, char * matrix, csc_hdf5_options_t * opts);
+    int csc_hdf5_read_short_vector( hid_t root, const char* dset_name, size_t rows, short * matrix, csc_hdf5_options_t * opts);
+    int csc_hdf5_read_int_vector( hid_t root, const char* dset_name, size_t rows, int * matrix, csc_hdf5_options_t * opts);
+    int csc_hdf5_read_long_vector( hid_t root, const char* dset_name, size_t rows, long * matrix, csc_hdf5_options_t * opts);
 
 
     int csc_hdf5_read_string(hid_t root, const char * dset_name, char **str, size_t *len);
@@ -722,7 +738,3 @@ extern "C" {
 #endif
 
 #endif /* end of include guard: CSC_HDF_H */
-
-
-
-

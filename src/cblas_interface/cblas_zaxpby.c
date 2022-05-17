@@ -53,12 +53,12 @@
 static TLS_STORE uint8_t hook_cblas_zaxpby_pos = 0;
 
 
-void cblas_zaxpby( const int N, const void *alpha, const void *X,
-                       const int incX, const void *beta, void *Y, const int incY)
+void cblas_zaxpby( const CBLAS_INT N, const void *alpha, const void *X,
+                       const CBLAS_INT incX, const void *beta, void *Y, const CBLAS_INT incY)
 {
 	   void (*fn)
-		 ( const int N, const void *alpha, const void *X,
-                       const int incX, const void *beta, void *Y, const int incY);
+		 ( const CBLAS_INT N, const void *alpha, const void *X,
+                       const CBLAS_INT incX, const void *beta, void *Y, const CBLAS_INT incY);
 	   CBLAS_BACKEND_INIT();
        CBLAS_HOOK_SELECT(zaxpby);
 
@@ -66,19 +66,19 @@ void cblas_zaxpby( const int N, const void *alpha, const void *X,
 
 }
 
-void flexiblas_chain_cblas_zaxpby( const int N, const void *alpha, const void *X,
-                       const int incX, const void *beta, void *Y, const int incY)
+void flexiblas_chain_cblas_zaxpby( const CBLAS_INT N, const void *alpha, const void *X,
+                       const CBLAS_INT incX, const void *beta, void *Y, const CBLAS_INT incY)
 {
 	   void (*fn)
-		 ( const int N, const void *alpha, const void *X,
-                       const int incX, const void *beta, void *Y, const int incY);
+		 ( const CBLAS_INT N, const void *alpha, const void *X,
+                       const CBLAS_INT incX, const void *beta, void *Y, const CBLAS_INT incY);
         CBLAS_HOOK_ADVANCE(zaxpby);
 	   fn(N,alpha,X,incX,beta, Y,incY);
 
 }
 
-void flexiblas_real_cblas_zaxpby( const int N, const void *alpha, const void *X,
-                       const int incX, const void *beta, void *Y, const int incY)
+void flexiblas_real_cblas_zaxpby( const CBLAS_INT N, const void *alpha, const void *X,
+                       const CBLAS_INT incX, const void *beta, void *Y, const CBLAS_INT incY)
 {
 #ifdef F77_INT
    F77_INT F77_N=N, F77_incX=incX, F77_incY=incY;
@@ -89,8 +89,8 @@ void flexiblas_real_cblas_zaxpby( const int N, const void *alpha, const void *X,
 #endif
    if ( current_backend->blas.zaxpby.cblas_function != NULL ) {
 	   void (*fn)
-		 ( const int N, const void *alpha, const void *X,
-                       const int incX, const void *beta, void *Y, const int incY)
+		 ( const CBLAS_INT N, const void *alpha, const void *X,
+                       const CBLAS_INT incX, const void *beta, void *Y, const CBLAS_INT incY)
 		   = current_backend->blas.zaxpby.cblas_function;
 	   fn(N,alpha,X,incX,beta, Y,incY);
    } else {

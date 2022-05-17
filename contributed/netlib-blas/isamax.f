@@ -54,8 +54,6 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \date December 2016
-*
 *> \ingroup aux_blas
 *
 *> \par Further Details:
@@ -71,10 +69,9 @@
 *  =====================================================================
       INTEGER FUNCTION ISAMAX(N,SX,INCX)
 *
-*  -- Reference BLAS level1 routine (version 3.7.0) --
+*  -- Reference BLAS level1 routine --
 *  -- Reference BLAS is a software package provided by Univ. of Tennessee,    --
 *  -- Univ. of California Berkeley, Univ. of Colorado Denver and NAG Ltd..--
-*     December 2016
 *
 *     .. Scalar Arguments ..
       INTEGER INCX,N
@@ -123,4 +120,7 @@
          END DO
       END IF
       RETURN
+*
+*     End of ISAMAX
+*
       END

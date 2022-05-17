@@ -53,17 +53,17 @@
 static TLS_STORE uint8_t hook_cblas_zsyr2k_pos = 0;
 
 void cblas_zsyr2k(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const CBLAS_TRANSPOSE Trans, const int N, const int K,
-        const void *alpha, const void  *A, const int lda,
-        const void  *B, const int ldb, const void *beta,
-        void  *C, const int ldc)
+        const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
+        const void *alpha, const void  *A, const CBLAS_INT lda,
+        const void  *B, const CBLAS_INT ldb, const void *beta,
+        void  *C, const CBLAS_INT ldc)
 {
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-             const CBLAS_TRANSPOSE Trans, const int N, const int K,
-             const void *alpha, const void  *A, const int lda,
-             const void  *B, const int ldb, const void *beta,
-             void  *C, const int ldc);
+             const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
+             const void *alpha, const void  *A, const CBLAS_INT lda,
+             const void  *B, const CBLAS_INT ldb, const void *beta,
+             void  *C, const CBLAS_INT ldc);
         CBLAS_BACKEND_INIT();
         CBLAS_HOOK_SELECT(zsyr2k);
 
@@ -72,17 +72,17 @@ void cblas_zsyr2k(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
 }
 
 void flexiblas_chain_cblas_zsyr2k(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const CBLAS_TRANSPOSE Trans, const int N, const int K,
-        const void *alpha, const void  *A, const int lda,
-        const void  *B, const int ldb, const void *beta,
-        void  *C, const int ldc)
+        const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
+        const void *alpha, const void  *A, const CBLAS_INT lda,
+        const void  *B, const CBLAS_INT ldb, const void *beta,
+        void  *C, const CBLAS_INT ldc)
 {
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-             const CBLAS_TRANSPOSE Trans, const int N, const int K,
-             const void *alpha, const void  *A, const int lda,
-             const void  *B, const int ldb, const void *beta,
-             void  *C, const int ldc);
+             const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
+             const void *alpha, const void  *A, const CBLAS_INT lda,
+             const void  *B, const CBLAS_INT ldb, const void *beta,
+             void  *C, const CBLAS_INT ldc);
         CBLAS_HOOK_ADVANCE(zsyr2k);
 
         fn(layout,Uplo,Trans,N,K,alpha,A,lda,B,ldb,beta,C,ldc);
@@ -90,10 +90,10 @@ void flexiblas_chain_cblas_zsyr2k(const CBLAS_LAYOUT layout, const CBLAS_UPLO Up
 }
 
 void flexiblas_real_cblas_zsyr2k(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const CBLAS_TRANSPOSE Trans, const int N, const int K,
-        const void *alpha, const void  *A, const int lda,
-        const void  *B, const int ldb, const void *beta,
-        void  *C, const int ldc)
+        const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
+        const void *alpha, const void  *A, const CBLAS_INT lda,
+        const void  *B, const CBLAS_INT ldb, const void *beta,
+        void  *C, const CBLAS_INT ldc)
 {
     char UL, TR;
 #define F77_TR &TR
@@ -114,10 +114,10 @@ void flexiblas_real_cblas_zsyr2k(const CBLAS_LAYOUT layout, const CBLAS_UPLO Upl
 
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-             const CBLAS_TRANSPOSE Trans, const int N, const int K,
-             const void *alpha, const void  *A, const int lda,
-             const void  *B, const int ldb, const void *beta,
-             void  *C, const int ldc)
+             const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
+             const void *alpha, const void  *A, const CBLAS_INT lda,
+             const void  *B, const CBLAS_INT ldb, const void *beta,
+             void  *C, const CBLAS_INT ldc)
             = current_backend->blas.zsyr2k.cblas_function;
         fn(layout,Uplo,Trans,N,K,alpha,A,lda,B,ldb,beta,C,ldc);
     } else {

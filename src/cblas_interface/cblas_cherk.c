@@ -53,15 +53,15 @@
 static TLS_STORE uint8_t hook_cblas_cherk_pos = 0;
 
 void cblas_cherk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const CBLAS_TRANSPOSE Trans, const int N, const int K,
-        const float alpha, const void *A, const int lda,
-        const float beta, void *C, const int ldc)
+        const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
+        const float alpha, const void *A, const CBLAS_INT lda,
+        const float beta, void *C, const CBLAS_INT ldc)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-         const CBLAS_TRANSPOSE Trans, const int N, const int K,
-         const float alpha, const void *A, const int lda,
-         const float beta, void *C, const int ldc);
+         const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
+         const float alpha, const void *A, const CBLAS_INT lda,
+         const float beta, void *C, const CBLAS_INT ldc);
 
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(cherk);
@@ -71,15 +71,15 @@ void cblas_cherk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
 }
 
 void flexiblas_chain_cblas_cherk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const CBLAS_TRANSPOSE Trans, const int N, const int K,
-        const float alpha, const void *A, const int lda,
-        const float beta, void *C, const int ldc)
+        const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
+        const float alpha, const void *A, const CBLAS_INT lda,
+        const float beta, void *C, const CBLAS_INT ldc)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-         const CBLAS_TRANSPOSE Trans, const int N, const int K,
-         const float alpha, const void *A, const int lda,
-         const float beta, void *C, const int ldc);
+         const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
+         const float alpha, const void *A, const CBLAS_INT lda,
+         const float beta, void *C, const CBLAS_INT ldc);
     CBLAS_HOOK_ADVANCE(cherk);
     fn(layout,Uplo,Trans,N,K,alpha,A,lda,beta,C,ldc);
 
@@ -87,9 +87,9 @@ void flexiblas_chain_cblas_cherk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Upl
 
 
 void flexiblas_real_cblas_cherk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const CBLAS_TRANSPOSE Trans, const int N, const int K,
-        const float alpha, const void *A, const int lda,
-        const float beta, void *C, const int ldc)
+        const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
+        const float alpha, const void *A, const CBLAS_INT lda,
+        const float beta, void *C, const CBLAS_INT ldc)
 {
     char UL, TR;
 #define F77_TR &TR
@@ -109,9 +109,9 @@ void flexiblas_real_cblas_cherk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo
     if ( current_backend->blas.cherk.cblas_function != NULL ) {
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-             const CBLAS_TRANSPOSE Trans, const int N, const int K,
-             const float alpha, const void *A, const int lda,
-             const float beta, void *C, const int ldc)
+             const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
+             const float alpha, const void *A, const CBLAS_INT lda,
+             const float beta, void *C, const CBLAS_INT ldc)
             = current_backend->blas.cherk.cblas_function;
         fn(layout,Uplo,Trans,N,K,alpha,A,lda,beta,C,ldc);
     } else {

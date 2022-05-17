@@ -749,11 +749,34 @@ int csc_hdf5_read_float_complex_matrix( hid_t root, const char* dset_name, size_
     return csc_hdf5_read_matrix_ex(root, dset_name, H5T_NATIVE_FLOAT, rows, cols, (void *) matrix, lda, 2, opts);
 }
 
+int csc_hdf5_read_char_matrix( hid_t root, const char* dset_name, size_t rows, size_t cols, char * matrix, size_t lda , csc_hdf5_options_t * opts)
+{
+    CHECK_INPUT;
+    return csc_hdf5_read_matrix_ex(root, dset_name, H5T_NATIVE_CHAR, rows, cols, (void *) matrix, lda, 2, opts);
+}
+
+int csc_hdf5_read_short_matrix( hid_t root, const char* dset_name, size_t rows, size_t cols, short * matrix, size_t lda , csc_hdf5_options_t * opts)
+{
+    CHECK_INPUT;
+    return csc_hdf5_read_matrix_ex(root, dset_name, H5T_NATIVE_SHORT, rows, cols, (void *) matrix, lda, 2, opts);
+}
+
+int csc_hdf5_read_int_matrix( hid_t root, const char* dset_name, size_t rows, size_t cols, int * matrix, size_t lda , csc_hdf5_options_t * opts)
+{
+    CHECK_INPUT;
+    return csc_hdf5_read_matrix_ex(root, dset_name, H5T_NATIVE_INT, rows, cols, (void *) matrix, lda, 2, opts);
+}
+
+int csc_hdf5_read_long_matrix( hid_t root, const char* dset_name, size_t rows, size_t cols, long * matrix, size_t lda , csc_hdf5_options_t * opts)
+{
+    CHECK_INPUT;
+    return csc_hdf5_read_matrix_ex(root, dset_name, H5T_NATIVE_LONG, rows, cols, (void *) matrix, lda, 2, opts);
+}
+
 int csc_hdf5_read_double_vector( hid_t root, const char* dset_name, size_t rows, double * matrix, csc_hdf5_options_t * opts)
 {
     CHECK_INPUT_V;
     return csc_hdf5_read_matrix_ex(root, dset_name, H5T_NATIVE_DOUBLE, rows, 1, (void *) matrix, rows, 1, opts);
-
 }
 
 int csc_hdf5_read_float_vector( hid_t root, const char* dset_name, size_t rows, float * matrix, csc_hdf5_options_t * opts)
@@ -772,6 +795,30 @@ int csc_hdf5_read_float_complex_vector( hid_t root, const char* dset_name, size_
 {
     CHECK_INPUT_V;
     return csc_hdf5_read_matrix_ex(root, dset_name, H5T_NATIVE_FLOAT, rows, 1, (void *) matrix, rows, 2, opts);
+}
+
+int csc_hdf5_read_char_vector( hid_t root, const char* dset_name, size_t rows, char * matrix, csc_hdf5_options_t * opts)
+{
+    CHECK_INPUT_V;
+    return csc_hdf5_read_matrix_ex(root, dset_name, H5T_NATIVE_CHAR, rows, 1, (void *) matrix, rows, 1, opts);
+}
+
+int csc_hdf5_read_short_vector( hid_t root, const char* dset_name, size_t rows, short * matrix, csc_hdf5_options_t * opts)
+{
+    CHECK_INPUT_V;
+    return csc_hdf5_read_matrix_ex(root, dset_name, H5T_NATIVE_SHORT, rows, 1, (void *) matrix, rows, 1, opts);
+}
+
+int csc_hdf5_read_int_vector( hid_t root, const char* dset_name, size_t rows, int * matrix, csc_hdf5_options_t * opts)
+{
+    CHECK_INPUT_V;
+    return csc_hdf5_read_matrix_ex(root, dset_name, H5T_NATIVE_INT, rows, 1, (void *) matrix, rows, 1, opts);
+}
+
+int csc_hdf5_read_long_vector( hid_t root, const char* dset_name, size_t rows, long * matrix, csc_hdf5_options_t * opts)
+{
+    CHECK_INPUT_V;
+    return csc_hdf5_read_matrix_ex(root, dset_name, H5T_NATIVE_LONG, rows, 1, (void *) matrix, rows, 1, opts);
 }
 
 
@@ -2315,6 +2362,3 @@ int csc_hdf5_matrix_read_complex(hid_t root, const char *dset_name, size_t rows,
     H5Gclose(vg);
     return 0;
 }
-
-
-

@@ -50,19 +50,19 @@
 static TLS_STORE uint8_t hook_cblas_zgbmv_pos = 0;
 
 void cblas_zgbmv(const CBLAS_LAYOUT layout,
-        const CBLAS_TRANSPOSE TransA, const int M, const int N,
-        const int KL, const int KU,
-        const void *alpha, const void  *A, const int lda,
-        const void  *X, const int incX, const void *beta,
-        void  *Y, const int incY)
+        const CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N,
+        const CBLAS_INT KL, const CBLAS_INT KU,
+        const void *alpha, const void  *A, const CBLAS_INT lda,
+        const void  *X, const CBLAS_INT incX, const void *beta,
+        void  *Y, const CBLAS_INT incY)
 
 {
     void (*fn)  (const CBLAS_LAYOUT layout,
-        const CBLAS_TRANSPOSE TransA, const int M, const int N,
-        const int KL, const int KU,
-        const void *alpha, const void  *A, const int lda,
-        const void  *X, const int incX, const void *beta,
-        void  *Y, const int incY);
+        const CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N,
+        const CBLAS_INT KL, const CBLAS_INT KU,
+        const void *alpha, const void  *A, const CBLAS_INT lda,
+        const void  *X, const CBLAS_INT incX, const void *beta,
+        void  *Y, const CBLAS_INT incY);
 
 
     CBLAS_BACKEND_INIT();
@@ -76,19 +76,19 @@ void cblas_zgbmv(const CBLAS_LAYOUT layout,
 }
 
 void flexiblas_chain_cblas_zgbmv(const CBLAS_LAYOUT layout,
-        const CBLAS_TRANSPOSE TransA, const int M, const int N,
-        const int KL, const int KU,
-        const void *alpha, const void  *A, const int lda,
-        const void  *X, const int incX, const void *beta,
-        void  *Y, const int incY)
+        const CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N,
+        const CBLAS_INT KL, const CBLAS_INT KU,
+        const void *alpha, const void  *A, const CBLAS_INT lda,
+        const void  *X, const CBLAS_INT incX, const void *beta,
+        void  *Y, const CBLAS_INT incY)
 
 {
     void (*fn)  (const CBLAS_LAYOUT layout,
-        const CBLAS_TRANSPOSE TransA, const int M, const int N,
-        const int KL, const int KU,
-        const void *alpha, const void  *A, const int lda,
-        const void  *X, const int incX, const void *beta,
-        void  *Y, const int incY);
+        const CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N,
+        const CBLAS_INT KL, const CBLAS_INT KU,
+        const void *alpha, const void  *A, const CBLAS_INT lda,
+        const void  *X, const CBLAS_INT incX, const void *beta,
+        void  *Y, const CBLAS_INT incY);
 
     CBLAS_HOOK_ADVANCE(zgbmv);
 
@@ -101,11 +101,11 @@ void flexiblas_chain_cblas_zgbmv(const CBLAS_LAYOUT layout,
 
 
 void flexiblas_real_cblas_zgbmv(const CBLAS_LAYOUT layout,
-        const CBLAS_TRANSPOSE TransA, const int M, const int N,
-        const int KL, const int KU,
-        const void *alpha, const void  *A, const int lda,
-        const void  *X, const int incX, const void *beta,
-        void  *Y, const int incY)
+        const CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N,
+        const CBLAS_INT KL, const CBLAS_INT KU,
+        const void *alpha, const void  *A, const CBLAS_INT lda,
+        const void  *X, const CBLAS_INT incX, const void *beta,
+        void  *Y, const CBLAS_INT incY)
 
 {
     char TA;
@@ -127,20 +127,20 @@ void flexiblas_real_cblas_zgbmv(const CBLAS_LAYOUT layout,
 
         void (*fn)
             (const CBLAS_LAYOUT layout,
-             const CBLAS_TRANSPOSE TransA, const int M, const int N,
-             const int KL, const int KU,
-             const void *alpha, const void  *A, const int lda,
-             const void  *X, const int incX, const void *beta,
-             void  *Y, const int incY);
+             const CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N,
+             const CBLAS_INT KL, const CBLAS_INT KU,
+             const void *alpha, const void  *A, const CBLAS_INT lda,
+             const void  *X, const CBLAS_INT incX, const void *beta,
+             void  *Y, const CBLAS_INT incY);
         fn = current_backend->blas.zgbmv.cblas_function;
         fn(layout,TransA,M,N,KL,KU,alpha,A,lda,X,incX,beta,Y,incY);
         return;
     }
 
-    int n=0, i=0, incx=incX;
+    CBLAS_INT n=0, i=0, incx=incX;
     const double *alp= (const double *)alpha, *bet = (const double *)beta;
     double ALPHA[2],BETA[2];
-    int tincY, tincx;
+    CBLAS_INT tincY, tincx;
     double *x =NULL, *xx, *y=(double *)Y, *st=0, *tx=0;
     extern int CBLAS_CallFromC;
     extern int RowMajorStrg;

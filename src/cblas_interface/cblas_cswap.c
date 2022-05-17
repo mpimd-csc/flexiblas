@@ -52,11 +52,11 @@
 
 static TLS_STORE uint8_t hook_cblas_cswap_pos = 0;
 
-void cblas_cswap( const int N, void *X, const int incX, void *Y,
-                       const int incY)
+void cblas_cswap( const CBLAS_INT N, void *X, const CBLAS_INT incX, void *Y,
+                       const CBLAS_INT incY)
 {
     void (*fn)
-		  ( const int N, void *X, const int incX, void *Y, const int incY);
+		  ( const CBLAS_INT N, void *X, const CBLAS_INT incX, void *Y, const CBLAS_INT incY);
 
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(cswap);
@@ -64,19 +64,19 @@ void cblas_cswap( const int N, void *X, const int incX, void *Y,
     fn(N,X,incX,Y,incY);
 }
 
-void flexiblas_chain_cblas_cswap( const int N, void *X, const int incX, void *Y,
-                       const int incY)
+void flexiblas_chain_cblas_cswap( const CBLAS_INT N, void *X, const CBLAS_INT incX, void *Y,
+                       const CBLAS_INT incY)
 {
    void (*fn)
-		  ( const int N, void *X, const int incX, void *Y, const int incY);
+		  ( const CBLAS_INT N, void *X, const CBLAS_INT incX, void *Y, const CBLAS_INT incY);
 
     CBLAS_HOOK_ADVANCE(cswap);
 
     fn(N,X,incX,Y,incY);
 }
 
-void flexiblas_real_cblas_cswap( const int N, void *X, const int incX, void *Y,
-                       const int incY)
+void flexiblas_real_cblas_cswap( const CBLAS_INT N, void *X, const CBLAS_INT incX, void *Y,
+                       const CBLAS_INT incY)
 {
 #ifdef F77_INT
    F77_INT F77_N=N, F77_incX=incX, F77_incY=incY;
@@ -87,8 +87,8 @@ void flexiblas_real_cblas_cswap( const int N, void *X, const int incX, void *Y,
 #endif
    if ( current_backend->blas.cswap.cblas_function != NULL ) {
 	   void (*fn)
-		  ( const int N, void *X, const int incX, void *Y,
-                       const int incY)
+		  ( const CBLAS_INT N, void *X, const CBLAS_INT incX, void *Y,
+                       const CBLAS_INT incY)
 		   = current_backend->blas.cswap.cblas_function;
 	fn(N,X,incX,Y,incY);
    } else {

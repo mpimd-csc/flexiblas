@@ -124,7 +124,7 @@ static void h_info_default(flexiblas_info_t *info) {
 
 
 /*-----------------------------------------------------------------------------
- *  Init the backend.
+ *  Initialize the backend.
  *-----------------------------------------------------------------------------*/
 HIDDEN void __flexiblas_backend_init( flexiblas_backend_t * backend) {
     int load = 0;
@@ -151,7 +151,7 @@ HIDDEN void __flexiblas_backend_init( flexiblas_backend_t * backend) {
 #endif
 
 	/*-----------------------------------------------------------------------------
-         *  Load FBLAS
+         *  Load Fortran BLAS
          *-----------------------------------------------------------------------------*/
         __flexiblas_load_fblas(backend, &load, &failed);
 
@@ -271,7 +271,7 @@ static flexiblas_backend_t * flexiblas_load_library_from_init (flexiblas_mgmt_t 
 
     } else {
         /*-----------------------------------------------------------------------------
-         *  Try to open env_FLEXIBLAS directly and the get the value from the Hashtable
+         *  Try to open env_FLEXIBLAS directly and the get the value from the Hash-table
          *-----------------------------------------------------------------------------*/
         DPRINTF(1,"Trying to use the content of " ENV_FLEXIBLAS ": \"%s\" as shared library.\n", env_FLEXIBLAS);
         library = __flexiblas_dlopen(env_FLEXIBLAS, DLOPEN_FLAGS_FROM_FILE, NULL);
@@ -317,7 +317,7 @@ static flexiblas_backend_t * flexiblas_load_library_from_init (flexiblas_mgmt_t 
         }
     }
 
-    /* Load FallBack if non of the previously opened libraries worked. */
+    /* Load Fallback if non of the previously opened libraries worked. */
     if ( library == NULL ) {
         char *clibrary = NULL;
         flexiblas_mgmt_location_t loc;
@@ -334,7 +334,7 @@ static flexiblas_backend_t * flexiblas_load_library_from_init (flexiblas_mgmt_t 
     }
 
     if ( library == NULL ) {
-        fprintf(stderr, PRINT_PREFIX "Unable to open any BLAS library (choosen: %s). Abort!\n",
+        fprintf(stderr, PRINT_PREFIX "Unable to open any BLAS library (chosen: %s). Abort!\n",
                 (env_FLEXIBLAS == NULL)?blas_default_map:env_FLEXIBLAS);
         abort();
         return NULL;
@@ -468,7 +468,7 @@ int flexiblas_load_backend(const char *name )
 
     DPRINTF(1,"Backend %s not loaded until now. - %d \n", name, -1);
     /* Not loaded */
-    new_backend = __flexiblas_load_backend_from_config(name);			/* FIXME does accept const char* (yet) */
+    new_backend = __flexiblas_load_backend_from_config(name);			/* FIX ME does accept const char* (yet) */
     if ( new_backend != NULL ) {
         size_t new_backend_pos = nloaded_backends;
         flexiblas_backend_t ** new_loaded;
@@ -613,7 +613,7 @@ __attribute__((constructor))
             int s = atoi(env_FLEXIBLAS_COLOR_OUTPUT);
             flexiblas_set_color_output(s);
         }
-        /* Load environemt variables   */
+        /* Load environment variables   */
         if ( env_FLEXIBLAS_VERBOSE != NULL ) {
             __flexiblas_verbose = atoi(env_FLEXIBLAS_VERBOSE);
         }

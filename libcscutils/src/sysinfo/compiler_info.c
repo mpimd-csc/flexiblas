@@ -71,6 +71,9 @@ char *csc_sysinfo_ccompiler()
 #elif defined(__clang__) && defined(__ibmxl__)
     // IBM XLC
     return make_message("IBM XLC %d.%d.%d.%d", __ibmxl_version__, __ibmxl_release__, __ibmxl_modification__, __ibmxl_ptf_fix_level__);
+#elif defined(_MSC_VER) && !defined(__INTEL_COMPILER)
+    // MSVC
+    return make_message("MSVC %d", _MSC_FULL_VER);
 #elif defined(__xlc__)
     // IBM XLC old
     return make_message("IBM XLC (Old, non Clang version) -- Please look yourself");
@@ -80,6 +83,9 @@ char *csc_sysinfo_ccompiler()
 #elif defined(__PGI)
     // PGI
     return make_message("PGI %d.%d.%d", __PGIC__, __PGIC_MINOR__, __PGIC_PATCHLEVEL__);
+#elif defined(__NVCOMPILER)
+    // Nvidia HPC SDK
+    return make_message("Nvidia HPC SDK %d.%d.%d",__NVCOMPILER_MAJOR,__NVCOMPILER_MINOR,__NVCOMPILER_PATCHLEVEL);
 #elif defined(__TINYC__)
     int major, minor, patch;
     patch = __TINYC__ % 100;

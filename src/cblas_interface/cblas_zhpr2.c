@@ -53,14 +53,14 @@
 static TLS_STORE uint8_t hook_cblas_zhpr2_pos = 0;
 
 void cblas_zhpr2(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const int N,const void *alpha, const void *X,
-        const int incX,const void *Y, const int incY, void *Ap)
+        const CBLAS_INT N,const void *alpha, const void *X,
+        const CBLAS_INT incX,const void *Y, const CBLAS_INT incY, void *Ap)
 
 {
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-             const int N,const void *alpha, const void *X,
-             const int incX,const void *Y, const int incY, void *Ap);
+             const CBLAS_INT N,const void *alpha, const void *X,
+             const CBLAS_INT incX,const void *Y, const CBLAS_INT incY, void *Ap);
 
         CBLAS_BACKEND_INIT();
         CBLAS_HOOK_SELECT(zhpr2);
@@ -69,14 +69,14 @@ void cblas_zhpr2(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
 }
 
 void flexiblas_chain_cblas_zhpr2(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const int N,const void *alpha, const void *X,
-        const int incX,const void *Y, const int incY, void *Ap)
+        const CBLAS_INT N,const void *alpha, const void *X,
+        const CBLAS_INT incX,const void *Y, const CBLAS_INT incY, void *Ap)
 
 {
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-             const int N,const void *alpha, const void *X,
-             const int incX,const void *Y, const int incY, void *Ap);
+             const CBLAS_INT N,const void *alpha, const void *X,
+             const CBLAS_INT incX,const void *Y, const CBLAS_INT incY, void *Ap);
         CBLAS_HOOK_ADVANCE(zhpr2);
         fn(layout,Uplo,N,alpha,X,incX,Y,incY,Ap);
 
@@ -84,8 +84,8 @@ void flexiblas_chain_cblas_zhpr2(const CBLAS_LAYOUT layout, const CBLAS_UPLO Upl
 }
 
 void flexiblas_real_cblas_zhpr2(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const int N,const void *alpha, const void *X,
-        const int incX,const void *Y, const int incY, void *Ap)
+        const CBLAS_INT N,const void *alpha, const void *X,
+        const CBLAS_INT incX,const void *Y, const CBLAS_INT incY, void *Ap)
 
 {
     char UL;
@@ -101,12 +101,12 @@ void flexiblas_real_cblas_zhpr2(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo
     if ( current_backend->blas.zhpr2.cblas_function != NULL ) {
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-             const int N,const void *alpha, const void *X,
-             const int incX,const void *Y, const int incY, void *Ap)
+             const CBLAS_INT N,const void *alpha, const void *X,
+             const CBLAS_INT incX,const void *Y, const CBLAS_INT incY, void *Ap)
             = current_backend->blas.zhpr2.cblas_function;
         fn(layout,Uplo,N,alpha,X,incX,Y,incY,Ap);
     } else {
-        int n, i, j, tincx, tincy, incx=incX, incy=incY;
+        CBLAS_INT n, i, j, tincx, tincy, incx=incX, incy=incY;
         double *x, *xx, *y, *yy, *tx, *ty, *stx, *sty;
 
         extern int CBLAS_CallFromC;

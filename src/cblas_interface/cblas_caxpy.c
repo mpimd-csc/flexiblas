@@ -54,9 +54,9 @@
 static TLS_STORE uint8_t hook_cblas_caxpy_pos = 0;
 
 
-void flexiblas_real_cblas_caxpy( const int N, const void *alpha, const void *X, const int incX, void *Y, const int incY)
+void flexiblas_real_cblas_caxpy( const CBLAS_INT N, const void *alpha, const void *X, const CBLAS_INT incX, void *Y, const CBLAS_INT incY)
 {
-    void (*fn)  ( const int N, const void *alpha, const void *X, const int incX, void *Y, const int incY);
+    void (*fn)  ( const CBLAS_INT N, const void *alpha, const void *X, const CBLAS_INT incX, void *Y, const CBLAS_INT incY);
     if ( current_backend->blas.caxpy.cblas_function != NULL ) {
         fn = current_backend->blas.caxpy.cblas_function;
         fn(N,alpha,X,incX,Y,incY);
@@ -67,9 +67,9 @@ void flexiblas_real_cblas_caxpy( const int N, const void *alpha, const void *X, 
     return;
 }
 
-void flexiblas_chain_cblas_caxpy( const int N, const void *alpha, const void *X, const int incX, void *Y, const int incY)
+void flexiblas_chain_cblas_caxpy( const CBLAS_INT N, const void *alpha, const void *X, const CBLAS_INT incX, void *Y, const CBLAS_INT incY)
 {
-    void (*fn)  ( const int N, const void *alpha, const void *X, const int incX, void *Y, const int incY);
+    void (*fn)  ( const CBLAS_INT N, const void *alpha, const void *X, const CBLAS_INT incX, void *Y, const CBLAS_INT incY);
     hook_cblas_caxpy_pos ++;
     if ( hook_cblas_caxpy_pos < __flexiblas_hooks->caxpy.cblas_nhook) {
         fn  = __flexiblas_hooks->caxpy.cblas_hook_function[hook_cblas_caxpy_pos];
@@ -80,11 +80,11 @@ void flexiblas_chain_cblas_caxpy( const int N, const void *alpha, const void *X,
     fn(N,alpha,X,incX,Y,incY);
 }
 
-void cblas_caxpy( const int N, const void *alpha, const void *X,
-        const int incX, void *Y, const int incY)
+void cblas_caxpy( const CBLAS_INT N, const void *alpha, const void *X,
+        const CBLAS_INT incX, void *Y, const CBLAS_INT incY)
 {
 
-    void (*fn)  ( const int N, const void *alpha, const void *X, const int incX, void *Y, const int incY);
+    void (*fn)  ( const CBLAS_INT N, const void *alpha, const void *X, const CBLAS_INT incX, void *Y, const CBLAS_INT incY);
 
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(caxpy);

@@ -41,6 +41,7 @@
 #cmakedefine CSC_HAVE_IOCTL
 #cmakedefine CSC_HAVE_UNISTD
 #cmakedefine CSC_HAVE_GETLINE
+#cmakedefine CSC_HAVE_GETDELIM
 #cmakedefine CSC_HAVE_REALPATH
 #cmakedefine CSC_HAVE_VSSCANF
 #cmakedefine CSC_HAVE_VSNPRINTF

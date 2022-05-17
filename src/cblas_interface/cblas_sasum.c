@@ -52,10 +52,10 @@
 
 static TLS_STORE uint8_t hook_cblas_sasum_pos = 0;
 
-float cblas_sasum( const int N, const float *X, const int incX)
+float cblas_sasum( const CBLAS_INT N, const float *X, const CBLAS_INT incX)
 {
     float asum;
-    float (*fn)(const int , const float *, const int );
+    float (*fn)(const CBLAS_INT , const float *, const CBLAS_INT );
 
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(sasum);
@@ -64,10 +64,10 @@ float cblas_sasum( const int N, const float *X, const int incX)
     return asum;
 }
 
-float flexiblas_chain_cblas_sasum( const int N, const float *X, const int incX)
+float flexiblas_chain_cblas_sasum( const CBLAS_INT N, const float *X, const CBLAS_INT incX)
 {
     float asum;
-    float (*fn)(const int , const float *, const int );
+    float (*fn)(const CBLAS_INT , const float *, const CBLAS_INT );
 
     CBLAS_HOOK_ADVANCE(sasum);
     asum = fn(N,X,incX);
@@ -75,7 +75,7 @@ float flexiblas_chain_cblas_sasum( const int N, const float *X, const int incX)
 }
 
 
-float flexiblas_real_cblas_sasum( const int N, const float *X, const int incX)
+float flexiblas_real_cblas_sasum( const CBLAS_INT N, const float *X, const CBLAS_INT incX)
 {
    float asum;
 #ifdef F77_INT
@@ -86,7 +86,7 @@ float flexiblas_real_cblas_sasum( const int N, const float *X, const int incX)
 #endif
    if ( current_backend->blas.sasum.cblas_function != NULL ) {
 
-	   float (*fn)(const int , const float *, const int ) = current_backend->blas.sasum.cblas_function;
+	   float (*fn)(const CBLAS_INT , const float *, const CBLAS_INT ) = current_backend->blas.sasum.cblas_function;
 	   asum = fn(N,X,incX);
 
    } else {

@@ -16,7 +16,7 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  *
  */
-#if defined (__linux__) 
+#if defined (__linux__)
 #ifndef _DEFAULT_SOURCE
 #define _DEFAULT_SOURCE
 #endif
@@ -26,9 +26,9 @@
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
-#elif defined(__FreeBSD__) 
+#elif defined(__FreeBSD__)
  #define _POSIX_C_SOURCE 200809L
-#endif 
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,6 +43,7 @@
 
 
 #include "cscutils/inifile.h"
+#include "cscutils/posix_impl.h"
 
 #define LOCK  do { pthread_mutex_lock(&(ini->lock)); } while(0);
 #define UNLOCK  do { pthread_mutex_unlock(&(ini->lock)); } while(0);
@@ -244,7 +245,12 @@ csc_ini_error_t  csc_ini_load(const char *filename, csc_ini_file_t * content, un
         fclose(fp);
         return CSC_INI_MALLOC;
     }
+
+#if defined(_WIN32) || defined(_WIN64)
+    if (_fullpath(content->filename, filename, path_max) == NULL) {
+#else
     if ( realpath(filename, content->filename) == NULL ) {
+#endif
         free(content->filename);
         content->filename = NULL;
         fclose(fp);
@@ -254,7 +260,7 @@ csc_ini_error_t  csc_ini_load(const char *filename, csc_ini_file_t * content, un
     line_len = 1024;
     read_line = calloc(line_len, sizeof(char));
 
-    while ( (len = getline(&read_line, &line_len, fp )) >= 0){
+    while ( (len = csc_getline(&read_line, &line_len, fp )) >= 0){
         line_number ++;
         remove_newline(read_line, &len);
         // printf("read line: '%s' (%d) \n", read_line, len);
@@ -407,7 +413,12 @@ csc_ini_error_t  csc_ini_write(const char * filename, csc_ini_file_t *ini)
         fclose(fp);
         return CSC_INI_MALLOC;
     }
+
+#if defined(_WIN32) || defined(_WIN64)
+    if (_fullpath(ini->filename, filename, path_max) == NULL) {
+#else
     if ( realpath(filename, ini->filename) == NULL ) {
+#endif
         free(ini->filename);
         ini->filename = NULL;
         UNLOCK;
@@ -1014,4 +1025,3 @@ csc_ini_error_t csc_ini_section_remove(csc_ini_file_t * ini, const char * sectio
     UNLOCK;
     return CSC_INI_SUCCESS;
 }
-

@@ -27,10 +27,10 @@ add_subdirectory(EIG)
 # Only run this test if python 3 is found
 if(PYTHON_EXECUTABLE)
   message(STATUS "Running Summary")
-  file(COPY ${PROJECT_SOURCE_DIR}/test/lapack-3.9.1/lapack_testing.py DESTINATION ${PROJECT_BINARY_DIR}/test/lapack-3.9.1/lapack_testing.py)
+  file(COPY ${PROJECT_SOURCE_DIR}/test/lapack-3.9.1/lapack_testing.py DESTINATION ${PROJECT_BINARY_DIR}/test/lapack-3.9.1/)
   add_test(
     NAME LAPACK_Test_Summary
-    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/test/lapack-3.9.1/lapack_testing.py"
+    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/test/lapack-3.9.1/"
     COMMAND ${PYTHON_EXECUTABLE} "lapack_testing.py"
     )
 endif()

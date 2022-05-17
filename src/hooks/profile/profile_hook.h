@@ -2203,6 +2203,10 @@ extern "C" {
         profile_data_t slaqz3;
         profile_data_t slaqz4;
 
+        /* LAPACK 3.10.1 */
+        profile_data_t droundup_lwork;
+        profile_data_t sroundup_lwork;
+
     } blas_calls_t;
 
     extern blas_calls_t *data;

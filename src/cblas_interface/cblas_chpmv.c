@@ -53,17 +53,17 @@ static TLS_STORE uint8_t hook_cblas_chpmv_pos = 0;
 
 
 void cblas_chpmv(const CBLAS_LAYOUT layout,
-        const CBLAS_UPLO Uplo,const int N,
+        const CBLAS_UPLO Uplo,const CBLAS_INT N,
         const void *alpha, const void  *AP,
-        const void  *X, const int incX, const void *beta,
-        void  *Y, const int incY)
+        const void  *X, const CBLAS_INT incX, const void *beta,
+        void  *Y, const CBLAS_INT incY)
 {
         void (*fn)
             (const CBLAS_LAYOUT layout,
-             const CBLAS_UPLO Uplo,const int N,
+             const CBLAS_UPLO Uplo,const CBLAS_INT N,
              const void *alpha, const void  *AP,
-             const void  *X, const int incX, const void *beta,
-             void  *Y, const int incY);
+             const void  *X, const CBLAS_INT incX, const void *beta,
+             void  *Y, const CBLAS_INT incY);
         CBLAS_BACKEND_INIT();
         CBLAS_HOOK_SELECT(chpmv);
 
@@ -72,17 +72,17 @@ void cblas_chpmv(const CBLAS_LAYOUT layout,
 }
 
 void flexiblas_chain_cblas_chpmv(const CBLAS_LAYOUT layout,
-        const CBLAS_UPLO Uplo,const int N,
+        const CBLAS_UPLO Uplo,const CBLAS_INT N,
         const void *alpha, const void  *AP,
-        const void  *X, const int incX, const void *beta,
-        void  *Y, const int incY)
+        const void  *X, const CBLAS_INT incX, const void *beta,
+        void  *Y, const CBLAS_INT incY)
 {
         void (*fn)
             (const CBLAS_LAYOUT layout,
-             const CBLAS_UPLO Uplo,const int N,
+             const CBLAS_UPLO Uplo,const CBLAS_INT N,
              const void *alpha, const void  *AP,
-             const void  *X, const int incX, const void *beta,
-             void  *Y, const int incY);
+             const void  *X, const CBLAS_INT incX, const void *beta,
+             void  *Y, const CBLAS_INT incY);
         CBLAS_HOOK_ADVANCE(chpmv);
 
         fn(layout,Uplo,N,alpha,AP,X,incX,beta,Y,incY);
@@ -91,10 +91,10 @@ void flexiblas_chain_cblas_chpmv(const CBLAS_LAYOUT layout,
 
 
 void flexiblas_real_cblas_chpmv(const CBLAS_LAYOUT layout,
-        const CBLAS_UPLO Uplo,const int N,
+        const CBLAS_UPLO Uplo,const CBLAS_INT N,
         const void *alpha, const void  *AP,
-        const void  *X, const int incX, const void *beta,
-        void  *Y, const int incY)
+        const void  *X, const CBLAS_INT incX, const void *beta,
+        void  *Y, const CBLAS_INT incY)
 {
     char UL;
 #define F77_UL &UL
@@ -109,17 +109,17 @@ void flexiblas_real_cblas_chpmv(const CBLAS_LAYOUT layout,
     if ( current_backend->blas.chpmv.cblas_function != NULL ) {
         void (*fn)
             (const CBLAS_LAYOUT layout,
-             const CBLAS_UPLO Uplo,const int N,
+             const CBLAS_UPLO Uplo,const CBLAS_INT N,
              const void *alpha, const void  *AP,
-             const void  *X, const int incX, const void *beta,
-             void  *Y, const int incY)
+             const void  *X, const CBLAS_INT incX, const void *beta,
+             void  *Y, const CBLAS_INT incY)
             = current_backend->blas.chpmv.cblas_function;
         fn(layout,Uplo,N,alpha,AP,X,incX,beta,Y,incY);
     } else {
-        int n, i=0, incx=incX;
+        CBLAS_INT n, i=0, incx=incX;
         const float *alp= (const float *)alpha, *bet = (const float *)beta;
         float ALPHA[2],BETA[2];
-        int tincY, tincx;
+        CBLAS_INT tincY, tincx;
         float *x, *xx, *y=(float *)Y, *st=0, *tx;
         extern int CBLAS_CallFromC;
         extern int RowMajorStrg;

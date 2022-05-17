@@ -1,7 +1,7 @@
 FlexiBLAS - A BLAS and LAPACK wrapper library with runtime exchangeable backends
 ================================================================================
 
-**Version 3.1.3** 10.5281/zenodo.798186
+**Version 3.2.0** 10.5281/zenodo.798186
 
 **Project Website:** https://www.mpi-magdeburg.mpg.de/projects/flexiblas
 
@@ -112,7 +112,7 @@ options:
 
     Turn `ON`/`OFF` the build of an *Intel MKL* custom library instead of
     searching for the *MKL* directly. This is necessary if you plan to switch
-    between single and multithreaded *MKL* in your application. Turning this
+    between single and multi-threaded *MKL* in your application. Turning this
     option on requires to have the `MKLROOT` environment variable set properly
     and an *MKL* version >=11.1. The default is `OFF`.
 
@@ -182,7 +182,7 @@ options:
     `RTLD_NODELETE` flag in its `dlopen` call, setting this option to `ON` can
     be helpful.
 
-The `PROFILE=ON/OFF` option was removed from version 1.1.0 onwards. Beginning
+The `PROFILE=ON/OFF` option was removed from version 1.1.0 onward. Beginning
 with version 3.0.0 profiling is done using a hook functionality and is not
 longer compiled in **FlexiBLAS** directly. See the Profiling section for
 details.
@@ -228,7 +228,7 @@ By default, **FlexiBLAS** tries to locate as many *BLAS* and *LAPACK*
 installations as possible on your system. If you want to add our own ones to the
 default setup you can pass the `-DEXTRA` option to *cmake*. It specifies a
 semicolon separated list of additional *BLAS* names that should be added. For
-each addtional library name `name` in the list, a path needs to be specified via
+each additional library name `name` in the list, a path needs to be specified via
 `-Dname_LIBRARY=PATH_TO_NAME`. If special linker flags are required the option
 `-Dname_LINKER_FLAGS="FLAGS"` can be passed to *cmake*. For example, if a custom
 build *OpenBLAS-0.3.4* and *OpenBLAS-0.3.10* should be included, the following
@@ -239,7 +239,7 @@ options have to be added to cmake:
     -DOpenBLAS0310_LIBRARY="/home/user/openblas-0.3.10/libopenblas.a;gomp;pthread;"
 ```
 
-### Setup on *Debian* and Derivates
+### Setup on *Debian* and Derivatives
 
 The easiest way is to build a *Debian* package out of the source and install it.
 At the moment we support the package creation on *Ubuntu 20.04* and *Debian 11*
@@ -282,7 +282,7 @@ dnf install flexiblas
 This installs most likely one of the latest FlexiBLAS releases.
 
 Thanks Iñaki Ucar (https://src.fedoraproject.org/user/iucar) for packaging and
-mainting the Fedora integration.
+maintaining the Fedora integration.
 
 
 ### Caveats
@@ -481,13 +481,13 @@ Other libraries are not necessary.
     useful if a backend is not loaded correctly, or when log files should
     contain the actual *BLAS* backend used in a certain run of the user
     application, e.g., because several implementations are compared for
-    benchmarking purposes. If the variable is not set, it is assumed to be `0`
+    benchmark purposes. If the variable is not set, it is assumed to be `0`
     and the additional output is turned off.
 
 * `FLEXIBLAS_NOLAPACK=0/1`
 
     If set to one, **FlexiBLAS** does not load *LAPACK* from the backends. Only
-    the interal fallback is used. In this way a detailed profiling and logging
+    the internal fallback is used. In this way a detailed profiling and logging
     is possible. The default value is `0`.
 
 * `FLEXIBLAS_COLOR_OUTPUT=0/1`
@@ -596,7 +596,7 @@ The whole library is provided under the conditions of the *GPLv3* and later with
 a linking exception according to section 7 of the GNU General Public License,
 version 3 ("GPLv3"). This exception, written in COPYING.ADDITIONAL, is valid
 for all files in the src/ directory. It allows to link FlexiBLAS against all
-software, opensource or proprietary, without violating the GPL license as long
+software, open source or proprietary, without violating the GPL license as long
 as only the BLAS/LAPACK interface of the reference implementation is used.
 The testing code ( contained in `test/` ) and the *Reference Implementation*
 implementation (contained in `contributed/`) are covered by the

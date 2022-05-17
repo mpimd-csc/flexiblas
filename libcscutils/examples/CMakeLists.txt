@@ -1,6 +1,4 @@
 SET(SRC
-    demo_inifile
-    demo_io
     demo_table
     demo_sysinfo
     )
@@ -8,11 +6,17 @@ SET(FSRC
     demo_table_fortran
 )
 
+IF(INIFILE_ENABLE)
+    SET(SRC ${SRC} demo_inifile)
+ENDIF()
+
+IF(IO_ENABLE)
+    SET(SRC ${SRC} demo_io)
+ENDIF()
+
 IF(LUA_ENABLE)
     SET(SRC ${SRC} demo_lua)
     SET(FSRC ${FSRC} demo_lua_f)
-
-
 ENDIF()
 
 IF(HDF5_ENABLE)
@@ -38,7 +42,9 @@ IF(THREADING_ENABLE)
         demo_background_worker)
 ENDIF()
 
-INCLUDE(${PROJECT_SOURCE_DIR}/src/lua/LuaInterface.cmake)
+IF(LUA_ENABLE)
+    INCLUDE(${PROJECT_SOURCE_DIR}/src/lua/LuaInterface.cmake)
+ENDIF()
 
 INCLUDE_DIRECTORIES(${PROJECT_BINARY_DIR}/include)
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include)
@@ -54,5 +60,6 @@ IF (CMAKE_Fortran_COMPILER_LOADED)
     ENDFOREACH()
 ENDIF()
 
-CSC_LUA_ADD_INLINE_CODE(demo_lua ${CMAKE_CURRENT_SOURCE_DIR}/demo_lua_incode.lua VARNAME incode FUNCTIONNAME incode_func)
-
+IF(LUA_ENABLE)
+    CSC_LUA_ADD_INLINE_CODE(demo_lua ${CMAKE_CURRENT_SOURCE_DIR}/demo_lua_incode.lua VARNAME incode FUNCTIONNAME incode_func)
+ENDIF()

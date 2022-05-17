@@ -49,11 +49,11 @@
 
 static TLS_STORE uint8_t hook_cblas_daxpy_pos = 0;
 
-void cblas_daxpy( const int N, const double alpha, const double *X,
-        const int incX, double *Y, const int incY)
+void cblas_daxpy( const CBLAS_INT N, const double alpha, const double *X,
+        const CBLAS_INT incX, double *Y, const CBLAS_INT incY)
 {
 
-    void (*fn)  ( const int N, const double alpha, const double *X, const int incX, double *Y, const int incY);
+    void (*fn)  ( const CBLAS_INT N, const double alpha, const double *X, const CBLAS_INT incX, double *Y, const CBLAS_INT incY);
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(daxpy);
 
@@ -61,10 +61,10 @@ void cblas_daxpy( const int N, const double alpha, const double *X,
 }
 
 
-void flexiblas_real_cblas_daxpy( const int N, const double alpha, const double *X, const int incX, double *Y, const int incY)
+void flexiblas_real_cblas_daxpy( const CBLAS_INT N, const double alpha, const double *X, const CBLAS_INT incX, double *Y, const CBLAS_INT incY)
 {
     if ( current_backend->blas.daxpy.cblas_function != NULL ) {
-        void (*fn)  ( const int N, const double alpha, const double *X, const int incX, double *Y, const int incY);
+        void (*fn)  ( const CBLAS_INT N, const double alpha, const double *X, const CBLAS_INT incX, double *Y, const CBLAS_INT incY);
         fn = current_backend->blas.daxpy.cblas_function;
         fn(N,alpha,X,incX,Y,incY);
     } else {
@@ -73,9 +73,9 @@ void flexiblas_real_cblas_daxpy( const int N, const double alpha, const double *
     }
 }
 
-void flexiblas_chain_cblas_daxpy( const int N, const double alpha, const double *X, const int incX, double *Y, const int incY)
+void flexiblas_chain_cblas_daxpy( const CBLAS_INT N, const double alpha, const double *X, const CBLAS_INT incX, double *Y, const CBLAS_INT incY)
 {
-    void (*fn)  ( const int N, const double alpha, const double *X, const int incX, double *Y, const int incY);
+    void (*fn)  ( const CBLAS_INT N, const double alpha, const double *X, const CBLAS_INT incX, double *Y, const CBLAS_INT incY);
     CBLAS_HOOK_ADVANCE(daxpy);
     fn(N,alpha,X,incX,Y,incY);
 }

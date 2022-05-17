@@ -146,7 +146,7 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
 		    	filepath = malloc(len * sizeof ( char ));
 			    snprintf(filepath, len -1, "%s/%s", path, libname);
             }
-			DPRINTF(1, "Check if shared libary exist: %s\n", filepath);
+			DPRINTF(1, "Check if shared library exist: %s\n", filepath);
             if ( file_exists(filepath) ){
 				found = 1;
 				break;
@@ -182,7 +182,7 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
 		} else {
 			filepath = strdup(resolvepath);
 			free(resolvepath);
-			/* DPRINTF_ERROR(2, "Filepath: %s\n",filepath ); */
+			/* DPRINTF_ERROR(2, "File path: %s\n",filepath ); */
 		}
 		if (file_exists(filepath) ) {
 			found = 1;
@@ -320,7 +320,7 @@ HIDDEN int __flexiblas_dl_symbol_exist( const char *libname, const char *symbol_
 		    	filepath = malloc(len * sizeof ( char ));
 			    snprintf(filepath, len -1, "%s/%s", path, libname);
             }
-			DPRINTF(1, "Check if shared libary exist: %s\n", filepath);
+			DPRINTF(1, "Check if shared library exist: %s\n", filepath);
             if ( file_exists(filepath) ){
 				found = 1;
 				break;

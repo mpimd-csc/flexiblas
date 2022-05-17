@@ -52,26 +52,26 @@
 
 static TLS_STORE uint8_t hook_cblas_srot_pos = 0;
 
-void flexiblas_chain_cblas_srot(const int N, float *X, const int incX, float *Y, const int incY, const float c, const float s)
+void flexiblas_chain_cblas_srot(const CBLAS_INT N, float *X, const CBLAS_INT incX, float *Y, const CBLAS_INT incY, const float c, const float s)
 {
-    void (*fn)(const int N, float *X, const int incX,
-            float *Y, const int incY, const float c, const float s);
+    void (*fn)(const CBLAS_INT N, float *X, const CBLAS_INT incX,
+            float *Y, const CBLAS_INT incY, const float c, const float s);
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(srot);
     fn(N,X,incX,Y,incY,c,s);
 
 }
 
-void flexiblas_real_cblas_srot(const int N, float *X, const int incX, float *Y, const int incY, const float c, const float s)
+void flexiblas_real_cblas_srot(const CBLAS_INT N, float *X, const CBLAS_INT incX, float *Y, const CBLAS_INT incY, const float c, const float s)
 {
-    void (*fn)(const int N, float *X, const int incX,
-            float *Y, const int incY, const float c, const float s);
+    void (*fn)(const CBLAS_INT N, float *X, const CBLAS_INT incX,
+            float *Y, const CBLAS_INT incY, const float c, const float s);
     CBLAS_HOOK_ADVANCE(srot);
     fn(N,X,incX,Y,incY,c,s);
 }
 
-void cblas_srot(const int N, float *X, const int incX,
-        float *Y, const int incY, const float c, const float s)
+void cblas_srot(const CBLAS_INT N, float *X, const CBLAS_INT incX,
+        float *Y, const CBLAS_INT incY, const float c, const float s)
 {
 #ifdef F77_INT
     F77_INT F77_N=N, F77_incX=incX, F77_incY=incY;
@@ -81,8 +81,8 @@ void cblas_srot(const int N, float *X, const int incX,
 #define F77_incY incY
 #endif
     if ( current_backend->blas.srot.cblas_function != NULL ) {
-        void (*fn)(const int N, float *X, const int incX,
-                float *Y, const int incY, const float c, const float s)
+        void (*fn)(const CBLAS_INT N, float *X, const CBLAS_INT incX,
+                float *Y, const CBLAS_INT incY, const float c, const float s)
             = current_backend->blas.srot.cblas_function;
         fn(N,X,incX,Y,incY,c,s);
     } else {

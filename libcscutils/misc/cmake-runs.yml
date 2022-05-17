@@ -1,0 +1,323 @@
+cmake-version-3-5:
+        stage: build
+        image: docker-registry.csc.mpi-magdeburg.mpg.de:5000/software/libcscutils/cmake-focal:3.5
+        script:
+                - bash ./misc/ci/test-cmake.sh
+
+build-cmake-3-5:
+    stage: build
+    when: manual
+    allow_failure: true
+    tags:
+        - docker-builder
+    script:
+        - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+        - cd misc/docker
+        - bash builder.sh 3.5.2
+
+cmake-version-3-6:
+        stage: build
+        image: docker-registry.csc.mpi-magdeburg.mpg.de:5000/software/libcscutils/cmake-focal:3.6
+        script:
+                - bash ./misc/ci/test-cmake.sh
+
+build-cmake-3-6:
+    stage: build
+    when: manual
+    allow_failure: true
+    tags:
+        - docker-builder
+    script:
+        - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+        - cd misc/docker
+        - bash builder.sh 3.6.3
+
+cmake-version-3-7:
+        stage: build
+        image: docker-registry.csc.mpi-magdeburg.mpg.de:5000/software/libcscutils/cmake-focal:3.7
+        script:
+                - bash ./misc/ci/test-cmake.sh
+
+build-cmake-3-7:
+    stage: build
+    when: manual
+    allow_failure: true
+    tags:
+        - docker-builder
+    script:
+        - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+        - cd misc/docker
+        - bash builder.sh 3.7.2
+
+cmake-version-3-8:
+        stage: build
+        image: docker-registry.csc.mpi-magdeburg.mpg.de:5000/software/libcscutils/cmake-focal:3.8
+        script:
+                - bash ./misc/ci/test-cmake.sh
+
+build-cmake-3-8:
+    stage: build
+    when: manual
+    allow_failure: true
+    tags:
+        - docker-builder
+    script:
+        - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+        - cd misc/docker
+        - bash builder.sh 3.8.2
+
+cmake-version-3-9:
+        stage: build
+        image: docker-registry.csc.mpi-magdeburg.mpg.de:5000/software/libcscutils/cmake-focal:3.9
+        script:
+                - bash ./misc/ci/test-cmake.sh
+
+build-cmake-3-9:
+    stage: build
+    when: manual
+    allow_failure: true
+    tags:
+        - docker-builder
+    script:
+        - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+        - cd misc/docker
+        - bash builder.sh 3.9.6
+
+cmake-version-3-10:
+        stage: build
+        image: docker-registry.csc.mpi-magdeburg.mpg.de:5000/software/libcscutils/cmake-focal:3.10
+        script:
+                - bash ./misc/ci/test-cmake.sh
+
+build-cmake-3-10:
+    stage: build
+    when: manual
+    allow_failure: true
+    tags:
+        - docker-builder
+    script:
+        - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+        - cd misc/docker
+        - bash builder.sh 3.10.3
+
+cmake-version-3-11:
+        stage: build
+        image: docker-registry.csc.mpi-magdeburg.mpg.de:5000/software/libcscutils/cmake-focal:3.11
+        script:
+                - bash ./misc/ci/test-cmake.sh
+
+build-cmake-3-11:
+    stage: build
+    when: manual
+    allow_failure: true
+    tags:
+        - docker-builder
+    script:
+        - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+        - cd misc/docker
+        - bash builder.sh 3.11.4
+
+cmake-version-3-12:
+        stage: build
+        image: docker-registry.csc.mpi-magdeburg.mpg.de:5000/software/libcscutils/cmake-focal:3.12
+        script:
+                - bash ./misc/ci/test-cmake.sh
+
+build-cmake-3-12:
+    stage: build
+    when: manual
+    allow_failure: true
+    tags:
+        - docker-builder
+    script:
+        - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+        - cd misc/docker
+        - bash builder.sh 3.12.4
+
+cmake-version-3-13:
+        stage: build
+        image: docker-registry.csc.mpi-magdeburg.mpg.de:5000/software/libcscutils/cmake-focal:3.13
+        script:
+                - bash ./misc/ci/test-cmake.sh
+
+build-cmake-3-13:
+    stage: build
+    when: manual
+    allow_failure: true
+    tags:
+        - docker-builder
+    script:
+        - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+        - cd misc/docker
+        - bash builder.sh 3.13.5
+
+cmake-version-3-14:
+        stage: build
+        image: docker-registry.csc.mpi-magdeburg.mpg.de:5000/software/libcscutils/cmake-focal:3.14
+        script:
+                - bash ./misc/ci/test-cmake.sh
+
+build-cmake-3-14:
+    stage: build
+    when: manual
+    allow_failure: true
+    tags:
+        - docker-builder
+    script:
+        - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+        - cd misc/docker
+        - bash builder.sh 3.14.7
+
+cmake-version-3-15:
+        stage: build
+        image: docker-registry.csc.mpi-magdeburg.mpg.de:5000/software/libcscutils/cmake-focal:3.15
+        script:
+                - bash ./misc/ci/test-cmake.sh
+
+build-cmake-3-15:
+    stage: build
+    when: manual
+    allow_failure: true
+    tags:
+        - docker-builder
+    script:
+        - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+        - cd misc/docker
+        - bash builder.sh 3.15.7
+
+cmake-version-3-16:
+        stage: build
+        image: docker-registry.csc.mpi-magdeburg.mpg.de:5000/software/libcscutils/cmake-focal:3.16
+        script:
+                - bash ./misc/ci/test-cmake.sh
+
+build-cmake-3-16:
+    stage: build
+    when: manual
+    allow_failure: true
+    tags:
+        - docker-builder
+    script:
+        - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+        - cd misc/docker
+        - bash builder.sh 3.16.5
+
+cmake-version-3-17:
+        stage: build
+        image: docker-registry.csc.mpi-magdeburg.mpg.de:5000/software/libcscutils/cmake-focal:3.17
+        script:
+                - bash ./misc/ci/test-cmake.sh
+
+build-cmake-3-17:
+    stage: build
+    when: manual
+    allow_failure: true
+    tags:
+        - docker-builder
+    script:
+        - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+        - cd misc/docker
+        - bash builder.sh 3.17.5
+
+cmake-version-3-18:
+        stage: build
+        image: docker-registry.csc.mpi-magdeburg.mpg.de:5000/software/libcscutils/cmake-focal:3.18
+        script:
+                - bash ./misc/ci/test-cmake.sh
+
+build-cmake-3-18:
+    stage: build
+    when: manual
+    allow_failure: true
+    tags:
+        - docker-builder
+    script:
+        - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+        - cd misc/docker
+        - bash builder.sh 3.18.6
+
+cmake-version-3-19:
+        stage: build
+        image: docker-registry.csc.mpi-magdeburg.mpg.de:5000/software/libcscutils/cmake-focal:3.19
+        script:
+                - bash ./misc/ci/test-cmake.sh
+
+build-cmake-3-19:
+    stage: build
+    when: manual
+    allow_failure: true
+    tags:
+        - docker-builder
+    script:
+        - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+        - cd misc/docker
+        - bash builder.sh 3.19.8
+
+cmake-version-3-20:
+        stage: build
+        image: docker-registry.csc.mpi-magdeburg.mpg.de:5000/software/libcscutils/cmake-focal:3.20
+        script:
+                - bash ./misc/ci/test-cmake.sh
+
+build-cmake-3-20:
+    stage: build
+    when: manual
+    allow_failure: true
+    tags:
+        - docker-builder
+    script:
+        - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+        - cd misc/docker
+        - bash builder.sh 3.20.6
+
+cmake-version-3-21:
+        stage: build
+        image: docker-registry.csc.mpi-magdeburg.mpg.de:5000/software/libcscutils/cmake-focal:3.21
+        script:
+                - bash ./misc/ci/test-cmake.sh
+
+build-cmake-3-21:
+    stage: build
+    when: manual
+    allow_failure: true
+    tags:
+        - docker-builder
+    script:
+        - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+        - cd misc/docker
+        - bash builder.sh 3.21.6
+
+cmake-version-3-22:
+        stage: build
+        image: docker-registry.csc.mpi-magdeburg.mpg.de:5000/software/libcscutils/cmake-focal:3.22
+        script:
+                - bash ./misc/ci/test-cmake.sh
+
+build-cmake-3-22:
+    stage: build
+    when: manual
+    allow_failure: true
+    tags:
+        - docker-builder
+    script:
+        - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+        - cd misc/docker
+        - bash builder.sh 3.22.4
+
+cmake-version-3-23:
+        stage: build
+        image: docker-registry.csc.mpi-magdeburg.mpg.de:5000/software/libcscutils/cmake-focal:3.23
+        script:
+                - bash ./misc/ci/test-cmake.sh
+
+build-cmake-3-23:
+    stage: build
+    when: manual
+    allow_failure: true
+    tags:
+        - docker-builder
+    script:
+        - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+        - cd misc/docker
+        - bash builder.sh 3.23.1
+

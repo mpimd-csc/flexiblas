@@ -16,12 +16,16 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  *
  */
-#if defined(__FreeBSD__) 
+#if defined(__FreeBSD__)
 #ifndef _BSD_SOURCE
-#define _BSD_SOURCE 
+#define _BSD_SOURCE
 #define _BSD_VISIBLE 1
-#endif 
-#endif 
+#endif
+#endif
+
+#if defined(_WIN32) || defined(_WIN64)
+#include <windows.h>
+#endif
 
 
 #include <stdio.h>
@@ -66,6 +70,10 @@ unsigned int csc_sysinfo_cpu_count()
     return ret + 1;
 #elif defined(__FreeBSD__)
     return sysconf(_SC_NPROCESSORS_CONF);
+#elif defined(_WIN32) || defined(_WIN64)
+    SYSTEM_INFO sysinfo;
+    GetSystemInfo(&sysinfo);
+    return sysinfo.dwNumberOfProcessors;
 #else
 #warning Not implemented yet
     return 1;

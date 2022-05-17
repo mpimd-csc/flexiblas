@@ -51,29 +51,29 @@
 
 static TLS_STORE uint8_t hook_cblas_dscal_pos = 0;
 
-void cblas_dscal( const int N, const double alpha, double *X, const int incX)
+void cblas_dscal( const CBLAS_INT N, const double alpha, double *X, const CBLAS_INT incX)
 {
 	   void (*fn)
-		 ( const int N, const double alpha, double *X,
-                       const int incX) ;
+		 ( const CBLAS_INT N, const double alpha, double *X,
+                       const CBLAS_INT incX) ;
         CBLAS_BACKEND_INIT();
         CBLAS_HOOK_SELECT(dscal);
 	   fn(N,alpha,X,incX);
 
 }
 
-void flexiblas_chain_cblas_dscal( const int N, const double alpha, double *X, const int incX)
+void flexiblas_chain_cblas_dscal( const CBLAS_INT N, const double alpha, double *X, const CBLAS_INT incX)
 {
 	   void (*fn)
-		 ( const int N, const double alpha, double *X,
-                       const int incX);
+		 ( const CBLAS_INT N, const double alpha, double *X,
+                       const CBLAS_INT incX);
 
 	   CBLAS_HOOK_ADVANCE(dscal);
        fn(N,alpha,X,incX);
 
 }
 
-void flexiblas_real_cblas_dscal( const int N, const double alpha, double *X, const int incX)
+void flexiblas_real_cblas_dscal( const CBLAS_INT N, const double alpha, double *X, const CBLAS_INT incX)
 {
 #ifdef F77_INT
    F77_INT F77_N=N, F77_incX=incX;
@@ -84,8 +84,8 @@ void flexiblas_real_cblas_dscal( const int N, const double alpha, double *X, con
 
    if ( current_backend->blas.dscal.cblas_function != NULL ) {
 	   void (*fn)
-		 ( const int N, const double alpha, double *X,
-                       const int incX)
+		 ( const CBLAS_INT N, const double alpha, double *X,
+                       const CBLAS_INT incX)
 		   = current_backend->blas.dscal.cblas_function;
 	   fn(N,alpha,X,incX);
    } else {

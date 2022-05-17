@@ -54,14 +54,14 @@ static TLS_STORE uint8_t hook_cblas_dtbsv_pos = 0;
 
 void cblas_dtbsv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
         const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
-        const int N, const int K, const double  *A, const int lda,
-        double  *X, const int incX)
+        const CBLAS_INT N, const CBLAS_INT K, const double  *A, const CBLAS_INT lda,
+        double  *X, const CBLAS_INT incX)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
          const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
-         const int N, const int K, const double  *A, const int lda,
-         double  *X, const int incX);
+         const CBLAS_INT N, const CBLAS_INT K, const double  *A, const CBLAS_INT lda,
+         double  *X, const CBLAS_INT incX);
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(dtbsv);
     fn(layout,Uplo,TransA,Diag,N,K,A,lda,X,incX);
@@ -70,14 +70,14 @@ void cblas_dtbsv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
 
 void flexiblas_chain_cblas_dtbsv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
         const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
-        const int N, const int K, const double  *A, const int lda,
-        double  *X, const int incX)
+        const CBLAS_INT N, const CBLAS_INT K, const double  *A, const CBLAS_INT lda,
+        double  *X, const CBLAS_INT incX)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
          const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
-         const int N, const int K, const double  *A, const int lda,
-         double  *X, const int incX);
+         const CBLAS_INT N, const CBLAS_INT K, const double  *A, const CBLAS_INT lda,
+         double  *X, const CBLAS_INT incX);
     CBLAS_HOOK_ADVANCE(dtbsv);
     fn(layout,Uplo,TransA,Diag,N,K,A,lda,X,incX);
 
@@ -85,8 +85,8 @@ void flexiblas_chain_cblas_dtbsv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Upl
 
 void flexiblas_real_cblas_dtbsv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
         const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
-        const int N, const int K, const double  *A, const int lda,
-        double  *X, const int incX)
+        const CBLAS_INT N, const CBLAS_INT K, const double  *A, const CBLAS_INT lda,
+        double  *X, const CBLAS_INT incX)
 {
     char TA;
     char UL;
@@ -106,8 +106,8 @@ void flexiblas_real_cblas_dtbsv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
              const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
-             const int N, const int K, const double  *A, const int lda,
-             double  *X, const int incX)
+             const CBLAS_INT N, const CBLAS_INT K, const double  *A, const CBLAS_INT lda,
+             double  *X, const CBLAS_INT incX)
             = current_backend->blas.dtbsv.cblas_function;
         fn(layout,Uplo,TransA,Diag,N,K,A,lda,X,incX);
     } else {

@@ -52,26 +52,26 @@
 
 static TLS_STORE uint8_t hook_cblas_drot_pos = 0;
 
-void flexiblas_chain_cblas_drot(const int N, double *X, const int incX, double *Y, const int incY, const double c, const double s)
+void flexiblas_chain_cblas_drot(const CBLAS_INT N, double *X, const CBLAS_INT incX, double *Y, const CBLAS_INT incY, const double c, const double s)
 {
-    void (*fn)(const int N, double *X, const int incX,
-            double *Y, const int incY, const double c, const double s);
+    void (*fn)(const CBLAS_INT N, double *X, const CBLAS_INT incX,
+            double *Y, const CBLAS_INT incY, const double c, const double s);
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(drot);
     fn(N,X,incX,Y,incY,c,s);
 
 }
 
-void flexiblas_real_cblas_drot(const int N, double *X, const int incX, double *Y, const int incY, const double c, const double s)
+void flexiblas_real_cblas_drot(const CBLAS_INT N, double *X, const CBLAS_INT incX, double *Y, const CBLAS_INT incY, const double c, const double s)
 {
-    void (*fn)(const int N, double *X, const int incX,
-            double *Y, const int incY, const double c, const double s);
+    void (*fn)(const CBLAS_INT N, double *X, const CBLAS_INT incX,
+            double *Y, const CBLAS_INT incY, const double c, const double s);
     CBLAS_HOOK_ADVANCE(drot);
     fn(N,X,incX,Y,incY,c,s);
 }
 
-void cblas_drot(const int N, double *X, const int incX,
-        double *Y, const int incY, const double c, const double s)
+void cblas_drot(const CBLAS_INT N, double *X, const CBLAS_INT incX,
+        double *Y, const CBLAS_INT incY, const double c, const double s)
 {
 #ifdef F77_INT
     F77_INT F77_N=N, F77_incX=incX, F77_incY=incY;
@@ -81,8 +81,8 @@ void cblas_drot(const int N, double *X, const int incX,
 #define F77_incY incY
 #endif
     if ( current_backend->blas.drot.cblas_function != NULL ) {
-        void (*fn)(const int N, double *X, const int incX,
-                double *Y, const int incY, const double c, const double s)
+        void (*fn)(const CBLAS_INT N, double *X, const CBLAS_INT incX,
+                double *Y, const CBLAS_INT incY, const double c, const double s)
             = current_backend->blas.drot.cblas_function;
         fn(N,X,incX,Y,incY,c,s);
     } else {

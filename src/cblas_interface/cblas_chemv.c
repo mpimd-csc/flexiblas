@@ -52,17 +52,17 @@
 static TLS_STORE uint8_t hook_cblas_chemv_pos = 0;
 
 void cblas_chemv(const CBLAS_LAYOUT layout,
-        const CBLAS_UPLO Uplo, const int N,
-        const void *alpha, const void *A, const int lda,
-        const void *X, const int incX, const void *beta,
-        void  *Y, const int incY)
+        const CBLAS_UPLO Uplo, const CBLAS_INT N,
+        const void *alpha, const void *A, const CBLAS_INT lda,
+        const void *X, const CBLAS_INT incX, const void *beta,
+        void  *Y, const CBLAS_INT incY)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout,
-         const CBLAS_UPLO Uplo, const int N,
-         const void *alpha, const void *A, const int lda,
-         const void *X, const int incX, const void *beta,
-         void  *Y, const int incY);
+         const CBLAS_UPLO Uplo, const CBLAS_INT N,
+         const void *alpha, const void *A, const CBLAS_INT lda,
+         const void *X, const CBLAS_INT incX, const void *beta,
+         void  *Y, const CBLAS_INT incY);
 
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(chemv);
@@ -72,17 +72,17 @@ void cblas_chemv(const CBLAS_LAYOUT layout,
 }
 
 void flexiblas_chain_cblas_chemv(const CBLAS_LAYOUT layout,
-        const CBLAS_UPLO Uplo, const int N,
-        const void *alpha, const void *A, const int lda,
-        const void *X, const int incX, const void *beta,
-        void  *Y, const int incY)
+        const CBLAS_UPLO Uplo, const CBLAS_INT N,
+        const void *alpha, const void *A, const CBLAS_INT lda,
+        const void *X, const CBLAS_INT incX, const void *beta,
+        void  *Y, const CBLAS_INT incY)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout,
-         const CBLAS_UPLO Uplo, const int N,
-         const void *alpha, const void *A, const int lda,
-         const void *X, const int incX, const void *beta,
-         void  *Y, const int incY);
+         const CBLAS_UPLO Uplo, const CBLAS_INT N,
+         const void *alpha, const void *A, const CBLAS_INT lda,
+         const void *X, const CBLAS_INT incX, const void *beta,
+         void  *Y, const CBLAS_INT incY);
     CBLAS_HOOK_ADVANCE(chemv);
     fn(layout,Uplo,N,alpha,A,lda,X,incX,beta,Y,incY);
 
@@ -90,10 +90,10 @@ void flexiblas_chain_cblas_chemv(const CBLAS_LAYOUT layout,
 }
 
 void flexiblas_real_cblas_chemv(const CBLAS_LAYOUT layout,
-        const CBLAS_UPLO Uplo, const int N,
-        const void *alpha, const void *A, const int lda,
-        const void *X, const int incX, const void *beta,
-        void  *Y, const int incY)
+        const CBLAS_UPLO Uplo, const CBLAS_INT N,
+        const void *alpha, const void *A, const CBLAS_INT lda,
+        const void *X, const CBLAS_INT incX, const void *beta,
+        void  *Y, const CBLAS_INT incY)
 {
     char UL;
 #define F77_UL &UL
@@ -109,23 +109,23 @@ void flexiblas_real_cblas_chemv(const CBLAS_LAYOUT layout,
     if ( current_backend->blas.chemv.cblas_function != NULL ) {
         void (*fn)
             (const CBLAS_LAYOUT layout,
-             const CBLAS_UPLO Uplo, const int N,
-             const void *alpha, const void *A, const int lda,
-             const void *X, const int incX, const void *beta,
-             void  *Y, const int incY)
+             const CBLAS_UPLO Uplo, const CBLAS_INT N,
+             const void *alpha, const void *A, const CBLAS_INT lda,
+             const void *X, const CBLAS_INT incX, const void *beta,
+             void  *Y, const CBLAS_INT incY)
             = current_backend->blas.chemv.cblas_function;
         fn(layout,Uplo,N,alpha,A,lda,X,incX,beta,Y,incY);
     } else {
-        int n=0, i=0;
+        CBLAS_INT n=0, i=0;
 #ifdef F77_INT
         F77_INT _incX = incX;
 #else
-        int _incX = incX;
+        CBLAS_INT _incX = incX;
 #endif
         const float *alp= (const float *)alpha, *bet = (const float *)beta;
         float *xx;
         float ALPHA[2],BETA[2];
-        int tincY, tincx;
+        CBLAS_INT tincY, tincx;
         float *x, *y=(float *)Y, *st=0, *tx;
         extern int CBLAS_CallFromC;
         extern int RowMajorStrg;

@@ -394,6 +394,7 @@ MODULE CSC_HDF5
     INTERFACE CSC_HDF5_WRITE_MATRIX
         MODULE PROCEDURE CSC_HDF5_WRITE_DOUBLE_MATRIX_RANK2
         MODULE PROCEDURE CSC_HDF5_WRITE_DOUBLE_MATRIX_RANK1
+        MODULE PROCEDURE CSC_HDF5_WRITE_DOUBLE_MATRIX_RANK0
         MODULE PROCEDURE CSC_HDF5_WRITE_FLOAT_MATRIX_RANK2
         MODULE PROCEDURE CSC_HDF5_WRITE_FLOAT_MATRIX_RANK1
         MODULE PROCEDURE CSC_HDF5_WRITE_DOUBLE_COMPLEX_MATRIX_RANK2
@@ -454,7 +455,7 @@ CONTAINS
         INFO = 0
         RET = CSC_HDF5_WRITE_DOUBLE_VECTOR_F(ROOT, DNAME//C_NULL_CHAR, LROW, APTR, COMP)
         IF ( RET .NE. 0 ) THEN
-            WRITE(*,*) "Failed to write vector to ", ROOT
+            WRITE(*,*) "Failed to write ", DNAME , " vector to ", ROOT
             INFO = 1
         END IF
         RETURN
@@ -482,7 +483,7 @@ CONTAINS
         INFO = 0
         RET = CSC_HDF5_WRITE_FLOAT_VECTOR_F(ROOT, DNAME//C_NULL_CHAR, LROW, APTR, COMP )
         IF ( RET .NE. 0 ) THEN
-            WRITE(*,*) "Failed to write vector to ", ROOT
+            WRITE(*,*) "Failed to write ", DNAME, " vector to ", ROOT
             INFO = 1
         END IF
         RETURN
@@ -509,7 +510,7 @@ CONTAINS
         INFO = 0
         RET = CSC_HDF5_WRITE_DOUBLE_COMPLEX_VECTOR_F(ROOT, DNAME//C_NULL_CHAR, LROW, APTR, COMP )
         IF ( RET .NE. 0 ) THEN
-            WRITE(*,*) "Failed to write vector to ", ROOT
+            WRITE(*,*) "Failed to write ", DNAME, " vector to ", ROOT
             INFO = 1
         END IF
         RETURN
@@ -536,7 +537,7 @@ CONTAINS
         INFO = 0
         RET = CSC_HDF5_WRITE_FLOAT_COMPLEX_VECTOR_F(ROOT, DNAME//C_NULL_CHAR, LROW, APTR, COMP )
         IF ( RET .NE. 0 ) THEN
-            WRITE(*,*) "Failed to write vector to ", ROOT
+            WRITE(*,*) "Failed to write ", DNAME," vector to ", ROOT
             INFO = 1
         END IF
         RETURN
@@ -561,7 +562,7 @@ CONTAINS
         INFO = 0
         RET = CSC_HDF5_READ_DOUBLE_VECTOR_F(ROOT, DNAME//C_NULL_CHAR, LROW, APTR )
         IF ( RET .NE. 0 ) THEN
-            WRITE(*,*) "Failed to read vector to ", ROOT
+            WRITE(*,*) "Failed to read ", DNAME, " vector to ", ROOT
             INFO = 1
         END IF
         RETURN
@@ -586,7 +587,7 @@ CONTAINS
         INFO = 0
         RET = CSC_HDF5_READ_FLOAT_VECTOR_F(ROOT, DNAME//C_NULL_CHAR, LROW, APTR )
         IF ( RET .NE. 0 ) THEN
-            WRITE(*,*) "Failed to read vector to ", ROOT
+            WRITE(*,*) "Failed to read ", DNAME, " vector to ", ROOT
             INFO = 1
         END IF
         RETURN
@@ -611,7 +612,7 @@ CONTAINS
         INFO = 0
         RET = CSC_HDF5_READ_DOUBLE_COMPLEX_VECTOR_F(ROOT, DNAME//C_NULL_CHAR, LROW, APTR )
         IF ( RET .NE. 0 ) THEN
-            WRITE(*,*) "Failed to read vector to ", ROOT
+            WRITE(*,*) "Failed to read ", DNAME, " vector to ", ROOT
             INFO = 1
         END IF
         RETURN
@@ -636,7 +637,7 @@ CONTAINS
         INFO = 0
         RET = CSC_HDF5_READ_FLOAT_COMPLEX_VECTOR_F(ROOT, DNAME//C_NULL_CHAR, LROW, APTR )
         IF ( RET .NE. 0 ) THEN
-            WRITE(*,*) "Failed to read vector to ", ROOT
+            WRITE(*,*) "Failed to read ", DNAME, " vector to ", ROOT
             INFO = 1
         END IF
         RETURN
@@ -668,7 +669,7 @@ CONTAINS
         INFO = 0
         RET = CSC_HDF5_READ_DOUBLE_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA )
         IF ( RET .NE. 0 ) THEN
-            WRITE(*,*) "Failed to write matrix to ", ROOT
+            WRITE(*,*) "Failed to write ", DNAME, " matrix to ", ROOT
             INFO = 1
         END IF
         RETURN
@@ -695,7 +696,7 @@ CONTAINS
         INFO = 0
         RET = CSC_HDF5_READ_DOUBLE_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA )
         IF ( RET .NE. 0 ) THEN
-            WRITE(*,*) "Failed to read matrix from ", ROOT
+            WRITE(*,*) "Failed to read ", DNAME, " matrix from ", ROOT
             INFO = 1
         END IF
         RETURN
@@ -722,7 +723,7 @@ CONTAINS
         INFO = 0
         RET = CSC_HDF5_READ_FLOAT_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA )
         IF ( RET .NE. 0 ) THEN
-            WRITE(*,*) "Failed to read matrix from ", ROOT
+            WRITE(*,*) "Failed to read ", DNAME, " matrix from ", ROOT
             INFO = 1
         END IF
         RETURN
@@ -749,7 +750,7 @@ CONTAINS
         INFO = 0
         RET = CSC_HDF5_READ_FLOAT_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA )
         IF ( RET .NE. 0 ) THEN
-            WRITE(*,*) "Failed to read matrix from ", ROOT
+            WRITE(*,*) "Failed to read ", DNAME, " matrix from ", ROOT
             INFO = 1
         END IF
         RETURN
@@ -776,7 +777,7 @@ CONTAINS
         INFO = 0
         RET = CSC_HDF5_READ_DOUBLE_COMPLEX_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA )
         IF ( RET .NE. 0 ) THEN
-            WRITE(*,*) "Failed to read matrix from ", ROOT
+            WRITE(*,*) "Failed to read ", DNAME ," matrix from ", ROOT
             INFO = 1
         END IF
         RETURN
@@ -803,7 +804,7 @@ CONTAINS
         INFO = 0
         RET = CSC_HDF5_READ_DOUBLE_COMPLEX_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA )
         IF ( RET .NE. 0 ) THEN
-            WRITE(*,*) "Failed to read matrix from ", ROOT
+            WRITE(*,*) "Failed to read ", DNAME, " matrix from ", ROOT
             INFO = 1
         END IF
         RETURN
@@ -830,7 +831,7 @@ CONTAINS
         INFO = 0
         RET = CSC_HDF5_READ_FLOAT_COMPLEX_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA )
         IF ( RET .NE. 0 ) THEN
-            WRITE(*,*) "Failed to read matrix from ", ROOT
+            WRITE(*,*) "Failed to read ", DNAME, " matrix from ", ROOT
             INFO = 1
         END IF
         RETURN
@@ -857,7 +858,7 @@ CONTAINS
         INFO = 0
         RET = CSC_HDF5_READ_FLOAT_COMPLEX_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA )
         IF ( RET .NE. 0 ) THEN
-            WRITE(*,*) "Failed to read matrix from ", ROOT
+            WRITE(*,*) "Failed to read ", DNAME, " matrix from ", ROOT
             INFO = 1
         END IF
         RETURN
@@ -870,6 +871,37 @@ CONTAINS
     ! Write Matrices
     !
     !
+    SUBROUTINE CSC_HDF5_WRITE_DOUBLE_MATRIX_RANK0(ROOT, DNAME, ROWS, COLS, A, LDA, INFO)
+        USE, INTRINSIC :: ISO_C_BINDING
+        IMPLICIT NONE
+        INTEGER(CSC_HDF5_T), INTENT(IN)  :: ROOT
+        CHARACTER(LEN=*), INTENT(IN)     :: DNAME
+        INTEGER, INTENT(IN)              :: ROWS, COLS, LDA
+        DOUBLE PRECISION, TARGET, INTENT(IN)     :: A
+        INTEGER, INTENT(OUT)             :: INFO
+
+        INTEGER :: RET
+        INTEGER(C_SIZE_T) :: LROW, LCOL, LLDA
+        INTEGER(C_INT) :: COMP
+        TYPE(C_PTR) :: APTR
+
+        LROW = ROWS
+        LCOL = COLS
+        LLDA = LDA
+        APTR = C_LOC(A)
+        COMP = INT(CSC_HDF5_COMPRESSION, KIND = C_INT)
+
+        INFO = 0
+        RET = CSC_HDF5_WRITE_DOUBLE_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA, COMP )
+        IF ( RET .NE. 0 ) THEN
+            WRITE(*,*) "Failed to write ", DNAME, " matrix to ", ROOT
+            INFO = 1
+        END IF
+        RETURN
+    END SUBROUTINE
+
+
+
     SUBROUTINE CSC_HDF5_WRITE_DOUBLE_MATRIX_RANK1(ROOT, DNAME, ROWS, COLS, A, LDA, INFO)
         USE, INTRINSIC :: ISO_C_BINDING
         IMPLICIT NONE
@@ -893,7 +925,7 @@ CONTAINS
         INFO = 0
         RET = CSC_HDF5_WRITE_DOUBLE_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA, COMP )
         IF ( RET .NE. 0 ) THEN
-            WRITE(*,*) "Failed to write matrix to ", ROOT
+            WRITE(*,*) "Failed to write ", DNAME, " matrix to ", ROOT
             INFO = 1
         END IF
         RETURN
@@ -922,7 +954,7 @@ CONTAINS
         INFO = 0
         RET = CSC_HDF5_WRITE_DOUBLE_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA, COMP )
         IF ( RET .NE. 0 ) THEN
-            WRITE(*,*) "Failed to write matrix to ", ROOT
+            WRITE(*,*) "Failed to write ", DNAME, " matrix to ", ROOT
             INFO = 1
         END IF
         RETURN
@@ -951,7 +983,7 @@ CONTAINS
         INFO = 0
         RET = CSC_HDF5_WRITE_FLOAT_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA, COMP )
         IF ( RET .NE. 0 ) THEN
-            WRITE(*,*) "Failed to write matrix to ", ROOT
+            WRITE(*,*) "Failed to write ", DNAME, " matrix to ", ROOT
             INFO = 1
         END IF
         RETURN
@@ -980,7 +1012,7 @@ CONTAINS
         INFO = 0
         RET = CSC_HDF5_WRITE_FLOAT_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA, COMP )
         IF ( RET .NE. 0 ) THEN
-            WRITE(*,*) "Failed to write matrix to ", ROOT
+            WRITE(*,*) "Failed to write ", DNAME, " matrix to ", ROOT
             INFO = 1
         END IF
         RETURN
@@ -1009,7 +1041,7 @@ CONTAINS
         INFO = 0
         RET = CSC_HDF5_WRITE_DOUBLE_COMPLEX_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA, COMP )
         IF ( RET .NE. 0 ) THEN
-            WRITE(*,*) "Failed to write matrix to ", ROOT
+            WRITE(*,*) "Failed to write ", DNAME, " matrix to ", ROOT
             INFO = 1
         END IF
         RETURN
@@ -1038,7 +1070,7 @@ CONTAINS
         INFO = 0
         RET = CSC_HDF5_WRITE_DOUBLE_COMPLEX_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA, COMP )
         IF ( RET .NE. 0 ) THEN
-            WRITE(*,*) "Failed to write matrix to ", ROOT
+            WRITE(*,*) "Failed to write ", DNAME, " matrix to ", ROOT
             INFO = 1
         END IF
         RETURN
@@ -1067,7 +1099,7 @@ CONTAINS
         INFO = 0
         RET = CSC_HDF5_WRITE_FLOAT_COMPLEX_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA, COMP )
         IF ( RET .NE. 0 ) THEN
-            WRITE(*,*) "Failed to write matrix to ", ROOT
+            WRITE(*,*) "Failed to write ", DNAME, " matrix to ", ROOT
             INFO = 1
         END IF
         RETURN
@@ -1096,7 +1128,7 @@ CONTAINS
         INFO = 0
         RET = CSC_HDF5_WRITE_FLOAT_COMPLEX_MATRIX_F(ROOT, DNAME//C_NULL_CHAR, LROW, LCOL, APTR, LLDA, COMP )
         IF ( RET .NE. 0 ) THEN
-            WRITE(*,*) "Failed to write matrix to ", ROOT
+            WRITE(*,*) "Failed to write ", DNAME, " matrix to ", ROOT
             INFO = 1
         END IF
         RETURN
@@ -1217,7 +1249,7 @@ CONTAINS
         INTEGER, INTENT(IN) :: COMPRESSS_LEVEL
         INTEGER(KIND=C_INT) :: LOCAL_LEVEL
 
-        LOCAL_LEVEL = COMPRESSS_LEVEL
+        LOCAL_LEVEL = INT(COMPRESSS_LEVEL, KIND = C_INT )
 
         CALL CSC_HDF5_SET_COMPRESSION_C(LOCAL_LEVEL)
 
@@ -1389,7 +1421,7 @@ CONTAINS
 
         INTEGER( KIND = C_INT ) :: R
 
-        R = INT(CSC_HDF5_EXISTS_C(ROOT, DNAME // C_NULL_CHAR))
+        R = INT(CSC_HDF5_EXISTS_C(ROOT, DNAME // C_NULL_CHAR), KIND = C_INT )
         IF ( R .NE. 0 ) THEN
             CSC_HDF5_EXISTS_F = .TRUE.
         ELSE

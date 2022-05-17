@@ -53,10 +53,10 @@
 static TLS_STORE uint8_t hook_cblas_dsdot_pos = 0;
 
 
-double cblas_dsdot( const int N, const float *X, const int incX, const float *Y, const int incY)
+double cblas_dsdot( const CBLAS_INT N, const float *X, const CBLAS_INT incX, const float *Y, const CBLAS_INT incY)
 {
     double d;
-    double (*fn)  ( const int N, const float *X, const int incX, const float *Y, const int incY);
+    double (*fn)  ( const CBLAS_INT N, const float *X, const CBLAS_INT incX, const float *Y, const CBLAS_INT incY);
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(dsdot);
 
@@ -65,11 +65,11 @@ double cblas_dsdot( const int N, const float *X, const int incX, const float *Y,
     return d;
 }
 
-double flexiblas_real_cblas_dsdot( const int N, const float *X, const int incX, const float *Y, const int incY)
+double flexiblas_real_cblas_dsdot( const CBLAS_INT N, const float *X, const CBLAS_INT incX, const float *Y, const CBLAS_INT incY)
 {
     double d;
     if ( current_backend->blas.dsdot.cblas_function != NULL ) {
-        double (*fn)  ( const int N, const float *X, const int incX, const float *Y, const int incY);
+        double (*fn)  ( const CBLAS_INT N, const float *X, const CBLAS_INT incX, const float *Y, const CBLAS_INT incY);
         fn = current_backend->blas.dsdot.cblas_function;
         d = fn(N,X,incX,Y,incY);
     } else {
@@ -80,9 +80,9 @@ double flexiblas_real_cblas_dsdot( const int N, const float *X, const int incX, 
 
 }
 
-double flexiblas_chain_cblas_dsdot( const int N, const float *X, const int incX, const float *Y, const int incY)
+double flexiblas_chain_cblas_dsdot( const CBLAS_INT N, const float *X, const CBLAS_INT incX, const float *Y, const CBLAS_INT incY)
 {
-    double (*fn)  ( const int N, const float *X, const int incX, const float *Y, const int incY);
+    double (*fn)  ( const CBLAS_INT N, const float *X, const CBLAS_INT incX, const float *Y, const CBLAS_INT incY);
     double d;
     CBLAS_HOOK_ADVANCE(dsdot);
 

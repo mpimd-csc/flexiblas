@@ -54,17 +54,17 @@ static TLS_STORE uint8_t hook_cblas_dgemm_pos = 0;
 
 
 void cblas_dgemm(const CBLAS_LAYOUT layout, const CBLAS_TRANSPOSE TransA,
-        const CBLAS_TRANSPOSE TransB, const int M, const int N,
-        const int K, const double alpha, const double  *A,
-        const int lda, const double  *B, const int ldb,
-        const double beta, double  *C, const int ldc)
+        const CBLAS_TRANSPOSE TransB, const CBLAS_INT M, const CBLAS_INT N,
+        const CBLAS_INT K, const double alpha, const double  *A,
+        const CBLAS_INT lda, const double  *B, const CBLAS_INT ldb,
+        const double beta, double  *C, const CBLAS_INT ldc)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout, const CBLAS_TRANSPOSE TransA,
-         const CBLAS_TRANSPOSE TransB, const int M, const int N,
-         const int K, const double alpha, const double  *A,
-         const int lda, const double  *B, const int ldb,
-         const double beta, double  *C, const int ldc);
+         const CBLAS_TRANSPOSE TransB, const CBLAS_INT M, const CBLAS_INT N,
+         const CBLAS_INT K, const double alpha, const double  *A,
+         const CBLAS_INT lda, const double  *B, const CBLAS_INT ldb,
+         const double beta, double  *C, const CBLAS_INT ldc);
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(dgemm);
 
@@ -73,27 +73,27 @@ void cblas_dgemm(const CBLAS_LAYOUT layout, const CBLAS_TRANSPOSE TransA,
 }
 
 void flexiblas_chain_cblas_dgemm(const CBLAS_LAYOUT layout, const CBLAS_TRANSPOSE TransA,
-        const CBLAS_TRANSPOSE TransB, const int M, const int N,
-        const int K, const double alpha, const double  *A,
-        const int lda, const double  *B, const int ldb,
-        const double beta, double  *C, const int ldc)
+        const CBLAS_TRANSPOSE TransB, const CBLAS_INT M, const CBLAS_INT N,
+        const CBLAS_INT K, const double alpha, const double  *A,
+        const CBLAS_INT lda, const double  *B, const CBLAS_INT ldb,
+        const double beta, double  *C, const CBLAS_INT ldc)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout, const CBLAS_TRANSPOSE TransA,
-         const CBLAS_TRANSPOSE TransB, const int M, const int N,
-         const int K, const double alpha, const double  *A,
-         const int lda, const double  *B, const int ldb,
-         const double beta, double  *C, const int ldc);
+         const CBLAS_TRANSPOSE TransB, const CBLAS_INT M, const CBLAS_INT N,
+         const CBLAS_INT K, const double alpha, const double  *A,
+         const CBLAS_INT lda, const double  *B, const CBLAS_INT ldb,
+         const double beta, double  *C, const CBLAS_INT ldc);
     CBLAS_HOOK_ADVANCE(dgemm);
     fn(layout, TransA, TransB, M, N, K, alpha, A, lda, B, ldb, beta, C, ldc);
 
 }
 
 void flexiblas_real_cblas_dgemm(const CBLAS_LAYOUT layout, const CBLAS_TRANSPOSE TransA,
-        const CBLAS_TRANSPOSE TransB, const int M, const int N,
-        const int K, const double alpha, const double  *A,
-        const int lda, const double  *B, const int ldb,
-        const double beta, double  *C, const int ldc)
+        const CBLAS_TRANSPOSE TransB, const CBLAS_INT M, const CBLAS_INT N,
+        const CBLAS_INT K, const double alpha, const double  *A,
+        const CBLAS_INT lda, const double  *B, const CBLAS_INT ldb,
+        const double beta, double  *C, const CBLAS_INT ldc)
 {
     char TA, TB;
 #define F77_TA &TA
@@ -113,10 +113,10 @@ void flexiblas_real_cblas_dgemm(const CBLAS_LAYOUT layout, const CBLAS_TRANSPOSE
     if ( current_backend->blas.dgemm.cblas_function != NULL ) {
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_TRANSPOSE TransA,
-             const CBLAS_TRANSPOSE TransB, const int M, const int N,
-             const int K, const double alpha, const double  *A,
-             const int lda, const double  *B, const int ldb,
-             const double beta, double  *C, const int ldc)
+             const CBLAS_TRANSPOSE TransB, const CBLAS_INT M, const CBLAS_INT N,
+             const CBLAS_INT K, const double alpha, const double  *A,
+             const CBLAS_INT lda, const double  *B, const CBLAS_INT ldb,
+             const double beta, double  *C, const CBLAS_INT ldc)
             = current_backend->blas.dgemm.cblas_function;
         fn(layout, TransA, TransB, M, N, K, alpha, A, lda, B, ldb, beta, C, ldc);
     } else {

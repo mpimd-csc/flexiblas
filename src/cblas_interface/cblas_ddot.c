@@ -55,11 +55,11 @@
 static TLS_STORE uint8_t hook_cblas_ddot_pos = 0;
 
 
-double cblas_ddot( const int N, const double *X, const int incX, const double *Y, const int incY)
+double cblas_ddot( const CBLAS_INT N, const double *X, const CBLAS_INT incX, const double *Y, const CBLAS_INT incY)
 {
     double d;
 
-    double (*fn)  ( const int N, const double *X, const int incX, const double *Y, const int incY);
+    double (*fn)  ( const CBLAS_INT N, const double *X, const CBLAS_INT incX, const double *Y, const CBLAS_INT incY);
 
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(ddot);
@@ -68,11 +68,11 @@ double cblas_ddot( const int N, const double *X, const int incX, const double *Y
     return d;
 }
 
-double flexiblas_real_cblas_ddot( const int N, const double *X, const int incX, const double *Y, const int incY)
+double flexiblas_real_cblas_ddot( const CBLAS_INT N, const double *X, const CBLAS_INT incX, const double *Y, const CBLAS_INT incY)
 {
     double d;
     if ( current_backend->blas.ddot.cblas_function != NULL ) {
-        double (*fn)  ( const int N, const double *X, const int incX, const double *Y, const int incY);
+        double (*fn)  ( const CBLAS_INT N, const double *X, const CBLAS_INT incX, const double *Y, const CBLAS_INT incY);
         fn = current_backend->blas.ddot.cblas_function;
         d = fn(N,X,incX,Y,incY);
     } else {
@@ -82,10 +82,10 @@ double flexiblas_real_cblas_ddot( const int N, const double *X, const int incX, 
     return d;
 }
 
-double flexiblas_chain_cblas_ddot( const int N, const double *X, const int incX, const double *Y, const int incY)
+double flexiblas_chain_cblas_ddot( const CBLAS_INT N, const double *X, const CBLAS_INT incX, const double *Y, const CBLAS_INT incY)
 {
     double d;
-    double (*fn)  ( const int N, const double *X, const int incX, const double *Y, const int incY);
+    double (*fn)  ( const CBLAS_INT N, const double *X, const CBLAS_INT incX, const double *Y, const CBLAS_INT incY);
     CBLAS_HOOK_ADVANCE(ddot);
     d = fn(N,X,incX,Y,incY);
     return d;

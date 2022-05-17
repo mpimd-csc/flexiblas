@@ -53,15 +53,15 @@
 
 static TLS_STORE uint8_t hook_cblas_ssyr2_pos = 0;
 void cblas_ssyr2(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const int N, const float  alpha, const float  *X,
-        const int incX, const float  *Y, const int incY, float  *A,
-        const int lda)
+        const CBLAS_INT N, const float  alpha, const float  *X,
+        const CBLAS_INT incX, const float  *Y, const CBLAS_INT incY, float  *A,
+        const CBLAS_INT lda)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-         const int N, const float  alpha, const float  *X,
-         const int incX, const float  *Y, const int incY, float  *A,
-         const int lda);
+         const CBLAS_INT N, const float  alpha, const float  *X,
+         const CBLAS_INT incX, const float  *Y, const CBLAS_INT incY, float  *A,
+         const CBLAS_INT lda);
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(ssyr2);
 
@@ -70,24 +70,24 @@ void cblas_ssyr2(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
 }
 
 void flexiblas_chain_cblas_ssyr2(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const int N, const float  alpha, const float  *X,
-        const int incX, const float  *Y, const int incY, float  *A,
-        const int lda)
+        const CBLAS_INT N, const float  alpha, const float  *X,
+        const CBLAS_INT incX, const float  *Y, const CBLAS_INT incY, float  *A,
+        const CBLAS_INT lda)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-         const int N, const float  alpha, const float  *X,
-         const int incX, const float  *Y, const int incY, float  *A,
-         const int lda);
+         const CBLAS_INT N, const float  alpha, const float  *X,
+         const CBLAS_INT incX, const float  *Y, const CBLAS_INT incY, float  *A,
+         const CBLAS_INT lda);
     CBLAS_HOOK_ADVANCE(ssyr2);
     fn(layout,Uplo,N,alpha,X,incX,Y,incY,A,lda);
 
 }
 
 void flexiblas_real_cblas_ssyr2(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const int N, const float  alpha, const float  *X,
-        const int incX, const float  *Y, const int incY, float  *A,
-        const int lda)
+        const CBLAS_INT N, const float  alpha, const float  *X,
+        const CBLAS_INT incX, const float  *Y, const CBLAS_INT incY, float  *A,
+        const CBLAS_INT lda)
 {
     char UL;
 #define F77_UL &UL
@@ -103,9 +103,9 @@ void flexiblas_real_cblas_ssyr2(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo
     if ( current_backend->blas.ssyr2.cblas_function != NULL ) {
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-             const int N, const float  alpha, const float  *X,
-             const int incX, const float  *Y, const int incY, float  *A,
-             const int lda)
+             const CBLAS_INT N, const float  alpha, const float  *X,
+             const CBLAS_INT incX, const float  *Y, const CBLAS_INT incY, float  *A,
+             const CBLAS_INT lda)
             = current_backend->blas.ssyr2.cblas_function;
         fn(layout,Uplo,N,alpha,X,incX,Y,incY,A,lda);
     } else {

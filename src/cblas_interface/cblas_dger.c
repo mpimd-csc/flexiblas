@@ -52,35 +52,35 @@
 
 static TLS_STORE uint8_t hook_cblas_dger_pos = 0;
 
-void cblas_dger(const CBLAS_LAYOUT layout, const int M, const int N,
-        const double alpha, const double  *X, const int incX,
-        const double  *Y, const int incY, double  *A, const int lda)
+void cblas_dger(const CBLAS_LAYOUT layout, const CBLAS_INT M, const CBLAS_INT N,
+        const double alpha, const double  *X, const CBLAS_INT incX,
+        const double  *Y, const CBLAS_INT incY, double  *A, const CBLAS_INT lda)
 {
-    void (*fn)(const CBLAS_LAYOUT layout, const int M, const int N,
-            const double alpha, const double  *X, const int incX,
-            const double  *Y, const int incY, double  *A, const int lda);
+    void (*fn)(const CBLAS_LAYOUT layout, const CBLAS_INT M, const CBLAS_INT N,
+            const double alpha, const double  *X, const CBLAS_INT incX,
+            const double  *Y, const CBLAS_INT incY, double  *A, const CBLAS_INT lda);
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(dger);
     fn(layout,M,N,alpha,X,incX,Y,incY,A,lda);
 
 }
 
-void flexiblas_chain_cblas_dger(const CBLAS_LAYOUT layout, const int M, const int N,
-        const double alpha, const double  *X, const int incX,
-        const double  *Y, const int incY, double  *A, const int lda)
+void flexiblas_chain_cblas_dger(const CBLAS_LAYOUT layout, const CBLAS_INT M, const CBLAS_INT N,
+        const double alpha, const double  *X, const CBLAS_INT incX,
+        const double  *Y, const CBLAS_INT incY, double  *A, const CBLAS_INT lda)
 {
-    void (*fn)(const CBLAS_LAYOUT layout, const int M, const int N,
-            const double alpha, const double  *X, const int incX,
-            const double  *Y, const int incY, double  *A, const int lda);
+    void (*fn)(const CBLAS_LAYOUT layout, const CBLAS_INT M, const CBLAS_INT N,
+            const double alpha, const double  *X, const CBLAS_INT incX,
+            const double  *Y, const CBLAS_INT incY, double  *A, const CBLAS_INT lda);
     CBLAS_HOOK_ADVANCE(dger);
     fn(layout,M,N,alpha,X,incX,Y,incY,A,lda);
 
 
 }
 
-void flexiblas_real_cblas_dger(const CBLAS_LAYOUT layout, const int M, const int N,
-        const double alpha, const double  *X, const int incX,
-        const double  *Y, const int incY, double  *A, const int lda)
+void flexiblas_real_cblas_dger(const CBLAS_LAYOUT layout, const CBLAS_INT M, const CBLAS_INT N,
+        const double alpha, const double  *X, const CBLAS_INT incX,
+        const double  *Y, const CBLAS_INT incY, double  *A, const CBLAS_INT lda)
 {
 #ifdef F77_INT
     F77_INT F77_M=M, F77_N=N, F77_lda=lda, F77_incX=incX, F77_incY=incY;
@@ -94,9 +94,9 @@ void flexiblas_real_cblas_dger(const CBLAS_LAYOUT layout, const int M, const int
     current_backend->blas.dger.calls[POS_CBLAS] ++;
 
     if ( current_backend->blas.dger.cblas_function != NULL ) {
-        void (*fn)(const CBLAS_LAYOUT layout, const int M, const int N,
-                const double alpha, const double  *X, const int incX,
-                const double  *Y, const int incY, double  *A, const int lda)
+        void (*fn)(const CBLAS_LAYOUT layout, const CBLAS_INT M, const CBLAS_INT N,
+                const double alpha, const double  *X, const CBLAS_INT incX,
+                const double  *Y, const CBLAS_INT incY, double  *A, const CBLAS_INT lda)
             = current_backend->blas.dger.cblas_function;
         fn(layout,M,N,alpha,X,incX,Y,incY,A,lda);
     } else {

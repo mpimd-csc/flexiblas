@@ -50,17 +50,17 @@
 static TLS_STORE uint8_t hook_cblas_zgemm_pos = 0;
 
 void cblas_zgemm(const CBLAS_LAYOUT layout, const CBLAS_TRANSPOSE TransA,
-        const CBLAS_TRANSPOSE TransB, const int M, const int N,
-        const int K, const void *alpha, const void  *A,
-        const int lda, const void  *B, const int ldb,
-        const void *beta, void  *C, const int ldc)
+        const CBLAS_TRANSPOSE TransB, const CBLAS_INT M, const CBLAS_INT N,
+        const CBLAS_INT K, const void *alpha, const void  *A,
+        const CBLAS_INT lda, const void  *B, const CBLAS_INT ldb,
+        const void *beta, void  *C, const CBLAS_INT ldc)
 {
    void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_TRANSPOSE TransA,
-             const CBLAS_TRANSPOSE TransB, const int M, const int N,
-             const int K, const void *alpha, const void  *A,
-             const int lda, const void  *B, const int ldb,
-             const void *beta, void  *C, const int ldc);
+             const CBLAS_TRANSPOSE TransB, const CBLAS_INT M, const CBLAS_INT N,
+             const CBLAS_INT K, const void *alpha, const void  *A,
+             const CBLAS_INT lda, const void  *B, const CBLAS_INT ldb,
+             const void *beta, void  *C, const CBLAS_INT ldc);
 
    CBLAS_BACKEND_INIT();
    CBLAS_HOOK_SELECT(zgemm);
@@ -72,17 +72,17 @@ void cblas_zgemm(const CBLAS_LAYOUT layout, const CBLAS_TRANSPOSE TransA,
 }
 
 void flexiblas_chain_cblas_zgemm(const CBLAS_LAYOUT layout, const CBLAS_TRANSPOSE TransA,
-        const CBLAS_TRANSPOSE TransB, const int M, const int N,
-        const int K, const void *alpha, const void  *A,
-        const int lda, const void  *B, const int ldb,
-        const void *beta, void  *C, const int ldc)
+        const CBLAS_TRANSPOSE TransB, const CBLAS_INT M, const CBLAS_INT N,
+        const CBLAS_INT K, const void *alpha, const void  *A,
+        const CBLAS_INT lda, const void  *B, const CBLAS_INT ldb,
+        const void *beta, void  *C, const CBLAS_INT ldc)
 {
    void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_TRANSPOSE TransA,
-             const CBLAS_TRANSPOSE TransB, const int M, const int N,
-             const int K, const void *alpha, const void  *A,
-             const int lda, const void  *B, const int ldb,
-             const void *beta, void  *C, const int ldc);
+             const CBLAS_TRANSPOSE TransB, const CBLAS_INT M, const CBLAS_INT N,
+             const CBLAS_INT K, const void *alpha, const void  *A,
+             const CBLAS_INT lda, const void  *B, const CBLAS_INT ldb,
+             const void *beta, void  *C, const CBLAS_INT ldc);
 
    CBLAS_HOOK_ADVANCE(zgemm);
 
@@ -93,10 +93,10 @@ void flexiblas_chain_cblas_zgemm(const CBLAS_LAYOUT layout, const CBLAS_TRANSPOS
 
 
 void flexiblas_real_cblas_zgemm(const CBLAS_LAYOUT layout, const CBLAS_TRANSPOSE TransA,
-        const CBLAS_TRANSPOSE TransB, const int M, const int N,
-        const int K, const void *alpha, const void  *A,
-        const int lda, const void  *B, const int ldb,
-        const void *beta, void  *C, const int ldc)
+        const CBLAS_TRANSPOSE TransB, const CBLAS_INT M, const CBLAS_INT N,
+        const CBLAS_INT K, const void *alpha, const void  *A,
+        const CBLAS_INT lda, const void  *B, const CBLAS_INT ldb,
+        const void *beta, void  *C, const CBLAS_INT ldc)
 {
     char TA, TB;
 #define F77_TA &TA
@@ -117,10 +117,10 @@ void flexiblas_real_cblas_zgemm(const CBLAS_LAYOUT layout, const CBLAS_TRANSPOSE
     if ( current_backend->blas.zgemm.cblas_function != NULL ) {
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_TRANSPOSE TransA,
-             const CBLAS_TRANSPOSE TransB, const int M, const int N,
-             const int K, const void *alpha, const void  *A,
-             const int lda, const void  *B, const int ldb,
-             const void *beta, void  *C, const int ldc)
+             const CBLAS_TRANSPOSE TransB, const CBLAS_INT M, const CBLAS_INT N,
+             const CBLAS_INT K, const void *alpha, const void  *A,
+             const CBLAS_INT lda, const void  *B, const CBLAS_INT ldb,
+             const void *beta, void  *C, const CBLAS_INT ldc)
             = current_backend->blas.zgemm.cblas_function;
         fn(layout,TransA,TransB,M,N,K,alpha,A,lda,B,ldb,beta,C,ldc);
     } else {

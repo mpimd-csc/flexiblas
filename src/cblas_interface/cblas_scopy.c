@@ -53,18 +53,18 @@
 static TLS_STORE uint8_t hook_cblas_scopy_pos = 0;
 
 
-void cblas_scopy( const int N, const float *X,const int incX, float *Y, const int incY)
+void cblas_scopy( const CBLAS_INT N, const float *X,const CBLAS_INT incX, float *Y, const CBLAS_INT incY)
 {
-    void (*fn)  ( const int N, const float *X, const int incX, float *Y, const int incY);
+    void (*fn)  ( const CBLAS_INT N, const float *X, const CBLAS_INT incX, float *Y, const CBLAS_INT incY);
 
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(scopy);
     fn(N,X,incX,Y,incY);
 }
 
-void flexiblas_real_cblas_scopy( const int N, const float *X,const int incX, float *Y, const int incY)
+void flexiblas_real_cblas_scopy( const CBLAS_INT N, const float *X,const CBLAS_INT incX, float *Y, const CBLAS_INT incY)
 {
-    void (*fn)  ( const int N, const float *X, const int incX, float *Y, const int incY);
+    void (*fn)  ( const CBLAS_INT N, const float *X, const CBLAS_INT incX, float *Y, const CBLAS_INT incY);
 
     if ( current_backend->blas.scopy.cblas_function != NULL ) {
         fn = current_backend->blas.scopy.cblas_function;
@@ -75,10 +75,10 @@ void flexiblas_real_cblas_scopy( const int N, const float *X,const int incX, flo
     }
 }
 
-void flexiblas_chain_cblas_scopy( const int N, const float *X,const int incX, float *Y, const int incY)
+void flexiblas_chain_cblas_scopy( const CBLAS_INT N, const float *X,const CBLAS_INT incX, float *Y, const CBLAS_INT incY)
 {
 
-    void (*fn)  ( const int N, const float *X, const int incX, float *Y, const int incY);
+    void (*fn)  ( const CBLAS_INT N, const float *X, const CBLAS_INT incX, float *Y, const CBLAS_INT incY);
     CBLAS_HOOK_ADVANCE(scopy);
     fn(N,X,incX,Y,incY);
 

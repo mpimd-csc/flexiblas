@@ -158,6 +158,10 @@ def main(version):
 
 
 if __name__ == "__main__":
+    main("3.10.1")
+    main("3.10.1-wodprc")
+
+
     main("3.10.0")
     main("3.10.0-wodprc")
 

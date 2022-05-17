@@ -39,6 +39,9 @@
 #cmakedefine HAVE_SYS_STAT_H
 #cmakedefine FALLBACK_NAME
 #cmakedefine FLEXIBLAS_LAPACK
+
+#cmakedefine FLEXIBLAS_LAPACK_3_10_1
+#cmakedefine FLEXIBLAS_LAPACK_3_10_1_WODPRC
 #cmakedefine FLEXIBLAS_LAPACK_3_10_0
 #cmakedefine FLEXIBLAS_LAPACK_3_10_0_WODPRC
 #cmakedefine FLEXIBLAS_LAPACK_3_9_1

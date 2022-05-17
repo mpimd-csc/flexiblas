@@ -70,7 +70,7 @@ HIDDEN int __flexiblas_load_cblas_function( void * handle , struct flexiblas_bla
     fn -> cblas_function = ptr_csymbol;
 
 	if ( __flexiblas_verbose > 2) {
-		fprintf(stderr, " %s.\n",(fn->cblas_function == NULL)?"failed":"sucess");
+		fprintf(stderr, " %s.\n",(fn->cblas_function == NULL)?"failed":"success");
 	}
 
 	if (fn->cblas_function == NULL) {
@@ -131,7 +131,7 @@ HIDDEN int __flexiblas_load_fortran_function( void * handle , struct flexiblas_b
         }
     } else {
         if ( __flexiblas_verbose > 2 ) {
-            fprintf(stderr, " %s.\n",(fn->f77_blas_function == NULL)?"failed":"sucess");
+            fprintf(stderr, " %s.\n",(fn->f77_blas_function == NULL)?"failed":"success");
         }
     }
     if (fn->f77_blas_function == NULL) {

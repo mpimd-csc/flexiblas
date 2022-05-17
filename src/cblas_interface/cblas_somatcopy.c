@@ -53,10 +53,10 @@
 static TLS_STORE uint8_t hook_cblas_somatcopy_pos = 0;
 
 void cblas_somatcopy(const CBLAS_ORDER CORDER, const CBLAS_TRANSPOSE CTRANS,
-        const int crows, const int ccols, const float calpha, const float *a, const int clda,
-        float *b, const int cldb)
+        const CBLAS_INT crows, const CBLAS_INT ccols, const float calpha, const float *a, const CBLAS_INT clda,
+        float *b, const CBLAS_INT cldb)
 {
-    void (*fn)(const CBLAS_ORDER, const CBLAS_TRANSPOSE, const int, const int, const float, const float *, const int, float *, const int) ;
+    void (*fn)(const CBLAS_ORDER, const CBLAS_TRANSPOSE, const CBLAS_INT, const CBLAS_INT, const float, const float *, const CBLAS_INT, float *, const CBLAS_INT) ;
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(somatcopy);
 
@@ -65,18 +65,18 @@ void cblas_somatcopy(const CBLAS_ORDER CORDER, const CBLAS_TRANSPOSE CTRANS,
 }
 
 void flexiblas_chain_cblas_somatcopy(const CBLAS_ORDER CORDER, const CBLAS_TRANSPOSE CTRANS,
-        const int crows, const int ccols, const float calpha, const float *a, const int clda,
-        float *b, const int cldb)
+        const CBLAS_INT crows, const CBLAS_INT ccols, const float calpha, const float *a, const CBLAS_INT clda,
+        float *b, const CBLAS_INT cldb)
 {
-    void (*fn)(const CBLAS_ORDER, const CBLAS_TRANSPOSE, const int, const int, const float, const float *, const int, float *, const int);
+    void (*fn)(const CBLAS_ORDER, const CBLAS_TRANSPOSE, const CBLAS_INT, const CBLAS_INT, const float, const float *, const CBLAS_INT, float *, const CBLAS_INT);
     CBLAS_HOOK_ADVANCE(somatcopy);
     fn(CORDER, CTRANS, crows, ccols, calpha, a, clda, b, cldb);
 
 }
 
 void flexiblas_real_cblas_somatcopy(const CBLAS_ORDER CORDER, const CBLAS_TRANSPOSE CTRANS,
-        const int crows, const int ccols, const float calpha, const float *a, const int clda,
-        float *b, const int cldb)
+        const CBLAS_INT crows, const CBLAS_INT ccols, const float calpha, const float *a, const CBLAS_INT clda,
+        float *b, const CBLAS_INT cldb)
 {
 #ifdef F77_INT
     F77_INT F77_ROWS=crows;
@@ -91,7 +91,7 @@ void flexiblas_real_cblas_somatcopy(const CBLAS_ORDER CORDER, const CBLAS_TRANSP
 #endif
 
     if ( current_backend->blas.somatcopy.cblas_function != NULL ) {
-        void (*fn)(const CBLAS_ORDER, const CBLAS_TRANSPOSE, const int, const int, const float, const float *, const int, float *, const int) = current_backend->blas.somatcopy.cblas_function;
+        void (*fn)(const CBLAS_ORDER, const CBLAS_TRANSPOSE, const CBLAS_INT, const CBLAS_INT, const float, const float *, const CBLAS_INT, float *, const CBLAS_INT) = current_backend->blas.somatcopy.cblas_function;
         fn(CORDER, CTRANS, crows, ccols, calpha, a, clda, b, cldb);
     } else {
         char ORDER[2]=" ";

@@ -52,12 +52,12 @@
 
 static TLS_STORE uint8_t hook_cblas_scasum_pos = 0;
 
-float cblas_scasum( const int N, const void *X, const int incX)
+float cblas_scasum( const CBLAS_INT N, const void *X, const CBLAS_INT incX)
 {
     float asum;
 
     float  (*fn)
-        ( const int N, const void *X, const int incX);
+        ( const CBLAS_INT N, const void *X, const CBLAS_INT incX);
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(scasum);
     asum  = fn(N,X,incX);
@@ -65,19 +65,19 @@ float cblas_scasum( const int N, const void *X, const int incX)
     return asum;
 }
 
-float flexiblas_chain_cblas_scasum( const int N, const void *X, const int incX)
+float flexiblas_chain_cblas_scasum( const CBLAS_INT N, const void *X, const CBLAS_INT incX)
 {
     float asum;
 
     float  (*fn)
-        ( const int N, const void *X, const int incX);
+        ( const CBLAS_INT N, const void *X, const CBLAS_INT incX);
     CBLAS_HOOK_ADVANCE(scasum);
     asum  = fn(N,X,incX);
     return asum;
 
 }
 
-float flexiblas_real_cblas_scasum( const int N, const void *X, const int incX)
+float flexiblas_real_cblas_scasum( const CBLAS_INT N, const void *X, const CBLAS_INT incX)
 {
     float asum;
 #ifdef F77_INT
@@ -88,7 +88,7 @@ float flexiblas_real_cblas_scasum( const int N, const void *X, const int incX)
 #endif
     if ( current_backend->blas.scasum.cblas_function != NULL ) {
         float  (*fn)
-            ( const int N, const void *X, const int incX)
+            ( const CBLAS_INT N, const void *X, const CBLAS_INT incX)
             = current_backend->blas.scasum.cblas_function;
         asum  = fn(N,X,incX);
     } else {

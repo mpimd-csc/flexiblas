@@ -50,14 +50,14 @@
 
 static TLS_STORE uint8_t hook_cblas_zgeru_pos = 0;
 
-void cblas_zgeru(const CBLAS_LAYOUT layout, const int M, const int N,
-        const void *alpha, const void *X, const int incX,
-        const void *Y, const int incY, void *A, const int lda)
+void cblas_zgeru(const CBLAS_LAYOUT layout, const CBLAS_INT M, const CBLAS_INT N,
+        const void *alpha, const void *X, const CBLAS_INT incX,
+        const void *Y, const CBLAS_INT incY, void *A, const CBLAS_INT lda)
 {
         void (*fn)
-            (const CBLAS_LAYOUT layout, const int M, const int N,
-             const void *alpha, const void *X, const int incX,
-             const void *Y, const int incY, void *A, const int lda);
+            (const CBLAS_LAYOUT layout, const CBLAS_INT M, const CBLAS_INT N,
+             const void *alpha, const void *X, const CBLAS_INT incX,
+             const void *Y, const CBLAS_INT incY, void *A, const CBLAS_INT lda);
 
         CBLAS_BACKEND_INIT();
         CBLAS_HOOK_SELECT(zgeru);
@@ -65,14 +65,14 @@ void cblas_zgeru(const CBLAS_LAYOUT layout, const int M, const int N,
 
 }
 
-void flexiblas_chain_cblas_zgeru(const CBLAS_LAYOUT layout, const int M, const int N,
-        const void *alpha, const void *X, const int incX,
-        const void *Y, const int incY, void *A, const int lda)
+void flexiblas_chain_cblas_zgeru(const CBLAS_LAYOUT layout, const CBLAS_INT M, const CBLAS_INT N,
+        const void *alpha, const void *X, const CBLAS_INT incX,
+        const void *Y, const CBLAS_INT incY, void *A, const CBLAS_INT lda)
 {
         void (*fn)
-            (const CBLAS_LAYOUT layout, const int M, const int N,
-             const void *alpha, const void *X, const int incX,
-             const void *Y, const int incY, void *A, const int lda);
+            (const CBLAS_LAYOUT layout, const CBLAS_INT M, const CBLAS_INT N,
+             const void *alpha, const void *X, const CBLAS_INT incX,
+             const void *Y, const CBLAS_INT incY, void *A, const CBLAS_INT lda);
 
         CBLAS_HOOK_ADVANCE(zgeru);
         fn(layout,M,N,alpha,X,incX,Y,incY,A,lda);
@@ -81,9 +81,9 @@ void flexiblas_chain_cblas_zgeru(const CBLAS_LAYOUT layout, const int M, const i
 
 
 
-void flexiblas_real_cblas_zgeru(const CBLAS_LAYOUT layout, const int M, const int N,
-        const void *alpha, const void *X, const int incX,
-        const void *Y, const int incY, void *A, const int lda)
+void flexiblas_real_cblas_zgeru(const CBLAS_LAYOUT layout, const CBLAS_INT M, const CBLAS_INT N,
+        const void *alpha, const void *X, const CBLAS_INT incX,
+        const void *Y, const CBLAS_INT incY, void *A, const CBLAS_INT lda)
 {
 #ifdef F77_INT
     F77_INT F77_M=M, F77_N=N, F77_lda=lda, F77_incX=incX, F77_incY=incY;
@@ -97,9 +97,9 @@ void flexiblas_real_cblas_zgeru(const CBLAS_LAYOUT layout, const int M, const in
 
     if ( current_backend->blas.zgeru.cblas_function != NULL ) {
         void (*fn)
-            (const CBLAS_LAYOUT layout, const int M, const int N,
-             const void *alpha, const void *X, const int incX,
-             const void *Y, const int incY, void *A, const int lda)
+            (const CBLAS_LAYOUT layout, const CBLAS_INT M, const CBLAS_INT N,
+             const void *alpha, const void *X, const CBLAS_INT incX,
+             const void *Y, const CBLAS_INT incY, void *A, const CBLAS_INT lda)
             = current_backend->blas.zgeru.cblas_function;
         fn(layout,M,N,alpha,X,incX,Y,incY,A,lda);
     } else {

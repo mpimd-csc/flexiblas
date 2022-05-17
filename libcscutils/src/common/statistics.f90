@@ -169,7 +169,7 @@ CONTAINS
         LW = A(K)
         OUTPUT%LOWERWHISKER = LW
 
-        ! Upper WHisker
+        ! Upper Whisker
         UW = OUTPUT%MEDIAN + IQRFACT*OUTPUT%IQR
         K = 1
 

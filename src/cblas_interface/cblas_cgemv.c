@@ -51,17 +51,17 @@
 static TLS_STORE uint8_t hook_cblas_cgemv_pos = 0;
 
 void cblas_cgemv(const CBLAS_LAYOUT layout,
-        const CBLAS_TRANSPOSE TransA, const int M, const int N,
-        const void *alpha, const void  *A, const int lda,
-        const void  *X, const int incX, const void *beta,
-        void  *Y, const int incY)
+        const CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N,
+        const void *alpha, const void  *A, const CBLAS_INT lda,
+        const void  *X, const CBLAS_INT incX, const void *beta,
+        void  *Y, const CBLAS_INT incY)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout,
-         const CBLAS_TRANSPOSE TransA, const int M, const int N,
-         const void *alpha, const void  *A, const int lda,
-         const void  *X, const int incX, const void *beta,
-         void  *Y, const int incY);
+         const CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N,
+         const void *alpha, const void  *A, const CBLAS_INT lda,
+         const void  *X, const CBLAS_INT incX, const void *beta,
+         void  *Y, const CBLAS_INT incY);
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(cgemv);
     fn(layout,TransA,M,N,alpha,A,lda,X,incX,beta,Y,incY);
@@ -70,17 +70,17 @@ void cblas_cgemv(const CBLAS_LAYOUT layout,
 }
 
 void flexiblas_chain_cblas_cgemv(const CBLAS_LAYOUT layout,
-        const CBLAS_TRANSPOSE TransA, const int M, const int N,
-        const void *alpha, const void  *A, const int lda,
-        const void  *X, const int incX, const void *beta,
-        void  *Y, const int incY)
+        const CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N,
+        const void *alpha, const void  *A, const CBLAS_INT lda,
+        const void  *X, const CBLAS_INT incX, const void *beta,
+        void  *Y, const CBLAS_INT incY)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout,
-         const CBLAS_TRANSPOSE TransA, const int M, const int N,
-         const void *alpha, const void  *A, const int lda,
-         const void  *X, const int incX, const void *beta,
-         void  *Y, const int incY);
+         const CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N,
+         const void *alpha, const void  *A, const CBLAS_INT lda,
+         const void  *X, const CBLAS_INT incX, const void *beta,
+         void  *Y, const CBLAS_INT incY);
     CBLAS_HOOK_ADVANCE(cgemv);
     fn(layout,TransA,M,N,alpha,A,lda,X,incX,beta,Y,incY);
 
@@ -88,10 +88,10 @@ void flexiblas_chain_cblas_cgemv(const CBLAS_LAYOUT layout,
 }
 
 void flexiblas_real_cblas_cgemv(const CBLAS_LAYOUT layout,
-        const CBLAS_TRANSPOSE TransA, const int M, const int N,
-        const void *alpha, const void  *A, const int lda,
-        const void  *X, const int incX, const void *beta,
-        void  *Y, const int incY)
+        const CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N,
+        const void *alpha, const void  *A, const CBLAS_INT lda,
+        const void  *X, const CBLAS_INT incX, const void *beta,
+        void  *Y, const CBLAS_INT incY)
 {
     char TA;
 #define F77_TA &TA
@@ -109,17 +109,17 @@ void flexiblas_real_cblas_cgemv(const CBLAS_LAYOUT layout,
 
         void (*fn)
             (const CBLAS_LAYOUT layout,
-             const CBLAS_TRANSPOSE TransA, const int M, const int N,
-             const void *alpha, const void  *A, const int lda,
-             const void  *X, const int incX, const void *beta,
-             void  *Y, const int incY)
+             const CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N,
+             const void *alpha, const void  *A, const CBLAS_INT lda,
+             const void  *X, const CBLAS_INT incX, const void *beta,
+             void  *Y, const CBLAS_INT incY)
             = current_backend->blas.cgemv.cblas_function;
         fn(layout,TransA,M,N,alpha,A,lda,X,incX,beta,Y,incY);
     } else {
-        int n=0, i=0, incx=incX;
+        CBLAS_INT n=0, i=0, incx=incX;
         float *xx;;
         float ALPHA[2],BETA[2];
-        int tincY, tincx;
+        CBLAS_INT tincY, tincx;
         float *x = NULL, *y=(float *)Y, *st=0, *tx=0;
         const float *stx = x;
         extern int CBLAS_CallFromC;

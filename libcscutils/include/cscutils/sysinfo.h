@@ -132,7 +132,7 @@ extern "C" {
     char *csc_sysinfo_cpuname();
 
     /**
-     * @brief Return the CPU's name.
+     * @brief Return the compiler name and version as human-readable string.
      * @return A malloced string or NULL on failure.
      *
      * The csc_sysinfo_ccompiler function returns the name and the version of the
@@ -251,7 +251,7 @@ extern "C" {
     /**
      * @brief Check if a cpufreq governor is set for a CPU core.
      * @param[in]   cpu         The number of the CPU to check.
-     * @þaram[in]   governor    The name of the governor to be checked.
+     * @param[in]   governor    The name of the governor to be checked.
      * @return one if the governor is set for the CPU core, zero otherwise.
      *
      * The csc_cpufreq_check_governor function checks if a CPU freq governor is
@@ -259,6 +259,25 @@ extern "C" {
      *
      */
     int csc_cpufreq_check_governor(unsigned int cpu, char *governor);
+
+    /**
+     * @brief Get information from CPU.
+     * @param[in,out] lcpu number of logical CPUs
+     * @param[in,out] pcpu number of physical CPUs
+     * @param[in,out] ht  returns true if HyperThreading works
+     * @return zero if output values were written
+     *
+     * The csc_sysinfo_cpuinfo function gets information from CPU, that means
+     * <ul>
+     * <li> number of logical CPUs \f$ lcpu \f$,
+     * <li> number of physical CPUs \f$ pcpu \f$,
+     * <li> information if HyperThreading works.
+     * </ul>
+     * Note that these are CPU properties, that is, they are invariant
+     * under software and platform hardware configuration.
+     */
+
+    int csc_sysinfo_cpuinfo(int *lcpu, int *pcpu, int *ht);
 
     /** @} */
 #ifdef  __cplusplus

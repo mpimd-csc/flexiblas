@@ -53,17 +53,17 @@
 static TLS_STORE uint8_t hook_cblas_dsymv_pos = 0;
 
 void cblas_dsymv(const CBLAS_LAYOUT layout,
-        const CBLAS_UPLO Uplo, const int N,
-        const double alpha, const double  *A, const int lda,
-        const double  *X, const int incX, const double beta,
-        double  *Y, const int incY)
+        const CBLAS_UPLO Uplo, const CBLAS_INT N,
+        const double alpha, const double  *A, const CBLAS_INT lda,
+        const double  *X, const CBLAS_INT incX, const double beta,
+        double  *Y, const CBLAS_INT incY)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout,
-         const CBLAS_UPLO Uplo, const int N,
-         const double alpha, const double  *A, const int lda,
-         const double  *X, const int incX, const double beta,
-         double  *Y, const int incY);
+         const CBLAS_UPLO Uplo, const CBLAS_INT N,
+         const double alpha, const double  *A, const CBLAS_INT lda,
+         const double  *X, const CBLAS_INT incX, const double beta,
+         double  *Y, const CBLAS_INT incY);
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(dsymv);
     fn(layout,Uplo,N,alpha,A,lda,X,incX,beta,Y,incY);
@@ -71,27 +71,27 @@ void cblas_dsymv(const CBLAS_LAYOUT layout,
 }
 
 void flexiblas_chain_cblas_dsymv(const CBLAS_LAYOUT layout,
-        const CBLAS_UPLO Uplo, const int N,
-        const double alpha, const double  *A, const int lda,
-        const double  *X, const int incX, const double beta,
-        double  *Y, const int incY)
+        const CBLAS_UPLO Uplo, const CBLAS_INT N,
+        const double alpha, const double  *A, const CBLAS_INT lda,
+        const double  *X, const CBLAS_INT incX, const double beta,
+        double  *Y, const CBLAS_INT incY)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout,
-         const CBLAS_UPLO Uplo, const int N,
-         const double alpha, const double  *A, const int lda,
-         const double  *X, const int incX, const double beta,
-         double  *Y, const int incY);
+         const CBLAS_UPLO Uplo, const CBLAS_INT N,
+         const double alpha, const double  *A, const CBLAS_INT lda,
+         const double  *X, const CBLAS_INT incX, const double beta,
+         double  *Y, const CBLAS_INT incY);
     CBLAS_HOOK_ADVANCE(dsymv);
     fn(layout,Uplo,N,alpha,A,lda,X,incX,beta,Y,incY);
 
 }
 
 void flexiblas_real_cblas_dsymv(const CBLAS_LAYOUT layout,
-        const CBLAS_UPLO Uplo, const int N,
-        const double alpha, const double  *A, const int lda,
-        const double  *X, const int incX, const double beta,
-        double  *Y, const int incY)
+        const CBLAS_UPLO Uplo, const CBLAS_INT N,
+        const double alpha, const double  *A, const CBLAS_INT lda,
+        const double  *X, const CBLAS_INT incX, const double beta,
+        double  *Y, const CBLAS_INT incY)
 {
     char UL;
 #define F77_UL &UL
@@ -107,10 +107,10 @@ void flexiblas_real_cblas_dsymv(const CBLAS_LAYOUT layout,
     if ( current_backend->blas.dsymv.cblas_function != NULL ) {
         void (*fn)
             (const CBLAS_LAYOUT layout,
-             const CBLAS_UPLO Uplo, const int N,
-             const double alpha, const double  *A, const int lda,
-             const double  *X, const int incX, const double beta,
-             double  *Y, const int incY)
+             const CBLAS_UPLO Uplo, const CBLAS_INT N,
+             const double alpha, const double  *A, const CBLAS_INT lda,
+             const double  *X, const CBLAS_INT incX, const double beta,
+             double  *Y, const CBLAS_INT incY)
             = current_backend->blas.dsymv.cblas_function;
         fn(layout,Uplo,N,alpha,A,lda,X,incX,beta,Y,incY);
     } else {

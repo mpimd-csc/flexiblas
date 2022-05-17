@@ -97,6 +97,10 @@ def lapack_generate(version):
     fo.close()
 
 if __name__ == "__main__":
+    lapack_generate("3.10.1")
+    lapack_generate("3.10.1-wodprc")
+
+
     lapack_generate("3.10.0")
     lapack_generate("3.10.0-wodprc")
 

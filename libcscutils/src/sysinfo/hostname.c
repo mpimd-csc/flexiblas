@@ -17,6 +17,11 @@
  *
  */
 
+#if defined(_WIN32) || defined(_WIN64)
+#include <winsock2.h>
+#include <windows.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -28,6 +33,16 @@
 
 char *csc_sysinfo_hostname()
 {
+#if defined(_WIN32) || defined(_WIN64)
+    // The string returned by gethostname is at most 256 bytes long
+    char* ret = calloc(256, sizeof(char));
+    if (gethostname(ret, 256)) {
+        free(ret);
+        return NULL;
+    } else {
+        return ret;
+    }
+#else
     char * ret = NULL;
     int err = 0;
     size_t len = 128;
@@ -44,4 +59,5 @@ char *csc_sysinfo_hostname()
         }
     } while (err);
     return ret;
+#endif
 }

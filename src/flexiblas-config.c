@@ -72,7 +72,7 @@ static void print_usage(const char * prgm)
             "   --i8            - Displays 1 if FlexiBLAS was compiled with 64 bit integer support.\n"
             "   --backenddir    - Shows the directory where the backends are installed.\n"
             "   --sysconfdir    - Shows the SYSCONFDIR used when compiling FlexiBLAS,\n"
-            "   --rcdir         - Shows FlexiBLAS' subdirectory in the SYSCONFDIR.\n"
+            "   --rcdir         - Shows FlexiBLAS' sub directory in the SYSCONFDIR.\n"
             "\n", prgm);
     return;
 }

@@ -52,17 +52,17 @@
 static TLS_STORE uint8_t hook_cblas_dsyr2k_pos = 0;
 
 void cblas_dsyr2k(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const CBLAS_TRANSPOSE Trans, const int N, const int K,
-        const double alpha, const double  *A, const int lda,
-        const double  *B, const int ldb, const double beta,
-        double  *C, const int ldc)
+        const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
+        const double alpha, const double  *A, const CBLAS_INT lda,
+        const double  *B, const CBLAS_INT ldb, const double beta,
+        double  *C, const CBLAS_INT ldc)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-         const CBLAS_TRANSPOSE Trans, const int N, const int K,
-         const double alpha, const double  *A, const int lda,
-         const double  *B, const int ldb, const double beta,
-         double  *C, const int ldc);
+         const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
+         const double alpha, const double  *A, const CBLAS_INT lda,
+         const double  *B, const CBLAS_INT ldb, const double beta,
+         double  *C, const CBLAS_INT ldc);
     CBLAS_BACKEND_INIT();
     CBLAS_HOOK_SELECT(dsyr2k);
     fn(layout,Uplo,Trans,N,K,alpha,A,lda,B,ldb,beta,C,ldc);
@@ -70,27 +70,27 @@ void cblas_dsyr2k(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
 }
 
 void flexiblas_chain_cblas_dsyr2k(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const CBLAS_TRANSPOSE Trans, const int N, const int K,
-        const double alpha, const double  *A, const int lda,
-        const double  *B, const int ldb, const double beta,
-        double  *C, const int ldc)
+        const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
+        const double alpha, const double  *A, const CBLAS_INT lda,
+        const double  *B, const CBLAS_INT ldb, const double beta,
+        double  *C, const CBLAS_INT ldc)
 {
     void (*fn)
         (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-         const CBLAS_TRANSPOSE Trans, const int N, const int K,
-         const double alpha, const double  *A, const int lda,
-         const double  *B, const int ldb, const double beta,
-         double  *C, const int ldc);
+         const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
+         const double alpha, const double  *A, const CBLAS_INT lda,
+         const double  *B, const CBLAS_INT ldb, const double beta,
+         double  *C, const CBLAS_INT ldc);
     CBLAS_HOOK_ADVANCE(dsyr2k);
     fn(layout,Uplo,Trans,N,K,alpha,A,lda,B,ldb,beta,C,ldc);
 
 }
 
 void flexiblas_real_cblas_dsyr2k(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-        const CBLAS_TRANSPOSE Trans, const int N, const int K,
-        const double alpha, const double  *A, const int lda,
-        const double  *B, const int ldb, const double beta,
-        double  *C, const int ldc)
+        const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
+        const double alpha, const double  *A, const CBLAS_INT lda,
+        const double  *B, const CBLAS_INT ldb, const double beta,
+        double  *C, const CBLAS_INT ldc)
 {
     char UL, TR;
 #define F77_TR &TR
@@ -109,10 +109,10 @@ void flexiblas_real_cblas_dsyr2k(const CBLAS_LAYOUT layout, const CBLAS_UPLO Upl
     if ( current_backend->blas.dsyr2k.cblas_function != NULL ) {
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
-             const CBLAS_TRANSPOSE Trans, const int N, const int K,
-             const double alpha, const double  *A, const int lda,
-             const double  *B, const int ldb, const double beta,
-             double  *C, const int ldc)
+             const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
+             const double alpha, const double  *A, const CBLAS_INT lda,
+             const double  *B, const CBLAS_INT ldb, const double beta,
+             double  *C, const CBLAS_INT ldc)
             = current_backend->blas.dsyr2k.cblas_function;
         fn(layout,Uplo,Trans,N,K,alpha,A,lda,B,ldb,beta,C,ldc);
     } else {
