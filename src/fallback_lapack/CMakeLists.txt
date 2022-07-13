@@ -76,7 +76,7 @@ else()
 endif()
 
 if (APPLE)
-   set_target_properties(flexiblas_fallback_lapack PROPERTIES LINK_FLAGS "-undefined dynamic_lookup -flat_namespace")
+   set_target_properties(flexiblas_fallback_lapack PROPERTIES LINK_FLAGS "-undefined dynamic_lookup ")
 endif()
 
 target_include_directories(flexiblas_fallback_lapack PRIVATE ${PROJECT_BINARY_DIR}/include)

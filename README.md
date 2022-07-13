@@ -1,7 +1,7 @@
 FlexiBLAS - A BLAS and LAPACK wrapper library with runtime exchangeable backends
 ================================================================================
 
-**Version 3.2.0** 10.5281/zenodo.798186
+**Version 3.2.1** 10.5281/zenodo.798186
 
 **Project Website:** https://www.mpi-magdeburg.mpg.de/projects/flexiblas
 
@@ -287,6 +287,7 @@ Thanks Iñaki Ucar (https://src.fedoraproject.org/user/iucar) for packaging and
 maintaining the Fedora integration.
 
 
+
 ### Caveats
 
 * If **FlexiBLAS** is not automatically selected by the `update-alternatives`
@@ -313,6 +314,13 @@ maintaining the Fedora integration.
   with the **OpenBLAS** package versions between 0.2.6 and 0.2.8-4. If you have
   one of these version installed, please update *OpenBLAS* before installing
   **FlexiBLAS**.
+
+* If FlexiBLAS should be used on MacOS X and OpenBLAS is installed via `brew`,
+  it is necessary to extend cmake's search path by setting:
+  ```
+  export CMAKE_PREFIX_PATH=/usr/local/opt/openblas:$CMAKE_PREFIX_PATH
+  ```
+
 
 ### Testing
 **FlexiBLAS** comes with the reference *BLAS* and reference *LAPACK* test suite.
