@@ -80,8 +80,8 @@ void FC_GLOBAL(dlasd5,DLASD5)(blasint* i, double* d, double* z, double* delta, d
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlasd5.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlasd5.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlasd5.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlasd5.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) dsigma, (void*) work); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlasd5_(void* i, void* d, void* z, void* delta, void* rho, v
 {
 	void (*fn) (void* i, void* d, void* z, void* delta, void* rho, void* dsigma, void* work);
 
-	fn = current_backend->lapack.dlasd5.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlasd5.f77_blas_function; 
 
 		fn((void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) dsigma, (void*) work); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlasd5_(void* i, void* d, void* z, void* delta, void* rho, 
 	void (*fn) (void* i, void* d, void* z, void* delta, void* rho, void* dsigma, void* work);
 	void (*fn_hook) (void* i, void* d, void* z, void* delta, void* rho, void* dsigma, void* work);
 
-	fn      = current_backend->lapack.dlasd5.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlasd5.f77_blas_function; 
 
     hook_pos_dlasd5 ++;
     if( hook_pos_dlasd5 < __flexiblas_hooks->dlasd5.nhook) {
-        fn_hook = __flexiblas_hooks->dlasd5.f77_hook_function[hook_pos_dlasd5];
+        *(void **) &fn_hook = __flexiblas_hooks->dlasd5.f77_hook_function[hook_pos_dlasd5];
         fn_hook((void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) dsigma, (void*) work);
     } else {
         hook_pos_dlasd5 = 0;

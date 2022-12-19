@@ -112,8 +112,8 @@ void flexiblas_real_cblas_zhemv(const CBLAS_LAYOUT layout,
              const CBLAS_UPLO Uplo, const CBLAS_INT N,
              const void *alpha, const void *A, const CBLAS_INT lda,
              const void *X, const CBLAS_INT incX, const void *beta,
-             void  *Y, const CBLAS_INT incY)
-            = current_backend->blas.zhemv.cblas_function;
+             void  *Y, const CBLAS_INT incY);
+        *(void **) & fn = current_backend->blas.zhemv.cblas_function;
         fn(layout,Uplo,N,alpha,A,lda,X,incX,beta,Y,incY);
     } else {
         CBLAS_INT n=0, i=0;

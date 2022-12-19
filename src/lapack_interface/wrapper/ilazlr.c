@@ -81,8 +81,8 @@ int FC_GLOBAL(ilazlr,ILAZLR)(blasint* m, blasint* n, double complex* a, blasint*
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ilazlr.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ilazlr.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ilazlr.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ilazlr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) m, (void*) n, (void*) a, (void*) lda); 
 		return ret; 
@@ -113,7 +113,7 @@ blasint flexiblas_real_ilazlr_(void* m, void* n, void* a, void* lda)
 	blasint (*fn) (void* m, void* n, void* a, void* lda);
 	blasint ret;
 
-	fn = current_backend->lapack.ilazlr.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ilazlr.f77_blas_function; 
 
 		ret = fn((void*) m, (void*) n, (void*) a, (void*) lda); 
 
@@ -137,11 +137,11 @@ blasint flexiblas_chain_ilazlr_(void* m, void* n, void* a, void* lda)
 	blasint (*fn_hook) (void* m, void* n, void* a, void* lda);
 	blasint ret;
 
-	fn      = current_backend->lapack.ilazlr.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ilazlr.f77_blas_function; 
 
     hook_pos_ilazlr ++;
     if( hook_pos_ilazlr < __flexiblas_hooks->ilazlr.nhook) {
-        fn_hook = __flexiblas_hooks->ilazlr.f77_hook_function[hook_pos_ilazlr];
+        *(void **) &fn_hook = __flexiblas_hooks->ilazlr.f77_hook_function[hook_pos_ilazlr];
         ret = fn_hook((void*) m, (void*) n, (void*) a, (void*) lda);
     } else {
         hook_pos_ilazlr = 0;

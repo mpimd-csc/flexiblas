@@ -80,8 +80,8 @@ void FC_GLOBAL(dlarrk,DLARRK)(blasint* n, blasint* iw, double* gl, double* gu, d
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlarrk.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlarrk.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlarrk.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlarrk.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) iw, (void*) gl, (void*) gu, (void*) d, (void*) e2, (void*) pivmin, (void*) reltol, (void*) w, (void*) werr, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlarrk_(void* n, void* iw, void* gl, void* gu, void* d, void
 {
 	void (*fn) (void* n, void* iw, void* gl, void* gu, void* d, void* e2, void* pivmin, void* reltol, void* w, void* werr, void* info);
 
-	fn = current_backend->lapack.dlarrk.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlarrk.f77_blas_function; 
 
 		fn((void*) n, (void*) iw, (void*) gl, (void*) gu, (void*) d, (void*) e2, (void*) pivmin, (void*) reltol, (void*) w, (void*) werr, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlarrk_(void* n, void* iw, void* gl, void* gu, void* d, voi
 	void (*fn) (void* n, void* iw, void* gl, void* gu, void* d, void* e2, void* pivmin, void* reltol, void* w, void* werr, void* info);
 	void (*fn_hook) (void* n, void* iw, void* gl, void* gu, void* d, void* e2, void* pivmin, void* reltol, void* w, void* werr, void* info);
 
-	fn      = current_backend->lapack.dlarrk.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlarrk.f77_blas_function; 
 
     hook_pos_dlarrk ++;
     if( hook_pos_dlarrk < __flexiblas_hooks->dlarrk.nhook) {
-        fn_hook = __flexiblas_hooks->dlarrk.f77_hook_function[hook_pos_dlarrk];
+        *(void **) &fn_hook = __flexiblas_hooks->dlarrk.f77_hook_function[hook_pos_dlarrk];
         fn_hook((void*) n, (void*) iw, (void*) gl, (void*) gu, (void*) d, (void*) e2, (void*) pivmin, (void*) reltol, (void*) w, (void*) werr, (void*) info);
     } else {
         hook_pos_dlarrk = 0;

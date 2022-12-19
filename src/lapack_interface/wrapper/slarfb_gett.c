@@ -80,8 +80,8 @@ void FC_GLOBAL_(slarfb_gett,SLARFB_GETT)(char* ident, blasint* m, blasint* n, bl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slarfb_gett.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slarfb_gett.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slarfb_gett.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slarfb_gett.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) ident, (void*) m, (void*) n, (void*) k, (void*) t, (void*) ldt, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) work, (void*) ldwork); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slarfb_gett_(void* ident, void* m, void* n, void* k, void* t
 {
 	void (*fn) (void* ident, void* m, void* n, void* k, void* t, void* ldt, void* a, void* lda, void* b, void* ldb, void* work, void* ldwork);
 
-	fn = current_backend->lapack.slarfb_gett.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slarfb_gett.f77_blas_function; 
 
 		fn((void*) ident, (void*) m, (void*) n, (void*) k, (void*) t, (void*) ldt, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) work, (void*) ldwork); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slarfb_gett_(void* ident, void* m, void* n, void* k, void* 
 	void (*fn) (void* ident, void* m, void* n, void* k, void* t, void* ldt, void* a, void* lda, void* b, void* ldb, void* work, void* ldwork);
 	void (*fn_hook) (void* ident, void* m, void* n, void* k, void* t, void* ldt, void* a, void* lda, void* b, void* ldb, void* work, void* ldwork);
 
-	fn      = current_backend->lapack.slarfb_gett.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slarfb_gett.f77_blas_function; 
 
     hook_pos_slarfb_gett ++;
     if( hook_pos_slarfb_gett < __flexiblas_hooks->slarfb_gett.nhook) {
-        fn_hook = __flexiblas_hooks->slarfb_gett.f77_hook_function[hook_pos_slarfb_gett];
+        *(void **) &fn_hook = __flexiblas_hooks->slarfb_gett.f77_hook_function[hook_pos_slarfb_gett];
         fn_hook((void*) ident, (void*) m, (void*) n, (void*) k, (void*) t, (void*) ldt, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) work, (void*) ldwork);
     } else {
         hook_pos_slarfb_gett = 0;

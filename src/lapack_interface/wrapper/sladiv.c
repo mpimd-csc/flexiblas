@@ -80,8 +80,8 @@ void FC_GLOBAL(sladiv,SLADIV)(float* a, float* b, float* c, float* d, float* p, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.sladiv.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->sladiv.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.sladiv.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->sladiv.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) a, (void*) b, (void*) c, (void*) d, (void*) p, (void*) q); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_sladiv_(void* a, void* b, void* c, void* d, void* p, void* q
 {
 	void (*fn) (void* a, void* b, void* c, void* d, void* p, void* q);
 
-	fn = current_backend->lapack.sladiv.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.sladiv.f77_blas_function; 
 
 		fn((void*) a, (void*) b, (void*) c, (void*) d, (void*) p, (void*) q); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_sladiv_(void* a, void* b, void* c, void* d, void* p, void* 
 	void (*fn) (void* a, void* b, void* c, void* d, void* p, void* q);
 	void (*fn_hook) (void* a, void* b, void* c, void* d, void* p, void* q);
 
-	fn      = current_backend->lapack.sladiv.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.sladiv.f77_blas_function; 
 
     hook_pos_sladiv ++;
     if( hook_pos_sladiv < __flexiblas_hooks->sladiv.nhook) {
-        fn_hook = __flexiblas_hooks->sladiv.f77_hook_function[hook_pos_sladiv];
+        *(void **) &fn_hook = __flexiblas_hooks->sladiv.f77_hook_function[hook_pos_sladiv];
         fn_hook((void*) a, (void*) b, (void*) c, (void*) d, (void*) p, (void*) q);
     } else {
         hook_pos_sladiv = 0;

@@ -91,7 +91,7 @@ typedef struct {
 }_uncompressed_mmap_file;
 
 /* Registers the access to uncompressed files. */
-_compressed_io_handler io_register_uncompressed(){
+_compressed_io_handler io_register_uncompressed(void){
     _compressed_io_handler handler;
     strcpy(handler.extension, "");
     handler.type = CSC_IO_FILE_UNCOMPRESSED;
@@ -111,7 +111,7 @@ _compressed_io_handler io_register_uncompressed(){
     return handler;
 }
 
-_compressed_io_handler io_register_no_gzip(){
+_compressed_io_handler io_register_no_gzip(void){
     _compressed_io_handler handler;
     strcpy(handler.extension, ".gz");
     handler.type = CSC_IO_FILE_UNCOMPRESSED;
@@ -124,7 +124,7 @@ _compressed_io_handler io_register_no_gzip(){
     return handler;
 }
 
-_compressed_io_handler io_register_no_bzip2(){
+_compressed_io_handler io_register_no_bzip2(void){
     _compressed_io_handler handler;
     strcpy(handler.extension, ".bz2");
     handler.type = CSC_IO_FILE_UNCOMPRESSED;
@@ -136,9 +136,9 @@ _compressed_io_handler io_register_no_bzip2(){
     return handler;
 }
 
-_compressed_io_handler io_register_no_xz(){
+_compressed_io_handler io_register_no_xz(void){
     _compressed_io_handler handler;
-    const char HEADER_MAGIC[6] = { 0xFD, '7', 'z', 'X', 'Z', 0x00 };
+    const char HEADER_MAGIC[6] = { (char) 0xFD, '7', 'z', 'X', 'Z', 0x00 };
     strcpy(handler.extension, ".xz");
     handler.type = CSC_IO_FILE_UNCOMPRESSED;
     strcpy(handler.magic,(char *) (uintptr_t) (const void*) HEADER_MAGIC);

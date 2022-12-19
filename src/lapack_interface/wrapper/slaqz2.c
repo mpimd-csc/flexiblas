@@ -80,8 +80,8 @@ void FC_GLOBAL(slaqz2,SLAQZ2)(blasint* ilq, blasint* ilz, blasint* k, blasint* i
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slaqz2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slaqz2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slaqz2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slaqz2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) ilq, (void*) ilz, (void*) k, (void*) istartm, (void*) istopm, (void*) ihi, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) nq, (void*) qstart, (void*) q, (void*) ldq, (void*) nz, (void*) zstart, (void*) z, (void*) ldz); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slaqz2_(void* ilq, void* ilz, void* k, void* istartm, void* 
 {
 	void (*fn) (void* ilq, void* ilz, void* k, void* istartm, void* istopm, void* ihi, void* a, void* lda, void* b, void* ldb, void* nq, void* qstart, void* q, void* ldq, void* nz, void* zstart, void* z, void* ldz);
 
-	fn = current_backend->lapack.slaqz2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slaqz2.f77_blas_function; 
 
 		fn((void*) ilq, (void*) ilz, (void*) k, (void*) istartm, (void*) istopm, (void*) ihi, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) nq, (void*) qstart, (void*) q, (void*) ldq, (void*) nz, (void*) zstart, (void*) z, (void*) ldz); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slaqz2_(void* ilq, void* ilz, void* k, void* istartm, void*
 	void (*fn) (void* ilq, void* ilz, void* k, void* istartm, void* istopm, void* ihi, void* a, void* lda, void* b, void* ldb, void* nq, void* qstart, void* q, void* ldq, void* nz, void* zstart, void* z, void* ldz);
 	void (*fn_hook) (void* ilq, void* ilz, void* k, void* istartm, void* istopm, void* ihi, void* a, void* lda, void* b, void* ldb, void* nq, void* qstart, void* q, void* ldq, void* nz, void* zstart, void* z, void* ldz);
 
-	fn      = current_backend->lapack.slaqz2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slaqz2.f77_blas_function; 
 
     hook_pos_slaqz2 ++;
     if( hook_pos_slaqz2 < __flexiblas_hooks->slaqz2.nhook) {
-        fn_hook = __flexiblas_hooks->slaqz2.f77_hook_function[hook_pos_slaqz2];
+        *(void **) &fn_hook = __flexiblas_hooks->slaqz2.f77_hook_function[hook_pos_slaqz2];
         fn_hook((void*) ilq, (void*) ilz, (void*) k, (void*) istartm, (void*) istopm, (void*) ihi, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) nq, (void*) qstart, (void*) q, (void*) ldq, (void*) nz, (void*) zstart, (void*) z, (void*) ldz);
     } else {
         hook_pos_slaqz2 = 0;

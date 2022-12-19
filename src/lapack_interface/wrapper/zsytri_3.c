@@ -80,8 +80,8 @@ void FC_GLOBAL_(zsytri_3,ZSYTRI_3)(char* uplo, blasint* n, double complex* a, bl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zsytri_3.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zsytri_3.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zsytri_3.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zsytri_3.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zsytri_3_(void* uplo, void* n, void* a, void* lda, void* e, 
 {
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* e, void* ipiv, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.zsytri_3.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zsytri_3.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zsytri_3_(void* uplo, void* n, void* a, void* lda, void* e,
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* e, void* ipiv, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* e, void* ipiv, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.zsytri_3.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zsytri_3.f77_blas_function; 
 
     hook_pos_zsytri_3 ++;
     if( hook_pos_zsytri_3 < __flexiblas_hooks->zsytri_3.nhook) {
-        fn_hook = __flexiblas_hooks->zsytri_3.f77_hook_function[hook_pos_zsytri_3];
+        *(void **) &fn_hook = __flexiblas_hooks->zsytri_3.f77_hook_function[hook_pos_zsytri_3];
         fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_zsytri_3 = 0;

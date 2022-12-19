@@ -80,8 +80,8 @@ void FC_GLOBAL(dptsvx,DPTSVX)(char* fact, blasint* n, blasint* nrhs, double* d, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dptsvx.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dptsvx.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dptsvx.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dptsvx.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) fact, (void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) df, (void*) ef, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) rcond, (void*) ferr, (void*) berr, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dptsvx_(void* fact, void* n, void* nrhs, void* d, void* e, v
 {
 	void (*fn) (void* fact, void* n, void* nrhs, void* d, void* e, void* df, void* ef, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* info);
 
-	fn = current_backend->lapack.dptsvx.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dptsvx.f77_blas_function; 
 
 		fn((void*) fact, (void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) df, (void*) ef, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) rcond, (void*) ferr, (void*) berr, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dptsvx_(void* fact, void* n, void* nrhs, void* d, void* e, 
 	void (*fn) (void* fact, void* n, void* nrhs, void* d, void* e, void* df, void* ef, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* info);
 	void (*fn_hook) (void* fact, void* n, void* nrhs, void* d, void* e, void* df, void* ef, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* info);
 
-	fn      = current_backend->lapack.dptsvx.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dptsvx.f77_blas_function; 
 
     hook_pos_dptsvx ++;
     if( hook_pos_dptsvx < __flexiblas_hooks->dptsvx.nhook) {
-        fn_hook = __flexiblas_hooks->dptsvx.f77_hook_function[hook_pos_dptsvx];
+        *(void **) &fn_hook = __flexiblas_hooks->dptsvx.f77_hook_function[hook_pos_dptsvx];
         fn_hook((void*) fact, (void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) df, (void*) ef, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) rcond, (void*) ferr, (void*) berr, (void*) work, (void*) info);
     } else {
         hook_pos_dptsvx = 0;

@@ -80,8 +80,8 @@ void FC_GLOBAL(dstebz,DSTEBZ)(char* range, char* order, blasint* n, double* vl, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dstebz.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dstebz.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dstebz.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dstebz.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) range, (void*) order, (void*) n, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) d, (void*) e, (void*) m, (void*) nsplit, (void*) w, (void*) iblock, (void*) isplit, (void*) work, (void*) iwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dstebz_(void* range, void* order, void* n, void* vl, void* v
 {
 	void (*fn) (void* range, void* order, void* n, void* vl, void* vu, void* il, void* iu, void* abstol, void* d, void* e, void* m, void* nsplit, void* w, void* iblock, void* isplit, void* work, void* iwork, void* info);
 
-	fn = current_backend->lapack.dstebz.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dstebz.f77_blas_function; 
 
 		fn((void*) range, (void*) order, (void*) n, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) d, (void*) e, (void*) m, (void*) nsplit, (void*) w, (void*) iblock, (void*) isplit, (void*) work, (void*) iwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dstebz_(void* range, void* order, void* n, void* vl, void* 
 	void (*fn) (void* range, void* order, void* n, void* vl, void* vu, void* il, void* iu, void* abstol, void* d, void* e, void* m, void* nsplit, void* w, void* iblock, void* isplit, void* work, void* iwork, void* info);
 	void (*fn_hook) (void* range, void* order, void* n, void* vl, void* vu, void* il, void* iu, void* abstol, void* d, void* e, void* m, void* nsplit, void* w, void* iblock, void* isplit, void* work, void* iwork, void* info);
 
-	fn      = current_backend->lapack.dstebz.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dstebz.f77_blas_function; 
 
     hook_pos_dstebz ++;
     if( hook_pos_dstebz < __flexiblas_hooks->dstebz.nhook) {
-        fn_hook = __flexiblas_hooks->dstebz.f77_hook_function[hook_pos_dstebz];
+        *(void **) &fn_hook = __flexiblas_hooks->dstebz.f77_hook_function[hook_pos_dstebz];
         fn_hook((void*) range, (void*) order, (void*) n, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) d, (void*) e, (void*) m, (void*) nsplit, (void*) w, (void*) iblock, (void*) isplit, (void*) work, (void*) iwork, (void*) info);
     } else {
         hook_pos_dstebz = 0;

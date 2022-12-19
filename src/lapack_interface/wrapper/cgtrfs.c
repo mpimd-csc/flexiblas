@@ -80,8 +80,8 @@ void FC_GLOBAL(cgtrfs,CGTRFS)(char* trans, blasint* n, blasint* nrhs, float comp
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cgtrfs.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cgtrfs.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cgtrfs.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cgtrfs.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) trans, (void*) n, (void*) nrhs, (void*) dl, (void*) d, (void*) du, (void*) dlf, (void*) df, (void*) duf, (void*) du2, (void*) ipiv, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cgtrfs_(void* trans, void* n, void* nrhs, void* dl, void* d,
 {
 	void (*fn) (void* trans, void* n, void* nrhs, void* dl, void* d, void* du, void* dlf, void* df, void* duf, void* du2, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* rwork, void* info);
 
-	fn = current_backend->lapack.cgtrfs.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cgtrfs.f77_blas_function; 
 
 		fn((void*) trans, (void*) n, (void*) nrhs, (void*) dl, (void*) d, (void*) du, (void*) dlf, (void*) df, (void*) duf, (void*) du2, (void*) ipiv, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cgtrfs_(void* trans, void* n, void* nrhs, void* dl, void* d
 	void (*fn) (void* trans, void* n, void* nrhs, void* dl, void* d, void* du, void* dlf, void* df, void* duf, void* du2, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* rwork, void* info);
 	void (*fn_hook) (void* trans, void* n, void* nrhs, void* dl, void* d, void* du, void* dlf, void* df, void* duf, void* du2, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* rwork, void* info);
 
-	fn      = current_backend->lapack.cgtrfs.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cgtrfs.f77_blas_function; 
 
     hook_pos_cgtrfs ++;
     if( hook_pos_cgtrfs < __flexiblas_hooks->cgtrfs.nhook) {
-        fn_hook = __flexiblas_hooks->cgtrfs.f77_hook_function[hook_pos_cgtrfs];
+        *(void **) &fn_hook = __flexiblas_hooks->cgtrfs.f77_hook_function[hook_pos_cgtrfs];
         fn_hook((void*) trans, (void*) n, (void*) nrhs, (void*) dl, (void*) d, (void*) du, (void*) dlf, (void*) df, (void*) duf, (void*) du2, (void*) ipiv, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info);
     } else {
         hook_pos_cgtrfs = 0;

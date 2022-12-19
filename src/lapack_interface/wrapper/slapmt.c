@@ -80,8 +80,8 @@ void FC_GLOBAL(slapmt,SLAPMT)(blasint* forwrd, blasint* m, blasint* n, float* x,
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slapmt.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slapmt.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slapmt.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slapmt.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) forwrd, (void*) m, (void*) n, (void*) x, (void*) ldx, (void*) k); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slapmt_(void* forwrd, void* m, void* n, void* x, void* ldx, 
 {
 	void (*fn) (void* forwrd, void* m, void* n, void* x, void* ldx, void* k);
 
-	fn = current_backend->lapack.slapmt.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slapmt.f77_blas_function; 
 
 		fn((void*) forwrd, (void*) m, (void*) n, (void*) x, (void*) ldx, (void*) k); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slapmt_(void* forwrd, void* m, void* n, void* x, void* ldx,
 	void (*fn) (void* forwrd, void* m, void* n, void* x, void* ldx, void* k);
 	void (*fn_hook) (void* forwrd, void* m, void* n, void* x, void* ldx, void* k);
 
-	fn      = current_backend->lapack.slapmt.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slapmt.f77_blas_function; 
 
     hook_pos_slapmt ++;
     if( hook_pos_slapmt < __flexiblas_hooks->slapmt.nhook) {
-        fn_hook = __flexiblas_hooks->slapmt.f77_hook_function[hook_pos_slapmt];
+        *(void **) &fn_hook = __flexiblas_hooks->slapmt.f77_hook_function[hook_pos_slapmt];
         fn_hook((void*) forwrd, (void*) m, (void*) n, (void*) x, (void*) ldx, (void*) k);
     } else {
         hook_pos_slapmt = 0;

@@ -80,8 +80,8 @@ void FC_GLOBAL(zhbevx,ZHBEVX)(char* jobz, char* range, char* uplo, blasint* n, b
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zhbevx.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zhbevx.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zhbevx.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zhbevx.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) q, (void*) ldq, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) rwork, (void*) iwork, (void*) ifail, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zhbevx_(void* jobz, void* range, void* uplo, void* n, void* 
 {
 	void (*fn) (void* jobz, void* range, void* uplo, void* n, void* kd, void* ab, void* ldab, void* q, void* ldq, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* rwork, void* iwork, void* ifail, void* info);
 
-	fn = current_backend->lapack.zhbevx.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zhbevx.f77_blas_function; 
 
 		fn((void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) q, (void*) ldq, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) rwork, (void*) iwork, (void*) ifail, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zhbevx_(void* jobz, void* range, void* uplo, void* n, void*
 	void (*fn) (void* jobz, void* range, void* uplo, void* n, void* kd, void* ab, void* ldab, void* q, void* ldq, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* rwork, void* iwork, void* ifail, void* info);
 	void (*fn_hook) (void* jobz, void* range, void* uplo, void* n, void* kd, void* ab, void* ldab, void* q, void* ldq, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* rwork, void* iwork, void* ifail, void* info);
 
-	fn      = current_backend->lapack.zhbevx.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zhbevx.f77_blas_function; 
 
     hook_pos_zhbevx ++;
     if( hook_pos_zhbevx < __flexiblas_hooks->zhbevx.nhook) {
-        fn_hook = __flexiblas_hooks->zhbevx.f77_hook_function[hook_pos_zhbevx];
+        *(void **) &fn_hook = __flexiblas_hooks->zhbevx.f77_hook_function[hook_pos_zhbevx];
         fn_hook((void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) q, (void*) ldq, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) rwork, (void*) iwork, (void*) ifail, (void*) info);
     } else {
         hook_pos_zhbevx = 0;

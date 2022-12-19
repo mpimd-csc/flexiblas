@@ -27,7 +27,7 @@ extern "C" {
     /* Filter number, see https://support.hdfgroup.org/services/contributions.html  */
     #define H5Z_FILTER_XZ 3001
 
-    int csc_hdf5_register_xz();
+    int csc_hdf5_register_xz(void);
 
 #ifdef __cplusplus
 };

@@ -80,8 +80,8 @@ void FC_GLOBAL(dlaqr5,DLAQR5)(blasint* wantt, blasint* wantz, blasint* kacc22, b
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlaqr5.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlaqr5.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlaqr5.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlaqr5.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) wantt, (void*) wantz, (void*) kacc22, (void*) n, (void*) ktop, (void*) kbot, (void*) nshfts, (void*) sr, (void*) si, (void*) h, (void*) ldh, (void*) iloz, (void*) ihiz, (void*) z, (void*) ldz, (void*) v, (void*) ldv, (void*) u, (void*) ldu, (void*) nv, (void*) wv, (void*) ldwv, (void*) nh, (void*) wh, (void*) ldwh); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlaqr5_(void* wantt, void* wantz, void* kacc22, void* n, voi
 {
 	void (*fn) (void* wantt, void* wantz, void* kacc22, void* n, void* ktop, void* kbot, void* nshfts, void* sr, void* si, void* h, void* ldh, void* iloz, void* ihiz, void* z, void* ldz, void* v, void* ldv, void* u, void* ldu, void* nv, void* wv, void* ldwv, void* nh, void* wh, void* ldwh);
 
-	fn = current_backend->lapack.dlaqr5.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlaqr5.f77_blas_function; 
 
 		fn((void*) wantt, (void*) wantz, (void*) kacc22, (void*) n, (void*) ktop, (void*) kbot, (void*) nshfts, (void*) sr, (void*) si, (void*) h, (void*) ldh, (void*) iloz, (void*) ihiz, (void*) z, (void*) ldz, (void*) v, (void*) ldv, (void*) u, (void*) ldu, (void*) nv, (void*) wv, (void*) ldwv, (void*) nh, (void*) wh, (void*) ldwh); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlaqr5_(void* wantt, void* wantz, void* kacc22, void* n, vo
 	void (*fn) (void* wantt, void* wantz, void* kacc22, void* n, void* ktop, void* kbot, void* nshfts, void* sr, void* si, void* h, void* ldh, void* iloz, void* ihiz, void* z, void* ldz, void* v, void* ldv, void* u, void* ldu, void* nv, void* wv, void* ldwv, void* nh, void* wh, void* ldwh);
 	void (*fn_hook) (void* wantt, void* wantz, void* kacc22, void* n, void* ktop, void* kbot, void* nshfts, void* sr, void* si, void* h, void* ldh, void* iloz, void* ihiz, void* z, void* ldz, void* v, void* ldv, void* u, void* ldu, void* nv, void* wv, void* ldwv, void* nh, void* wh, void* ldwh);
 
-	fn      = current_backend->lapack.dlaqr5.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlaqr5.f77_blas_function; 
 
     hook_pos_dlaqr5 ++;
     if( hook_pos_dlaqr5 < __flexiblas_hooks->dlaqr5.nhook) {
-        fn_hook = __flexiblas_hooks->dlaqr5.f77_hook_function[hook_pos_dlaqr5];
+        *(void **) &fn_hook = __flexiblas_hooks->dlaqr5.f77_hook_function[hook_pos_dlaqr5];
         fn_hook((void*) wantt, (void*) wantz, (void*) kacc22, (void*) n, (void*) ktop, (void*) kbot, (void*) nshfts, (void*) sr, (void*) si, (void*) h, (void*) ldh, (void*) iloz, (void*) ihiz, (void*) z, (void*) ldz, (void*) v, (void*) ldv, (void*) u, (void*) ldu, (void*) nv, (void*) wv, (void*) ldwv, (void*) nh, (void*) wh, (void*) ldwh);
     } else {
         hook_pos_dlaqr5 = 0;

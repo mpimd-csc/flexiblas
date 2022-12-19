@@ -80,8 +80,8 @@ void FC_GLOBAL(spotri,SPOTRI)(char* uplo, blasint* n, float* a, blasint* lda, bl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.spotri.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->spotri.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.spotri.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->spotri.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_spotri_(void* uplo, void* n, void* a, void* lda, void* info)
 {
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* info);
 
-	fn = current_backend->lapack.spotri.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.spotri.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_spotri_(void* uplo, void* n, void* a, void* lda, void* info
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* info);
 
-	fn      = current_backend->lapack.spotri.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.spotri.f77_blas_function; 
 
     hook_pos_spotri ++;
     if( hook_pos_spotri < __flexiblas_hooks->spotri.nhook) {
-        fn_hook = __flexiblas_hooks->spotri.f77_hook_function[hook_pos_spotri];
+        *(void **) &fn_hook = __flexiblas_hooks->spotri.f77_hook_function[hook_pos_spotri];
         fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) info);
     } else {
         hook_pos_spotri = 0;

@@ -80,8 +80,8 @@ void FC_GLOBAL(ssytrs2,SSYTRS2)(char* uplo, blasint* n, blasint* nrhs, float* a,
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ssytrs2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ssytrs2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ssytrs2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ssytrs2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ssytrs2_(void* uplo, void* n, void* nrhs, void* a, void* lda
 {
 	void (*fn) (void* uplo, void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* work, void* info);
 
-	fn = current_backend->lapack.ssytrs2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ssytrs2.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ssytrs2_(void* uplo, void* n, void* nrhs, void* a, void* ld
 	void (*fn) (void* uplo, void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* work, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* work, void* info);
 
-	fn      = current_backend->lapack.ssytrs2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ssytrs2.f77_blas_function; 
 
     hook_pos_ssytrs2 ++;
     if( hook_pos_ssytrs2 < __flexiblas_hooks->ssytrs2.nhook) {
-        fn_hook = __flexiblas_hooks->ssytrs2.f77_hook_function[hook_pos_ssytrs2];
+        *(void **) &fn_hook = __flexiblas_hooks->ssytrs2.f77_hook_function[hook_pos_ssytrs2];
         fn_hook((void*) uplo, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) work, (void*) info);
     } else {
         hook_pos_ssytrs2 = 0;

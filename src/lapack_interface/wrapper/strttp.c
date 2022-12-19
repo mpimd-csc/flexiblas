@@ -80,8 +80,8 @@ void FC_GLOBAL(strttp,STRTTP)(char* uplo, blasint* n, float* a, blasint* lda, fl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.strttp.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->strttp.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.strttp.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->strttp.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ap, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_strttp_(void* uplo, void* n, void* a, void* lda, void* ap, v
 {
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* ap, void* info);
 
-	fn = current_backend->lapack.strttp.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.strttp.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ap, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_strttp_(void* uplo, void* n, void* a, void* lda, void* ap, 
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* ap, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* ap, void* info);
 
-	fn      = current_backend->lapack.strttp.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.strttp.f77_blas_function; 
 
     hook_pos_strttp ++;
     if( hook_pos_strttp < __flexiblas_hooks->strttp.nhook) {
-        fn_hook = __flexiblas_hooks->strttp.f77_hook_function[hook_pos_strttp];
+        *(void **) &fn_hook = __flexiblas_hooks->strttp.f77_hook_function[hook_pos_strttp];
         fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ap, (void*) info);
     } else {
         hook_pos_strttp = 0;

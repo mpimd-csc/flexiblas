@@ -80,8 +80,8 @@ void FC_GLOBAL(cgebal,CGEBAL)(char* job, blasint* n, float complex* a, blasint* 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cgebal.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cgebal.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cgebal.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cgebal.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) job, (void*) n, (void*) a, (void*) lda, (void*) ilo, (void*) ihi, (void*) scale, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cgebal_(void* job, void* n, void* a, void* lda, void* ilo, v
 {
 	void (*fn) (void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info);
 
-	fn = current_backend->lapack.cgebal.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cgebal.f77_blas_function; 
 
 		fn((void*) job, (void*) n, (void*) a, (void*) lda, (void*) ilo, (void*) ihi, (void*) scale, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cgebal_(void* job, void* n, void* a, void* lda, void* ilo, 
 	void (*fn) (void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info);
 	void (*fn_hook) (void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info);
 
-	fn      = current_backend->lapack.cgebal.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cgebal.f77_blas_function; 
 
     hook_pos_cgebal ++;
     if( hook_pos_cgebal < __flexiblas_hooks->cgebal.nhook) {
-        fn_hook = __flexiblas_hooks->cgebal.f77_hook_function[hook_pos_cgebal];
+        *(void **) &fn_hook = __flexiblas_hooks->cgebal.f77_hook_function[hook_pos_cgebal];
         fn_hook((void*) job, (void*) n, (void*) a, (void*) lda, (void*) ilo, (void*) ihi, (void*) scale, (void*) info);
     } else {
         hook_pos_cgebal = 0;

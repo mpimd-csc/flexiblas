@@ -80,8 +80,8 @@ void FC_GLOBAL(slaed9,SLAED9)(blasint* k, blasint* kstart, blasint* kstop, blasi
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slaed9.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slaed9.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slaed9.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slaed9.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) k, (void*) kstart, (void*) kstop, (void*) n, (void*) d, (void*) q, (void*) ldq, (void*) rho, (void*) dlamda, (void*) w, (void*) s, (void*) lds, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slaed9_(void* k, void* kstart, void* kstop, void* n, void* d
 {
 	void (*fn) (void* k, void* kstart, void* kstop, void* n, void* d, void* q, void* ldq, void* rho, void* dlamda, void* w, void* s, void* lds, void* info);
 
-	fn = current_backend->lapack.slaed9.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slaed9.f77_blas_function; 
 
 		fn((void*) k, (void*) kstart, (void*) kstop, (void*) n, (void*) d, (void*) q, (void*) ldq, (void*) rho, (void*) dlamda, (void*) w, (void*) s, (void*) lds, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slaed9_(void* k, void* kstart, void* kstop, void* n, void* 
 	void (*fn) (void* k, void* kstart, void* kstop, void* n, void* d, void* q, void* ldq, void* rho, void* dlamda, void* w, void* s, void* lds, void* info);
 	void (*fn_hook) (void* k, void* kstart, void* kstop, void* n, void* d, void* q, void* ldq, void* rho, void* dlamda, void* w, void* s, void* lds, void* info);
 
-	fn      = current_backend->lapack.slaed9.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slaed9.f77_blas_function; 
 
     hook_pos_slaed9 ++;
     if( hook_pos_slaed9 < __flexiblas_hooks->slaed9.nhook) {
-        fn_hook = __flexiblas_hooks->slaed9.f77_hook_function[hook_pos_slaed9];
+        *(void **) &fn_hook = __flexiblas_hooks->slaed9.f77_hook_function[hook_pos_slaed9];
         fn_hook((void*) k, (void*) kstart, (void*) kstop, (void*) n, (void*) d, (void*) q, (void*) ldq, (void*) rho, (void*) dlamda, (void*) w, (void*) s, (void*) lds, (void*) info);
     } else {
         hook_pos_slaed9 = 0;

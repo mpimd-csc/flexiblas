@@ -80,8 +80,8 @@ void FC_GLOBAL(sgelq,SGELQ)(blasint* m, blasint* n, float* a, blasint* lda, floa
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.sgelq.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->sgelq.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.sgelq.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->sgelq.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) t, (void*) tsize, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_sgelq_(void* m, void* n, void* a, void* lda, void* t, void* 
 {
 	void (*fn) (void* m, void* n, void* a, void* lda, void* t, void* tsize, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.sgelq.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.sgelq.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) t, (void*) tsize, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_sgelq_(void* m, void* n, void* a, void* lda, void* t, void*
 	void (*fn) (void* m, void* n, void* a, void* lda, void* t, void* tsize, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* m, void* n, void* a, void* lda, void* t, void* tsize, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.sgelq.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.sgelq.f77_blas_function; 
 
     hook_pos_sgelq ++;
     if( hook_pos_sgelq < __flexiblas_hooks->sgelq.nhook) {
-        fn_hook = __flexiblas_hooks->sgelq.f77_hook_function[hook_pos_sgelq];
+        *(void **) &fn_hook = __flexiblas_hooks->sgelq.f77_hook_function[hook_pos_sgelq];
         fn_hook((void*) m, (void*) n, (void*) a, (void*) lda, (void*) t, (void*) tsize, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_sgelq = 0;

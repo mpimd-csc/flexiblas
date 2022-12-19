@@ -80,8 +80,8 @@ void FC_GLOBAL(slarz,SLARZ)(char* side, blasint* m, blasint* n, blasint* l, floa
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slarz.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slarz.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slarz.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slarz.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) side, (void*) m, (void*) n, (void*) l, (void*) v, (void*) incv, (void*) tau, (void*) c, (void*) ldc, (void*) work); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slarz_(void* side, void* m, void* n, void* l, void* v, void*
 {
 	void (*fn) (void* side, void* m, void* n, void* l, void* v, void* incv, void* tau, void* c, void* ldc, void* work);
 
-	fn = current_backend->lapack.slarz.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slarz.f77_blas_function; 
 
 		fn((void*) side, (void*) m, (void*) n, (void*) l, (void*) v, (void*) incv, (void*) tau, (void*) c, (void*) ldc, (void*) work); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slarz_(void* side, void* m, void* n, void* l, void* v, void
 	void (*fn) (void* side, void* m, void* n, void* l, void* v, void* incv, void* tau, void* c, void* ldc, void* work);
 	void (*fn_hook) (void* side, void* m, void* n, void* l, void* v, void* incv, void* tau, void* c, void* ldc, void* work);
 
-	fn      = current_backend->lapack.slarz.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slarz.f77_blas_function; 
 
     hook_pos_slarz ++;
     if( hook_pos_slarz < __flexiblas_hooks->slarz.nhook) {
-        fn_hook = __flexiblas_hooks->slarz.f77_hook_function[hook_pos_slarz];
+        *(void **) &fn_hook = __flexiblas_hooks->slarz.f77_hook_function[hook_pos_slarz];
         fn_hook((void*) side, (void*) m, (void*) n, (void*) l, (void*) v, (void*) incv, (void*) tau, (void*) c, (void*) ldc, (void*) work);
     } else {
         hook_pos_slarz = 0;

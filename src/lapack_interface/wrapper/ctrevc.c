@@ -80,8 +80,8 @@ void FC_GLOBAL(ctrevc,CTREVC)(char* side, char* howmny, blasint* select, blasint
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ctrevc.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ctrevc.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ctrevc.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ctrevc.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) side, (void*) howmny, (void*) select, (void*) n, (void*) t, (void*) ldt, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) mm, (void*) m, (void*) work, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ctrevc_(void* side, void* howmny, void* select, void* n, voi
 {
 	void (*fn) (void* side, void* howmny, void* select, void* n, void* t, void* ldt, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* rwork, void* info);
 
-	fn = current_backend->lapack.ctrevc.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ctrevc.f77_blas_function; 
 
 		fn((void*) side, (void*) howmny, (void*) select, (void*) n, (void*) t, (void*) ldt, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) mm, (void*) m, (void*) work, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ctrevc_(void* side, void* howmny, void* select, void* n, vo
 	void (*fn) (void* side, void* howmny, void* select, void* n, void* t, void* ldt, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* rwork, void* info);
 	void (*fn_hook) (void* side, void* howmny, void* select, void* n, void* t, void* ldt, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* rwork, void* info);
 
-	fn      = current_backend->lapack.ctrevc.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ctrevc.f77_blas_function; 
 
     hook_pos_ctrevc ++;
     if( hook_pos_ctrevc < __flexiblas_hooks->ctrevc.nhook) {
-        fn_hook = __flexiblas_hooks->ctrevc.f77_hook_function[hook_pos_ctrevc];
+        *(void **) &fn_hook = __flexiblas_hooks->ctrevc.f77_hook_function[hook_pos_ctrevc];
         fn_hook((void*) side, (void*) howmny, (void*) select, (void*) n, (void*) t, (void*) ldt, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) mm, (void*) m, (void*) work, (void*) rwork, (void*) info);
     } else {
         hook_pos_ctrevc = 0;

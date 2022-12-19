@@ -56,7 +56,7 @@ typedef struct {
 
 
 /* Registers the bzip2 compression library. */
-_compressed_io_handler io_register_bzip2(){
+_compressed_io_handler io_register_bzip2(void){
     _compressed_io_handler handler;
     strcpy(handler.extension, ".bz2");
     handler.type = CSC_IO_FILE_BZIP2;

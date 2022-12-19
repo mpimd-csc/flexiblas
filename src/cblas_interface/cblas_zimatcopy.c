@@ -89,7 +89,8 @@ void flexiblas_real_cblas_zimatcopy(const CBLAS_ORDER CORDER, const CBLAS_TRANSP
 #define F77_LDB  cldb
 #endif
     if ( current_backend->blas.zimatcopy.cblas_function != NULL ) {
-        void (*fn)(const CBLAS_ORDER, const CBLAS_TRANSPOSE, const CBLAS_INT, const CBLAS_INT, const void *, void*, const CBLAS_INT, const CBLAS_INT) = current_backend->blas.zimatcopy.cblas_function;
+        void (*fn)(const CBLAS_ORDER, const CBLAS_TRANSPOSE, const CBLAS_INT, const CBLAS_INT, const void *, void*, const CBLAS_INT, const CBLAS_INT);
+        *(void **) &fn = current_backend->blas.zimatcopy.cblas_function;
         fn(CORDER, CTRANS, crows, ccols, calpha, a, clda, cldb);
     } else {
         char ORDER[2]=" ";

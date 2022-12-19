@@ -85,8 +85,8 @@ void flexiblas_real_cblas_sscal( const CBLAS_INT N, const float alpha, float *X,
    if ( current_backend->blas.sscal.cblas_function != NULL ) {
 	   void (*fn)
 		 ( const CBLAS_INT N, const float alpha, float *X,
-                       const CBLAS_INT incX)
-		   = current_backend->blas.sscal.cblas_function;
+                       const CBLAS_INT incX);
+       *(void **) & fn = current_backend->blas.sscal.cblas_function;
 	   fn(N,alpha,X,incX);
    } else {
 	FC_GLOBAL(sscal,SSCAL)( &F77_N, &alpha, X, &F77_incX);

@@ -110,8 +110,8 @@ void flexiblas_real_cblas_ztrsv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
              const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
              const CBLAS_INT N, const void  *A, const CBLAS_INT lda, void  *X,
-             const CBLAS_INT incX)
-            = current_backend->blas.ztrsv.cblas_function;
+             const CBLAS_INT incX);
+        *(void **) & fn = current_backend->blas.ztrsv.cblas_function;
         fn(layout,Uplo,TransA,Diag,N,A,lda,X,incX);
     } else {
         CBLAS_INT n, i=0, tincX;

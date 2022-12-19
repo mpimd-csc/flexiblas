@@ -80,8 +80,8 @@ void FC_GLOBAL(dorm2l,DORM2L)(char* side, char* trans, blasint* m, blasint* n, b
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dorm2l.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dorm2l.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dorm2l.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dorm2l.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dorm2l_(void* side, void* trans, void* m, void* n, void* k, 
 {
 	void (*fn) (void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* info);
 
-	fn = current_backend->lapack.dorm2l.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dorm2l.f77_blas_function; 
 
 		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dorm2l_(void* side, void* trans, void* m, void* n, void* k,
 	void (*fn) (void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* info);
 	void (*fn_hook) (void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* info);
 
-	fn      = current_backend->lapack.dorm2l.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dorm2l.f77_blas_function; 
 
     hook_pos_dorm2l ++;
     if( hook_pos_dorm2l < __flexiblas_hooks->dorm2l.nhook) {
-        fn_hook = __flexiblas_hooks->dorm2l.f77_hook_function[hook_pos_dorm2l];
+        *(void **) &fn_hook = __flexiblas_hooks->dorm2l.f77_hook_function[hook_pos_dorm2l];
         fn_hook((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) info);
     } else {
         hook_pos_dorm2l = 0;

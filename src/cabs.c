@@ -51,15 +51,26 @@
 #include <complex.h>
 #include "flexiblas.h"
 
-double FC_GLOBAL(dcabs1,DCABS1)(double complex *z)
+double FC_GLOBAL(dcabs1,DCABS1)(const double complex *z)
 {
     return fabs(creal(*z)) + fabs(cimag(*z));
 }
 
-float FC_GLOBAL(scabs1,SCABS1)(float complex *z)
+float FC_GLOBAL(scabs1,SCABS1)(const float complex *z)
 {
     return fabsf(crealf(*z)) + fabsf(cimagf(*z));
 }
 
 
+#ifdef FLEXIBLAS_CBLAS
+double cblas_dcabs1(const void *c)
+{
+    return FC_GLOBAL(dcabs1,DCABS1)((const double complex *) c);
+}
 
+double cblas_scabs1(const void *c)
+{
+    return FC_GLOBAL(scabs1,SCABS1)((const float complex *) c);
+}
+
+#endif

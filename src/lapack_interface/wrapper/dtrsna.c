@@ -80,8 +80,8 @@ void FC_GLOBAL(dtrsna,DTRSNA)(char* job, char* howmny, blasint* select, blasint*
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dtrsna.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dtrsna.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dtrsna.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dtrsna.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) job, (void*) howmny, (void*) select, (void*) n, (void*) t, (void*) ldt, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) s, (void*) sep, (void*) mm, (void*) m, (void*) work, (void*) ldwork, (void*) iwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dtrsna_(void* job, void* howmny, void* select, void* n, void
 {
 	void (*fn) (void* job, void* howmny, void* select, void* n, void* t, void* ldt, void* vl, void* ldvl, void* vr, void* ldvr, void* s, void* sep, void* mm, void* m, void* work, void* ldwork, void* iwork, void* info);
 
-	fn = current_backend->lapack.dtrsna.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dtrsna.f77_blas_function; 
 
 		fn((void*) job, (void*) howmny, (void*) select, (void*) n, (void*) t, (void*) ldt, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) s, (void*) sep, (void*) mm, (void*) m, (void*) work, (void*) ldwork, (void*) iwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dtrsna_(void* job, void* howmny, void* select, void* n, voi
 	void (*fn) (void* job, void* howmny, void* select, void* n, void* t, void* ldt, void* vl, void* ldvl, void* vr, void* ldvr, void* s, void* sep, void* mm, void* m, void* work, void* ldwork, void* iwork, void* info);
 	void (*fn_hook) (void* job, void* howmny, void* select, void* n, void* t, void* ldt, void* vl, void* ldvl, void* vr, void* ldvr, void* s, void* sep, void* mm, void* m, void* work, void* ldwork, void* iwork, void* info);
 
-	fn      = current_backend->lapack.dtrsna.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dtrsna.f77_blas_function; 
 
     hook_pos_dtrsna ++;
     if( hook_pos_dtrsna < __flexiblas_hooks->dtrsna.nhook) {
-        fn_hook = __flexiblas_hooks->dtrsna.f77_hook_function[hook_pos_dtrsna];
+        *(void **) &fn_hook = __flexiblas_hooks->dtrsna.f77_hook_function[hook_pos_dtrsna];
         fn_hook((void*) job, (void*) howmny, (void*) select, (void*) n, (void*) t, (void*) ldt, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) s, (void*) sep, (void*) mm, (void*) m, (void*) work, (void*) ldwork, (void*) iwork, (void*) info);
     } else {
         hook_pos_dtrsna = 0;

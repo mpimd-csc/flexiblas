@@ -101,8 +101,8 @@ void flexiblas_real_cblas_ctpmv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
              const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
-             const CBLAS_INT N, const void  *Ap, void  *X, const CBLAS_INT incX)
-            = current_backend->blas.ctpmv.cblas_function;
+             const CBLAS_INT N, const void  *Ap, void  *X, const CBLAS_INT incX);
+        *(void **) &fn = current_backend->blas.ctpmv.cblas_function;
         fn(layout,Uplo,TransA,Diag,N,Ap,X,incX);
     } else {
         CBLAS_INT n, i=0, tincX;

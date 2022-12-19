@@ -80,8 +80,8 @@ void FC_GLOBAL(zheev,ZHEEV)(char* jobz, char* uplo, blasint* n, double complex* 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zheev.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zheev.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zheev.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zheev.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobz, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) w, (void*) work, (void*) lwork, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zheev_(void* jobz, void* uplo, void* n, void* a, void* lda, 
 {
 	void (*fn) (void* jobz, void* uplo, void* n, void* a, void* lda, void* w, void* work, void* lwork, void* rwork, void* info);
 
-	fn = current_backend->lapack.zheev.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zheev.f77_blas_function; 
 
 		fn((void*) jobz, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) w, (void*) work, (void*) lwork, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zheev_(void* jobz, void* uplo, void* n, void* a, void* lda,
 	void (*fn) (void* jobz, void* uplo, void* n, void* a, void* lda, void* w, void* work, void* lwork, void* rwork, void* info);
 	void (*fn_hook) (void* jobz, void* uplo, void* n, void* a, void* lda, void* w, void* work, void* lwork, void* rwork, void* info);
 
-	fn      = current_backend->lapack.zheev.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zheev.f77_blas_function; 
 
     hook_pos_zheev ++;
     if( hook_pos_zheev < __flexiblas_hooks->zheev.nhook) {
-        fn_hook = __flexiblas_hooks->zheev.f77_hook_function[hook_pos_zheev];
+        *(void **) &fn_hook = __flexiblas_hooks->zheev.f77_hook_function[hook_pos_zheev];
         fn_hook((void*) jobz, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) w, (void*) work, (void*) lwork, (void*) rwork, (void*) info);
     } else {
         hook_pos_zheev = 0;

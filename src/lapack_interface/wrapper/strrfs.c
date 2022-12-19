@@ -80,8 +80,8 @@ void FC_GLOBAL(strrfs,STRRFS)(char* uplo, char* trans, char* diag, blasint* n, b
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.strrfs.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->strrfs.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.strrfs.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->strrfs.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) iwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_strrfs_(void* uplo, void* trans, void* diag, void* n, void* 
 {
 	void (*fn) (void* uplo, void* trans, void* diag, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* iwork, void* info);
 
-	fn = current_backend->lapack.strrfs.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.strrfs.f77_blas_function; 
 
 		fn((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) iwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_strrfs_(void* uplo, void* trans, void* diag, void* n, void*
 	void (*fn) (void* uplo, void* trans, void* diag, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* iwork, void* info);
 	void (*fn_hook) (void* uplo, void* trans, void* diag, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* iwork, void* info);
 
-	fn      = current_backend->lapack.strrfs.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.strrfs.f77_blas_function; 
 
     hook_pos_strrfs ++;
     if( hook_pos_strrfs < __flexiblas_hooks->strrfs.nhook) {
-        fn_hook = __flexiblas_hooks->strrfs.f77_hook_function[hook_pos_strrfs];
+        *(void **) &fn_hook = __flexiblas_hooks->strrfs.f77_hook_function[hook_pos_strrfs];
         fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) iwork, (void*) info);
     } else {
         hook_pos_strrfs = 0;

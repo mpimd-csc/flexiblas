@@ -80,8 +80,8 @@ void FC_GLOBAL(slar1v,SLAR1V)(blasint* n, blasint* b1, blasint* bn, float* lambd
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slar1v.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slar1v.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slar1v.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slar1v.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) b1, (void*) bn, (void*) lambda, (void*) d, (void*) l, (void*) ld, (void*) lld, (void*) pivmin, (void*) gaptol, (void*) z, (void*) wantnc, (void*) negcnt, (void*) ztz, (void*) mingma, (void*) r, (void*) isuppz, (void*) nrminv, (void*) resid, (void*) rqcorr, (void*) work); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slar1v_(void* n, void* b1, void* bn, void* lambda, void* d, 
 {
 	void (*fn) (void* n, void* b1, void* bn, void* lambda, void* d, void* l, void* ld, void* lld, void* pivmin, void* gaptol, void* z, void* wantnc, void* negcnt, void* ztz, void* mingma, void* r, void* isuppz, void* nrminv, void* resid, void* rqcorr, void* work);
 
-	fn = current_backend->lapack.slar1v.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slar1v.f77_blas_function; 
 
 		fn((void*) n, (void*) b1, (void*) bn, (void*) lambda, (void*) d, (void*) l, (void*) ld, (void*) lld, (void*) pivmin, (void*) gaptol, (void*) z, (void*) wantnc, (void*) negcnt, (void*) ztz, (void*) mingma, (void*) r, (void*) isuppz, (void*) nrminv, (void*) resid, (void*) rqcorr, (void*) work); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slar1v_(void* n, void* b1, void* bn, void* lambda, void* d,
 	void (*fn) (void* n, void* b1, void* bn, void* lambda, void* d, void* l, void* ld, void* lld, void* pivmin, void* gaptol, void* z, void* wantnc, void* negcnt, void* ztz, void* mingma, void* r, void* isuppz, void* nrminv, void* resid, void* rqcorr, void* work);
 	void (*fn_hook) (void* n, void* b1, void* bn, void* lambda, void* d, void* l, void* ld, void* lld, void* pivmin, void* gaptol, void* z, void* wantnc, void* negcnt, void* ztz, void* mingma, void* r, void* isuppz, void* nrminv, void* resid, void* rqcorr, void* work);
 
-	fn      = current_backend->lapack.slar1v.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slar1v.f77_blas_function; 
 
     hook_pos_slar1v ++;
     if( hook_pos_slar1v < __flexiblas_hooks->slar1v.nhook) {
-        fn_hook = __flexiblas_hooks->slar1v.f77_hook_function[hook_pos_slar1v];
+        *(void **) &fn_hook = __flexiblas_hooks->slar1v.f77_hook_function[hook_pos_slar1v];
         fn_hook((void*) n, (void*) b1, (void*) bn, (void*) lambda, (void*) d, (void*) l, (void*) ld, (void*) lld, (void*) pivmin, (void*) gaptol, (void*) z, (void*) wantnc, (void*) negcnt, (void*) ztz, (void*) mingma, (void*) r, (void*) isuppz, (void*) nrminv, (void*) resid, (void*) rqcorr, (void*) work);
     } else {
         hook_pos_slar1v = 0;

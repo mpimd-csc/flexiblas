@@ -80,8 +80,8 @@ void FC_GLOBAL_(slaorhr_col_getrfnp2,SLAORHR_COL_GETRFNP2)(blasint* m, blasint* 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slaorhr_col_getrfnp2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slaorhr_col_getrfnp2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slaorhr_col_getrfnp2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slaorhr_col_getrfnp2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) d, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slaorhr_col_getrfnp2_(void* m, void* n, void* a, void* lda, 
 {
 	void (*fn) (void* m, void* n, void* a, void* lda, void* d, void* info);
 
-	fn = current_backend->lapack.slaorhr_col_getrfnp2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slaorhr_col_getrfnp2.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) d, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slaorhr_col_getrfnp2_(void* m, void* n, void* a, void* lda,
 	void (*fn) (void* m, void* n, void* a, void* lda, void* d, void* info);
 	void (*fn_hook) (void* m, void* n, void* a, void* lda, void* d, void* info);
 
-	fn      = current_backend->lapack.slaorhr_col_getrfnp2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slaorhr_col_getrfnp2.f77_blas_function; 
 
     hook_pos_slaorhr_col_getrfnp2 ++;
     if( hook_pos_slaorhr_col_getrfnp2 < __flexiblas_hooks->slaorhr_col_getrfnp2.nhook) {
-        fn_hook = __flexiblas_hooks->slaorhr_col_getrfnp2.f77_hook_function[hook_pos_slaorhr_col_getrfnp2];
+        *(void **) &fn_hook = __flexiblas_hooks->slaorhr_col_getrfnp2.f77_hook_function[hook_pos_slaorhr_col_getrfnp2];
         fn_hook((void*) m, (void*) n, (void*) a, (void*) lda, (void*) d, (void*) info);
     } else {
         hook_pos_slaorhr_col_getrfnp2 = 0;

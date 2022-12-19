@@ -80,8 +80,8 @@ void FC_GLOBAL(zhegv,ZHEGV)(blasint* itype, char* jobz, char* uplo, blasint* n, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zhegv.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zhegv.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zhegv.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zhegv.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) itype, (void*) jobz, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) w, (void*) work, (void*) lwork, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zhegv_(void* itype, void* jobz, void* uplo, void* n, void* a
 {
 	void (*fn) (void* itype, void* jobz, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* w, void* work, void* lwork, void* rwork, void* info);
 
-	fn = current_backend->lapack.zhegv.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zhegv.f77_blas_function; 
 
 		fn((void*) itype, (void*) jobz, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) w, (void*) work, (void*) lwork, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zhegv_(void* itype, void* jobz, void* uplo, void* n, void* 
 	void (*fn) (void* itype, void* jobz, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* w, void* work, void* lwork, void* rwork, void* info);
 	void (*fn_hook) (void* itype, void* jobz, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* w, void* work, void* lwork, void* rwork, void* info);
 
-	fn      = current_backend->lapack.zhegv.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zhegv.f77_blas_function; 
 
     hook_pos_zhegv ++;
     if( hook_pos_zhegv < __flexiblas_hooks->zhegv.nhook) {
-        fn_hook = __flexiblas_hooks->zhegv.f77_hook_function[hook_pos_zhegv];
+        *(void **) &fn_hook = __flexiblas_hooks->zhegv.f77_hook_function[hook_pos_zhegv];
         fn_hook((void*) itype, (void*) jobz, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) w, (void*) work, (void*) lwork, (void*) rwork, (void*) info);
     } else {
         hook_pos_zhegv = 0;

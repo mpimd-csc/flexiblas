@@ -213,7 +213,7 @@ int main(int argc, char **argv)
         if ( line )  free(line);
     }
     fprintf(ofp, ";\n");
-    fprintf(ofp, "\nconst char * %s ( ) { return %s; }\n\n", funcname, varname );
+    fprintf(ofp, "\nconst char * %s ( void ) { return %s; }\n\n", funcname, varname );
 
 
 

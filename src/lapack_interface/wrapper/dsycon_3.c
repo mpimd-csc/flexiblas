@@ -80,8 +80,8 @@ void FC_GLOBAL_(dsycon_3,DSYCON_3)(char* uplo, blasint* n, double* a, blasint* l
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dsycon_3.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dsycon_3.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dsycon_3.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dsycon_3.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) iwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dsycon_3_(void* uplo, void* n, void* a, void* lda, void* e, 
 {
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* e, void* ipiv, void* anorm, void* rcond, void* work, void* iwork, void* info);
 
-	fn = current_backend->lapack.dsycon_3.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dsycon_3.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) iwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dsycon_3_(void* uplo, void* n, void* a, void* lda, void* e,
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* e, void* ipiv, void* anorm, void* rcond, void* work, void* iwork, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* e, void* ipiv, void* anorm, void* rcond, void* work, void* iwork, void* info);
 
-	fn      = current_backend->lapack.dsycon_3.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dsycon_3.f77_blas_function; 
 
     hook_pos_dsycon_3 ++;
     if( hook_pos_dsycon_3 < __flexiblas_hooks->dsycon_3.nhook) {
-        fn_hook = __flexiblas_hooks->dsycon_3.f77_hook_function[hook_pos_dsycon_3];
+        *(void **) &fn_hook = __flexiblas_hooks->dsycon_3.f77_hook_function[hook_pos_dsycon_3];
         fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) iwork, (void*) info);
     } else {
         hook_pos_dsycon_3 = 0;

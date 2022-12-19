@@ -6397,8 +6397,8 @@ void hook_zggbal(char* job, Int * n, double complex* a, Int * lda, double comple
 
 
 
-extern float flexiblas_chain_second ();
-float hook_second()
+extern float flexiblas_chain_second (void);
+float hook_second(void)
 {
     float v;
     double helpTime;
@@ -20110,8 +20110,8 @@ double hook_dladiv2(double* a, double* b, double* c, double* d, double* r, doubl
 
 
 
-extern double flexiblas_chain_dsecnd ();
-double hook_dsecnd()
+extern double flexiblas_chain_dsecnd (void);
+double hook_dsecnd(void)
 {
     double v;
     double helpTime;

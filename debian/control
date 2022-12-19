@@ -6,7 +6,7 @@ Build-Depends: debhelper (>= 11.0.0), cmake, gfortran (>= 5.1.0), gcc (>= 5.1.0)
  libopenblas64-openmp-dev, libopenblas64-pthread-dev, libopenblas64-serial-dev,
  libblis-openmp-dev, libblis-pthread-dev, libblis-serial-dev,
  libblis64-openmp-dev, libblis64-pthread-dev, libblis64-serial-dev,
- libblas-dev, libblas64-dev, liblapack-dev, liblapack64-dev
+ libblas-dev, libblas64-dev, liblapack-dev, liblapack64-dev, libmkl-dev [amd64]
 Standards-Version: 4.5.0
 Section: libs
 Homepage: http://www.mpi-magdeburg.mpg.de/projects/flexiblas
@@ -388,6 +388,47 @@ Description: BLIS Pthread backend for FlexiBLAS
  .
  This package contains the BLIS-Pthread backend for FlexiBLAS.
 
+Package: libflexiblas-mkl-serial
+Section: libs
+Architecture: amd64
+Multi-Arch: same
+Depends: libflexiblas (= ${binary:Version}), libmkl-sequential, libmkl-gf-lp64, ${misc:Depends}
+Description: Intel MKL Serial backend for FlexiBLAS
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ This package contains the Intel MKL Serial backend for FlexiBLAS.
+
+Package: libflexiblas-mkl-openmp
+Section: libs
+Architecture: amd64
+Multi-Arch: same
+Depends: libflexiblas (= ${binary:Version}), libmkl-gnu-thread, libmkl-gf-ilp64, ${misc:Depends}
+Description: Intel MKL OpenMP backend for FlexiBLAS
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ This package contains the Intel MKL OpenMP backend for FlexiBLAS.
+
+Package: libflexiblas-mkl-tbb
+Section: libs
+Architecture: amd64
+Multi-Arch: same
+Depends: libflexiblas (= ${binary:Version}), libmkl-tbb-thread, libmkl-gf-ilp64, ${misc:Depends}
+Description: Intel MKL OpenMP backend for FlexiBLAS
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ This package contains the Intel MKL TBB backend for FlexiBLAS.
 
 Package: libflexiblas64-openblas-serial
 Section: libs
@@ -472,5 +513,47 @@ Description: BLIS Pthread backend for FlexiBLAS (64 bit integers)
  not necessary with FlexiBLAS.
  .
  This package contains the BLIS-Pthread backend for FlexiBLAS.
+
+Package: libflexiblas64-mkl-serial
+Section: libs
+Architecture: amd64
+Multi-Arch: same
+Depends: libflexiblas (= ${binary:Version}), libmkl-sequential, libmkl-gf-ilp64, ${misc:Depends}
+Description: Intel MKL Serial backend for FlexiBLAS (64 bit integers)
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ This package contains the Intel MKL Serial backend for FlexiBLAS.
+
+Package: libflexiblas64-mkl-openmp
+Section: libs
+Architecture: amd64
+Multi-Arch: same
+Depends: libflexiblas (= ${binary:Version}), libmkl-gnu-thread, libmkl-gf-ilp64, ${misc:Depends}
+Description: Intel MKL OpenMP backend for FlexiBLAS (64 bit integers)
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ This package contains the Intel MKL OpenMP backend for FlexiBLAS.
+
+Package: libflexiblas64-mkl-tbb
+Section: libs
+Architecture: amd64
+Multi-Arch: same
+Depends: libflexiblas (= ${binary:Version}), libmkl-tbb-thread, libmkl-gf-ilp64,  ${misc:Depends}
+Description: Intel MKL OpenMP backend for FlexiBLAS (64 bit integers)
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ This package contains the Intel MKL TBB backend for FlexiBLAS.
 
 

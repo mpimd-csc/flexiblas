@@ -80,8 +80,8 @@ void FC_GLOBAL(cheev,CHEEV)(char* jobz, char* uplo, blasint* n, float complex* a
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cheev.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cheev.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cheev.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cheev.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobz, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) w, (void*) work, (void*) lwork, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cheev_(void* jobz, void* uplo, void* n, void* a, void* lda, 
 {
 	void (*fn) (void* jobz, void* uplo, void* n, void* a, void* lda, void* w, void* work, void* lwork, void* rwork, void* info);
 
-	fn = current_backend->lapack.cheev.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cheev.f77_blas_function; 
 
 		fn((void*) jobz, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) w, (void*) work, (void*) lwork, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cheev_(void* jobz, void* uplo, void* n, void* a, void* lda,
 	void (*fn) (void* jobz, void* uplo, void* n, void* a, void* lda, void* w, void* work, void* lwork, void* rwork, void* info);
 	void (*fn_hook) (void* jobz, void* uplo, void* n, void* a, void* lda, void* w, void* work, void* lwork, void* rwork, void* info);
 
-	fn      = current_backend->lapack.cheev.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cheev.f77_blas_function; 
 
     hook_pos_cheev ++;
     if( hook_pos_cheev < __flexiblas_hooks->cheev.nhook) {
-        fn_hook = __flexiblas_hooks->cheev.f77_hook_function[hook_pos_cheev];
+        *(void **) &fn_hook = __flexiblas_hooks->cheev.f77_hook_function[hook_pos_cheev];
         fn_hook((void*) jobz, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) w, (void*) work, (void*) lwork, (void*) rwork, (void*) info);
     } else {
         hook_pos_cheev = 0;

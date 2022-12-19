@@ -39,7 +39,7 @@
 #define MIN(A,B) (((A)<(B))?(A):(B))
 #define MAX(A,B) (((A)>(B))?(A):(B))
 
-extern void io_init();
+extern void io_init(void);
 
 
 

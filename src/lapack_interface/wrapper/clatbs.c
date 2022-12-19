@@ -80,8 +80,8 @@ void FC_GLOBAL(clatbs,CLATBS)(char* uplo, char* trans, char* diag, char* normin,
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.clatbs.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->clatbs.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.clatbs.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->clatbs.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) x, (void*) scale, (void*) cnorm, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_clatbs_(void* uplo, void* trans, void* diag, void* normin, v
 {
 	void (*fn) (void* uplo, void* trans, void* diag, void* normin, void* n, void* kd, void* ab, void* ldab, void* x, void* scale, void* cnorm, void* info);
 
-	fn = current_backend->lapack.clatbs.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.clatbs.f77_blas_function; 
 
 		fn((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) x, (void*) scale, (void*) cnorm, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_clatbs_(void* uplo, void* trans, void* diag, void* normin, 
 	void (*fn) (void* uplo, void* trans, void* diag, void* normin, void* n, void* kd, void* ab, void* ldab, void* x, void* scale, void* cnorm, void* info);
 	void (*fn_hook) (void* uplo, void* trans, void* diag, void* normin, void* n, void* kd, void* ab, void* ldab, void* x, void* scale, void* cnorm, void* info);
 
-	fn      = current_backend->lapack.clatbs.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.clatbs.f77_blas_function; 
 
     hook_pos_clatbs ++;
     if( hook_pos_clatbs < __flexiblas_hooks->clatbs.nhook) {
-        fn_hook = __flexiblas_hooks->clatbs.f77_hook_function[hook_pos_clatbs];
+        *(void **) &fn_hook = __flexiblas_hooks->clatbs.f77_hook_function[hook_pos_clatbs];
         fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) x, (void*) scale, (void*) cnorm, (void*) info);
     } else {
         hook_pos_clatbs = 0;

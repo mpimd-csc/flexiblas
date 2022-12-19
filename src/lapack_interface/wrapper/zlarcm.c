@@ -80,8 +80,8 @@ void FC_GLOBAL(zlarcm,ZLARCM)(blasint* m, blasint* n, double* a, blasint* lda, d
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlarcm.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlarcm.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlarcm.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlarcm.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) ldc, (void*) rwork); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zlarcm_(void* m, void* n, void* a, void* lda, void* b, void*
 {
 	void (*fn) (void* m, void* n, void* a, void* lda, void* b, void* ldb, void* c, void* ldc, void* rwork);
 
-	fn = current_backend->lapack.zlarcm.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlarcm.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) ldc, (void*) rwork); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zlarcm_(void* m, void* n, void* a, void* lda, void* b, void
 	void (*fn) (void* m, void* n, void* a, void* lda, void* b, void* ldb, void* c, void* ldc, void* rwork);
 	void (*fn_hook) (void* m, void* n, void* a, void* lda, void* b, void* ldb, void* c, void* ldc, void* rwork);
 
-	fn      = current_backend->lapack.zlarcm.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlarcm.f77_blas_function; 
 
     hook_pos_zlarcm ++;
     if( hook_pos_zlarcm < __flexiblas_hooks->zlarcm.nhook) {
-        fn_hook = __flexiblas_hooks->zlarcm.f77_hook_function[hook_pos_zlarcm];
+        *(void **) &fn_hook = __flexiblas_hooks->zlarcm.f77_hook_function[hook_pos_zlarcm];
         fn_hook((void*) m, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) ldc, (void*) rwork);
     } else {
         hook_pos_zlarcm = 0;

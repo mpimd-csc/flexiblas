@@ -80,8 +80,8 @@ void FC_GLOBAL(slaqz1,SLAQZ1)(float* a, blasint* lda, float* b, blasint* ldb, fl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slaqz1.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slaqz1.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slaqz1.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slaqz1.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) sr1, (void*) sr2, (void*) si, (void*) beta1, (void*) beta2, (void*) v); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slaqz1_(void* a, void* lda, void* b, void* ldb, void* sr1, v
 {
 	void (*fn) (void* a, void* lda, void* b, void* ldb, void* sr1, void* sr2, void* si, void* beta1, void* beta2, void* v);
 
-	fn = current_backend->lapack.slaqz1.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slaqz1.f77_blas_function; 
 
 		fn((void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) sr1, (void*) sr2, (void*) si, (void*) beta1, (void*) beta2, (void*) v); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slaqz1_(void* a, void* lda, void* b, void* ldb, void* sr1, 
 	void (*fn) (void* a, void* lda, void* b, void* ldb, void* sr1, void* sr2, void* si, void* beta1, void* beta2, void* v);
 	void (*fn_hook) (void* a, void* lda, void* b, void* ldb, void* sr1, void* sr2, void* si, void* beta1, void* beta2, void* v);
 
-	fn      = current_backend->lapack.slaqz1.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slaqz1.f77_blas_function; 
 
     hook_pos_slaqz1 ++;
     if( hook_pos_slaqz1 < __flexiblas_hooks->slaqz1.nhook) {
-        fn_hook = __flexiblas_hooks->slaqz1.f77_hook_function[hook_pos_slaqz1];
+        *(void **) &fn_hook = __flexiblas_hooks->slaqz1.f77_hook_function[hook_pos_slaqz1];
         fn_hook((void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) sr1, (void*) sr2, (void*) si, (void*) beta1, (void*) beta2, (void*) v);
     } else {
         hook_pos_slaqz1 = 0;

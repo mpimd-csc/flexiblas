@@ -71,9 +71,9 @@ typedef struct {
 }_xz_file;
 
 /* Registers the access to uncompressed files. */
-_compressed_io_handler io_register_xz(){
+_compressed_io_handler io_register_xz(void){
     _compressed_io_handler handler;
-    const char HEADER_MAGIC[6] = { 0xFD, '7', 'z', 'X', 'Z', 0x00 };
+    const char HEADER_MAGIC[6] = { (char) 0xFD, '7', 'z', 'X', 'Z', 0x00 };
 
     strcpy(handler.extension, ".xz");
     handler.type = CSC_IO_FILE_XZ;

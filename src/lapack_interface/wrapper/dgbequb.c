@@ -80,8 +80,8 @@ void FC_GLOBAL(dgbequb,DGBEQUB)(blasint* m, blasint* n, blasint* kl, blasint* ku
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dgbequb.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dgbequb.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dgbequb.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dgbequb.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dgbequb_(void* m, void* n, void* kl, void* ku, void* ab, voi
 {
 	void (*fn) (void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* info);
 
-	fn = current_backend->lapack.dgbequb.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dgbequb.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dgbequb_(void* m, void* n, void* kl, void* ku, void* ab, vo
 	void (*fn) (void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* info);
 	void (*fn_hook) (void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* info);
 
-	fn      = current_backend->lapack.dgbequb.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dgbequb.f77_blas_function; 
 
     hook_pos_dgbequb ++;
     if( hook_pos_dgbequb < __flexiblas_hooks->dgbequb.nhook) {
-        fn_hook = __flexiblas_hooks->dgbequb.f77_hook_function[hook_pos_dgbequb];
+        *(void **) &fn_hook = __flexiblas_hooks->dgbequb.f77_hook_function[hook_pos_dgbequb];
         fn_hook((void*) m, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) info);
     } else {
         hook_pos_dgbequb = 0;

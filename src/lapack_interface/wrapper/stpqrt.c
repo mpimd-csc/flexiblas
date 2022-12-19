@@ -80,8 +80,8 @@ void FC_GLOBAL(stpqrt,STPQRT)(blasint* m, blasint* n, blasint* l, blasint* nb, f
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.stpqrt.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->stpqrt.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.stpqrt.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->stpqrt.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) l, (void*) nb, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) t, (void*) ldt, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_stpqrt_(void* m, void* n, void* l, void* nb, void* a, void* 
 {
 	void (*fn) (void* m, void* n, void* l, void* nb, void* a, void* lda, void* b, void* ldb, void* t, void* ldt, void* work, void* info);
 
-	fn = current_backend->lapack.stpqrt.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.stpqrt.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) l, (void*) nb, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) t, (void*) ldt, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_stpqrt_(void* m, void* n, void* l, void* nb, void* a, void*
 	void (*fn) (void* m, void* n, void* l, void* nb, void* a, void* lda, void* b, void* ldb, void* t, void* ldt, void* work, void* info);
 	void (*fn_hook) (void* m, void* n, void* l, void* nb, void* a, void* lda, void* b, void* ldb, void* t, void* ldt, void* work, void* info);
 
-	fn      = current_backend->lapack.stpqrt.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.stpqrt.f77_blas_function; 
 
     hook_pos_stpqrt ++;
     if( hook_pos_stpqrt < __flexiblas_hooks->stpqrt.nhook) {
-        fn_hook = __flexiblas_hooks->stpqrt.f77_hook_function[hook_pos_stpqrt];
+        *(void **) &fn_hook = __flexiblas_hooks->stpqrt.f77_hook_function[hook_pos_stpqrt];
         fn_hook((void*) m, (void*) n, (void*) l, (void*) nb, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) t, (void*) ldt, (void*) work, (void*) info);
     } else {
         hook_pos_stpqrt = 0;

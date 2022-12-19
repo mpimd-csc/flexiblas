@@ -80,8 +80,8 @@ void FC_GLOBAL(dlaev2,DLAEV2)(double* a, double* b, double* c, double* rt1, doub
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlaev2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlaev2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlaev2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlaev2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlaev2_(void* a, void* b, void* c, void* rt1, void* rt2, voi
 {
 	void (*fn) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
 
-	fn = current_backend->lapack.dlaev2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlaev2.f77_blas_function; 
 
 		fn((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlaev2_(void* a, void* b, void* c, void* rt1, void* rt2, vo
 	void (*fn) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
 	void (*fn_hook) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
 
-	fn      = current_backend->lapack.dlaev2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlaev2.f77_blas_function; 
 
     hook_pos_dlaev2 ++;
     if( hook_pos_dlaev2 < __flexiblas_hooks->dlaev2.nhook) {
-        fn_hook = __flexiblas_hooks->dlaev2.f77_hook_function[hook_pos_dlaev2];
+        *(void **) &fn_hook = __flexiblas_hooks->dlaev2.f77_hook_function[hook_pos_dlaev2];
         fn_hook((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1);
     } else {
         hook_pos_dlaev2 = 0;

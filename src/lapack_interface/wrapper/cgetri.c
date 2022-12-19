@@ -80,8 +80,8 @@ void FC_GLOBAL(cgetri,CGETRI)(blasint* n, float complex* a, blasint* lda, blasin
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cgetri.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cgetri.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cgetri.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cgetri.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cgetri_(void* n, void* a, void* lda, void* ipiv, void* work,
 {
 	void (*fn) (void* n, void* a, void* lda, void* ipiv, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.cgetri.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cgetri.f77_blas_function; 
 
 		fn((void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cgetri_(void* n, void* a, void* lda, void* ipiv, void* work
 	void (*fn) (void* n, void* a, void* lda, void* ipiv, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* n, void* a, void* lda, void* ipiv, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.cgetri.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cgetri.f77_blas_function; 
 
     hook_pos_cgetri ++;
     if( hook_pos_cgetri < __flexiblas_hooks->cgetri.nhook) {
-        fn_hook = __flexiblas_hooks->cgetri.f77_hook_function[hook_pos_cgetri];
+        *(void **) &fn_hook = __flexiblas_hooks->cgetri.f77_hook_function[hook_pos_cgetri];
         fn_hook((void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_cgetri = 0;

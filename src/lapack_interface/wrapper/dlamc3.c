@@ -81,8 +81,8 @@ double FC_GLOBAL(dlamc3,DLAMC3)(double* a, double* b)
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlamc3.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlamc3.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlamc3.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlamc3.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) a, (void*) b); 
 		return ret; 
@@ -113,7 +113,7 @@ double flexiblas_real_dlamc3_(void* a, void* b)
 	double (*fn) (void* a, void* b);
 	double ret;
 
-	fn = current_backend->lapack.dlamc3.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlamc3.f77_blas_function; 
 
 		ret = fn((void*) a, (void*) b); 
 
@@ -137,11 +137,11 @@ double flexiblas_chain_dlamc3_(void* a, void* b)
 	double (*fn_hook) (void* a, void* b);
 	double ret;
 
-	fn      = current_backend->lapack.dlamc3.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlamc3.f77_blas_function; 
 
     hook_pos_dlamc3 ++;
     if( hook_pos_dlamc3 < __flexiblas_hooks->dlamc3.nhook) {
-        fn_hook = __flexiblas_hooks->dlamc3.f77_hook_function[hook_pos_dlamc3];
+        *(void **) &fn_hook = __flexiblas_hooks->dlamc3.f77_hook_function[hook_pos_dlamc3];
         ret = fn_hook((void*) a, (void*) b);
     } else {
         hook_pos_dlamc3 = 0;

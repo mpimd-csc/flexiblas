@@ -80,8 +80,8 @@ void FC_GLOBAL(zlar2v,ZLAR2V)(blasint* n, double complex* x, double complex* y, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlar2v.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlar2v.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlar2v.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlar2v.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) x, (void*) y, (void*) z, (void*) incx, (void*) c, (void*) s, (void*) incc); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zlar2v_(void* n, void* x, void* y, void* z, void* incx, void
 {
 	void (*fn) (void* n, void* x, void* y, void* z, void* incx, void* c, void* s, void* incc);
 
-	fn = current_backend->lapack.zlar2v.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlar2v.f77_blas_function; 
 
 		fn((void*) n, (void*) x, (void*) y, (void*) z, (void*) incx, (void*) c, (void*) s, (void*) incc); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zlar2v_(void* n, void* x, void* y, void* z, void* incx, voi
 	void (*fn) (void* n, void* x, void* y, void* z, void* incx, void* c, void* s, void* incc);
 	void (*fn_hook) (void* n, void* x, void* y, void* z, void* incx, void* c, void* s, void* incc);
 
-	fn      = current_backend->lapack.zlar2v.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlar2v.f77_blas_function; 
 
     hook_pos_zlar2v ++;
     if( hook_pos_zlar2v < __flexiblas_hooks->zlar2v.nhook) {
-        fn_hook = __flexiblas_hooks->zlar2v.f77_hook_function[hook_pos_zlar2v];
+        *(void **) &fn_hook = __flexiblas_hooks->zlar2v.f77_hook_function[hook_pos_zlar2v];
         fn_hook((void*) n, (void*) x, (void*) y, (void*) z, (void*) incx, (void*) c, (void*) s, (void*) incc);
     } else {
         hook_pos_zlar2v = 0;

@@ -81,8 +81,8 @@ float FC_GLOBAL(slapy2,SLAPY2)(float* x, float* y)
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slapy2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slapy2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slapy2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slapy2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) x, (void*) y); 
 		return ret; 
@@ -113,7 +113,7 @@ float flexiblas_real_slapy2_(void* x, void* y)
 	float (*fn) (void* x, void* y);
 	float ret;
 
-	fn = current_backend->lapack.slapy2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slapy2.f77_blas_function; 
 
 		ret = fn((void*) x, (void*) y); 
 
@@ -137,11 +137,11 @@ float flexiblas_chain_slapy2_(void* x, void* y)
 	float (*fn_hook) (void* x, void* y);
 	float ret;
 
-	fn      = current_backend->lapack.slapy2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slapy2.f77_blas_function; 
 
     hook_pos_slapy2 ++;
     if( hook_pos_slapy2 < __flexiblas_hooks->slapy2.nhook) {
-        fn_hook = __flexiblas_hooks->slapy2.f77_hook_function[hook_pos_slapy2];
+        *(void **) &fn_hook = __flexiblas_hooks->slapy2.f77_hook_function[hook_pos_slapy2];
         ret = fn_hook((void*) x, (void*) y);
     } else {
         hook_pos_slapy2 = 0;

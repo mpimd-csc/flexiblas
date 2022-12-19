@@ -80,8 +80,8 @@ void FC_GLOBAL(dtrsyl,DTRSYL)(char* trana, char* tranb, blasint* isgn, blasint* 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dtrsyl.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dtrsyl.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dtrsyl.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dtrsyl.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) trana, (void*) tranb, (void*) isgn, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) ldc, (void*) scale, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dtrsyl_(void* trana, void* tranb, void* isgn, void* m, void*
 {
 	void (*fn) (void* trana, void* tranb, void* isgn, void* m, void* n, void* a, void* lda, void* b, void* ldb, void* c, void* ldc, void* scale, void* info);
 
-	fn = current_backend->lapack.dtrsyl.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dtrsyl.f77_blas_function; 
 
 		fn((void*) trana, (void*) tranb, (void*) isgn, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) ldc, (void*) scale, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dtrsyl_(void* trana, void* tranb, void* isgn, void* m, void
 	void (*fn) (void* trana, void* tranb, void* isgn, void* m, void* n, void* a, void* lda, void* b, void* ldb, void* c, void* ldc, void* scale, void* info);
 	void (*fn_hook) (void* trana, void* tranb, void* isgn, void* m, void* n, void* a, void* lda, void* b, void* ldb, void* c, void* ldc, void* scale, void* info);
 
-	fn      = current_backend->lapack.dtrsyl.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dtrsyl.f77_blas_function; 
 
     hook_pos_dtrsyl ++;
     if( hook_pos_dtrsyl < __flexiblas_hooks->dtrsyl.nhook) {
-        fn_hook = __flexiblas_hooks->dtrsyl.f77_hook_function[hook_pos_dtrsyl];
+        *(void **) &fn_hook = __flexiblas_hooks->dtrsyl.f77_hook_function[hook_pos_dtrsyl];
         fn_hook((void*) trana, (void*) tranb, (void*) isgn, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) ldc, (void*) scale, (void*) info);
     } else {
         hook_pos_dtrsyl = 0;

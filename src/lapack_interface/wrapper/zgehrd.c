@@ -80,8 +80,8 @@ void FC_GLOBAL(zgehrd,ZGEHRD)(blasint* n, blasint* ilo, blasint* ihi, double com
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zgehrd.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zgehrd.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zgehrd.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zgehrd.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zgehrd_(void* n, void* ilo, void* ihi, void* a, void* lda, v
 {
 	void (*fn) (void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.zgehrd.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zgehrd.f77_blas_function; 
 
 		fn((void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zgehrd_(void* n, void* ilo, void* ihi, void* a, void* lda, 
 	void (*fn) (void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.zgehrd.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zgehrd.f77_blas_function; 
 
     hook_pos_zgehrd ++;
     if( hook_pos_zgehrd < __flexiblas_hooks->zgehrd.nhook) {
-        fn_hook = __flexiblas_hooks->zgehrd.f77_hook_function[hook_pos_zgehrd];
+        *(void **) &fn_hook = __flexiblas_hooks->zgehrd.f77_hook_function[hook_pos_zgehrd];
         fn_hook((void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_zgehrd = 0;

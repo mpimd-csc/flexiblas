@@ -80,8 +80,8 @@ void FC_GLOBAL(zggevx,ZGGEVX)(char* balanc, char* jobvl, char* jobvr, char* sens
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zggevx.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zggevx.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zggevx.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zggevx.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) balanc, (void*) jobvl, (void*) jobvr, (void*) sense, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) alpha, (void*) beta, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) ilo, (void*) ihi, (void*) lscale, (void*) rscale, (void*) abnrm, (void*) bbnrm, (void*) rconde, (void*) rcondv, (void*) work, (void*) lwork, (void*) rwork, (void*) iwork, (void*) bwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zggevx_(void* balanc, void* jobvl, void* jobvr, void* sense,
 {
 	void (*fn) (void* balanc, void* jobvl, void* jobvr, void* sense, void* n, void* a, void* lda, void* b, void* ldb, void* alpha, void* beta, void* vl, void* ldvl, void* vr, void* ldvr, void* ilo, void* ihi, void* lscale, void* rscale, void* abnrm, void* bbnrm, void* rconde, void* rcondv, void* work, void* lwork, void* rwork, void* iwork, void* bwork, void* info);
 
-	fn = current_backend->lapack.zggevx.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zggevx.f77_blas_function; 
 
 		fn((void*) balanc, (void*) jobvl, (void*) jobvr, (void*) sense, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) alpha, (void*) beta, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) ilo, (void*) ihi, (void*) lscale, (void*) rscale, (void*) abnrm, (void*) bbnrm, (void*) rconde, (void*) rcondv, (void*) work, (void*) lwork, (void*) rwork, (void*) iwork, (void*) bwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zggevx_(void* balanc, void* jobvl, void* jobvr, void* sense
 	void (*fn) (void* balanc, void* jobvl, void* jobvr, void* sense, void* n, void* a, void* lda, void* b, void* ldb, void* alpha, void* beta, void* vl, void* ldvl, void* vr, void* ldvr, void* ilo, void* ihi, void* lscale, void* rscale, void* abnrm, void* bbnrm, void* rconde, void* rcondv, void* work, void* lwork, void* rwork, void* iwork, void* bwork, void* info);
 	void (*fn_hook) (void* balanc, void* jobvl, void* jobvr, void* sense, void* n, void* a, void* lda, void* b, void* ldb, void* alpha, void* beta, void* vl, void* ldvl, void* vr, void* ldvr, void* ilo, void* ihi, void* lscale, void* rscale, void* abnrm, void* bbnrm, void* rconde, void* rcondv, void* work, void* lwork, void* rwork, void* iwork, void* bwork, void* info);
 
-	fn      = current_backend->lapack.zggevx.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zggevx.f77_blas_function; 
 
     hook_pos_zggevx ++;
     if( hook_pos_zggevx < __flexiblas_hooks->zggevx.nhook) {
-        fn_hook = __flexiblas_hooks->zggevx.f77_hook_function[hook_pos_zggevx];
+        *(void **) &fn_hook = __flexiblas_hooks->zggevx.f77_hook_function[hook_pos_zggevx];
         fn_hook((void*) balanc, (void*) jobvl, (void*) jobvr, (void*) sense, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) alpha, (void*) beta, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) ilo, (void*) ihi, (void*) lscale, (void*) rscale, (void*) abnrm, (void*) bbnrm, (void*) rconde, (void*) rcondv, (void*) work, (void*) lwork, (void*) rwork, (void*) iwork, (void*) bwork, (void*) info);
     } else {
         hook_pos_zggevx = 0;

@@ -80,8 +80,8 @@ void FC_GLOBAL(zggglm,ZGGGLM)(blasint* n, blasint* m, blasint* p, double complex
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zggglm.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zggglm.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zggglm.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zggglm.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) m, (void*) p, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) d, (void*) x, (void*) y, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zggglm_(void* n, void* m, void* p, void* a, void* lda, void*
 {
 	void (*fn) (void* n, void* m, void* p, void* a, void* lda, void* b, void* ldb, void* d, void* x, void* y, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.zggglm.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zggglm.f77_blas_function; 
 
 		fn((void*) n, (void*) m, (void*) p, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) d, (void*) x, (void*) y, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zggglm_(void* n, void* m, void* p, void* a, void* lda, void
 	void (*fn) (void* n, void* m, void* p, void* a, void* lda, void* b, void* ldb, void* d, void* x, void* y, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* n, void* m, void* p, void* a, void* lda, void* b, void* ldb, void* d, void* x, void* y, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.zggglm.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zggglm.f77_blas_function; 
 
     hook_pos_zggglm ++;
     if( hook_pos_zggglm < __flexiblas_hooks->zggglm.nhook) {
-        fn_hook = __flexiblas_hooks->zggglm.f77_hook_function[hook_pos_zggglm];
+        *(void **) &fn_hook = __flexiblas_hooks->zggglm.f77_hook_function[hook_pos_zggglm];
         fn_hook((void*) n, (void*) m, (void*) p, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) d, (void*) x, (void*) y, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_zggglm = 0;

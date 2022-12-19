@@ -80,8 +80,8 @@ void FC_GLOBAL(dlaln2,DLALN2)(blasint* ltrans, blasint* na, blasint* nw, double*
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlaln2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlaln2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlaln2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlaln2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) ltrans, (void*) na, (void*) nw, (void*) smin, (void*) ca, (void*) a, (void*) lda, (void*) d1, (void*) d2, (void*) b, (void*) ldb, (void*) wr, (void*) wi, (void*) x, (void*) ldx, (void*) scale, (void*) xnorm, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlaln2_(void* ltrans, void* na, void* nw, void* smin, void* 
 {
 	void (*fn) (void* ltrans, void* na, void* nw, void* smin, void* ca, void* a, void* lda, void* d1, void* d2, void* b, void* ldb, void* wr, void* wi, void* x, void* ldx, void* scale, void* xnorm, void* info);
 
-	fn = current_backend->lapack.dlaln2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlaln2.f77_blas_function; 
 
 		fn((void*) ltrans, (void*) na, (void*) nw, (void*) smin, (void*) ca, (void*) a, (void*) lda, (void*) d1, (void*) d2, (void*) b, (void*) ldb, (void*) wr, (void*) wi, (void*) x, (void*) ldx, (void*) scale, (void*) xnorm, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlaln2_(void* ltrans, void* na, void* nw, void* smin, void*
 	void (*fn) (void* ltrans, void* na, void* nw, void* smin, void* ca, void* a, void* lda, void* d1, void* d2, void* b, void* ldb, void* wr, void* wi, void* x, void* ldx, void* scale, void* xnorm, void* info);
 	void (*fn_hook) (void* ltrans, void* na, void* nw, void* smin, void* ca, void* a, void* lda, void* d1, void* d2, void* b, void* ldb, void* wr, void* wi, void* x, void* ldx, void* scale, void* xnorm, void* info);
 
-	fn      = current_backend->lapack.dlaln2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlaln2.f77_blas_function; 
 
     hook_pos_dlaln2 ++;
     if( hook_pos_dlaln2 < __flexiblas_hooks->dlaln2.nhook) {
-        fn_hook = __flexiblas_hooks->dlaln2.f77_hook_function[hook_pos_dlaln2];
+        *(void **) &fn_hook = __flexiblas_hooks->dlaln2.f77_hook_function[hook_pos_dlaln2];
         fn_hook((void*) ltrans, (void*) na, (void*) nw, (void*) smin, (void*) ca, (void*) a, (void*) lda, (void*) d1, (void*) d2, (void*) b, (void*) ldb, (void*) wr, (void*) wi, (void*) x, (void*) ldx, (void*) scale, (void*) xnorm, (void*) info);
     } else {
         hook_pos_dlaln2 = 0;

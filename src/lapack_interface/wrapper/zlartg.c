@@ -68,36 +68,36 @@ typedef int fortran_charlen_t;
 
 static TLS_STORE uint8_t hook_pos_zlartg = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(zlartg,ZLARTG)(double complex* f, double complex* g, double* cs, double complex* sn, double complex* r)
+void FC_GLOBAL(zlartg,ZLARTG)(float complex* f, float complex* g, float* c, float complex* s, float complex* r)
 #else
-void FC_GLOBAL(zlartg,ZLARTG)(double complex* f, double complex* g, double* cs, double complex* sn, double complex* r)
+void FC_GLOBAL(zlartg,ZLARTG)(float complex* f, float complex* g, float* c, float complex* s, float complex* r)
 #endif
 {
-	void (*fn) (void* f, void* g, void* cs, void* sn, void* r);
-	void (*fn_hook) (void* f, void* g, void* cs, void* sn, void* r);
+	void (*fn) (void* f, void* g, void* c, void* s, void* r);
+	void (*fn_hook) (void* f, void* g, void* c, void* s, void* r);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlartg.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlartg.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlartg.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlartg.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) f, (void*) g, (void*) cs, (void*) sn, (void*) r); 
+		fn((void*) f, (void*) g, (void*) c, (void*) s, (void*) r); 
 		return;
 	} else {
 		hook_pos_zlartg = 0;
-		fn_hook((void*) f, (void*) g, (void*) cs, (void*) sn, (void*) r);
+		fn_hook((void*) f, (void*) g, (void*) c, (void*) s, (void*) r);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zlartg_(double complex* f, double complex* g, double* cs, double complex* sn, double complex* r) __attribute__((alias(MTS(FC_GLOBAL(zlartg,ZLARTG)))));
+void zlartg_(float complex* f, float complex* g, float* c, float complex* s, float complex* r) __attribute__((alias(MTS(FC_GLOBAL(zlartg,ZLARTG)))));
 #else
 #ifndef __APPLE__
-void zlartg(double complex* f, double complex* g, double* cs, double complex* sn, double complex* r) __attribute__((alias(MTS(FC_GLOBAL(zlartg,ZLARTG)))));
+void zlartg(float complex* f, float complex* g, float* c, float complex* s, float complex* r) __attribute__((alias(MTS(FC_GLOBAL(zlartg,ZLARTG)))));
 #else
-void zlartg(double complex* f, double complex* g, double* cs, double complex* sn, double complex* r){ FC_GLOBAL(zlartg,ZLARTG)((void*) f, (void*) g, (void*) cs, (void*) sn, (void*) r); }
+void zlartg(float complex* f, float complex* g, float* c, float complex* s, float complex* r){ FC_GLOBAL(zlartg,ZLARTG)((void*) f, (void*) g, (void*) c, (void*) s, (void*) r); }
 #endif
 #endif
 
@@ -107,20 +107,20 @@ void zlartg(double complex* f, double complex* g, double* cs, double complex* sn
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_zlartg_(void* f, void* g, void* cs, void* sn, void* r)
+void flexiblas_real_zlartg_(void* f, void* g, void* c, void* s, void* r)
 {
-	void (*fn) (void* f, void* g, void* cs, void* sn, void* r);
+	void (*fn) (void* f, void* g, void* c, void* s, void* r);
 
-	fn = current_backend->lapack.zlartg.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlartg.f77_blas_function; 
 
-		fn((void*) f, (void*) g, (void*) cs, (void*) sn, (void*) r); 
+		fn((void*) f, (void*) g, (void*) c, (void*) s, (void*) r); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_zlartg(void* f, void* g, void* cs, void* sn, void* r) __attribute__((alias("flexiblas_real_zlartg_")));
+void flexiblas_real_zlartg(void* f, void* g, void* c, void* s, void* r) __attribute__((alias("flexiblas_real_zlartg_")));
 #else
-void flexiblas_real_zlartg(void* f, void* g, void* cs, void* sn, void* r){flexiblas_real_zlartg_((void*) f, (void*) g, (void*) cs, (void*) sn, (void*) r);}
+void flexiblas_real_zlartg(void* f, void* g, void* c, void* s, void* r){flexiblas_real_zlartg_((void*) f, (void*) g, (void*) c, (void*) s, (void*) r);}
 #endif
 
 
@@ -129,27 +129,27 @@ void flexiblas_real_zlartg(void* f, void* g, void* cs, void* sn, void* r){flexib
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_zlartg_(void* f, void* g, void* cs, void* sn, void* r)
+void flexiblas_chain_zlartg_(void* f, void* g, void* c, void* s, void* r)
 {
-	void (*fn) (void* f, void* g, void* cs, void* sn, void* r);
-	void (*fn_hook) (void* f, void* g, void* cs, void* sn, void* r);
+	void (*fn) (void* f, void* g, void* c, void* s, void* r);
+	void (*fn_hook) (void* f, void* g, void* c, void* s, void* r);
 
-	fn      = current_backend->lapack.zlartg.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlartg.f77_blas_function; 
 
     hook_pos_zlartg ++;
     if( hook_pos_zlartg < __flexiblas_hooks->zlartg.nhook) {
-        fn_hook = __flexiblas_hooks->zlartg.f77_hook_function[hook_pos_zlartg];
-        fn_hook((void*) f, (void*) g, (void*) cs, (void*) sn, (void*) r);
+        *(void **) &fn_hook = __flexiblas_hooks->zlartg.f77_hook_function[hook_pos_zlartg];
+        fn_hook((void*) f, (void*) g, (void*) c, (void*) s, (void*) r);
     } else {
         hook_pos_zlartg = 0;
-		fn((void*) f, (void*) g, (void*) cs, (void*) sn, (void*) r); 
+		fn((void*) f, (void*) g, (void*) c, (void*) s, (void*) r); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_zlartg(void* f, void* g, void* cs, void* sn, void* r) __attribute__((alias("flexiblas_chain_zlartg_")));
+void flexiblas_chain_zlartg(void* f, void* g, void* c, void* s, void* r) __attribute__((alias("flexiblas_chain_zlartg_")));
 #else
-void flexiblas_chain_zlartg(void* f, void* g, void* cs, void* sn, void* r){flexiblas_chain_zlartg_((void*) f, (void*) g, (void*) cs, (void*) sn, (void*) r);}
+void flexiblas_chain_zlartg(void* f, void* g, void* c, void* s, void* r){flexiblas_chain_zlartg_((void*) f, (void*) g, (void*) c, (void*) s, (void*) r);}
 #endif
 
 

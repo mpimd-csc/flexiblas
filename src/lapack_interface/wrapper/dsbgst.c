@@ -80,8 +80,8 @@ void FC_GLOBAL(dsbgst,DSBGST)(char* vect, char* uplo, blasint* n, blasint* ka, b
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dsbgst.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dsbgst.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dsbgst.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dsbgst.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) vect, (void*) uplo, (void*) n, (void*) ka, (void*) kb, (void*) ab, (void*) ldab, (void*) bb, (void*) ldbb, (void*) x, (void*) ldx, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dsbgst_(void* vect, void* uplo, void* n, void* ka, void* kb,
 {
 	void (*fn) (void* vect, void* uplo, void* n, void* ka, void* kb, void* ab, void* ldab, void* bb, void* ldbb, void* x, void* ldx, void* work, void* info);
 
-	fn = current_backend->lapack.dsbgst.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dsbgst.f77_blas_function; 
 
 		fn((void*) vect, (void*) uplo, (void*) n, (void*) ka, (void*) kb, (void*) ab, (void*) ldab, (void*) bb, (void*) ldbb, (void*) x, (void*) ldx, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dsbgst_(void* vect, void* uplo, void* n, void* ka, void* kb
 	void (*fn) (void* vect, void* uplo, void* n, void* ka, void* kb, void* ab, void* ldab, void* bb, void* ldbb, void* x, void* ldx, void* work, void* info);
 	void (*fn_hook) (void* vect, void* uplo, void* n, void* ka, void* kb, void* ab, void* ldab, void* bb, void* ldbb, void* x, void* ldx, void* work, void* info);
 
-	fn      = current_backend->lapack.dsbgst.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dsbgst.f77_blas_function; 
 
     hook_pos_dsbgst ++;
     if( hook_pos_dsbgst < __flexiblas_hooks->dsbgst.nhook) {
-        fn_hook = __flexiblas_hooks->dsbgst.f77_hook_function[hook_pos_dsbgst];
+        *(void **) &fn_hook = __flexiblas_hooks->dsbgst.f77_hook_function[hook_pos_dsbgst];
         fn_hook((void*) vect, (void*) uplo, (void*) n, (void*) ka, (void*) kb, (void*) ab, (void*) ldab, (void*) bb, (void*) ldbb, (void*) x, (void*) ldx, (void*) work, (void*) info);
     } else {
         hook_pos_dsbgst = 0;

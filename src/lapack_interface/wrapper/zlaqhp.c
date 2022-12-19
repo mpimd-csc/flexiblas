@@ -80,8 +80,8 @@ void FC_GLOBAL(zlaqhp,ZLAQHP)(char* uplo, blasint* n, double complex* ap, double
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlaqhp.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlaqhp.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlaqhp.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlaqhp.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) equed); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zlaqhp_(void* uplo, void* n, void* ap, void* s, void* scond,
 {
 	void (*fn) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* equed);
 
-	fn = current_backend->lapack.zlaqhp.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlaqhp.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) equed); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zlaqhp_(void* uplo, void* n, void* ap, void* s, void* scond
 	void (*fn) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* equed);
 	void (*fn_hook) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* equed);
 
-	fn      = current_backend->lapack.zlaqhp.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlaqhp.f77_blas_function; 
 
     hook_pos_zlaqhp ++;
     if( hook_pos_zlaqhp < __flexiblas_hooks->zlaqhp.nhook) {
-        fn_hook = __flexiblas_hooks->zlaqhp.f77_hook_function[hook_pos_zlaqhp];
+        *(void **) &fn_hook = __flexiblas_hooks->zlaqhp.f77_hook_function[hook_pos_zlaqhp];
         fn_hook((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) equed);
     } else {
         hook_pos_zlaqhp = 0;

@@ -80,8 +80,8 @@ void FC_GLOBAL(zpoequ,ZPOEQU)(blasint* n, double complex* a, blasint* lda, doubl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zpoequ.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zpoequ.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zpoequ.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zpoequ.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zpoequ_(void* n, void* a, void* lda, void* s, void* scond, v
 {
 	void (*fn) (void* n, void* a, void* lda, void* s, void* scond, void* amax, void* info);
 
-	fn = current_backend->lapack.zpoequ.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zpoequ.f77_blas_function; 
 
 		fn((void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zpoequ_(void* n, void* a, void* lda, void* s, void* scond, 
 	void (*fn) (void* n, void* a, void* lda, void* s, void* scond, void* amax, void* info);
 	void (*fn_hook) (void* n, void* a, void* lda, void* s, void* scond, void* amax, void* info);
 
-	fn      = current_backend->lapack.zpoequ.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zpoequ.f77_blas_function; 
 
     hook_pos_zpoequ ++;
     if( hook_pos_zpoequ < __flexiblas_hooks->zpoequ.nhook) {
-        fn_hook = __flexiblas_hooks->zpoequ.f77_hook_function[hook_pos_zpoequ];
+        *(void **) &fn_hook = __flexiblas_hooks->zpoequ.f77_hook_function[hook_pos_zpoequ];
         fn_hook((void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) info);
     } else {
         hook_pos_zpoequ = 0;

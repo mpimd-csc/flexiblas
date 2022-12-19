@@ -82,8 +82,8 @@ void cblas_srot(const CBLAS_INT N, float *X, const CBLAS_INT incX,
 #endif
     if ( current_backend->blas.srot.cblas_function != NULL ) {
         void (*fn)(const CBLAS_INT N, float *X, const CBLAS_INT incX,
-                float *Y, const CBLAS_INT incY, const float c, const float s)
-            = current_backend->blas.srot.cblas_function;
+                float *Y, const CBLAS_INT incY, const float c, const float s);
+        *(void **) &fn  = current_backend->blas.srot.cblas_function;
         fn(N,X,incX,Y,incY,c,s);
     } else {
         FC_GLOBAL(srot,SROT)(&F77_N, X, &F77_incX, Y, &F77_incY, &c, &s);

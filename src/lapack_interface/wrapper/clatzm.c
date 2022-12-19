@@ -80,8 +80,8 @@ void FC_GLOBAL(clatzm,CLATZM)(char* side, blasint* m, blasint* n, float complex*
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.clatzm.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->clatzm.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.clatzm.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->clatzm.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) side, (void*) m, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c1, (void*) c2, (void*) ldc, (void*) work); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_clatzm_(void* side, void* m, void* n, void* v, void* incv, v
 {
 	void (*fn) (void* side, void* m, void* n, void* v, void* incv, void* tau, void* c1, void* c2, void* ldc, void* work);
 
-	fn = current_backend->lapack.clatzm.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.clatzm.f77_blas_function; 
 
 		fn((void*) side, (void*) m, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c1, (void*) c2, (void*) ldc, (void*) work); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_clatzm_(void* side, void* m, void* n, void* v, void* incv, 
 	void (*fn) (void* side, void* m, void* n, void* v, void* incv, void* tau, void* c1, void* c2, void* ldc, void* work);
 	void (*fn_hook) (void* side, void* m, void* n, void* v, void* incv, void* tau, void* c1, void* c2, void* ldc, void* work);
 
-	fn      = current_backend->lapack.clatzm.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.clatzm.f77_blas_function; 
 
     hook_pos_clatzm ++;
     if( hook_pos_clatzm < __flexiblas_hooks->clatzm.nhook) {
-        fn_hook = __flexiblas_hooks->clatzm.f77_hook_function[hook_pos_clatzm];
+        *(void **) &fn_hook = __flexiblas_hooks->clatzm.f77_hook_function[hook_pos_clatzm];
         fn_hook((void*) side, (void*) m, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c1, (void*) c2, (void*) ldc, (void*) work);
     } else {
         hook_pos_clatzm = 0;

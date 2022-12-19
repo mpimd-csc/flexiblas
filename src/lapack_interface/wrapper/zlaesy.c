@@ -80,8 +80,8 @@ void FC_GLOBAL(zlaesy,ZLAESY)(double complex* a, double complex* b, double compl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlaesy.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlaesy.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlaesy.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlaesy.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) evscal, (void*) cs1, (void*) sn1); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zlaesy_(void* a, void* b, void* c, void* rt1, void* rt2, voi
 {
 	void (*fn) (void* a, void* b, void* c, void* rt1, void* rt2, void* evscal, void* cs1, void* sn1);
 
-	fn = current_backend->lapack.zlaesy.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlaesy.f77_blas_function; 
 
 		fn((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) evscal, (void*) cs1, (void*) sn1); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zlaesy_(void* a, void* b, void* c, void* rt1, void* rt2, vo
 	void (*fn) (void* a, void* b, void* c, void* rt1, void* rt2, void* evscal, void* cs1, void* sn1);
 	void (*fn_hook) (void* a, void* b, void* c, void* rt1, void* rt2, void* evscal, void* cs1, void* sn1);
 
-	fn      = current_backend->lapack.zlaesy.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlaesy.f77_blas_function; 
 
     hook_pos_zlaesy ++;
     if( hook_pos_zlaesy < __flexiblas_hooks->zlaesy.nhook) {
-        fn_hook = __flexiblas_hooks->zlaesy.f77_hook_function[hook_pos_zlaesy];
+        *(void **) &fn_hook = __flexiblas_hooks->zlaesy.f77_hook_function[hook_pos_zlaesy];
         fn_hook((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) evscal, (void*) cs1, (void*) sn1);
     } else {
         hook_pos_zlaesy = 0;

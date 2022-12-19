@@ -80,8 +80,8 @@ void FC_GLOBAL(dgetrs,DGETRS)(char* trans, blasint* n, blasint* nrhs, double* a,
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dgetrs.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dgetrs.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dgetrs.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dgetrs.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) trans, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dgetrs_(void* trans, void* n, void* nrhs, void* a, void* lda
 {
 	void (*fn) (void* trans, void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* info);
 
-	fn = current_backend->lapack.dgetrs.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dgetrs.f77_blas_function; 
 
 		fn((void*) trans, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dgetrs_(void* trans, void* n, void* nrhs, void* a, void* ld
 	void (*fn) (void* trans, void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* info);
 	void (*fn_hook) (void* trans, void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* info);
 
-	fn      = current_backend->lapack.dgetrs.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dgetrs.f77_blas_function; 
 
     hook_pos_dgetrs ++;
     if( hook_pos_dgetrs < __flexiblas_hooks->dgetrs.nhook) {
-        fn_hook = __flexiblas_hooks->dgetrs.f77_hook_function[hook_pos_dgetrs];
+        *(void **) &fn_hook = __flexiblas_hooks->dgetrs.f77_hook_function[hook_pos_dgetrs];
         fn_hook((void*) trans, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) info);
     } else {
         hook_pos_dgetrs = 0;

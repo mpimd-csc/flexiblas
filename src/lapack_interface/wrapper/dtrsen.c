@@ -80,8 +80,8 @@ void FC_GLOBAL(dtrsen,DTRSEN)(char* job, char* compq, blasint* select, blasint* 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dtrsen.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dtrsen.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dtrsen.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dtrsen.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) job, (void*) compq, (void*) select, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) wr, (void*) wi, (void*) m, (void*) s, (void*) sep, (void*) work, (void*) lwork, (void*) iwork, (void*) liwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dtrsen_(void* job, void* compq, void* select, void* n, void*
 {
 	void (*fn) (void* job, void* compq, void* select, void* n, void* t, void* ldt, void* q, void* ldq, void* wr, void* wi, void* m, void* s, void* sep, void* work, void* lwork, void* iwork, void* liwork, void* info);
 
-	fn = current_backend->lapack.dtrsen.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dtrsen.f77_blas_function; 
 
 		fn((void*) job, (void*) compq, (void*) select, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) wr, (void*) wi, (void*) m, (void*) s, (void*) sep, (void*) work, (void*) lwork, (void*) iwork, (void*) liwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dtrsen_(void* job, void* compq, void* select, void* n, void
 	void (*fn) (void* job, void* compq, void* select, void* n, void* t, void* ldt, void* q, void* ldq, void* wr, void* wi, void* m, void* s, void* sep, void* work, void* lwork, void* iwork, void* liwork, void* info);
 	void (*fn_hook) (void* job, void* compq, void* select, void* n, void* t, void* ldt, void* q, void* ldq, void* wr, void* wi, void* m, void* s, void* sep, void* work, void* lwork, void* iwork, void* liwork, void* info);
 
-	fn      = current_backend->lapack.dtrsen.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dtrsen.f77_blas_function; 
 
     hook_pos_dtrsen ++;
     if( hook_pos_dtrsen < __flexiblas_hooks->dtrsen.nhook) {
-        fn_hook = __flexiblas_hooks->dtrsen.f77_hook_function[hook_pos_dtrsen];
+        *(void **) &fn_hook = __flexiblas_hooks->dtrsen.f77_hook_function[hook_pos_dtrsen];
         fn_hook((void*) job, (void*) compq, (void*) select, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) wr, (void*) wi, (void*) m, (void*) s, (void*) sep, (void*) work, (void*) lwork, (void*) iwork, (void*) liwork, (void*) info);
     } else {
         hook_pos_dtrsen = 0;

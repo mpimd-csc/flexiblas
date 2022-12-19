@@ -88,8 +88,8 @@ void flexiblas_real_cblas_drotm( const CBLAS_INT N, double *X, const CBLAS_INT i
 
     if ( current_backend->blas.drotm.cblas_function != NULL ) {
         void (*fn)( const CBLAS_INT N, double *X, const CBLAS_INT incX, double *Y,
-                const CBLAS_INT incY, const double *P)
-            = current_backend->blas.drotm.cblas_function;
+                const CBLAS_INT incY, const double *P);
+        *(void **) & fn = current_backend->blas.drotm.cblas_function;
         fn(N,X,incX,Y,incY,P);
     } else {
         FC_GLOBAL(drotm,DROTM)( &F77_N, X, &F77_incX, Y, &F77_incY, P);

@@ -80,8 +80,8 @@ void FC_GLOBAL(slaed4,SLAED4)(blasint* n, blasint* i, float* d, float* z, float*
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slaed4.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slaed4.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slaed4.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slaed4.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) dlam, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slaed4_(void* n, void* i, void* d, void* z, void* delta, voi
 {
 	void (*fn) (void* n, void* i, void* d, void* z, void* delta, void* rho, void* dlam, void* info);
 
-	fn = current_backend->lapack.slaed4.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slaed4.f77_blas_function; 
 
 		fn((void*) n, (void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) dlam, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slaed4_(void* n, void* i, void* d, void* z, void* delta, vo
 	void (*fn) (void* n, void* i, void* d, void* z, void* delta, void* rho, void* dlam, void* info);
 	void (*fn_hook) (void* n, void* i, void* d, void* z, void* delta, void* rho, void* dlam, void* info);
 
-	fn      = current_backend->lapack.slaed4.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slaed4.f77_blas_function; 
 
     hook_pos_slaed4 ++;
     if( hook_pos_slaed4 < __flexiblas_hooks->slaed4.nhook) {
-        fn_hook = __flexiblas_hooks->slaed4.f77_hook_function[hook_pos_slaed4];
+        *(void **) &fn_hook = __flexiblas_hooks->slaed4.f77_hook_function[hook_pos_slaed4];
         fn_hook((void*) n, (void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) dlam, (void*) info);
     } else {
         hook_pos_slaed4 = 0;

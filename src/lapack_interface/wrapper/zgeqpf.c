@@ -80,8 +80,8 @@ void FC_GLOBAL(zgeqpf,ZGEQPF)(blasint* m, blasint* n, double complex* a, blasint
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zgeqpf.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zgeqpf.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zgeqpf.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zgeqpf.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) jpvt, (void*) tau, (void*) work, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zgeqpf_(void* m, void* n, void* a, void* lda, void* jpvt, vo
 {
 	void (*fn) (void* m, void* n, void* a, void* lda, void* jpvt, void* tau, void* work, void* rwork, void* info);
 
-	fn = current_backend->lapack.zgeqpf.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zgeqpf.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) jpvt, (void*) tau, (void*) work, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zgeqpf_(void* m, void* n, void* a, void* lda, void* jpvt, v
 	void (*fn) (void* m, void* n, void* a, void* lda, void* jpvt, void* tau, void* work, void* rwork, void* info);
 	void (*fn_hook) (void* m, void* n, void* a, void* lda, void* jpvt, void* tau, void* work, void* rwork, void* info);
 
-	fn      = current_backend->lapack.zgeqpf.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zgeqpf.f77_blas_function; 
 
     hook_pos_zgeqpf ++;
     if( hook_pos_zgeqpf < __flexiblas_hooks->zgeqpf.nhook) {
-        fn_hook = __flexiblas_hooks->zgeqpf.f77_hook_function[hook_pos_zgeqpf];
+        *(void **) &fn_hook = __flexiblas_hooks->zgeqpf.f77_hook_function[hook_pos_zgeqpf];
         fn_hook((void*) m, (void*) n, (void*) a, (void*) lda, (void*) jpvt, (void*) tau, (void*) work, (void*) rwork, (void*) info);
     } else {
         hook_pos_zgeqpf = 0;

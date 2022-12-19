@@ -80,8 +80,8 @@ void FC_GLOBAL(dlasq4,DLASQ4)(blasint* i0, blasint* n0, double* z, blasint* pp, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlasq4.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlasq4.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlasq4.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlasq4.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) i0, (void*) n0, (void*) z, (void*) pp, (void*) n0in, (void*) dmin, (void*) dmin1, (void*) dmin2, (void*) dn, (void*) dn1, (void*) dn2, (void*) tau, (void*) ttype, (void*) g); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlasq4_(void* i0, void* n0, void* z, void* pp, void* n0in, v
 {
 	void (*fn) (void* i0, void* n0, void* z, void* pp, void* n0in, void* dmin, void* dmin1, void* dmin2, void* dn, void* dn1, void* dn2, void* tau, void* ttype, void* g);
 
-	fn = current_backend->lapack.dlasq4.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlasq4.f77_blas_function; 
 
 		fn((void*) i0, (void*) n0, (void*) z, (void*) pp, (void*) n0in, (void*) dmin, (void*) dmin1, (void*) dmin2, (void*) dn, (void*) dn1, (void*) dn2, (void*) tau, (void*) ttype, (void*) g); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlasq4_(void* i0, void* n0, void* z, void* pp, void* n0in, 
 	void (*fn) (void* i0, void* n0, void* z, void* pp, void* n0in, void* dmin, void* dmin1, void* dmin2, void* dn, void* dn1, void* dn2, void* tau, void* ttype, void* g);
 	void (*fn_hook) (void* i0, void* n0, void* z, void* pp, void* n0in, void* dmin, void* dmin1, void* dmin2, void* dn, void* dn1, void* dn2, void* tau, void* ttype, void* g);
 
-	fn      = current_backend->lapack.dlasq4.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlasq4.f77_blas_function; 
 
     hook_pos_dlasq4 ++;
     if( hook_pos_dlasq4 < __flexiblas_hooks->dlasq4.nhook) {
-        fn_hook = __flexiblas_hooks->dlasq4.f77_hook_function[hook_pos_dlasq4];
+        *(void **) &fn_hook = __flexiblas_hooks->dlasq4.f77_hook_function[hook_pos_dlasq4];
         fn_hook((void*) i0, (void*) n0, (void*) z, (void*) pp, (void*) n0in, (void*) dmin, (void*) dmin1, (void*) dmin2, (void*) dn, (void*) dn1, (void*) dn2, (void*) tau, (void*) ttype, (void*) g);
     } else {
         hook_pos_dlasq4 = 0;

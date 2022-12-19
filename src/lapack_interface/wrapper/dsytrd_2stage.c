@@ -80,8 +80,8 @@ void FC_GLOBAL_(dsytrd_2stage,DSYTRD_2STAGE)(char* vect, char* uplo, blasint* n,
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dsytrd_2stage.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dsytrd_2stage.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dsytrd_2stage.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dsytrd_2stage.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) vect, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) d, (void*) e, (void*) tau, (void*) hous2, (void*) lhous2, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dsytrd_2stage_(void* vect, void* uplo, void* n, void* a, voi
 {
 	void (*fn) (void* vect, void* uplo, void* n, void* a, void* lda, void* d, void* e, void* tau, void* hous2, void* lhous2, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.dsytrd_2stage.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dsytrd_2stage.f77_blas_function; 
 
 		fn((void*) vect, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) d, (void*) e, (void*) tau, (void*) hous2, (void*) lhous2, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dsytrd_2stage_(void* vect, void* uplo, void* n, void* a, vo
 	void (*fn) (void* vect, void* uplo, void* n, void* a, void* lda, void* d, void* e, void* tau, void* hous2, void* lhous2, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* vect, void* uplo, void* n, void* a, void* lda, void* d, void* e, void* tau, void* hous2, void* lhous2, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.dsytrd_2stage.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dsytrd_2stage.f77_blas_function; 
 
     hook_pos_dsytrd_2stage ++;
     if( hook_pos_dsytrd_2stage < __flexiblas_hooks->dsytrd_2stage.nhook) {
-        fn_hook = __flexiblas_hooks->dsytrd_2stage.f77_hook_function[hook_pos_dsytrd_2stage];
+        *(void **) &fn_hook = __flexiblas_hooks->dsytrd_2stage.f77_hook_function[hook_pos_dsytrd_2stage];
         fn_hook((void*) vect, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) d, (void*) e, (void*) tau, (void*) hous2, (void*) lhous2, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_dsytrd_2stage = 0;

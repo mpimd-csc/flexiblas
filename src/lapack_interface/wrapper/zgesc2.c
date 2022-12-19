@@ -80,8 +80,8 @@ void FC_GLOBAL(zgesc2,ZGESC2)(blasint* n, double complex* a, blasint* lda, doubl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zgesc2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zgesc2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zgesc2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zgesc2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) a, (void*) lda, (void*) rhs, (void*) ipiv, (void*) jpiv, (void*) scale); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zgesc2_(void* n, void* a, void* lda, void* rhs, void* ipiv, 
 {
 	void (*fn) (void* n, void* a, void* lda, void* rhs, void* ipiv, void* jpiv, void* scale);
 
-	fn = current_backend->lapack.zgesc2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zgesc2.f77_blas_function; 
 
 		fn((void*) n, (void*) a, (void*) lda, (void*) rhs, (void*) ipiv, (void*) jpiv, (void*) scale); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zgesc2_(void* n, void* a, void* lda, void* rhs, void* ipiv,
 	void (*fn) (void* n, void* a, void* lda, void* rhs, void* ipiv, void* jpiv, void* scale);
 	void (*fn_hook) (void* n, void* a, void* lda, void* rhs, void* ipiv, void* jpiv, void* scale);
 
-	fn      = current_backend->lapack.zgesc2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zgesc2.f77_blas_function; 
 
     hook_pos_zgesc2 ++;
     if( hook_pos_zgesc2 < __flexiblas_hooks->zgesc2.nhook) {
-        fn_hook = __flexiblas_hooks->zgesc2.f77_hook_function[hook_pos_zgesc2];
+        *(void **) &fn_hook = __flexiblas_hooks->zgesc2.f77_hook_function[hook_pos_zgesc2];
         fn_hook((void*) n, (void*) a, (void*) lda, (void*) rhs, (void*) ipiv, (void*) jpiv, (void*) scale);
     } else {
         hook_pos_zgesc2 = 0;

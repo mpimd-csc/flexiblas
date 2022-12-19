@@ -80,8 +80,8 @@ void FC_GLOBAL(zungl2,ZUNGL2)(blasint* m, blasint* n, blasint* k, double complex
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zungl2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zungl2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zungl2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zungl2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zungl2_(void* m, void* n, void* k, void* a, void* lda, void*
 {
 	void (*fn) (void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* info);
 
-	fn = current_backend->lapack.zungl2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zungl2.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zungl2_(void* m, void* n, void* k, void* a, void* lda, void
 	void (*fn) (void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* info);
 	void (*fn_hook) (void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* info);
 
-	fn      = current_backend->lapack.zungl2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zungl2.f77_blas_function; 
 
     hook_pos_zungl2 ++;
     if( hook_pos_zungl2 < __flexiblas_hooks->zungl2.nhook) {
-        fn_hook = __flexiblas_hooks->zungl2.f77_hook_function[hook_pos_zungl2];
+        *(void **) &fn_hook = __flexiblas_hooks->zungl2.f77_hook_function[hook_pos_zungl2];
         fn_hook((void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) info);
     } else {
         hook_pos_zungl2 = 0;

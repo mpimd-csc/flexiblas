@@ -80,8 +80,8 @@ void FC_GLOBAL(dlaed3,DLAED3)(blasint* k, blasint* n, blasint* n1, double* d, do
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlaed3.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlaed3.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlaed3.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlaed3.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) k, (void*) n, (void*) n1, (void*) d, (void*) q, (void*) ldq, (void*) rho, (void*) dlamda, (void*) q2, (void*) indx, (void*) ctot, (void*) w, (void*) s, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlaed3_(void* k, void* n, void* n1, void* d, void* q, void* 
 {
 	void (*fn) (void* k, void* n, void* n1, void* d, void* q, void* ldq, void* rho, void* dlamda, void* q2, void* indx, void* ctot, void* w, void* s, void* info);
 
-	fn = current_backend->lapack.dlaed3.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlaed3.f77_blas_function; 
 
 		fn((void*) k, (void*) n, (void*) n1, (void*) d, (void*) q, (void*) ldq, (void*) rho, (void*) dlamda, (void*) q2, (void*) indx, (void*) ctot, (void*) w, (void*) s, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlaed3_(void* k, void* n, void* n1, void* d, void* q, void*
 	void (*fn) (void* k, void* n, void* n1, void* d, void* q, void* ldq, void* rho, void* dlamda, void* q2, void* indx, void* ctot, void* w, void* s, void* info);
 	void (*fn_hook) (void* k, void* n, void* n1, void* d, void* q, void* ldq, void* rho, void* dlamda, void* q2, void* indx, void* ctot, void* w, void* s, void* info);
 
-	fn      = current_backend->lapack.dlaed3.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlaed3.f77_blas_function; 
 
     hook_pos_dlaed3 ++;
     if( hook_pos_dlaed3 < __flexiblas_hooks->dlaed3.nhook) {
-        fn_hook = __flexiblas_hooks->dlaed3.f77_hook_function[hook_pos_dlaed3];
+        *(void **) &fn_hook = __flexiblas_hooks->dlaed3.f77_hook_function[hook_pos_dlaed3];
         fn_hook((void*) k, (void*) n, (void*) n1, (void*) d, (void*) q, (void*) ldq, (void*) rho, (void*) dlamda, (void*) q2, (void*) indx, (void*) ctot, (void*) w, (void*) s, (void*) info);
     } else {
         hook_pos_dlaed3 = 0;

@@ -80,8 +80,8 @@ void FC_GLOBAL(sorgbr,SORGBR)(char* vect, blasint* m, blasint* n, blasint* k, fl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.sorgbr.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->sorgbr.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.sorgbr.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->sorgbr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) vect, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_sorgbr_(void* vect, void* m, void* n, void* k, void* a, void
 {
 	void (*fn) (void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.sorgbr.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.sorgbr.f77_blas_function; 
 
 		fn((void*) vect, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_sorgbr_(void* vect, void* m, void* n, void* k, void* a, voi
 	void (*fn) (void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.sorgbr.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.sorgbr.f77_blas_function; 
 
     hook_pos_sorgbr ++;
     if( hook_pos_sorgbr < __flexiblas_hooks->sorgbr.nhook) {
-        fn_hook = __flexiblas_hooks->sorgbr.f77_hook_function[hook_pos_sorgbr];
+        *(void **) &fn_hook = __flexiblas_hooks->sorgbr.f77_hook_function[hook_pos_sorgbr];
         fn_hook((void*) vect, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_sorgbr = 0;

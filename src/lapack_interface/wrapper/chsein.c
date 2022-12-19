@@ -80,8 +80,8 @@ void FC_GLOBAL(chsein,CHSEIN)(char* side, char* eigsrc, char* initv, blasint* se
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.chsein.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->chsein.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.chsein.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->chsein.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) side, (void*) eigsrc, (void*) initv, (void*) select, (void*) n, (void*) h, (void*) ldh, (void*) w, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) mm, (void*) m, (void*) work, (void*) rwork, (void*) ifaill, (void*) ifailr, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_chsein_(void* side, void* eigsrc, void* initv, void* select,
 {
 	void (*fn) (void* side, void* eigsrc, void* initv, void* select, void* n, void* h, void* ldh, void* w, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* rwork, void* ifaill, void* ifailr, void* info);
 
-	fn = current_backend->lapack.chsein.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.chsein.f77_blas_function; 
 
 		fn((void*) side, (void*) eigsrc, (void*) initv, (void*) select, (void*) n, (void*) h, (void*) ldh, (void*) w, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) mm, (void*) m, (void*) work, (void*) rwork, (void*) ifaill, (void*) ifailr, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_chsein_(void* side, void* eigsrc, void* initv, void* select
 	void (*fn) (void* side, void* eigsrc, void* initv, void* select, void* n, void* h, void* ldh, void* w, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* rwork, void* ifaill, void* ifailr, void* info);
 	void (*fn_hook) (void* side, void* eigsrc, void* initv, void* select, void* n, void* h, void* ldh, void* w, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* rwork, void* ifaill, void* ifailr, void* info);
 
-	fn      = current_backend->lapack.chsein.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.chsein.f77_blas_function; 
 
     hook_pos_chsein ++;
     if( hook_pos_chsein < __flexiblas_hooks->chsein.nhook) {
-        fn_hook = __flexiblas_hooks->chsein.f77_hook_function[hook_pos_chsein];
+        *(void **) &fn_hook = __flexiblas_hooks->chsein.f77_hook_function[hook_pos_chsein];
         fn_hook((void*) side, (void*) eigsrc, (void*) initv, (void*) select, (void*) n, (void*) h, (void*) ldh, (void*) w, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) mm, (void*) m, (void*) work, (void*) rwork, (void*) ifaill, (void*) ifailr, (void*) info);
     } else {
         hook_pos_chsein = 0;

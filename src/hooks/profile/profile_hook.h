@@ -2207,6 +2207,28 @@ extern "C" {
         profile_data_t droundup_lwork;
         profile_data_t sroundup_lwork;
 
+        /* LAPACK 3.11.0 */
+        profile_data_t ctrsyl3;
+        profile_data_t dtrsyl3;
+        profile_data_t strsyl3;
+        profile_data_t ztrsyl3;
+        profile_data_t clatrs3;
+        profile_data_t dlatrs3;
+        profile_data_t slatrs3;
+        profile_data_t zlatrs3;
+        profile_data_t cgelst;
+        profile_data_t dgelst;
+        profile_data_t sgelst;
+        profile_data_t zgelst;
+        profile_data_t dlarmm;
+        profile_data_t slarmm;
+
+
+
+
+
+
+
     } blas_calls_t;
 
     extern blas_calls_t *data;

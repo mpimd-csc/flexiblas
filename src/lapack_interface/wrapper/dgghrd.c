@@ -80,8 +80,8 @@ void FC_GLOBAL(dgghrd,DGGHRD)(char* compq, char* compz, blasint* n, blasint* ilo
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dgghrd.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dgghrd.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dgghrd.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dgghrd.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) compq, (void*) compz, (void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dgghrd_(void* compq, void* compz, void* n, void* ilo, void* 
 {
 	void (*fn) (void* compq, void* compz, void* n, void* ilo, void* ihi, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* info);
 
-	fn = current_backend->lapack.dgghrd.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dgghrd.f77_blas_function; 
 
 		fn((void*) compq, (void*) compz, (void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dgghrd_(void* compq, void* compz, void* n, void* ilo, void*
 	void (*fn) (void* compq, void* compz, void* n, void* ilo, void* ihi, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* info);
 	void (*fn_hook) (void* compq, void* compz, void* n, void* ilo, void* ihi, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* info);
 
-	fn      = current_backend->lapack.dgghrd.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dgghrd.f77_blas_function; 
 
     hook_pos_dgghrd ++;
     if( hook_pos_dgghrd < __flexiblas_hooks->dgghrd.nhook) {
-        fn_hook = __flexiblas_hooks->dgghrd.f77_hook_function[hook_pos_dgghrd];
+        *(void **) &fn_hook = __flexiblas_hooks->dgghrd.f77_hook_function[hook_pos_dgghrd];
         fn_hook((void*) compq, (void*) compz, (void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) info);
     } else {
         hook_pos_dgghrd = 0;

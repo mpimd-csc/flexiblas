@@ -80,8 +80,8 @@ void FC_GLOBAL(sptrfs,SPTRFS)(blasint* n, blasint* nrhs, float* d, float* e, flo
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.sptrfs.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->sptrfs.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.sptrfs.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->sptrfs.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) df, (void*) ef, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_sptrfs_(void* n, void* nrhs, void* d, void* e, void* df, voi
 {
 	void (*fn) (void* n, void* nrhs, void* d, void* e, void* df, void* ef, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* info);
 
-	fn = current_backend->lapack.sptrfs.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.sptrfs.f77_blas_function; 
 
 		fn((void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) df, (void*) ef, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_sptrfs_(void* n, void* nrhs, void* d, void* e, void* df, vo
 	void (*fn) (void* n, void* nrhs, void* d, void* e, void* df, void* ef, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* info);
 	void (*fn_hook) (void* n, void* nrhs, void* d, void* e, void* df, void* ef, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* info);
 
-	fn      = current_backend->lapack.sptrfs.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.sptrfs.f77_blas_function; 
 
     hook_pos_sptrfs ++;
     if( hook_pos_sptrfs < __flexiblas_hooks->sptrfs.nhook) {
-        fn_hook = __flexiblas_hooks->sptrfs.f77_hook_function[hook_pos_sptrfs];
+        *(void **) &fn_hook = __flexiblas_hooks->sptrfs.f77_hook_function[hook_pos_sptrfs];
         fn_hook((void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) df, (void*) ef, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) info);
     } else {
         hook_pos_sptrfs = 0;

@@ -81,8 +81,8 @@ double FC_GLOBAL(dlangt,DLANGT)(char* norm, blasint* n, double* dl, double* d, d
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlangt.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlangt.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlangt.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlangt.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du); 
 		return ret; 
@@ -113,7 +113,7 @@ double flexiblas_real_dlangt_(void* norm, void* n, void* dl, void* d, void* du)
 	double (*fn) (void* norm, void* n, void* dl, void* d, void* du);
 	double ret;
 
-	fn = current_backend->lapack.dlangt.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlangt.f77_blas_function; 
 
 		ret = fn((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du); 
 
@@ -137,11 +137,11 @@ double flexiblas_chain_dlangt_(void* norm, void* n, void* dl, void* d, void* du)
 	double (*fn_hook) (void* norm, void* n, void* dl, void* d, void* du);
 	double ret;
 
-	fn      = current_backend->lapack.dlangt.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlangt.f77_blas_function; 
 
     hook_pos_dlangt ++;
     if( hook_pos_dlangt < __flexiblas_hooks->dlangt.nhook) {
-        fn_hook = __flexiblas_hooks->dlangt.f77_hook_function[hook_pos_dlangt];
+        *(void **) &fn_hook = __flexiblas_hooks->dlangt.f77_hook_function[hook_pos_dlangt];
         ret = fn_hook((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du);
     } else {
         hook_pos_dlangt = 0;

@@ -115,7 +115,7 @@ void internal_cblas_xerbla(CBLAS_INT info, const char *rout, const char *form, .
    }
 
    if (info)
-      fprintf(stderr, "Parameter %d to routine %s was incorrect\n", info, rout);
+      fprintf(stderr, "Parameter %" CBLAS_IFMT "  to routine %s was incorrect\n", info, rout);
    vfprintf(stderr, form, argptr);
    va_end(argptr);
    if (info) {

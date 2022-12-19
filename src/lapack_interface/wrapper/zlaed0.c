@@ -80,8 +80,8 @@ void FC_GLOBAL(zlaed0,ZLAED0)(blasint* qsiz, blasint* n, double* d, double* e, d
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlaed0.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlaed0.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlaed0.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlaed0.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) qsiz, (void*) n, (void*) d, (void*) e, (void*) q, (void*) ldq, (void*) qstore, (void*) ldqs, (void*) rwork, (void*) iwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zlaed0_(void* qsiz, void* n, void* d, void* e, void* q, void
 {
 	void (*fn) (void* qsiz, void* n, void* d, void* e, void* q, void* ldq, void* qstore, void* ldqs, void* rwork, void* iwork, void* info);
 
-	fn = current_backend->lapack.zlaed0.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlaed0.f77_blas_function; 
 
 		fn((void*) qsiz, (void*) n, (void*) d, (void*) e, (void*) q, (void*) ldq, (void*) qstore, (void*) ldqs, (void*) rwork, (void*) iwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zlaed0_(void* qsiz, void* n, void* d, void* e, void* q, voi
 	void (*fn) (void* qsiz, void* n, void* d, void* e, void* q, void* ldq, void* qstore, void* ldqs, void* rwork, void* iwork, void* info);
 	void (*fn_hook) (void* qsiz, void* n, void* d, void* e, void* q, void* ldq, void* qstore, void* ldqs, void* rwork, void* iwork, void* info);
 
-	fn      = current_backend->lapack.zlaed0.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlaed0.f77_blas_function; 
 
     hook_pos_zlaed0 ++;
     if( hook_pos_zlaed0 < __flexiblas_hooks->zlaed0.nhook) {
-        fn_hook = __flexiblas_hooks->zlaed0.f77_hook_function[hook_pos_zlaed0];
+        *(void **) &fn_hook = __flexiblas_hooks->zlaed0.f77_hook_function[hook_pos_zlaed0];
         fn_hook((void*) qsiz, (void*) n, (void*) d, (void*) e, (void*) q, (void*) ldq, (void*) qstore, (void*) ldqs, (void*) rwork, (void*) iwork, (void*) info);
     } else {
         hook_pos_zlaed0 = 0;

@@ -60,17 +60,17 @@ extern "C" {
     int disable_hook(flexiblas_mgmt_location_t loc, const char *name);
     int enable_hook(flexiblas_mgmt_location_t loc, char *name);
     int  show_hook(char *name);
-    int list_all_hooks();
+    int list_all_hooks(void);
     int hook_option_set(flexiblas_mgmt_location_t loc, char *hookname, char *option, char *value);
     int hook_option_unset(flexiblas_mgmt_location_t loc, char *hookname, char *option);
-    int list_enabled_hooks();
-    int list_active_hooks();
+    int list_enabled_hooks(void);
+    int list_active_hooks(void);
 
         /* BLAS handling   */
     int remove_blas (flexiblas_mgmt_location_t loc, char *name);
     int add_blas (flexiblas_mgmt_location_t loc, char *name, char *blas, char *comment);
     int set_blas(flexiblas_mgmt_location_t loc, char* name);
-    int list_all_blas();
+    int list_all_blas(void);
     int print_blas(flexiblas_mgmt_t *config, flexiblas_mgmt_location_t loc, char *where );
 
 #ifdef __cplusplus

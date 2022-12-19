@@ -80,8 +80,8 @@ void FC_GLOBAL(dlacon,DLACON)(blasint* n, double* v, double* x, blasint* isgn, d
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlacon.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlacon.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlacon.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlacon.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) v, (void*) x, (void*) isgn, (void*) est, (void*) kase); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlacon_(void* n, void* v, void* x, void* isgn, void* est, vo
 {
 	void (*fn) (void* n, void* v, void* x, void* isgn, void* est, void* kase);
 
-	fn = current_backend->lapack.dlacon.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlacon.f77_blas_function; 
 
 		fn((void*) n, (void*) v, (void*) x, (void*) isgn, (void*) est, (void*) kase); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlacon_(void* n, void* v, void* x, void* isgn, void* est, v
 	void (*fn) (void* n, void* v, void* x, void* isgn, void* est, void* kase);
 	void (*fn_hook) (void* n, void* v, void* x, void* isgn, void* est, void* kase);
 
-	fn      = current_backend->lapack.dlacon.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlacon.f77_blas_function; 
 
     hook_pos_dlacon ++;
     if( hook_pos_dlacon < __flexiblas_hooks->dlacon.nhook) {
-        fn_hook = __flexiblas_hooks->dlacon.f77_hook_function[hook_pos_dlacon];
+        *(void **) &fn_hook = __flexiblas_hooks->dlacon.f77_hook_function[hook_pos_dlacon];
         fn_hook((void*) n, (void*) v, (void*) x, (void*) isgn, (void*) est, (void*) kase);
     } else {
         hook_pos_dlacon = 0;

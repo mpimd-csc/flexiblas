@@ -80,8 +80,8 @@ void FC_GLOBAL(slaed1,SLAED1)(blasint* n, float* d, float* q, blasint* ldq, blas
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slaed1.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slaed1.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slaed1.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slaed1.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) d, (void*) q, (void*) ldq, (void*) indxq, (void*) rho, (void*) cutpnt, (void*) work, (void*) iwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slaed1_(void* n, void* d, void* q, void* ldq, void* indxq, v
 {
 	void (*fn) (void* n, void* d, void* q, void* ldq, void* indxq, void* rho, void* cutpnt, void* work, void* iwork, void* info);
 
-	fn = current_backend->lapack.slaed1.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slaed1.f77_blas_function; 
 
 		fn((void*) n, (void*) d, (void*) q, (void*) ldq, (void*) indxq, (void*) rho, (void*) cutpnt, (void*) work, (void*) iwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slaed1_(void* n, void* d, void* q, void* ldq, void* indxq, 
 	void (*fn) (void* n, void* d, void* q, void* ldq, void* indxq, void* rho, void* cutpnt, void* work, void* iwork, void* info);
 	void (*fn_hook) (void* n, void* d, void* q, void* ldq, void* indxq, void* rho, void* cutpnt, void* work, void* iwork, void* info);
 
-	fn      = current_backend->lapack.slaed1.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slaed1.f77_blas_function; 
 
     hook_pos_slaed1 ++;
     if( hook_pos_slaed1 < __flexiblas_hooks->slaed1.nhook) {
-        fn_hook = __flexiblas_hooks->slaed1.f77_hook_function[hook_pos_slaed1];
+        *(void **) &fn_hook = __flexiblas_hooks->slaed1.f77_hook_function[hook_pos_slaed1];
         fn_hook((void*) n, (void*) d, (void*) q, (void*) ldq, (void*) indxq, (void*) rho, (void*) cutpnt, (void*) work, (void*) iwork, (void*) info);
     } else {
         hook_pos_slaed1 = 0;

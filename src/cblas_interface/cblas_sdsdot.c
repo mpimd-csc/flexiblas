@@ -79,7 +79,7 @@ float flexiblas_real_cblas_sdsdot( const CBLAS_INT N, const float alpha, const f
     float (*fn)  ( const CBLAS_INT N, const float alpha, const float *X, const CBLAS_INT incX, const float *Y, const CBLAS_INT incY);
 
     if ( current_backend->blas.sdsdot.cblas_function != NULL ) {
-        fn = current_backend->blas.sdsdot.cblas_function;
+        *(void **) &fn = current_backend->blas.sdsdot.cblas_function;
         d = fn(N,alpha, X,incX,Y,incY);
     } else {
         Int F77_N=N, F77_incX=incX, F77_incY=incY;

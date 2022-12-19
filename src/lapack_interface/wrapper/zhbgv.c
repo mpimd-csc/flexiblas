@@ -80,8 +80,8 @@ void FC_GLOBAL(zhbgv,ZHBGV)(char* jobz, char* uplo, blasint* n, blasint* ka, bla
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zhbgv.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zhbgv.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zhbgv.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zhbgv.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobz, (void*) uplo, (void*) n, (void*) ka, (void*) kb, (void*) ab, (void*) ldab, (void*) bb, (void*) ldbb, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zhbgv_(void* jobz, void* uplo, void* n, void* ka, void* kb, 
 {
 	void (*fn) (void* jobz, void* uplo, void* n, void* ka, void* kb, void* ab, void* ldab, void* bb, void* ldbb, void* w, void* z, void* ldz, void* work, void* rwork, void* info);
 
-	fn = current_backend->lapack.zhbgv.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zhbgv.f77_blas_function; 
 
 		fn((void*) jobz, (void*) uplo, (void*) n, (void*) ka, (void*) kb, (void*) ab, (void*) ldab, (void*) bb, (void*) ldbb, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zhbgv_(void* jobz, void* uplo, void* n, void* ka, void* kb,
 	void (*fn) (void* jobz, void* uplo, void* n, void* ka, void* kb, void* ab, void* ldab, void* bb, void* ldbb, void* w, void* z, void* ldz, void* work, void* rwork, void* info);
 	void (*fn_hook) (void* jobz, void* uplo, void* n, void* ka, void* kb, void* ab, void* ldab, void* bb, void* ldbb, void* w, void* z, void* ldz, void* work, void* rwork, void* info);
 
-	fn      = current_backend->lapack.zhbgv.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zhbgv.f77_blas_function; 
 
     hook_pos_zhbgv ++;
     if( hook_pos_zhbgv < __flexiblas_hooks->zhbgv.nhook) {
-        fn_hook = __flexiblas_hooks->zhbgv.f77_hook_function[hook_pos_zhbgv];
+        *(void **) &fn_hook = __flexiblas_hooks->zhbgv.f77_hook_function[hook_pos_zhbgv];
         fn_hook((void*) jobz, (void*) uplo, (void*) n, (void*) ka, (void*) kb, (void*) ab, (void*) ldab, (void*) bb, (void*) ldbb, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) rwork, (void*) info);
     } else {
         hook_pos_zhbgv = 0;

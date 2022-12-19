@@ -67,7 +67,7 @@ void flexiblas_real_cblas_zdotu_sub( const CBLAS_INT N, const void *X, const CBL
     void (*fn)  ( const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY,void *dotc);
 
     if ( current_backend->blas.zdotu_sub.cblas_function != NULL ) {
-        fn = current_backend->blas.zdotu_sub.cblas_function;
+        *(void **) &fn = current_backend->blas.zdotu_sub.cblas_function;
         fn(N,X,incX,Y,incY,dotc);
     } else {
         double complex d;

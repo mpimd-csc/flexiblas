@@ -80,8 +80,8 @@ void FC_GLOBAL(dgesv,DGESV)(blasint* n, blasint* nrhs, double* a, blasint* lda, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dgesv.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dgesv.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dgesv.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dgesv.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dgesv_(void* n, void* nrhs, void* a, void* lda, void* ipiv, 
 {
 	void (*fn) (void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* info);
 
-	fn = current_backend->lapack.dgesv.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dgesv.f77_blas_function; 
 
 		fn((void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dgesv_(void* n, void* nrhs, void* a, void* lda, void* ipiv,
 	void (*fn) (void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* info);
 	void (*fn_hook) (void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* info);
 
-	fn      = current_backend->lapack.dgesv.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dgesv.f77_blas_function; 
 
     hook_pos_dgesv ++;
     if( hook_pos_dgesv < __flexiblas_hooks->dgesv.nhook) {
-        fn_hook = __flexiblas_hooks->dgesv.f77_hook_function[hook_pos_dgesv];
+        *(void **) &fn_hook = __flexiblas_hooks->dgesv.f77_hook_function[hook_pos_dgesv];
         fn_hook((void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) info);
     } else {
         hook_pos_dgesv = 0;

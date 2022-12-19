@@ -80,8 +80,8 @@ void FC_GLOBAL(cungtsqr,CUNGTSQR)(blasint* m, blasint* n, blasint* mb, blasint* 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cungtsqr.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cungtsqr.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cungtsqr.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cungtsqr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) mb, (void*) nb, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cungtsqr_(void* m, void* n, void* mb, void* nb, void* a, voi
 {
 	void (*fn) (void* m, void* n, void* mb, void* nb, void* a, void* lda, void* t, void* ldt, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.cungtsqr.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cungtsqr.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) mb, (void*) nb, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cungtsqr_(void* m, void* n, void* mb, void* nb, void* a, vo
 	void (*fn) (void* m, void* n, void* mb, void* nb, void* a, void* lda, void* t, void* ldt, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* m, void* n, void* mb, void* nb, void* a, void* lda, void* t, void* ldt, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.cungtsqr.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cungtsqr.f77_blas_function; 
 
     hook_pos_cungtsqr ++;
     if( hook_pos_cungtsqr < __flexiblas_hooks->cungtsqr.nhook) {
-        fn_hook = __flexiblas_hooks->cungtsqr.f77_hook_function[hook_pos_cungtsqr];
+        *(void **) &fn_hook = __flexiblas_hooks->cungtsqr.f77_hook_function[hook_pos_cungtsqr];
         fn_hook((void*) m, (void*) n, (void*) mb, (void*) nb, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_cungtsqr = 0;

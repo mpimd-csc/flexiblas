@@ -107,8 +107,8 @@ void flexiblas_real_cblas_stbsv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
              const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
              const CBLAS_INT N, const CBLAS_INT K, const float  *A, const CBLAS_INT lda,
-             float  *X, const CBLAS_INT incX)
-            = current_backend->blas.stbsv.cblas_function;
+             float  *X, const CBLAS_INT incX);
+        *(void **) &fn = current_backend->blas.stbsv.cblas_function;
         fn(layout,Uplo,TransA,Diag,N,K,A,lda,X,incX);
     } else {
 

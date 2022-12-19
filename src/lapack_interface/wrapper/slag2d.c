@@ -80,8 +80,8 @@ void FC_GLOBAL(slag2d,SLAG2D)(blasint* m, blasint* n, float* sa, blasint* ldsa, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slag2d.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slag2d.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slag2d.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slag2d.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) sa, (void*) ldsa, (void*) a, (void*) lda, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slag2d_(void* m, void* n, void* sa, void* ldsa, void* a, voi
 {
 	void (*fn) (void* m, void* n, void* sa, void* ldsa, void* a, void* lda, void* info);
 
-	fn = current_backend->lapack.slag2d.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slag2d.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) sa, (void*) ldsa, (void*) a, (void*) lda, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slag2d_(void* m, void* n, void* sa, void* ldsa, void* a, vo
 	void (*fn) (void* m, void* n, void* sa, void* ldsa, void* a, void* lda, void* info);
 	void (*fn_hook) (void* m, void* n, void* sa, void* ldsa, void* a, void* lda, void* info);
 
-	fn      = current_backend->lapack.slag2d.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slag2d.f77_blas_function; 
 
     hook_pos_slag2d ++;
     if( hook_pos_slag2d < __flexiblas_hooks->slag2d.nhook) {
-        fn_hook = __flexiblas_hooks->slag2d.f77_hook_function[hook_pos_slag2d];
+        *(void **) &fn_hook = __flexiblas_hooks->slag2d.f77_hook_function[hook_pos_slag2d];
         fn_hook((void*) m, (void*) n, (void*) sa, (void*) ldsa, (void*) a, (void*) lda, (void*) info);
     } else {
         hook_pos_slag2d = 0;

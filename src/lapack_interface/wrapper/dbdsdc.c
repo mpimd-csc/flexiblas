@@ -80,8 +80,8 @@ void FC_GLOBAL(dbdsdc,DBDSDC)(char* uplo, char* compq, blasint* n, double* d, do
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dbdsdc.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dbdsdc.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dbdsdc.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dbdsdc.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) compq, (void*) n, (void*) d, (void*) e, (void*) u, (void*) ldu, (void*) vt, (void*) ldvt, (void*) q, (void*) iq, (void*) work, (void*) iwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dbdsdc_(void* uplo, void* compq, void* n, void* d, void* e, 
 {
 	void (*fn) (void* uplo, void* compq, void* n, void* d, void* e, void* u, void* ldu, void* vt, void* ldvt, void* q, void* iq, void* work, void* iwork, void* info);
 
-	fn = current_backend->lapack.dbdsdc.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dbdsdc.f77_blas_function; 
 
 		fn((void*) uplo, (void*) compq, (void*) n, (void*) d, (void*) e, (void*) u, (void*) ldu, (void*) vt, (void*) ldvt, (void*) q, (void*) iq, (void*) work, (void*) iwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dbdsdc_(void* uplo, void* compq, void* n, void* d, void* e,
 	void (*fn) (void* uplo, void* compq, void* n, void* d, void* e, void* u, void* ldu, void* vt, void* ldvt, void* q, void* iq, void* work, void* iwork, void* info);
 	void (*fn_hook) (void* uplo, void* compq, void* n, void* d, void* e, void* u, void* ldu, void* vt, void* ldvt, void* q, void* iq, void* work, void* iwork, void* info);
 
-	fn      = current_backend->lapack.dbdsdc.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dbdsdc.f77_blas_function; 
 
     hook_pos_dbdsdc ++;
     if( hook_pos_dbdsdc < __flexiblas_hooks->dbdsdc.nhook) {
-        fn_hook = __flexiblas_hooks->dbdsdc.f77_hook_function[hook_pos_dbdsdc];
+        *(void **) &fn_hook = __flexiblas_hooks->dbdsdc.f77_hook_function[hook_pos_dbdsdc];
         fn_hook((void*) uplo, (void*) compq, (void*) n, (void*) d, (void*) e, (void*) u, (void*) ldu, (void*) vt, (void*) ldvt, (void*) q, (void*) iq, (void*) work, (void*) iwork, (void*) info);
     } else {
         hook_pos_dbdsdc = 0;

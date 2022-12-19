@@ -80,8 +80,8 @@ void FC_GLOBAL(sorghr,SORGHR)(blasint* n, blasint* ilo, blasint* ihi, float* a, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.sorghr.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->sorghr.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.sorghr.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->sorghr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_sorghr_(void* n, void* ilo, void* ihi, void* a, void* lda, v
 {
 	void (*fn) (void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.sorghr.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.sorghr.f77_blas_function; 
 
 		fn((void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_sorghr_(void* n, void* ilo, void* ihi, void* a, void* lda, 
 	void (*fn) (void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.sorghr.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.sorghr.f77_blas_function; 
 
     hook_pos_sorghr ++;
     if( hook_pos_sorghr < __flexiblas_hooks->sorghr.nhook) {
-        fn_hook = __flexiblas_hooks->sorghr.f77_hook_function[hook_pos_sorghr];
+        *(void **) &fn_hook = __flexiblas_hooks->sorghr.f77_hook_function[hook_pos_sorghr];
         fn_hook((void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_sorghr = 0;

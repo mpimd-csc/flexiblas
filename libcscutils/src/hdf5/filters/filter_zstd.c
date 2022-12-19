@@ -99,7 +99,7 @@ error:
 
 }
 
-int csc_hdf5_register_zstd()
+int csc_hdf5_register_zstd(void)
 {
     herr_t status;
     status = H5Zregister(H5Z_ZSTD);
@@ -114,7 +114,7 @@ int csc_hdf5_register_zstd()
 #else
 
 /* Filter not available  */
-int csc_hdf5_register_zstd()
+int csc_hdf5_register_zstd(void)
 {
     return -1;
 }

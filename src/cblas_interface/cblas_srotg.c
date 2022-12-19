@@ -73,8 +73,8 @@ void flexiblas_chain_cblas_srotg(  float *a, float *b, float *c, float *s)
 void flexiblas_real_cblas_srotg(  float *a, float *b, float *c, float *s)
 {
     if ( current_backend->blas.srotg.cblas_function != NULL ) {
-        void (*fn)(float *, float *, float *, float *)
-            = current_backend->blas.srotg.cblas_function;
+        void (*fn)(float *, float *, float *, float *);
+        *(void **) & fn = current_backend->blas.srotg.cblas_function;
         fn(a,b,c,s);
     } else {
         FC_GLOBAL(srotg,SROTG)(a,b,c,s);

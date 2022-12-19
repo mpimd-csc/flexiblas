@@ -80,8 +80,8 @@ void FC_GLOBAL(sormqr,SORMQR)(char* side, char* trans, blasint* m, blasint* n, b
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.sormqr.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->sormqr.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.sormqr.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->sormqr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_sormqr_(void* side, void* trans, void* m, void* n, void* k, 
 {
 	void (*fn) (void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.sormqr.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.sormqr.f77_blas_function; 
 
 		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_sormqr_(void* side, void* trans, void* m, void* n, void* k,
 	void (*fn) (void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.sormqr.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.sormqr.f77_blas_function; 
 
     hook_pos_sormqr ++;
     if( hook_pos_sormqr < __flexiblas_hooks->sormqr.nhook) {
-        fn_hook = __flexiblas_hooks->sormqr.f77_hook_function[hook_pos_sormqr];
+        *(void **) &fn_hook = __flexiblas_hooks->sormqr.f77_hook_function[hook_pos_sormqr];
         fn_hook((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_sormqr = 0;

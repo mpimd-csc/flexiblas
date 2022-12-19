@@ -81,8 +81,8 @@ float FC_GLOBAL(clange,CLANGE)(char* norm, blasint* m, blasint* n, float complex
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.clange.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->clange.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.clange.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->clange.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) norm, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) work); 
 		return ret; 
@@ -113,7 +113,7 @@ float flexiblas_real_clange_(void* norm, void* m, void* n, void* a, void* lda, v
 	float (*fn) (void* norm, void* m, void* n, void* a, void* lda, void* work);
 	float ret;
 
-	fn = current_backend->lapack.clange.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.clange.f77_blas_function; 
 
 		ret = fn((void*) norm, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) work); 
 
@@ -137,11 +137,11 @@ float flexiblas_chain_clange_(void* norm, void* m, void* n, void* a, void* lda, 
 	float (*fn_hook) (void* norm, void* m, void* n, void* a, void* lda, void* work);
 	float ret;
 
-	fn      = current_backend->lapack.clange.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.clange.f77_blas_function; 
 
     hook_pos_clange ++;
     if( hook_pos_clange < __flexiblas_hooks->clange.nhook) {
-        fn_hook = __flexiblas_hooks->clange.f77_hook_function[hook_pos_clange];
+        *(void **) &fn_hook = __flexiblas_hooks->clange.f77_hook_function[hook_pos_clange];
         ret = fn_hook((void*) norm, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) work);
     } else {
         hook_pos_clange = 0;

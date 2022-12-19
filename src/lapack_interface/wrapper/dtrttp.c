@@ -80,8 +80,8 @@ void FC_GLOBAL(dtrttp,DTRTTP)(char* uplo, blasint* n, double* a, blasint* lda, d
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dtrttp.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dtrttp.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dtrttp.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dtrttp.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ap, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dtrttp_(void* uplo, void* n, void* a, void* lda, void* ap, v
 {
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* ap, void* info);
 
-	fn = current_backend->lapack.dtrttp.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dtrttp.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ap, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dtrttp_(void* uplo, void* n, void* a, void* lda, void* ap, 
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* ap, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* ap, void* info);
 
-	fn      = current_backend->lapack.dtrttp.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dtrttp.f77_blas_function; 
 
     hook_pos_dtrttp ++;
     if( hook_pos_dtrttp < __flexiblas_hooks->dtrttp.nhook) {
-        fn_hook = __flexiblas_hooks->dtrttp.f77_hook_function[hook_pos_dtrttp];
+        *(void **) &fn_hook = __flexiblas_hooks->dtrttp.f77_hook_function[hook_pos_dtrttp];
         fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ap, (void*) info);
     } else {
         hook_pos_dtrttp = 0;

@@ -80,8 +80,8 @@ void FC_GLOBAL(slaed7,SLAED7)(blasint* icompq, blasint* n, blasint* qsiz, blasin
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slaed7.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slaed7.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slaed7.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slaed7.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) icompq, (void*) n, (void*) qsiz, (void*) tlvls, (void*) curlvl, (void*) curpbm, (void*) d, (void*) q, (void*) ldq, (void*) indxq, (void*) rho, (void*) cutpnt, (void*) qstore, (void*) qptr, (void*) prmptr, (void*) perm, (void*) givptr, (void*) givcol, (void*) givnum, (void*) work, (void*) iwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slaed7_(void* icompq, void* n, void* qsiz, void* tlvls, void
 {
 	void (*fn) (void* icompq, void* n, void* qsiz, void* tlvls, void* curlvl, void* curpbm, void* d, void* q, void* ldq, void* indxq, void* rho, void* cutpnt, void* qstore, void* qptr, void* prmptr, void* perm, void* givptr, void* givcol, void* givnum, void* work, void* iwork, void* info);
 
-	fn = current_backend->lapack.slaed7.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slaed7.f77_blas_function; 
 
 		fn((void*) icompq, (void*) n, (void*) qsiz, (void*) tlvls, (void*) curlvl, (void*) curpbm, (void*) d, (void*) q, (void*) ldq, (void*) indxq, (void*) rho, (void*) cutpnt, (void*) qstore, (void*) qptr, (void*) prmptr, (void*) perm, (void*) givptr, (void*) givcol, (void*) givnum, (void*) work, (void*) iwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slaed7_(void* icompq, void* n, void* qsiz, void* tlvls, voi
 	void (*fn) (void* icompq, void* n, void* qsiz, void* tlvls, void* curlvl, void* curpbm, void* d, void* q, void* ldq, void* indxq, void* rho, void* cutpnt, void* qstore, void* qptr, void* prmptr, void* perm, void* givptr, void* givcol, void* givnum, void* work, void* iwork, void* info);
 	void (*fn_hook) (void* icompq, void* n, void* qsiz, void* tlvls, void* curlvl, void* curpbm, void* d, void* q, void* ldq, void* indxq, void* rho, void* cutpnt, void* qstore, void* qptr, void* prmptr, void* perm, void* givptr, void* givcol, void* givnum, void* work, void* iwork, void* info);
 
-	fn      = current_backend->lapack.slaed7.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slaed7.f77_blas_function; 
 
     hook_pos_slaed7 ++;
     if( hook_pos_slaed7 < __flexiblas_hooks->slaed7.nhook) {
-        fn_hook = __flexiblas_hooks->slaed7.f77_hook_function[hook_pos_slaed7];
+        *(void **) &fn_hook = __flexiblas_hooks->slaed7.f77_hook_function[hook_pos_slaed7];
         fn_hook((void*) icompq, (void*) n, (void*) qsiz, (void*) tlvls, (void*) curlvl, (void*) curpbm, (void*) d, (void*) q, (void*) ldq, (void*) indxq, (void*) rho, (void*) cutpnt, (void*) qstore, (void*) qptr, (void*) prmptr, (void*) perm, (void*) givptr, (void*) givcol, (void*) givnum, (void*) work, (void*) iwork, (void*) info);
     } else {
         hook_pos_slaed7 = 0;

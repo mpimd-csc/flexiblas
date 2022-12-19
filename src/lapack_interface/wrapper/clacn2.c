@@ -80,8 +80,8 @@ void FC_GLOBAL(clacn2,CLACN2)(blasint* n, float complex* v, float complex* x, fl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.clacn2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->clacn2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.clacn2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->clacn2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) v, (void*) x, (void*) est, (void*) kase, (void*) isave); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_clacn2_(void* n, void* v, void* x, void* est, void* kase, vo
 {
 	void (*fn) (void* n, void* v, void* x, void* est, void* kase, void* isave);
 
-	fn = current_backend->lapack.clacn2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.clacn2.f77_blas_function; 
 
 		fn((void*) n, (void*) v, (void*) x, (void*) est, (void*) kase, (void*) isave); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_clacn2_(void* n, void* v, void* x, void* est, void* kase, v
 	void (*fn) (void* n, void* v, void* x, void* est, void* kase, void* isave);
 	void (*fn_hook) (void* n, void* v, void* x, void* est, void* kase, void* isave);
 
-	fn      = current_backend->lapack.clacn2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.clacn2.f77_blas_function; 
 
     hook_pos_clacn2 ++;
     if( hook_pos_clacn2 < __flexiblas_hooks->clacn2.nhook) {
-        fn_hook = __flexiblas_hooks->clacn2.f77_hook_function[hook_pos_clacn2];
+        *(void **) &fn_hook = __flexiblas_hooks->clacn2.f77_hook_function[hook_pos_clacn2];
         fn_hook((void*) n, (void*) v, (void*) x, (void*) est, (void*) kase, (void*) isave);
     } else {
         hook_pos_clacn2 = 0;

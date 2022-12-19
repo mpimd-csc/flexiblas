@@ -80,8 +80,8 @@ void FC_GLOBAL(slahr2,SLAHR2)(blasint* n, blasint* k, blasint* nb, float* a, bla
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slahr2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slahr2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slahr2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slahr2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) k, (void*) nb, (void*) a, (void*) lda, (void*) tau, (void*) t, (void*) ldt, (void*) y, (void*) ldy); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slahr2_(void* n, void* k, void* nb, void* a, void* lda, void
 {
 	void (*fn) (void* n, void* k, void* nb, void* a, void* lda, void* tau, void* t, void* ldt, void* y, void* ldy);
 
-	fn = current_backend->lapack.slahr2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slahr2.f77_blas_function; 
 
 		fn((void*) n, (void*) k, (void*) nb, (void*) a, (void*) lda, (void*) tau, (void*) t, (void*) ldt, (void*) y, (void*) ldy); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slahr2_(void* n, void* k, void* nb, void* a, void* lda, voi
 	void (*fn) (void* n, void* k, void* nb, void* a, void* lda, void* tau, void* t, void* ldt, void* y, void* ldy);
 	void (*fn_hook) (void* n, void* k, void* nb, void* a, void* lda, void* tau, void* t, void* ldt, void* y, void* ldy);
 
-	fn      = current_backend->lapack.slahr2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slahr2.f77_blas_function; 
 
     hook_pos_slahr2 ++;
     if( hook_pos_slahr2 < __flexiblas_hooks->slahr2.nhook) {
-        fn_hook = __flexiblas_hooks->slahr2.f77_hook_function[hook_pos_slahr2];
+        *(void **) &fn_hook = __flexiblas_hooks->slahr2.f77_hook_function[hook_pos_slahr2];
         fn_hook((void*) n, (void*) k, (void*) nb, (void*) a, (void*) lda, (void*) tau, (void*) t, (void*) ldt, (void*) y, (void*) ldy);
     } else {
         hook_pos_slahr2 = 0;

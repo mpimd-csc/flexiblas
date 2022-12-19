@@ -80,8 +80,8 @@ void FC_GLOBAL(cgtsv,CGTSV)(blasint* n, blasint* nrhs, float complex* dl, float 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cgtsv.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cgtsv.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cgtsv.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cgtsv.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) nrhs, (void*) dl, (void*) d, (void*) du, (void*) b, (void*) ldb, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cgtsv_(void* n, void* nrhs, void* dl, void* d, void* du, voi
 {
 	void (*fn) (void* n, void* nrhs, void* dl, void* d, void* du, void* b, void* ldb, void* info);
 
-	fn = current_backend->lapack.cgtsv.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cgtsv.f77_blas_function; 
 
 		fn((void*) n, (void*) nrhs, (void*) dl, (void*) d, (void*) du, (void*) b, (void*) ldb, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cgtsv_(void* n, void* nrhs, void* dl, void* d, void* du, vo
 	void (*fn) (void* n, void* nrhs, void* dl, void* d, void* du, void* b, void* ldb, void* info);
 	void (*fn_hook) (void* n, void* nrhs, void* dl, void* d, void* du, void* b, void* ldb, void* info);
 
-	fn      = current_backend->lapack.cgtsv.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cgtsv.f77_blas_function; 
 
     hook_pos_cgtsv ++;
     if( hook_pos_cgtsv < __flexiblas_hooks->cgtsv.nhook) {
-        fn_hook = __flexiblas_hooks->cgtsv.f77_hook_function[hook_pos_cgtsv];
+        *(void **) &fn_hook = __flexiblas_hooks->cgtsv.f77_hook_function[hook_pos_cgtsv];
         fn_hook((void*) n, (void*) nrhs, (void*) dl, (void*) d, (void*) du, (void*) b, (void*) ldb, (void*) info);
     } else {
         hook_pos_cgtsv = 0;

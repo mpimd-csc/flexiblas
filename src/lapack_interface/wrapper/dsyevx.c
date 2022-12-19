@@ -80,8 +80,8 @@ void FC_GLOBAL(dsyevx,DSYEVX)(char* jobz, char* range, char* uplo, blasint* n, d
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dsyevx.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dsyevx.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dsyevx.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dsyevx.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) iwork, (void*) ifail, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dsyevx_(void* jobz, void* range, void* uplo, void* n, void* 
 {
 	void (*fn) (void* jobz, void* range, void* uplo, void* n, void* a, void* lda, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* lwork, void* iwork, void* ifail, void* info);
 
-	fn = current_backend->lapack.dsyevx.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dsyevx.f77_blas_function; 
 
 		fn((void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) iwork, (void*) ifail, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dsyevx_(void* jobz, void* range, void* uplo, void* n, void*
 	void (*fn) (void* jobz, void* range, void* uplo, void* n, void* a, void* lda, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* lwork, void* iwork, void* ifail, void* info);
 	void (*fn_hook) (void* jobz, void* range, void* uplo, void* n, void* a, void* lda, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* lwork, void* iwork, void* ifail, void* info);
 
-	fn      = current_backend->lapack.dsyevx.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dsyevx.f77_blas_function; 
 
     hook_pos_dsyevx ++;
     if( hook_pos_dsyevx < __flexiblas_hooks->dsyevx.nhook) {
-        fn_hook = __flexiblas_hooks->dsyevx.f77_hook_function[hook_pos_dsyevx];
+        *(void **) &fn_hook = __flexiblas_hooks->dsyevx.f77_hook_function[hook_pos_dsyevx];
         fn_hook((void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) iwork, (void*) ifail, (void*) info);
     } else {
         hook_pos_dsyevx = 0;

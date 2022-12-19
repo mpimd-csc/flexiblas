@@ -131,6 +131,8 @@ class FortranFunction(object):
     def _callsequence(self, intwidth = 0, void = False, typecast = False ):
         first = True
         s = ""
+        if len(self._args) == 0:
+            return "void"
         for i in self._args:
             if not void:
                 if self._cvars[i] == "int":
@@ -373,10 +375,10 @@ class FortranFunction(object):
             s += "\t{returntype:s} ret;\n".format(returntype = return_type)
         s += "\n"
         # Get the function
-        s += "\tfn = current_backend->{part:s}.{funcname:s}.f77_blas_function; \n".format(funcname = self._name.lower(),part=part)
+        s += "\t*(void **) & fn = current_backend->{part:s}.{funcname:s}.f77_blas_function; \n".format(funcname = self._name.lower(),part=part)
 
         if self._function and is_complex(self._fvars[self._name]["typespec"]):
-            s+= "\tfn_intel = (void *) fn;\n"
+            s+= "\t*(void **) & fn_intel = *(void **) &fn;\n"
         s += "\n"
 
 
@@ -429,15 +431,15 @@ class FortranFunction(object):
             s += "\t{returntype:s} ret;\n".format(returntype = return_type)
         s += "\n"
         # Get the function
-        s += "\tfn      = current_backend->{part:s}.{funcname:s}.f77_blas_function; \n".format(funcname = self._name.lower(),part=part)
+        s += "\t*(void **) &fn      = current_backend->{part:s}.{funcname:s}.f77_blas_function; \n".format(funcname = self._name.lower(),part=part)
         if self._function and is_complex(self._fvars[self._name]["typespec"]):
-            s+= "\tfn_intel = (void *) fn;\n"
+            s+= "\t*(void **) & fn_intel = *(void **) &fn;\n"
 
         # Check the hook
         s += """
     hook_pos_{funcname:s} ++;
     if( hook_pos_{funcname:s} < __flexiblas_hooks->{funcname:s}.nhook) {{
-        fn_hook = __flexiblas_hooks->{funcname:s}.f77_hook_function[hook_pos_{funcname:s}];
+        *(void **) &fn_hook = __flexiblas_hooks->{funcname:s}.f77_hook_function[hook_pos_{funcname:s}];
         {call_hook:s}
     }} else {{
         hook_pos_{funcname:s} = 0;\n""".format(funcname = self._name.lower(),
@@ -517,15 +519,15 @@ static TLS_STORE uint8_t hook_pos_{funcname:s} = 0;
         current_backend->post_init = 0;
     }\n"""
         # s += "\tfn = flexiblas_{funcname:s}.call_fblas; \n".format(funcname = self._name.lower())
-        s += "\tfn = current_backend->{part:s}.{funcname:s}.f77_blas_function; \n".format(funcname = self._name.lower(),part=part)
-        s += "\tfn_hook = __flexiblas_hooks->{funcname:s}.f77_hook_function[0]; \n".format(funcname = self._name.lower(),part=part)
+        s += "\t*(void **) & fn = current_backend->{part:s}.{funcname:s}.f77_blas_function; \n".format(funcname = self._name.lower(),part=part)
+        s += "\t*(void **) & fn_hook = __flexiblas_hooks->{funcname:s}.f77_hook_function[0]; \n".format(funcname = self._name.lower(),part=part)
 
         # s += "\tif ( fn == NULL ) { \n"
         # s += "\t\tfprintf(stderr, PRINT_PREFIX \"{funcname:s}_ not hooked, abort\\n\"); \n".format(funcname=self._name.lower())
         # s += "\t\tabort(); \n"
         # s += "\t}\n"
         if self._function and is_complex(self._fvars[self._name]["typespec"]):
-            s+= "\tfn_intel = (void *) fn;\n"
+            s+= "\t*(void **) & fn_intel = *(void **) &fn;\n"
 
 
         # Adjust Int sizes

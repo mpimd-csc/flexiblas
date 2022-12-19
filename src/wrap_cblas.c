@@ -196,6 +196,8 @@ HIDDEN int __flexiblas_load_cblas(flexiblas_backend_t *backend)
 	LOAD_CBLAS(backend,blas.ctrmv,ctrmv);
 	LOAD_CBLAS(backend,blas.ctrsm,ctrsm);
 	LOAD_CBLAS(backend,blas.ctrsv,ctrsv);
+    LOAD_CBLAS(backend,blas.crotg,crotg);
+    LOAD_CBLAS(backend,blas.csrot,csrot);
 
 
 	/*-----------------------------------------------------------------------------
@@ -236,6 +238,9 @@ HIDDEN int __flexiblas_load_cblas(flexiblas_backend_t *backend)
 	LOAD_CBLAS(backend,blas.ztrmv,ztrmv);
 	LOAD_CBLAS(backend,blas.ztrsm,ztrsm);
 	LOAD_CBLAS(backend,blas.ztrsv,ztrsv);
+    LOAD_CBLAS(backend,blas.zrotg,zrotg);
+    LOAD_CBLAS(backend,blas.zdrot,zdrot);
+
 
 	return 0;
 }

@@ -103,6 +103,8 @@ void flexiblas_real_cblas_cgemv(const CBLAS_LAYOUT layout,
 #define F77_lda lda
 #define F77_incX incx
 #define F77_incY incY
+    CBLAS_INT incx=incX;
+
 #endif
 
     if ( current_backend->blas.cgemv.cblas_function != NULL ) {
@@ -112,11 +114,11 @@ void flexiblas_real_cblas_cgemv(const CBLAS_LAYOUT layout,
              const CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N,
              const void *alpha, const void  *A, const CBLAS_INT lda,
              const void  *X, const CBLAS_INT incX, const void *beta,
-             void  *Y, const CBLAS_INT incY)
-            = current_backend->blas.cgemv.cblas_function;
+             void  *Y, const CBLAS_INT incY);
+        *(void **) & fn = current_backend->blas.cgemv.cblas_function;
         fn(layout,TransA,M,N,alpha,A,lda,X,incX,beta,Y,incY);
     } else {
-        CBLAS_INT n=0, i=0, incx=incX;
+        CBLAS_INT n=0, i=0;
         float *xx;;
         float ALPHA[2],BETA[2];
         CBLAS_INT tincY, tincx;

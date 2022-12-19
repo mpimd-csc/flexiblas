@@ -27,7 +27,7 @@ extern "C" {
     /* Filter number, see https://support.hdfgroup.org/services/contributions.html  */
     #define H5Z_FILTER_BZIP2 305
 
-    int csc_hdf5_register_bzip2();
+    int csc_hdf5_register_bzip2(void);
 
 #ifdef __cplusplus
 };

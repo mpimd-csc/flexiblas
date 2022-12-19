@@ -80,8 +80,8 @@ void FC_GLOBAL(cgesvdq,CGESVDQ)(char* joba, char* jobp, char* jobr, char* jobu, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cgesvdq.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cgesvdq.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cgesvdq.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cgesvdq.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) joba, (void*) jobp, (void*) jobr, (void*) jobu, (void*) jobv, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) u, (void*) ldu, (void*) v, (void*) ldv, (void*) numrank, (void*) iwork, (void*) liwork, (void*) cwork, (void*) lcwork, (void*) rwork, (void*) lrwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cgesvdq_(void* joba, void* jobp, void* jobr, void* jobu, voi
 {
 	void (*fn) (void* joba, void* jobp, void* jobr, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* s, void* u, void* ldu, void* v, void* ldv, void* numrank, void* iwork, void* liwork, void* cwork, void* lcwork, void* rwork, void* lrwork, void* info);
 
-	fn = current_backend->lapack.cgesvdq.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cgesvdq.f77_blas_function; 
 
 		fn((void*) joba, (void*) jobp, (void*) jobr, (void*) jobu, (void*) jobv, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) u, (void*) ldu, (void*) v, (void*) ldv, (void*) numrank, (void*) iwork, (void*) liwork, (void*) cwork, (void*) lcwork, (void*) rwork, (void*) lrwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cgesvdq_(void* joba, void* jobp, void* jobr, void* jobu, vo
 	void (*fn) (void* joba, void* jobp, void* jobr, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* s, void* u, void* ldu, void* v, void* ldv, void* numrank, void* iwork, void* liwork, void* cwork, void* lcwork, void* rwork, void* lrwork, void* info);
 	void (*fn_hook) (void* joba, void* jobp, void* jobr, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* s, void* u, void* ldu, void* v, void* ldv, void* numrank, void* iwork, void* liwork, void* cwork, void* lcwork, void* rwork, void* lrwork, void* info);
 
-	fn      = current_backend->lapack.cgesvdq.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cgesvdq.f77_blas_function; 
 
     hook_pos_cgesvdq ++;
     if( hook_pos_cgesvdq < __flexiblas_hooks->cgesvdq.nhook) {
-        fn_hook = __flexiblas_hooks->cgesvdq.f77_hook_function[hook_pos_cgesvdq];
+        *(void **) &fn_hook = __flexiblas_hooks->cgesvdq.f77_hook_function[hook_pos_cgesvdq];
         fn_hook((void*) joba, (void*) jobp, (void*) jobr, (void*) jobu, (void*) jobv, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) u, (void*) ldu, (void*) v, (void*) ldv, (void*) numrank, (void*) iwork, (void*) liwork, (void*) cwork, (void*) lcwork, (void*) rwork, (void*) lrwork, (void*) info);
     } else {
         hook_pos_cgesvdq = 0;

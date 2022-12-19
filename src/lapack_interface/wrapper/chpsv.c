@@ -80,8 +80,8 @@ void FC_GLOBAL(chpsv,CHPSV)(char* uplo, blasint* n, blasint* nrhs, float complex
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.chpsv.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->chpsv.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.chpsv.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->chpsv.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) ipiv, (void*) b, (void*) ldb, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_chpsv_(void* uplo, void* n, void* nrhs, void* ap, void* ipiv
 {
 	void (*fn) (void* uplo, void* n, void* nrhs, void* ap, void* ipiv, void* b, void* ldb, void* info);
 
-	fn = current_backend->lapack.chpsv.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.chpsv.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) ipiv, (void*) b, (void*) ldb, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_chpsv_(void* uplo, void* n, void* nrhs, void* ap, void* ipi
 	void (*fn) (void* uplo, void* n, void* nrhs, void* ap, void* ipiv, void* b, void* ldb, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* nrhs, void* ap, void* ipiv, void* b, void* ldb, void* info);
 
-	fn      = current_backend->lapack.chpsv.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.chpsv.f77_blas_function; 
 
     hook_pos_chpsv ++;
     if( hook_pos_chpsv < __flexiblas_hooks->chpsv.nhook) {
-        fn_hook = __flexiblas_hooks->chpsv.f77_hook_function[hook_pos_chpsv];
+        *(void **) &fn_hook = __flexiblas_hooks->chpsv.f77_hook_function[hook_pos_chpsv];
         fn_hook((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) ipiv, (void*) b, (void*) ldb, (void*) info);
     } else {
         hook_pos_chpsv = 0;

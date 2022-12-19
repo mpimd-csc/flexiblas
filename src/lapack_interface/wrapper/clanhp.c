@@ -81,8 +81,8 @@ float FC_GLOBAL(clanhp,CLANHP)(char* norm, char* uplo, blasint* n, float complex
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.clanhp.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->clanhp.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.clanhp.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->clanhp.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) norm, (void*) uplo, (void*) n, (void*) ap, (void*) work); 
 		return ret; 
@@ -113,7 +113,7 @@ float flexiblas_real_clanhp_(void* norm, void* uplo, void* n, void* ap, void* wo
 	float (*fn) (void* norm, void* uplo, void* n, void* ap, void* work);
 	float ret;
 
-	fn = current_backend->lapack.clanhp.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.clanhp.f77_blas_function; 
 
 		ret = fn((void*) norm, (void*) uplo, (void*) n, (void*) ap, (void*) work); 
 
@@ -137,11 +137,11 @@ float flexiblas_chain_clanhp_(void* norm, void* uplo, void* n, void* ap, void* w
 	float (*fn_hook) (void* norm, void* uplo, void* n, void* ap, void* work);
 	float ret;
 
-	fn      = current_backend->lapack.clanhp.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.clanhp.f77_blas_function; 
 
     hook_pos_clanhp ++;
     if( hook_pos_clanhp < __flexiblas_hooks->clanhp.nhook) {
-        fn_hook = __flexiblas_hooks->clanhp.f77_hook_function[hook_pos_clanhp];
+        *(void **) &fn_hook = __flexiblas_hooks->clanhp.f77_hook_function[hook_pos_clanhp];
         ret = fn_hook((void*) norm, (void*) uplo, (void*) n, (void*) ap, (void*) work);
     } else {
         hook_pos_clanhp = 0;

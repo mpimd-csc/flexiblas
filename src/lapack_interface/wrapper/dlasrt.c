@@ -80,8 +80,8 @@ void FC_GLOBAL(dlasrt,DLASRT)(char* id, blasint* n, double* d, blasint* info)
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlasrt.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlasrt.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlasrt.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlasrt.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) id, (void*) n, (void*) d, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlasrt_(void* id, void* n, void* d, void* info)
 {
 	void (*fn) (void* id, void* n, void* d, void* info);
 
-	fn = current_backend->lapack.dlasrt.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlasrt.f77_blas_function; 
 
 		fn((void*) id, (void*) n, (void*) d, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlasrt_(void* id, void* n, void* d, void* info)
 	void (*fn) (void* id, void* n, void* d, void* info);
 	void (*fn_hook) (void* id, void* n, void* d, void* info);
 
-	fn      = current_backend->lapack.dlasrt.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlasrt.f77_blas_function; 
 
     hook_pos_dlasrt ++;
     if( hook_pos_dlasrt < __flexiblas_hooks->dlasrt.nhook) {
-        fn_hook = __flexiblas_hooks->dlasrt.f77_hook_function[hook_pos_dlasrt];
+        *(void **) &fn_hook = __flexiblas_hooks->dlasrt.f77_hook_function[hook_pos_dlasrt];
         fn_hook((void*) id, (void*) n, (void*) d, (void*) info);
     } else {
         hook_pos_dlasrt = 0;

@@ -80,8 +80,8 @@ void FC_GLOBAL(csrscl,CSRSCL)(blasint* n, float* sa, float complex* sx, blasint*
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.csrscl.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->csrscl.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.csrscl.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->csrscl.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) sa, (void*) sx, (void*) incx); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_csrscl_(void* n, void* sa, void* sx, void* incx)
 {
 	void (*fn) (void* n, void* sa, void* sx, void* incx);
 
-	fn = current_backend->lapack.csrscl.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.csrscl.f77_blas_function; 
 
 		fn((void*) n, (void*) sa, (void*) sx, (void*) incx); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_csrscl_(void* n, void* sa, void* sx, void* incx)
 	void (*fn) (void* n, void* sa, void* sx, void* incx);
 	void (*fn_hook) (void* n, void* sa, void* sx, void* incx);
 
-	fn      = current_backend->lapack.csrscl.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.csrscl.f77_blas_function; 
 
     hook_pos_csrscl ++;
     if( hook_pos_csrscl < __flexiblas_hooks->csrscl.nhook) {
-        fn_hook = __flexiblas_hooks->csrscl.f77_hook_function[hook_pos_csrscl];
+        *(void **) &fn_hook = __flexiblas_hooks->csrscl.f77_hook_function[hook_pos_csrscl];
         fn_hook((void*) n, (void*) sa, (void*) sx, (void*) incx);
     } else {
         hook_pos_csrscl = 0;

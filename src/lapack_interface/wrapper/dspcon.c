@@ -80,8 +80,8 @@ void FC_GLOBAL(dspcon,DSPCON)(char* uplo, blasint* n, double* ap, blasint* ipiv,
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dspcon.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dspcon.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dspcon.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dspcon.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) ap, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) iwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dspcon_(void* uplo, void* n, void* ap, void* ipiv, void* ano
 {
 	void (*fn) (void* uplo, void* n, void* ap, void* ipiv, void* anorm, void* rcond, void* work, void* iwork, void* info);
 
-	fn = current_backend->lapack.dspcon.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dspcon.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) ap, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) iwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dspcon_(void* uplo, void* n, void* ap, void* ipiv, void* an
 	void (*fn) (void* uplo, void* n, void* ap, void* ipiv, void* anorm, void* rcond, void* work, void* iwork, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* ap, void* ipiv, void* anorm, void* rcond, void* work, void* iwork, void* info);
 
-	fn      = current_backend->lapack.dspcon.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dspcon.f77_blas_function; 
 
     hook_pos_dspcon ++;
     if( hook_pos_dspcon < __flexiblas_hooks->dspcon.nhook) {
-        fn_hook = __flexiblas_hooks->dspcon.f77_hook_function[hook_pos_dspcon];
+        *(void **) &fn_hook = __flexiblas_hooks->dspcon.f77_hook_function[hook_pos_dspcon];
         fn_hook((void*) uplo, (void*) n, (void*) ap, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) iwork, (void*) info);
     } else {
         hook_pos_dspcon = 0;

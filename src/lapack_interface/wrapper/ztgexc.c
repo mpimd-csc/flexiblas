@@ -80,8 +80,8 @@ void FC_GLOBAL(ztgexc,ZTGEXC)(blasint* wantq, blasint* wantz, blasint* n, double
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ztgexc.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ztgexc.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ztgexc.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ztgexc.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) wantq, (void*) wantz, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) ifst, (void*) ilst, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ztgexc_(void* wantq, void* wantz, void* n, void* a, void* ld
 {
 	void (*fn) (void* wantq, void* wantz, void* n, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* ifst, void* ilst, void* info);
 
-	fn = current_backend->lapack.ztgexc.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ztgexc.f77_blas_function; 
 
 		fn((void*) wantq, (void*) wantz, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) ifst, (void*) ilst, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ztgexc_(void* wantq, void* wantz, void* n, void* a, void* l
 	void (*fn) (void* wantq, void* wantz, void* n, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* ifst, void* ilst, void* info);
 	void (*fn_hook) (void* wantq, void* wantz, void* n, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* ifst, void* ilst, void* info);
 
-	fn      = current_backend->lapack.ztgexc.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ztgexc.f77_blas_function; 
 
     hook_pos_ztgexc ++;
     if( hook_pos_ztgexc < __flexiblas_hooks->ztgexc.nhook) {
-        fn_hook = __flexiblas_hooks->ztgexc.f77_hook_function[hook_pos_ztgexc];
+        *(void **) &fn_hook = __flexiblas_hooks->ztgexc.f77_hook_function[hook_pos_ztgexc];
         fn_hook((void*) wantq, (void*) wantz, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) ifst, (void*) ilst, (void*) info);
     } else {
         hook_pos_ztgexc = 0;

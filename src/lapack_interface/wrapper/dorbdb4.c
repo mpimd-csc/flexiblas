@@ -80,8 +80,8 @@ void FC_GLOBAL(dorbdb4,DORBDB4)(blasint* m, blasint* p, blasint* q, double* x11,
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dorbdb4.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dorbdb4.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dorbdb4.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dorbdb4.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) p, (void*) q, (void*) x11, (void*) ldx11, (void*) x21, (void*) ldx21, (void*) theta, (void*) phi, (void*) taup1, (void*) taup2, (void*) tauq1, (void*) phantom, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dorbdb4_(void* m, void* p, void* q, void* x11, void* ldx11, 
 {
 	void (*fn) (void* m, void* p, void* q, void* x11, void* ldx11, void* x21, void* ldx21, void* theta, void* phi, void* taup1, void* taup2, void* tauq1, void* phantom, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.dorbdb4.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dorbdb4.f77_blas_function; 
 
 		fn((void*) m, (void*) p, (void*) q, (void*) x11, (void*) ldx11, (void*) x21, (void*) ldx21, (void*) theta, (void*) phi, (void*) taup1, (void*) taup2, (void*) tauq1, (void*) phantom, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dorbdb4_(void* m, void* p, void* q, void* x11, void* ldx11,
 	void (*fn) (void* m, void* p, void* q, void* x11, void* ldx11, void* x21, void* ldx21, void* theta, void* phi, void* taup1, void* taup2, void* tauq1, void* phantom, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* m, void* p, void* q, void* x11, void* ldx11, void* x21, void* ldx21, void* theta, void* phi, void* taup1, void* taup2, void* tauq1, void* phantom, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.dorbdb4.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dorbdb4.f77_blas_function; 
 
     hook_pos_dorbdb4 ++;
     if( hook_pos_dorbdb4 < __flexiblas_hooks->dorbdb4.nhook) {
-        fn_hook = __flexiblas_hooks->dorbdb4.f77_hook_function[hook_pos_dorbdb4];
+        *(void **) &fn_hook = __flexiblas_hooks->dorbdb4.f77_hook_function[hook_pos_dorbdb4];
         fn_hook((void*) m, (void*) p, (void*) q, (void*) x11, (void*) ldx11, (void*) x21, (void*) ldx21, (void*) theta, (void*) phi, (void*) taup1, (void*) taup2, (void*) tauq1, (void*) phantom, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_dorbdb4 = 0;

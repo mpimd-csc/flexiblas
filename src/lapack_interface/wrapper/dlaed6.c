@@ -80,8 +80,8 @@ void FC_GLOBAL(dlaed6,DLAED6)(blasint* kniter, blasint* orgati, double* rho, dou
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlaed6.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlaed6.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlaed6.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlaed6.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) kniter, (void*) orgati, (void*) rho, (void*) d, (void*) z, (void*) finit, (void*) tau, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlaed6_(void* kniter, void* orgati, void* rho, void* d, void
 {
 	void (*fn) (void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info);
 
-	fn = current_backend->lapack.dlaed6.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlaed6.f77_blas_function; 
 
 		fn((void*) kniter, (void*) orgati, (void*) rho, (void*) d, (void*) z, (void*) finit, (void*) tau, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlaed6_(void* kniter, void* orgati, void* rho, void* d, voi
 	void (*fn) (void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info);
 	void (*fn_hook) (void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info);
 
-	fn      = current_backend->lapack.dlaed6.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlaed6.f77_blas_function; 
 
     hook_pos_dlaed6 ++;
     if( hook_pos_dlaed6 < __flexiblas_hooks->dlaed6.nhook) {
-        fn_hook = __flexiblas_hooks->dlaed6.f77_hook_function[hook_pos_dlaed6];
+        *(void **) &fn_hook = __flexiblas_hooks->dlaed6.f77_hook_function[hook_pos_dlaed6];
         fn_hook((void*) kniter, (void*) orgati, (void*) rho, (void*) d, (void*) z, (void*) finit, (void*) tau, (void*) info);
     } else {
         hook_pos_dlaed6 = 0;

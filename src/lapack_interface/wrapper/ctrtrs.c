@@ -80,8 +80,8 @@ void FC_GLOBAL(ctrtrs,CTRTRS)(char* uplo, char* trans, char* diag, blasint* n, b
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ctrtrs.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ctrtrs.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ctrtrs.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ctrtrs.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ctrtrs_(void* uplo, void* trans, void* diag, void* n, void* 
 {
 	void (*fn) (void* uplo, void* trans, void* diag, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* info);
 
-	fn = current_backend->lapack.ctrtrs.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ctrtrs.f77_blas_function; 
 
 		fn((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ctrtrs_(void* uplo, void* trans, void* diag, void* n, void*
 	void (*fn) (void* uplo, void* trans, void* diag, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* info);
 	void (*fn_hook) (void* uplo, void* trans, void* diag, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* info);
 
-	fn      = current_backend->lapack.ctrtrs.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ctrtrs.f77_blas_function; 
 
     hook_pos_ctrtrs ++;
     if( hook_pos_ctrtrs < __flexiblas_hooks->ctrtrs.nhook) {
-        fn_hook = __flexiblas_hooks->ctrtrs.f77_hook_function[hook_pos_ctrtrs];
+        *(void **) &fn_hook = __flexiblas_hooks->ctrtrs.f77_hook_function[hook_pos_ctrtrs];
         fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info);
     } else {
         hook_pos_ctrtrs = 0;

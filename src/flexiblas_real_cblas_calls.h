@@ -62,6 +62,19 @@ extern "C" {
     void flexiblas_chain_cblas_cdotc_sub( const int N, const void *X, const int incX, const void *Y, const int incY,void *dotc);
     void flexiblas_real_cblas_cdotu_sub( const int N, const void *X, const int incX, const void *Y, const int incY,void *dotc);
     void flexiblas_chain_cblas_cdotu_sub( const int N, const void *X, const int incX, const void *Y, const int incY,void *dotc);
+
+    void flexiblas_real_cblas_crotg(  void *a, void *b, float *c, void *s);
+    void flexiblas_chain_cblas_crotg(  void *a, void *b,float  *c, void *s);
+    void flexiblas_real_cblas_zrotg(  void *a, void *b, double *c, void *s);
+    void flexiblas_chain_cblas_zrotg(  void *a, void *b, double *c, void *s);
+
+    void flexiblas_real_cblas_csrot(const CBLAS_INT N, void *X, const CBLAS_INT incX, void *Y, const CBLAS_INT incY, const float c, const float s);
+    void flexiblas_chain_cblas_csrot(const CBLAS_INT N, void *X, const CBLAS_INT incX, void *Y, const CBLAS_INT incY, const float c, const float s);
+
+    void flexiblas_real_cblas_zdrot(const CBLAS_INT N, void *X, const CBLAS_INT incX, void *Y, const CBLAS_INT incY, const double c, const double s);
+    void flexiblas_chain_cblas_zdrot(const CBLAS_INT N, void *X, const CBLAS_INT incX, void *Y, const CBLAS_INT incY, const double c, const double s);
+
+
     void flexiblas_real_cblas_cgbmv(const CBLAS_LAYOUT layout,
         const CBLAS_TRANSPOSE TransA, const int M, const int N,
         const int KL, const int KU,

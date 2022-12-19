@@ -80,8 +80,8 @@ void FC_GLOBAL(zpttrf,ZPTTRF)(blasint* n, double* d, double complex* e, blasint*
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zpttrf.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zpttrf.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zpttrf.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zpttrf.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) d, (void*) e, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zpttrf_(void* n, void* d, void* e, void* info)
 {
 	void (*fn) (void* n, void* d, void* e, void* info);
 
-	fn = current_backend->lapack.zpttrf.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zpttrf.f77_blas_function; 
 
 		fn((void*) n, (void*) d, (void*) e, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zpttrf_(void* n, void* d, void* e, void* info)
 	void (*fn) (void* n, void* d, void* e, void* info);
 	void (*fn_hook) (void* n, void* d, void* e, void* info);
 
-	fn      = current_backend->lapack.zpttrf.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zpttrf.f77_blas_function; 
 
     hook_pos_zpttrf ++;
     if( hook_pos_zpttrf < __flexiblas_hooks->zpttrf.nhook) {
-        fn_hook = __flexiblas_hooks->zpttrf.f77_hook_function[hook_pos_zpttrf];
+        *(void **) &fn_hook = __flexiblas_hooks->zpttrf.f77_hook_function[hook_pos_zpttrf];
         fn_hook((void*) n, (void*) d, (void*) e, (void*) info);
     } else {
         hook_pos_zpttrf = 0;

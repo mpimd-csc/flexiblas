@@ -80,8 +80,8 @@ void FC_GLOBAL(dlasd7,DLASD7)(blasint* icompq, blasint* nl, blasint* nr, blasint
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlasd7.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlasd7.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlasd7.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlasd7.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) icompq, (void*) nl, (void*) nr, (void*) sqre, (void*) k, (void*) d, (void*) z, (void*) zw, (void*) vf, (void*) vfw, (void*) vl, (void*) vlw, (void*) alpha, (void*) beta, (void*) dsigma, (void*) idx, (void*) idxp, (void*) idxq, (void*) perm, (void*) givptr, (void*) givcol, (void*) ldgcol, (void*) givnum, (void*) ldgnum, (void*) c, (void*) s, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlasd7_(void* icompq, void* nl, void* nr, void* sqre, void* 
 {
 	void (*fn) (void* icompq, void* nl, void* nr, void* sqre, void* k, void* d, void* z, void* zw, void* vf, void* vfw, void* vl, void* vlw, void* alpha, void* beta, void* dsigma, void* idx, void* idxp, void* idxq, void* perm, void* givptr, void* givcol, void* ldgcol, void* givnum, void* ldgnum, void* c, void* s, void* info);
 
-	fn = current_backend->lapack.dlasd7.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlasd7.f77_blas_function; 
 
 		fn((void*) icompq, (void*) nl, (void*) nr, (void*) sqre, (void*) k, (void*) d, (void*) z, (void*) zw, (void*) vf, (void*) vfw, (void*) vl, (void*) vlw, (void*) alpha, (void*) beta, (void*) dsigma, (void*) idx, (void*) idxp, (void*) idxq, (void*) perm, (void*) givptr, (void*) givcol, (void*) ldgcol, (void*) givnum, (void*) ldgnum, (void*) c, (void*) s, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlasd7_(void* icompq, void* nl, void* nr, void* sqre, void*
 	void (*fn) (void* icompq, void* nl, void* nr, void* sqre, void* k, void* d, void* z, void* zw, void* vf, void* vfw, void* vl, void* vlw, void* alpha, void* beta, void* dsigma, void* idx, void* idxp, void* idxq, void* perm, void* givptr, void* givcol, void* ldgcol, void* givnum, void* ldgnum, void* c, void* s, void* info);
 	void (*fn_hook) (void* icompq, void* nl, void* nr, void* sqre, void* k, void* d, void* z, void* zw, void* vf, void* vfw, void* vl, void* vlw, void* alpha, void* beta, void* dsigma, void* idx, void* idxp, void* idxq, void* perm, void* givptr, void* givcol, void* ldgcol, void* givnum, void* ldgnum, void* c, void* s, void* info);
 
-	fn      = current_backend->lapack.dlasd7.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlasd7.f77_blas_function; 
 
     hook_pos_dlasd7 ++;
     if( hook_pos_dlasd7 < __flexiblas_hooks->dlasd7.nhook) {
-        fn_hook = __flexiblas_hooks->dlasd7.f77_hook_function[hook_pos_dlasd7];
+        *(void **) &fn_hook = __flexiblas_hooks->dlasd7.f77_hook_function[hook_pos_dlasd7];
         fn_hook((void*) icompq, (void*) nl, (void*) nr, (void*) sqre, (void*) k, (void*) d, (void*) z, (void*) zw, (void*) vf, (void*) vfw, (void*) vl, (void*) vlw, (void*) alpha, (void*) beta, (void*) dsigma, (void*) idx, (void*) idxp, (void*) idxq, (void*) perm, (void*) givptr, (void*) givcol, (void*) ldgcol, (void*) givnum, (void*) ldgnum, (void*) c, (void*) s, (void*) info);
     } else {
         hook_pos_dlasd7 = 0;

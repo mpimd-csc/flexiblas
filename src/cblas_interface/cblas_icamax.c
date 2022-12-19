@@ -87,7 +87,8 @@ CBLAS_INDEX flexiblas_real_cblas_icamax( const CBLAS_INT N, const void *X, const
 #endif
 
     if ( current_backend->blas.icamax.cblas_function != NULL ) {
-        CBLAS_INDEX (*fn) ( const CBLAS_INT N, const void *X, const CBLAS_INT incX)  = current_backend->blas.icamax.cblas_function;
+        CBLAS_INDEX (*fn) ( const CBLAS_INT N, const void *X, const CBLAS_INT incX);
+        *(void **) &fn = current_backend->blas.icamax.cblas_function;
         iamax = fn(N,X,incX);
 
     } else {

@@ -80,8 +80,8 @@ void FC_GLOBAL(csyswapr,CSYSWAPR)(char* uplo, blasint* n, float complex* a, blas
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.csyswapr.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->csyswapr.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.csyswapr.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->csyswapr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) i1, (void*) i2); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_csyswapr_(void* uplo, void* n, void* a, void* lda, void* i1,
 {
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* i1, void* i2);
 
-	fn = current_backend->lapack.csyswapr.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.csyswapr.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) i1, (void*) i2); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_csyswapr_(void* uplo, void* n, void* a, void* lda, void* i1
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* i1, void* i2);
 	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* i1, void* i2);
 
-	fn      = current_backend->lapack.csyswapr.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.csyswapr.f77_blas_function; 
 
     hook_pos_csyswapr ++;
     if( hook_pos_csyswapr < __flexiblas_hooks->csyswapr.nhook) {
-        fn_hook = __flexiblas_hooks->csyswapr.f77_hook_function[hook_pos_csyswapr];
+        *(void **) &fn_hook = __flexiblas_hooks->csyswapr.f77_hook_function[hook_pos_csyswapr];
         fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) i1, (void*) i2);
     } else {
         hook_pos_csyswapr = 0;

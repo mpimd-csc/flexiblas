@@ -80,8 +80,8 @@ void FC_GLOBAL(dstein,DSTEIN)(blasint* n, double* d, double* e, blasint* m, doub
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dstein.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dstein.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dstein.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dstein.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) d, (void*) e, (void*) m, (void*) w, (void*) iblock, (void*) isplit, (void*) z, (void*) ldz, (void*) work, (void*) iwork, (void*) ifail, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dstein_(void* n, void* d, void* e, void* m, void* w, void* i
 {
 	void (*fn) (void* n, void* d, void* e, void* m, void* w, void* iblock, void* isplit, void* z, void* ldz, void* work, void* iwork, void* ifail, void* info);
 
-	fn = current_backend->lapack.dstein.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dstein.f77_blas_function; 
 
 		fn((void*) n, (void*) d, (void*) e, (void*) m, (void*) w, (void*) iblock, (void*) isplit, (void*) z, (void*) ldz, (void*) work, (void*) iwork, (void*) ifail, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dstein_(void* n, void* d, void* e, void* m, void* w, void* 
 	void (*fn) (void* n, void* d, void* e, void* m, void* w, void* iblock, void* isplit, void* z, void* ldz, void* work, void* iwork, void* ifail, void* info);
 	void (*fn_hook) (void* n, void* d, void* e, void* m, void* w, void* iblock, void* isplit, void* z, void* ldz, void* work, void* iwork, void* ifail, void* info);
 
-	fn      = current_backend->lapack.dstein.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dstein.f77_blas_function; 
 
     hook_pos_dstein ++;
     if( hook_pos_dstein < __flexiblas_hooks->dstein.nhook) {
-        fn_hook = __flexiblas_hooks->dstein.f77_hook_function[hook_pos_dstein];
+        *(void **) &fn_hook = __flexiblas_hooks->dstein.f77_hook_function[hook_pos_dstein];
         fn_hook((void*) n, (void*) d, (void*) e, (void*) m, (void*) w, (void*) iblock, (void*) isplit, (void*) z, (void*) ldz, (void*) work, (void*) iwork, (void*) ifail, (void*) info);
     } else {
         hook_pos_dstein = 0;

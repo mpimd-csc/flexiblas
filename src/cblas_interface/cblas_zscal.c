@@ -92,8 +92,8 @@ void flexiblas_real_cblas_zscal( const CBLAS_INT N, const void *alpha, void *X,
 
         void (*fn)
             ( const CBLAS_INT N, const void *alpha, void *X,
-              const CBLAS_INT incX)
-            = current_backend->blas.zscal.cblas_function;
+              const CBLAS_INT incX);
+        *(void **) &fn = current_backend->blas.zscal.cblas_function;
         fn(N,alpha,X,incX);
     } else {
         FC_GLOBAL(zscal,ZSCAL)( &F77_N, alpha, X, &F77_incX);

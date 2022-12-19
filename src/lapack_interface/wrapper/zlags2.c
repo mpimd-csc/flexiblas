@@ -80,8 +80,8 @@ void FC_GLOBAL(zlags2,ZLAGS2)(blasint* upper, double* a1, double complex* a2, do
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlags2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlags2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlags2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlags2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) upper, (void*) a1, (void*) a2, (void*) a3, (void*) b1, (void*) b2, (void*) b3, (void*) csu, (void*) snu, (void*) csv, (void*) snv, (void*) csq, (void*) snq); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zlags2_(void* upper, void* a1, void* a2, void* a3, void* b1,
 {
 	void (*fn) (void* upper, void* a1, void* a2, void* a3, void* b1, void* b2, void* b3, void* csu, void* snu, void* csv, void* snv, void* csq, void* snq);
 
-	fn = current_backend->lapack.zlags2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlags2.f77_blas_function; 
 
 		fn((void*) upper, (void*) a1, (void*) a2, (void*) a3, (void*) b1, (void*) b2, (void*) b3, (void*) csu, (void*) snu, (void*) csv, (void*) snv, (void*) csq, (void*) snq); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zlags2_(void* upper, void* a1, void* a2, void* a3, void* b1
 	void (*fn) (void* upper, void* a1, void* a2, void* a3, void* b1, void* b2, void* b3, void* csu, void* snu, void* csv, void* snv, void* csq, void* snq);
 	void (*fn_hook) (void* upper, void* a1, void* a2, void* a3, void* b1, void* b2, void* b3, void* csu, void* snu, void* csv, void* snv, void* csq, void* snq);
 
-	fn      = current_backend->lapack.zlags2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlags2.f77_blas_function; 
 
     hook_pos_zlags2 ++;
     if( hook_pos_zlags2 < __flexiblas_hooks->zlags2.nhook) {
-        fn_hook = __flexiblas_hooks->zlags2.f77_hook_function[hook_pos_zlags2];
+        *(void **) &fn_hook = __flexiblas_hooks->zlags2.f77_hook_function[hook_pos_zlags2];
         fn_hook((void*) upper, (void*) a1, (void*) a2, (void*) a3, (void*) b1, (void*) b2, (void*) b3, (void*) csu, (void*) snu, (void*) csv, (void*) snv, (void*) csq, (void*) snq);
     } else {
         hook_pos_zlags2 = 0;

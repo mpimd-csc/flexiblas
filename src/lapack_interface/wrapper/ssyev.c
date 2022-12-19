@@ -80,8 +80,8 @@ void FC_GLOBAL(ssyev,SSYEV)(char* jobz, char* uplo, blasint* n, float* a, blasin
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ssyev.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ssyev.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ssyev.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ssyev.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobz, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) w, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ssyev_(void* jobz, void* uplo, void* n, void* a, void* lda, 
 {
 	void (*fn) (void* jobz, void* uplo, void* n, void* a, void* lda, void* w, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.ssyev.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ssyev.f77_blas_function; 
 
 		fn((void*) jobz, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) w, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ssyev_(void* jobz, void* uplo, void* n, void* a, void* lda,
 	void (*fn) (void* jobz, void* uplo, void* n, void* a, void* lda, void* w, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* jobz, void* uplo, void* n, void* a, void* lda, void* w, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.ssyev.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ssyev.f77_blas_function; 
 
     hook_pos_ssyev ++;
     if( hook_pos_ssyev < __flexiblas_hooks->ssyev.nhook) {
-        fn_hook = __flexiblas_hooks->ssyev.f77_hook_function[hook_pos_ssyev];
+        *(void **) &fn_hook = __flexiblas_hooks->ssyev.f77_hook_function[hook_pos_ssyev];
         fn_hook((void*) jobz, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) w, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_ssyev = 0;

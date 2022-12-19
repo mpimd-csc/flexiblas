@@ -80,8 +80,8 @@ void FC_GLOBAL(zhseqr,ZHSEQR)(char* job, char* compz, blasint* n, blasint* ilo, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zhseqr.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zhseqr.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zhseqr.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zhseqr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) job, (void*) compz, (void*) n, (void*) ilo, (void*) ihi, (void*) h, (void*) ldh, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zhseqr_(void* job, void* compz, void* n, void* ilo, void* ih
 {
 	void (*fn) (void* job, void* compz, void* n, void* ilo, void* ihi, void* h, void* ldh, void* w, void* z, void* ldz, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.zhseqr.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zhseqr.f77_blas_function; 
 
 		fn((void*) job, (void*) compz, (void*) n, (void*) ilo, (void*) ihi, (void*) h, (void*) ldh, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zhseqr_(void* job, void* compz, void* n, void* ilo, void* i
 	void (*fn) (void* job, void* compz, void* n, void* ilo, void* ihi, void* h, void* ldh, void* w, void* z, void* ldz, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* job, void* compz, void* n, void* ilo, void* ihi, void* h, void* ldh, void* w, void* z, void* ldz, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.zhseqr.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zhseqr.f77_blas_function; 
 
     hook_pos_zhseqr ++;
     if( hook_pos_zhseqr < __flexiblas_hooks->zhseqr.nhook) {
-        fn_hook = __flexiblas_hooks->zhseqr.f77_hook_function[hook_pos_zhseqr];
+        *(void **) &fn_hook = __flexiblas_hooks->zhseqr.f77_hook_function[hook_pos_zhseqr];
         fn_hook((void*) job, (void*) compz, (void*) n, (void*) ilo, (void*) ihi, (void*) h, (void*) ldh, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_zhseqr = 0;

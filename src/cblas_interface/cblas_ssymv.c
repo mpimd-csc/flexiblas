@@ -110,8 +110,8 @@ void flexiblas_real_cblas_ssymv(const CBLAS_LAYOUT layout,
              const CBLAS_UPLO Uplo, const CBLAS_INT N,
              const float alpha, const float  *A, const CBLAS_INT lda,
              const float  *X, const CBLAS_INT incX, const float beta,
-             float  *Y, const CBLAS_INT incY)
-            = current_backend->blas.ssymv.cblas_function;
+             float  *Y, const CBLAS_INT incY);
+        *(void **) & fn = current_backend->blas.ssymv.cblas_function;
         fn(layout,Uplo,N,alpha,A,lda,X,incX,beta,Y,incY);
     } else {
 

@@ -80,8 +80,8 @@ void FC_GLOBAL(csymv,CSYMV)(char* uplo, blasint* n, float complex* alpha, float 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.csymv.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->csymv.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.csymv.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->csymv.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_csymv_(void* uplo, void* n, void* alpha, void* a, void* lda,
 {
 	void (*fn) (void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy);
 
-	fn = current_backend->lapack.csymv.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.csymv.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_csymv_(void* uplo, void* n, void* alpha, void* a, void* lda
 	void (*fn) (void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy);
 	void (*fn_hook) (void* uplo, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy);
 
-	fn      = current_backend->lapack.csymv.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.csymv.f77_blas_function; 
 
     hook_pos_csymv ++;
     if( hook_pos_csymv < __flexiblas_hooks->csymv.nhook) {
-        fn_hook = __flexiblas_hooks->csymv.f77_hook_function[hook_pos_csymv];
+        *(void **) &fn_hook = __flexiblas_hooks->csymv.f77_hook_function[hook_pos_csymv];
         fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);
     } else {
         hook_pos_csymv = 0;

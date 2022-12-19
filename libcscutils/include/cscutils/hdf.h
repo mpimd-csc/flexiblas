@@ -164,7 +164,7 @@ extern "C" {
 
     void * csc_hdf5_matlab_header(const char * str);
 
-    int csc_hdf5_register_filters();
+    int csc_hdf5_register_filters(void);
 
 
 
@@ -500,8 +500,8 @@ extern "C" {
      * the data sets.
      */
     void csc_hdf5_set_compression(csc_hdf5_compression_t comp);
-    csc_hdf5_compression_t csc_hdf5_get_compression();
-    int  csc_hdf5_get_compression_int();
+    csc_hdf5_compression_t csc_hdf5_get_compression(void);
+    int  csc_hdf5_get_compression_int(void);
 
 
     int csc_hdf5_exist(hid_t h5file, const char *name);

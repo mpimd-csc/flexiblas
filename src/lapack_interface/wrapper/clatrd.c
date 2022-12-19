@@ -80,8 +80,8 @@ void FC_GLOBAL(clatrd,CLATRD)(char* uplo, blasint* n, blasint* nb, float complex
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.clatrd.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->clatrd.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.clatrd.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->clatrd.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) nb, (void*) a, (void*) lda, (void*) e, (void*) tau, (void*) w, (void*) ldw); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_clatrd_(void* uplo, void* n, void* nb, void* a, void* lda, v
 {
 	void (*fn) (void* uplo, void* n, void* nb, void* a, void* lda, void* e, void* tau, void* w, void* ldw);
 
-	fn = current_backend->lapack.clatrd.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.clatrd.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) nb, (void*) a, (void*) lda, (void*) e, (void*) tau, (void*) w, (void*) ldw); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_clatrd_(void* uplo, void* n, void* nb, void* a, void* lda, 
 	void (*fn) (void* uplo, void* n, void* nb, void* a, void* lda, void* e, void* tau, void* w, void* ldw);
 	void (*fn_hook) (void* uplo, void* n, void* nb, void* a, void* lda, void* e, void* tau, void* w, void* ldw);
 
-	fn      = current_backend->lapack.clatrd.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.clatrd.f77_blas_function; 
 
     hook_pos_clatrd ++;
     if( hook_pos_clatrd < __flexiblas_hooks->clatrd.nhook) {
-        fn_hook = __flexiblas_hooks->clatrd.f77_hook_function[hook_pos_clatrd];
+        *(void **) &fn_hook = __flexiblas_hooks->clatrd.f77_hook_function[hook_pos_clatrd];
         fn_hook((void*) uplo, (void*) n, (void*) nb, (void*) a, (void*) lda, (void*) e, (void*) tau, (void*) w, (void*) ldw);
     } else {
         hook_pos_clatrd = 0;

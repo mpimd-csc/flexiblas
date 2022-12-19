@@ -80,8 +80,8 @@ void FC_GLOBAL(cpttrs,CPTTRS)(char* uplo, blasint* n, blasint* nrhs, float* d, f
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cpttrs.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cpttrs.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cpttrs.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cpttrs.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) b, (void*) ldb, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cpttrs_(void* uplo, void* n, void* nrhs, void* d, void* e, v
 {
 	void (*fn) (void* uplo, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* info);
 
-	fn = current_backend->lapack.cpttrs.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cpttrs.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) b, (void*) ldb, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cpttrs_(void* uplo, void* n, void* nrhs, void* d, void* e, 
 	void (*fn) (void* uplo, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* nrhs, void* d, void* e, void* b, void* ldb, void* info);
 
-	fn      = current_backend->lapack.cpttrs.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cpttrs.f77_blas_function; 
 
     hook_pos_cpttrs ++;
     if( hook_pos_cpttrs < __flexiblas_hooks->cpttrs.nhook) {
-        fn_hook = __flexiblas_hooks->cpttrs.f77_hook_function[hook_pos_cpttrs];
+        *(void **) &fn_hook = __flexiblas_hooks->cpttrs.f77_hook_function[hook_pos_cpttrs];
         fn_hook((void*) uplo, (void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) b, (void*) ldb, (void*) info);
     } else {
         hook_pos_cpttrs = 0;

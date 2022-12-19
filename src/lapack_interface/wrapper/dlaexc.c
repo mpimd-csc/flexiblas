@@ -80,8 +80,8 @@ void FC_GLOBAL(dlaexc,DLAEXC)(blasint* wantq, blasint* n, double* t, blasint* ld
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlaexc.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlaexc.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlaexc.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlaexc.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) wantq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) j1, (void*) n1, (void*) n2, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlaexc_(void* wantq, void* n, void* t, void* ldt, void* q, v
 {
 	void (*fn) (void* wantq, void* n, void* t, void* ldt, void* q, void* ldq, void* j1, void* n1, void* n2, void* work, void* info);
 
-	fn = current_backend->lapack.dlaexc.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlaexc.f77_blas_function; 
 
 		fn((void*) wantq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) j1, (void*) n1, (void*) n2, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlaexc_(void* wantq, void* n, void* t, void* ldt, void* q, 
 	void (*fn) (void* wantq, void* n, void* t, void* ldt, void* q, void* ldq, void* j1, void* n1, void* n2, void* work, void* info);
 	void (*fn_hook) (void* wantq, void* n, void* t, void* ldt, void* q, void* ldq, void* j1, void* n1, void* n2, void* work, void* info);
 
-	fn      = current_backend->lapack.dlaexc.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlaexc.f77_blas_function; 
 
     hook_pos_dlaexc ++;
     if( hook_pos_dlaexc < __flexiblas_hooks->dlaexc.nhook) {
-        fn_hook = __flexiblas_hooks->dlaexc.f77_hook_function[hook_pos_dlaexc];
+        *(void **) &fn_hook = __flexiblas_hooks->dlaexc.f77_hook_function[hook_pos_dlaexc];
         fn_hook((void*) wantq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) j1, (void*) n1, (void*) n2, (void*) work, (void*) info);
     } else {
         hook_pos_dlaexc = 0;

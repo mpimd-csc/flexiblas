@@ -80,8 +80,8 @@ void FC_GLOBAL(chpevd,CHPEVD)(char* jobz, char* uplo, blasint* n, float complex*
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.chpevd.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->chpevd.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.chpevd.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->chpevd.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobz, (void*) uplo, (void*) n, (void*) ap, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) iwork, (void*) liwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_chpevd_(void* jobz, void* uplo, void* n, void* ap, void* w, 
 {
 	void (*fn) (void* jobz, void* uplo, void* n, void* ap, void* w, void* z, void* ldz, void* work, void* lwork, void* rwork, void* lrwork, void* iwork, void* liwork, void* info);
 
-	fn = current_backend->lapack.chpevd.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.chpevd.f77_blas_function; 
 
 		fn((void*) jobz, (void*) uplo, (void*) n, (void*) ap, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) iwork, (void*) liwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_chpevd_(void* jobz, void* uplo, void* n, void* ap, void* w,
 	void (*fn) (void* jobz, void* uplo, void* n, void* ap, void* w, void* z, void* ldz, void* work, void* lwork, void* rwork, void* lrwork, void* iwork, void* liwork, void* info);
 	void (*fn_hook) (void* jobz, void* uplo, void* n, void* ap, void* w, void* z, void* ldz, void* work, void* lwork, void* rwork, void* lrwork, void* iwork, void* liwork, void* info);
 
-	fn      = current_backend->lapack.chpevd.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.chpevd.f77_blas_function; 
 
     hook_pos_chpevd ++;
     if( hook_pos_chpevd < __flexiblas_hooks->chpevd.nhook) {
-        fn_hook = __flexiblas_hooks->chpevd.f77_hook_function[hook_pos_chpevd];
+        *(void **) &fn_hook = __flexiblas_hooks->chpevd.f77_hook_function[hook_pos_chpevd];
         fn_hook((void*) jobz, (void*) uplo, (void*) n, (void*) ap, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) iwork, (void*) liwork, (void*) info);
     } else {
         hook_pos_chpevd = 0;

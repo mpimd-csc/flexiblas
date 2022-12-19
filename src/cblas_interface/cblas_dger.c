@@ -96,8 +96,8 @@ void flexiblas_real_cblas_dger(const CBLAS_LAYOUT layout, const CBLAS_INT M, con
     if ( current_backend->blas.dger.cblas_function != NULL ) {
         void (*fn)(const CBLAS_LAYOUT layout, const CBLAS_INT M, const CBLAS_INT N,
                 const double alpha, const double  *X, const CBLAS_INT incX,
-                const double  *Y, const CBLAS_INT incY, double  *A, const CBLAS_INT lda)
-            = current_backend->blas.dger.cblas_function;
+                const double  *Y, const CBLAS_INT incY, double  *A, const CBLAS_INT lda);
+        *(void **) & fn = current_backend->blas.dger.cblas_function;
         fn(layout,M,N,alpha,X,incX,Y,incY,A,lda);
     } else {
         extern int CBLAS_CallFromC;

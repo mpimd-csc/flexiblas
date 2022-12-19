@@ -80,8 +80,8 @@ void FC_GLOBAL(zspmv,ZSPMV)(char* uplo, blasint* n, double complex* alpha, doubl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zspmv.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zspmv.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zspmv.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zspmv.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zspmv_(void* uplo, void* n, void* alpha, void* ap, void* x, 
 {
 	void (*fn) (void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy);
 
-	fn = current_backend->lapack.zspmv.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zspmv.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zspmv_(void* uplo, void* n, void* alpha, void* ap, void* x,
 	void (*fn) (void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy);
 	void (*fn_hook) (void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy);
 
-	fn      = current_backend->lapack.zspmv.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zspmv.f77_blas_function; 
 
     hook_pos_zspmv ++;
     if( hook_pos_zspmv < __flexiblas_hooks->zspmv.nhook) {
-        fn_hook = __flexiblas_hooks->zspmv.f77_hook_function[hook_pos_zspmv];
+        *(void **) &fn_hook = __flexiblas_hooks->zspmv.f77_hook_function[hook_pos_zspmv];
         fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);
     } else {
         hook_pos_zspmv = 0;

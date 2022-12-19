@@ -80,8 +80,8 @@ void FC_GLOBAL(claset,CLASET)(char* uplo, blasint* m, blasint* n, float complex*
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.claset.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->claset.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.claset.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->claset.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) beta, (void*) a, (void*) lda); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_claset_(void* uplo, void* m, void* n, void* alpha, void* bet
 {
 	void (*fn) (void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda);
 
-	fn = current_backend->lapack.claset.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.claset.f77_blas_function; 
 
 		fn((void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) beta, (void*) a, (void*) lda); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_claset_(void* uplo, void* m, void* n, void* alpha, void* be
 	void (*fn) (void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda);
 	void (*fn_hook) (void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda);
 
-	fn      = current_backend->lapack.claset.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.claset.f77_blas_function; 
 
     hook_pos_claset ++;
     if( hook_pos_claset < __flexiblas_hooks->claset.nhook) {
-        fn_hook = __flexiblas_hooks->claset.f77_hook_function[hook_pos_claset];
+        *(void **) &fn_hook = __flexiblas_hooks->claset.f77_hook_function[hook_pos_claset];
         fn_hook((void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) beta, (void*) a, (void*) lda);
     } else {
         hook_pos_claset = 0;

@@ -80,8 +80,8 @@ void FC_GLOBAL(zgeequb,ZGEEQUB)(blasint* m, blasint* n, double complex* a, blasi
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zgeequb.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zgeequb.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zgeequb.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zgeequb.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zgeequb_(void* m, void* n, void* a, void* lda, void* r, void
 {
 	void (*fn) (void* m, void* n, void* a, void* lda, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* info);
 
-	fn = current_backend->lapack.zgeequb.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zgeequb.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zgeequb_(void* m, void* n, void* a, void* lda, void* r, voi
 	void (*fn) (void* m, void* n, void* a, void* lda, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* info);
 	void (*fn_hook) (void* m, void* n, void* a, void* lda, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* info);
 
-	fn      = current_backend->lapack.zgeequb.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zgeequb.f77_blas_function; 
 
     hook_pos_zgeequb ++;
     if( hook_pos_zgeequb < __flexiblas_hooks->zgeequb.nhook) {
-        fn_hook = __flexiblas_hooks->zgeequb.f77_hook_function[hook_pos_zgeequb];
+        *(void **) &fn_hook = __flexiblas_hooks->zgeequb.f77_hook_function[hook_pos_zgeequb];
         fn_hook((void*) m, (void*) n, (void*) a, (void*) lda, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) info);
     } else {
         hook_pos_zgeequb = 0;

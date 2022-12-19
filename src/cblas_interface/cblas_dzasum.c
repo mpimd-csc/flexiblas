@@ -88,8 +88,8 @@ double flexiblas_real_cblas_dzasum( const CBLAS_INT N, const void *X, const CBLA
 #endif
     if ( current_backend->blas.dzasum.cblas_function != NULL ) {
         double  (*fn)
-            ( const CBLAS_INT N, const void *X, const CBLAS_INT incX)
-            = current_backend->blas.dzasum.cblas_function;
+            ( const CBLAS_INT N, const void *X, const CBLAS_INT incX);
+        *(void **) &fn = current_backend->blas.dzasum.cblas_function;
         asum  = fn(N,X,incX);
     } else {
         asum = FC_GLOBAL(dzasum,DZASUM)( &F77_N, X, &F77_incX);

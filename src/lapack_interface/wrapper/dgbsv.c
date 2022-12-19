@@ -80,8 +80,8 @@ void FC_GLOBAL(dgbsv,DGBSV)(blasint* n, blasint* kl, blasint* ku, blasint* nrhs,
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dgbsv.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dgbsv.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dgbsv.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dgbsv.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) kl, (void*) ku, (void*) nrhs, (void*) ab, (void*) ldab, (void*) ipiv, (void*) b, (void*) ldb, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dgbsv_(void* n, void* kl, void* ku, void* nrhs, void* ab, vo
 {
 	void (*fn) (void* n, void* kl, void* ku, void* nrhs, void* ab, void* ldab, void* ipiv, void* b, void* ldb, void* info);
 
-	fn = current_backend->lapack.dgbsv.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dgbsv.f77_blas_function; 
 
 		fn((void*) n, (void*) kl, (void*) ku, (void*) nrhs, (void*) ab, (void*) ldab, (void*) ipiv, (void*) b, (void*) ldb, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dgbsv_(void* n, void* kl, void* ku, void* nrhs, void* ab, v
 	void (*fn) (void* n, void* kl, void* ku, void* nrhs, void* ab, void* ldab, void* ipiv, void* b, void* ldb, void* info);
 	void (*fn_hook) (void* n, void* kl, void* ku, void* nrhs, void* ab, void* ldab, void* ipiv, void* b, void* ldb, void* info);
 
-	fn      = current_backend->lapack.dgbsv.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dgbsv.f77_blas_function; 
 
     hook_pos_dgbsv ++;
     if( hook_pos_dgbsv < __flexiblas_hooks->dgbsv.nhook) {
-        fn_hook = __flexiblas_hooks->dgbsv.f77_hook_function[hook_pos_dgbsv];
+        *(void **) &fn_hook = __flexiblas_hooks->dgbsv.f77_hook_function[hook_pos_dgbsv];
         fn_hook((void*) n, (void*) kl, (void*) ku, (void*) nrhs, (void*) ab, (void*) ldab, (void*) ipiv, (void*) b, (void*) ldb, (void*) info);
     } else {
         hook_pos_dgbsv = 0;

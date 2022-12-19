@@ -108,7 +108,8 @@ void flexiblas_real_cblas_dgemv(const CBLAS_LAYOUT layout,
                 const CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N,
                 const double alpha, const double  *A, const CBLAS_INT lda,
                 const double  *X, const CBLAS_INT incX, const double beta,
-                double  *Y, const CBLAS_INT incY) = current_backend->blas.dgemv.cblas_function;
+                double  *Y, const CBLAS_INT incY);
+        *(void **) &fn = current_backend->blas.dgemv.cblas_function;
         fn ( layout, TransA, M, N, alpha, A, lda, X, incX, beta, Y,incY);
     } else {
         extern int CBLAS_CallFromC;

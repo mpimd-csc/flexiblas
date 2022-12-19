@@ -109,8 +109,8 @@ void flexiblas_real_cblas_ztbmv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
              const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
              const CBLAS_INT N, const CBLAS_INT K, const void  *A, const CBLAS_INT lda,
-             void  *X, const CBLAS_INT incX)
-            = current_backend->blas.ztbmv.cblas_function;
+             void  *X, const CBLAS_INT incX);
+        *(void **) &fn = current_backend->blas.ztbmv.cblas_function;
         fn(layout,Uplo,TransA,Diag,N,K,A,lda,X,incX);
     } else {
         CBLAS_INT n, i=0, tincX;

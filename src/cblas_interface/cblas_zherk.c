@@ -111,8 +111,8 @@ void flexiblas_real_cblas_zherk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
              const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
              const double alpha, const void *A, const CBLAS_INT lda,
-             const double beta, void *C, const CBLAS_INT ldc)
-            = current_backend->blas.zherk.cblas_function;
+             const double beta, void *C, const CBLAS_INT ldc);
+        *(void **) & fn = current_backend->blas.zherk.cblas_function;
         fn(layout,Uplo,Trans,N,K,alpha,A,lda,beta,C,ldc);
     } else {
         extern int CBLAS_CallFromC;

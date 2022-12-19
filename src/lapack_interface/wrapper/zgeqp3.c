@@ -80,8 +80,8 @@ void FC_GLOBAL(zgeqp3,ZGEQP3)(blasint* m, blasint* n, double complex* a, blasint
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zgeqp3.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zgeqp3.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zgeqp3.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zgeqp3.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) jpvt, (void*) tau, (void*) work, (void*) lwork, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zgeqp3_(void* m, void* n, void* a, void* lda, void* jpvt, vo
 {
 	void (*fn) (void* m, void* n, void* a, void* lda, void* jpvt, void* tau, void* work, void* lwork, void* rwork, void* info);
 
-	fn = current_backend->lapack.zgeqp3.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zgeqp3.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) jpvt, (void*) tau, (void*) work, (void*) lwork, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zgeqp3_(void* m, void* n, void* a, void* lda, void* jpvt, v
 	void (*fn) (void* m, void* n, void* a, void* lda, void* jpvt, void* tau, void* work, void* lwork, void* rwork, void* info);
 	void (*fn_hook) (void* m, void* n, void* a, void* lda, void* jpvt, void* tau, void* work, void* lwork, void* rwork, void* info);
 
-	fn      = current_backend->lapack.zgeqp3.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zgeqp3.f77_blas_function; 
 
     hook_pos_zgeqp3 ++;
     if( hook_pos_zgeqp3 < __flexiblas_hooks->zgeqp3.nhook) {
-        fn_hook = __flexiblas_hooks->zgeqp3.f77_hook_function[hook_pos_zgeqp3];
+        *(void **) &fn_hook = __flexiblas_hooks->zgeqp3.f77_hook_function[hook_pos_zgeqp3];
         fn_hook((void*) m, (void*) n, (void*) a, (void*) lda, (void*) jpvt, (void*) tau, (void*) work, (void*) lwork, (void*) rwork, (void*) info);
     } else {
         hook_pos_zgeqp3 = 0;

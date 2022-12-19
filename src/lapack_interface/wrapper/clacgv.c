@@ -80,8 +80,8 @@ void FC_GLOBAL(clacgv,CLACGV)(blasint* n, float complex* x, blasint* incx)
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.clacgv.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->clacgv.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.clacgv.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->clacgv.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) x, (void*) incx); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_clacgv_(void* n, void* x, void* incx)
 {
 	void (*fn) (void* n, void* x, void* incx);
 
-	fn = current_backend->lapack.clacgv.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.clacgv.f77_blas_function; 
 
 		fn((void*) n, (void*) x, (void*) incx); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_clacgv_(void* n, void* x, void* incx)
 	void (*fn) (void* n, void* x, void* incx);
 	void (*fn_hook) (void* n, void* x, void* incx);
 
-	fn      = current_backend->lapack.clacgv.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.clacgv.f77_blas_function; 
 
     hook_pos_clacgv ++;
     if( hook_pos_clacgv < __flexiblas_hooks->clacgv.nhook) {
-        fn_hook = __flexiblas_hooks->clacgv.f77_hook_function[hook_pos_clacgv];
+        *(void **) &fn_hook = __flexiblas_hooks->clacgv.f77_hook_function[hook_pos_clacgv];
         fn_hook((void*) n, (void*) x, (void*) incx);
     } else {
         hook_pos_clacgv = 0;

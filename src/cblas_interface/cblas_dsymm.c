@@ -114,8 +114,8 @@ void flexiblas_real_cblas_dsymm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side
              const CBLAS_UPLO Uplo, const CBLAS_INT M, const CBLAS_INT N,
              const double alpha, const double  *A, const CBLAS_INT lda,
              const double  *B, const CBLAS_INT ldb, const double beta,
-             double  *C, const CBLAS_INT ldc)
-            = current_backend->blas.dsymm.cblas_function;
+             double  *C, const CBLAS_INT ldc);
+        *(void **) &fn = current_backend->blas.dsymm.cblas_function;
         fn	(layout,Side,Uplo,M,N,alpha,A,lda,B,ldb,beta,C,ldc);
     } else {
 

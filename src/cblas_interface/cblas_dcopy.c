@@ -67,7 +67,7 @@ void flexiblas_real_cblas_dcopy( const CBLAS_INT N, const double *X,const CBLAS_
     void (*fn)  ( const CBLAS_INT N, const double *X, const CBLAS_INT incX, double *Y, const CBLAS_INT incY);
 
     if ( current_backend->blas.dcopy.cblas_function != NULL ) {
-        fn = current_backend->blas.dcopy.cblas_function;
+        *(void **) &fn = current_backend->blas.dcopy.cblas_function;
         fn(N,X,incX,Y,incY);
     } else {
         Int F77_N=N, F77_incX=incX, F77_incY=incY;

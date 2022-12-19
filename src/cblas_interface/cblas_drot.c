@@ -82,8 +82,8 @@ void cblas_drot(const CBLAS_INT N, double *X, const CBLAS_INT incX,
 #endif
     if ( current_backend->blas.drot.cblas_function != NULL ) {
         void (*fn)(const CBLAS_INT N, double *X, const CBLAS_INT incX,
-                double *Y, const CBLAS_INT incY, const double c, const double s)
-            = current_backend->blas.drot.cblas_function;
+                double *Y, const CBLAS_INT incY, const double c, const double s);
+        *(void **) &fn = current_backend->blas.drot.cblas_function;
         fn(N,X,incX,Y,incY,c,s);
     } else {
         FC_GLOBAL(drot,DROT)(&F77_N, X, &F77_incX, Y, &F77_incY, &c, &s);

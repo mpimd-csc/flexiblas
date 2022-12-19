@@ -176,7 +176,7 @@ cleanupAndFail:
     return 0;
 }
 
-int csc_hdf5_register_bzip2()
+int csc_hdf5_register_bzip2(void)
 {
     herr_t status;
     status = H5Zregister(H5Z_BZIP2);
@@ -191,7 +191,7 @@ int csc_hdf5_register_bzip2()
 #else
 
 /* Filter not available  */
-int csc_hdf5_register_bzip2()
+int csc_hdf5_register_bzip2(void)
 {
     return -1;
 }

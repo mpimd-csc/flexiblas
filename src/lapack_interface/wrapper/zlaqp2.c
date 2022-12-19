@@ -80,8 +80,8 @@ void FC_GLOBAL(zlaqp2,ZLAQP2)(blasint* m, blasint* n, blasint* offset, double co
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlaqp2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlaqp2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlaqp2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlaqp2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) offset, (void*) a, (void*) lda, (void*) jpvt, (void*) tau, (void*) vn1, (void*) vn2, (void*) work); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zlaqp2_(void* m, void* n, void* offset, void* a, void* lda, 
 {
 	void (*fn) (void* m, void* n, void* offset, void* a, void* lda, void* jpvt, void* tau, void* vn1, void* vn2, void* work);
 
-	fn = current_backend->lapack.zlaqp2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlaqp2.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) offset, (void*) a, (void*) lda, (void*) jpvt, (void*) tau, (void*) vn1, (void*) vn2, (void*) work); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zlaqp2_(void* m, void* n, void* offset, void* a, void* lda,
 	void (*fn) (void* m, void* n, void* offset, void* a, void* lda, void* jpvt, void* tau, void* vn1, void* vn2, void* work);
 	void (*fn_hook) (void* m, void* n, void* offset, void* a, void* lda, void* jpvt, void* tau, void* vn1, void* vn2, void* work);
 
-	fn      = current_backend->lapack.zlaqp2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlaqp2.f77_blas_function; 
 
     hook_pos_zlaqp2 ++;
     if( hook_pos_zlaqp2 < __flexiblas_hooks->zlaqp2.nhook) {
-        fn_hook = __flexiblas_hooks->zlaqp2.f77_hook_function[hook_pos_zlaqp2];
+        *(void **) &fn_hook = __flexiblas_hooks->zlaqp2.f77_hook_function[hook_pos_zlaqp2];
         fn_hook((void*) m, (void*) n, (void*) offset, (void*) a, (void*) lda, (void*) jpvt, (void*) tau, (void*) vn1, (void*) vn2, (void*) work);
     } else {
         hook_pos_zlaqp2 = 0;

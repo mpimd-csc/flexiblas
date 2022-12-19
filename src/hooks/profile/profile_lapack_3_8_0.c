@@ -39325,8 +39325,8 @@ double hook_dlamc3(double* a, double* b)
 
 
 
-extern double flexiblas_chain_dsecnd ();
-double hook_dsecnd()
+extern double flexiblas_chain_dsecnd (void);
+double hook_dsecnd(void)
 {
     double v;
     double helpTime;
@@ -39346,8 +39346,8 @@ double hook_dsecnd()
 
 
 
-extern float flexiblas_chain_second ();
-float hook_second()
+extern float flexiblas_chain_second (void);
+float hook_second(void)
 {
     float v;
     double helpTime;

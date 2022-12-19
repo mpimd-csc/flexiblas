@@ -80,8 +80,8 @@ void FC_GLOBAL(dporfs,DPORFS)(char* uplo, blasint* n, blasint* nrhs, double* a, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dporfs.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dporfs.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dporfs.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dporfs.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) af, (void*) ldaf, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) iwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dporfs_(void* uplo, void* n, void* nrhs, void* a, void* lda,
 {
 	void (*fn) (void* uplo, void* n, void* nrhs, void* a, void* lda, void* af, void* ldaf, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* iwork, void* info);
 
-	fn = current_backend->lapack.dporfs.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dporfs.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) af, (void*) ldaf, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) iwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dporfs_(void* uplo, void* n, void* nrhs, void* a, void* lda
 	void (*fn) (void* uplo, void* n, void* nrhs, void* a, void* lda, void* af, void* ldaf, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* iwork, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* nrhs, void* a, void* lda, void* af, void* ldaf, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* iwork, void* info);
 
-	fn      = current_backend->lapack.dporfs.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dporfs.f77_blas_function; 
 
     hook_pos_dporfs ++;
     if( hook_pos_dporfs < __flexiblas_hooks->dporfs.nhook) {
-        fn_hook = __flexiblas_hooks->dporfs.f77_hook_function[hook_pos_dporfs];
+        *(void **) &fn_hook = __flexiblas_hooks->dporfs.f77_hook_function[hook_pos_dporfs];
         fn_hook((void*) uplo, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) af, (void*) ldaf, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) iwork, (void*) info);
     } else {
         hook_pos_dporfs = 0;

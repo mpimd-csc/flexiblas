@@ -86,7 +86,8 @@ void flexiblas_real_cblas_zdscal( const CBLAS_INT N, const double alpha, void *X
     if ( current_backend->blas.zdscal.cblas_function != NULL ) {
 
         void (*fn) ( const CBLAS_INT N, const double alpha, void *X, const CBLAS_INT
-                incX) = current_backend->blas.zdscal.cblas_function;
+                incX);
+        *(void **) &fn = current_backend->blas.zdscal.cblas_function;
         fn(N,alpha,X,incX);
     } else {
         FC_GLOBAL(zdscal,ZDSCAL)( &F77_N, &alpha,

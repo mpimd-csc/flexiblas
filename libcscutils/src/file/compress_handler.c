@@ -51,23 +51,23 @@
 
 #ifdef  USE_GZIP
 #include <zlib.h>
-extern _compressed_io_handler io_register_gzip();
+extern _compressed_io_handler io_register_gzip(void);
 #else
-extern _compressed_io_handler io_register_no_gzip();
+extern _compressed_io_handler io_register_no_gzip(void);
 #endif
 #ifdef  USE_BZ2
 #include <bzlib.h>
-extern _compressed_io_handler io_register_bzip2();
+extern _compressed_io_handler io_register_bzip2(void);
 #else
-extern _compressed_io_handler io_register_no_bzip2();
+extern _compressed_io_handler io_register_no_bzip2(void);
 #endif
 #ifdef USE_LZMA
-extern _compressed_io_handler io_register_xz();
+extern _compressed_io_handler io_register_xz(void);
 #else
-extern _compressed_io_handler io_register_no_xz();
+extern _compressed_io_handler io_register_no_xz(void);
 #endif
 
-extern _compressed_io_handler io_register_uncompressed();
+extern _compressed_io_handler io_register_uncompressed(void);
 typedef _compressed_io_handler (*compress_handler_init)(void);
 
 
@@ -109,10 +109,10 @@ static int is_initialized = 0;
  *  Setup the available IO handlers.
  *-----------------------------------------------------------------------------*/
 #ifdef CSC_HAVE_ATTR_CONSTRUCTOR
-void csc_io_init ()  __attribute__((constructor));
+void csc_io_init (void)  __attribute__((constructor));
 #endif
 
-void csc_io_init ()
+void csc_io_init (void)
 {
     if (! is_initialized ){
         int i = 0 ;

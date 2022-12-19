@@ -80,8 +80,8 @@ void FC_GLOBAL(dgesdd,DGESDD)(char* jobz, blasint* m, blasint* n, double* a, bla
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dgesdd.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dgesdd.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dgesdd.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dgesdd.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobz, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) u, (void*) ldu, (void*) vt, (void*) ldvt, (void*) work, (void*) lwork, (void*) iwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dgesdd_(void* jobz, void* m, void* n, void* a, void* lda, vo
 {
 	void (*fn) (void* jobz, void* m, void* n, void* a, void* lda, void* s, void* u, void* ldu, void* vt, void* ldvt, void* work, void* lwork, void* iwork, void* info);
 
-	fn = current_backend->lapack.dgesdd.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dgesdd.f77_blas_function; 
 
 		fn((void*) jobz, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) u, (void*) ldu, (void*) vt, (void*) ldvt, (void*) work, (void*) lwork, (void*) iwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dgesdd_(void* jobz, void* m, void* n, void* a, void* lda, v
 	void (*fn) (void* jobz, void* m, void* n, void* a, void* lda, void* s, void* u, void* ldu, void* vt, void* ldvt, void* work, void* lwork, void* iwork, void* info);
 	void (*fn_hook) (void* jobz, void* m, void* n, void* a, void* lda, void* s, void* u, void* ldu, void* vt, void* ldvt, void* work, void* lwork, void* iwork, void* info);
 
-	fn      = current_backend->lapack.dgesdd.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dgesdd.f77_blas_function; 
 
     hook_pos_dgesdd ++;
     if( hook_pos_dgesdd < __flexiblas_hooks->dgesdd.nhook) {
-        fn_hook = __flexiblas_hooks->dgesdd.f77_hook_function[hook_pos_dgesdd];
+        *(void **) &fn_hook = __flexiblas_hooks->dgesdd.f77_hook_function[hook_pos_dgesdd];
         fn_hook((void*) jobz, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) u, (void*) ldu, (void*) vt, (void*) ldvt, (void*) work, (void*) lwork, (void*) iwork, (void*) info);
     } else {
         hook_pos_dgesdd = 0;

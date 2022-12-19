@@ -87,8 +87,8 @@ void flexiblas_real_cblas_dgeadd(const CBLAS_ORDER CORDER,
 #endif
 
     if ( current_backend->blas.dgeadd.cblas_function != NULL ) {
-        void (*fn)(const CBLAS_ORDER, const CBLAS_INT, const CBLAS_INT, const double, double *, const CBLAS_INT, const double, double *, const CBLAS_INT)
-            = current_backend->blas.dgeadd.cblas_function;
+        void (*fn)(const CBLAS_ORDER, const CBLAS_INT, const CBLAS_INT, const double, double *, const CBLAS_INT, const double, double *, const CBLAS_INT);
+        *(void **) & fn = current_backend->blas.dgeadd.cblas_function;
         fn(CORDER, crows, ccols, calpha, a, clda, cbeta, b, cldb);
     } else {
 #ifdef F77_INT

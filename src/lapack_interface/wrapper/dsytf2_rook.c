@@ -80,8 +80,8 @@ void FC_GLOBAL_(dsytf2_rook,DSYTF2_ROOK)(char* uplo, blasint* n, double* a, blas
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dsytf2_rook.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dsytf2_rook.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dsytf2_rook.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dsytf2_rook.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dsytf2_rook_(void* uplo, void* n, void* a, void* lda, void* 
 {
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* info);
 
-	fn = current_backend->lapack.dsytf2_rook.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dsytf2_rook.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dsytf2_rook_(void* uplo, void* n, void* a, void* lda, void*
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* info);
 
-	fn      = current_backend->lapack.dsytf2_rook.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dsytf2_rook.f77_blas_function; 
 
     hook_pos_dsytf2_rook ++;
     if( hook_pos_dsytf2_rook < __flexiblas_hooks->dsytf2_rook.nhook) {
-        fn_hook = __flexiblas_hooks->dsytf2_rook.f77_hook_function[hook_pos_dsytf2_rook];
+        *(void **) &fn_hook = __flexiblas_hooks->dsytf2_rook.f77_hook_function[hook_pos_dsytf2_rook];
         fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) info);
     } else {
         hook_pos_dsytf2_rook = 0;

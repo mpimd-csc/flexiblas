@@ -34,7 +34,7 @@
 #define RUNS 1
 
 void FC_GLOBAL(dgetrf,DGETRF)(Int *n , Int *m, double *A, Int *lda, Int *ipiv, Int *info);
-double wtime()
+double wtime(void)
 {
 	struct timeval tv;
 	gettimeofday (&tv, NULL);

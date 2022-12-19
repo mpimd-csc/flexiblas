@@ -119,7 +119,8 @@ void flexiblas_real_cblas_sgbmv(const CBLAS_LAYOUT layout,
                 const CBLAS_INT KL, const CBLAS_INT KU,
                 const float alpha, const float  *A, const CBLAS_INT lda,
                 const float  *X, const CBLAS_INT incX, const float beta,
-                float  *Y, const CBLAS_INT incY) = current_backend->blas.sgbmv.cblas_function;
+                float  *Y, const CBLAS_INT incY);
+        *(void **) &fn = current_backend->blas.sgbmv.cblas_function;
         fn(layout, TransA, M,N,KL,KU,alpha,A,lda,X,incX,beta, Y, incY);
     } else {
         extern int CBLAS_CallFromC;

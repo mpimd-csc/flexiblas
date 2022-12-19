@@ -80,8 +80,8 @@ void FC_GLOBAL_(zlahef_rk,ZLAHEF_RK)(char* uplo, blasint* n, blasint* nb, blasin
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlahef_rk.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlahef_rk.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlahef_rk.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlahef_rk.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) nb, (void*) kb, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) w, (void*) ldw, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zlahef_rk_(void* uplo, void* n, void* nb, void* kb, void* a,
 {
 	void (*fn) (void* uplo, void* n, void* nb, void* kb, void* a, void* lda, void* e, void* ipiv, void* w, void* ldw, void* info);
 
-	fn = current_backend->lapack.zlahef_rk.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlahef_rk.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) nb, (void*) kb, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) w, (void*) ldw, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zlahef_rk_(void* uplo, void* n, void* nb, void* kb, void* a
 	void (*fn) (void* uplo, void* n, void* nb, void* kb, void* a, void* lda, void* e, void* ipiv, void* w, void* ldw, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* nb, void* kb, void* a, void* lda, void* e, void* ipiv, void* w, void* ldw, void* info);
 
-	fn      = current_backend->lapack.zlahef_rk.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlahef_rk.f77_blas_function; 
 
     hook_pos_zlahef_rk ++;
     if( hook_pos_zlahef_rk < __flexiblas_hooks->zlahef_rk.nhook) {
-        fn_hook = __flexiblas_hooks->zlahef_rk.f77_hook_function[hook_pos_zlahef_rk];
+        *(void **) &fn_hook = __flexiblas_hooks->zlahef_rk.f77_hook_function[hook_pos_zlahef_rk];
         fn_hook((void*) uplo, (void*) n, (void*) nb, (void*) kb, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) w, (void*) ldw, (void*) info);
     } else {
         hook_pos_zlahef_rk = 0;

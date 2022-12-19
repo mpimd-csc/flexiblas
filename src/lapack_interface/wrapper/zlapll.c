@@ -80,8 +80,8 @@ void FC_GLOBAL(zlapll,ZLAPLL)(blasint* n, double complex* x, blasint* incx, doub
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlapll.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlapll.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlapll.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlapll.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ssmin); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zlapll_(void* n, void* x, void* incx, void* y, void* incy, v
 {
 	void (*fn) (void* n, void* x, void* incx, void* y, void* incy, void* ssmin);
 
-	fn = current_backend->lapack.zlapll.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlapll.f77_blas_function; 
 
 		fn((void*) n, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ssmin); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zlapll_(void* n, void* x, void* incx, void* y, void* incy, 
 	void (*fn) (void* n, void* x, void* incx, void* y, void* incy, void* ssmin);
 	void (*fn_hook) (void* n, void* x, void* incx, void* y, void* incy, void* ssmin);
 
-	fn      = current_backend->lapack.zlapll.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlapll.f77_blas_function; 
 
     hook_pos_zlapll ++;
     if( hook_pos_zlapll < __flexiblas_hooks->zlapll.nhook) {
-        fn_hook = __flexiblas_hooks->zlapll.f77_hook_function[hook_pos_zlapll];
+        *(void **) &fn_hook = __flexiblas_hooks->zlapll.f77_hook_function[hook_pos_zlapll];
         fn_hook((void*) n, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ssmin);
     } else {
         hook_pos_zlapll = 0;

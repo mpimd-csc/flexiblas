@@ -80,8 +80,8 @@ void FC_GLOBAL(cgglse,CGGLSE)(blasint* m, blasint* n, blasint* p, float complex*
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cgglse.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cgglse.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cgglse.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cgglse.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) p, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) d, (void*) x, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cgglse_(void* m, void* n, void* p, void* a, void* lda, void*
 {
 	void (*fn) (void* m, void* n, void* p, void* a, void* lda, void* b, void* ldb, void* c, void* d, void* x, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.cgglse.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cgglse.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) p, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) d, (void*) x, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cgglse_(void* m, void* n, void* p, void* a, void* lda, void
 	void (*fn) (void* m, void* n, void* p, void* a, void* lda, void* b, void* ldb, void* c, void* d, void* x, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* m, void* n, void* p, void* a, void* lda, void* b, void* ldb, void* c, void* d, void* x, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.cgglse.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cgglse.f77_blas_function; 
 
     hook_pos_cgglse ++;
     if( hook_pos_cgglse < __flexiblas_hooks->cgglse.nhook) {
-        fn_hook = __flexiblas_hooks->cgglse.f77_hook_function[hook_pos_cgglse];
+        *(void **) &fn_hook = __flexiblas_hooks->cgglse.f77_hook_function[hook_pos_cgglse];
         fn_hook((void*) m, (void*) n, (void*) p, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) d, (void*) x, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_cgglse = 0;

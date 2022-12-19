@@ -16540,8 +16540,8 @@ void hook_dsposv(char* uplo, Int * n, Int * nrhs, double* a, Int * lda, double* 
 
 
 
-extern double flexiblas_chain_dsecnd ();
-double hook_dsecnd()
+extern double flexiblas_chain_dsecnd (void);
+double hook_dsecnd(void)
 {
     double v;
     double helpTime;
@@ -37981,8 +37981,8 @@ void hook_clahef_rk(char* uplo, Int * n, Int * nb, Int * kb, float complex* a, I
 
 
 
-extern float flexiblas_chain_second ();
-float hook_second()
+extern float flexiblas_chain_second (void);
+float hook_second(void)
 {
     float v;
     double helpTime;

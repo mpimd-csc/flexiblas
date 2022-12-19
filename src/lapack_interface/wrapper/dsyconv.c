@@ -80,8 +80,8 @@ void FC_GLOBAL(dsyconv,DSYCONV)(char* uplo, char* way, blasint* n, double* a, bl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dsyconv.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dsyconv.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dsyconv.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dsyconv.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) way, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) e, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dsyconv_(void* uplo, void* way, void* n, void* a, void* lda,
 {
 	void (*fn) (void* uplo, void* way, void* n, void* a, void* lda, void* ipiv, void* e, void* info);
 
-	fn = current_backend->lapack.dsyconv.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dsyconv.f77_blas_function; 
 
 		fn((void*) uplo, (void*) way, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) e, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dsyconv_(void* uplo, void* way, void* n, void* a, void* lda
 	void (*fn) (void* uplo, void* way, void* n, void* a, void* lda, void* ipiv, void* e, void* info);
 	void (*fn_hook) (void* uplo, void* way, void* n, void* a, void* lda, void* ipiv, void* e, void* info);
 
-	fn      = current_backend->lapack.dsyconv.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dsyconv.f77_blas_function; 
 
     hook_pos_dsyconv ++;
     if( hook_pos_dsyconv < __flexiblas_hooks->dsyconv.nhook) {
-        fn_hook = __flexiblas_hooks->dsyconv.f77_hook_function[hook_pos_dsyconv];
+        *(void **) &fn_hook = __flexiblas_hooks->dsyconv.f77_hook_function[hook_pos_dsyconv];
         fn_hook((void*) uplo, (void*) way, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) e, (void*) info);
     } else {
         hook_pos_dsyconv = 0;

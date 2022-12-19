@@ -80,8 +80,8 @@ void FC_GLOBAL(zggbak,ZGGBAK)(char* job, char* side, blasint* n, blasint* ilo, b
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zggbak.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zggbak.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zggbak.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zggbak.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) job, (void*) side, (void*) n, (void*) ilo, (void*) ihi, (void*) lscale, (void*) rscale, (void*) m, (void*) v, (void*) ldv, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zggbak_(void* job, void* side, void* n, void* ilo, void* ihi
 {
 	void (*fn) (void* job, void* side, void* n, void* ilo, void* ihi, void* lscale, void* rscale, void* m, void* v, void* ldv, void* info);
 
-	fn = current_backend->lapack.zggbak.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zggbak.f77_blas_function; 
 
 		fn((void*) job, (void*) side, (void*) n, (void*) ilo, (void*) ihi, (void*) lscale, (void*) rscale, (void*) m, (void*) v, (void*) ldv, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zggbak_(void* job, void* side, void* n, void* ilo, void* ih
 	void (*fn) (void* job, void* side, void* n, void* ilo, void* ihi, void* lscale, void* rscale, void* m, void* v, void* ldv, void* info);
 	void (*fn_hook) (void* job, void* side, void* n, void* ilo, void* ihi, void* lscale, void* rscale, void* m, void* v, void* ldv, void* info);
 
-	fn      = current_backend->lapack.zggbak.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zggbak.f77_blas_function; 
 
     hook_pos_zggbak ++;
     if( hook_pos_zggbak < __flexiblas_hooks->zggbak.nhook) {
-        fn_hook = __flexiblas_hooks->zggbak.f77_hook_function[hook_pos_zggbak];
+        *(void **) &fn_hook = __flexiblas_hooks->zggbak.f77_hook_function[hook_pos_zggbak];
         fn_hook((void*) job, (void*) side, (void*) n, (void*) ilo, (void*) ihi, (void*) lscale, (void*) rscale, (void*) m, (void*) v, (void*) ldv, (void*) info);
     } else {
         hook_pos_zggbak = 0;

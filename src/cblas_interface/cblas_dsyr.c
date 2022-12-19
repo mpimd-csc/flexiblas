@@ -96,8 +96,8 @@ void flexiblas_real_cblas_dsyr(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
              const CBLAS_INT N, const double  alpha, const double  *X,
-             const CBLAS_INT incX, double  *A, const CBLAS_INT lda)
-            = current_backend->blas.dsyr.cblas_function;
+             const CBLAS_INT incX, double  *A, const CBLAS_INT lda);
+        *(void **) &fn = current_backend->blas.dsyr.cblas_function;
         fn(layout,Uplo,N,alpha,X,incX,A,lda);
     } else {
 

@@ -80,8 +80,8 @@ void FC_GLOBAL(slas2,SLAS2)(float* f, float* g, float* h, float* ssmin, float* s
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slas2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slas2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slas2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slas2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) f, (void*) g, (void*) h, (void*) ssmin, (void*) ssmax); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slas2_(void* f, void* g, void* h, void* ssmin, void* ssmax)
 {
 	void (*fn) (void* f, void* g, void* h, void* ssmin, void* ssmax);
 
-	fn = current_backend->lapack.slas2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slas2.f77_blas_function; 
 
 		fn((void*) f, (void*) g, (void*) h, (void*) ssmin, (void*) ssmax); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slas2_(void* f, void* g, void* h, void* ssmin, void* ssmax)
 	void (*fn) (void* f, void* g, void* h, void* ssmin, void* ssmax);
 	void (*fn_hook) (void* f, void* g, void* h, void* ssmin, void* ssmax);
 
-	fn      = current_backend->lapack.slas2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slas2.f77_blas_function; 
 
     hook_pos_slas2 ++;
     if( hook_pos_slas2 < __flexiblas_hooks->slas2.nhook) {
-        fn_hook = __flexiblas_hooks->slas2.f77_hook_function[hook_pos_slas2];
+        *(void **) &fn_hook = __flexiblas_hooks->slas2.f77_hook_function[hook_pos_slas2];
         fn_hook((void*) f, (void*) g, (void*) h, (void*) ssmin, (void*) ssmax);
     } else {
         hook_pos_slas2 = 0;

@@ -80,8 +80,8 @@ void FC_GLOBAL(dgemqrt,DGEMQRT)(char* side, char* trans, blasint* m, blasint* n,
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dgemqrt.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dgemqrt.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dgemqrt.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dgemqrt.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) nb, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dgemqrt_(void* side, void* trans, void* m, void* n, void* k,
 {
 	void (*fn) (void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info);
 
-	fn = current_backend->lapack.dgemqrt.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dgemqrt.f77_blas_function; 
 
 		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) nb, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dgemqrt_(void* side, void* trans, void* m, void* n, void* k
 	void (*fn) (void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info);
 	void (*fn_hook) (void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info);
 
-	fn      = current_backend->lapack.dgemqrt.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dgemqrt.f77_blas_function; 
 
     hook_pos_dgemqrt ++;
     if( hook_pos_dgemqrt < __flexiblas_hooks->dgemqrt.nhook) {
-        fn_hook = __flexiblas_hooks->dgemqrt.f77_hook_function[hook_pos_dgemqrt];
+        *(void **) &fn_hook = __flexiblas_hooks->dgemqrt.f77_hook_function[hook_pos_dgemqrt];
         fn_hook((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) nb, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) info);
     } else {
         hook_pos_dgemqrt = 0;

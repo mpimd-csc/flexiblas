@@ -80,8 +80,8 @@ void FC_GLOBAL(sgebak,SGEBAK)(char* job, char* side, blasint* n, blasint* ilo, b
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.sgebak.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->sgebak.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.sgebak.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->sgebak.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) job, (void*) side, (void*) n, (void*) ilo, (void*) ihi, (void*) scale, (void*) m, (void*) v, (void*) ldv, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_sgebak_(void* job, void* side, void* n, void* ilo, void* ihi
 {
 	void (*fn) (void* job, void* side, void* n, void* ilo, void* ihi, void* scale, void* m, void* v, void* ldv, void* info);
 
-	fn = current_backend->lapack.sgebak.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.sgebak.f77_blas_function; 
 
 		fn((void*) job, (void*) side, (void*) n, (void*) ilo, (void*) ihi, (void*) scale, (void*) m, (void*) v, (void*) ldv, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_sgebak_(void* job, void* side, void* n, void* ilo, void* ih
 	void (*fn) (void* job, void* side, void* n, void* ilo, void* ihi, void* scale, void* m, void* v, void* ldv, void* info);
 	void (*fn_hook) (void* job, void* side, void* n, void* ilo, void* ihi, void* scale, void* m, void* v, void* ldv, void* info);
 
-	fn      = current_backend->lapack.sgebak.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.sgebak.f77_blas_function; 
 
     hook_pos_sgebak ++;
     if( hook_pos_sgebak < __flexiblas_hooks->sgebak.nhook) {
-        fn_hook = __flexiblas_hooks->sgebak.f77_hook_function[hook_pos_sgebak];
+        *(void **) &fn_hook = __flexiblas_hooks->sgebak.f77_hook_function[hook_pos_sgebak];
         fn_hook((void*) job, (void*) side, (void*) n, (void*) ilo, (void*) ihi, (void*) scale, (void*) m, (void*) v, (void*) ldv, (void*) info);
     } else {
         hook_pos_sgebak = 0;

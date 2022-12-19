@@ -150,7 +150,7 @@ int __flexiblas_load_blas_hooks(flexiblas_hook_t *backend, void *hook_handle);
 void __flexiblas_backend_init( flexiblas_backend_t * backend);
 
 
-flexiblas_mgmt_t * flexiblas_mgmt();
+flexiblas_mgmt_t * flexiblas_mgmt(void);
 
 double flexiblas_wtime(void);
 

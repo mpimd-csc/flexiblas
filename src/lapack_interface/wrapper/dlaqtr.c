@@ -80,8 +80,8 @@ void FC_GLOBAL(dlaqtr,DLAQTR)(blasint* ltran, blasint* lreal, blasint* n, double
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlaqtr.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlaqtr.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlaqtr.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlaqtr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) ltran, (void*) lreal, (void*) n, (void*) t, (void*) ldt, (void*) b, (void*) w, (void*) scale, (void*) x, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlaqtr_(void* ltran, void* lreal, void* n, void* t, void* ld
 {
 	void (*fn) (void* ltran, void* lreal, void* n, void* t, void* ldt, void* b, void* w, void* scale, void* x, void* work, void* info);
 
-	fn = current_backend->lapack.dlaqtr.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlaqtr.f77_blas_function; 
 
 		fn((void*) ltran, (void*) lreal, (void*) n, (void*) t, (void*) ldt, (void*) b, (void*) w, (void*) scale, (void*) x, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlaqtr_(void* ltran, void* lreal, void* n, void* t, void* l
 	void (*fn) (void* ltran, void* lreal, void* n, void* t, void* ldt, void* b, void* w, void* scale, void* x, void* work, void* info);
 	void (*fn_hook) (void* ltran, void* lreal, void* n, void* t, void* ldt, void* b, void* w, void* scale, void* x, void* work, void* info);
 
-	fn      = current_backend->lapack.dlaqtr.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlaqtr.f77_blas_function; 
 
     hook_pos_dlaqtr ++;
     if( hook_pos_dlaqtr < __flexiblas_hooks->dlaqtr.nhook) {
-        fn_hook = __flexiblas_hooks->dlaqtr.f77_hook_function[hook_pos_dlaqtr];
+        *(void **) &fn_hook = __flexiblas_hooks->dlaqtr.f77_hook_function[hook_pos_dlaqtr];
         fn_hook((void*) ltran, (void*) lreal, (void*) n, (void*) t, (void*) ldt, (void*) b, (void*) w, (void*) scale, (void*) x, (void*) work, (void*) info);
     } else {
         hook_pos_dlaqtr = 0;

@@ -80,8 +80,8 @@ void FC_GLOBAL(slaqsp,SLAQSP)(char* uplo, blasint* n, float* ap, float* s, float
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slaqsp.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slaqsp.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slaqsp.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slaqsp.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) equed); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slaqsp_(void* uplo, void* n, void* ap, void* s, void* scond,
 {
 	void (*fn) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* equed);
 
-	fn = current_backend->lapack.slaqsp.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slaqsp.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) equed); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slaqsp_(void* uplo, void* n, void* ap, void* s, void* scond
 	void (*fn) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* equed);
 	void (*fn_hook) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* equed);
 
-	fn      = current_backend->lapack.slaqsp.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slaqsp.f77_blas_function; 
 
     hook_pos_slaqsp ++;
     if( hook_pos_slaqsp < __flexiblas_hooks->slaqsp.nhook) {
-        fn_hook = __flexiblas_hooks->slaqsp.f77_hook_function[hook_pos_slaqsp];
+        *(void **) &fn_hook = __flexiblas_hooks->slaqsp.f77_hook_function[hook_pos_slaqsp];
         fn_hook((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) equed);
     } else {
         hook_pos_slaqsp = 0;

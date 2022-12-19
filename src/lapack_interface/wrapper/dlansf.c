@@ -81,8 +81,8 @@ double FC_GLOBAL(dlansf,DLANSF)(char* norm, char* transr, char* uplo, blasint* n
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlansf.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlansf.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlansf.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlansf.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work); 
 		return ret; 
@@ -113,7 +113,7 @@ double flexiblas_real_dlansf_(void* norm, void* transr, void* uplo, void* n, voi
 	double (*fn) (void* norm, void* transr, void* uplo, void* n, void* a, void* work);
 	double ret;
 
-	fn = current_backend->lapack.dlansf.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlansf.f77_blas_function; 
 
 		ret = fn((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work); 
 
@@ -137,11 +137,11 @@ double flexiblas_chain_dlansf_(void* norm, void* transr, void* uplo, void* n, vo
 	double (*fn_hook) (void* norm, void* transr, void* uplo, void* n, void* a, void* work);
 	double ret;
 
-	fn      = current_backend->lapack.dlansf.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlansf.f77_blas_function; 
 
     hook_pos_dlansf ++;
     if( hook_pos_dlansf < __flexiblas_hooks->dlansf.nhook) {
-        fn_hook = __flexiblas_hooks->dlansf.f77_hook_function[hook_pos_dlansf];
+        *(void **) &fn_hook = __flexiblas_hooks->dlansf.f77_hook_function[hook_pos_dlansf];
         ret = fn_hook((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work);
     } else {
         hook_pos_dlansf = 0;

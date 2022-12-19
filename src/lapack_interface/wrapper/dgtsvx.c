@@ -80,8 +80,8 @@ void FC_GLOBAL(dgtsvx,DGTSVX)(char* fact, char* trans, blasint* n, blasint* nrhs
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dgtsvx.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dgtsvx.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dgtsvx.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dgtsvx.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) fact, (void*) trans, (void*) n, (void*) nrhs, (void*) dl, (void*) d, (void*) du, (void*) dlf, (void*) df, (void*) duf, (void*) du2, (void*) ipiv, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) rcond, (void*) ferr, (void*) berr, (void*) work, (void*) iwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dgtsvx_(void* fact, void* trans, void* n, void* nrhs, void* 
 {
 	void (*fn) (void* fact, void* trans, void* n, void* nrhs, void* dl, void* d, void* du, void* dlf, void* df, void* duf, void* du2, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* iwork, void* info);
 
-	fn = current_backend->lapack.dgtsvx.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dgtsvx.f77_blas_function; 
 
 		fn((void*) fact, (void*) trans, (void*) n, (void*) nrhs, (void*) dl, (void*) d, (void*) du, (void*) dlf, (void*) df, (void*) duf, (void*) du2, (void*) ipiv, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) rcond, (void*) ferr, (void*) berr, (void*) work, (void*) iwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dgtsvx_(void* fact, void* trans, void* n, void* nrhs, void*
 	void (*fn) (void* fact, void* trans, void* n, void* nrhs, void* dl, void* d, void* du, void* dlf, void* df, void* duf, void* du2, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* iwork, void* info);
 	void (*fn_hook) (void* fact, void* trans, void* n, void* nrhs, void* dl, void* d, void* du, void* dlf, void* df, void* duf, void* du2, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* iwork, void* info);
 
-	fn      = current_backend->lapack.dgtsvx.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dgtsvx.f77_blas_function; 
 
     hook_pos_dgtsvx ++;
     if( hook_pos_dgtsvx < __flexiblas_hooks->dgtsvx.nhook) {
-        fn_hook = __flexiblas_hooks->dgtsvx.f77_hook_function[hook_pos_dgtsvx];
+        *(void **) &fn_hook = __flexiblas_hooks->dgtsvx.f77_hook_function[hook_pos_dgtsvx];
         fn_hook((void*) fact, (void*) trans, (void*) n, (void*) nrhs, (void*) dl, (void*) d, (void*) du, (void*) dlf, (void*) df, (void*) duf, (void*) du2, (void*) ipiv, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) rcond, (void*) ferr, (void*) berr, (void*) work, (void*) iwork, (void*) info);
     } else {
         hook_pos_dgtsvx = 0;

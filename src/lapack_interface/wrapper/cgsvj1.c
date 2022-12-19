@@ -80,8 +80,8 @@ void FC_GLOBAL(cgsvj1,CGSVJ1)(char* jobv, blasint* m, blasint* n, blasint* n1, f
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cgsvj1.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cgsvj1.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cgsvj1.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cgsvj1.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobv, (void*) m, (void*) n, (void*) n1, (void*) a, (void*) lda, (void*) d, (void*) sva, (void*) mv, (void*) v, (void*) ldv, (void*) eps, (void*) sfmin, (void*) tol, (void*) nsweep, (void*) work, (void*) lwork, (void*) info, ( fortran_charlen_t ) len_jobv); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cgsvj1_(void* jobv, void* m, void* n, void* n1, void* a, voi
 {
 	void (*fn) (void* jobv, void* m, void* n, void* n1, void* a, void* lda, void* d, void* sva, void* mv, void* v, void* ldv, void* eps, void* sfmin, void* tol, void* nsweep, void* work, void* lwork, void* info, fortran_charlen_t len_jobv);
 
-	fn = current_backend->lapack.cgsvj1.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cgsvj1.f77_blas_function; 
 
 		fn((void*) jobv, (void*) m, (void*) n, (void*) n1, (void*) a, (void*) lda, (void*) d, (void*) sva, (void*) mv, (void*) v, (void*) ldv, (void*) eps, (void*) sfmin, (void*) tol, (void*) nsweep, (void*) work, (void*) lwork, (void*) info, ( fortran_charlen_t ) len_jobv); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cgsvj1_(void* jobv, void* m, void* n, void* n1, void* a, vo
 	void (*fn) (void* jobv, void* m, void* n, void* n1, void* a, void* lda, void* d, void* sva, void* mv, void* v, void* ldv, void* eps, void* sfmin, void* tol, void* nsweep, void* work, void* lwork, void* info, fortran_charlen_t len_jobv);
 	void (*fn_hook) (void* jobv, void* m, void* n, void* n1, void* a, void* lda, void* d, void* sva, void* mv, void* v, void* ldv, void* eps, void* sfmin, void* tol, void* nsweep, void* work, void* lwork, void* info, fortran_charlen_t len_jobv);
 
-	fn      = current_backend->lapack.cgsvj1.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cgsvj1.f77_blas_function; 
 
     hook_pos_cgsvj1 ++;
     if( hook_pos_cgsvj1 < __flexiblas_hooks->cgsvj1.nhook) {
-        fn_hook = __flexiblas_hooks->cgsvj1.f77_hook_function[hook_pos_cgsvj1];
+        *(void **) &fn_hook = __flexiblas_hooks->cgsvj1.f77_hook_function[hook_pos_cgsvj1];
         fn_hook((void*) jobv, (void*) m, (void*) n, (void*) n1, (void*) a, (void*) lda, (void*) d, (void*) sva, (void*) mv, (void*) v, (void*) ldv, (void*) eps, (void*) sfmin, (void*) tol, (void*) nsweep, (void*) work, (void*) lwork, (void*) info, ( fortran_charlen_t ) len_jobv);
     } else {
         hook_pos_cgsvj1 = 0;

@@ -80,8 +80,8 @@ void FC_GLOBAL(dlaruv,DLARUV)(blasint* iseed, blasint* n, double* x)
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlaruv.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlaruv.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlaruv.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlaruv.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) iseed, (void*) n, (void*) x); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlaruv_(void* iseed, void* n, void* x)
 {
 	void (*fn) (void* iseed, void* n, void* x);
 
-	fn = current_backend->lapack.dlaruv.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlaruv.f77_blas_function; 
 
 		fn((void*) iseed, (void*) n, (void*) x); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlaruv_(void* iseed, void* n, void* x)
 	void (*fn) (void* iseed, void* n, void* x);
 	void (*fn_hook) (void* iseed, void* n, void* x);
 
-	fn      = current_backend->lapack.dlaruv.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlaruv.f77_blas_function; 
 
     hook_pos_dlaruv ++;
     if( hook_pos_dlaruv < __flexiblas_hooks->dlaruv.nhook) {
-        fn_hook = __flexiblas_hooks->dlaruv.f77_hook_function[hook_pos_dlaruv];
+        *(void **) &fn_hook = __flexiblas_hooks->dlaruv.f77_hook_function[hook_pos_dlaruv];
         fn_hook((void*) iseed, (void*) n, (void*) x);
     } else {
         hook_pos_dlaruv = 0;

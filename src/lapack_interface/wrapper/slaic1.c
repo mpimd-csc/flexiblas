@@ -80,8 +80,8 @@ void FC_GLOBAL(slaic1,SLAIC1)(blasint* job, blasint* j, float* x, float* sest, f
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slaic1.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slaic1.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slaic1.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slaic1.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) job, (void*) j, (void*) x, (void*) sest, (void*) w, (void*) gamma, (void*) sestpr, (void*) s, (void*) c); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slaic1_(void* job, void* j, void* x, void* sest, void* w, vo
 {
 	void (*fn) (void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c);
 
-	fn = current_backend->lapack.slaic1.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slaic1.f77_blas_function; 
 
 		fn((void*) job, (void*) j, (void*) x, (void*) sest, (void*) w, (void*) gamma, (void*) sestpr, (void*) s, (void*) c); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slaic1_(void* job, void* j, void* x, void* sest, void* w, v
 	void (*fn) (void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c);
 	void (*fn_hook) (void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c);
 
-	fn      = current_backend->lapack.slaic1.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slaic1.f77_blas_function; 
 
     hook_pos_slaic1 ++;
     if( hook_pos_slaic1 < __flexiblas_hooks->slaic1.nhook) {
-        fn_hook = __flexiblas_hooks->slaic1.f77_hook_function[hook_pos_slaic1];
+        *(void **) &fn_hook = __flexiblas_hooks->slaic1.f77_hook_function[hook_pos_slaic1];
         fn_hook((void*) job, (void*) j, (void*) x, (void*) sest, (void*) w, (void*) gamma, (void*) sestpr, (void*) s, (void*) c);
     } else {
         hook_pos_slaic1 = 0;

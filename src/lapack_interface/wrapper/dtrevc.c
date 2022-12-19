@@ -80,8 +80,8 @@ void FC_GLOBAL(dtrevc,DTREVC)(char* side, char* howmny, blasint* select, blasint
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dtrevc.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dtrevc.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dtrevc.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dtrevc.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) side, (void*) howmny, (void*) select, (void*) n, (void*) t, (void*) ldt, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) mm, (void*) m, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dtrevc_(void* side, void* howmny, void* select, void* n, voi
 {
 	void (*fn) (void* side, void* howmny, void* select, void* n, void* t, void* ldt, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* info);
 
-	fn = current_backend->lapack.dtrevc.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dtrevc.f77_blas_function; 
 
 		fn((void*) side, (void*) howmny, (void*) select, (void*) n, (void*) t, (void*) ldt, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) mm, (void*) m, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dtrevc_(void* side, void* howmny, void* select, void* n, vo
 	void (*fn) (void* side, void* howmny, void* select, void* n, void* t, void* ldt, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* info);
 	void (*fn_hook) (void* side, void* howmny, void* select, void* n, void* t, void* ldt, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* info);
 
-	fn      = current_backend->lapack.dtrevc.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dtrevc.f77_blas_function; 
 
     hook_pos_dtrevc ++;
     if( hook_pos_dtrevc < __flexiblas_hooks->dtrevc.nhook) {
-        fn_hook = __flexiblas_hooks->dtrevc.f77_hook_function[hook_pos_dtrevc];
+        *(void **) &fn_hook = __flexiblas_hooks->dtrevc.f77_hook_function[hook_pos_dtrevc];
         fn_hook((void*) side, (void*) howmny, (void*) select, (void*) n, (void*) t, (void*) ldt, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) mm, (void*) m, (void*) work, (void*) info);
     } else {
         hook_pos_dtrevc = 0;

@@ -67,7 +67,7 @@ extern "C" {
      * as malloced string. The result needs to be freed afterwards.
      *
      */
-    char *csc_sysinfo_hostname();
+    char *csc_sysinfo_hostname(void);
 
     /**
      * @brief Return the system name.
@@ -77,7 +77,7 @@ extern "C" {
      * as reported by \b uname as malloced string. The result needs to be freed afterwards.
      *
      */
-    char *csc_sysinfo_sysname();
+    char *csc_sysinfo_sysname(void);
 
 
     /**
@@ -89,7 +89,7 @@ extern "C" {
      *
      * @sa csc_sysinfo_hostname
      */
-    char *csc_sysinfo_nodename();
+    char *csc_sysinfo_nodename(void);
 
 
      /**
@@ -100,7 +100,7 @@ extern "C" {
      * as reported by \b uname as malloced string. The result needs to be freed afterwards.
      *
      */
-    char *csc_sysinfo_release();
+    char *csc_sysinfo_release(void);
 
     /**
      * @brief Return the kernel version.
@@ -110,7 +110,7 @@ extern "C" {
      * as reported by \b uname as malloced string. The result needs to be freed afterwards.
      *
      */
-    char *csc_sysinfo_version();
+    char *csc_sysinfo_version(void);
 
     /**
      * @brief Return the machine architecture.
@@ -120,7 +120,7 @@ extern "C" {
      * as reported by \b uname as malloced string. The result needs to be freed afterwards.
      *
      */
-    char *csc_sysinfo_machine();
+    char *csc_sysinfo_machine(void);
 
     /**
      * @brief Return the CPU's name.
@@ -129,7 +129,7 @@ extern "C" {
      * The csc_sysinfo_cpuname  function returns the CPU's name as reported by
      * the kernel in /proc/cpuinfo. The string needs to be freed afterwards.
      */
-    char *csc_sysinfo_cpuname();
+    char *csc_sysinfo_cpuname(void);
 
     /**
      * @brief Return the compiler name and version as human-readable string.
@@ -138,7 +138,7 @@ extern "C" {
      * The csc_sysinfo_ccompiler function returns the name and the version of the
      * use C compiler as human-readable string. The string needs to be freed afterwards.
      */
-    char *csc_sysinfo_ccompiler();
+    char *csc_sysinfo_ccompiler(void);
 
     /**
      * @brief Return the number of CPU cores
@@ -148,7 +148,7 @@ extern "C" {
      * available CPU cores. In case of an error one is returned.
      *
      */
-    unsigned int csc_sysinfo_cpu_count();
+    unsigned int csc_sysinfo_cpu_count(void);
 
 
     /**
@@ -159,7 +159,7 @@ extern "C" {
      * and enabled.
      *
      */
-    int csc_cpufreq_enabled();
+    int csc_cpufreq_enabled(void);
 
     /**
      * @brief Set the frequency of a CPU core.

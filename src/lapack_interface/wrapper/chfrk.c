@@ -80,8 +80,8 @@ void FC_GLOBAL(chfrk,CHFRK)(char* transr, char* uplo, char* trans, blasint* n, b
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.chfrk.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->chfrk.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.chfrk.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->chfrk.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) transr, (void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_chfrk_(void* transr, void* uplo, void* trans, void* n, void*
 {
 	void (*fn) (void* transr, void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c);
 
-	fn = current_backend->lapack.chfrk.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.chfrk.f77_blas_function; 
 
 		fn((void*) transr, (void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_chfrk_(void* transr, void* uplo, void* trans, void* n, void
 	void (*fn) (void* transr, void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c);
 	void (*fn_hook) (void* transr, void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c);
 
-	fn      = current_backend->lapack.chfrk.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.chfrk.f77_blas_function; 
 
     hook_pos_chfrk ++;
     if( hook_pos_chfrk < __flexiblas_hooks->chfrk.nhook) {
-        fn_hook = __flexiblas_hooks->chfrk.f77_hook_function[hook_pos_chfrk];
+        *(void **) &fn_hook = __flexiblas_hooks->chfrk.f77_hook_function[hook_pos_chfrk];
         fn_hook((void*) transr, (void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c);
     } else {
         hook_pos_chfrk = 0;

@@ -81,8 +81,8 @@ int FC_GLOBAL(icmax1,ICMAX1)(blasint* n, float complex* cx, blasint* incx)
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.icmax1.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->icmax1.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.icmax1.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->icmax1.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) n, (void*) cx, (void*) incx); 
 		return ret; 
@@ -113,7 +113,7 @@ blasint flexiblas_real_icmax1_(void* n, void* cx, void* incx)
 	blasint (*fn) (void* n, void* cx, void* incx);
 	blasint ret;
 
-	fn = current_backend->lapack.icmax1.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.icmax1.f77_blas_function; 
 
 		ret = fn((void*) n, (void*) cx, (void*) incx); 
 
@@ -137,11 +137,11 @@ blasint flexiblas_chain_icmax1_(void* n, void* cx, void* incx)
 	blasint (*fn_hook) (void* n, void* cx, void* incx);
 	blasint ret;
 
-	fn      = current_backend->lapack.icmax1.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.icmax1.f77_blas_function; 
 
     hook_pos_icmax1 ++;
     if( hook_pos_icmax1 < __flexiblas_hooks->icmax1.nhook) {
-        fn_hook = __flexiblas_hooks->icmax1.f77_hook_function[hook_pos_icmax1];
+        *(void **) &fn_hook = __flexiblas_hooks->icmax1.f77_hook_function[hook_pos_icmax1];
         ret = fn_hook((void*) n, (void*) cx, (void*) incx);
     } else {
         hook_pos_icmax1 = 0;

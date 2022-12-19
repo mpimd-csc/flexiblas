@@ -112,6 +112,8 @@ extern "C" {
 
 
 /* Single Complex Precision */
+   void FC_GLOBAL(crotg,CROTG)(void *, void *, float *, void *);
+   void FC_GLOBAL(csrot,CSROT)(FINT, void *, FINT, void *, FINT, const float *, const float *);
 
    void FC_GLOBAL(cswap,CSWAP)( FINT, void *, FINT, void *, FINT);
    void FC_GLOBAL(ccopy,CCOPY)( FINT, const void *, FINT, void *, FINT);
@@ -129,6 +131,8 @@ extern "C" {
    float FC_GLOBAL(scasum,SCASUM)( FINT, const void *, FINT);
 
 /* Double Complex Precision */
+   void FC_GLOBAL(zrotg,ZROTG)(void *, void *, double *, void *);
+   void FC_GLOBAL(zdrot,ZDROT)(FINT, void *, FINT, void *, FINT, const double *, const double *);
 
    void FC_GLOBAL(zswap,ZSWAP)( FINT, void *, FINT, void *, FINT);
    void FC_GLOBAL(zcopy,ZCOPY)( FINT, const void *, FINT, void *, FINT);

@@ -80,8 +80,8 @@ void FC_GLOBAL(dspevd,DSPEVD)(char* jobz, char* uplo, blasint* n, double* ap, do
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dspevd.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dspevd.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dspevd.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dspevd.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobz, (void*) uplo, (void*) n, (void*) ap, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) iwork, (void*) liwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dspevd_(void* jobz, void* uplo, void* n, void* ap, void* w, 
 {
 	void (*fn) (void* jobz, void* uplo, void* n, void* ap, void* w, void* z, void* ldz, void* work, void* lwork, void* iwork, void* liwork, void* info);
 
-	fn = current_backend->lapack.dspevd.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dspevd.f77_blas_function; 
 
 		fn((void*) jobz, (void*) uplo, (void*) n, (void*) ap, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) iwork, (void*) liwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dspevd_(void* jobz, void* uplo, void* n, void* ap, void* w,
 	void (*fn) (void* jobz, void* uplo, void* n, void* ap, void* w, void* z, void* ldz, void* work, void* lwork, void* iwork, void* liwork, void* info);
 	void (*fn_hook) (void* jobz, void* uplo, void* n, void* ap, void* w, void* z, void* ldz, void* work, void* lwork, void* iwork, void* liwork, void* info);
 
-	fn      = current_backend->lapack.dspevd.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dspevd.f77_blas_function; 
 
     hook_pos_dspevd ++;
     if( hook_pos_dspevd < __flexiblas_hooks->dspevd.nhook) {
-        fn_hook = __flexiblas_hooks->dspevd.f77_hook_function[hook_pos_dspevd];
+        *(void **) &fn_hook = __flexiblas_hooks->dspevd.f77_hook_function[hook_pos_dspevd];
         fn_hook((void*) jobz, (void*) uplo, (void*) n, (void*) ap, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) iwork, (void*) liwork, (void*) info);
     } else {
         hook_pos_dspevd = 0;

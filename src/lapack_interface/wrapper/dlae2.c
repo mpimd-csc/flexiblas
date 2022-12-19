@@ -80,8 +80,8 @@ void FC_GLOBAL(dlae2,DLAE2)(double* a, double* b, double* c, double* rt1, double
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlae2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlae2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlae2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlae2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlae2_(void* a, void* b, void* c, void* rt1, void* rt2)
 {
 	void (*fn) (void* a, void* b, void* c, void* rt1, void* rt2);
 
-	fn = current_backend->lapack.dlae2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlae2.f77_blas_function; 
 
 		fn((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlae2_(void* a, void* b, void* c, void* rt1, void* rt2)
 	void (*fn) (void* a, void* b, void* c, void* rt1, void* rt2);
 	void (*fn_hook) (void* a, void* b, void* c, void* rt1, void* rt2);
 
-	fn      = current_backend->lapack.dlae2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlae2.f77_blas_function; 
 
     hook_pos_dlae2 ++;
     if( hook_pos_dlae2 < __flexiblas_hooks->dlae2.nhook) {
-        fn_hook = __flexiblas_hooks->dlae2.f77_hook_function[hook_pos_dlae2];
+        *(void **) &fn_hook = __flexiblas_hooks->dlae2.f77_hook_function[hook_pos_dlae2];
         fn_hook((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2);
     } else {
         hook_pos_dlae2 = 0;

@@ -80,8 +80,8 @@ void FC_GLOBAL(dgeequ,DGEEQU)(blasint* m, blasint* n, double* a, blasint* lda, d
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dgeequ.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dgeequ.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dgeequ.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dgeequ.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dgeequ_(void* m, void* n, void* a, void* lda, void* r, void*
 {
 	void (*fn) (void* m, void* n, void* a, void* lda, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* info);
 
-	fn = current_backend->lapack.dgeequ.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dgeequ.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dgeequ_(void* m, void* n, void* a, void* lda, void* r, void
 	void (*fn) (void* m, void* n, void* a, void* lda, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* info);
 	void (*fn_hook) (void* m, void* n, void* a, void* lda, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* info);
 
-	fn      = current_backend->lapack.dgeequ.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dgeequ.f77_blas_function; 
 
     hook_pos_dgeequ ++;
     if( hook_pos_dgeequ < __flexiblas_hooks->dgeequ.nhook) {
-        fn_hook = __flexiblas_hooks->dgeequ.f77_hook_function[hook_pos_dgeequ];
+        *(void **) &fn_hook = __flexiblas_hooks->dgeequ.f77_hook_function[hook_pos_dgeequ];
         fn_hook((void*) m, (void*) n, (void*) a, (void*) lda, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) info);
     } else {
         hook_pos_dgeequ = 0;

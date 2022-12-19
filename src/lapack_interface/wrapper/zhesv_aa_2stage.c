@@ -80,8 +80,8 @@ void FC_GLOBAL_(zhesv_aa_2stage,ZHESV_AA_2STAGE)(char* uplo, blasint* n, blasint
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zhesv_aa_2stage.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zhesv_aa_2stage.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zhesv_aa_2stage.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zhesv_aa_2stage.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) tb, (void*) ltb, (void*) ipiv, (void*) ipiv2, (void*) b, (void*) ldb, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zhesv_aa_2stage_(void* uplo, void* n, void* nrhs, void* a, v
 {
 	void (*fn) (void* uplo, void* n, void* nrhs, void* a, void* lda, void* tb, void* ltb, void* ipiv, void* ipiv2, void* b, void* ldb, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.zhesv_aa_2stage.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zhesv_aa_2stage.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) tb, (void*) ltb, (void*) ipiv, (void*) ipiv2, (void*) b, (void*) ldb, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zhesv_aa_2stage_(void* uplo, void* n, void* nrhs, void* a, 
 	void (*fn) (void* uplo, void* n, void* nrhs, void* a, void* lda, void* tb, void* ltb, void* ipiv, void* ipiv2, void* b, void* ldb, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* nrhs, void* a, void* lda, void* tb, void* ltb, void* ipiv, void* ipiv2, void* b, void* ldb, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.zhesv_aa_2stage.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zhesv_aa_2stage.f77_blas_function; 
 
     hook_pos_zhesv_aa_2stage ++;
     if( hook_pos_zhesv_aa_2stage < __flexiblas_hooks->zhesv_aa_2stage.nhook) {
-        fn_hook = __flexiblas_hooks->zhesv_aa_2stage.f77_hook_function[hook_pos_zhesv_aa_2stage];
+        *(void **) &fn_hook = __flexiblas_hooks->zhesv_aa_2stage.f77_hook_function[hook_pos_zhesv_aa_2stage];
         fn_hook((void*) uplo, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) tb, (void*) ltb, (void*) ipiv, (void*) ipiv2, (void*) b, (void*) ldb, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_zhesv_aa_2stage = 0;

@@ -80,8 +80,8 @@ void FC_GLOBAL(slasq3,SLASQ3)(blasint* i0, blasint* n0, float* z, blasint* pp, f
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slasq3.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slasq3.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slasq3.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slasq3.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) i0, (void*) n0, (void*) z, (void*) pp, (void*) dmin, (void*) sigma, (void*) desig, (void*) qmax, (void*) nfail, (void*) iter, (void*) ndiv, (void*) ieee, (void*) ttype, (void*) dmin1, (void*) dmin2, (void*) dn, (void*) dn1, (void*) dn2, (void*) g, (void*) tau); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slasq3_(void* i0, void* n0, void* z, void* pp, void* dmin, v
 {
 	void (*fn) (void* i0, void* n0, void* z, void* pp, void* dmin, void* sigma, void* desig, void* qmax, void* nfail, void* iter, void* ndiv, void* ieee, void* ttype, void* dmin1, void* dmin2, void* dn, void* dn1, void* dn2, void* g, void* tau);
 
-	fn = current_backend->lapack.slasq3.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slasq3.f77_blas_function; 
 
 		fn((void*) i0, (void*) n0, (void*) z, (void*) pp, (void*) dmin, (void*) sigma, (void*) desig, (void*) qmax, (void*) nfail, (void*) iter, (void*) ndiv, (void*) ieee, (void*) ttype, (void*) dmin1, (void*) dmin2, (void*) dn, (void*) dn1, (void*) dn2, (void*) g, (void*) tau); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slasq3_(void* i0, void* n0, void* z, void* pp, void* dmin, 
 	void (*fn) (void* i0, void* n0, void* z, void* pp, void* dmin, void* sigma, void* desig, void* qmax, void* nfail, void* iter, void* ndiv, void* ieee, void* ttype, void* dmin1, void* dmin2, void* dn, void* dn1, void* dn2, void* g, void* tau);
 	void (*fn_hook) (void* i0, void* n0, void* z, void* pp, void* dmin, void* sigma, void* desig, void* qmax, void* nfail, void* iter, void* ndiv, void* ieee, void* ttype, void* dmin1, void* dmin2, void* dn, void* dn1, void* dn2, void* g, void* tau);
 
-	fn      = current_backend->lapack.slasq3.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slasq3.f77_blas_function; 
 
     hook_pos_slasq3 ++;
     if( hook_pos_slasq3 < __flexiblas_hooks->slasq3.nhook) {
-        fn_hook = __flexiblas_hooks->slasq3.f77_hook_function[hook_pos_slasq3];
+        *(void **) &fn_hook = __flexiblas_hooks->slasq3.f77_hook_function[hook_pos_slasq3];
         fn_hook((void*) i0, (void*) n0, (void*) z, (void*) pp, (void*) dmin, (void*) sigma, (void*) desig, (void*) qmax, (void*) nfail, (void*) iter, (void*) ndiv, (void*) ieee, (void*) ttype, (void*) dmin1, (void*) dmin2, (void*) dn, (void*) dn1, (void*) dn2, (void*) g, (void*) tau);
     } else {
         hook_pos_slasq3 = 0;

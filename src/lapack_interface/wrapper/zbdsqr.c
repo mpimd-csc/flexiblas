@@ -80,8 +80,8 @@ void FC_GLOBAL(zbdsqr,ZBDSQR)(char* uplo, blasint* n, blasint* ncvt, blasint* nr
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zbdsqr.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zbdsqr.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zbdsqr.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zbdsqr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) ncvt, (void*) nru, (void*) ncc, (void*) d, (void*) e, (void*) vt, (void*) ldvt, (void*) u, (void*) ldu, (void*) c, (void*) ldc, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zbdsqr_(void* uplo, void* n, void* ncvt, void* nru, void* nc
 {
 	void (*fn) (void* uplo, void* n, void* ncvt, void* nru, void* ncc, void* d, void* e, void* vt, void* ldvt, void* u, void* ldu, void* c, void* ldc, void* rwork, void* info);
 
-	fn = current_backend->lapack.zbdsqr.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zbdsqr.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) ncvt, (void*) nru, (void*) ncc, (void*) d, (void*) e, (void*) vt, (void*) ldvt, (void*) u, (void*) ldu, (void*) c, (void*) ldc, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zbdsqr_(void* uplo, void* n, void* ncvt, void* nru, void* n
 	void (*fn) (void* uplo, void* n, void* ncvt, void* nru, void* ncc, void* d, void* e, void* vt, void* ldvt, void* u, void* ldu, void* c, void* ldc, void* rwork, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* ncvt, void* nru, void* ncc, void* d, void* e, void* vt, void* ldvt, void* u, void* ldu, void* c, void* ldc, void* rwork, void* info);
 
-	fn      = current_backend->lapack.zbdsqr.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zbdsqr.f77_blas_function; 
 
     hook_pos_zbdsqr ++;
     if( hook_pos_zbdsqr < __flexiblas_hooks->zbdsqr.nhook) {
-        fn_hook = __flexiblas_hooks->zbdsqr.f77_hook_function[hook_pos_zbdsqr];
+        *(void **) &fn_hook = __flexiblas_hooks->zbdsqr.f77_hook_function[hook_pos_zbdsqr];
         fn_hook((void*) uplo, (void*) n, (void*) ncvt, (void*) nru, (void*) ncc, (void*) d, (void*) e, (void*) vt, (void*) ldvt, (void*) u, (void*) ldu, (void*) c, (void*) ldc, (void*) rwork, (void*) info);
     } else {
         hook_pos_zbdsqr = 0;

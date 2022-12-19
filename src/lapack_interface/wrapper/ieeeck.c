@@ -81,8 +81,8 @@ int FC_GLOBAL(ieeeck,IEEECK)(blasint* ispec, float* zero, float* one)
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ieeeck.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ieeeck.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ieeeck.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ieeeck.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) ispec, (void*) zero, (void*) one); 
 		return ret; 
@@ -113,7 +113,7 @@ blasint flexiblas_real_ieeeck_(void* ispec, void* zero, void* one)
 	blasint (*fn) (void* ispec, void* zero, void* one);
 	blasint ret;
 
-	fn = current_backend->lapack.ieeeck.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ieeeck.f77_blas_function; 
 
 		ret = fn((void*) ispec, (void*) zero, (void*) one); 
 
@@ -137,11 +137,11 @@ blasint flexiblas_chain_ieeeck_(void* ispec, void* zero, void* one)
 	blasint (*fn_hook) (void* ispec, void* zero, void* one);
 	blasint ret;
 
-	fn      = current_backend->lapack.ieeeck.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ieeeck.f77_blas_function; 
 
     hook_pos_ieeeck ++;
     if( hook_pos_ieeeck < __flexiblas_hooks->ieeeck.nhook) {
-        fn_hook = __flexiblas_hooks->ieeeck.f77_hook_function[hook_pos_ieeeck];
+        *(void **) &fn_hook = __flexiblas_hooks->ieeeck.f77_hook_function[hook_pos_ieeeck];
         ret = fn_hook((void*) ispec, (void*) zero, (void*) one);
     } else {
         hook_pos_ieeeck = 0;

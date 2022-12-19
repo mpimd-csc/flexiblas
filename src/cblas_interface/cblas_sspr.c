@@ -97,8 +97,8 @@ void flexiblas_real_cblas_sspr(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
              const CBLAS_INT N, const float alpha, const float *X,
-             const CBLAS_INT incX, float *Ap)
-            = current_backend->blas.sspr.cblas_function;
+             const CBLAS_INT incX, float *Ap);
+        *(void **) & fn = current_backend->blas.sspr.cblas_function;
         fn(layout,Uplo,N,alpha,X,incX,Ap);
     } else {
         extern int CBLAS_CallFromC;

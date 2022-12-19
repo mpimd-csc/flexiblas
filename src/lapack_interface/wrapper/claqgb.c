@@ -80,8 +80,8 @@ void FC_GLOBAL(claqgb,CLAQGB)(blasint* m, blasint* n, blasint* kl, blasint* ku, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.claqgb.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->claqgb.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.claqgb.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->claqgb.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) equed); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_claqgb_(void* m, void* n, void* kl, void* ku, void* ab, void
 {
 	void (*fn) (void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* equed);
 
-	fn = current_backend->lapack.claqgb.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.claqgb.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) equed); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_claqgb_(void* m, void* n, void* kl, void* ku, void* ab, voi
 	void (*fn) (void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* equed);
 	void (*fn_hook) (void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* equed);
 
-	fn      = current_backend->lapack.claqgb.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.claqgb.f77_blas_function; 
 
     hook_pos_claqgb ++;
     if( hook_pos_claqgb < __flexiblas_hooks->claqgb.nhook) {
-        fn_hook = __flexiblas_hooks->claqgb.f77_hook_function[hook_pos_claqgb];
+        *(void **) &fn_hook = __flexiblas_hooks->claqgb.f77_hook_function[hook_pos_claqgb];
         fn_hook((void*) m, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) equed);
     } else {
         hook_pos_claqgb = 0;

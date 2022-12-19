@@ -80,8 +80,8 @@ void FC_GLOBAL(cgtts2,CGTTS2)(blasint* itrans, blasint* n, blasint* nrhs, float 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cgtts2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cgtts2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cgtts2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cgtts2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) itrans, (void*) n, (void*) nrhs, (void*) dl, (void*) d, (void*) du, (void*) du2, (void*) ipiv, (void*) b, (void*) ldb); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cgtts2_(void* itrans, void* n, void* nrhs, void* dl, void* d
 {
 	void (*fn) (void* itrans, void* n, void* nrhs, void* dl, void* d, void* du, void* du2, void* ipiv, void* b, void* ldb);
 
-	fn = current_backend->lapack.cgtts2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cgtts2.f77_blas_function; 
 
 		fn((void*) itrans, (void*) n, (void*) nrhs, (void*) dl, (void*) d, (void*) du, (void*) du2, (void*) ipiv, (void*) b, (void*) ldb); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cgtts2_(void* itrans, void* n, void* nrhs, void* dl, void* 
 	void (*fn) (void* itrans, void* n, void* nrhs, void* dl, void* d, void* du, void* du2, void* ipiv, void* b, void* ldb);
 	void (*fn_hook) (void* itrans, void* n, void* nrhs, void* dl, void* d, void* du, void* du2, void* ipiv, void* b, void* ldb);
 
-	fn      = current_backend->lapack.cgtts2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cgtts2.f77_blas_function; 
 
     hook_pos_cgtts2 ++;
     if( hook_pos_cgtts2 < __flexiblas_hooks->cgtts2.nhook) {
-        fn_hook = __flexiblas_hooks->cgtts2.f77_hook_function[hook_pos_cgtts2];
+        *(void **) &fn_hook = __flexiblas_hooks->cgtts2.f77_hook_function[hook_pos_cgtts2];
         fn_hook((void*) itrans, (void*) n, (void*) nrhs, (void*) dl, (void*) d, (void*) du, (void*) du2, (void*) ipiv, (void*) b, (void*) ldb);
     } else {
         hook_pos_cgtts2 = 0;

@@ -81,8 +81,8 @@ int FC_GLOBAL(slaneg,SLANEG)(blasint* n, float* d, float* lld, float* sigma, flo
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slaneg.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slaneg.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slaneg.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slaneg.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) n, (void*) d, (void*) lld, (void*) sigma, (void*) pivmin, (void*) r); 
 		return ret; 
@@ -113,7 +113,7 @@ blasint flexiblas_real_slaneg_(void* n, void* d, void* lld, void* sigma, void* p
 	blasint (*fn) (void* n, void* d, void* lld, void* sigma, void* pivmin, void* r);
 	blasint ret;
 
-	fn = current_backend->lapack.slaneg.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slaneg.f77_blas_function; 
 
 		ret = fn((void*) n, (void*) d, (void*) lld, (void*) sigma, (void*) pivmin, (void*) r); 
 
@@ -137,11 +137,11 @@ blasint flexiblas_chain_slaneg_(void* n, void* d, void* lld, void* sigma, void* 
 	blasint (*fn_hook) (void* n, void* d, void* lld, void* sigma, void* pivmin, void* r);
 	blasint ret;
 
-	fn      = current_backend->lapack.slaneg.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slaneg.f77_blas_function; 
 
     hook_pos_slaneg ++;
     if( hook_pos_slaneg < __flexiblas_hooks->slaneg.nhook) {
-        fn_hook = __flexiblas_hooks->slaneg.f77_hook_function[hook_pos_slaneg];
+        *(void **) &fn_hook = __flexiblas_hooks->slaneg.f77_hook_function[hook_pos_slaneg];
         ret = fn_hook((void*) n, (void*) d, (void*) lld, (void*) sigma, (void*) pivmin, (void*) r);
     } else {
         hook_pos_slaneg = 0;

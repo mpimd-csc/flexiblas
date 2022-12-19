@@ -80,8 +80,8 @@ void FC_GLOBAL(claic1,CLAIC1)(blasint* job, blasint* j, float complex* x, float*
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.claic1.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->claic1.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.claic1.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->claic1.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) job, (void*) j, (void*) x, (void*) sest, (void*) w, (void*) gamma, (void*) sestpr, (void*) s, (void*) c); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_claic1_(void* job, void* j, void* x, void* sest, void* w, vo
 {
 	void (*fn) (void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c);
 
-	fn = current_backend->lapack.claic1.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.claic1.f77_blas_function; 
 
 		fn((void*) job, (void*) j, (void*) x, (void*) sest, (void*) w, (void*) gamma, (void*) sestpr, (void*) s, (void*) c); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_claic1_(void* job, void* j, void* x, void* sest, void* w, v
 	void (*fn) (void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c);
 	void (*fn_hook) (void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c);
 
-	fn      = current_backend->lapack.claic1.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.claic1.f77_blas_function; 
 
     hook_pos_claic1 ++;
     if( hook_pos_claic1 < __flexiblas_hooks->claic1.nhook) {
-        fn_hook = __flexiblas_hooks->claic1.f77_hook_function[hook_pos_claic1];
+        *(void **) &fn_hook = __flexiblas_hooks->claic1.f77_hook_function[hook_pos_claic1];
         fn_hook((void*) job, (void*) j, (void*) x, (void*) sest, (void*) w, (void*) gamma, (void*) sestpr, (void*) s, (void*) c);
     } else {
         hook_pos_claic1 = 0;

@@ -81,8 +81,8 @@ double FC_GLOBAL(dlamch,DLAMCH)(char* cmach)
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlamch.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlamch.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlamch.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlamch.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) cmach); 
 		return ret; 
@@ -113,7 +113,7 @@ double flexiblas_real_dlamch_(void* cmach)
 	double (*fn) (void* cmach);
 	double ret;
 
-	fn = current_backend->lapack.dlamch.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlamch.f77_blas_function; 
 
 		ret = fn((void*) cmach); 
 
@@ -137,11 +137,11 @@ double flexiblas_chain_dlamch_(void* cmach)
 	double (*fn_hook) (void* cmach);
 	double ret;
 
-	fn      = current_backend->lapack.dlamch.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlamch.f77_blas_function; 
 
     hook_pos_dlamch ++;
     if( hook_pos_dlamch < __flexiblas_hooks->dlamch.nhook) {
-        fn_hook = __flexiblas_hooks->dlamch.f77_hook_function[hook_pos_dlamch];
+        *(void **) &fn_hook = __flexiblas_hooks->dlamch.f77_hook_function[hook_pos_dlamch];
         ret = fn_hook((void*) cmach);
     } else {
         hook_pos_dlamch = 0;

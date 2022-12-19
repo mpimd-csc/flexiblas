@@ -80,8 +80,8 @@ void FC_GLOBAL(sopgtr,SOPGTR)(char* uplo, blasint* n, float* ap, float* tau, flo
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.sopgtr.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->sopgtr.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.sopgtr.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->sopgtr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) ap, (void*) tau, (void*) q, (void*) ldq, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_sopgtr_(void* uplo, void* n, void* ap, void* tau, void* q, v
 {
 	void (*fn) (void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info);
 
-	fn = current_backend->lapack.sopgtr.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.sopgtr.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) ap, (void*) tau, (void*) q, (void*) ldq, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_sopgtr_(void* uplo, void* n, void* ap, void* tau, void* q, 
 	void (*fn) (void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info);
 
-	fn      = current_backend->lapack.sopgtr.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.sopgtr.f77_blas_function; 
 
     hook_pos_sopgtr ++;
     if( hook_pos_sopgtr < __flexiblas_hooks->sopgtr.nhook) {
-        fn_hook = __flexiblas_hooks->sopgtr.f77_hook_function[hook_pos_sopgtr];
+        *(void **) &fn_hook = __flexiblas_hooks->sopgtr.f77_hook_function[hook_pos_sopgtr];
         fn_hook((void*) uplo, (void*) n, (void*) ap, (void*) tau, (void*) q, (void*) ldq, (void*) work, (void*) info);
     } else {
         hook_pos_sopgtr = 0;

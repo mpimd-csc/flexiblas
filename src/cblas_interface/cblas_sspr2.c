@@ -95,8 +95,8 @@ void flexiblas_real_cblas_sspr2(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo
 	   void (*fn)
 		 (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
                 const CBLAS_INT N, const float  alpha, const float  *X,
-                const CBLAS_INT incX, const float  *Y, const CBLAS_INT incY, float  *A)
-		   = current_backend->blas.sspr2.cblas_function;
+                const CBLAS_INT incX, const float  *Y, const CBLAS_INT incY, float  *A);
+       *(void **) & fn = current_backend->blas.sspr2.cblas_function;
 	fn	(layout,Uplo,N,alpha,X,incX,Y,incY,A);
    } else {
 

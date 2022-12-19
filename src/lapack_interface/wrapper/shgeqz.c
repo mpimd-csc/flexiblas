@@ -80,8 +80,8 @@ void FC_GLOBAL(shgeqz,SHGEQZ)(char* job, char* compq, char* compz, blasint* n, b
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.shgeqz.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->shgeqz.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.shgeqz.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->shgeqz.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) job, (void*) compq, (void*) compz, (void*) n, (void*) ilo, (void*) ihi, (void*) h, (void*) ldh, (void*) t, (void*) ldt, (void*) alphar, (void*) alphai, (void*) beta, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_shgeqz_(void* job, void* compq, void* compz, void* n, void* 
 {
 	void (*fn) (void* job, void* compq, void* compz, void* n, void* ilo, void* ihi, void* h, void* ldh, void* t, void* ldt, void* alphar, void* alphai, void* beta, void* q, void* ldq, void* z, void* ldz, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.shgeqz.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.shgeqz.f77_blas_function; 
 
 		fn((void*) job, (void*) compq, (void*) compz, (void*) n, (void*) ilo, (void*) ihi, (void*) h, (void*) ldh, (void*) t, (void*) ldt, (void*) alphar, (void*) alphai, (void*) beta, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_shgeqz_(void* job, void* compq, void* compz, void* n, void*
 	void (*fn) (void* job, void* compq, void* compz, void* n, void* ilo, void* ihi, void* h, void* ldh, void* t, void* ldt, void* alphar, void* alphai, void* beta, void* q, void* ldq, void* z, void* ldz, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* job, void* compq, void* compz, void* n, void* ilo, void* ihi, void* h, void* ldh, void* t, void* ldt, void* alphar, void* alphai, void* beta, void* q, void* ldq, void* z, void* ldz, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.shgeqz.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.shgeqz.f77_blas_function; 
 
     hook_pos_shgeqz ++;
     if( hook_pos_shgeqz < __flexiblas_hooks->shgeqz.nhook) {
-        fn_hook = __flexiblas_hooks->shgeqz.f77_hook_function[hook_pos_shgeqz];
+        *(void **) &fn_hook = __flexiblas_hooks->shgeqz.f77_hook_function[hook_pos_shgeqz];
         fn_hook((void*) job, (void*) compq, (void*) compz, (void*) n, (void*) ilo, (void*) ihi, (void*) h, (void*) ldh, (void*) t, (void*) ldt, (void*) alphar, (void*) alphai, (void*) beta, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_shgeqz = 0;

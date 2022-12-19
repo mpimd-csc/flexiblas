@@ -80,8 +80,8 @@ void FC_GLOBAL(slasd6,SLASD6)(blasint* icompq, blasint* nl, blasint* nr, blasint
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slasd6.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slasd6.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slasd6.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slasd6.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) icompq, (void*) nl, (void*) nr, (void*) sqre, (void*) d, (void*) vf, (void*) vl, (void*) alpha, (void*) beta, (void*) idxq, (void*) perm, (void*) givptr, (void*) givcol, (void*) ldgcol, (void*) givnum, (void*) ldgnum, (void*) poles, (void*) difl, (void*) difr, (void*) z, (void*) k, (void*) c, (void*) s, (void*) work, (void*) iwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slasd6_(void* icompq, void* nl, void* nr, void* sqre, void* 
 {
 	void (*fn) (void* icompq, void* nl, void* nr, void* sqre, void* d, void* vf, void* vl, void* alpha, void* beta, void* idxq, void* perm, void* givptr, void* givcol, void* ldgcol, void* givnum, void* ldgnum, void* poles, void* difl, void* difr, void* z, void* k, void* c, void* s, void* work, void* iwork, void* info);
 
-	fn = current_backend->lapack.slasd6.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slasd6.f77_blas_function; 
 
 		fn((void*) icompq, (void*) nl, (void*) nr, (void*) sqre, (void*) d, (void*) vf, (void*) vl, (void*) alpha, (void*) beta, (void*) idxq, (void*) perm, (void*) givptr, (void*) givcol, (void*) ldgcol, (void*) givnum, (void*) ldgnum, (void*) poles, (void*) difl, (void*) difr, (void*) z, (void*) k, (void*) c, (void*) s, (void*) work, (void*) iwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slasd6_(void* icompq, void* nl, void* nr, void* sqre, void*
 	void (*fn) (void* icompq, void* nl, void* nr, void* sqre, void* d, void* vf, void* vl, void* alpha, void* beta, void* idxq, void* perm, void* givptr, void* givcol, void* ldgcol, void* givnum, void* ldgnum, void* poles, void* difl, void* difr, void* z, void* k, void* c, void* s, void* work, void* iwork, void* info);
 	void (*fn_hook) (void* icompq, void* nl, void* nr, void* sqre, void* d, void* vf, void* vl, void* alpha, void* beta, void* idxq, void* perm, void* givptr, void* givcol, void* ldgcol, void* givnum, void* ldgnum, void* poles, void* difl, void* difr, void* z, void* k, void* c, void* s, void* work, void* iwork, void* info);
 
-	fn      = current_backend->lapack.slasd6.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slasd6.f77_blas_function; 
 
     hook_pos_slasd6 ++;
     if( hook_pos_slasd6 < __flexiblas_hooks->slasd6.nhook) {
-        fn_hook = __flexiblas_hooks->slasd6.f77_hook_function[hook_pos_slasd6];
+        *(void **) &fn_hook = __flexiblas_hooks->slasd6.f77_hook_function[hook_pos_slasd6];
         fn_hook((void*) icompq, (void*) nl, (void*) nr, (void*) sqre, (void*) d, (void*) vf, (void*) vl, (void*) alpha, (void*) beta, (void*) idxq, (void*) perm, (void*) givptr, (void*) givcol, (void*) ldgcol, (void*) givnum, (void*) ldgnum, (void*) poles, (void*) difl, (void*) difr, (void*) z, (void*) k, (void*) c, (void*) s, (void*) work, (void*) iwork, (void*) info);
     } else {
         hook_pos_slasd6 = 0;

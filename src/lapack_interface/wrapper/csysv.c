@@ -80,8 +80,8 @@ void FC_GLOBAL(csysv,CSYSV)(char* uplo, blasint* n, blasint* nrhs, float complex
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.csysv.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->csysv.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.csysv.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->csysv.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_csysv_(void* uplo, void* n, void* nrhs, void* a, void* lda, 
 {
 	void (*fn) (void* uplo, void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.csysv.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.csysv.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_csysv_(void* uplo, void* n, void* nrhs, void* a, void* lda,
 	void (*fn) (void* uplo, void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.csysv.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.csysv.f77_blas_function; 
 
     hook_pos_csysv ++;
     if( hook_pos_csysv < __flexiblas_hooks->csysv.nhook) {
-        fn_hook = __flexiblas_hooks->csysv.f77_hook_function[hook_pos_csysv];
+        *(void **) &fn_hook = __flexiblas_hooks->csysv.f77_hook_function[hook_pos_csysv];
         fn_hook((void*) uplo, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_csysv = 0;

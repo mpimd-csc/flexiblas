@@ -80,8 +80,8 @@ void FC_GLOBAL(dlagtm,DLAGTM)(char* trans, blasint* n, blasint* nrhs, double* al
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlagtm.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlagtm.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlagtm.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlagtm.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) trans, (void*) n, (void*) nrhs, (void*) alpha, (void*) dl, (void*) d, (void*) du, (void*) x, (void*) ldx, (void*) beta, (void*) b, (void*) ldb); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlagtm_(void* trans, void* n, void* nrhs, void* alpha, void*
 {
 	void (*fn) (void* trans, void* n, void* nrhs, void* alpha, void* dl, void* d, void* du, void* x, void* ldx, void* beta, void* b, void* ldb);
 
-	fn = current_backend->lapack.dlagtm.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlagtm.f77_blas_function; 
 
 		fn((void*) trans, (void*) n, (void*) nrhs, (void*) alpha, (void*) dl, (void*) d, (void*) du, (void*) x, (void*) ldx, (void*) beta, (void*) b, (void*) ldb); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlagtm_(void* trans, void* n, void* nrhs, void* alpha, void
 	void (*fn) (void* trans, void* n, void* nrhs, void* alpha, void* dl, void* d, void* du, void* x, void* ldx, void* beta, void* b, void* ldb);
 	void (*fn_hook) (void* trans, void* n, void* nrhs, void* alpha, void* dl, void* d, void* du, void* x, void* ldx, void* beta, void* b, void* ldb);
 
-	fn      = current_backend->lapack.dlagtm.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlagtm.f77_blas_function; 
 
     hook_pos_dlagtm ++;
     if( hook_pos_dlagtm < __flexiblas_hooks->dlagtm.nhook) {
-        fn_hook = __flexiblas_hooks->dlagtm.f77_hook_function[hook_pos_dlagtm];
+        *(void **) &fn_hook = __flexiblas_hooks->dlagtm.f77_hook_function[hook_pos_dlagtm];
         fn_hook((void*) trans, (void*) n, (void*) nrhs, (void*) alpha, (void*) dl, (void*) d, (void*) du, (void*) x, (void*) ldx, (void*) beta, (void*) b, (void*) ldb);
     } else {
         hook_pos_dlagtm = 0;

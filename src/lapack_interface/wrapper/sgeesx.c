@@ -80,8 +80,8 @@ void FC_GLOBAL(sgeesx,SGEESX)(char* jobvs, char* sort, blasint* select, char* se
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.sgeesx.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->sgeesx.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.sgeesx.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->sgeesx.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobvs, (void*) sort, (void*) select, (void*) sense, (void*) n, (void*) a, (void*) lda, (void*) sdim, (void*) wr, (void*) wi, (void*) vs, (void*) ldvs, (void*) rconde, (void*) rcondv, (void*) work, (void*) lwork, (void*) iwork, (void*) liwork, (void*) bwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_sgeesx_(void* jobvs, void* sort, void* select, void* sense, 
 {
 	void (*fn) (void* jobvs, void* sort, void* select, void* sense, void* n, void* a, void* lda, void* sdim, void* wr, void* wi, void* vs, void* ldvs, void* rconde, void* rcondv, void* work, void* lwork, void* iwork, void* liwork, void* bwork, void* info);
 
-	fn = current_backend->lapack.sgeesx.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.sgeesx.f77_blas_function; 
 
 		fn((void*) jobvs, (void*) sort, (void*) select, (void*) sense, (void*) n, (void*) a, (void*) lda, (void*) sdim, (void*) wr, (void*) wi, (void*) vs, (void*) ldvs, (void*) rconde, (void*) rcondv, (void*) work, (void*) lwork, (void*) iwork, (void*) liwork, (void*) bwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_sgeesx_(void* jobvs, void* sort, void* select, void* sense,
 	void (*fn) (void* jobvs, void* sort, void* select, void* sense, void* n, void* a, void* lda, void* sdim, void* wr, void* wi, void* vs, void* ldvs, void* rconde, void* rcondv, void* work, void* lwork, void* iwork, void* liwork, void* bwork, void* info);
 	void (*fn_hook) (void* jobvs, void* sort, void* select, void* sense, void* n, void* a, void* lda, void* sdim, void* wr, void* wi, void* vs, void* ldvs, void* rconde, void* rcondv, void* work, void* lwork, void* iwork, void* liwork, void* bwork, void* info);
 
-	fn      = current_backend->lapack.sgeesx.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.sgeesx.f77_blas_function; 
 
     hook_pos_sgeesx ++;
     if( hook_pos_sgeesx < __flexiblas_hooks->sgeesx.nhook) {
-        fn_hook = __flexiblas_hooks->sgeesx.f77_hook_function[hook_pos_sgeesx];
+        *(void **) &fn_hook = __flexiblas_hooks->sgeesx.f77_hook_function[hook_pos_sgeesx];
         fn_hook((void*) jobvs, (void*) sort, (void*) select, (void*) sense, (void*) n, (void*) a, (void*) lda, (void*) sdim, (void*) wr, (void*) wi, (void*) vs, (void*) ldvs, (void*) rconde, (void*) rcondv, (void*) work, (void*) lwork, (void*) iwork, (void*) liwork, (void*) bwork, (void*) info);
     } else {
         hook_pos_sgeesx = 0;

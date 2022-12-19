@@ -1,0 +1,3 @@
+etc/flexiblas64rc.d/MklTBB64.conf
+usr/lib/*/flexiblas64/libflexiblas_mkltbb64.so
+

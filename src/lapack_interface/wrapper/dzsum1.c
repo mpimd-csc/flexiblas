@@ -81,8 +81,8 @@ double FC_GLOBAL(dzsum1,DZSUM1)(blasint* n, double complex* cx, blasint* incx)
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dzsum1.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dzsum1.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dzsum1.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dzsum1.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) n, (void*) cx, (void*) incx); 
 		return ret; 
@@ -113,7 +113,7 @@ double flexiblas_real_dzsum1_(void* n, void* cx, void* incx)
 	double (*fn) (void* n, void* cx, void* incx);
 	double ret;
 
-	fn = current_backend->lapack.dzsum1.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dzsum1.f77_blas_function; 
 
 		ret = fn((void*) n, (void*) cx, (void*) incx); 
 
@@ -137,11 +137,11 @@ double flexiblas_chain_dzsum1_(void* n, void* cx, void* incx)
 	double (*fn_hook) (void* n, void* cx, void* incx);
 	double ret;
 
-	fn      = current_backend->lapack.dzsum1.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dzsum1.f77_blas_function; 
 
     hook_pos_dzsum1 ++;
     if( hook_pos_dzsum1 < __flexiblas_hooks->dzsum1.nhook) {
-        fn_hook = __flexiblas_hooks->dzsum1.f77_hook_function[hook_pos_dzsum1];
+        *(void **) &fn_hook = __flexiblas_hooks->dzsum1.f77_hook_function[hook_pos_dzsum1];
         ret = fn_hook((void*) n, (void*) cx, (void*) incx);
     } else {
         hook_pos_dzsum1 = 0;

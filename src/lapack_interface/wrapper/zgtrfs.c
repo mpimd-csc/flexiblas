@@ -80,8 +80,8 @@ void FC_GLOBAL(zgtrfs,ZGTRFS)(char* trans, blasint* n, blasint* nrhs, double com
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zgtrfs.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zgtrfs.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zgtrfs.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zgtrfs.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) trans, (void*) n, (void*) nrhs, (void*) dl, (void*) d, (void*) du, (void*) dlf, (void*) df, (void*) duf, (void*) du2, (void*) ipiv, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zgtrfs_(void* trans, void* n, void* nrhs, void* dl, void* d,
 {
 	void (*fn) (void* trans, void* n, void* nrhs, void* dl, void* d, void* du, void* dlf, void* df, void* duf, void* du2, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* rwork, void* info);
 
-	fn = current_backend->lapack.zgtrfs.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zgtrfs.f77_blas_function; 
 
 		fn((void*) trans, (void*) n, (void*) nrhs, (void*) dl, (void*) d, (void*) du, (void*) dlf, (void*) df, (void*) duf, (void*) du2, (void*) ipiv, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zgtrfs_(void* trans, void* n, void* nrhs, void* dl, void* d
 	void (*fn) (void* trans, void* n, void* nrhs, void* dl, void* d, void* du, void* dlf, void* df, void* duf, void* du2, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* rwork, void* info);
 	void (*fn_hook) (void* trans, void* n, void* nrhs, void* dl, void* d, void* du, void* dlf, void* df, void* duf, void* du2, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* rwork, void* info);
 
-	fn      = current_backend->lapack.zgtrfs.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zgtrfs.f77_blas_function; 
 
     hook_pos_zgtrfs ++;
     if( hook_pos_zgtrfs < __flexiblas_hooks->zgtrfs.nhook) {
-        fn_hook = __flexiblas_hooks->zgtrfs.f77_hook_function[hook_pos_zgtrfs];
+        *(void **) &fn_hook = __flexiblas_hooks->zgtrfs.f77_hook_function[hook_pos_zgtrfs];
         fn_hook((void*) trans, (void*) n, (void*) nrhs, (void*) dl, (void*) d, (void*) du, (void*) dlf, (void*) df, (void*) duf, (void*) du2, (void*) ipiv, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info);
     } else {
         hook_pos_zgtrfs = 0;

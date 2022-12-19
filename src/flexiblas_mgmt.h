@@ -122,8 +122,8 @@ extern "C" {
      */
     char *flexiblas_mgmt_location_to_string(flexiblas_mgmt_location_t loc);
 
-    void flexiblas_mgmt_init();
-    void flexiblas_mgmt_exit();
+    void flexiblas_mgmt_init(void);
+    void flexiblas_mgmt_exit(void);
 
     /**
      * @brief Loads the FlexiBLAS configuration.

@@ -80,8 +80,8 @@ void FC_GLOBAL(claed8,CLAED8)(blasint* k, blasint* n, blasint* qsiz, float compl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.claed8.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->claed8.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.claed8.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->claed8.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) k, (void*) n, (void*) qsiz, (void*) q, (void*) ldq, (void*) d, (void*) rho, (void*) cutpnt, (void*) z, (void*) dlamda, (void*) q2, (void*) ldq2, (void*) w, (void*) indxp, (void*) indx, (void*) indxq, (void*) perm, (void*) givptr, (void*) givcol, (void*) givnum, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_claed8_(void* k, void* n, void* qsiz, void* q, void* ldq, vo
 {
 	void (*fn) (void* k, void* n, void* qsiz, void* q, void* ldq, void* d, void* rho, void* cutpnt, void* z, void* dlamda, void* q2, void* ldq2, void* w, void* indxp, void* indx, void* indxq, void* perm, void* givptr, void* givcol, void* givnum, void* info);
 
-	fn = current_backend->lapack.claed8.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.claed8.f77_blas_function; 
 
 		fn((void*) k, (void*) n, (void*) qsiz, (void*) q, (void*) ldq, (void*) d, (void*) rho, (void*) cutpnt, (void*) z, (void*) dlamda, (void*) q2, (void*) ldq2, (void*) w, (void*) indxp, (void*) indx, (void*) indxq, (void*) perm, (void*) givptr, (void*) givcol, (void*) givnum, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_claed8_(void* k, void* n, void* qsiz, void* q, void* ldq, v
 	void (*fn) (void* k, void* n, void* qsiz, void* q, void* ldq, void* d, void* rho, void* cutpnt, void* z, void* dlamda, void* q2, void* ldq2, void* w, void* indxp, void* indx, void* indxq, void* perm, void* givptr, void* givcol, void* givnum, void* info);
 	void (*fn_hook) (void* k, void* n, void* qsiz, void* q, void* ldq, void* d, void* rho, void* cutpnt, void* z, void* dlamda, void* q2, void* ldq2, void* w, void* indxp, void* indx, void* indxq, void* perm, void* givptr, void* givcol, void* givnum, void* info);
 
-	fn      = current_backend->lapack.claed8.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.claed8.f77_blas_function; 
 
     hook_pos_claed8 ++;
     if( hook_pos_claed8 < __flexiblas_hooks->claed8.nhook) {
-        fn_hook = __flexiblas_hooks->claed8.f77_hook_function[hook_pos_claed8];
+        *(void **) &fn_hook = __flexiblas_hooks->claed8.f77_hook_function[hook_pos_claed8];
         fn_hook((void*) k, (void*) n, (void*) qsiz, (void*) q, (void*) ldq, (void*) d, (void*) rho, (void*) cutpnt, (void*) z, (void*) dlamda, (void*) q2, (void*) ldq2, (void*) w, (void*) indxp, (void*) indx, (void*) indxq, (void*) perm, (void*) givptr, (void*) givcol, (void*) givnum, (void*) info);
     } else {
         hook_pos_claed8 = 0;

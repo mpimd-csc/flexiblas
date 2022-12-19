@@ -80,8 +80,8 @@ void FC_GLOBAL_(xerbla_array,XERBLA_ARRAY)(char* srname_array, blasint* srname_l
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.xerbla_array.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->xerbla_array.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.xerbla_array.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->xerbla_array.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) srname_array, (void*) srname_len, (void*) info, ( fortran_charlen_t ) len_srname_array); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_xerbla_array_(void* srname_array, void* srname_len, void* in
 {
 	void (*fn) (void* srname_array, void* srname_len, void* info, fortran_charlen_t len_srname_array);
 
-	fn = current_backend->lapack.xerbla_array.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.xerbla_array.f77_blas_function; 
 
 		fn((void*) srname_array, (void*) srname_len, (void*) info, ( fortran_charlen_t ) len_srname_array); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_xerbla_array_(void* srname_array, void* srname_len, void* i
 	void (*fn) (void* srname_array, void* srname_len, void* info, fortran_charlen_t len_srname_array);
 	void (*fn_hook) (void* srname_array, void* srname_len, void* info, fortran_charlen_t len_srname_array);
 
-	fn      = current_backend->lapack.xerbla_array.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.xerbla_array.f77_blas_function; 
 
     hook_pos_xerbla_array ++;
     if( hook_pos_xerbla_array < __flexiblas_hooks->xerbla_array.nhook) {
-        fn_hook = __flexiblas_hooks->xerbla_array.f77_hook_function[hook_pos_xerbla_array];
+        *(void **) &fn_hook = __flexiblas_hooks->xerbla_array.f77_hook_function[hook_pos_xerbla_array];
         fn_hook((void*) srname_array, (void*) srname_len, (void*) info, ( fortran_charlen_t ) len_srname_array);
     } else {
         hook_pos_xerbla_array = 0;

@@ -92,7 +92,8 @@ void flexiblas_real_cblas_domatcopy(const CBLAS_ORDER CORDER, const CBLAS_TRANSP
 #endif
 
     if ( current_backend->blas.domatcopy.cblas_function != NULL ) {
-        void (*fn)(const CBLAS_ORDER, const CBLAS_TRANSPOSE, const CBLAS_INT, const CBLAS_INT, const double, const double *, const CBLAS_INT, double *, const CBLAS_INT) = current_backend->blas.domatcopy.cblas_function;
+        void (*fn)(const CBLAS_ORDER, const CBLAS_TRANSPOSE, const CBLAS_INT, const CBLAS_INT, const double, const double *, const CBLAS_INT, double *, const CBLAS_INT);
+        *(void **) &fn = current_backend->blas.domatcopy.cblas_function;
         fn(CORDER, CTRANS, crows, ccols, calpha, a, clda, b, cldb);
     } else {
         char ORDER[2]=" ";

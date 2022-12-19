@@ -80,8 +80,8 @@ void FC_GLOBAL(zspr,ZSPR)(char* uplo, blasint* n, double complex* alpha, double 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zspr.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zspr.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zspr.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zspr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zspr_(void* uplo, void* n, void* alpha, void* x, void* incx,
 {
 	void (*fn) (void* uplo, void* n, void* alpha, void* x, void* incx, void* ap);
 
-	fn = current_backend->lapack.zspr.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zspr.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zspr_(void* uplo, void* n, void* alpha, void* x, void* incx
 	void (*fn) (void* uplo, void* n, void* alpha, void* x, void* incx, void* ap);
 	void (*fn_hook) (void* uplo, void* n, void* alpha, void* x, void* incx, void* ap);
 
-	fn      = current_backend->lapack.zspr.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zspr.f77_blas_function; 
 
     hook_pos_zspr ++;
     if( hook_pos_zspr < __flexiblas_hooks->zspr.nhook) {
-        fn_hook = __flexiblas_hooks->zspr.f77_hook_function[hook_pos_zspr];
+        *(void **) &fn_hook = __flexiblas_hooks->zspr.f77_hook_function[hook_pos_zspr];
         fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap);
     } else {
         hook_pos_zspr = 0;

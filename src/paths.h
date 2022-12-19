@@ -63,8 +63,8 @@ extern "C" {
 
     HIDDEN void __flexiblas_add_path(const char * path );
     HIDDEN void __flexiblas_free_paths(void);
-    HIDDEN void __flexiblas_init_default_paths();
-    HIDDEN void __flexiblas_add_path_from_environment();
+    HIDDEN void __flexiblas_init_default_paths(void);
+    HIDDEN void __flexiblas_add_path_from_environment(void);
     HIDDEN void __flexiblas_add_path_from_config( flexiblas_mgmt_t * config, flexiblas_mgmt_location_t loc);
 
 #ifdef __cplusplus

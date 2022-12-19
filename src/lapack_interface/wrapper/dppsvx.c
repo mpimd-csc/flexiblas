@@ -80,8 +80,8 @@ void FC_GLOBAL(dppsvx,DPPSVX)(char* fact, char* uplo, blasint* n, blasint* nrhs,
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dppsvx.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dppsvx.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dppsvx.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dppsvx.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) fact, (void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) afp, (void*) equed, (void*) s, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) rcond, (void*) ferr, (void*) berr, (void*) work, (void*) iwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dppsvx_(void* fact, void* uplo, void* n, void* nrhs, void* a
 {
 	void (*fn) (void* fact, void* uplo, void* n, void* nrhs, void* ap, void* afp, void* equed, void* s, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* iwork, void* info);
 
-	fn = current_backend->lapack.dppsvx.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dppsvx.f77_blas_function; 
 
 		fn((void*) fact, (void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) afp, (void*) equed, (void*) s, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) rcond, (void*) ferr, (void*) berr, (void*) work, (void*) iwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dppsvx_(void* fact, void* uplo, void* n, void* nrhs, void* 
 	void (*fn) (void* fact, void* uplo, void* n, void* nrhs, void* ap, void* afp, void* equed, void* s, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* iwork, void* info);
 	void (*fn_hook) (void* fact, void* uplo, void* n, void* nrhs, void* ap, void* afp, void* equed, void* s, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* iwork, void* info);
 
-	fn      = current_backend->lapack.dppsvx.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dppsvx.f77_blas_function; 
 
     hook_pos_dppsvx ++;
     if( hook_pos_dppsvx < __flexiblas_hooks->dppsvx.nhook) {
-        fn_hook = __flexiblas_hooks->dppsvx.f77_hook_function[hook_pos_dppsvx];
+        *(void **) &fn_hook = __flexiblas_hooks->dppsvx.f77_hook_function[hook_pos_dppsvx];
         fn_hook((void*) fact, (void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) afp, (void*) equed, (void*) s, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) rcond, (void*) ferr, (void*) berr, (void*) work, (void*) iwork, (void*) info);
     } else {
         hook_pos_dppsvx = 0;

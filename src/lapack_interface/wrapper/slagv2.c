@@ -80,8 +80,8 @@ void FC_GLOBAL(slagv2,SLAGV2)(float* a, blasint* lda, float* b, blasint* ldb, fl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slagv2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slagv2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slagv2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slagv2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) alphar, (void*) alphai, (void*) beta, (void*) csl, (void*) snl, (void*) csr, (void*) snr); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slagv2_(void* a, void* lda, void* b, void* ldb, void* alphar
 {
 	void (*fn) (void* a, void* lda, void* b, void* ldb, void* alphar, void* alphai, void* beta, void* csl, void* snl, void* csr, void* snr);
 
-	fn = current_backend->lapack.slagv2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slagv2.f77_blas_function; 
 
 		fn((void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) alphar, (void*) alphai, (void*) beta, (void*) csl, (void*) snl, (void*) csr, (void*) snr); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slagv2_(void* a, void* lda, void* b, void* ldb, void* alpha
 	void (*fn) (void* a, void* lda, void* b, void* ldb, void* alphar, void* alphai, void* beta, void* csl, void* snl, void* csr, void* snr);
 	void (*fn_hook) (void* a, void* lda, void* b, void* ldb, void* alphar, void* alphai, void* beta, void* csl, void* snl, void* csr, void* snr);
 
-	fn      = current_backend->lapack.slagv2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slagv2.f77_blas_function; 
 
     hook_pos_slagv2 ++;
     if( hook_pos_slagv2 < __flexiblas_hooks->slagv2.nhook) {
-        fn_hook = __flexiblas_hooks->slagv2.f77_hook_function[hook_pos_slagv2];
+        *(void **) &fn_hook = __flexiblas_hooks->slagv2.f77_hook_function[hook_pos_slagv2];
         fn_hook((void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) alphar, (void*) alphai, (void*) beta, (void*) csl, (void*) snl, (void*) csr, (void*) snr);
     } else {
         hook_pos_slagv2 = 0;

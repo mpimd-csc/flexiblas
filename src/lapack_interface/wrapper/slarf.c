@@ -80,8 +80,8 @@ void FC_GLOBAL(slarf,SLARF)(char* side, blasint* m, blasint* n, float* v, blasin
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slarf.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slarf.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slarf.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slarf.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) side, (void*) m, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c, (void*) ldc, (void*) work); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slarf_(void* side, void* m, void* n, void* v, void* incv, vo
 {
 	void (*fn) (void* side, void* m, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work);
 
-	fn = current_backend->lapack.slarf.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slarf.f77_blas_function; 
 
 		fn((void*) side, (void*) m, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c, (void*) ldc, (void*) work); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slarf_(void* side, void* m, void* n, void* v, void* incv, v
 	void (*fn) (void* side, void* m, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work);
 	void (*fn_hook) (void* side, void* m, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work);
 
-	fn      = current_backend->lapack.slarf.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slarf.f77_blas_function; 
 
     hook_pos_slarf ++;
     if( hook_pos_slarf < __flexiblas_hooks->slarf.nhook) {
-        fn_hook = __flexiblas_hooks->slarf.f77_hook_function[hook_pos_slarf];
+        *(void **) &fn_hook = __flexiblas_hooks->slarf.f77_hook_function[hook_pos_slarf];
         fn_hook((void*) side, (void*) m, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c, (void*) ldc, (void*) work);
     } else {
         hook_pos_slarf = 0;

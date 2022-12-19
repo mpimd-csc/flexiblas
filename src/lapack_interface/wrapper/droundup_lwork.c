@@ -81,8 +81,8 @@ double FC_GLOBAL_(droundup_lwork,DROUNDUP_LWORK)(blasint* lwork)
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.droundup_lwork.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->droundup_lwork.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.droundup_lwork.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->droundup_lwork.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) lwork); 
 		return ret; 
@@ -113,7 +113,7 @@ double flexiblas_real_droundup_lwork_(void* lwork)
 	double (*fn) (void* lwork);
 	double ret;
 
-	fn = current_backend->lapack.droundup_lwork.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.droundup_lwork.f77_blas_function; 
 
 		ret = fn((void*) lwork); 
 
@@ -137,11 +137,11 @@ double flexiblas_chain_droundup_lwork_(void* lwork)
 	double (*fn_hook) (void* lwork);
 	double ret;
 
-	fn      = current_backend->lapack.droundup_lwork.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.droundup_lwork.f77_blas_function; 
 
     hook_pos_droundup_lwork ++;
     if( hook_pos_droundup_lwork < __flexiblas_hooks->droundup_lwork.nhook) {
-        fn_hook = __flexiblas_hooks->droundup_lwork.f77_hook_function[hook_pos_droundup_lwork];
+        *(void **) &fn_hook = __flexiblas_hooks->droundup_lwork.f77_hook_function[hook_pos_droundup_lwork];
         ret = fn_hook((void*) lwork);
     } else {
         hook_pos_droundup_lwork = 0;

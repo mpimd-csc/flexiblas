@@ -80,8 +80,8 @@ void FC_GLOBAL(zhegvx,ZHEGVX)(blasint* itype, char* jobz, char* range, char* upl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zhegvx.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zhegvx.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zhegvx.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zhegvx.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) itype, (void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) rwork, (void*) iwork, (void*) ifail, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zhegvx_(void* itype, void* jobz, void* range, void* uplo, vo
 {
 	void (*fn) (void* itype, void* jobz, void* range, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* lwork, void* rwork, void* iwork, void* ifail, void* info);
 
-	fn = current_backend->lapack.zhegvx.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zhegvx.f77_blas_function; 
 
 		fn((void*) itype, (void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) rwork, (void*) iwork, (void*) ifail, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zhegvx_(void* itype, void* jobz, void* range, void* uplo, v
 	void (*fn) (void* itype, void* jobz, void* range, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* lwork, void* rwork, void* iwork, void* ifail, void* info);
 	void (*fn_hook) (void* itype, void* jobz, void* range, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* lwork, void* rwork, void* iwork, void* ifail, void* info);
 
-	fn      = current_backend->lapack.zhegvx.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zhegvx.f77_blas_function; 
 
     hook_pos_zhegvx ++;
     if( hook_pos_zhegvx < __flexiblas_hooks->zhegvx.nhook) {
-        fn_hook = __flexiblas_hooks->zhegvx.f77_hook_function[hook_pos_zhegvx];
+        *(void **) &fn_hook = __flexiblas_hooks->zhegvx.f77_hook_function[hook_pos_zhegvx];
         fn_hook((void*) itype, (void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) rwork, (void*) iwork, (void*) ifail, (void*) info);
     } else {
         hook_pos_zhegvx = 0;

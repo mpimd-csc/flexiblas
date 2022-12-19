@@ -80,8 +80,8 @@ void FC_GLOBAL(cptrfs,CPTRFS)(char* uplo, blasint* n, blasint* nrhs, float* d, f
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cptrfs.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cptrfs.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cptrfs.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cptrfs.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) df, (void*) ef, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cptrfs_(void* uplo, void* n, void* nrhs, void* d, void* e, v
 {
 	void (*fn) (void* uplo, void* n, void* nrhs, void* d, void* e, void* df, void* ef, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* rwork, void* info);
 
-	fn = current_backend->lapack.cptrfs.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cptrfs.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) df, (void*) ef, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cptrfs_(void* uplo, void* n, void* nrhs, void* d, void* e, 
 	void (*fn) (void* uplo, void* n, void* nrhs, void* d, void* e, void* df, void* ef, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* rwork, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* nrhs, void* d, void* e, void* df, void* ef, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* rwork, void* info);
 
-	fn      = current_backend->lapack.cptrfs.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cptrfs.f77_blas_function; 
 
     hook_pos_cptrfs ++;
     if( hook_pos_cptrfs < __flexiblas_hooks->cptrfs.nhook) {
-        fn_hook = __flexiblas_hooks->cptrfs.f77_hook_function[hook_pos_cptrfs];
+        *(void **) &fn_hook = __flexiblas_hooks->cptrfs.f77_hook_function[hook_pos_cptrfs];
         fn_hook((void*) uplo, (void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) df, (void*) ef, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info);
     } else {
         hook_pos_cptrfs = 0;

@@ -80,8 +80,8 @@ void FC_GLOBAL(ssterf,SSTERF)(blasint* n, float* d, float* e, blasint* info)
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ssterf.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ssterf.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ssterf.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ssterf.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) d, (void*) e, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ssterf_(void* n, void* d, void* e, void* info)
 {
 	void (*fn) (void* n, void* d, void* e, void* info);
 
-	fn = current_backend->lapack.ssterf.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ssterf.f77_blas_function; 
 
 		fn((void*) n, (void*) d, (void*) e, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ssterf_(void* n, void* d, void* e, void* info)
 	void (*fn) (void* n, void* d, void* e, void* info);
 	void (*fn_hook) (void* n, void* d, void* e, void* info);
 
-	fn      = current_backend->lapack.ssterf.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ssterf.f77_blas_function; 
 
     hook_pos_ssterf ++;
     if( hook_pos_ssterf < __flexiblas_hooks->ssterf.nhook) {
-        fn_hook = __flexiblas_hooks->ssterf.f77_hook_function[hook_pos_ssterf];
+        *(void **) &fn_hook = __flexiblas_hooks->ssterf.f77_hook_function[hook_pos_ssterf];
         fn_hook((void*) n, (void*) d, (void*) e, (void*) info);
     } else {
         hook_pos_ssterf = 0;

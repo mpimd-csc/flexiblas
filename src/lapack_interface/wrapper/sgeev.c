@@ -80,8 +80,8 @@ void FC_GLOBAL(sgeev,SGEEV)(char* jobvl, char* jobvr, blasint* n, float* a, blas
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.sgeev.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->sgeev.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.sgeev.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->sgeev.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobvl, (void*) jobvr, (void*) n, (void*) a, (void*) lda, (void*) wr, (void*) wi, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_sgeev_(void* jobvl, void* jobvr, void* n, void* a, void* lda
 {
 	void (*fn) (void* jobvl, void* jobvr, void* n, void* a, void* lda, void* wr, void* wi, void* vl, void* ldvl, void* vr, void* ldvr, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.sgeev.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.sgeev.f77_blas_function; 
 
 		fn((void*) jobvl, (void*) jobvr, (void*) n, (void*) a, (void*) lda, (void*) wr, (void*) wi, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_sgeev_(void* jobvl, void* jobvr, void* n, void* a, void* ld
 	void (*fn) (void* jobvl, void* jobvr, void* n, void* a, void* lda, void* wr, void* wi, void* vl, void* ldvl, void* vr, void* ldvr, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* jobvl, void* jobvr, void* n, void* a, void* lda, void* wr, void* wi, void* vl, void* ldvl, void* vr, void* ldvr, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.sgeev.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.sgeev.f77_blas_function; 
 
     hook_pos_sgeev ++;
     if( hook_pos_sgeev < __flexiblas_hooks->sgeev.nhook) {
-        fn_hook = __flexiblas_hooks->sgeev.f77_hook_function[hook_pos_sgeev];
+        *(void **) &fn_hook = __flexiblas_hooks->sgeev.f77_hook_function[hook_pos_sgeev];
         fn_hook((void*) jobvl, (void*) jobvr, (void*) n, (void*) a, (void*) lda, (void*) wr, (void*) wi, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_sgeev = 0;

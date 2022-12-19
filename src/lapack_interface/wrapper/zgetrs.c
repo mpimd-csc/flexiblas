@@ -80,8 +80,8 @@ void FC_GLOBAL(zgetrs,ZGETRS)(char* trans, blasint* n, blasint* nrhs, double com
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zgetrs.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zgetrs.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zgetrs.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zgetrs.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) trans, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zgetrs_(void* trans, void* n, void* nrhs, void* a, void* lda
 {
 	void (*fn) (void* trans, void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* info);
 
-	fn = current_backend->lapack.zgetrs.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zgetrs.f77_blas_function; 
 
 		fn((void*) trans, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zgetrs_(void* trans, void* n, void* nrhs, void* a, void* ld
 	void (*fn) (void* trans, void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* info);
 	void (*fn_hook) (void* trans, void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* info);
 
-	fn      = current_backend->lapack.zgetrs.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zgetrs.f77_blas_function; 
 
     hook_pos_zgetrs ++;
     if( hook_pos_zgetrs < __flexiblas_hooks->zgetrs.nhook) {
-        fn_hook = __flexiblas_hooks->zgetrs.f77_hook_function[hook_pos_zgetrs];
+        *(void **) &fn_hook = __flexiblas_hooks->zgetrs.f77_hook_function[hook_pos_zgetrs];
         fn_hook((void*) trans, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) info);
     } else {
         hook_pos_zgetrs = 0;

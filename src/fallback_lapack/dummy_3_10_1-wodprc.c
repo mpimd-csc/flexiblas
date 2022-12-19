@@ -1942,7 +1942,7 @@ void FC_GLOBAL(zunmtr,ZUNMTR)(void);
 void FC_GLOBAL(zupgtr,ZUPGTR)(void);
 void FC_GLOBAL(zupmtr,ZUPMTR)(void);
 
-HIDDEN void flexiblas_lapack_dummy_function_not_called()
+HIDDEN void flexiblas_lapack_dummy_function_not_called(void)
 {
     FC_GLOBAL(cbbcsd,CBBCSD)();
     FC_GLOBAL(cbdsqr,CBDSQR)();

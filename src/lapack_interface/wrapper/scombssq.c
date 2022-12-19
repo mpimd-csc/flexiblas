@@ -80,8 +80,8 @@ void FC_GLOBAL(scombssq,SCOMBSSQ)(float* v1, float* v2)
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.scombssq.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->scombssq.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.scombssq.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->scombssq.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) v1, (void*) v2); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_scombssq_(void* v1, void* v2)
 {
 	void (*fn) (void* v1, void* v2);
 
-	fn = current_backend->lapack.scombssq.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.scombssq.f77_blas_function; 
 
 		fn((void*) v1, (void*) v2); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_scombssq_(void* v1, void* v2)
 	void (*fn) (void* v1, void* v2);
 	void (*fn_hook) (void* v1, void* v2);
 
-	fn      = current_backend->lapack.scombssq.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.scombssq.f77_blas_function; 
 
     hook_pos_scombssq ++;
     if( hook_pos_scombssq < __flexiblas_hooks->scombssq.nhook) {
-        fn_hook = __flexiblas_hooks->scombssq.f77_hook_function[hook_pos_scombssq];
+        *(void **) &fn_hook = __flexiblas_hooks->scombssq.f77_hook_function[hook_pos_scombssq];
         fn_hook((void*) v1, (void*) v2);
     } else {
         hook_pos_scombssq = 0;

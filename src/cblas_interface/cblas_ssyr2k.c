@@ -112,8 +112,8 @@ void flexiblas_real_cblas_ssyr2k(const CBLAS_LAYOUT layout, const CBLAS_UPLO Upl
              const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
              const float alpha, const float  *A, const CBLAS_INT lda,
              const float  *B, const CBLAS_INT ldb, const float beta,
-             float  *C, const CBLAS_INT ldc)
-            = current_backend->blas.ssyr2k.cblas_function;
+             float  *C, const CBLAS_INT ldc);
+        *(void **) &fn = current_backend->blas.ssyr2k.cblas_function;
         fn(layout,Uplo,Trans,N,K,alpha,A,lda,B,ldb,beta,C,ldc);
     } else {
 

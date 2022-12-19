@@ -68,7 +68,8 @@ csc_error_print_t print_handle      = print_print;
  *  Set new Print handles
  *-----------------------------------------------------------------------------*/
 void * csc_error_message_handle( csc_error_print_t fn){
-    void *ret = (void *) error_handle;
+    void *ret;
+    *(void **) & ret = *(void **) & error_handle;
     if ( fn == NULL ) {
         error_handle  = error_print;
     } else {
@@ -78,7 +79,9 @@ void * csc_error_message_handle( csc_error_print_t fn){
 }
 
 void * csc_warn_message_handle( csc_error_print_t fn){
-    void * ret = (void * )warn_handle;
+    void * ret;
+    *(void **) &ret =  *(void **) &warn_handle;
+
     if ( fn == NULL ) {
         warn_handle = warn_print;
     } else {
@@ -88,7 +91,8 @@ void * csc_warn_message_handle( csc_error_print_t fn){
 }
 
 void * csc_info_message_handle( csc_error_print_t fn){
-    void * ret = (void *)  info_handle;
+    void * ret;
+    *(void **) &ret =  *(void **) &info_handle;
     if ( fn == NULL ) {
         info_handle = info_print;
     } else {
@@ -98,7 +102,8 @@ void * csc_info_message_handle( csc_error_print_t fn){
 }
 
 void * csc_print_message_handle( csc_error_print_t fn){
-    void * ret = (void *)  print_handle;
+    void * ret;
+    *(void **) &ret =  *(void **) &print_handle;
     if ( fn == NULL ) {
         print_handle = print_print;
     } else {
@@ -120,9 +125,9 @@ static realloc_call error_realloc = realloc;
 static free_call    error_free    = free;
 
 void csc_error_message_memory(void *m, void *r, void *f ){
-    error_malloc = (malloc_call) m;
-    error_realloc= (realloc_call) r;
-    error_free   = (free_call) f;
+    *(void **) &error_malloc  = m;
+    *(void **) &error_realloc = r;
+    *(void **) &error_free    = f;
 }
 
 static char * make_message(int size, const char *fmt, va_list ap)

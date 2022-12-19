@@ -81,8 +81,8 @@ int FC_GLOBAL(ilaenv2stage,ILAENV2STAGE)(blasint* ispec, char* name, char* opts,
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ilaenv2stage.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ilaenv2stage.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ilaenv2stage.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ilaenv2stage.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) ispec, (void*) name, (void*) opts, (void*) n1, (void*) n2, (void*) n3, (void*) n4, ( fortran_charlen_t ) len_name, ( fortran_charlen_t ) len_opts); 
 		return ret; 
@@ -113,7 +113,7 @@ blasint flexiblas_real_ilaenv2stage_(void* ispec, void* name, void* opts, void* 
 	blasint (*fn) (void* ispec, void* name, void* opts, void* n1, void* n2, void* n3, void* n4, fortran_charlen_t len_name, fortran_charlen_t len_opts);
 	blasint ret;
 
-	fn = current_backend->lapack.ilaenv2stage.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ilaenv2stage.f77_blas_function; 
 
 		ret = fn((void*) ispec, (void*) name, (void*) opts, (void*) n1, (void*) n2, (void*) n3, (void*) n4, ( fortran_charlen_t ) len_name, ( fortran_charlen_t ) len_opts); 
 
@@ -137,11 +137,11 @@ blasint flexiblas_chain_ilaenv2stage_(void* ispec, void* name, void* opts, void*
 	blasint (*fn_hook) (void* ispec, void* name, void* opts, void* n1, void* n2, void* n3, void* n4, fortran_charlen_t len_name, fortran_charlen_t len_opts);
 	blasint ret;
 
-	fn      = current_backend->lapack.ilaenv2stage.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ilaenv2stage.f77_blas_function; 
 
     hook_pos_ilaenv2stage ++;
     if( hook_pos_ilaenv2stage < __flexiblas_hooks->ilaenv2stage.nhook) {
-        fn_hook = __flexiblas_hooks->ilaenv2stage.f77_hook_function[hook_pos_ilaenv2stage];
+        *(void **) &fn_hook = __flexiblas_hooks->ilaenv2stage.f77_hook_function[hook_pos_ilaenv2stage];
         ret = fn_hook((void*) ispec, (void*) name, (void*) opts, (void*) n1, (void*) n2, (void*) n3, (void*) n4, ( fortran_charlen_t )len_name, ( fortran_charlen_t )len_opts);
     } else {
         hook_pos_ilaenv2stage = 0;

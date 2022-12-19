@@ -80,8 +80,8 @@ void FC_GLOBAL_(dorhr_col,DORHR_COL)(blasint* m, blasint* n, blasint* nb, double
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dorhr_col.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dorhr_col.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dorhr_col.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dorhr_col.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) nb, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) d, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dorhr_col_(void* m, void* n, void* nb, void* a, void* lda, v
 {
 	void (*fn) (void* m, void* n, void* nb, void* a, void* lda, void* t, void* ldt, void* d, void* info);
 
-	fn = current_backend->lapack.dorhr_col.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dorhr_col.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) nb, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) d, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dorhr_col_(void* m, void* n, void* nb, void* a, void* lda, 
 	void (*fn) (void* m, void* n, void* nb, void* a, void* lda, void* t, void* ldt, void* d, void* info);
 	void (*fn_hook) (void* m, void* n, void* nb, void* a, void* lda, void* t, void* ldt, void* d, void* info);
 
-	fn      = current_backend->lapack.dorhr_col.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dorhr_col.f77_blas_function; 
 
     hook_pos_dorhr_col ++;
     if( hook_pos_dorhr_col < __flexiblas_hooks->dorhr_col.nhook) {
-        fn_hook = __flexiblas_hooks->dorhr_col.f77_hook_function[hook_pos_dorhr_col];
+        *(void **) &fn_hook = __flexiblas_hooks->dorhr_col.f77_hook_function[hook_pos_dorhr_col];
         fn_hook((void*) m, (void*) n, (void*) nb, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) d, (void*) info);
     } else {
         hook_pos_dorhr_col = 0;

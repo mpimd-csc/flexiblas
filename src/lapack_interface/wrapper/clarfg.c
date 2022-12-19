@@ -80,8 +80,8 @@ void FC_GLOBAL(clarfg,CLARFG)(blasint* n, float complex* alpha, float complex* x
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.clarfg.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->clarfg.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.clarfg.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->clarfg.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) tau); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_clarfg_(void* n, void* alpha, void* x, void* incx, void* tau
 {
 	void (*fn) (void* n, void* alpha, void* x, void* incx, void* tau);
 
-	fn = current_backend->lapack.clarfg.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.clarfg.f77_blas_function; 
 
 		fn((void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) tau); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_clarfg_(void* n, void* alpha, void* x, void* incx, void* ta
 	void (*fn) (void* n, void* alpha, void* x, void* incx, void* tau);
 	void (*fn_hook) (void* n, void* alpha, void* x, void* incx, void* tau);
 
-	fn      = current_backend->lapack.clarfg.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.clarfg.f77_blas_function; 
 
     hook_pos_clarfg ++;
     if( hook_pos_clarfg < __flexiblas_hooks->clarfg.nhook) {
-        fn_hook = __flexiblas_hooks->clarfg.f77_hook_function[hook_pos_clarfg];
+        *(void **) &fn_hook = __flexiblas_hooks->clarfg.f77_hook_function[hook_pos_clarfg];
         fn_hook((void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) tau);
     } else {
         hook_pos_clarfg = 0;

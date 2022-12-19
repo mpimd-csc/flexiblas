@@ -80,8 +80,8 @@ void FC_GLOBAL(ctpqrt2,CTPQRT2)(blasint* m, blasint* n, blasint* l, float comple
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ctpqrt2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ctpqrt2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ctpqrt2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ctpqrt2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) l, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) t, (void*) ldt, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ctpqrt2_(void* m, void* n, void* l, void* a, void* lda, void
 {
 	void (*fn) (void* m, void* n, void* l, void* a, void* lda, void* b, void* ldb, void* t, void* ldt, void* info);
 
-	fn = current_backend->lapack.ctpqrt2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ctpqrt2.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) l, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) t, (void*) ldt, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ctpqrt2_(void* m, void* n, void* l, void* a, void* lda, voi
 	void (*fn) (void* m, void* n, void* l, void* a, void* lda, void* b, void* ldb, void* t, void* ldt, void* info);
 	void (*fn_hook) (void* m, void* n, void* l, void* a, void* lda, void* b, void* ldb, void* t, void* ldt, void* info);
 
-	fn      = current_backend->lapack.ctpqrt2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ctpqrt2.f77_blas_function; 
 
     hook_pos_ctpqrt2 ++;
     if( hook_pos_ctpqrt2 < __flexiblas_hooks->ctpqrt2.nhook) {
-        fn_hook = __flexiblas_hooks->ctpqrt2.f77_hook_function[hook_pos_ctpqrt2];
+        *(void **) &fn_hook = __flexiblas_hooks->ctpqrt2.f77_hook_function[hook_pos_ctpqrt2];
         fn_hook((void*) m, (void*) n, (void*) l, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) t, (void*) ldt, (void*) info);
     } else {
         hook_pos_ctpqrt2 = 0;

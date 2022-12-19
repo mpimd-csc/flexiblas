@@ -80,8 +80,8 @@ void FC_GLOBAL(dlaeda,DLAEDA)(blasint* n, blasint* tlvls, blasint* curlvl, blasi
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlaeda.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlaeda.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlaeda.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlaeda.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) tlvls, (void*) curlvl, (void*) curpbm, (void*) prmptr, (void*) perm, (void*) givptr, (void*) givcol, (void*) givnum, (void*) q, (void*) qptr, (void*) z, (void*) ztemp, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlaeda_(void* n, void* tlvls, void* curlvl, void* curpbm, vo
 {
 	void (*fn) (void* n, void* tlvls, void* curlvl, void* curpbm, void* prmptr, void* perm, void* givptr, void* givcol, void* givnum, void* q, void* qptr, void* z, void* ztemp, void* info);
 
-	fn = current_backend->lapack.dlaeda.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlaeda.f77_blas_function; 
 
 		fn((void*) n, (void*) tlvls, (void*) curlvl, (void*) curpbm, (void*) prmptr, (void*) perm, (void*) givptr, (void*) givcol, (void*) givnum, (void*) q, (void*) qptr, (void*) z, (void*) ztemp, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlaeda_(void* n, void* tlvls, void* curlvl, void* curpbm, v
 	void (*fn) (void* n, void* tlvls, void* curlvl, void* curpbm, void* prmptr, void* perm, void* givptr, void* givcol, void* givnum, void* q, void* qptr, void* z, void* ztemp, void* info);
 	void (*fn_hook) (void* n, void* tlvls, void* curlvl, void* curpbm, void* prmptr, void* perm, void* givptr, void* givcol, void* givnum, void* q, void* qptr, void* z, void* ztemp, void* info);
 
-	fn      = current_backend->lapack.dlaeda.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlaeda.f77_blas_function; 
 
     hook_pos_dlaeda ++;
     if( hook_pos_dlaeda < __flexiblas_hooks->dlaeda.nhook) {
-        fn_hook = __flexiblas_hooks->dlaeda.f77_hook_function[hook_pos_dlaeda];
+        *(void **) &fn_hook = __flexiblas_hooks->dlaeda.f77_hook_function[hook_pos_dlaeda];
         fn_hook((void*) n, (void*) tlvls, (void*) curlvl, (void*) curpbm, (void*) prmptr, (void*) perm, (void*) givptr, (void*) givcol, (void*) givnum, (void*) q, (void*) qptr, (void*) z, (void*) ztemp, (void*) info);
     } else {
         hook_pos_dlaeda = 0;

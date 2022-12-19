@@ -113,8 +113,8 @@ void flexiblas_real_cblas_dtrmm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side
              const CBLAS_UPLO Uplo, const  CBLAS_TRANSPOSE TransA,
              const CBLAS_DIAG Diag, const CBLAS_INT M, const CBLAS_INT N,
              const double alpha, const double  *A, const CBLAS_INT lda,
-             double  *B, const CBLAS_INT ldb)
-            = current_backend->blas.dtrmm.cblas_function;
+             double  *B, const CBLAS_INT ldb);
+        *(void **) & fn = current_backend->blas.dtrmm.cblas_function;
         fn(layout,Side,Uplo,TransA,Diag,M,N,alpha,A,lda,B,ldb);
     } else {
 

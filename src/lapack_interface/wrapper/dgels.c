@@ -80,8 +80,8 @@ void FC_GLOBAL(dgels,DGELS)(char* trans, blasint* m, blasint* n, blasint* nrhs, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dgels.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dgels.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dgels.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dgels.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) trans, (void*) m, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dgels_(void* trans, void* m, void* n, void* nrhs, void* a, v
 {
 	void (*fn) (void* trans, void* m, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.dgels.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dgels.f77_blas_function; 
 
 		fn((void*) trans, (void*) m, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dgels_(void* trans, void* m, void* n, void* nrhs, void* a, 
 	void (*fn) (void* trans, void* m, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* trans, void* m, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.dgels.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dgels.f77_blas_function; 
 
     hook_pos_dgels ++;
     if( hook_pos_dgels < __flexiblas_hooks->dgels.nhook) {
-        fn_hook = __flexiblas_hooks->dgels.f77_hook_function[hook_pos_dgels];
+        *(void **) &fn_hook = __flexiblas_hooks->dgels.f77_hook_function[hook_pos_dgels];
         fn_hook((void*) trans, (void*) m, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_dgels = 0;

@@ -80,8 +80,8 @@ void FC_GLOBAL(dlabad,DLABAD)(double* small, double* large)
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlabad.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlabad.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlabad.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlabad.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) small, (void*) large); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlabad_(void* small, void* large)
 {
 	void (*fn) (void* small, void* large);
 
-	fn = current_backend->lapack.dlabad.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlabad.f77_blas_function; 
 
 		fn((void*) small, (void*) large); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlabad_(void* small, void* large)
 	void (*fn) (void* small, void* large);
 	void (*fn_hook) (void* small, void* large);
 
-	fn      = current_backend->lapack.dlabad.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlabad.f77_blas_function; 
 
     hook_pos_dlabad ++;
     if( hook_pos_dlabad < __flexiblas_hooks->dlabad.nhook) {
-        fn_hook = __flexiblas_hooks->dlabad.f77_hook_function[hook_pos_dlabad];
+        *(void **) &fn_hook = __flexiblas_hooks->dlabad.f77_hook_function[hook_pos_dlabad];
         fn_hook((void*) small, (void*) large);
     } else {
         hook_pos_dlabad = 0;

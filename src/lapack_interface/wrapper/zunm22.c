@@ -80,8 +80,8 @@ void FC_GLOBAL(zunm22,ZUNM22)(char* side, char* trans, blasint* m, blasint* n, b
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zunm22.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zunm22.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zunm22.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zunm22.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) n1, (void*) n2, (void*) q, (void*) ldq, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zunm22_(void* side, void* trans, void* m, void* n, void* n1,
 {
 	void (*fn) (void* side, void* trans, void* m, void* n, void* n1, void* n2, void* q, void* ldq, void* c, void* ldc, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.zunm22.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zunm22.f77_blas_function; 
 
 		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) n1, (void*) n2, (void*) q, (void*) ldq, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zunm22_(void* side, void* trans, void* m, void* n, void* n1
 	void (*fn) (void* side, void* trans, void* m, void* n, void* n1, void* n2, void* q, void* ldq, void* c, void* ldc, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* side, void* trans, void* m, void* n, void* n1, void* n2, void* q, void* ldq, void* c, void* ldc, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.zunm22.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zunm22.f77_blas_function; 
 
     hook_pos_zunm22 ++;
     if( hook_pos_zunm22 < __flexiblas_hooks->zunm22.nhook) {
-        fn_hook = __flexiblas_hooks->zunm22.f77_hook_function[hook_pos_zunm22];
+        *(void **) &fn_hook = __flexiblas_hooks->zunm22.f77_hook_function[hook_pos_zunm22];
         fn_hook((void*) side, (void*) trans, (void*) m, (void*) n, (void*) n1, (void*) n2, (void*) q, (void*) ldq, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_zunm22 = 0;

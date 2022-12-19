@@ -80,8 +80,8 @@ void FC_GLOBAL(ctpcon,CTPCON)(char* norm, char* uplo, char* diag, blasint* n, fl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ctpcon.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ctpcon.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ctpcon.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ctpcon.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) norm, (void*) uplo, (void*) diag, (void*) n, (void*) ap, (void*) rcond, (void*) work, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ctpcon_(void* norm, void* uplo, void* diag, void* n, void* a
 {
 	void (*fn) (void* norm, void* uplo, void* diag, void* n, void* ap, void* rcond, void* work, void* rwork, void* info);
 
-	fn = current_backend->lapack.ctpcon.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ctpcon.f77_blas_function; 
 
 		fn((void*) norm, (void*) uplo, (void*) diag, (void*) n, (void*) ap, (void*) rcond, (void*) work, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ctpcon_(void* norm, void* uplo, void* diag, void* n, void* 
 	void (*fn) (void* norm, void* uplo, void* diag, void* n, void* ap, void* rcond, void* work, void* rwork, void* info);
 	void (*fn_hook) (void* norm, void* uplo, void* diag, void* n, void* ap, void* rcond, void* work, void* rwork, void* info);
 
-	fn      = current_backend->lapack.ctpcon.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ctpcon.f77_blas_function; 
 
     hook_pos_ctpcon ++;
     if( hook_pos_ctpcon < __flexiblas_hooks->ctpcon.nhook) {
-        fn_hook = __flexiblas_hooks->ctpcon.f77_hook_function[hook_pos_ctpcon];
+        *(void **) &fn_hook = __flexiblas_hooks->ctpcon.f77_hook_function[hook_pos_ctpcon];
         fn_hook((void*) norm, (void*) uplo, (void*) diag, (void*) n, (void*) ap, (void*) rcond, (void*) work, (void*) rwork, (void*) info);
     } else {
         hook_pos_ctpcon = 0;

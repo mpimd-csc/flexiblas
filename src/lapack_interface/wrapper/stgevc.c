@@ -80,8 +80,8 @@ void FC_GLOBAL(stgevc,STGEVC)(char* side, char* howmny, blasint* select, blasint
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.stgevc.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->stgevc.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.stgevc.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->stgevc.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) side, (void*) howmny, (void*) select, (void*) n, (void*) s, (void*) lds, (void*) p, (void*) ldp, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) mm, (void*) m, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_stgevc_(void* side, void* howmny, void* select, void* n, voi
 {
 	void (*fn) (void* side, void* howmny, void* select, void* n, void* s, void* lds, void* p, void* ldp, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* info);
 
-	fn = current_backend->lapack.stgevc.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.stgevc.f77_blas_function; 
 
 		fn((void*) side, (void*) howmny, (void*) select, (void*) n, (void*) s, (void*) lds, (void*) p, (void*) ldp, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) mm, (void*) m, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_stgevc_(void* side, void* howmny, void* select, void* n, vo
 	void (*fn) (void* side, void* howmny, void* select, void* n, void* s, void* lds, void* p, void* ldp, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* info);
 	void (*fn_hook) (void* side, void* howmny, void* select, void* n, void* s, void* lds, void* p, void* ldp, void* vl, void* ldvl, void* vr, void* ldvr, void* mm, void* m, void* work, void* info);
 
-	fn      = current_backend->lapack.stgevc.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.stgevc.f77_blas_function; 
 
     hook_pos_stgevc ++;
     if( hook_pos_stgevc < __flexiblas_hooks->stgevc.nhook) {
-        fn_hook = __flexiblas_hooks->stgevc.f77_hook_function[hook_pos_stgevc];
+        *(void **) &fn_hook = __flexiblas_hooks->stgevc.f77_hook_function[hook_pos_stgevc];
         fn_hook((void*) side, (void*) howmny, (void*) select, (void*) n, (void*) s, (void*) lds, (void*) p, (void*) ldp, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) mm, (void*) m, (void*) work, (void*) info);
     } else {
         hook_pos_stgevc = 0;

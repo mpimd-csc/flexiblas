@@ -80,8 +80,8 @@ void FC_GLOBAL(dlartgp,DLARTGP)(double* f, double* g, double* cs, double* sn, do
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlartgp.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlartgp.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlartgp.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlartgp.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) f, (void*) g, (void*) cs, (void*) sn, (void*) r); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlartgp_(void* f, void* g, void* cs, void* sn, void* r)
 {
 	void (*fn) (void* f, void* g, void* cs, void* sn, void* r);
 
-	fn = current_backend->lapack.dlartgp.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlartgp.f77_blas_function; 
 
 		fn((void*) f, (void*) g, (void*) cs, (void*) sn, (void*) r); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlartgp_(void* f, void* g, void* cs, void* sn, void* r)
 	void (*fn) (void* f, void* g, void* cs, void* sn, void* r);
 	void (*fn_hook) (void* f, void* g, void* cs, void* sn, void* r);
 
-	fn      = current_backend->lapack.dlartgp.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlartgp.f77_blas_function; 
 
     hook_pos_dlartgp ++;
     if( hook_pos_dlartgp < __flexiblas_hooks->dlartgp.nhook) {
-        fn_hook = __flexiblas_hooks->dlartgp.f77_hook_function[hook_pos_dlartgp];
+        *(void **) &fn_hook = __flexiblas_hooks->dlartgp.f77_hook_function[hook_pos_dlartgp];
         fn_hook((void*) f, (void*) g, (void*) cs, (void*) sn, (void*) r);
     } else {
         hook_pos_dlartgp = 0;

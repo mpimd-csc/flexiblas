@@ -80,8 +80,8 @@ void FC_GLOBAL(dtfsm,DTFSM)(char* transr, char* side, char* uplo, char* trans, c
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dtfsm.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dtfsm.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dtfsm.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dtfsm.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) transr, (void*) side, (void*) uplo, (void*) trans, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) b, (void*) ldb); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dtfsm_(void* transr, void* side, void* uplo, void* trans, vo
 {
 	void (*fn) (void* transr, void* side, void* uplo, void* trans, void* diag, void* m, void* n, void* alpha, void* a, void* b, void* ldb);
 
-	fn = current_backend->lapack.dtfsm.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dtfsm.f77_blas_function; 
 
 		fn((void*) transr, (void*) side, (void*) uplo, (void*) trans, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) b, (void*) ldb); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dtfsm_(void* transr, void* side, void* uplo, void* trans, v
 	void (*fn) (void* transr, void* side, void* uplo, void* trans, void* diag, void* m, void* n, void* alpha, void* a, void* b, void* ldb);
 	void (*fn_hook) (void* transr, void* side, void* uplo, void* trans, void* diag, void* m, void* n, void* alpha, void* a, void* b, void* ldb);
 
-	fn      = current_backend->lapack.dtfsm.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dtfsm.f77_blas_function; 
 
     hook_pos_dtfsm ++;
     if( hook_pos_dtfsm < __flexiblas_hooks->dtfsm.nhook) {
-        fn_hook = __flexiblas_hooks->dtfsm.f77_hook_function[hook_pos_dtfsm];
+        *(void **) &fn_hook = __flexiblas_hooks->dtfsm.f77_hook_function[hook_pos_dtfsm];
         fn_hook((void*) transr, (void*) side, (void*) uplo, (void*) trans, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) b, (void*) ldb);
     } else {
         hook_pos_dtfsm = 0;

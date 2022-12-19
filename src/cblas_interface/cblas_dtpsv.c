@@ -101,8 +101,8 @@ void flexiblas_real_cblas_dtpsv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
              const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
-             const CBLAS_INT N, const double  *Ap, double  *X, const CBLAS_INT incX)
-            = current_backend->blas.dtpsv.cblas_function;
+             const CBLAS_INT N, const double  *Ap, double  *X, const CBLAS_INT incX);
+        *(void **) &fn = current_backend->blas.dtpsv.cblas_function;
         fn(layout,Uplo,TransA,Diag,N,Ap,X,incX);
     } else {
 

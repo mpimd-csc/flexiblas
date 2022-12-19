@@ -80,8 +80,8 @@ void FC_GLOBAL(dlarra,DLARRA)(blasint* n, double* d, double* e, double* e2, doub
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlarra.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlarra.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlarra.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlarra.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) d, (void*) e, (void*) e2, (void*) spltol, (void*) tnrm, (void*) nsplit, (void*) isplit, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlarra_(void* n, void* d, void* e, void* e2, void* spltol, v
 {
 	void (*fn) (void* n, void* d, void* e, void* e2, void* spltol, void* tnrm, void* nsplit, void* isplit, void* info);
 
-	fn = current_backend->lapack.dlarra.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlarra.f77_blas_function; 
 
 		fn((void*) n, (void*) d, (void*) e, (void*) e2, (void*) spltol, (void*) tnrm, (void*) nsplit, (void*) isplit, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlarra_(void* n, void* d, void* e, void* e2, void* spltol, 
 	void (*fn) (void* n, void* d, void* e, void* e2, void* spltol, void* tnrm, void* nsplit, void* isplit, void* info);
 	void (*fn_hook) (void* n, void* d, void* e, void* e2, void* spltol, void* tnrm, void* nsplit, void* isplit, void* info);
 
-	fn      = current_backend->lapack.dlarra.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlarra.f77_blas_function; 
 
     hook_pos_dlarra ++;
     if( hook_pos_dlarra < __flexiblas_hooks->dlarra.nhook) {
-        fn_hook = __flexiblas_hooks->dlarra.f77_hook_function[hook_pos_dlarra];
+        *(void **) &fn_hook = __flexiblas_hooks->dlarra.f77_hook_function[hook_pos_dlarra];
         fn_hook((void*) n, (void*) d, (void*) e, (void*) e2, (void*) spltol, (void*) tnrm, (void*) nsplit, (void*) isplit, (void*) info);
     } else {
         hook_pos_dlarra = 0;

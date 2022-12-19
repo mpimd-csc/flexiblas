@@ -80,8 +80,8 @@ void FC_GLOBAL(stbcon,STBCON)(char* norm, char* uplo, char* diag, blasint* n, bl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.stbcon.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->stbcon.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.stbcon.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->stbcon.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) norm, (void*) uplo, (void*) diag, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) rcond, (void*) work, (void*) iwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_stbcon_(void* norm, void* uplo, void* diag, void* n, void* k
 {
 	void (*fn) (void* norm, void* uplo, void* diag, void* n, void* kd, void* ab, void* ldab, void* rcond, void* work, void* iwork, void* info);
 
-	fn = current_backend->lapack.stbcon.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.stbcon.f77_blas_function; 
 
 		fn((void*) norm, (void*) uplo, (void*) diag, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) rcond, (void*) work, (void*) iwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_stbcon_(void* norm, void* uplo, void* diag, void* n, void* 
 	void (*fn) (void* norm, void* uplo, void* diag, void* n, void* kd, void* ab, void* ldab, void* rcond, void* work, void* iwork, void* info);
 	void (*fn_hook) (void* norm, void* uplo, void* diag, void* n, void* kd, void* ab, void* ldab, void* rcond, void* work, void* iwork, void* info);
 
-	fn      = current_backend->lapack.stbcon.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.stbcon.f77_blas_function; 
 
     hook_pos_stbcon ++;
     if( hook_pos_stbcon < __flexiblas_hooks->stbcon.nhook) {
-        fn_hook = __flexiblas_hooks->stbcon.f77_hook_function[hook_pos_stbcon];
+        *(void **) &fn_hook = __flexiblas_hooks->stbcon.f77_hook_function[hook_pos_stbcon];
         fn_hook((void*) norm, (void*) uplo, (void*) diag, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) rcond, (void*) work, (void*) iwork, (void*) info);
     } else {
         hook_pos_stbcon = 0;

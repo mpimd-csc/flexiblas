@@ -80,8 +80,8 @@ void FC_GLOBAL(zpotri,ZPOTRI)(char* uplo, blasint* n, double complex* a, blasint
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zpotri.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zpotri.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zpotri.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zpotri.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zpotri_(void* uplo, void* n, void* a, void* lda, void* info)
 {
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* info);
 
-	fn = current_backend->lapack.zpotri.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zpotri.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zpotri_(void* uplo, void* n, void* a, void* lda, void* info
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* info);
 
-	fn      = current_backend->lapack.zpotri.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zpotri.f77_blas_function; 
 
     hook_pos_zpotri ++;
     if( hook_pos_zpotri < __flexiblas_hooks->zpotri.nhook) {
-        fn_hook = __flexiblas_hooks->zpotri.f77_hook_function[hook_pos_zpotri];
+        *(void **) &fn_hook = __flexiblas_hooks->zpotri.f77_hook_function[hook_pos_zpotri];
         fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) info);
     } else {
         hook_pos_zpotri = 0;

@@ -80,8 +80,8 @@ void FC_GLOBAL(clarfb,CLARFB)(char* side, char* trans, char* direct, char* store
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.clarfb.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->clarfb.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.clarfb.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->clarfb.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) side, (void*) trans, (void*) direct, (void*) storev, (void*) m, (void*) n, (void*) k, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) ldwork); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_clarfb_(void* side, void* trans, void* direct, void* storev,
 {
 	void (*fn) (void* side, void* trans, void* direct, void* storev, void* m, void* n, void* k, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* ldwork);
 
-	fn = current_backend->lapack.clarfb.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.clarfb.f77_blas_function; 
 
 		fn((void*) side, (void*) trans, (void*) direct, (void*) storev, (void*) m, (void*) n, (void*) k, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) ldwork); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_clarfb_(void* side, void* trans, void* direct, void* storev
 	void (*fn) (void* side, void* trans, void* direct, void* storev, void* m, void* n, void* k, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* ldwork);
 	void (*fn_hook) (void* side, void* trans, void* direct, void* storev, void* m, void* n, void* k, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* ldwork);
 
-	fn      = current_backend->lapack.clarfb.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.clarfb.f77_blas_function; 
 
     hook_pos_clarfb ++;
     if( hook_pos_clarfb < __flexiblas_hooks->clarfb.nhook) {
-        fn_hook = __flexiblas_hooks->clarfb.f77_hook_function[hook_pos_clarfb];
+        *(void **) &fn_hook = __flexiblas_hooks->clarfb.f77_hook_function[hook_pos_clarfb];
         fn_hook((void*) side, (void*) trans, (void*) direct, (void*) storev, (void*) m, (void*) n, (void*) k, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) ldwork);
     } else {
         hook_pos_clarfb = 0;

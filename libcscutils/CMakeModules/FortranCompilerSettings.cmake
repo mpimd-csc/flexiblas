@@ -18,6 +18,7 @@ IF(NOT "${HOSTOPT}" STREQUAL "")
 ENDIF()
 
 INCLUDE(CheckFortranCompilerFlag_meta)
+# INCLUDE(CheckFortranCompilerFlag)
 
 
 FUNCTION(ADD_FORTRAN_COMPILER_FLAG VAR FLAGNAME )
@@ -218,6 +219,7 @@ ELSEIF(CMAKE_Fortran_COMPILER_ID STREQUAL "XL")
 
     IF(OPENMP_FOUND)
         LIST(REMOVE_ITEM CMAKE_Fortran_IMPLICIT_LINK_LIBRARIES "xlomp_ser")
+        SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${OpenMP_Fortran_FLAGS}")
     ENDIF()
     SET(I8FLAG "-qintsize=8")
 ENDIF()

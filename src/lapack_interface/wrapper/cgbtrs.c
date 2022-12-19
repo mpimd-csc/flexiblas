@@ -80,8 +80,8 @@ void FC_GLOBAL(cgbtrs,CGBTRS)(char* trans, blasint* n, blasint* kl, blasint* ku,
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cgbtrs.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cgbtrs.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cgbtrs.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cgbtrs.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) trans, (void*) n, (void*) kl, (void*) ku, (void*) nrhs, (void*) ab, (void*) ldab, (void*) ipiv, (void*) b, (void*) ldb, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cgbtrs_(void* trans, void* n, void* kl, void* ku, void* nrhs
 {
 	void (*fn) (void* trans, void* n, void* kl, void* ku, void* nrhs, void* ab, void* ldab, void* ipiv, void* b, void* ldb, void* info);
 
-	fn = current_backend->lapack.cgbtrs.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cgbtrs.f77_blas_function; 
 
 		fn((void*) trans, (void*) n, (void*) kl, (void*) ku, (void*) nrhs, (void*) ab, (void*) ldab, (void*) ipiv, (void*) b, (void*) ldb, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cgbtrs_(void* trans, void* n, void* kl, void* ku, void* nrh
 	void (*fn) (void* trans, void* n, void* kl, void* ku, void* nrhs, void* ab, void* ldab, void* ipiv, void* b, void* ldb, void* info);
 	void (*fn_hook) (void* trans, void* n, void* kl, void* ku, void* nrhs, void* ab, void* ldab, void* ipiv, void* b, void* ldb, void* info);
 
-	fn      = current_backend->lapack.cgbtrs.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cgbtrs.f77_blas_function; 
 
     hook_pos_cgbtrs ++;
     if( hook_pos_cgbtrs < __flexiblas_hooks->cgbtrs.nhook) {
-        fn_hook = __flexiblas_hooks->cgbtrs.f77_hook_function[hook_pos_cgbtrs];
+        *(void **) &fn_hook = __flexiblas_hooks->cgbtrs.f77_hook_function[hook_pos_cgbtrs];
         fn_hook((void*) trans, (void*) n, (void*) kl, (void*) ku, (void*) nrhs, (void*) ab, (void*) ldab, (void*) ipiv, (void*) b, (void*) ldb, (void*) info);
     } else {
         hook_pos_cgbtrs = 0;

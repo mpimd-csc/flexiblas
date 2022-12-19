@@ -80,8 +80,8 @@ void FC_GLOBAL(dsbgv,DSBGV)(char* jobz, char* uplo, blasint* n, blasint* ka, bla
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dsbgv.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dsbgv.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dsbgv.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dsbgv.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobz, (void*) uplo, (void*) n, (void*) ka, (void*) kb, (void*) ab, (void*) ldab, (void*) bb, (void*) ldbb, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dsbgv_(void* jobz, void* uplo, void* n, void* ka, void* kb, 
 {
 	void (*fn) (void* jobz, void* uplo, void* n, void* ka, void* kb, void* ab, void* ldab, void* bb, void* ldbb, void* w, void* z, void* ldz, void* work, void* info);
 
-	fn = current_backend->lapack.dsbgv.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dsbgv.f77_blas_function; 
 
 		fn((void*) jobz, (void*) uplo, (void*) n, (void*) ka, (void*) kb, (void*) ab, (void*) ldab, (void*) bb, (void*) ldbb, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dsbgv_(void* jobz, void* uplo, void* n, void* ka, void* kb,
 	void (*fn) (void* jobz, void* uplo, void* n, void* ka, void* kb, void* ab, void* ldab, void* bb, void* ldbb, void* w, void* z, void* ldz, void* work, void* info);
 	void (*fn_hook) (void* jobz, void* uplo, void* n, void* ka, void* kb, void* ab, void* ldab, void* bb, void* ldbb, void* w, void* z, void* ldz, void* work, void* info);
 
-	fn      = current_backend->lapack.dsbgv.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dsbgv.f77_blas_function; 
 
     hook_pos_dsbgv ++;
     if( hook_pos_dsbgv < __flexiblas_hooks->dsbgv.nhook) {
-        fn_hook = __flexiblas_hooks->dsbgv.f77_hook_function[hook_pos_dsbgv];
+        *(void **) &fn_hook = __flexiblas_hooks->dsbgv.f77_hook_function[hook_pos_dsbgv];
         fn_hook((void*) jobz, (void*) uplo, (void*) n, (void*) ka, (void*) kb, (void*) ab, (void*) ldab, (void*) bb, (void*) ldbb, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) info);
     } else {
         hook_pos_dsbgv = 0;

@@ -80,8 +80,8 @@ void FC_GLOBAL(zlatrs,ZLATRS)(char* uplo, char* trans, char* diag, char* normin,
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlatrs.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlatrs.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlatrs.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlatrs.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) scale, (void*) cnorm, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zlatrs_(void* uplo, void* trans, void* diag, void* normin, v
 {
 	void (*fn) (void* uplo, void* trans, void* diag, void* normin, void* n, void* a, void* lda, void* x, void* scale, void* cnorm, void* info);
 
-	fn = current_backend->lapack.zlatrs.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlatrs.f77_blas_function; 
 
 		fn((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) scale, (void*) cnorm, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zlatrs_(void* uplo, void* trans, void* diag, void* normin, 
 	void (*fn) (void* uplo, void* trans, void* diag, void* normin, void* n, void* a, void* lda, void* x, void* scale, void* cnorm, void* info);
 	void (*fn_hook) (void* uplo, void* trans, void* diag, void* normin, void* n, void* a, void* lda, void* x, void* scale, void* cnorm, void* info);
 
-	fn      = current_backend->lapack.zlatrs.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlatrs.f77_blas_function; 
 
     hook_pos_zlatrs ++;
     if( hook_pos_zlatrs < __flexiblas_hooks->zlatrs.nhook) {
-        fn_hook = __flexiblas_hooks->zlatrs.f77_hook_function[hook_pos_zlatrs];
+        *(void **) &fn_hook = __flexiblas_hooks->zlatrs.f77_hook_function[hook_pos_zlatrs];
         fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) scale, (void*) cnorm, (void*) info);
     } else {
         hook_pos_zlatrs = 0;

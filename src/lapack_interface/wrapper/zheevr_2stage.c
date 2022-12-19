@@ -80,8 +80,8 @@ void FC_GLOBAL_(zheevr_2stage,ZHEEVR_2STAGE)(char* jobz, char* range, char* uplo
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zheevr_2stage.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zheevr_2stage.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zheevr_2stage.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zheevr_2stage.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) isuppz, (void*) work, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) iwork, (void*) liwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zheevr_2stage_(void* jobz, void* range, void* uplo, void* n,
 {
 	void (*fn) (void* jobz, void* range, void* uplo, void* n, void* a, void* lda, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* isuppz, void* work, void* lwork, void* rwork, void* lrwork, void* iwork, void* liwork, void* info);
 
-	fn = current_backend->lapack.zheevr_2stage.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zheevr_2stage.f77_blas_function; 
 
 		fn((void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) isuppz, (void*) work, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) iwork, (void*) liwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zheevr_2stage_(void* jobz, void* range, void* uplo, void* n
 	void (*fn) (void* jobz, void* range, void* uplo, void* n, void* a, void* lda, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* isuppz, void* work, void* lwork, void* rwork, void* lrwork, void* iwork, void* liwork, void* info);
 	void (*fn_hook) (void* jobz, void* range, void* uplo, void* n, void* a, void* lda, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* isuppz, void* work, void* lwork, void* rwork, void* lrwork, void* iwork, void* liwork, void* info);
 
-	fn      = current_backend->lapack.zheevr_2stage.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zheevr_2stage.f77_blas_function; 
 
     hook_pos_zheevr_2stage ++;
     if( hook_pos_zheevr_2stage < __flexiblas_hooks->zheevr_2stage.nhook) {
-        fn_hook = __flexiblas_hooks->zheevr_2stage.f77_hook_function[hook_pos_zheevr_2stage];
+        *(void **) &fn_hook = __flexiblas_hooks->zheevr_2stage.f77_hook_function[hook_pos_zheevr_2stage];
         fn_hook((void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) isuppz, (void*) work, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) iwork, (void*) liwork, (void*) info);
     } else {
         hook_pos_zheevr_2stage = 0;

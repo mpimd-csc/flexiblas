@@ -35,7 +35,7 @@
 #include <unistd.h>
 #include <errno.h>
 
-unsigned int csc_sysinfo_cpu_count()
+unsigned int csc_sysinfo_cpu_count(void)
 {
 #if defined(__linux__)
 #define LINE_LEN 10

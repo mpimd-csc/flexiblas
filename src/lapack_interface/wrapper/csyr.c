@@ -80,8 +80,8 @@ void FC_GLOBAL(csyr,CSYR)(char* uplo, blasint* n, float complex* alpha, float co
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.csyr.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->csyr.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.csyr.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->csyr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_csyr_(void* uplo, void* n, void* alpha, void* x, void* incx,
 {
 	void (*fn) (void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda);
 
-	fn = current_backend->lapack.csyr.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.csyr.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_csyr_(void* uplo, void* n, void* alpha, void* x, void* incx
 	void (*fn) (void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda);
 	void (*fn_hook) (void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda);
 
-	fn      = current_backend->lapack.csyr.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.csyr.f77_blas_function; 
 
     hook_pos_csyr ++;
     if( hook_pos_csyr < __flexiblas_hooks->csyr.nhook) {
-        fn_hook = __flexiblas_hooks->csyr.f77_hook_function[hook_pos_csyr];
+        *(void **) &fn_hook = __flexiblas_hooks->csyr.f77_hook_function[hook_pos_csyr];
         fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda);
     } else {
         hook_pos_csyr = 0;

@@ -80,8 +80,8 @@ void FC_GLOBAL(cgetsqrhrt,CGETSQRHRT)(blasint* m, blasint* n, blasint* mb1, blas
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cgetsqrhrt.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cgetsqrhrt.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cgetsqrhrt.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cgetsqrhrt.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) mb1, (void*) nb1, (void*) nb2, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cgetsqrhrt_(void* m, void* n, void* mb1, void* nb1, void* nb
 {
 	void (*fn) (void* m, void* n, void* mb1, void* nb1, void* nb2, void* a, void* lda, void* t, void* ldt, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.cgetsqrhrt.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cgetsqrhrt.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) mb1, (void*) nb1, (void*) nb2, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cgetsqrhrt_(void* m, void* n, void* mb1, void* nb1, void* n
 	void (*fn) (void* m, void* n, void* mb1, void* nb1, void* nb2, void* a, void* lda, void* t, void* ldt, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* m, void* n, void* mb1, void* nb1, void* nb2, void* a, void* lda, void* t, void* ldt, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.cgetsqrhrt.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cgetsqrhrt.f77_blas_function; 
 
     hook_pos_cgetsqrhrt ++;
     if( hook_pos_cgetsqrhrt < __flexiblas_hooks->cgetsqrhrt.nhook) {
-        fn_hook = __flexiblas_hooks->cgetsqrhrt.f77_hook_function[hook_pos_cgetsqrhrt];
+        *(void **) &fn_hook = __flexiblas_hooks->cgetsqrhrt.f77_hook_function[hook_pos_cgetsqrhrt];
         fn_hook((void*) m, (void*) n, (void*) mb1, (void*) nb1, (void*) nb2, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_cgetsqrhrt = 0;

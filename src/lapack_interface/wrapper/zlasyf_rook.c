@@ -80,8 +80,8 @@ void FC_GLOBAL_(zlasyf_rook,ZLASYF_ROOK)(char* uplo, blasint* n, blasint* nb, bl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlasyf_rook.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlasyf_rook.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlasyf_rook.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlasyf_rook.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) nb, (void*) kb, (void*) a, (void*) lda, (void*) ipiv, (void*) w, (void*) ldw, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zlasyf_rook_(void* uplo, void* n, void* nb, void* kb, void* 
 {
 	void (*fn) (void* uplo, void* n, void* nb, void* kb, void* a, void* lda, void* ipiv, void* w, void* ldw, void* info);
 
-	fn = current_backend->lapack.zlasyf_rook.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlasyf_rook.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) nb, (void*) kb, (void*) a, (void*) lda, (void*) ipiv, (void*) w, (void*) ldw, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zlasyf_rook_(void* uplo, void* n, void* nb, void* kb, void*
 	void (*fn) (void* uplo, void* n, void* nb, void* kb, void* a, void* lda, void* ipiv, void* w, void* ldw, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* nb, void* kb, void* a, void* lda, void* ipiv, void* w, void* ldw, void* info);
 
-	fn      = current_backend->lapack.zlasyf_rook.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlasyf_rook.f77_blas_function; 
 
     hook_pos_zlasyf_rook ++;
     if( hook_pos_zlasyf_rook < __flexiblas_hooks->zlasyf_rook.nhook) {
-        fn_hook = __flexiblas_hooks->zlasyf_rook.f77_hook_function[hook_pos_zlasyf_rook];
+        *(void **) &fn_hook = __flexiblas_hooks->zlasyf_rook.f77_hook_function[hook_pos_zlasyf_rook];
         fn_hook((void*) uplo, (void*) n, (void*) nb, (void*) kb, (void*) a, (void*) lda, (void*) ipiv, (void*) w, (void*) ldw, (void*) info);
     } else {
         hook_pos_zlasyf_rook = 0;

@@ -80,8 +80,8 @@ void FC_GLOBAL(cptcon,CPTCON)(blasint* n, float* d, float complex* e, float* ano
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cptcon.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cptcon.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cptcon.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cptcon.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) d, (void*) e, (void*) anorm, (void*) rcond, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cptcon_(void* n, void* d, void* e, void* anorm, void* rcond,
 {
 	void (*fn) (void* n, void* d, void* e, void* anorm, void* rcond, void* rwork, void* info);
 
-	fn = current_backend->lapack.cptcon.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cptcon.f77_blas_function; 
 
 		fn((void*) n, (void*) d, (void*) e, (void*) anorm, (void*) rcond, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cptcon_(void* n, void* d, void* e, void* anorm, void* rcond
 	void (*fn) (void* n, void* d, void* e, void* anorm, void* rcond, void* rwork, void* info);
 	void (*fn_hook) (void* n, void* d, void* e, void* anorm, void* rcond, void* rwork, void* info);
 
-	fn      = current_backend->lapack.cptcon.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cptcon.f77_blas_function; 
 
     hook_pos_cptcon ++;
     if( hook_pos_cptcon < __flexiblas_hooks->cptcon.nhook) {
-        fn_hook = __flexiblas_hooks->cptcon.f77_hook_function[hook_pos_cptcon];
+        *(void **) &fn_hook = __flexiblas_hooks->cptcon.f77_hook_function[hook_pos_cptcon];
         fn_hook((void*) n, (void*) d, (void*) e, (void*) anorm, (void*) rcond, (void*) rwork, (void*) info);
     } else {
         hook_pos_cptcon = 0;

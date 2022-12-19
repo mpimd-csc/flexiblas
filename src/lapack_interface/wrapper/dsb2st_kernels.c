@@ -80,8 +80,8 @@ void FC_GLOBAL_(dsb2st_kernels,DSB2ST_KERNELS)(char* uplo, blasint* wantz, blasi
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dsb2st_kernels.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dsb2st_kernels.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dsb2st_kernels.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dsb2st_kernels.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) wantz, (void*) ttype, (void*) st, (void*) ed, (void*) sweep, (void*) n, (void*) nb, (void*) ib, (void*) a, (void*) lda, (void*) v, (void*) tau, (void*) ldvt, (void*) work); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dsb2st_kernels_(void* uplo, void* wantz, void* ttype, void* 
 {
 	void (*fn) (void* uplo, void* wantz, void* ttype, void* st, void* ed, void* sweep, void* n, void* nb, void* ib, void* a, void* lda, void* v, void* tau, void* ldvt, void* work);
 
-	fn = current_backend->lapack.dsb2st_kernels.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dsb2st_kernels.f77_blas_function; 
 
 		fn((void*) uplo, (void*) wantz, (void*) ttype, (void*) st, (void*) ed, (void*) sweep, (void*) n, (void*) nb, (void*) ib, (void*) a, (void*) lda, (void*) v, (void*) tau, (void*) ldvt, (void*) work); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dsb2st_kernels_(void* uplo, void* wantz, void* ttype, void*
 	void (*fn) (void* uplo, void* wantz, void* ttype, void* st, void* ed, void* sweep, void* n, void* nb, void* ib, void* a, void* lda, void* v, void* tau, void* ldvt, void* work);
 	void (*fn_hook) (void* uplo, void* wantz, void* ttype, void* st, void* ed, void* sweep, void* n, void* nb, void* ib, void* a, void* lda, void* v, void* tau, void* ldvt, void* work);
 
-	fn      = current_backend->lapack.dsb2st_kernels.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dsb2st_kernels.f77_blas_function; 
 
     hook_pos_dsb2st_kernels ++;
     if( hook_pos_dsb2st_kernels < __flexiblas_hooks->dsb2st_kernels.nhook) {
-        fn_hook = __flexiblas_hooks->dsb2st_kernels.f77_hook_function[hook_pos_dsb2st_kernels];
+        *(void **) &fn_hook = __flexiblas_hooks->dsb2st_kernels.f77_hook_function[hook_pos_dsb2st_kernels];
         fn_hook((void*) uplo, (void*) wantz, (void*) ttype, (void*) st, (void*) ed, (void*) sweep, (void*) n, (void*) nb, (void*) ib, (void*) a, (void*) lda, (void*) v, (void*) tau, (void*) ldvt, (void*) work);
     } else {
         hook_pos_dsb2st_kernels = 0;

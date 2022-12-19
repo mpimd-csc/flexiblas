@@ -80,8 +80,8 @@ void FC_GLOBAL_(cheev_2stage,CHEEV_2STAGE)(char* jobz, char* uplo, blasint* n, f
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cheev_2stage.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cheev_2stage.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cheev_2stage.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cheev_2stage.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobz, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) w, (void*) work, (void*) lwork, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cheev_2stage_(void* jobz, void* uplo, void* n, void* a, void
 {
 	void (*fn) (void* jobz, void* uplo, void* n, void* a, void* lda, void* w, void* work, void* lwork, void* rwork, void* info);
 
-	fn = current_backend->lapack.cheev_2stage.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cheev_2stage.f77_blas_function; 
 
 		fn((void*) jobz, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) w, (void*) work, (void*) lwork, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cheev_2stage_(void* jobz, void* uplo, void* n, void* a, voi
 	void (*fn) (void* jobz, void* uplo, void* n, void* a, void* lda, void* w, void* work, void* lwork, void* rwork, void* info);
 	void (*fn_hook) (void* jobz, void* uplo, void* n, void* a, void* lda, void* w, void* work, void* lwork, void* rwork, void* info);
 
-	fn      = current_backend->lapack.cheev_2stage.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cheev_2stage.f77_blas_function; 
 
     hook_pos_cheev_2stage ++;
     if( hook_pos_cheev_2stage < __flexiblas_hooks->cheev_2stage.nhook) {
-        fn_hook = __flexiblas_hooks->cheev_2stage.f77_hook_function[hook_pos_cheev_2stage];
+        *(void **) &fn_hook = __flexiblas_hooks->cheev_2stage.f77_hook_function[hook_pos_cheev_2stage];
         fn_hook((void*) jobz, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) w, (void*) work, (void*) lwork, (void*) rwork, (void*) info);
     } else {
         hook_pos_cheev_2stage = 0;

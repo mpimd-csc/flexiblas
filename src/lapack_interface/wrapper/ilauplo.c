@@ -81,8 +81,8 @@ int FC_GLOBAL(ilauplo,ILAUPLO)(char* uplo)
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ilauplo.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ilauplo.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ilauplo.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ilauplo.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) uplo); 
 		return ret; 
@@ -113,7 +113,7 @@ blasint flexiblas_real_ilauplo_(void* uplo)
 	blasint (*fn) (void* uplo);
 	blasint ret;
 
-	fn = current_backend->lapack.ilauplo.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ilauplo.f77_blas_function; 
 
 		ret = fn((void*) uplo); 
 
@@ -137,11 +137,11 @@ blasint flexiblas_chain_ilauplo_(void* uplo)
 	blasint (*fn_hook) (void* uplo);
 	blasint ret;
 
-	fn      = current_backend->lapack.ilauplo.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ilauplo.f77_blas_function; 
 
     hook_pos_ilauplo ++;
     if( hook_pos_ilauplo < __flexiblas_hooks->ilauplo.nhook) {
-        fn_hook = __flexiblas_hooks->ilauplo.f77_hook_function[hook_pos_ilauplo];
+        *(void **) &fn_hook = __flexiblas_hooks->ilauplo.f77_hook_function[hook_pos_ilauplo];
         ret = fn_hook((void*) uplo);
     } else {
         hook_pos_ilauplo = 0;

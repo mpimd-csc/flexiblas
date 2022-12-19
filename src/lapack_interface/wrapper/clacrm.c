@@ -80,8 +80,8 @@ void FC_GLOBAL(clacrm,CLACRM)(blasint* m, blasint* n, float complex* a, blasint*
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.clacrm.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->clacrm.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.clacrm.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->clacrm.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) ldc, (void*) rwork); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_clacrm_(void* m, void* n, void* a, void* lda, void* b, void*
 {
 	void (*fn) (void* m, void* n, void* a, void* lda, void* b, void* ldb, void* c, void* ldc, void* rwork);
 
-	fn = current_backend->lapack.clacrm.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.clacrm.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) ldc, (void*) rwork); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_clacrm_(void* m, void* n, void* a, void* lda, void* b, void
 	void (*fn) (void* m, void* n, void* a, void* lda, void* b, void* ldb, void* c, void* ldc, void* rwork);
 	void (*fn_hook) (void* m, void* n, void* a, void* lda, void* b, void* ldb, void* c, void* ldc, void* rwork);
 
-	fn      = current_backend->lapack.clacrm.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.clacrm.f77_blas_function; 
 
     hook_pos_clacrm ++;
     if( hook_pos_clacrm < __flexiblas_hooks->clacrm.nhook) {
-        fn_hook = __flexiblas_hooks->clacrm.f77_hook_function[hook_pos_clacrm];
+        *(void **) &fn_hook = __flexiblas_hooks->clacrm.f77_hook_function[hook_pos_clacrm];
         fn_hook((void*) m, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) ldc, (void*) rwork);
     } else {
         hook_pos_clacrm = 0;

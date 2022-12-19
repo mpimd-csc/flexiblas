@@ -80,8 +80,8 @@ void FC_GLOBAL(zstemr,ZSTEMR)(char* jobz, char* range, blasint* n, double* d, do
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zstemr.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zstemr.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zstemr.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zstemr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobz, (void*) range, (void*) n, (void*) d, (void*) e, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) nzc, (void*) isuppz, (void*) tryrac, (void*) work, (void*) lwork, (void*) iwork, (void*) liwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zstemr_(void* jobz, void* range, void* n, void* d, void* e, 
 {
 	void (*fn) (void* jobz, void* range, void* n, void* d, void* e, void* vl, void* vu, void* il, void* iu, void* m, void* w, void* z, void* ldz, void* nzc, void* isuppz, void* tryrac, void* work, void* lwork, void* iwork, void* liwork, void* info);
 
-	fn = current_backend->lapack.zstemr.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zstemr.f77_blas_function; 
 
 		fn((void*) jobz, (void*) range, (void*) n, (void*) d, (void*) e, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) nzc, (void*) isuppz, (void*) tryrac, (void*) work, (void*) lwork, (void*) iwork, (void*) liwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zstemr_(void* jobz, void* range, void* n, void* d, void* e,
 	void (*fn) (void* jobz, void* range, void* n, void* d, void* e, void* vl, void* vu, void* il, void* iu, void* m, void* w, void* z, void* ldz, void* nzc, void* isuppz, void* tryrac, void* work, void* lwork, void* iwork, void* liwork, void* info);
 	void (*fn_hook) (void* jobz, void* range, void* n, void* d, void* e, void* vl, void* vu, void* il, void* iu, void* m, void* w, void* z, void* ldz, void* nzc, void* isuppz, void* tryrac, void* work, void* lwork, void* iwork, void* liwork, void* info);
 
-	fn      = current_backend->lapack.zstemr.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zstemr.f77_blas_function; 
 
     hook_pos_zstemr ++;
     if( hook_pos_zstemr < __flexiblas_hooks->zstemr.nhook) {
-        fn_hook = __flexiblas_hooks->zstemr.f77_hook_function[hook_pos_zstemr];
+        *(void **) &fn_hook = __flexiblas_hooks->zstemr.f77_hook_function[hook_pos_zstemr];
         fn_hook((void*) jobz, (void*) range, (void*) n, (void*) d, (void*) e, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) nzc, (void*) isuppz, (void*) tryrac, (void*) work, (void*) lwork, (void*) iwork, (void*) liwork, (void*) info);
     } else {
         hook_pos_zstemr = 0;

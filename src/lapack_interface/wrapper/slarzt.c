@@ -80,8 +80,8 @@ void FC_GLOBAL(slarzt,SLARZT)(char* direct, char* storev, blasint* n, blasint* k
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slarzt.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slarzt.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slarzt.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slarzt.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) direct, (void*) storev, (void*) n, (void*) k, (void*) v, (void*) ldv, (void*) tau, (void*) t, (void*) ldt); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slarzt_(void* direct, void* storev, void* n, void* k, void* 
 {
 	void (*fn) (void* direct, void* storev, void* n, void* k, void* v, void* ldv, void* tau, void* t, void* ldt);
 
-	fn = current_backend->lapack.slarzt.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slarzt.f77_blas_function; 
 
 		fn((void*) direct, (void*) storev, (void*) n, (void*) k, (void*) v, (void*) ldv, (void*) tau, (void*) t, (void*) ldt); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slarzt_(void* direct, void* storev, void* n, void* k, void*
 	void (*fn) (void* direct, void* storev, void* n, void* k, void* v, void* ldv, void* tau, void* t, void* ldt);
 	void (*fn_hook) (void* direct, void* storev, void* n, void* k, void* v, void* ldv, void* tau, void* t, void* ldt);
 
-	fn      = current_backend->lapack.slarzt.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slarzt.f77_blas_function; 
 
     hook_pos_slarzt ++;
     if( hook_pos_slarzt < __flexiblas_hooks->slarzt.nhook) {
-        fn_hook = __flexiblas_hooks->slarzt.f77_hook_function[hook_pos_slarzt];
+        *(void **) &fn_hook = __flexiblas_hooks->slarzt.f77_hook_function[hook_pos_slarzt];
         fn_hook((void*) direct, (void*) storev, (void*) n, (void*) k, (void*) v, (void*) ldv, (void*) tau, (void*) t, (void*) ldt);
     } else {
         hook_pos_slarzt = 0;

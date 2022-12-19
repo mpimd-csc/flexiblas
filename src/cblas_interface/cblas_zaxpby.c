@@ -90,8 +90,8 @@ void flexiblas_real_cblas_zaxpby( const CBLAS_INT N, const void *alpha, const vo
    if ( current_backend->blas.zaxpby.cblas_function != NULL ) {
 	   void (*fn)
 		 ( const CBLAS_INT N, const void *alpha, const void *X,
-                       const CBLAS_INT incX, const void *beta, void *Y, const CBLAS_INT incY)
-		   = current_backend->blas.zaxpby.cblas_function;
+                       const CBLAS_INT incX, const void *beta, void *Y, const CBLAS_INT incY);
+       *(void **) & fn = current_backend->blas.zaxpby.cblas_function;
 	   fn(N,alpha,X,incX,beta, Y,incY);
    } else {
 	FC_GLOBAL(zaxpby,ZAXPBY)( &F77_N, alpha, X, &F77_incX, beta, Y, &F77_incY);

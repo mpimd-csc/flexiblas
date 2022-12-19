@@ -80,8 +80,8 @@ void FC_GLOBAL(zlaqz2,ZLAQZ2)(blasint* ilschur, blasint* ilq, blasint* ilz, blas
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlaqz2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlaqz2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlaqz2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlaqz2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) ilschur, (void*) ilq, (void*) ilz, (void*) n, (void*) ilo, (void*) ihi, (void*) nw, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) ns, (void*) nd, (void*) alpha, (void*) beta, (void*) qc, (void*) ldqc, (void*) zc, (void*) ldzc, (void*) work, (void*) lwork, (void*) rwork, (void*) rec, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zlaqz2_(void* ilschur, void* ilq, void* ilz, void* n, void* 
 {
 	void (*fn) (void* ilschur, void* ilq, void* ilz, void* n, void* ilo, void* ihi, void* nw, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* ns, void* nd, void* alpha, void* beta, void* qc, void* ldqc, void* zc, void* ldzc, void* work, void* lwork, void* rwork, void* rec, void* info);
 
-	fn = current_backend->lapack.zlaqz2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlaqz2.f77_blas_function; 
 
 		fn((void*) ilschur, (void*) ilq, (void*) ilz, (void*) n, (void*) ilo, (void*) ihi, (void*) nw, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) ns, (void*) nd, (void*) alpha, (void*) beta, (void*) qc, (void*) ldqc, (void*) zc, (void*) ldzc, (void*) work, (void*) lwork, (void*) rwork, (void*) rec, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zlaqz2_(void* ilschur, void* ilq, void* ilz, void* n, void*
 	void (*fn) (void* ilschur, void* ilq, void* ilz, void* n, void* ilo, void* ihi, void* nw, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* ns, void* nd, void* alpha, void* beta, void* qc, void* ldqc, void* zc, void* ldzc, void* work, void* lwork, void* rwork, void* rec, void* info);
 	void (*fn_hook) (void* ilschur, void* ilq, void* ilz, void* n, void* ilo, void* ihi, void* nw, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* ns, void* nd, void* alpha, void* beta, void* qc, void* ldqc, void* zc, void* ldzc, void* work, void* lwork, void* rwork, void* rec, void* info);
 
-	fn      = current_backend->lapack.zlaqz2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlaqz2.f77_blas_function; 
 
     hook_pos_zlaqz2 ++;
     if( hook_pos_zlaqz2 < __flexiblas_hooks->zlaqz2.nhook) {
-        fn_hook = __flexiblas_hooks->zlaqz2.f77_hook_function[hook_pos_zlaqz2];
+        *(void **) &fn_hook = __flexiblas_hooks->zlaqz2.f77_hook_function[hook_pos_zlaqz2];
         fn_hook((void*) ilschur, (void*) ilq, (void*) ilz, (void*) n, (void*) ilo, (void*) ihi, (void*) nw, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) ns, (void*) nd, (void*) alpha, (void*) beta, (void*) qc, (void*) ldqc, (void*) zc, (void*) ldzc, (void*) work, (void*) lwork, (void*) rwork, (void*) rec, (void*) info);
     } else {
         hook_pos_zlaqz2 = 0;

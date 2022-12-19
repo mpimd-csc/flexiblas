@@ -80,8 +80,8 @@ void FC_GLOBAL(dlatdf,DLATDF)(blasint* ijob, blasint* n, double* z, blasint* ldz
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlatdf.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlatdf.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlatdf.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlatdf.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) ijob, (void*) n, (void*) z, (void*) ldz, (void*) rhs, (void*) rdsum, (void*) rdscal, (void*) ipiv, (void*) jpiv); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlatdf_(void* ijob, void* n, void* z, void* ldz, void* rhs, 
 {
 	void (*fn) (void* ijob, void* n, void* z, void* ldz, void* rhs, void* rdsum, void* rdscal, void* ipiv, void* jpiv);
 
-	fn = current_backend->lapack.dlatdf.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlatdf.f77_blas_function; 
 
 		fn((void*) ijob, (void*) n, (void*) z, (void*) ldz, (void*) rhs, (void*) rdsum, (void*) rdscal, (void*) ipiv, (void*) jpiv); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlatdf_(void* ijob, void* n, void* z, void* ldz, void* rhs,
 	void (*fn) (void* ijob, void* n, void* z, void* ldz, void* rhs, void* rdsum, void* rdscal, void* ipiv, void* jpiv);
 	void (*fn_hook) (void* ijob, void* n, void* z, void* ldz, void* rhs, void* rdsum, void* rdscal, void* ipiv, void* jpiv);
 
-	fn      = current_backend->lapack.dlatdf.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlatdf.f77_blas_function; 
 
     hook_pos_dlatdf ++;
     if( hook_pos_dlatdf < __flexiblas_hooks->dlatdf.nhook) {
-        fn_hook = __flexiblas_hooks->dlatdf.f77_hook_function[hook_pos_dlatdf];
+        *(void **) &fn_hook = __flexiblas_hooks->dlatdf.f77_hook_function[hook_pos_dlatdf];
         fn_hook((void*) ijob, (void*) n, (void*) z, (void*) ldz, (void*) rhs, (void*) rdsum, (void*) rdscal, (void*) ipiv, (void*) jpiv);
     } else {
         hook_pos_dlatdf = 0;

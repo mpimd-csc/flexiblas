@@ -80,8 +80,8 @@ void FC_GLOBAL(ztrexc,ZTREXC)(char* compq, blasint* n, double complex* t, blasin
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ztrexc.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ztrexc.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ztrexc.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ztrexc.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ztrexc_(void* compq, void* n, void* t, void* ldt, void* q, v
 {
 	void (*fn) (void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* info);
 
-	fn = current_backend->lapack.ztrexc.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ztrexc.f77_blas_function; 
 
 		fn((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ztrexc_(void* compq, void* n, void* t, void* ldt, void* q, 
 	void (*fn) (void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* info);
 	void (*fn_hook) (void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* info);
 
-	fn      = current_backend->lapack.ztrexc.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ztrexc.f77_blas_function; 
 
     hook_pos_ztrexc ++;
     if( hook_pos_ztrexc < __flexiblas_hooks->ztrexc.nhook) {
-        fn_hook = __flexiblas_hooks->ztrexc.f77_hook_function[hook_pos_ztrexc];
+        *(void **) &fn_hook = __flexiblas_hooks->ztrexc.f77_hook_function[hook_pos_ztrexc];
         fn_hook((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) info);
     } else {
         hook_pos_ztrexc = 0;

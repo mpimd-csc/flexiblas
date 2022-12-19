@@ -80,8 +80,8 @@ void FC_GLOBAL_(dlasyf_aa,DLASYF_AA)(char* uplo, blasint* j1, blasint* m, blasin
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlasyf_aa.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlasyf_aa.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlasyf_aa.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlasyf_aa.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) j1, (void*) m, (void*) nb, (void*) a, (void*) lda, (void*) ipiv, (void*) h, (void*) ldh, (void*) work); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlasyf_aa_(void* uplo, void* j1, void* m, void* nb, void* a,
 {
 	void (*fn) (void* uplo, void* j1, void* m, void* nb, void* a, void* lda, void* ipiv, void* h, void* ldh, void* work);
 
-	fn = current_backend->lapack.dlasyf_aa.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlasyf_aa.f77_blas_function; 
 
 		fn((void*) uplo, (void*) j1, (void*) m, (void*) nb, (void*) a, (void*) lda, (void*) ipiv, (void*) h, (void*) ldh, (void*) work); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlasyf_aa_(void* uplo, void* j1, void* m, void* nb, void* a
 	void (*fn) (void* uplo, void* j1, void* m, void* nb, void* a, void* lda, void* ipiv, void* h, void* ldh, void* work);
 	void (*fn_hook) (void* uplo, void* j1, void* m, void* nb, void* a, void* lda, void* ipiv, void* h, void* ldh, void* work);
 
-	fn      = current_backend->lapack.dlasyf_aa.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlasyf_aa.f77_blas_function; 
 
     hook_pos_dlasyf_aa ++;
     if( hook_pos_dlasyf_aa < __flexiblas_hooks->dlasyf_aa.nhook) {
-        fn_hook = __flexiblas_hooks->dlasyf_aa.f77_hook_function[hook_pos_dlasyf_aa];
+        *(void **) &fn_hook = __flexiblas_hooks->dlasyf_aa.f77_hook_function[hook_pos_dlasyf_aa];
         fn_hook((void*) uplo, (void*) j1, (void*) m, (void*) nb, (void*) a, (void*) lda, (void*) ipiv, (void*) h, (void*) ldh, (void*) work);
     } else {
         hook_pos_dlasyf_aa = 0;

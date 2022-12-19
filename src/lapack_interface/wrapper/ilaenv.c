@@ -81,8 +81,8 @@ int FC_GLOBAL(ilaenv,ILAENV)(blasint* ispec, char* name, char* opts, blasint* n1
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ilaenv.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ilaenv.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ilaenv.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ilaenv.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) ispec, (void*) name, (void*) opts, (void*) n1, (void*) n2, (void*) n3, (void*) n4, ( fortran_charlen_t ) len_name, ( fortran_charlen_t ) len_opts); 
 		return ret; 
@@ -113,7 +113,7 @@ blasint flexiblas_real_ilaenv_(void* ispec, void* name, void* opts, void* n1, vo
 	blasint (*fn) (void* ispec, void* name, void* opts, void* n1, void* n2, void* n3, void* n4, fortran_charlen_t len_name, fortran_charlen_t len_opts);
 	blasint ret;
 
-	fn = current_backend->lapack.ilaenv.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ilaenv.f77_blas_function; 
 
 		ret = fn((void*) ispec, (void*) name, (void*) opts, (void*) n1, (void*) n2, (void*) n3, (void*) n4, ( fortran_charlen_t ) len_name, ( fortran_charlen_t ) len_opts); 
 
@@ -137,11 +137,11 @@ blasint flexiblas_chain_ilaenv_(void* ispec, void* name, void* opts, void* n1, v
 	blasint (*fn_hook) (void* ispec, void* name, void* opts, void* n1, void* n2, void* n3, void* n4, fortran_charlen_t len_name, fortran_charlen_t len_opts);
 	blasint ret;
 
-	fn      = current_backend->lapack.ilaenv.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ilaenv.f77_blas_function; 
 
     hook_pos_ilaenv ++;
     if( hook_pos_ilaenv < __flexiblas_hooks->ilaenv.nhook) {
-        fn_hook = __flexiblas_hooks->ilaenv.f77_hook_function[hook_pos_ilaenv];
+        *(void **) &fn_hook = __flexiblas_hooks->ilaenv.f77_hook_function[hook_pos_ilaenv];
         ret = fn_hook((void*) ispec, (void*) name, (void*) opts, (void*) n1, (void*) n2, (void*) n3, (void*) n4, ( fortran_charlen_t )len_name, ( fortran_charlen_t )len_opts);
     } else {
         hook_pos_ilaenv = 0;

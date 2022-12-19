@@ -40,6 +40,8 @@
 #cmakedefine FALLBACK_NAME
 #cmakedefine FLEXIBLAS_LAPACK
 
+#cmakedefine FLEXIBLAS_LAPACK_3_11_0
+#cmakedefine FLEXIBLAS_LAPACK_3_11_0_WODPRC
 #cmakedefine FLEXIBLAS_LAPACK_3_10_1
 #cmakedefine FLEXIBLAS_LAPACK_3_10_1_WODPRC
 #cmakedefine FLEXIBLAS_LAPACK_3_10_0

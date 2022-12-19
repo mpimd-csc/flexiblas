@@ -111,8 +111,8 @@ void flexiblas_real_cblas_dspmv(const CBLAS_LAYOUT layout,
              const CBLAS_UPLO Uplo, const CBLAS_INT N,
              const double alpha, const double  *AP,
              const double  *X, const CBLAS_INT incX, const double beta,
-             double  *Y, const CBLAS_INT incY)
-            = current_backend->blas.dspmv.cblas_function;
+             double  *Y, const CBLAS_INT incY);
+        *(void **) & fn = current_backend->blas.dspmv.cblas_function;
         fn(layout,Uplo,N,alpha,AP,X,incX,beta,Y,incY);
     } else {
         extern int CBLAS_CallFromC;

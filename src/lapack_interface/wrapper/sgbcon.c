@@ -80,8 +80,8 @@ void FC_GLOBAL(sgbcon,SGBCON)(char* norm, blasint* n, blasint* kl, blasint* ku, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.sgbcon.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->sgbcon.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.sgbcon.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->sgbcon.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) iwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_sgbcon_(void* norm, void* n, void* kl, void* ku, void* ab, v
 {
 	void (*fn) (void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* ipiv, void* anorm, void* rcond, void* work, void* iwork, void* info);
 
-	fn = current_backend->lapack.sgbcon.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.sgbcon.f77_blas_function; 
 
 		fn((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) iwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_sgbcon_(void* norm, void* n, void* kl, void* ku, void* ab, 
 	void (*fn) (void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* ipiv, void* anorm, void* rcond, void* work, void* iwork, void* info);
 	void (*fn_hook) (void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* ipiv, void* anorm, void* rcond, void* work, void* iwork, void* info);
 
-	fn      = current_backend->lapack.sgbcon.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.sgbcon.f77_blas_function; 
 
     hook_pos_sgbcon ++;
     if( hook_pos_sgbcon < __flexiblas_hooks->sgbcon.nhook) {
-        fn_hook = __flexiblas_hooks->sgbcon.f77_hook_function[hook_pos_sgbcon];
+        *(void **) &fn_hook = __flexiblas_hooks->sgbcon.f77_hook_function[hook_pos_sgbcon];
         fn_hook((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) iwork, (void*) info);
     } else {
         hook_pos_sgbcon = 0;

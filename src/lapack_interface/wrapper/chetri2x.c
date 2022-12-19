@@ -80,8 +80,8 @@ void FC_GLOBAL(chetri2x,CHETRI2X)(char* uplo, blasint* n, float complex* a, blas
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.chetri2x.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->chetri2x.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.chetri2x.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->chetri2x.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) nb, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_chetri2x_(void* uplo, void* n, void* a, void* lda, void* ipi
 {
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* nb, void* info);
 
-	fn = current_backend->lapack.chetri2x.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.chetri2x.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) nb, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_chetri2x_(void* uplo, void* n, void* a, void* lda, void* ip
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* nb, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* nb, void* info);
 
-	fn      = current_backend->lapack.chetri2x.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.chetri2x.f77_blas_function; 
 
     hook_pos_chetri2x ++;
     if( hook_pos_chetri2x < __flexiblas_hooks->chetri2x.nhook) {
-        fn_hook = __flexiblas_hooks->chetri2x.f77_hook_function[hook_pos_chetri2x];
+        *(void **) &fn_hook = __flexiblas_hooks->chetri2x.f77_hook_function[hook_pos_chetri2x];
         fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) nb, (void*) info);
     } else {
         hook_pos_chetri2x = 0;

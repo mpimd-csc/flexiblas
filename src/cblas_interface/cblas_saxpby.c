@@ -84,7 +84,8 @@ void flexiblas_real_cblas_saxpby( const CBLAS_INT N, const float alpha, const fl
    #define F77_incY incY
 #endif
    if ( current_backend->blas.saxpby.cblas_function != NULL ) {
-	   void (*fn)(const CBLAS_INT , const float , const float *, const CBLAS_INT, const float, float *Y, const CBLAS_INT ) = current_backend->blas.saxpby.cblas_function;
+	   void (*fn)(const CBLAS_INT , const float , const float *, const CBLAS_INT, const float, float *Y, const CBLAS_INT ) ;
+       *(void **) &fn = current_backend->blas.saxpby.cblas_function;
 	   fn(N,alpha,X,incX,beta, Y,incY);
    } else {
    	FC_GLOBAL(saxpby,SAXPBY)( &F77_N, &alpha, X, &F77_incX, &beta, Y, &F77_incY);

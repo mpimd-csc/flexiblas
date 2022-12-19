@@ -58,7 +58,7 @@ void flexiblas_real_cblas_caxpy( const CBLAS_INT N, const void *alpha, const voi
 {
     void (*fn)  ( const CBLAS_INT N, const void *alpha, const void *X, const CBLAS_INT incX, void *Y, const CBLAS_INT incY);
     if ( current_backend->blas.caxpy.cblas_function != NULL ) {
-        fn = current_backend->blas.caxpy.cblas_function;
+        *(void **) &fn = current_backend->blas.caxpy.cblas_function;
         fn(N,alpha,X,incX,Y,incY);
     } else {
         Int F77_N=N, F77_incX=incX, F77_incY=incY;
@@ -72,7 +72,7 @@ void flexiblas_chain_cblas_caxpy( const CBLAS_INT N, const void *alpha, const vo
     void (*fn)  ( const CBLAS_INT N, const void *alpha, const void *X, const CBLAS_INT incX, void *Y, const CBLAS_INT incY);
     hook_cblas_caxpy_pos ++;
     if ( hook_cblas_caxpy_pos < __flexiblas_hooks->caxpy.cblas_nhook) {
-        fn  = __flexiblas_hooks->caxpy.cblas_hook_function[hook_cblas_caxpy_pos];
+        *(void **) &fn = __flexiblas_hooks->caxpy.cblas_hook_function[hook_cblas_caxpy_pos];
     } else {
         hook_cblas_caxpy_pos = 0;
         fn = flexiblas_chain_cblas_caxpy;

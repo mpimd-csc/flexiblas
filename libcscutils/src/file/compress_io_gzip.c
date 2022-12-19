@@ -51,7 +51,7 @@ typedef struct {
 
 
 /* Registers the gzip compression library. */
-_compressed_io_handler io_register_gzip(){
+_compressed_io_handler io_register_gzip(void){
     _compressed_io_handler handler;
     strcpy(handler.extension, ".gz");
     handler.type = CSC_IO_FILE_GZIP;

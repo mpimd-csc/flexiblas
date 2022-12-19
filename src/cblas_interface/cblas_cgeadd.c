@@ -94,8 +94,8 @@ void flexiblas_real_cblas_cgeadd(const CBLAS_ORDER CORDER,
 #endif
 
     if ( current_backend->blas.cgeadd.cblas_function != NULL ) {
-        void (*fn)(const CBLAS_ORDER, const CBLAS_INT, const CBLAS_INT, const float complex *, float complex *, const CBLAS_INT, const float complex * , float complex *, const CBLAS_INT)
-            = current_backend->blas.cgeadd.cblas_function;
+        void (*fn)(const CBLAS_ORDER, const CBLAS_INT, const CBLAS_INT, const float complex *, float complex *, const CBLAS_INT, const float complex * , float complex *, const CBLAS_INT);
+        *(void **) &fn = current_backend->blas.cgeadd.cblas_function;
         fn(CORDER, crows, ccols, calpha, a, clda, cbeta, b, cldb);
     } else {
 #ifdef F77_INT

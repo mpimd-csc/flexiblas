@@ -80,8 +80,8 @@ void FC_GLOBAL(cgelsy,CGELSY)(blasint* m, blasint* n, blasint* nrhs, float compl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cgelsy.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cgelsy.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cgelsy.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cgelsy.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) jpvt, (void*) rcond, (void*) rank_bn, (void*) work, (void*) lwork, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cgelsy_(void* m, void* n, void* nrhs, void* a, void* lda, vo
 {
 	void (*fn) (void* m, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* jpvt, void* rcond, void* rank_bn, void* work, void* lwork, void* rwork, void* info);
 
-	fn = current_backend->lapack.cgelsy.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cgelsy.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) jpvt, (void*) rcond, (void*) rank_bn, (void*) work, (void*) lwork, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cgelsy_(void* m, void* n, void* nrhs, void* a, void* lda, v
 	void (*fn) (void* m, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* jpvt, void* rcond, void* rank_bn, void* work, void* lwork, void* rwork, void* info);
 	void (*fn_hook) (void* m, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* jpvt, void* rcond, void* rank_bn, void* work, void* lwork, void* rwork, void* info);
 
-	fn      = current_backend->lapack.cgelsy.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cgelsy.f77_blas_function; 
 
     hook_pos_cgelsy ++;
     if( hook_pos_cgelsy < __flexiblas_hooks->cgelsy.nhook) {
-        fn_hook = __flexiblas_hooks->cgelsy.f77_hook_function[hook_pos_cgelsy];
+        *(void **) &fn_hook = __flexiblas_hooks->cgelsy.f77_hook_function[hook_pos_cgelsy];
         fn_hook((void*) m, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) jpvt, (void*) rcond, (void*) rank_bn, (void*) work, (void*) lwork, (void*) rwork, (void*) info);
     } else {
         hook_pos_cgelsy = 0;

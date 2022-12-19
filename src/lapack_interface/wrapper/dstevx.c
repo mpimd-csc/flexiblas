@@ -80,8 +80,8 @@ void FC_GLOBAL(dstevx,DSTEVX)(char* jobz, char* range, blasint* n, double* d, do
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dstevx.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dstevx.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dstevx.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dstevx.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobz, (void*) range, (void*) n, (void*) d, (void*) e, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) iwork, (void*) ifail, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dstevx_(void* jobz, void* range, void* n, void* d, void* e, 
 {
 	void (*fn) (void* jobz, void* range, void* n, void* d, void* e, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* iwork, void* ifail, void* info);
 
-	fn = current_backend->lapack.dstevx.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dstevx.f77_blas_function; 
 
 		fn((void*) jobz, (void*) range, (void*) n, (void*) d, (void*) e, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) iwork, (void*) ifail, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dstevx_(void* jobz, void* range, void* n, void* d, void* e,
 	void (*fn) (void* jobz, void* range, void* n, void* d, void* e, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* iwork, void* ifail, void* info);
 	void (*fn_hook) (void* jobz, void* range, void* n, void* d, void* e, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* iwork, void* ifail, void* info);
 
-	fn      = current_backend->lapack.dstevx.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dstevx.f77_blas_function; 
 
     hook_pos_dstevx ++;
     if( hook_pos_dstevx < __flexiblas_hooks->dstevx.nhook) {
-        fn_hook = __flexiblas_hooks->dstevx.f77_hook_function[hook_pos_dstevx];
+        *(void **) &fn_hook = __flexiblas_hooks->dstevx.f77_hook_function[hook_pos_dstevx];
         fn_hook((void*) jobz, (void*) range, (void*) n, (void*) d, (void*) e, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) iwork, (void*) ifail, (void*) info);
     } else {
         hook_pos_dstevx = 0;

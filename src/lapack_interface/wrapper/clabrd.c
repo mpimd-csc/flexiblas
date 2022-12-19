@@ -80,8 +80,8 @@ void FC_GLOBAL(clabrd,CLABRD)(blasint* m, blasint* n, blasint* nb, float complex
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.clabrd.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->clabrd.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.clabrd.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->clabrd.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) nb, (void*) a, (void*) lda, (void*) d, (void*) e, (void*) tauq, (void*) taup, (void*) x, (void*) ldx, (void*) y, (void*) ldy); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_clabrd_(void* m, void* n, void* nb, void* a, void* lda, void
 {
 	void (*fn) (void* m, void* n, void* nb, void* a, void* lda, void* d, void* e, void* tauq, void* taup, void* x, void* ldx, void* y, void* ldy);
 
-	fn = current_backend->lapack.clabrd.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.clabrd.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) nb, (void*) a, (void*) lda, (void*) d, (void*) e, (void*) tauq, (void*) taup, (void*) x, (void*) ldx, (void*) y, (void*) ldy); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_clabrd_(void* m, void* n, void* nb, void* a, void* lda, voi
 	void (*fn) (void* m, void* n, void* nb, void* a, void* lda, void* d, void* e, void* tauq, void* taup, void* x, void* ldx, void* y, void* ldy);
 	void (*fn_hook) (void* m, void* n, void* nb, void* a, void* lda, void* d, void* e, void* tauq, void* taup, void* x, void* ldx, void* y, void* ldy);
 
-	fn      = current_backend->lapack.clabrd.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.clabrd.f77_blas_function; 
 
     hook_pos_clabrd ++;
     if( hook_pos_clabrd < __flexiblas_hooks->clabrd.nhook) {
-        fn_hook = __flexiblas_hooks->clabrd.f77_hook_function[hook_pos_clabrd];
+        *(void **) &fn_hook = __flexiblas_hooks->clabrd.f77_hook_function[hook_pos_clabrd];
         fn_hook((void*) m, (void*) n, (void*) nb, (void*) a, (void*) lda, (void*) d, (void*) e, (void*) tauq, (void*) taup, (void*) x, (void*) ldx, (void*) y, (void*) ldy);
     } else {
         hook_pos_clabrd = 0;

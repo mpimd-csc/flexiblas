@@ -68,36 +68,36 @@ typedef int fortran_charlen_t;
 
 static TLS_STORE uint8_t hook_pos_dlassq = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(dlassq,DLASSQ)(blasint* n, double* x, blasint* incx, double* scale, double* sumsq)
+void FC_GLOBAL(dlassq,DLASSQ)(blasint* n, float* x, blasint* incx, float* scl, float* sumsq)
 #else
-void FC_GLOBAL(dlassq,DLASSQ)(blasint* n, double* x, blasint* incx, double* scale, double* sumsq)
+void FC_GLOBAL(dlassq,DLASSQ)(blasint* n, float* x, blasint* incx, float* scl, float* sumsq)
 #endif
 {
-	void (*fn) (void* n, void* x, void* incx, void* scale, void* sumsq);
-	void (*fn_hook) (void* n, void* x, void* incx, void* scale, void* sumsq);
+	void (*fn) (void* n, void* x, void* incx, void* scl, void* sumsq);
+	void (*fn_hook) (void* n, void* x, void* incx, void* scl, void* sumsq);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlassq.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlassq.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlassq.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlassq.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq); 
+		fn((void*) n, (void*) x, (void*) incx, (void*) scl, (void*) sumsq); 
 		return;
 	} else {
 		hook_pos_dlassq = 0;
-		fn_hook((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq);
+		fn_hook((void*) n, (void*) x, (void*) incx, (void*) scl, (void*) sumsq);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dlassq_(blasint* n, double* x, blasint* incx, double* scale, double* sumsq) __attribute__((alias(MTS(FC_GLOBAL(dlassq,DLASSQ)))));
+void dlassq_(blasint* n, float* x, blasint* incx, float* scl, float* sumsq) __attribute__((alias(MTS(FC_GLOBAL(dlassq,DLASSQ)))));
 #else
 #ifndef __APPLE__
-void dlassq(blasint* n, double* x, blasint* incx, double* scale, double* sumsq) __attribute__((alias(MTS(FC_GLOBAL(dlassq,DLASSQ)))));
+void dlassq(blasint* n, float* x, blasint* incx, float* scl, float* sumsq) __attribute__((alias(MTS(FC_GLOBAL(dlassq,DLASSQ)))));
 #else
-void dlassq(blasint* n, double* x, blasint* incx, double* scale, double* sumsq){ FC_GLOBAL(dlassq,DLASSQ)((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq); }
+void dlassq(blasint* n, float* x, blasint* incx, float* scl, float* sumsq){ FC_GLOBAL(dlassq,DLASSQ)((void*) n, (void*) x, (void*) incx, (void*) scl, (void*) sumsq); }
 #endif
 #endif
 
@@ -107,20 +107,20 @@ void dlassq(blasint* n, double* x, blasint* incx, double* scale, double* sumsq){
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_dlassq_(void* n, void* x, void* incx, void* scale, void* sumsq)
+void flexiblas_real_dlassq_(void* n, void* x, void* incx, void* scl, void* sumsq)
 {
-	void (*fn) (void* n, void* x, void* incx, void* scale, void* sumsq);
+	void (*fn) (void* n, void* x, void* incx, void* scl, void* sumsq);
 
-	fn = current_backend->lapack.dlassq.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlassq.f77_blas_function; 
 
-		fn((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq); 
+		fn((void*) n, (void*) x, (void*) incx, (void*) scl, (void*) sumsq); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_dlassq(void* n, void* x, void* incx, void* scale, void* sumsq) __attribute__((alias("flexiblas_real_dlassq_")));
+void flexiblas_real_dlassq(void* n, void* x, void* incx, void* scl, void* sumsq) __attribute__((alias("flexiblas_real_dlassq_")));
 #else
-void flexiblas_real_dlassq(void* n, void* x, void* incx, void* scale, void* sumsq){flexiblas_real_dlassq_((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq);}
+void flexiblas_real_dlassq(void* n, void* x, void* incx, void* scl, void* sumsq){flexiblas_real_dlassq_((void*) n, (void*) x, (void*) incx, (void*) scl, (void*) sumsq);}
 #endif
 
 
@@ -129,27 +129,27 @@ void flexiblas_real_dlassq(void* n, void* x, void* incx, void* scale, void* sums
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_dlassq_(void* n, void* x, void* incx, void* scale, void* sumsq)
+void flexiblas_chain_dlassq_(void* n, void* x, void* incx, void* scl, void* sumsq)
 {
-	void (*fn) (void* n, void* x, void* incx, void* scale, void* sumsq);
-	void (*fn_hook) (void* n, void* x, void* incx, void* scale, void* sumsq);
+	void (*fn) (void* n, void* x, void* incx, void* scl, void* sumsq);
+	void (*fn_hook) (void* n, void* x, void* incx, void* scl, void* sumsq);
 
-	fn      = current_backend->lapack.dlassq.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlassq.f77_blas_function; 
 
     hook_pos_dlassq ++;
     if( hook_pos_dlassq < __flexiblas_hooks->dlassq.nhook) {
-        fn_hook = __flexiblas_hooks->dlassq.f77_hook_function[hook_pos_dlassq];
-        fn_hook((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq);
+        *(void **) &fn_hook = __flexiblas_hooks->dlassq.f77_hook_function[hook_pos_dlassq];
+        fn_hook((void*) n, (void*) x, (void*) incx, (void*) scl, (void*) sumsq);
     } else {
         hook_pos_dlassq = 0;
-		fn((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq); 
+		fn((void*) n, (void*) x, (void*) incx, (void*) scl, (void*) sumsq); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_dlassq(void* n, void* x, void* incx, void* scale, void* sumsq) __attribute__((alias("flexiblas_chain_dlassq_")));
+void flexiblas_chain_dlassq(void* n, void* x, void* incx, void* scl, void* sumsq) __attribute__((alias("flexiblas_chain_dlassq_")));
 #else
-void flexiblas_chain_dlassq(void* n, void* x, void* incx, void* scale, void* sumsq){flexiblas_chain_dlassq_((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq);}
+void flexiblas_chain_dlassq(void* n, void* x, void* incx, void* scl, void* sumsq){flexiblas_chain_dlassq_((void*) n, (void*) x, (void*) incx, (void*) scl, (void*) sumsq);}
 #endif
 
 

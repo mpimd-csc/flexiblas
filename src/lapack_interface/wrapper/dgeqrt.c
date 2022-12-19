@@ -80,8 +80,8 @@ void FC_GLOBAL(dgeqrt,DGEQRT)(blasint* m, blasint* n, blasint* nb, double* a, bl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dgeqrt.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dgeqrt.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dgeqrt.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dgeqrt.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) nb, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dgeqrt_(void* m, void* n, void* nb, void* a, void* lda, void
 {
 	void (*fn) (void* m, void* n, void* nb, void* a, void* lda, void* t, void* ldt, void* work, void* info);
 
-	fn = current_backend->lapack.dgeqrt.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dgeqrt.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) nb, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dgeqrt_(void* m, void* n, void* nb, void* a, void* lda, voi
 	void (*fn) (void* m, void* n, void* nb, void* a, void* lda, void* t, void* ldt, void* work, void* info);
 	void (*fn_hook) (void* m, void* n, void* nb, void* a, void* lda, void* t, void* ldt, void* work, void* info);
 
-	fn      = current_backend->lapack.dgeqrt.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dgeqrt.f77_blas_function; 
 
     hook_pos_dgeqrt ++;
     if( hook_pos_dgeqrt < __flexiblas_hooks->dgeqrt.nhook) {
-        fn_hook = __flexiblas_hooks->dgeqrt.f77_hook_function[hook_pos_dgeqrt];
+        *(void **) &fn_hook = __flexiblas_hooks->dgeqrt.f77_hook_function[hook_pos_dgeqrt];
         fn_hook((void*) m, (void*) n, (void*) nb, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) work, (void*) info);
     } else {
         hook_pos_dgeqrt = 0;

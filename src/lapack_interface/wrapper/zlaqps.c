@@ -80,8 +80,8 @@ void FC_GLOBAL(zlaqps,ZLAQPS)(blasint* m, blasint* n, blasint* offset, blasint* 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlaqps.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlaqps.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlaqps.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlaqps.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) offset, (void*) nb, (void*) kb, (void*) a, (void*) lda, (void*) jpvt, (void*) tau, (void*) vn1, (void*) vn2, (void*) auxv, (void*) f, (void*) ldf); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zlaqps_(void* m, void* n, void* offset, void* nb, void* kb, 
 {
 	void (*fn) (void* m, void* n, void* offset, void* nb, void* kb, void* a, void* lda, void* jpvt, void* tau, void* vn1, void* vn2, void* auxv, void* f, void* ldf);
 
-	fn = current_backend->lapack.zlaqps.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlaqps.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) offset, (void*) nb, (void*) kb, (void*) a, (void*) lda, (void*) jpvt, (void*) tau, (void*) vn1, (void*) vn2, (void*) auxv, (void*) f, (void*) ldf); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zlaqps_(void* m, void* n, void* offset, void* nb, void* kb,
 	void (*fn) (void* m, void* n, void* offset, void* nb, void* kb, void* a, void* lda, void* jpvt, void* tau, void* vn1, void* vn2, void* auxv, void* f, void* ldf);
 	void (*fn_hook) (void* m, void* n, void* offset, void* nb, void* kb, void* a, void* lda, void* jpvt, void* tau, void* vn1, void* vn2, void* auxv, void* f, void* ldf);
 
-	fn      = current_backend->lapack.zlaqps.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlaqps.f77_blas_function; 
 
     hook_pos_zlaqps ++;
     if( hook_pos_zlaqps < __flexiblas_hooks->zlaqps.nhook) {
-        fn_hook = __flexiblas_hooks->zlaqps.f77_hook_function[hook_pos_zlaqps];
+        *(void **) &fn_hook = __flexiblas_hooks->zlaqps.f77_hook_function[hook_pos_zlaqps];
         fn_hook((void*) m, (void*) n, (void*) offset, (void*) nb, (void*) kb, (void*) a, (void*) lda, (void*) jpvt, (void*) tau, (void*) vn1, (void*) vn2, (void*) auxv, (void*) f, (void*) ldf);
     } else {
         hook_pos_zlaqps = 0;
