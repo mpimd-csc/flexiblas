@@ -40,7 +40,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 #include "flexiblas_config.h"

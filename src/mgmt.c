@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -69,7 +69,7 @@
 HIDDEN int __flexiblas_mgmt_init = 0;
 
 
-void flexiblas_mgmt_init()
+void flexiblas_mgmt_init(void)
 {
 
     flexiblas_mgmt_t * config = NULL;
@@ -100,7 +100,7 @@ void flexiblas_mgmt_init()
 }
 
 
-void flexiblas_mgmt_exit()
+void flexiblas_mgmt_exit(void)
 {
     if (! __flexiblas_mgmt_init ) return;
     __flexiblas_mgmt_init = 0;
@@ -264,7 +264,7 @@ char *flexiblas_mgmt_location_to_string(flexiblas_mgmt_location_t loc){
 }
 
 /*  Load all configfiles */
-flexiblas_mgmt_t * flexiblas_mgmt_load_config()
+flexiblas_mgmt_t * flexiblas_mgmt_load_config(void)
 {
     flexiblas_mgmt_t * config;
     char *path;

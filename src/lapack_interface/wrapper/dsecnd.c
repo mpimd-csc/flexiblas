@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -98,7 +98,7 @@ double dsecnd_(void) __attribute__((alias(MTS(FC_GLOBAL(dsecnd,DSECND)))));
 #ifndef __APPLE__
 double dsecnd(void) __attribute__((alias(MTS(FC_GLOBAL(dsecnd,DSECND)))));
 #else
-double dsecnd(void){ return FC_GLOBAL(dsecnd,DSECND)(void); }
+double dsecnd(void){ return FC_GLOBAL(dsecnd,DSECND)(); }
 #endif
 #endif
 
@@ -122,7 +122,7 @@ double flexiblas_real_dsecnd_(void)
 #ifndef __APPLE__
 double flexiblas_real_dsecnd(void) __attribute__((alias("flexiblas_real_dsecnd_")));
 #else
-double flexiblas_real_dsecnd(void){return flexiblas_real_dsecnd_(void);}
+double flexiblas_real_dsecnd(void){return flexiblas_real_dsecnd_();}
 #endif
 
 
@@ -152,7 +152,7 @@ double flexiblas_chain_dsecnd_(void)
 #ifndef __APPLE__
 double flexiblas_chain_dsecnd(void) __attribute__((alias("flexiblas_chain_dsecnd_")));
 #else
-double flexiblas_chain_dsecnd(void){return flexiblas_chain_dsecnd_(void);}
+double flexiblas_chain_dsecnd(void){return flexiblas_chain_dsecnd_();}
 #endif
 
 

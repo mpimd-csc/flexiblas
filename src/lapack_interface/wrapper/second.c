@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -98,7 +98,7 @@ float second_(void) __attribute__((alias(MTS(FC_GLOBAL(second,SECOND)))));
 #ifndef __APPLE__
 float second(void) __attribute__((alias(MTS(FC_GLOBAL(second,SECOND)))));
 #else
-float second(void){ return FC_GLOBAL(second,SECOND)(void); }
+float second(void){ return FC_GLOBAL(second,SECOND)(); }
 #endif
 #endif
 
@@ -122,7 +122,7 @@ float flexiblas_real_second_(void)
 #ifndef __APPLE__
 float flexiblas_real_second(void) __attribute__((alias("flexiblas_real_second_")));
 #else
-float flexiblas_real_second(void){return flexiblas_real_second_(void);}
+float flexiblas_real_second(void){return flexiblas_real_second_();}
 #endif
 
 
@@ -152,7 +152,7 @@ float flexiblas_chain_second_(void)
 #ifndef __APPLE__
 float flexiblas_chain_second(void) __attribute__((alias("flexiblas_chain_second_")));
 #else
-float flexiblas_chain_second(void){return flexiblas_chain_second_(void);}
+float flexiblas_chain_second(void){return flexiblas_chain_second_();}
 #endif
 
 

@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -901,7 +901,7 @@ __attribute__((destructor))
 
 
 
-double flexiblas_wtime()
+double flexiblas_wtime(void)
 {
     struct timeval tv;
     gettimeofday (&tv, NULL);
@@ -909,7 +909,7 @@ double flexiblas_wtime()
 }
 
 
-int flexiblas_verbosity()
+int flexiblas_verbosity(void)
 {
     return __flexiblas_verbose;
 }
@@ -945,7 +945,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 #endif
 
 
-flexiblas_mgmt_t * flexiblas_mgmt()
+flexiblas_mgmt_t * flexiblas_mgmt(void)
 {
     return __flexiblas_mgmt;
 }

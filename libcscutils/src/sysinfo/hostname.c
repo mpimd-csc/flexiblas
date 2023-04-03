@@ -31,7 +31,7 @@
 
 #include "cscutils/sysinfo.h"
 
-char *csc_sysinfo_hostname()
+char *csc_sysinfo_hostname(void)
 {
 #if defined(_WIN32) || defined(_WIN64)
     // The string returned by gethostname is at most 256 bytes long

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #ifndef FLEXIBLAS_REAL_CALLS_LAPACK_H

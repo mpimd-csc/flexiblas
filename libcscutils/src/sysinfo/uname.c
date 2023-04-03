@@ -33,7 +33,7 @@
 
 #include "cscutils/sysinfo.h"
 
-char * csc_sysinfo_sysname()
+char * csc_sysinfo_sysname(void)
 {
 #if defined(_WIN32) || defined(_WIN64)
     return strdup("Windows_NT");
@@ -45,7 +45,7 @@ char * csc_sysinfo_sysname()
 #endif
 }
 
-char * csc_sysinfo_nodename()
+char * csc_sysinfo_nodename(void)
 {
 #if defined(_WIN32) || defined(_WIN64)
     return strdup("Unknown");
@@ -57,7 +57,7 @@ char * csc_sysinfo_nodename()
 #endif
 }
 
-char * csc_sysinfo_release()
+char * csc_sysinfo_release(void)
 {
 #if defined(_WIN32) || defined(_WIN64)
     DWORD dwVersion = 0;
@@ -91,7 +91,7 @@ char * csc_sysinfo_release()
 #endif
 }
 
-char * csc_sysinfo_version()
+char * csc_sysinfo_version(void)
 {
 #if defined(_WIN32) || defined(_WIN64)
     return strdup("Unknown");
@@ -103,7 +103,7 @@ char * csc_sysinfo_version()
 #endif
 }
 
-char * csc_sysinfo_machine()
+char * csc_sysinfo_machine(void)
 {
 #if defined(_WIN32) || defined(_WIN64)
     SYSTEM_INFO sysinfo;

@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -59,7 +59,7 @@
 
 typedef int (*flexiblas_avail_t) (void);
 
-int flexiblas_avail()
+int flexiblas_avail(void)
 {
     int (*fnptr) (void);
     flexiblas_avail_t  ptr_next, ptr_default, ptr_self;
@@ -85,7 +85,7 @@ int flexiblas_avail()
 
 typedef int (*get_color_function_t) ( void );
 
-int flexiblas_get_color_output() {
+int flexiblas_get_color_output(void) {
     int (*fnptr)(void);
     get_color_function_t ptr_next, ptr_default, ptr_self;
     *(void **) &ptr_next    = dlsym(RTLD_NEXT, "flexiblas_get_color_output");
@@ -249,7 +249,7 @@ void flexiblas_print_current_backend(FILE* fp)
 
 /* Handle Backends  */
 typedef ssize_t (*list_t) (char *, size_t, ssize_t);
- 
+
 
 ssize_t flexiblas_list(char *name, const size_t len, const ssize_t pos)
 {
@@ -487,7 +487,7 @@ void bli_thread_set_num_threads(FLEXIBLAS_API_INT num)
 
 /* Get number of threads  */
 typedef int (*get_num_threads_t) (void);
-int flexiblas_get_num_threads()
+int flexiblas_get_num_threads(void)
 {
     int (*fnptr) (void);
     get_num_threads_t ptr_next, ptr_default, ptr_self;
@@ -513,53 +513,53 @@ int flexiblas_get_num_threads()
 
 }
 
-FLEXIBLAS_API_INT flexiblas_get_num_threads_()
+FLEXIBLAS_API_INT flexiblas_get_num_threads_(void)
 {
     return (FLEXIBLAS_API_INT) flexiblas_get_num_threads();
 }
 
-int openblas_get_num_threads()
+int openblas_get_num_threads(void)
 {
     return flexiblas_get_num_threads();
 }
 
-FLEXIBLAS_API_INT openblas_get_num_threads_()
+FLEXIBLAS_API_INT openblas_get_num_threads_(void)
 {
     return flexiblas_get_num_threads();
 }
 
-int mkl_get_num_threads()
+int mkl_get_num_threads(void)
 {
     return flexiblas_get_num_threads();
 }
 
-FLEXIBLAS_API_INT mkl_get_num_threads_()
+FLEXIBLAS_API_INT mkl_get_num_threads_(void)
 {
     return (FLEXIBLAS_API_INT) flexiblas_get_num_threads();
 }
 
-int blas_get_num_threads()
+int blas_get_num_threads(void)
 {
     return flexiblas_get_num_threads();
 }
 
-FLEXIBLAS_API_INT blas_get_num_threads_()
+FLEXIBLAS_API_INT blas_get_num_threads_(void)
 {
     return (FLEXIBLAS_API_INT) flexiblas_get_num_threads();
 }
 
-int acmlgetnumthreads()
+int acmlgetnumthreads(void)
 {
     return flexiblas_get_num_threads();
 }
 
-FLEXIBLAS_API_INT acmlgetnumthreads_()
+FLEXIBLAS_API_INT acmlgetnumthreads_(void)
 {
     return (FLEXIBLAS_API_INT) flexiblas_get_num_threads();
 }
 
 
-FLEXIBLAS_API_INT bli_thread_get_num_threads()
+FLEXIBLAS_API_INT bli_thread_get_num_threads(void)
 {
     return (FLEXIBLAS_API_INT) flexiblas_get_num_threads();
 }

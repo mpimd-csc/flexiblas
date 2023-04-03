@@ -1,3 +1,9 @@
+3.3.1 (April 3, 2023)
+---------------------
+- Fix non-strict prototypes detected by clang 15+
+- Fix GH #34: Search Intel MKL-TBB in oneAPI based installations
+- Fix GH #35: Error on codegen with prototypes on macOS X
+
 3.3.0 (December 19, 2022)
 -------------------------
 - Import LAPACK 3.11.0

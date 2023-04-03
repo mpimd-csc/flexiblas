@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -228,7 +228,7 @@ fin:
 
 
 
-int list_all_hooks()
+int list_all_hooks(void)
 {
     char **list1;
     char **list2;
@@ -252,7 +252,7 @@ int list_all_hooks()
 
 }
 
-int list_enabled_hooks()
+int list_enabled_hooks(void)
 {
     int i, j;
     flexiblas_mgmt_location_t loc;
@@ -307,7 +307,7 @@ int list_enabled_hooks()
 
 }
 
-int list_active_hooks()
+int list_active_hooks(void)
 {
     int j;
     flexiblas_mgmt_location_t loc;

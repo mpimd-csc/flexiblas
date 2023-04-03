@@ -60,7 +60,7 @@ static char * make_message(const char *fmt, ...)
 }
 
 
-char *csc_sysinfo_ccompiler()
+char *csc_sysinfo_ccompiler(void)
 {
 #if defined(__GNUC__) && !( defined(__clang__) || defined(__ICC))
     // GCC

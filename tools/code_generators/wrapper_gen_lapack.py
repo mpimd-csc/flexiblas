@@ -128,11 +128,14 @@ class FortranFunction(object):
             int_type = "int64_t"
         return int_type
 
-    def _callsequence(self, intwidth = 0, void = False, typecast = False ):
+    def _callsequence(self, intwidth = 0, void = False, call = False, typecast = False ):
         first = True
         s = ""
         if len(self._args) == 0:
-            return "void"
+            if call:
+                return ""
+            else:
+                return "void"
         for i in self._args:
             if not void:
                 if self._cvars[i] == "int":
@@ -338,7 +341,7 @@ class FortranFunction(object):
             else:
                 s = "void "
             s += "flexiblas_"+xname+"_" + self.funcname(0) +suffix+ "("
-        s += self._callsequence(intwidth = 0,  void = True, typecast = call)
+        s += self._callsequence(intwidth = 0,  void = True, call = call, typecast = call)
         s += ")"+end
         return s
 
@@ -672,11 +675,11 @@ static TLS_STORE uint8_t hook_pos_{funcname:s} = 0;
             s += self.c_headerx(intwidth = intwidth, suffix="", intel_interface=intel_interface, end="")
             if self._function:
                 if intel_interface and is_complex(self._fvars[self._name]["typespec"]):
-                    s += "{ "+ self.funcnamex(intwidth = intwidth) + "( (void*) returnvalue, "+self._callsequence(intwidth = intwidth, void=True, typecast = True)+"); }\n"
+                    s += "{ "+ self.funcnamex(intwidth = intwidth) + "( (void*) returnvalue, "+self._callsequence(intwidth = intwidth, void=True, call=True, typecast = True)+"); }\n"
                 else:
-                    s += "{ return "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, void=True, typecast = True)+"); }\n"
+                    s += "{ return "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, void=True, call = True, typecast = True)+"); }\n"
             else:
-                s += "{ "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, void=True, typecast = True)+"); }\n"
+                s += "{ "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, void=True, call=True, typecast = True)+"); }\n"
             s += "#endif\n"
             s += "#endif\n"
         s +="\n"
@@ -786,7 +789,7 @@ class Wrapper(object):
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         """.format(date =  datetime.now().ctime())
         return s
