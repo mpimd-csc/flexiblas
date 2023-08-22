@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -81,8 +81,8 @@ float FC_GLOBAL(slangb,SLANGB)(char* norm, blasint* n, blasint* kl, blasint* ku,
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slangb.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slangb.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slangb.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slangb.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) work); 
 		return ret; 
@@ -113,7 +113,7 @@ float flexiblas_real_slangb_(void* norm, void* n, void* kl, void* ku, void* ab, 
 	float (*fn) (void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work);
 	float ret;
 
-	fn = current_backend->lapack.slangb.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slangb.f77_blas_function; 
 
 		ret = fn((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) work); 
 
@@ -137,11 +137,11 @@ float flexiblas_chain_slangb_(void* norm, void* n, void* kl, void* ku, void* ab,
 	float (*fn_hook) (void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work);
 	float ret;
 
-	fn      = current_backend->lapack.slangb.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slangb.f77_blas_function; 
 
     hook_pos_slangb ++;
     if( hook_pos_slangb < __flexiblas_hooks->slangb.nhook) {
-        fn_hook = __flexiblas_hooks->slangb.f77_hook_function[hook_pos_slangb];
+        *(void **) &fn_hook = __flexiblas_hooks->slangb.f77_hook_function[hook_pos_slangb];
         ret = fn_hook((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) work);
     } else {
         hook_pos_slangb = 0;

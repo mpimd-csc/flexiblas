@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 #ifndef CBLAS_FLEXIBLAS_H
@@ -59,7 +59,7 @@ extern "C" {
         } while(0)
 
 #define CBLAS_HOOK_SELECT(FN)  do { if ( __flexiblas_hooks-> FN .cblas_hook_function[0] != NULL) { \
-            fn  = __flexiblas_hooks-> FN .cblas_hook_function[0]; \
+            *(void **) &fn = __flexiblas_hooks-> FN .cblas_hook_function[0]; \
             hook_cblas_ ## FN ## _pos = 0; \
         } else { \
             fn = flexiblas_real_cblas_ ## FN; \
@@ -68,7 +68,7 @@ extern "C" {
 #define CBLAS_HOOK_ADVANCE(FN) do { \
     hook_cblas_ ## FN ## _pos ++; \
     if ( hook_cblas_## FN ## _pos < __flexiblas_hooks-> FN .cblas_nhook) { \
-        fn  = __flexiblas_hooks-> FN .cblas_hook_function[hook_cblas_## FN ## _pos]; \
+        *(void **) &fn = __flexiblas_hooks-> FN .cblas_hook_function[hook_cblas_## FN ## _pos]; \
     } else { \
         hook_cblas_## FN ## _pos = 0; \
         fn = flexiblas_real_cblas_ ## FN; \

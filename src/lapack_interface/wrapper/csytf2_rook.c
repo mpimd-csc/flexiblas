@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL_(csytf2_rook,CSYTF2_ROOK)(char* uplo, blasint* n, float complex* 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.csytf2_rook.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->csytf2_rook.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.csytf2_rook.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->csytf2_rook.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_csytf2_rook_(void* uplo, void* n, void* a, void* lda, void* 
 {
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* info);
 
-	fn = current_backend->lapack.csytf2_rook.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.csytf2_rook.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_csytf2_rook_(void* uplo, void* n, void* a, void* lda, void*
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* info);
 
-	fn      = current_backend->lapack.csytf2_rook.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.csytf2_rook.f77_blas_function; 
 
     hook_pos_csytf2_rook ++;
     if( hook_pos_csytf2_rook < __flexiblas_hooks->csytf2_rook.nhook) {
-        fn_hook = __flexiblas_hooks->csytf2_rook.f77_hook_function[hook_pos_csytf2_rook];
+        *(void **) &fn_hook = __flexiblas_hooks->csytf2_rook.f77_hook_function[hook_pos_csytf2_rook];
         fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) info);
     } else {
         hook_pos_csytf2_rook = 0;

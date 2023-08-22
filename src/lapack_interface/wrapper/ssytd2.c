@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(ssytd2,SSYTD2)(char* uplo, blasint* n, float* a, blasint* lda, fl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ssytd2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ssytd2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ssytd2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ssytd2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) d, (void*) e, (void*) tau, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ssytd2_(void* uplo, void* n, void* a, void* lda, void* d, vo
 {
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* d, void* e, void* tau, void* info);
 
-	fn = current_backend->lapack.ssytd2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ssytd2.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) d, (void*) e, (void*) tau, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ssytd2_(void* uplo, void* n, void* a, void* lda, void* d, v
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* d, void* e, void* tau, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* d, void* e, void* tau, void* info);
 
-	fn      = current_backend->lapack.ssytd2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ssytd2.f77_blas_function; 
 
     hook_pos_ssytd2 ++;
     if( hook_pos_ssytd2 < __flexiblas_hooks->ssytd2.nhook) {
-        fn_hook = __flexiblas_hooks->ssytd2.f77_hook_function[hook_pos_ssytd2];
+        *(void **) &fn_hook = __flexiblas_hooks->ssytd2.f77_hook_function[hook_pos_ssytd2];
         fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) d, (void*) e, (void*) tau, (void*) info);
     } else {
         hook_pos_ssytd2 = 0;

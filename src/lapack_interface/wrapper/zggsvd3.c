@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zggsvd3,ZGGSVD3)(char* jobu, char* jobv, char* jobq, blasint* m, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zggsvd3.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zggsvd3.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zggsvd3.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zggsvd3.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobu, (void*) jobv, (void*) jobq, (void*) m, (void*) n, (void*) p, (void*) k, (void*) l, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) alpha, (void*) beta, (void*) u, (void*) ldu, (void*) v, (void*) ldv, (void*) q, (void*) ldq, (void*) work, (void*) lwork, (void*) rwork, (void*) iwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zggsvd3_(void* jobu, void* jobv, void* jobq, void* m, void* 
 {
 	void (*fn) (void* jobu, void* jobv, void* jobq, void* m, void* n, void* p, void* k, void* l, void* a, void* lda, void* b, void* ldb, void* alpha, void* beta, void* u, void* ldu, void* v, void* ldv, void* q, void* ldq, void* work, void* lwork, void* rwork, void* iwork, void* info);
 
-	fn = current_backend->lapack.zggsvd3.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zggsvd3.f77_blas_function; 
 
 		fn((void*) jobu, (void*) jobv, (void*) jobq, (void*) m, (void*) n, (void*) p, (void*) k, (void*) l, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) alpha, (void*) beta, (void*) u, (void*) ldu, (void*) v, (void*) ldv, (void*) q, (void*) ldq, (void*) work, (void*) lwork, (void*) rwork, (void*) iwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zggsvd3_(void* jobu, void* jobv, void* jobq, void* m, void*
 	void (*fn) (void* jobu, void* jobv, void* jobq, void* m, void* n, void* p, void* k, void* l, void* a, void* lda, void* b, void* ldb, void* alpha, void* beta, void* u, void* ldu, void* v, void* ldv, void* q, void* ldq, void* work, void* lwork, void* rwork, void* iwork, void* info);
 	void (*fn_hook) (void* jobu, void* jobv, void* jobq, void* m, void* n, void* p, void* k, void* l, void* a, void* lda, void* b, void* ldb, void* alpha, void* beta, void* u, void* ldu, void* v, void* ldv, void* q, void* ldq, void* work, void* lwork, void* rwork, void* iwork, void* info);
 
-	fn      = current_backend->lapack.zggsvd3.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zggsvd3.f77_blas_function; 
 
     hook_pos_zggsvd3 ++;
     if( hook_pos_zggsvd3 < __flexiblas_hooks->zggsvd3.nhook) {
-        fn_hook = __flexiblas_hooks->zggsvd3.f77_hook_function[hook_pos_zggsvd3];
+        *(void **) &fn_hook = __flexiblas_hooks->zggsvd3.f77_hook_function[hook_pos_zggsvd3];
         fn_hook((void*) jobu, (void*) jobv, (void*) jobq, (void*) m, (void*) n, (void*) p, (void*) k, (void*) l, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) alpha, (void*) beta, (void*) u, (void*) ldu, (void*) v, (void*) ldv, (void*) q, (void*) ldq, (void*) work, (void*) lwork, (void*) rwork, (void*) iwork, (void*) info);
     } else {
         hook_pos_zggsvd3 = 0;

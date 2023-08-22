@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -103,6 +103,8 @@ void flexiblas_real_cblas_zgemv(const CBLAS_LAYOUT layout,
 #define F77_lda lda
 #define F77_incX incx
 #define F77_incY incY
+    CBLAS_INT incx=incX;
+
 #endif
 
     if ( current_backend->blas.zgemv.cblas_function != NULL ) {
@@ -112,11 +114,11 @@ void flexiblas_real_cblas_zgemv(const CBLAS_LAYOUT layout,
              const CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N,
              const void *alpha, const void  *A, const CBLAS_INT lda,
              const void  *X, const CBLAS_INT incX, const void *beta,
-             void  *Y, const CBLAS_INT incY)
-            = current_backend->blas.zgemv.cblas_function;
+             void  *Y, const CBLAS_INT incY);
+        *(void **) & fn = current_backend->blas.zgemv.cblas_function;
         fn(layout,TransA,M,N,alpha,A,lda,X,incX,beta,Y,incY);
     } else {
-        CBLAS_INT n=0, i=0, incx=incX;
+        CBLAS_INT n=0, i=0;
         double *xx;;
         double ALPHA[2],BETA[2];
         CBLAS_INT tincY, tincx;

@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 #include "flexiblas_fortran_mangle.h"
@@ -51,15 +51,26 @@
 #include <complex.h>
 #include "flexiblas.h"
 
-double FC_GLOBAL(dcabs1,DCABS1)(double complex *z)
+double FC_GLOBAL(dcabs1,DCABS1)(const double complex *z)
 {
     return fabs(creal(*z)) + fabs(cimag(*z));
 }
 
-float FC_GLOBAL(scabs1,SCABS1)(float complex *z)
+float FC_GLOBAL(scabs1,SCABS1)(const float complex *z)
 {
     return fabsf(crealf(*z)) + fabsf(cimagf(*z));
 }
 
 
+#ifdef FLEXIBLAS_CBLAS
+double cblas_dcabs1(const void *c)
+{
+    return FC_GLOBAL(dcabs1,DCABS1)((const double complex *) c);
+}
 
+double cblas_scabs1(const void *c)
+{
+    return FC_GLOBAL(scabs1,SCABS1)((const float complex *) c);
+}
+
+#endif

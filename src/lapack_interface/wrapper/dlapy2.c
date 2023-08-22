@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -81,8 +81,8 @@ double FC_GLOBAL(dlapy2,DLAPY2)(double* x, double* y)
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlapy2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlapy2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlapy2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlapy2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) x, (void*) y); 
 		return ret; 
@@ -113,7 +113,7 @@ double flexiblas_real_dlapy2_(void* x, void* y)
 	double (*fn) (void* x, void* y);
 	double ret;
 
-	fn = current_backend->lapack.dlapy2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlapy2.f77_blas_function; 
 
 		ret = fn((void*) x, (void*) y); 
 
@@ -137,11 +137,11 @@ double flexiblas_chain_dlapy2_(void* x, void* y)
 	double (*fn_hook) (void* x, void* y);
 	double ret;
 
-	fn      = current_backend->lapack.dlapy2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlapy2.f77_blas_function; 
 
     hook_pos_dlapy2 ++;
     if( hook_pos_dlapy2 < __flexiblas_hooks->dlapy2.nhook) {
-        fn_hook = __flexiblas_hooks->dlapy2.f77_hook_function[hook_pos_dlapy2];
+        *(void **) &fn_hook = __flexiblas_hooks->dlapy2.f77_hook_function[hook_pos_dlapy2];
         ret = fn_hook((void*) x, (void*) y);
     } else {
         hook_pos_dlapy2 = 0;

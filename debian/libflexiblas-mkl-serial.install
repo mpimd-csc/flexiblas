@@ -1,0 +1,3 @@
+etc/flexiblasrc.d/MklSerial.conf
+usr/lib/*/flexiblas/libflexiblas_mklserial.so
+

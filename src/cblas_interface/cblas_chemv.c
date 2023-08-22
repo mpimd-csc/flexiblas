@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -112,8 +112,8 @@ void flexiblas_real_cblas_chemv(const CBLAS_LAYOUT layout,
              const CBLAS_UPLO Uplo, const CBLAS_INT N,
              const void *alpha, const void *A, const CBLAS_INT lda,
              const void *X, const CBLAS_INT incX, const void *beta,
-             void  *Y, const CBLAS_INT incY)
-            = current_backend->blas.chemv.cblas_function;
+             void  *Y, const CBLAS_INT incY);
+        *(void **) & fn = current_backend->blas.chemv.cblas_function;
         fn(layout,Uplo,N,alpha,A,lda,X,incX,beta,Y,incY);
     } else {
         CBLAS_INT n=0, i=0;

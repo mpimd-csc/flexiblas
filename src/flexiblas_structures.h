@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -89,6 +89,14 @@ extern "C" {
     typedef int (*flexiblas_get_num_procs_function_t)(void);			// TODO is this procedure implemented yet, if so where and what EXACTLY does it return?
 
 #ifdef FLEXIBLAS_LAPACK
+
+#ifdef FLEXIBLAS_LAPACK_3_11_0
+#include "lapack_interface/structures_lapack_3_11_0.h"
+#endif
+#ifdef FLEXIBLAS_LAPACK_3_11_0_WODPRC
+#include "lapack_interface/structures_lapack_3_11_0-wodprc.h"
+#endif
+
 
 #ifdef FLEXIBLAS_LAPACK_3_10_1
 #include "lapack_interface/structures_lapack_3_10_1.h"
@@ -2459,6 +2467,27 @@ extern "C" {
         /* LAPACK 3.10.1 */
         struct flexiblas_hook_fn droundup_lwork;
         struct flexiblas_hook_fn sroundup_lwork;
+
+        /* LAPACK 3.11.0 */
+        struct flexiblas_hook_fn cgelst;
+        struct flexiblas_hook_fn dgelst;
+        struct flexiblas_hook_fn sgelst;
+        struct flexiblas_hook_fn zgelst;
+        struct flexiblas_hook_fn ctrsyl3;
+        struct flexiblas_hook_fn dtrsyl3;
+        struct flexiblas_hook_fn strsyl3;
+        struct flexiblas_hook_fn ztrsyl3;
+        struct flexiblas_hook_fn clatrs3;
+        struct flexiblas_hook_fn dlatrs3;
+        struct flexiblas_hook_fn slatrs3;
+        struct flexiblas_hook_fn zlatrs3;
+        struct flexiblas_hook_fn dlarmm;
+        struct flexiblas_hook_fn slarmm;
+        struct flexiblas_hook_fn clarmm;
+        struct flexiblas_hook_fn zlarmm;
+
+
+
 
     } flexiblas_hook_t;
 

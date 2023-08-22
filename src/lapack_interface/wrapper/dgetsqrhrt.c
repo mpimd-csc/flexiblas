@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dgetsqrhrt,DGETSQRHRT)(blasint* m, blasint* n, blasint* mb1, blas
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dgetsqrhrt.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dgetsqrhrt.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dgetsqrhrt.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dgetsqrhrt.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) mb1, (void*) nb1, (void*) nb2, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dgetsqrhrt_(void* m, void* n, void* mb1, void* nb1, void* nb
 {
 	void (*fn) (void* m, void* n, void* mb1, void* nb1, void* nb2, void* a, void* lda, void* t, void* ldt, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.dgetsqrhrt.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dgetsqrhrt.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) mb1, (void*) nb1, (void*) nb2, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dgetsqrhrt_(void* m, void* n, void* mb1, void* nb1, void* n
 	void (*fn) (void* m, void* n, void* mb1, void* nb1, void* nb2, void* a, void* lda, void* t, void* ldt, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* m, void* n, void* mb1, void* nb1, void* nb2, void* a, void* lda, void* t, void* ldt, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.dgetsqrhrt.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dgetsqrhrt.f77_blas_function; 
 
     hook_pos_dgetsqrhrt ++;
     if( hook_pos_dgetsqrhrt < __flexiblas_hooks->dgetsqrhrt.nhook) {
-        fn_hook = __flexiblas_hooks->dgetsqrhrt.f77_hook_function[hook_pos_dgetsqrhrt];
+        *(void **) &fn_hook = __flexiblas_hooks->dgetsqrhrt.f77_hook_function[hook_pos_dgetsqrhrt];
         fn_hook((void*) m, (void*) n, (void*) mb1, (void*) nb1, (void*) nb2, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_dgetsqrhrt = 0;

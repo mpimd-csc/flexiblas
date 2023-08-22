@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dtplqt,DTPLQT)(blasint* m, blasint* n, blasint* l, blasint* mb, d
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dtplqt.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dtplqt.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dtplqt.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dtplqt.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) l, (void*) mb, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) t, (void*) ldt, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dtplqt_(void* m, void* n, void* l, void* mb, void* a, void* 
 {
 	void (*fn) (void* m, void* n, void* l, void* mb, void* a, void* lda, void* b, void* ldb, void* t, void* ldt, void* work, void* info);
 
-	fn = current_backend->lapack.dtplqt.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dtplqt.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) l, (void*) mb, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) t, (void*) ldt, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dtplqt_(void* m, void* n, void* l, void* mb, void* a, void*
 	void (*fn) (void* m, void* n, void* l, void* mb, void* a, void* lda, void* b, void* ldb, void* t, void* ldt, void* work, void* info);
 	void (*fn_hook) (void* m, void* n, void* l, void* mb, void* a, void* lda, void* b, void* ldb, void* t, void* ldt, void* work, void* info);
 
-	fn      = current_backend->lapack.dtplqt.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dtplqt.f77_blas_function; 
 
     hook_pos_dtplqt ++;
     if( hook_pos_dtplqt < __flexiblas_hooks->dtplqt.nhook) {
-        fn_hook = __flexiblas_hooks->dtplqt.f77_hook_function[hook_pos_dtplqt];
+        *(void **) &fn_hook = __flexiblas_hooks->dtplqt.f77_hook_function[hook_pos_dtplqt];
         fn_hook((void*) m, (void*) n, (void*) l, (void*) mb, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) t, (void*) ldt, (void*) work, (void*) info);
     } else {
         hook_pos_dtplqt = 0;

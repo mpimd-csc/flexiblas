@@ -68,7 +68,7 @@ static void stackDump (lua_State *L) {
 
 
 
-csc_lua_t csc_lua_init()
+csc_lua_t csc_lua_init(void)
 {
     lua_State *state;
     state = luaL_newstate();

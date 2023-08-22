@@ -128,9 +128,14 @@ class FortranFunction(object):
             int_type = "int64_t"
         return int_type
 
-    def _callsequence(self, intwidth = 0, void = False, typecast = False ):
+    def _callsequence(self, intwidth = 0, void = False, call = False, typecast = False ):
         first = True
         s = ""
+        if len(self._args) == 0:
+            if call:
+                return ""
+            else:
+                return "void"
         for i in self._args:
             if not void:
                 if self._cvars[i] == "int":
@@ -336,7 +341,7 @@ class FortranFunction(object):
             else:
                 s = "void "
             s += "flexiblas_"+xname+"_" + self.funcname(0) +suffix+ "("
-        s += self._callsequence(intwidth = 0,  void = True, typecast = call)
+        s += self._callsequence(intwidth = 0,  void = True, call = call, typecast = call)
         s += ")"+end
         return s
 
@@ -373,10 +378,10 @@ class FortranFunction(object):
             s += "\t{returntype:s} ret;\n".format(returntype = return_type)
         s += "\n"
         # Get the function
-        s += "\tfn = current_backend->{part:s}.{funcname:s}.f77_blas_function; \n".format(funcname = self._name.lower(),part=part)
+        s += "\t*(void **) & fn = current_backend->{part:s}.{funcname:s}.f77_blas_function; \n".format(funcname = self._name.lower(),part=part)
 
         if self._function and is_complex(self._fvars[self._name]["typespec"]):
-            s+= "\tfn_intel = (void *) fn;\n"
+            s+= "\t*(void **) & fn_intel = *(void **) &fn;\n"
         s += "\n"
 
 
@@ -429,15 +434,15 @@ class FortranFunction(object):
             s += "\t{returntype:s} ret;\n".format(returntype = return_type)
         s += "\n"
         # Get the function
-        s += "\tfn      = current_backend->{part:s}.{funcname:s}.f77_blas_function; \n".format(funcname = self._name.lower(),part=part)
+        s += "\t*(void **) &fn      = current_backend->{part:s}.{funcname:s}.f77_blas_function; \n".format(funcname = self._name.lower(),part=part)
         if self._function and is_complex(self._fvars[self._name]["typespec"]):
-            s+= "\tfn_intel = (void *) fn;\n"
+            s+= "\t*(void **) & fn_intel = *(void **) &fn;\n"
 
         # Check the hook
         s += """
     hook_pos_{funcname:s} ++;
     if( hook_pos_{funcname:s} < __flexiblas_hooks->{funcname:s}.nhook) {{
-        fn_hook = __flexiblas_hooks->{funcname:s}.f77_hook_function[hook_pos_{funcname:s}];
+        *(void **) &fn_hook = __flexiblas_hooks->{funcname:s}.f77_hook_function[hook_pos_{funcname:s}];
         {call_hook:s}
     }} else {{
         hook_pos_{funcname:s} = 0;\n""".format(funcname = self._name.lower(),
@@ -517,15 +522,15 @@ static TLS_STORE uint8_t hook_pos_{funcname:s} = 0;
         current_backend->post_init = 0;
     }\n"""
         # s += "\tfn = flexiblas_{funcname:s}.call_fblas; \n".format(funcname = self._name.lower())
-        s += "\tfn = current_backend->{part:s}.{funcname:s}.f77_blas_function; \n".format(funcname = self._name.lower(),part=part)
-        s += "\tfn_hook = __flexiblas_hooks->{funcname:s}.f77_hook_function[0]; \n".format(funcname = self._name.lower(),part=part)
+        s += "\t*(void **) & fn = current_backend->{part:s}.{funcname:s}.f77_blas_function; \n".format(funcname = self._name.lower(),part=part)
+        s += "\t*(void **) & fn_hook = __flexiblas_hooks->{funcname:s}.f77_hook_function[0]; \n".format(funcname = self._name.lower(),part=part)
 
         # s += "\tif ( fn == NULL ) { \n"
         # s += "\t\tfprintf(stderr, PRINT_PREFIX \"{funcname:s}_ not hooked, abort\\n\"); \n".format(funcname=self._name.lower())
         # s += "\t\tabort(); \n"
         # s += "\t}\n"
         if self._function and is_complex(self._fvars[self._name]["typespec"]):
-            s+= "\tfn_intel = (void *) fn;\n"
+            s+= "\t*(void **) & fn_intel = *(void **) &fn;\n"
 
 
         # Adjust Int sizes
@@ -670,11 +675,11 @@ static TLS_STORE uint8_t hook_pos_{funcname:s} = 0;
             s += self.c_headerx(intwidth = intwidth, suffix="", intel_interface=intel_interface, end="")
             if self._function:
                 if intel_interface and is_complex(self._fvars[self._name]["typespec"]):
-                    s += "{ "+ self.funcnamex(intwidth = intwidth) + "( (void*) returnvalue, "+self._callsequence(intwidth = intwidth, void=True, typecast = True)+"); }\n"
+                    s += "{ "+ self.funcnamex(intwidth = intwidth) + "( (void*) returnvalue, "+self._callsequence(intwidth = intwidth, void=True, call=True, typecast = True)+"); }\n"
                 else:
-                    s += "{ return "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, void=True, typecast = True)+"); }\n"
+                    s += "{ return "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, void=True, call = True, typecast = True)+"); }\n"
             else:
-                s += "{ "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, void=True, typecast = True)+"); }\n"
+                s += "{ "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, void=True, call=True, typecast = True)+"); }\n"
             s += "#endif\n"
             s += "#endif\n"
         s +="\n"
@@ -784,7 +789,7 @@ class Wrapper(object):
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         """.format(date =  datetime.now().ctime())
         return s

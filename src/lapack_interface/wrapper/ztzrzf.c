@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(ztzrzf,ZTZRZF)(blasint* m, blasint* n, double complex* a, blasint
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ztzrzf.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ztzrzf.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ztzrzf.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ztzrzf.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ztzrzf_(void* m, void* n, void* a, void* lda, void* tau, voi
 {
 	void (*fn) (void* m, void* n, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.ztzrzf.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ztzrzf.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ztzrzf_(void* m, void* n, void* a, void* lda, void* tau, vo
 	void (*fn) (void* m, void* n, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* m, void* n, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.ztzrzf.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ztzrzf.f77_blas_function; 
 
     hook_pos_ztzrzf ++;
     if( hook_pos_ztzrzf < __flexiblas_hooks->ztzrzf.nhook) {
-        fn_hook = __flexiblas_hooks->ztzrzf.f77_hook_function[hook_pos_ztzrzf];
+        *(void **) &fn_hook = __flexiblas_hooks->ztzrzf.f77_hook_function[hook_pos_ztzrzf];
         fn_hook((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_ztzrzf = 0;

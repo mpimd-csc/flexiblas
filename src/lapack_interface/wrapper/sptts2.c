@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(sptts2,SPTTS2)(blasint* n, blasint* nrhs, float* d, float* e, flo
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.sptts2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->sptts2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.sptts2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->sptts2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) b, (void*) ldb); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_sptts2_(void* n, void* nrhs, void* d, void* e, void* b, void
 {
 	void (*fn) (void* n, void* nrhs, void* d, void* e, void* b, void* ldb);
 
-	fn = current_backend->lapack.sptts2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.sptts2.f77_blas_function; 
 
 		fn((void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) b, (void*) ldb); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_sptts2_(void* n, void* nrhs, void* d, void* e, void* b, voi
 	void (*fn) (void* n, void* nrhs, void* d, void* e, void* b, void* ldb);
 	void (*fn_hook) (void* n, void* nrhs, void* d, void* e, void* b, void* ldb);
 
-	fn      = current_backend->lapack.sptts2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.sptts2.f77_blas_function; 
 
     hook_pos_sptts2 ++;
     if( hook_pos_sptts2 < __flexiblas_hooks->sptts2.nhook) {
-        fn_hook = __flexiblas_hooks->sptts2.f77_hook_function[hook_pos_sptts2];
+        *(void **) &fn_hook = __flexiblas_hooks->sptts2.f77_hook_function[hook_pos_sptts2];
         fn_hook((void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) b, (void*) ldb);
     } else {
         hook_pos_sptts2 = 0;

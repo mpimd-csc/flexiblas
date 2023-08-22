@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zungbr,ZUNGBR)(char* vect, blasint* m, blasint* n, blasint* k, do
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zungbr.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zungbr.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zungbr.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zungbr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) vect, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zungbr_(void* vect, void* m, void* n, void* k, void* a, void
 {
 	void (*fn) (void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.zungbr.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zungbr.f77_blas_function; 
 
 		fn((void*) vect, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zungbr_(void* vect, void* m, void* n, void* k, void* a, voi
 	void (*fn) (void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.zungbr.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zungbr.f77_blas_function; 
 
     hook_pos_zungbr ++;
     if( hook_pos_zungbr < __flexiblas_hooks->zungbr.nhook) {
-        fn_hook = __flexiblas_hooks->zungbr.f77_hook_function[hook_pos_zungbr];
+        *(void **) &fn_hook = __flexiblas_hooks->zungbr.f77_hook_function[hook_pos_zungbr];
         fn_hook((void*) vect, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_zungbr = 0;

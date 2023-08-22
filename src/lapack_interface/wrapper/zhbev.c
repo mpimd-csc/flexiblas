@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zhbev,ZHBEV)(char* jobz, char* uplo, blasint* n, blasint* kd, dou
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zhbev.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zhbev.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zhbev.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zhbev.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobz, (void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zhbev_(void* jobz, void* uplo, void* n, void* kd, void* ab, 
 {
 	void (*fn) (void* jobz, void* uplo, void* n, void* kd, void* ab, void* ldab, void* w, void* z, void* ldz, void* work, void* rwork, void* info);
 
-	fn = current_backend->lapack.zhbev.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zhbev.f77_blas_function; 
 
 		fn((void*) jobz, (void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zhbev_(void* jobz, void* uplo, void* n, void* kd, void* ab,
 	void (*fn) (void* jobz, void* uplo, void* n, void* kd, void* ab, void* ldab, void* w, void* z, void* ldz, void* work, void* rwork, void* info);
 	void (*fn_hook) (void* jobz, void* uplo, void* n, void* kd, void* ab, void* ldab, void* w, void* z, void* ldz, void* work, void* rwork, void* info);
 
-	fn      = current_backend->lapack.zhbev.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zhbev.f77_blas_function; 
 
     hook_pos_zhbev ++;
     if( hook_pos_zhbev < __flexiblas_hooks->zhbev.nhook) {
-        fn_hook = __flexiblas_hooks->zhbev.f77_hook_function[hook_pos_zhbev];
+        *(void **) &fn_hook = __flexiblas_hooks->zhbev.f77_hook_function[hook_pos_zhbev];
         fn_hook((void*) jobz, (void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) rwork, (void*) info);
     } else {
         hook_pos_zhbev = 0;

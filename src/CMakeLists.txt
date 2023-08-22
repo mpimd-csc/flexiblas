@@ -147,6 +147,8 @@ SET ( CBLAS_SRC
 	cblas_interface/cblas_chpmv.c
 	cblas_interface/cblas_chpr2.c
 	cblas_interface/cblas_chpr.c
+	cblas_interface/cblas_crotg.c
+	cblas_interface/cblas_csrot.c
 	cblas_interface/cblas_cscal.c
 	cblas_interface/cblas_csscal.c
 	cblas_interface/cblas_cswap.c
@@ -182,6 +184,8 @@ SET ( CBLAS_SRC
 	cblas_interface/cblas_zhpmv.c
 	cblas_interface/cblas_zhpr2.c
 	cblas_interface/cblas_zhpr.c
+    cblas_interface/cblas_zrotg.c
+    cblas_interface/cblas_zdrot.c
 	cblas_interface/cblas_zscal.c
 	cblas_interface/cblas_zdscal.c
 	cblas_interface/cblas_zswap.c
@@ -225,7 +229,11 @@ ENDIF()
 #
 IF ( LAPACK )
 	# 3.7.1 and 3.7.0 share the same api/abi
-	IF(LAPACK_API_VERSION STREQUAL "3.10.1")
+	IF(LAPACK_API_VERSION STREQUAL "3.11.0")
+		SET(_LAPACK_FILE_SUFFIX 3_11_0)
+	ELSEIF (LAPACK_API_VERSION STREQUAL "3.11.0-wodprc")
+		SET(_LAPACK_FILE_SUFFIX 3_11_0-wodprc) #
+    ELSEIF(LAPACK_API_VERSION STREQUAL "3.10.1")
 		SET(_LAPACK_FILE_SUFFIX 3_10_1)
 	ELSEIF (LAPACK_API_VERSION STREQUAL "3.10.1-wodprc")
 		SET(_LAPACK_FILE_SUFFIX 3_10_1-wodprc) #
@@ -314,6 +322,18 @@ set(GENERIC_LIB_SOVERSION "${FLEXIBLAS_VERSION_MAJOR}")
 
 
 add_executable(flexiblas-config flexiblas-config.c)
+
+IF ( C_W_PEDANTIC )
+    target_compile_options(flexiblas PRIVATE "-Wpedantic")
+    target_compile_options(flexiblas-tool PRIVATE "-Wpedantic")
+    target_compile_options(flexiblas_mgmt PRIVATE "-Wpedantic")
+    target_compile_options(flexiblas_api PRIVATE "-Wpedantic")
+    target_compile_options(flexiblas-config PRIVATE "-Wpedantic")
+ENDIF()
+
+
+
+
 
 
 IF ( NOT ${CMAKE_C_COMPILER_ID} MATCHES "XL")

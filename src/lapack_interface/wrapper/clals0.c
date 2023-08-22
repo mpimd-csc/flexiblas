@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(clals0,CLALS0)(blasint* icompq, blasint* nl, blasint* nr, blasint
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.clals0.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->clals0.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.clals0.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->clals0.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) icompq, (void*) nl, (void*) nr, (void*) sqre, (void*) nrhs, (void*) b, (void*) ldb, (void*) bx, (void*) ldbx, (void*) perm, (void*) givptr, (void*) givcol, (void*) ldgcol, (void*) givnum, (void*) ldgnum, (void*) poles, (void*) difl, (void*) difr, (void*) z, (void*) k, (void*) c, (void*) s, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_clals0_(void* icompq, void* nl, void* nr, void* sqre, void* 
 {
 	void (*fn) (void* icompq, void* nl, void* nr, void* sqre, void* nrhs, void* b, void* ldb, void* bx, void* ldbx, void* perm, void* givptr, void* givcol, void* ldgcol, void* givnum, void* ldgnum, void* poles, void* difl, void* difr, void* z, void* k, void* c, void* s, void* rwork, void* info);
 
-	fn = current_backend->lapack.clals0.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.clals0.f77_blas_function; 
 
 		fn((void*) icompq, (void*) nl, (void*) nr, (void*) sqre, (void*) nrhs, (void*) b, (void*) ldb, (void*) bx, (void*) ldbx, (void*) perm, (void*) givptr, (void*) givcol, (void*) ldgcol, (void*) givnum, (void*) ldgnum, (void*) poles, (void*) difl, (void*) difr, (void*) z, (void*) k, (void*) c, (void*) s, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_clals0_(void* icompq, void* nl, void* nr, void* sqre, void*
 	void (*fn) (void* icompq, void* nl, void* nr, void* sqre, void* nrhs, void* b, void* ldb, void* bx, void* ldbx, void* perm, void* givptr, void* givcol, void* ldgcol, void* givnum, void* ldgnum, void* poles, void* difl, void* difr, void* z, void* k, void* c, void* s, void* rwork, void* info);
 	void (*fn_hook) (void* icompq, void* nl, void* nr, void* sqre, void* nrhs, void* b, void* ldb, void* bx, void* ldbx, void* perm, void* givptr, void* givcol, void* ldgcol, void* givnum, void* ldgnum, void* poles, void* difl, void* difr, void* z, void* k, void* c, void* s, void* rwork, void* info);
 
-	fn      = current_backend->lapack.clals0.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.clals0.f77_blas_function; 
 
     hook_pos_clals0 ++;
     if( hook_pos_clals0 < __flexiblas_hooks->clals0.nhook) {
-        fn_hook = __flexiblas_hooks->clals0.f77_hook_function[hook_pos_clals0];
+        *(void **) &fn_hook = __flexiblas_hooks->clals0.f77_hook_function[hook_pos_clals0];
         fn_hook((void*) icompq, (void*) nl, (void*) nr, (void*) sqre, (void*) nrhs, (void*) b, (void*) ldb, (void*) bx, (void*) ldbx, (void*) perm, (void*) givptr, (void*) givcol, (void*) ldgcol, (void*) givnum, (void*) ldgnum, (void*) poles, (void*) difl, (void*) difr, (void*) z, (void*) k, (void*) c, (void*) s, (void*) rwork, (void*) info);
     } else {
         hook_pos_clals0 = 0;

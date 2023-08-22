@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dpbstf,DPBSTF)(char* uplo, blasint* n, blasint* kd, double* ab, b
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dpbstf.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dpbstf.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dpbstf.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dpbstf.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dpbstf_(void* uplo, void* n, void* kd, void* ab, void* ldab,
 {
 	void (*fn) (void* uplo, void* n, void* kd, void* ab, void* ldab, void* info);
 
-	fn = current_backend->lapack.dpbstf.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dpbstf.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dpbstf_(void* uplo, void* n, void* kd, void* ab, void* ldab
 	void (*fn) (void* uplo, void* n, void* kd, void* ab, void* ldab, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* kd, void* ab, void* ldab, void* info);
 
-	fn      = current_backend->lapack.dpbstf.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dpbstf.f77_blas_function; 
 
     hook_pos_dpbstf ++;
     if( hook_pos_dpbstf < __flexiblas_hooks->dpbstf.nhook) {
-        fn_hook = __flexiblas_hooks->dpbstf.f77_hook_function[hook_pos_dpbstf];
+        *(void **) &fn_hook = __flexiblas_hooks->dpbstf.f77_hook_function[hook_pos_dpbstf];
         fn_hook((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) info);
     } else {
         hook_pos_dpbstf = 0;

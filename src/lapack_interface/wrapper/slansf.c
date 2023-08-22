@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -81,8 +81,8 @@ float FC_GLOBAL(slansf,SLANSF)(char* norm, char* transr, char* uplo, blasint* n,
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slansf.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slansf.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slansf.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slansf.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work); 
 		return ret; 
@@ -113,7 +113,7 @@ float flexiblas_real_slansf_(void* norm, void* transr, void* uplo, void* n, void
 	float (*fn) (void* norm, void* transr, void* uplo, void* n, void* a, void* work);
 	float ret;
 
-	fn = current_backend->lapack.slansf.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slansf.f77_blas_function; 
 
 		ret = fn((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work); 
 
@@ -137,11 +137,11 @@ float flexiblas_chain_slansf_(void* norm, void* transr, void* uplo, void* n, voi
 	float (*fn_hook) (void* norm, void* transr, void* uplo, void* n, void* a, void* work);
 	float ret;
 
-	fn      = current_backend->lapack.slansf.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slansf.f77_blas_function; 
 
     hook_pos_slansf ++;
     if( hook_pos_slansf < __flexiblas_hooks->slansf.nhook) {
-        fn_hook = __flexiblas_hooks->slansf.f77_hook_function[hook_pos_slansf];
+        *(void **) &fn_hook = __flexiblas_hooks->slansf.f77_hook_function[hook_pos_slansf];
         ret = fn_hook((void*) norm, (void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) work);
     } else {
         hook_pos_slansf = 0;

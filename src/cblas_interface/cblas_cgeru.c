@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -99,8 +99,8 @@ void flexiblas_real_cblas_cgeru(const CBLAS_LAYOUT layout, const CBLAS_INT M, co
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_INT M, const CBLAS_INT N,
              const void *alpha, const void *X, const CBLAS_INT incX,
-             const void *Y, const CBLAS_INT incY, void *A, const CBLAS_INT lda)
-            = current_backend->blas.cgeru.cblas_function;
+             const void *Y, const CBLAS_INT incY, void *A, const CBLAS_INT lda);
+        *(void **) &fn = current_backend->blas.cgeru.cblas_function;
         fn(layout,M,N,alpha,X,incX,Y,incY,A,lda);
     } else {
         extern int CBLAS_CallFromC;

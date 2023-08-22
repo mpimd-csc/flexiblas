@@ -370,7 +370,7 @@ cleanupAndFail:
     return 0;
 }
 
-int csc_hdf5_register_xz()
+int csc_hdf5_register_xz(void)
 {
     herr_t status;
     status = H5Zregister(H5Z_XZ);
@@ -385,7 +385,7 @@ int csc_hdf5_register_xz()
 #else
 
 /* Filter not available  */
-int csc_hdf5_register_xz()
+int csc_hdf5_register_xz(void)
 {
     return -1;
 }

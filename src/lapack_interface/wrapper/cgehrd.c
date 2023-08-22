@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(cgehrd,CGEHRD)(blasint* n, blasint* ilo, blasint* ihi, float comp
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cgehrd.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cgehrd.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cgehrd.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cgehrd.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cgehrd_(void* n, void* ilo, void* ihi, void* a, void* lda, v
 {
 	void (*fn) (void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.cgehrd.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cgehrd.f77_blas_function; 
 
 		fn((void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cgehrd_(void* n, void* ilo, void* ihi, void* a, void* lda, 
 	void (*fn) (void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.cgehrd.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cgehrd.f77_blas_function; 
 
     hook_pos_cgehrd ++;
     if( hook_pos_cgehrd < __flexiblas_hooks->cgehrd.nhook) {
-        fn_hook = __flexiblas_hooks->cgehrd.f77_hook_function[hook_pos_cgehrd];
+        *(void **) &fn_hook = __flexiblas_hooks->cgehrd.f77_hook_function[hook_pos_cgehrd];
         fn_hook((void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_cgehrd = 0;

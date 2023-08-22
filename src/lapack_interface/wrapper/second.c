@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -68,21 +68,21 @@ typedef int fortran_charlen_t;
 
 static TLS_STORE uint8_t hook_pos_second = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-float FC_GLOBAL(second,SECOND)()
+float FC_GLOBAL(second,SECOND)(void)
 #else
-float FC_GLOBAL(second,SECOND)()
+float FC_GLOBAL(second,SECOND)(void)
 #endif
 {
-	float (*fn) ();
-	float (*fn_hook) ();
+	float (*fn) (void);
+	float (*fn_hook) (void);
 	float ret;
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.second.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->second.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.second.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->second.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn(); 
 		return ret; 
@@ -93,12 +93,12 @@ float FC_GLOBAL(second,SECOND)()
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-float second_() __attribute__((alias(MTS(FC_GLOBAL(second,SECOND)))));
+float second_(void) __attribute__((alias(MTS(FC_GLOBAL(second,SECOND)))));
 #else
 #ifndef __APPLE__
-float second() __attribute__((alias(MTS(FC_GLOBAL(second,SECOND)))));
+float second(void) __attribute__((alias(MTS(FC_GLOBAL(second,SECOND)))));
 #else
-float second(){ return FC_GLOBAL(second,SECOND)(); }
+float second(void){ return FC_GLOBAL(second,SECOND)(); }
 #endif
 #endif
 
@@ -108,21 +108,21 @@ float second(){ return FC_GLOBAL(second,SECOND)(); }
 /* Real Implementation for Hooks */
 
 
-float flexiblas_real_second_()
+float flexiblas_real_second_(void)
 {
-	float (*fn) ();
+	float (*fn) (void);
 	float ret;
 
-	fn = current_backend->lapack.second.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.second.f77_blas_function; 
 
 		ret = fn(); 
 
 	return ret ;
 }
 #ifndef __APPLE__
-float flexiblas_real_second() __attribute__((alias("flexiblas_real_second_")));
+float flexiblas_real_second(void) __attribute__((alias("flexiblas_real_second_")));
 #else
-float flexiblas_real_second(){return flexiblas_real_second_();}
+float flexiblas_real_second(void){return flexiblas_real_second_();}
 #endif
 
 
@@ -131,17 +131,17 @@ float flexiblas_real_second(){return flexiblas_real_second_();}
 /* Chainloader for Hooks */
 
 
-float flexiblas_chain_second_()
+float flexiblas_chain_second_(void)
 {
-	float (*fn) ();
-	float (*fn_hook) ();
+	float (*fn) (void);
+	float (*fn_hook) (void);
 	float ret;
 
-	fn      = current_backend->lapack.second.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.second.f77_blas_function; 
 
     hook_pos_second ++;
     if( hook_pos_second < __flexiblas_hooks->second.nhook) {
-        fn_hook = __flexiblas_hooks->second.f77_hook_function[hook_pos_second];
+        *(void **) &fn_hook = __flexiblas_hooks->second.f77_hook_function[hook_pos_second];
         ret = fn_hook();
     } else {
         hook_pos_second = 0;
@@ -150,9 +150,9 @@ float flexiblas_chain_second_()
 	return ret ;
 }
 #ifndef __APPLE__
-float flexiblas_chain_second() __attribute__((alias("flexiblas_chain_second_")));
+float flexiblas_chain_second(void) __attribute__((alias("flexiblas_chain_second_")));
 #else
-float flexiblas_chain_second(){return flexiblas_chain_second_();}
+float flexiblas_chain_second(void){return flexiblas_chain_second_();}
 #endif
 
 

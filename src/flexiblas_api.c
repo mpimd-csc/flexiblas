@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -55,7 +55,7 @@
 /*-----------------------------------------------------------------------------
  *  Check if flexiblas is available. True in case if built-in is used
  *-----------------------------------------------------------------------------*/
-int flexiblas_avail()
+int flexiblas_avail(void)
 {
     return 1;
 }

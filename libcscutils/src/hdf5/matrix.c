@@ -299,8 +299,7 @@ static int csc_hdf5_write_matrix_ex1(hid_t root, const char *dset_name, hid_t dt
             ret = -1;
             goto end;
         }
-        size_t tmp_size = len + 20;
-        strncpy(tmp, dset_name, tmp_size);
+        strcpy(tmp, dset_name);
         csc_strremovedup(tmp, '/');
         len2 = strlen(tmp);
         if ( tmp[len2-1] == '/') {

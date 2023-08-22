@@ -34,7 +34,7 @@
 
 #if defined(__linux__)
 
-char *csc_sysinfo_cpuname()
+char *csc_sysinfo_cpuname(void)
 {
     FILE *fp = NULL;
     char *line = NULL;
@@ -109,7 +109,7 @@ char *csc_sysinfo_cpuname()
 
 #else
 
-char *csc_sysinfo_cpuname()
+char *csc_sysinfo_cpuname(void)
 {
     return strdup("Unknown");
 }

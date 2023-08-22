@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -54,9 +54,9 @@ extern "C" {
 
     #include "flexiblas_config.h"
 
-    HIDDEN void __flexiblas_list_hooks();
-    HIDDEN void __flexiblas_add_hooks();
-    HIDDEN void __flexiblas_exit_hook( );
+    HIDDEN void __flexiblas_list_hooks(void);
+    HIDDEN void __flexiblas_add_hooks(void);
+    HIDDEN void __flexiblas_exit_hook(void);
     HIDDEN int __flexiblas_hook_exists(char *name);
     HIDDEN char * __flexiblas_hook_sofile(char *name);
     HIDDEN char *  __flexiblas_hook_add_from_file(char *path);

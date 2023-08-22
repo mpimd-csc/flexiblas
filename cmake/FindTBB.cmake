@@ -188,9 +188,10 @@ endmacro()
 
 # Get path, convert backslashes as ${ENV_${var}}
 getenv_path(TBB_ROOT)
+getenv_path(TBBROOT)
 
 # initialize search paths
-set(TBB_PREFIX_PATH ${TBB_ROOT} ${ENV_TBB_ROOT})
+set(TBB_PREFIX_PATH ${TBB_ROOT} ${ENV_TBB_ROOT} ${ENV_TBBROOT})
 set(TBB_INC_SEARCH_PATH "")
 set(TBB_LIB_SEARCH_PATH "")
 
@@ -297,7 +298,7 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   endif()
   list(APPEND COMPILER_PREFIX "gcc4.4")
 else() # Assume compatibility with 4.4 for other compilers
-  list(APPEND COMPILER_PREFIX "gcc4.4")
+  list(APPEND COMPILER_PREFIX "gcc4.8")
 endif ()
 
 # if platform architecture is explicitly specified
@@ -308,6 +309,8 @@ if (TBB_ARCH_PLATFORM)
     list(APPEND TBB_LIB_SEARCH_PATH ${dir}/lib/${TBB_ARCH_PLATFORM})
   endforeach ()
 endif ()
+
+MESSAGE(STATUS "PP: ${TBB_PREFIX_PATH}")
 
 foreach (dir IN LISTS TBB_PREFIX_PATH)
   foreach (prefix IN LISTS COMPILER_PREFIX)
@@ -324,6 +327,8 @@ foreach (dir IN LISTS TBB_PREFIX_PATH)
     endif ()
   endforeach()
 endforeach ()
+
+MESSAGE(STATUS "SP: ${TBB_LIB_SEARCH_PATH}")
 
 # add general search paths
 foreach (dir IN LISTS TBB_PREFIX_PATH)
@@ -343,9 +348,11 @@ find_path(TBB_INCLUDE_DIR
 
 find_library(TBB_LIBRARY_RELEASE
              NAMES ${TBB_LIBRARY_NAMES}
+             HINTS ${TBB_LIB_SEARCH_PATH}
              PATHS ${TBB_LIB_SEARCH_PATH})
 find_library(TBB_LIBRARY_DEBUG
              NAMES ${TBB_LIBRARY_NAMES_DEBUG}
+             HINTS ${TBB_LIB_SEARCH_PATH}
              PATHS ${TBB_LIB_SEARCH_PATH})
 make_library_set(TBB_LIBRARY)
 
@@ -367,9 +374,11 @@ find_path(TBB_MALLOC_INCLUDE_DIR
 
 find_library(TBB_MALLOC_LIBRARY_RELEASE
              NAMES ${TBB_MALLOC_LIBRARY_NAMES}
+             HINTS ${TBB_LIB_SEARCH_PATH}
              PATHS ${TBB_LIB_SEARCH_PATH})
 find_library(TBB_MALLOC_LIBRARY_DEBUG
              NAMES ${TBB_MALLOC_LIBRARY_NAMES_DEBUG}
+             HINTS ${TBB_LIB_SEARCH_PATH}
              PATHS ${TBB_LIB_SEARCH_PATH})
 make_library_set(TBB_MALLOC_LIBRARY)
 
@@ -398,27 +407,67 @@ findpkg_finish(TBB_MALLOC_PROXY tbbmalloc_proxy)
 #=============================================================================
 #parse all the version numbers from tbb
 if(NOT TBB_VERSION)
+    MESSAGE(STATUS "TBB_INCLUDE_DIR: ${TBB_INCLUDE_DIR}")
+    if (EXISTS "${TBB_INCLUDE_DIR}/oneapi")
+        file(STRINGS
+            "${TBB_INCLUDE_DIR}/oneapi/tbb/version.h"
+            TBB_VERSION_CONTENTS
+            REGEX "VERSION")
 
- #only read the start of the file
- file(STRINGS
-      "${TBB_INCLUDE_DIR}/tbb/tbb_stddef.h"
-      TBB_VERSION_CONTENTS
-      REGEX "VERSION")
+        string(REGEX REPLACE
+            ".*#define TBB_VERSION_MAJOR ([0-9]+).*" "\\1"
+            TBB_VERSION_MAJOR "${TBB_VERSION_CONTENTS}")
 
-  string(REGEX REPLACE
-    ".*#define TBB_VERSION_MAJOR ([0-9]+).*" "\\1"
-    TBB_VERSION_MAJOR "${TBB_VERSION_CONTENTS}")
+        string(REGEX REPLACE
+            ".*#define TBB_VERSION_MINOR ([0-9]+).*" "\\1"
+            TBB_VERSION_MINOR "${TBB_VERSION_CONTENTS}")
+        string(REGEX REPLACE
+            ".*#define TBB_VERSION_PATCH ([0-9]+).*" "\\1"
+            TBB_VERSION_PATCH "${TBB_VERSION_CONTENTS}")
 
-  string(REGEX REPLACE
-    ".*#define TBB_VERSION_MINOR ([0-9]+).*" "\\1"
-    TBB_VERSION_MINOR "${TBB_VERSION_CONTENTS}")
+        string(REGEX REPLACE
+            ".*#define TBB_INTERFACE_VERSION ([0-9]+).*" "\\1"
+            TBB_INTERFACE_VERSION "${TBB_VERSION_CONTENTS}")
 
-  string(REGEX REPLACE
-        ".*#define TBB_INTERFACE_VERSION ([0-9]+).*" "\\1"
-        TBB_INTERFACE_VERSION "${TBB_VERSION_CONTENTS}")
+        string(REGEX REPLACE
+            ".*#define TBB_COMPATIBLE_INTERFACE_VERSION ([0-9]+).*" "\\1"
+            TBB_COMPATIBLE_INTERFACE_VERSION "${TBB_VERSION_CONTENTS}")
 
-  string(REGEX REPLACE
-        ".*#define TBB_COMPATIBLE_INTERFACE_VERSION ([0-9]+).*" "\\1"
-        TBB_COMPATIBLE_INTERFACE_VERSION "${TBB_VERSION_CONTENTS}")
+    else()
+        if ( EXISTS "${TBB_INCLUDE_DIR}/tbb/tbb_stddef.h")
+            #only read the start of the file
+            file(STRINGS
+                "${TBB_INCLUDE_DIR}/tbb/tbb_stddef.h"
+                TBB_VERSION_CONTENTS
+                REGEX "VERSION")
 
+            string(REGEX REPLACE
+                ".*#define TBB_VERSION_MAJOR ([0-9]+).*" "\\1"
+                TBB_VERSION_MAJOR "${TBB_VERSION_CONTENTS}")
+
+            string(REGEX REPLACE
+                ".*#define TBB_VERSION_MINOR ([0-9]+).*" "\\1"
+                TBB_VERSION_MINOR "${TBB_VERSION_CONTENTS}")
+
+            string(REGEX REPLACE
+                ".*#define TBB_INTERFACE_VERSION ([0-9]+).*" "\\1"
+                TBB_INTERFACE_VERSION "${TBB_VERSION_CONTENTS}")
+
+            string(REGEX REPLACE
+                ".*#define TBB_COMPATIBLE_INTERFACE_VERSION ([0-9]+).*" "\\1"
+                TBB_COMPATIBLE_INTERFACE_VERSION "${TBB_VERSION_CONTENTS}")
+            SET(TBB_VERSION_PATCH "0")
+
+        else()
+            MESSAGE(WARNING "TBB Version could not be detected.")
+            SET(TBB_VERSION_MAJOR "0")
+            SET(TBB_VERSION_MINOR "0")
+            SET(TBB_VERSION_PATCH "0")
+            SET(TBB_INTERFACE_VERSION "0")
+            SET(TBB_COMPATIBLE_INTERFACE_VERSION "0")
+        endif()
+    endif()
+    IF (TBB_FOUND)
+        MESSAGE(STATUS "Found TBB ${TBB_VERSION_MAJOR}.${TBB_VERSION_MINOR}.${TBB_VERSION_PATCH}")
+    ENDIF()
 endif()

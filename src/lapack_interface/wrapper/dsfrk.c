@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dsfrk,DSFRK)(char* transr, char* uplo, char* trans, blasint* n, b
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dsfrk.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dsfrk.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dsfrk.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dsfrk.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) transr, (void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dsfrk_(void* transr, void* uplo, void* trans, void* n, void*
 {
 	void (*fn) (void* transr, void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c);
 
-	fn = current_backend->lapack.dsfrk.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dsfrk.f77_blas_function; 
 
 		fn((void*) transr, (void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dsfrk_(void* transr, void* uplo, void* trans, void* n, void
 	void (*fn) (void* transr, void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c);
 	void (*fn_hook) (void* transr, void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c);
 
-	fn      = current_backend->lapack.dsfrk.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dsfrk.f77_blas_function; 
 
     hook_pos_dsfrk ++;
     if( hook_pos_dsfrk < __flexiblas_hooks->dsfrk.nhook) {
-        fn_hook = __flexiblas_hooks->dsfrk.f77_hook_function[hook_pos_dsfrk];
+        *(void **) &fn_hook = __flexiblas_hooks->dsfrk.f77_hook_function[hook_pos_dsfrk];
         fn_hook((void*) transr, (void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c);
     } else {
         hook_pos_dsfrk = 0;

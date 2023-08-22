@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zlahrd,ZLAHRD)(blasint* n, blasint* k, blasint* nb, double comple
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlahrd.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlahrd.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlahrd.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlahrd.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) k, (void*) nb, (void*) a, (void*) lda, (void*) tau, (void*) t, (void*) ldt, (void*) y, (void*) ldy); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zlahrd_(void* n, void* k, void* nb, void* a, void* lda, void
 {
 	void (*fn) (void* n, void* k, void* nb, void* a, void* lda, void* tau, void* t, void* ldt, void* y, void* ldy);
 
-	fn = current_backend->lapack.zlahrd.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlahrd.f77_blas_function; 
 
 		fn((void*) n, (void*) k, (void*) nb, (void*) a, (void*) lda, (void*) tau, (void*) t, (void*) ldt, (void*) y, (void*) ldy); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zlahrd_(void* n, void* k, void* nb, void* a, void* lda, voi
 	void (*fn) (void* n, void* k, void* nb, void* a, void* lda, void* tau, void* t, void* ldt, void* y, void* ldy);
 	void (*fn_hook) (void* n, void* k, void* nb, void* a, void* lda, void* tau, void* t, void* ldt, void* y, void* ldy);
 
-	fn      = current_backend->lapack.zlahrd.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlahrd.f77_blas_function; 
 
     hook_pos_zlahrd ++;
     if( hook_pos_zlahrd < __flexiblas_hooks->zlahrd.nhook) {
-        fn_hook = __flexiblas_hooks->zlahrd.f77_hook_function[hook_pos_zlahrd];
+        *(void **) &fn_hook = __flexiblas_hooks->zlahrd.f77_hook_function[hook_pos_zlahrd];
         fn_hook((void*) n, (void*) k, (void*) nb, (void*) a, (void*) lda, (void*) tau, (void*) t, (void*) ldt, (void*) y, (void*) ldy);
     } else {
         hook_pos_zlahrd = 0;

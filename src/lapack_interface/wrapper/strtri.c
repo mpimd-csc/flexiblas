@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(strtri,STRTRI)(char* uplo, char* diag, blasint* n, float* a, blas
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.strtri.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->strtri.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.strtri.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->strtri.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_strtri_(void* uplo, void* diag, void* n, void* a, void* lda,
 {
 	void (*fn) (void* uplo, void* diag, void* n, void* a, void* lda, void* info);
 
-	fn = current_backend->lapack.strtri.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.strtri.f77_blas_function; 
 
 		fn((void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_strtri_(void* uplo, void* diag, void* n, void* a, void* lda
 	void (*fn) (void* uplo, void* diag, void* n, void* a, void* lda, void* info);
 	void (*fn_hook) (void* uplo, void* diag, void* n, void* a, void* lda, void* info);
 
-	fn      = current_backend->lapack.strtri.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.strtri.f77_blas_function; 
 
     hook_pos_strtri ++;
     if( hook_pos_strtri < __flexiblas_hooks->strtri.nhook) {
-        fn_hook = __flexiblas_hooks->strtri.f77_hook_function[hook_pos_strtri];
+        *(void **) &fn_hook = __flexiblas_hooks->strtri.f77_hook_function[hook_pos_strtri];
         fn_hook((void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) info);
     } else {
         hook_pos_strtri = 0;

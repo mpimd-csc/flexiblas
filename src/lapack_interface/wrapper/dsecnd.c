@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -68,21 +68,21 @@ typedef int fortran_charlen_t;
 
 static TLS_STORE uint8_t hook_pos_dsecnd = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-double FC_GLOBAL(dsecnd,DSECND)()
+double FC_GLOBAL(dsecnd,DSECND)(void)
 #else
-double FC_GLOBAL(dsecnd,DSECND)()
+double FC_GLOBAL(dsecnd,DSECND)(void)
 #endif
 {
-	double (*fn) ();
-	double (*fn_hook) ();
+	double (*fn) (void);
+	double (*fn_hook) (void);
 	double ret;
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dsecnd.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dsecnd.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dsecnd.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dsecnd.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn(); 
 		return ret; 
@@ -93,12 +93,12 @@ double FC_GLOBAL(dsecnd,DSECND)()
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-double dsecnd_() __attribute__((alias(MTS(FC_GLOBAL(dsecnd,DSECND)))));
+double dsecnd_(void) __attribute__((alias(MTS(FC_GLOBAL(dsecnd,DSECND)))));
 #else
 #ifndef __APPLE__
-double dsecnd() __attribute__((alias(MTS(FC_GLOBAL(dsecnd,DSECND)))));
+double dsecnd(void) __attribute__((alias(MTS(FC_GLOBAL(dsecnd,DSECND)))));
 #else
-double dsecnd(){ return FC_GLOBAL(dsecnd,DSECND)(); }
+double dsecnd(void){ return FC_GLOBAL(dsecnd,DSECND)(); }
 #endif
 #endif
 
@@ -108,21 +108,21 @@ double dsecnd(){ return FC_GLOBAL(dsecnd,DSECND)(); }
 /* Real Implementation for Hooks */
 
 
-double flexiblas_real_dsecnd_()
+double flexiblas_real_dsecnd_(void)
 {
-	double (*fn) ();
+	double (*fn) (void);
 	double ret;
 
-	fn = current_backend->lapack.dsecnd.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dsecnd.f77_blas_function; 
 
 		ret = fn(); 
 
 	return ret ;
 }
 #ifndef __APPLE__
-double flexiblas_real_dsecnd() __attribute__((alias("flexiblas_real_dsecnd_")));
+double flexiblas_real_dsecnd(void) __attribute__((alias("flexiblas_real_dsecnd_")));
 #else
-double flexiblas_real_dsecnd(){return flexiblas_real_dsecnd_();}
+double flexiblas_real_dsecnd(void){return flexiblas_real_dsecnd_();}
 #endif
 
 
@@ -131,17 +131,17 @@ double flexiblas_real_dsecnd(){return flexiblas_real_dsecnd_();}
 /* Chainloader for Hooks */
 
 
-double flexiblas_chain_dsecnd_()
+double flexiblas_chain_dsecnd_(void)
 {
-	double (*fn) ();
-	double (*fn_hook) ();
+	double (*fn) (void);
+	double (*fn_hook) (void);
 	double ret;
 
-	fn      = current_backend->lapack.dsecnd.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dsecnd.f77_blas_function; 
 
     hook_pos_dsecnd ++;
     if( hook_pos_dsecnd < __flexiblas_hooks->dsecnd.nhook) {
-        fn_hook = __flexiblas_hooks->dsecnd.f77_hook_function[hook_pos_dsecnd];
+        *(void **) &fn_hook = __flexiblas_hooks->dsecnd.f77_hook_function[hook_pos_dsecnd];
         ret = fn_hook();
     } else {
         hook_pos_dsecnd = 0;
@@ -150,9 +150,9 @@ double flexiblas_chain_dsecnd_()
 	return ret ;
 }
 #ifndef __APPLE__
-double flexiblas_chain_dsecnd() __attribute__((alias("flexiblas_chain_dsecnd_")));
+double flexiblas_chain_dsecnd(void) __attribute__((alias("flexiblas_chain_dsecnd_")));
 #else
-double flexiblas_chain_dsecnd(){return flexiblas_chain_dsecnd_();}
+double flexiblas_chain_dsecnd(void){return flexiblas_chain_dsecnd_();}
 #endif
 
 

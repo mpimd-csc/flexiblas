@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -59,7 +59,7 @@ int __profile_verbose = 0;
 FLEXIBLAS_HOOK_OPTIONS(
     FLEXIBLAS_HOOK_OPTION("output", "Output file for profiling.", FLEXIBLAS_OPTIONS_STRING, "flexiblas_profile.txt"),
     FLEXIBLAS_HOOK_OPTIONS_END
-);
+)
 
 
 FLEXIBLAS_HOOK_REGISTER(
@@ -67,14 +67,14 @@ FLEXIBLAS_HOOK_REGISTER(
         "PROFILE",  // Name if the section in the config
         profile,
         "This hook counts all function calls.", // Description
-        "Martin Koehler");
+        "Martin Koehler")
 
 
 
 blas_calls_t *data = NULL;
 static char *profile_file;
 
-FLEXIBLAS_HOOK_INIT_FUNCTION () {
+FLEXIBLAS_HOOK_INIT_FUNCTION (void) {
     flexiblas_mgmt_t *mgmt;
     __profile_verbose = flexiblas_verbosity();
 
@@ -101,7 +101,7 @@ FLEXIBLAS_HOOK_INIT_FUNCTION () {
 }
 
 
-FLEXIBLAS_HOOK_EXIT_FUNCTION () {
+FLEXIBLAS_HOOK_EXIT_FUNCTION (void) {
     csc_table_t *tab = csc_table_new(0);
     int col_name, col_calls, col_time;
     if ( ! tab) goto end;

@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 #include "flexiblas_config.h"
@@ -59,7 +59,7 @@ void cblas_cdotc_sub( const CBLAS_INT N, const void *X, const CBLAS_INT incX, co
     CBLAS_BACKEND_INIT();
 
     if ( __flexiblas_hooks->cdotc_sub.cblas_hook_function[0] != NULL) {
-        fn  = __flexiblas_hooks->cdotc_sub.cblas_hook_function[0];
+        *(void **) &fn = __flexiblas_hooks->cdotc_sub.cblas_hook_function[0];
         hook_cblas_cdotc_sub_pos = 0;
     } else {
         fn = flexiblas_real_cblas_cdotc_sub;
@@ -73,7 +73,7 @@ void flexiblas_real_cblas_cdotc_sub( const CBLAS_INT N, const void *X, const CBL
     void (*fn)  ( const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY,void *dotc);
 
     if ( current_backend->blas.cdotc_sub.cblas_function != NULL ) {
-        fn = current_backend->blas.cdotc_sub.cblas_function;
+        *(void **) &fn = current_backend->blas.cdotc_sub.cblas_function;
         fn(N,X,incX,Y,incY,dotc);
     } else {
         float complex d;

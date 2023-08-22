@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(cgesvj,CGESVJ)(char* joba, char* jobu, char* jobv, blasint* m, bl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cgesvj.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cgesvj.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cgesvj.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cgesvj.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) joba, (void*) jobu, (void*) jobv, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) sva, (void*) mv, (void*) v, (void*) ldv, (void*) cwork, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) info, ( fortran_charlen_t ) len_joba, ( fortran_charlen_t ) len_jobu, ( fortran_charlen_t ) len_jobv); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cgesvj_(void* joba, void* jobu, void* jobv, void* m, void* n
 {
 	void (*fn) (void* joba, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* sva, void* mv, void* v, void* ldv, void* cwork, void* lwork, void* rwork, void* lrwork, void* info, fortran_charlen_t len_joba, fortran_charlen_t len_jobu, fortran_charlen_t len_jobv);
 
-	fn = current_backend->lapack.cgesvj.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cgesvj.f77_blas_function; 
 
 		fn((void*) joba, (void*) jobu, (void*) jobv, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) sva, (void*) mv, (void*) v, (void*) ldv, (void*) cwork, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) info, ( fortran_charlen_t ) len_joba, ( fortran_charlen_t ) len_jobu, ( fortran_charlen_t ) len_jobv); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cgesvj_(void* joba, void* jobu, void* jobv, void* m, void* 
 	void (*fn) (void* joba, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* sva, void* mv, void* v, void* ldv, void* cwork, void* lwork, void* rwork, void* lrwork, void* info, fortran_charlen_t len_joba, fortran_charlen_t len_jobu, fortran_charlen_t len_jobv);
 	void (*fn_hook) (void* joba, void* jobu, void* jobv, void* m, void* n, void* a, void* lda, void* sva, void* mv, void* v, void* ldv, void* cwork, void* lwork, void* rwork, void* lrwork, void* info, fortran_charlen_t len_joba, fortran_charlen_t len_jobu, fortran_charlen_t len_jobv);
 
-	fn      = current_backend->lapack.cgesvj.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cgesvj.f77_blas_function; 
 
     hook_pos_cgesvj ++;
     if( hook_pos_cgesvj < __flexiblas_hooks->cgesvj.nhook) {
-        fn_hook = __flexiblas_hooks->cgesvj.f77_hook_function[hook_pos_cgesvj];
+        *(void **) &fn_hook = __flexiblas_hooks->cgesvj.f77_hook_function[hook_pos_cgesvj];
         fn_hook((void*) joba, (void*) jobu, (void*) jobv, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) sva, (void*) mv, (void*) v, (void*) ldv, (void*) cwork, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) info, ( fortran_charlen_t ) len_joba, ( fortran_charlen_t ) len_jobu, ( fortran_charlen_t ) len_jobv);
     } else {
         hook_pos_cgesvj = 0;

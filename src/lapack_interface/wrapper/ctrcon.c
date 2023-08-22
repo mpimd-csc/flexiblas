@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(ctrcon,CTRCON)(char* norm, char* uplo, char* diag, blasint* n, fl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ctrcon.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ctrcon.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ctrcon.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ctrcon.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) norm, (void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) rcond, (void*) work, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ctrcon_(void* norm, void* uplo, void* diag, void* n, void* a
 {
 	void (*fn) (void* norm, void* uplo, void* diag, void* n, void* a, void* lda, void* rcond, void* work, void* rwork, void* info);
 
-	fn = current_backend->lapack.ctrcon.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ctrcon.f77_blas_function; 
 
 		fn((void*) norm, (void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) rcond, (void*) work, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ctrcon_(void* norm, void* uplo, void* diag, void* n, void* 
 	void (*fn) (void* norm, void* uplo, void* diag, void* n, void* a, void* lda, void* rcond, void* work, void* rwork, void* info);
 	void (*fn_hook) (void* norm, void* uplo, void* diag, void* n, void* a, void* lda, void* rcond, void* work, void* rwork, void* info);
 
-	fn      = current_backend->lapack.ctrcon.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ctrcon.f77_blas_function; 
 
     hook_pos_ctrcon ++;
     if( hook_pos_ctrcon < __flexiblas_hooks->ctrcon.nhook) {
-        fn_hook = __flexiblas_hooks->ctrcon.f77_hook_function[hook_pos_ctrcon];
+        *(void **) &fn_hook = __flexiblas_hooks->ctrcon.f77_hook_function[hook_pos_ctrcon];
         fn_hook((void*) norm, (void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) rcond, (void*) work, (void*) rwork, (void*) info);
     } else {
         hook_pos_ctrcon = 0;

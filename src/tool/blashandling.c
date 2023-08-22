@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -146,7 +146,7 @@ int set_blas(flexiblas_mgmt_location_t loc, char* name)
 }
 
 
-int list_all_blas()
+int list_all_blas(void)
 {
     int ecode = 0;
     flexiblas_mgmt_t *config;

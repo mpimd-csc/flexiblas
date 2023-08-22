@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zlaset,ZLASET)(char* uplo, blasint* m, blasint* n, double complex
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlaset.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlaset.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlaset.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlaset.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) beta, (void*) a, (void*) lda); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zlaset_(void* uplo, void* m, void* n, void* alpha, void* bet
 {
 	void (*fn) (void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda);
 
-	fn = current_backend->lapack.zlaset.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlaset.f77_blas_function; 
 
 		fn((void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) beta, (void*) a, (void*) lda); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zlaset_(void* uplo, void* m, void* n, void* alpha, void* be
 	void (*fn) (void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda);
 	void (*fn_hook) (void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda);
 
-	fn      = current_backend->lapack.zlaset.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlaset.f77_blas_function; 
 
     hook_pos_zlaset ++;
     if( hook_pos_zlaset < __flexiblas_hooks->zlaset.nhook) {
-        fn_hook = __flexiblas_hooks->zlaset.f77_hook_function[hook_pos_zlaset];
+        *(void **) &fn_hook = __flexiblas_hooks->zlaset.f77_hook_function[hook_pos_zlaset];
         fn_hook((void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) beta, (void*) a, (void*) lda);
     } else {
         hook_pos_zlaset = 0;

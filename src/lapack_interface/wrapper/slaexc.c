@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(slaexc,SLAEXC)(blasint* wantq, blasint* n, float* t, blasint* ldt
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slaexc.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slaexc.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slaexc.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slaexc.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) wantq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) j1, (void*) n1, (void*) n2, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slaexc_(void* wantq, void* n, void* t, void* ldt, void* q, v
 {
 	void (*fn) (void* wantq, void* n, void* t, void* ldt, void* q, void* ldq, void* j1, void* n1, void* n2, void* work, void* info);
 
-	fn = current_backend->lapack.slaexc.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slaexc.f77_blas_function; 
 
 		fn((void*) wantq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) j1, (void*) n1, (void*) n2, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slaexc_(void* wantq, void* n, void* t, void* ldt, void* q, 
 	void (*fn) (void* wantq, void* n, void* t, void* ldt, void* q, void* ldq, void* j1, void* n1, void* n2, void* work, void* info);
 	void (*fn_hook) (void* wantq, void* n, void* t, void* ldt, void* q, void* ldq, void* j1, void* n1, void* n2, void* work, void* info);
 
-	fn      = current_backend->lapack.slaexc.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slaexc.f77_blas_function; 
 
     hook_pos_slaexc ++;
     if( hook_pos_slaexc < __flexiblas_hooks->slaexc.nhook) {
-        fn_hook = __flexiblas_hooks->slaexc.f77_hook_function[hook_pos_slaexc];
+        *(void **) &fn_hook = __flexiblas_hooks->slaexc.f77_hook_function[hook_pos_slaexc];
         fn_hook((void*) wantq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) j1, (void*) n1, (void*) n2, (void*) work, (void*) info);
     } else {
         hook_pos_slaexc = 0;

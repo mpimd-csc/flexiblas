@@ -3475,7 +3475,7 @@ void FC_GLOBAL(dsbgvx,DSBGVX)(char* jobz, char* range, char* uplo, blasint* n, b
 
 void FC_GLOBAL(dsbtrd,DSBTRD)(char* vect, char* uplo, blasint* n, blasint* kd, double* ab, blasint* ldab, double* d, double* e, double* q, blasint* ldq, double* work, blasint* info);
 
-double FC_GLOBAL(dsecnd,DSECND)();
+double FC_GLOBAL(dsecnd,DSECND)(void);
 
 void FC_GLOBAL(dsfrk,DSFRK)(char* transr, char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* beta, double* c);
 
@@ -3781,7 +3781,7 @@ float FC_GLOBAL(scsum1,SCSUM1)(blasint* n, float complex* cx, blasint* incx);
 
 void FC_GLOBAL(sdisna,SDISNA)(char* job, blasint* m, blasint* n, float* d, float* sep, blasint* info);
 
-float FC_GLOBAL(second,SECOND)();
+float FC_GLOBAL(second,SECOND)(void);
 
 void FC_GLOBAL(sgbbrd,SGBBRD)(char* vect, blasint* m, blasint* n, blasint* ncc, blasint* kl, blasint* ku, float* ab, blasint* ldab, float* d, float* e, float* q, blasint* ldq, float* pt, blasint* ldpt, float* c, blasint* ldc, float* work, blasint* info);
 

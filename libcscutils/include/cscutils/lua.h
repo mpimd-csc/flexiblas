@@ -48,7 +48,7 @@ extern "C" {
      * The csc_lua_init function initializes the LUA interface and loads the
      * LUA standard libraries into it.
      */
-    csc_lua_t csc_lua_init();
+    csc_lua_t csc_lua_init(void);
 
     /**
      * \brief Destroys a LUA interface.

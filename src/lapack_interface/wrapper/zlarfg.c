@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zlarfg,ZLARFG)(blasint* n, double complex* alpha, double complex*
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlarfg.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlarfg.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlarfg.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlarfg.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) tau); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zlarfg_(void* n, void* alpha, void* x, void* incx, void* tau
 {
 	void (*fn) (void* n, void* alpha, void* x, void* incx, void* tau);
 
-	fn = current_backend->lapack.zlarfg.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlarfg.f77_blas_function; 
 
 		fn((void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) tau); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zlarfg_(void* n, void* alpha, void* x, void* incx, void* ta
 	void (*fn) (void* n, void* alpha, void* x, void* incx, void* tau);
 	void (*fn_hook) (void* n, void* alpha, void* x, void* incx, void* tau);
 
-	fn      = current_backend->lapack.zlarfg.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlarfg.f77_blas_function; 
 
     hook_pos_zlarfg ++;
     if( hook_pos_zlarfg < __flexiblas_hooks->zlarfg.nhook) {
-        fn_hook = __flexiblas_hooks->zlarfg.f77_hook_function[hook_pos_zlarfg];
+        *(void **) &fn_hook = __flexiblas_hooks->zlarfg.f77_hook_function[hook_pos_zlarfg];
         fn_hook((void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) tau);
     } else {
         hook_pos_zlarfg = 0;

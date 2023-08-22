@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zptcon,ZPTCON)(blasint* n, double* d, double complex* e, double* 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zptcon.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zptcon.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zptcon.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zptcon.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) d, (void*) e, (void*) anorm, (void*) rcond, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zptcon_(void* n, void* d, void* e, void* anorm, void* rcond,
 {
 	void (*fn) (void* n, void* d, void* e, void* anorm, void* rcond, void* rwork, void* info);
 
-	fn = current_backend->lapack.zptcon.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zptcon.f77_blas_function; 
 
 		fn((void*) n, (void*) d, (void*) e, (void*) anorm, (void*) rcond, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zptcon_(void* n, void* d, void* e, void* anorm, void* rcond
 	void (*fn) (void* n, void* d, void* e, void* anorm, void* rcond, void* rwork, void* info);
 	void (*fn_hook) (void* n, void* d, void* e, void* anorm, void* rcond, void* rwork, void* info);
 
-	fn      = current_backend->lapack.zptcon.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zptcon.f77_blas_function; 
 
     hook_pos_zptcon ++;
     if( hook_pos_zptcon < __flexiblas_hooks->zptcon.nhook) {
-        fn_hook = __flexiblas_hooks->zptcon.f77_hook_function[hook_pos_zptcon];
+        *(void **) &fn_hook = __flexiblas_hooks->zptcon.f77_hook_function[hook_pos_zptcon];
         fn_hook((void*) n, (void*) d, (void*) e, (void*) anorm, (void*) rcond, (void*) rwork, (void*) info);
     } else {
         hook_pos_zptcon = 0;

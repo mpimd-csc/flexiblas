@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dbdsqr,DBDSQR)(char* uplo, blasint* n, blasint* ncvt, blasint* nr
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dbdsqr.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dbdsqr.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dbdsqr.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dbdsqr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) ncvt, (void*) nru, (void*) ncc, (void*) d, (void*) e, (void*) vt, (void*) ldvt, (void*) u, (void*) ldu, (void*) c, (void*) ldc, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dbdsqr_(void* uplo, void* n, void* ncvt, void* nru, void* nc
 {
 	void (*fn) (void* uplo, void* n, void* ncvt, void* nru, void* ncc, void* d, void* e, void* vt, void* ldvt, void* u, void* ldu, void* c, void* ldc, void* work, void* info);
 
-	fn = current_backend->lapack.dbdsqr.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dbdsqr.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) ncvt, (void*) nru, (void*) ncc, (void*) d, (void*) e, (void*) vt, (void*) ldvt, (void*) u, (void*) ldu, (void*) c, (void*) ldc, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dbdsqr_(void* uplo, void* n, void* ncvt, void* nru, void* n
 	void (*fn) (void* uplo, void* n, void* ncvt, void* nru, void* ncc, void* d, void* e, void* vt, void* ldvt, void* u, void* ldu, void* c, void* ldc, void* work, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* ncvt, void* nru, void* ncc, void* d, void* e, void* vt, void* ldvt, void* u, void* ldu, void* c, void* ldc, void* work, void* info);
 
-	fn      = current_backend->lapack.dbdsqr.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dbdsqr.f77_blas_function; 
 
     hook_pos_dbdsqr ++;
     if( hook_pos_dbdsqr < __flexiblas_hooks->dbdsqr.nhook) {
-        fn_hook = __flexiblas_hooks->dbdsqr.f77_hook_function[hook_pos_dbdsqr];
+        *(void **) &fn_hook = __flexiblas_hooks->dbdsqr.f77_hook_function[hook_pos_dbdsqr];
         fn_hook((void*) uplo, (void*) n, (void*) ncvt, (void*) nru, (void*) ncc, (void*) d, (void*) e, (void*) vt, (void*) ldvt, (void*) u, (void*) ldu, (void*) c, (void*) ldc, (void*) work, (void*) info);
     } else {
         hook_pos_dbdsqr = 0;

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(slag2,SLAG2)(float* a, blasint* lda, float* b, blasint* ldb, floa
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slag2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slag2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slag2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slag2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) safmin, (void*) scale1, (void*) scale2, (void*) wr1, (void*) wr2, (void*) wi); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slag2_(void* a, void* lda, void* b, void* ldb, void* safmin,
 {
 	void (*fn) (void* a, void* lda, void* b, void* ldb, void* safmin, void* scale1, void* scale2, void* wr1, void* wr2, void* wi);
 
-	fn = current_backend->lapack.slag2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slag2.f77_blas_function; 
 
 		fn((void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) safmin, (void*) scale1, (void*) scale2, (void*) wr1, (void*) wr2, (void*) wi); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slag2_(void* a, void* lda, void* b, void* ldb, void* safmin
 	void (*fn) (void* a, void* lda, void* b, void* ldb, void* safmin, void* scale1, void* scale2, void* wr1, void* wr2, void* wi);
 	void (*fn_hook) (void* a, void* lda, void* b, void* ldb, void* safmin, void* scale1, void* scale2, void* wr1, void* wr2, void* wi);
 
-	fn      = current_backend->lapack.slag2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slag2.f77_blas_function; 
 
     hook_pos_slag2 ++;
     if( hook_pos_slag2 < __flexiblas_hooks->slag2.nhook) {
-        fn_hook = __flexiblas_hooks->slag2.f77_hook_function[hook_pos_slag2];
+        *(void **) &fn_hook = __flexiblas_hooks->slag2.f77_hook_function[hook_pos_slag2];
         fn_hook((void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) safmin, (void*) scale1, (void*) scale2, (void*) wr1, (void*) wr2, (void*) wi);
     } else {
         hook_pos_slag2 = 0;

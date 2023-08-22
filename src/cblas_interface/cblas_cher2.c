@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -94,16 +94,19 @@ void flexiblas_real_cblas_cher2(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo
 #define F77_lda lda
 #define F77_incX incx
 #define F77_incY incy
+    CBLAS_INT incx=incX;
+    CBLAS_INT incy=incY;
+
 #endif
     if ( current_backend->blas.cher2.cblas_function != NULL ) {
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
              const CBLAS_INT N, const void *alpha, const void *X, const CBLAS_INT incX,
-             const void *Y, const CBLAS_INT incY, void *A, const CBLAS_INT lda)
-            = current_backend->blas.cher2.cblas_function;
+             const void *Y, const CBLAS_INT incY, void *A, const CBLAS_INT lda);
+        *(void **) &fn = current_backend->blas.cher2.cblas_function;
         fn(layout,Uplo,N,alpha,X,incX,Y,incY,A,lda);
     } else {
-        CBLAS_INT n, i, j, tincx, tincy, incx=incX, incy=incY;
+        CBLAS_INT n, i, j, tincx, tincy;
         float *x, *xx, *y, *yy, *tx, *ty, *stx, *sty;
 
         extern int CBLAS_CallFromC;

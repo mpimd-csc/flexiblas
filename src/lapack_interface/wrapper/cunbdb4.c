@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(cunbdb4,CUNBDB4)(blasint* m, blasint* p, blasint* q, float comple
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cunbdb4.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cunbdb4.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cunbdb4.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cunbdb4.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) p, (void*) q, (void*) x11, (void*) ldx11, (void*) x21, (void*) ldx21, (void*) theta, (void*) phi, (void*) taup1, (void*) taup2, (void*) tauq1, (void*) phantom, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cunbdb4_(void* m, void* p, void* q, void* x11, void* ldx11, 
 {
 	void (*fn) (void* m, void* p, void* q, void* x11, void* ldx11, void* x21, void* ldx21, void* theta, void* phi, void* taup1, void* taup2, void* tauq1, void* phantom, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.cunbdb4.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cunbdb4.f77_blas_function; 
 
 		fn((void*) m, (void*) p, (void*) q, (void*) x11, (void*) ldx11, (void*) x21, (void*) ldx21, (void*) theta, (void*) phi, (void*) taup1, (void*) taup2, (void*) tauq1, (void*) phantom, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cunbdb4_(void* m, void* p, void* q, void* x11, void* ldx11,
 	void (*fn) (void* m, void* p, void* q, void* x11, void* ldx11, void* x21, void* ldx21, void* theta, void* phi, void* taup1, void* taup2, void* tauq1, void* phantom, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* m, void* p, void* q, void* x11, void* ldx11, void* x21, void* ldx21, void* theta, void* phi, void* taup1, void* taup2, void* tauq1, void* phantom, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.cunbdb4.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cunbdb4.f77_blas_function; 
 
     hook_pos_cunbdb4 ++;
     if( hook_pos_cunbdb4 < __flexiblas_hooks->cunbdb4.nhook) {
-        fn_hook = __flexiblas_hooks->cunbdb4.f77_hook_function[hook_pos_cunbdb4];
+        *(void **) &fn_hook = __flexiblas_hooks->cunbdb4.f77_hook_function[hook_pos_cunbdb4];
         fn_hook((void*) m, (void*) p, (void*) q, (void*) x11, (void*) ldx11, (void*) x21, (void*) ldx21, (void*) theta, (void*) phi, (void*) taup1, (void*) taup2, (void*) tauq1, (void*) phantom, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_cunbdb4 = 0;

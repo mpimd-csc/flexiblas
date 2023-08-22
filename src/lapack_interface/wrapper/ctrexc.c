@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(ctrexc,CTREXC)(char* compq, blasint* n, float complex* t, blasint
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ctrexc.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ctrexc.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ctrexc.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ctrexc.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ctrexc_(void* compq, void* n, void* t, void* ldt, void* q, v
 {
 	void (*fn) (void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* info);
 
-	fn = current_backend->lapack.ctrexc.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ctrexc.f77_blas_function; 
 
 		fn((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ctrexc_(void* compq, void* n, void* t, void* ldt, void* q, 
 	void (*fn) (void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* info);
 	void (*fn_hook) (void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* info);
 
-	fn      = current_backend->lapack.ctrexc.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ctrexc.f77_blas_function; 
 
     hook_pos_ctrexc ++;
     if( hook_pos_ctrexc < __flexiblas_hooks->ctrexc.nhook) {
-        fn_hook = __flexiblas_hooks->ctrexc.f77_hook_function[hook_pos_ctrexc];
+        *(void **) &fn_hook = __flexiblas_hooks->ctrexc.f77_hook_function[hook_pos_ctrexc];
         fn_hook((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) info);
     } else {
         hook_pos_ctrexc = 0;

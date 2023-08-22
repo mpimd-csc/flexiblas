@@ -27,7 +27,7 @@
 
 #include "cscutils/sysinfo.h"
 
-int csc_sysinfo_getpid()
+int csc_sysinfo_getpid(void)
 {
     return (int) getpid();
 }

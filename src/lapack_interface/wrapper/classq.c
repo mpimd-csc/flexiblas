@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -68,36 +68,36 @@ typedef int fortran_charlen_t;
 
 static TLS_STORE uint8_t hook_pos_classq = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(classq,CLASSQ)(blasint* n, float complex* x, blasint* incx, float* scale, float* sumsq)
+void FC_GLOBAL(classq,CLASSQ)(blasint* n, float complex* x, blasint* incx, float* scl, float* sumsq)
 #else
-void FC_GLOBAL(classq,CLASSQ)(blasint* n, float complex* x, blasint* incx, float* scale, float* sumsq)
+void FC_GLOBAL(classq,CLASSQ)(blasint* n, float complex* x, blasint* incx, float* scl, float* sumsq)
 #endif
 {
-	void (*fn) (void* n, void* x, void* incx, void* scale, void* sumsq);
-	void (*fn_hook) (void* n, void* x, void* incx, void* scale, void* sumsq);
+	void (*fn) (void* n, void* x, void* incx, void* scl, void* sumsq);
+	void (*fn_hook) (void* n, void* x, void* incx, void* scl, void* sumsq);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.classq.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->classq.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.classq.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->classq.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq); 
+		fn((void*) n, (void*) x, (void*) incx, (void*) scl, (void*) sumsq); 
 		return;
 	} else {
 		hook_pos_classq = 0;
-		fn_hook((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq);
+		fn_hook((void*) n, (void*) x, (void*) incx, (void*) scl, (void*) sumsq);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void classq_(blasint* n, float complex* x, blasint* incx, float* scale, float* sumsq) __attribute__((alias(MTS(FC_GLOBAL(classq,CLASSQ)))));
+void classq_(blasint* n, float complex* x, blasint* incx, float* scl, float* sumsq) __attribute__((alias(MTS(FC_GLOBAL(classq,CLASSQ)))));
 #else
 #ifndef __APPLE__
-void classq(blasint* n, float complex* x, blasint* incx, float* scale, float* sumsq) __attribute__((alias(MTS(FC_GLOBAL(classq,CLASSQ)))));
+void classq(blasint* n, float complex* x, blasint* incx, float* scl, float* sumsq) __attribute__((alias(MTS(FC_GLOBAL(classq,CLASSQ)))));
 #else
-void classq(blasint* n, float complex* x, blasint* incx, float* scale, float* sumsq){ FC_GLOBAL(classq,CLASSQ)((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq); }
+void classq(blasint* n, float complex* x, blasint* incx, float* scl, float* sumsq){ FC_GLOBAL(classq,CLASSQ)((void*) n, (void*) x, (void*) incx, (void*) scl, (void*) sumsq); }
 #endif
 #endif
 
@@ -107,20 +107,20 @@ void classq(blasint* n, float complex* x, blasint* incx, float* scale, float* su
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_classq_(void* n, void* x, void* incx, void* scale, void* sumsq)
+void flexiblas_real_classq_(void* n, void* x, void* incx, void* scl, void* sumsq)
 {
-	void (*fn) (void* n, void* x, void* incx, void* scale, void* sumsq);
+	void (*fn) (void* n, void* x, void* incx, void* scl, void* sumsq);
 
-	fn = current_backend->lapack.classq.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.classq.f77_blas_function; 
 
-		fn((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq); 
+		fn((void*) n, (void*) x, (void*) incx, (void*) scl, (void*) sumsq); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_classq(void* n, void* x, void* incx, void* scale, void* sumsq) __attribute__((alias("flexiblas_real_classq_")));
+void flexiblas_real_classq(void* n, void* x, void* incx, void* scl, void* sumsq) __attribute__((alias("flexiblas_real_classq_")));
 #else
-void flexiblas_real_classq(void* n, void* x, void* incx, void* scale, void* sumsq){flexiblas_real_classq_((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq);}
+void flexiblas_real_classq(void* n, void* x, void* incx, void* scl, void* sumsq){flexiblas_real_classq_((void*) n, (void*) x, (void*) incx, (void*) scl, (void*) sumsq);}
 #endif
 
 
@@ -129,27 +129,27 @@ void flexiblas_real_classq(void* n, void* x, void* incx, void* scale, void* sums
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_classq_(void* n, void* x, void* incx, void* scale, void* sumsq)
+void flexiblas_chain_classq_(void* n, void* x, void* incx, void* scl, void* sumsq)
 {
-	void (*fn) (void* n, void* x, void* incx, void* scale, void* sumsq);
-	void (*fn_hook) (void* n, void* x, void* incx, void* scale, void* sumsq);
+	void (*fn) (void* n, void* x, void* incx, void* scl, void* sumsq);
+	void (*fn_hook) (void* n, void* x, void* incx, void* scl, void* sumsq);
 
-	fn      = current_backend->lapack.classq.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.classq.f77_blas_function; 
 
     hook_pos_classq ++;
     if( hook_pos_classq < __flexiblas_hooks->classq.nhook) {
-        fn_hook = __flexiblas_hooks->classq.f77_hook_function[hook_pos_classq];
-        fn_hook((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq);
+        *(void **) &fn_hook = __flexiblas_hooks->classq.f77_hook_function[hook_pos_classq];
+        fn_hook((void*) n, (void*) x, (void*) incx, (void*) scl, (void*) sumsq);
     } else {
         hook_pos_classq = 0;
-		fn((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq); 
+		fn((void*) n, (void*) x, (void*) incx, (void*) scl, (void*) sumsq); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_classq(void* n, void* x, void* incx, void* scale, void* sumsq) __attribute__((alias("flexiblas_chain_classq_")));
+void flexiblas_chain_classq(void* n, void* x, void* incx, void* scl, void* sumsq) __attribute__((alias("flexiblas_chain_classq_")));
 #else
-void flexiblas_chain_classq(void* n, void* x, void* incx, void* scale, void* sumsq){flexiblas_chain_classq_((void*) n, (void*) x, (void*) incx, (void*) scale, (void*) sumsq);}
+void flexiblas_chain_classq(void* n, void* x, void* incx, void* scl, void* sumsq){flexiblas_chain_classq_((void*) n, (void*) x, (void*) incx, (void*) scl, (void*) sumsq);}
 #endif
 
 

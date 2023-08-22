@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zlasr,ZLASR)(char* side, char* pivot, char* direct, blasint* m, b
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlasr.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlasr.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlasr.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlasr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) side, (void*) pivot, (void*) direct, (void*) m, (void*) n, (void*) c, (void*) s, (void*) a, (void*) lda); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zlasr_(void* side, void* pivot, void* direct, void* m, void*
 {
 	void (*fn) (void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda);
 
-	fn = current_backend->lapack.zlasr.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlasr.f77_blas_function; 
 
 		fn((void*) side, (void*) pivot, (void*) direct, (void*) m, (void*) n, (void*) c, (void*) s, (void*) a, (void*) lda); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zlasr_(void* side, void* pivot, void* direct, void* m, void
 	void (*fn) (void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda);
 	void (*fn_hook) (void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda);
 
-	fn      = current_backend->lapack.zlasr.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlasr.f77_blas_function; 
 
     hook_pos_zlasr ++;
     if( hook_pos_zlasr < __flexiblas_hooks->zlasr.nhook) {
-        fn_hook = __flexiblas_hooks->zlasr.f77_hook_function[hook_pos_zlasr];
+        *(void **) &fn_hook = __flexiblas_hooks->zlasr.f77_hook_function[hook_pos_zlasr];
         fn_hook((void*) side, (void*) pivot, (void*) direct, (void*) m, (void*) n, (void*) c, (void*) s, (void*) a, (void*) lda);
     } else {
         hook_pos_zlasr = 0;

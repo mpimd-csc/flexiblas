@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dtptri,DTPTRI)(char* uplo, char* diag, blasint* n, double* ap, bl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dtptri.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dtptri.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dtptri.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dtptri.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) diag, (void*) n, (void*) ap, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dtptri_(void* uplo, void* diag, void* n, void* ap, void* inf
 {
 	void (*fn) (void* uplo, void* diag, void* n, void* ap, void* info);
 
-	fn = current_backend->lapack.dtptri.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dtptri.f77_blas_function; 
 
 		fn((void*) uplo, (void*) diag, (void*) n, (void*) ap, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dtptri_(void* uplo, void* diag, void* n, void* ap, void* in
 	void (*fn) (void* uplo, void* diag, void* n, void* ap, void* info);
 	void (*fn_hook) (void* uplo, void* diag, void* n, void* ap, void* info);
 
-	fn      = current_backend->lapack.dtptri.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dtptri.f77_blas_function; 
 
     hook_pos_dtptri ++;
     if( hook_pos_dtptri < __flexiblas_hooks->dtptri.nhook) {
-        fn_hook = __flexiblas_hooks->dtptri.f77_hook_function[hook_pos_dtptri];
+        *(void **) &fn_hook = __flexiblas_hooks->dtptri.f77_hook_function[hook_pos_dtptri];
         fn_hook((void*) uplo, (void*) diag, (void*) n, (void*) ap, (void*) info);
     } else {
         hook_pos_dtptri = 0;

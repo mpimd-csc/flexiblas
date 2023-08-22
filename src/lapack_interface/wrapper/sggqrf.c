@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(sggqrf,SGGQRF)(blasint* n, blasint* m, blasint* p, float* a, blas
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.sggqrf.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->sggqrf.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.sggqrf.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->sggqrf.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) m, (void*) p, (void*) a, (void*) lda, (void*) taua, (void*) b, (void*) ldb, (void*) taub, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_sggqrf_(void* n, void* m, void* p, void* a, void* lda, void*
 {
 	void (*fn) (void* n, void* m, void* p, void* a, void* lda, void* taua, void* b, void* ldb, void* taub, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.sggqrf.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.sggqrf.f77_blas_function; 
 
 		fn((void*) n, (void*) m, (void*) p, (void*) a, (void*) lda, (void*) taua, (void*) b, (void*) ldb, (void*) taub, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_sggqrf_(void* n, void* m, void* p, void* a, void* lda, void
 	void (*fn) (void* n, void* m, void* p, void* a, void* lda, void* taua, void* b, void* ldb, void* taub, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* n, void* m, void* p, void* a, void* lda, void* taua, void* b, void* ldb, void* taub, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.sggqrf.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.sggqrf.f77_blas_function; 
 
     hook_pos_sggqrf ++;
     if( hook_pos_sggqrf < __flexiblas_hooks->sggqrf.nhook) {
-        fn_hook = __flexiblas_hooks->sggqrf.f77_hook_function[hook_pos_sggqrf];
+        *(void **) &fn_hook = __flexiblas_hooks->sggqrf.f77_hook_function[hook_pos_sggqrf];
         fn_hook((void*) n, (void*) m, (void*) p, (void*) a, (void*) lda, (void*) taua, (void*) b, (void*) ldb, (void*) taub, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_sggqrf = 0;

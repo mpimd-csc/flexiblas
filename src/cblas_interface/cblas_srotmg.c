@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -83,8 +83,8 @@ void flexiblas_real_cblas_srotmg( float *d1, float *d2, float *b1,
     if ( current_backend->blas.srotmg.cblas_function != NULL ) {
         void (*fn)
             ( float *d1, float *d2, float *b1,
-              const float b2, float *p)
-            = current_backend->blas.srotmg.cblas_function;
+              const float b2, float *p);
+        *(void **) &fn = current_backend->blas.srotmg.cblas_function;
         fn(d1,d2,b1,b2,p);
     } else {
         FC_GLOBAL(srotmg,SROTMG)(d1,d2,b1,&b2,p);

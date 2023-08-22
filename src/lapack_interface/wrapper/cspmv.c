@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(cspmv,CSPMV)(char* uplo, blasint* n, float complex* alpha, float 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cspmv.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cspmv.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cspmv.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cspmv.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cspmv_(void* uplo, void* n, void* alpha, void* ap, void* x, 
 {
 	void (*fn) (void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy);
 
-	fn = current_backend->lapack.cspmv.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cspmv.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cspmv_(void* uplo, void* n, void* alpha, void* ap, void* x,
 	void (*fn) (void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy);
 	void (*fn_hook) (void* uplo, void* n, void* alpha, void* ap, void* x, void* incx, void* beta, void* y, void* incy);
 
-	fn      = current_backend->lapack.cspmv.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cspmv.f77_blas_function; 
 
     hook_pos_cspmv ++;
     if( hook_pos_cspmv < __flexiblas_hooks->cspmv.nhook) {
-        fn_hook = __flexiblas_hooks->cspmv.f77_hook_function[hook_pos_cspmv];
+        *(void **) &fn_hook = __flexiblas_hooks->cspmv.f77_hook_function[hook_pos_cspmv];
         fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);
     } else {
         hook_pos_cspmv = 0;

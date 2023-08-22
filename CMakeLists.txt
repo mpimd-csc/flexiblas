@@ -1,9 +1,9 @@
 INCLUDE(libcscutils/CMakeModules/CheckPolicy.cmake)
 CheckPolicy(CMP0048 NEW)
 
-PROJECT(FlexiBLAS LANGUAGES C Fortran VERSION 3.2.1)
+PROJECT(FlexiBLAS LANGUAGES C Fortran VERSION 3.3.1)
 ENABLE_LANGUAGE(Fortran)
-cmake_minimum_required(VERSION 3.3.0)
+cmake_minimum_required(VERSION 3.5.0)
 
 IF (${CMAKE_MAJOR_VERSION} GREATER "2")
 	cmake_policy(SET CMP0054 NEW)
@@ -19,7 +19,7 @@ SET(FLEXIBLAS_VERSION_PATCH  ${FlexiBLAS_VERSION_PATCH})
 IF ( NOT FLEXIBLAS_VERSION_PATCH )
     SET(FLEXIBLAS_VERSION_PATCH "0")
 ENDIF()
-SET(FLEXIBLAS_YEARS "2013-2021")
+SET(FLEXIBLAS_YEARS "2013-2023")
 MESSAGE(STATUS "Configuring FlexiBLAS ${FlexiBLAS_VERSION_MAJOR}.${FlexiBLAS_VERSION_MINOR}.${FlexiBLAS_VERSION_PATCH}")
 
 
@@ -103,6 +103,11 @@ INCLUDE(ccache)
 SET(LIBS m)
 INCLUDE(CheckCCompilerFlag)
 INCLUDE(CheckFortranCompilerFlag)
+
+INCLUDE(EnablePedanticC)
+INCLUDE(EnableStrictPrototypesC)
+INCLUDE(EnableCastQual)
+
 
 IF ( ${CMAKE_C_COMPILER_ID} STREQUAL "GNU")
     check_c_compiler_flag("-fstack-protector-strong" C_STACK_PROTECTOR)
@@ -355,6 +360,7 @@ INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/src)
 
 CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/config.h.in ${CMAKE_BINARY_DIR}/include/flexiblas_config.h)
 
+
 add_subdirectory(src)
 
 IF(EXAMPLES STREQUAL "ON")
@@ -415,49 +421,8 @@ IF (INTEGER8 STREQUAL ON)
 ENDIF()
 
 IF ( TESTS )
-	SET(PYTHON_IGNORE_LIBRARY ON)
-	MESSAGE( STATUS "Enable Testing...")
-	ENABLE_TESTING()
-	add_subdirectory(test/blas)
-	IF ( LAPACK AND (LAPACK_API_VERSION STREQUAL "3.6.1" OR LAPACK_API_VERSION STREQUAL "3.6.1-wodprc"))
-        FIND_PACKAGE(PythonInterp)
-		add_subdirectory(test/lapack-3.6.1)
-	ENDIF()
-	IF ( LAPACK AND (LAPACK_API_VERSION STREQUAL "3.7.0" OR LAPACK_API_VERSION STREQUAL "3.7.0-wodprc"))
-        FIND_PACKAGE(PythonInterp)
-		add_subdirectory(test/lapack-3.7.0)
-	ENDIF()
-	IF ( LAPACK AND (LAPACK_API_VERSION STREQUAL "3.7.1" OR LAPACK_API_VERSION STREQUAL "3.7.1-wodprc"))
-		FIND_PACKAGE(PythonInterp)
-		add_subdirectory(test/lapack-3.7.0)
-	ENDIF()
-	IF ( LAPACK AND (LAPACK_API_VERSION STREQUAL "3.8.0" OR LAPACK_API_VERSION STREQUAL "3.8.0-wodprc"))
-		FIND_PACKAGE(PythonInterp)
-		add_subdirectory(test/lapack-3.8.0)
-	ENDIF()
-
-    IF ( LAPACK AND (LAPACK_API_VERSION STREQUAL "3.9.0" OR LAPACK_API_VERSION STREQUAL "3.9.0-wodprc"))
-		FIND_PACKAGE(PythonInterp)
-		add_subdirectory(test/lapack-3.9.0)
-	ENDIF()
-
-    IF ( LAPACK AND (LAPACK_API_VERSION STREQUAL "3.9.1" OR LAPACK_API_VERSION STREQUAL "3.9.1-wodprc"))
-		FIND_PACKAGE(PythonInterp)
-		add_subdirectory(test/lapack-3.9.1)
-	ENDIF()
-
-    IF ( LAPACK AND (LAPACK_API_VERSION STREQUAL "3.10.0" OR LAPACK_API_VERSION STREQUAL "3.10.0-wodprc"))
-		FIND_PACKAGE(PythonInterp)
-		add_subdirectory(test/lapack-3.10.0)
-	ENDIF()
-
-    IF ( LAPACK AND (LAPACK_API_VERSION STREQUAL "3.10.1" OR LAPACK_API_VERSION STREQUAL "3.10.1-wodprc"))
-        FIND_PACKAGE(PythonInterp)
-        add_subdirectory(test/lapack-3.10.1)
-    ENDIF()
-
-
-
+    ENABLE_TESTING()
+    add_subdirectory(test)
 ENDIF (TESTS)
 
 #

@@ -40,7 +40,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 #include "flexiblas_config.h"
@@ -1978,7 +1978,7 @@ void FC_GLOBAL(zlaqz1,ZLAQZ1)(void);
 void FC_GLOBAL(zlaqz2,ZLAQZ2)(void);
 void FC_GLOBAL(zlaqz3,ZLAQZ3)(void);
 
-HIDDEN void flexiblas_lapack_dummy_function_not_called()
+HIDDEN void flexiblas_lapack_dummy_function_not_called(void)
 {
     FC_GLOBAL(dlamc3,DLAMC3)();
     FC_GLOBAL(slamc3,SLAMC3)();

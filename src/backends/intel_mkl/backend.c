@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 #include <stdio.h>
@@ -86,7 +86,7 @@ FLEXIBLAS_INFO_FUNCTION(info) {
 /*-----------------------------------------------------------------------------
  *  Init function, called once when FlexiBLAS initializes the backend.
  *-----------------------------------------------------------------------------*/
-FLEXIBLAS_INIT_FUNCTION() {
+FLEXIBLAS_INIT_FUNCTION(void) {
 	/* Return 0 on success, != 0 otherwise   */
 	return 0 ;
 }
@@ -96,7 +96,7 @@ FLEXIBLAS_INIT_FUNCTION() {
 /*-----------------------------------------------------------------------------
  *  Exit function, called once when the program finishes.
  *-----------------------------------------------------------------------------*/
-FLEXIBLAS_EXIT_FUNCTION() {
+FLEXIBLAS_EXIT_FUNCTION(void) {
 	return;
 }
 

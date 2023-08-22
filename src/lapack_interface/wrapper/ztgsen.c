@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(ztgsen,ZTGSEN)(blasint* ijob, blasint* wantq, blasint* wantz, bla
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ztgsen.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ztgsen.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ztgsen.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ztgsen.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) ijob, (void*) wantq, (void*) wantz, (void*) select, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) alpha, (void*) beta, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) m, (void*) pl, (void*) pr, (void*) dif, (void*) work, (void*) lwork, (void*) iwork, (void*) liwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ztgsen_(void* ijob, void* wantq, void* wantz, void* select, 
 {
 	void (*fn) (void* ijob, void* wantq, void* wantz, void* select, void* n, void* a, void* lda, void* b, void* ldb, void* alpha, void* beta, void* q, void* ldq, void* z, void* ldz, void* m, void* pl, void* pr, void* dif, void* work, void* lwork, void* iwork, void* liwork, void* info);
 
-	fn = current_backend->lapack.ztgsen.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ztgsen.f77_blas_function; 
 
 		fn((void*) ijob, (void*) wantq, (void*) wantz, (void*) select, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) alpha, (void*) beta, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) m, (void*) pl, (void*) pr, (void*) dif, (void*) work, (void*) lwork, (void*) iwork, (void*) liwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ztgsen_(void* ijob, void* wantq, void* wantz, void* select,
 	void (*fn) (void* ijob, void* wantq, void* wantz, void* select, void* n, void* a, void* lda, void* b, void* ldb, void* alpha, void* beta, void* q, void* ldq, void* z, void* ldz, void* m, void* pl, void* pr, void* dif, void* work, void* lwork, void* iwork, void* liwork, void* info);
 	void (*fn_hook) (void* ijob, void* wantq, void* wantz, void* select, void* n, void* a, void* lda, void* b, void* ldb, void* alpha, void* beta, void* q, void* ldq, void* z, void* ldz, void* m, void* pl, void* pr, void* dif, void* work, void* lwork, void* iwork, void* liwork, void* info);
 
-	fn      = current_backend->lapack.ztgsen.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ztgsen.f77_blas_function; 
 
     hook_pos_ztgsen ++;
     if( hook_pos_ztgsen < __flexiblas_hooks->ztgsen.nhook) {
-        fn_hook = __flexiblas_hooks->ztgsen.f77_hook_function[hook_pos_ztgsen];
+        *(void **) &fn_hook = __flexiblas_hooks->ztgsen.f77_hook_function[hook_pos_ztgsen];
         fn_hook((void*) ijob, (void*) wantq, (void*) wantz, (void*) select, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) alpha, (void*) beta, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) m, (void*) pl, (void*) pr, (void*) dif, (void*) work, (void*) lwork, (void*) iwork, (void*) liwork, (void*) info);
     } else {
         hook_pos_ztgsen = 0;

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(cggglm,CGGGLM)(blasint* n, blasint* m, blasint* p, float complex*
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cggglm.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cggglm.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cggglm.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cggglm.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) m, (void*) p, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) d, (void*) x, (void*) y, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cggglm_(void* n, void* m, void* p, void* a, void* lda, void*
 {
 	void (*fn) (void* n, void* m, void* p, void* a, void* lda, void* b, void* ldb, void* d, void* x, void* y, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.cggglm.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cggglm.f77_blas_function; 
 
 		fn((void*) n, (void*) m, (void*) p, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) d, (void*) x, (void*) y, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cggglm_(void* n, void* m, void* p, void* a, void* lda, void
 	void (*fn) (void* n, void* m, void* p, void* a, void* lda, void* b, void* ldb, void* d, void* x, void* y, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* n, void* m, void* p, void* a, void* lda, void* b, void* ldb, void* d, void* x, void* y, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.cggglm.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cggglm.f77_blas_function; 
 
     hook_pos_cggglm ++;
     if( hook_pos_cggglm < __flexiblas_hooks->cggglm.nhook) {
-        fn_hook = __flexiblas_hooks->cggglm.f77_hook_function[hook_pos_cggglm];
+        *(void **) &fn_hook = __flexiblas_hooks->cggglm.f77_hook_function[hook_pos_cggglm];
         fn_hook((void*) n, (void*) m, (void*) p, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) d, (void*) x, (void*) y, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_cggglm = 0;

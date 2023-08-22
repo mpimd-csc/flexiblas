@@ -27,7 +27,7 @@
 
 #ifdef CSC_HAVE_CPUFREQ
 #include <cpufreq.h>
-int csc_cpufreq_enabled()
+int csc_cpufreq_enabled(void)
 {
     return 1;
 }
@@ -160,7 +160,7 @@ int csc_cpufreq_check_governor(unsigned int cpu, char *governor) {
 }
 
 #else
-int csc_cpufreq_enabled() { return 0; }
+int csc_cpufreq_enabled(void) { return 0; }
 unsigned long csc_cpufreq_freq(unsigned int cpu) { (void) cpu; return 0;}
 int csc_cpufreq_set(unsigned int cpu, unsigned long freq) { (void) cpu; (void) freq; return 0; }
 unsigned long *csc_cpufreq_available_freq(unsigned int cpu) { (void) cpu; return NULL; }

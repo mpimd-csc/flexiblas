@@ -257,15 +257,14 @@ if(BLA_VENDOR MATCHES "OpenBLAS.*" OR BLA_VENDOR STREQUAL "All")
 
         foreach(IT ${BLAS_SEARCH_LIBS})
             string(REPLACE " " ";" SEARCH_LIBS ${IT})
-            if(BLAS_LIBRARIES)
-            else()
+            if(NOT BLAS_LIBRARIES)
                 check_fortran_libraries(
                     BLAS_LIBRARIES
                     BLAS
                     sgemm
-                    "${OpenMP_LD_FLAGS}"
+                    ""
                     "${SEARCH_LIBS}"
-                    "${OpenMP_C_FLAGS};${CMAKE_THREAD_LIBS_INIT};${LM}"
+                    "${OpenMP_C_LIBRARIES};${CMAKE_THREAD_LIBS_INIT};${LM}"
                     )
             endif()
         endforeach()
@@ -831,4 +830,3 @@ if(BLAS_LIBRARIES)
                 endif()
             endif()
             set(CMAKE_FIND_LIBRARY_SUFFIXES ${_blas_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES})
-

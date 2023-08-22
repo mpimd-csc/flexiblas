@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -82,8 +82,8 @@ void cblas_drot(const CBLAS_INT N, double *X, const CBLAS_INT incX,
 #endif
     if ( current_backend->blas.drot.cblas_function != NULL ) {
         void (*fn)(const CBLAS_INT N, double *X, const CBLAS_INT incX,
-                double *Y, const CBLAS_INT incY, const double c, const double s)
-            = current_backend->blas.drot.cblas_function;
+                double *Y, const CBLAS_INT incY, const double c, const double s);
+        *(void **) &fn = current_backend->blas.drot.cblas_function;
         fn(N,X,incX,Y,incY,c,s);
     } else {
         FC_GLOBAL(drot,DROT)(&F77_N, X, &F77_incX, Y, &F77_incY, &c, &s);

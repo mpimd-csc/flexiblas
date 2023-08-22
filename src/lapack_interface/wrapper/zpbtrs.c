@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zpbtrs,ZPBTRS)(char* uplo, blasint* n, blasint* kd, blasint* nrhs
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zpbtrs.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zpbtrs.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zpbtrs.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zpbtrs.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) kd, (void*) nrhs, (void*) ab, (void*) ldab, (void*) b, (void*) ldb, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zpbtrs_(void* uplo, void* n, void* kd, void* nrhs, void* ab,
 {
 	void (*fn) (void* uplo, void* n, void* kd, void* nrhs, void* ab, void* ldab, void* b, void* ldb, void* info);
 
-	fn = current_backend->lapack.zpbtrs.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zpbtrs.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) kd, (void*) nrhs, (void*) ab, (void*) ldab, (void*) b, (void*) ldb, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zpbtrs_(void* uplo, void* n, void* kd, void* nrhs, void* ab
 	void (*fn) (void* uplo, void* n, void* kd, void* nrhs, void* ab, void* ldab, void* b, void* ldb, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* kd, void* nrhs, void* ab, void* ldab, void* b, void* ldb, void* info);
 
-	fn      = current_backend->lapack.zpbtrs.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zpbtrs.f77_blas_function; 
 
     hook_pos_zpbtrs ++;
     if( hook_pos_zpbtrs < __flexiblas_hooks->zpbtrs.nhook) {
-        fn_hook = __flexiblas_hooks->zpbtrs.f77_hook_function[hook_pos_zpbtrs];
+        *(void **) &fn_hook = __flexiblas_hooks->zpbtrs.f77_hook_function[hook_pos_zpbtrs];
         fn_hook((void*) uplo, (void*) n, (void*) kd, (void*) nrhs, (void*) ab, (void*) ldab, (void*) b, (void*) ldb, (void*) info);
     } else {
         hook_pos_zpbtrs = 0;

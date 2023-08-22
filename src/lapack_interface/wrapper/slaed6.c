@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(slaed6,SLAED6)(blasint* kniter, blasint* orgati, float* rho, floa
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slaed6.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slaed6.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slaed6.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slaed6.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) kniter, (void*) orgati, (void*) rho, (void*) d, (void*) z, (void*) finit, (void*) tau, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slaed6_(void* kniter, void* orgati, void* rho, void* d, void
 {
 	void (*fn) (void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info);
 
-	fn = current_backend->lapack.slaed6.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slaed6.f77_blas_function; 
 
 		fn((void*) kniter, (void*) orgati, (void*) rho, (void*) d, (void*) z, (void*) finit, (void*) tau, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slaed6_(void* kniter, void* orgati, void* rho, void* d, voi
 	void (*fn) (void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info);
 	void (*fn_hook) (void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info);
 
-	fn      = current_backend->lapack.slaed6.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slaed6.f77_blas_function; 
 
     hook_pos_slaed6 ++;
     if( hook_pos_slaed6 < __flexiblas_hooks->slaed6.nhook) {
-        fn_hook = __flexiblas_hooks->slaed6.f77_hook_function[hook_pos_slaed6];
+        *(void **) &fn_hook = __flexiblas_hooks->slaed6.f77_hook_function[hook_pos_slaed6];
         fn_hook((void*) kniter, (void*) orgati, (void*) rho, (void*) d, (void*) z, (void*) finit, (void*) tau, (void*) info);
     } else {
         hook_pos_slaed6 = 0;

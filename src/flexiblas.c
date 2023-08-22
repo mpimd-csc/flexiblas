@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -201,13 +201,13 @@ static void flexiblas_load_info(void *library, flexiblas_backend_t *backend)
     memset(&(backend->info),0,sizeof(flexiblas_info_t));
     backend->info.flexiblas_integer_size = sizeof(Int);
 #ifdef __WIN32__
-    backend->info_function = (flexiblas_info_function_t) GetProcAddress(library, FLEXIBLAS_INFO_FUNCTION_NAME );
-    backend->init_function = (flexiblas_init_function_t) GetProcAddress(library, FLEXIBLAS_INIT_FUNCTION_NAME);
-    backend->exit_function = (flexiblas_exit_function_t) GetProcAddress(library, FLEXIBLAS_EXIT_FUNCTION_NAME);
+    *(void **) &backend->info_function = GetProcAddress(library, FLEXIBLAS_INFO_FUNCTION_NAME );
+    *(void **) &backend->init_function = GetProcAddress(library, FLEXIBLAS_INIT_FUNCTION_NAME);
+    *(void **) &backend->exit_function = GetProcAddress(library, FLEXIBLAS_EXIT_FUNCTION_NAME);
 #else
-    backend->info_function = (flexiblas_info_function_t) dlsym(library, FLEXIBLAS_INFO_FUNCTION_NAME);
-    backend->init_function = (flexiblas_init_function_t) dlsym(library, FLEXIBLAS_INIT_FUNCTION_NAME);
-    backend->exit_function = (flexiblas_exit_function_t) dlsym(library, FLEXIBLAS_EXIT_FUNCTION_NAME);
+    *(void **) &backend->info_function = dlsym(library, FLEXIBLAS_INFO_FUNCTION_NAME);
+    *(void **) &backend->init_function = dlsym(library, FLEXIBLAS_INIT_FUNCTION_NAME);
+    *(void **) &backend->exit_function = dlsym(library, FLEXIBLAS_EXIT_FUNCTION_NAME);
 #endif
 
     backend->library_handle = library;
@@ -588,7 +588,7 @@ static void * reload_handler = NULL;
 #ifndef __WIN32__
 __attribute__((constructor))
 #endif
-    void flexiblas_init() {
+    void flexiblas_init(void) {
         char blas_default_map[FLEXIBLAS_MGMT_MAX_BUFFER_LEN] ;
         char path[FLEXIBLAS_MGMT_MAX_BUFFER_LEN];
         flexiblas_backend_t  *backend = NULL;
@@ -647,7 +647,9 @@ __attribute__((constructor))
 
 
         /* Backward Init */
-        void *ptr =  (void*)flexiblas_init;
+        void (*ptr_fn)(void) = & flexiblas_init;
+        void *ptr;
+        ptr = *((void **) &ptr_fn);
         Dl_info fb_info;
         memset(&fb_info, 0, sizeof(Dl_info));
         dlerror();
@@ -814,8 +816,8 @@ __attribute__((constructor))
 
 
             __flexiblas_hooks->handles[k] = handle;
-            __flexiblas_hooks->hook_init[k] = (flexiblas_init_function_t) dlsym(handle, FLEXIBLAS_HOOK_INIT_FUNCTION_NAME);
-            __flexiblas_hooks->hook_exit[k] = (flexiblas_exit_function_t) dlsym(handle, FLEXIBLAS_HOOK_EXIT_FUNCTION_NAME);
+            *(void **) &__flexiblas_hooks->hook_init[k] = dlsym(handle, FLEXIBLAS_HOOK_INIT_FUNCTION_NAME);
+            *(void **) &__flexiblas_hooks->hook_exit[k] = dlsym(handle, FLEXIBLAS_HOOK_EXIT_FUNCTION_NAME);
 
             __flexiblas_load_blas_hooks(__flexiblas_hooks, handle);
 
@@ -855,7 +857,7 @@ __attribute__((constructor))
 #ifndef __WIN32__
 __attribute__((destructor))
 #endif
-    void flexiblas_exit() {
+    void flexiblas_exit(void) {
         size_t i;
         if (__flexiblas_verbose ) DPRINTF(1,"cleanup\n");
 
@@ -899,7 +901,7 @@ __attribute__((destructor))
 
 
 
-double flexiblas_wtime()
+double flexiblas_wtime(void)
 {
     struct timeval tv;
     gettimeofday (&tv, NULL);
@@ -907,7 +909,7 @@ double flexiblas_wtime()
 }
 
 
-int flexiblas_verbosity()
+int flexiblas_verbosity(void)
 {
     return __flexiblas_verbose;
 }
@@ -943,7 +945,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 #endif
 
 
-flexiblas_mgmt_t * flexiblas_mgmt()
+flexiblas_mgmt_t * flexiblas_mgmt(void)
 {
     return __flexiblas_mgmt;
 }

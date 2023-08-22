@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -83,8 +83,8 @@ void flexiblas_real_cblas_drotmg( double *d1, double *d2, double *b1,
     if ( current_backend->blas.drotmg.cblas_function != NULL ) {
         void (*fn)
             ( double *d1, double *d2, double *b1,
-              const double b2, double *p)
-            = current_backend->blas.drotmg.cblas_function;
+              const double b2, double *p);
+        *(void **) & fn = current_backend->blas.drotmg.cblas_function;
         fn(d1,d2,b1,b2,p);
     } else {
         FC_GLOBAL(drotmg,DROTMG)(d1,d2,b1,&b2,p);

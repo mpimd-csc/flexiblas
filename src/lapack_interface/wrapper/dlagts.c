@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dlagts,DLAGTS)(blasint* job, blasint* n, double* a, double* b, do
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlagts.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlagts.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlagts.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlagts.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) job, (void*) n, (void*) a, (void*) b, (void*) c, (void*) d, (void*) in, (void*) y, (void*) tol, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlagts_(void* job, void* n, void* a, void* b, void* c, void*
 {
 	void (*fn) (void* job, void* n, void* a, void* b, void* c, void* d, void* in, void* y, void* tol, void* info);
 
-	fn = current_backend->lapack.dlagts.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlagts.f77_blas_function; 
 
 		fn((void*) job, (void*) n, (void*) a, (void*) b, (void*) c, (void*) d, (void*) in, (void*) y, (void*) tol, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlagts_(void* job, void* n, void* a, void* b, void* c, void
 	void (*fn) (void* job, void* n, void* a, void* b, void* c, void* d, void* in, void* y, void* tol, void* info);
 	void (*fn_hook) (void* job, void* n, void* a, void* b, void* c, void* d, void* in, void* y, void* tol, void* info);
 
-	fn      = current_backend->lapack.dlagts.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlagts.f77_blas_function; 
 
     hook_pos_dlagts ++;
     if( hook_pos_dlagts < __flexiblas_hooks->dlagts.nhook) {
-        fn_hook = __flexiblas_hooks->dlagts.f77_hook_function[hook_pos_dlagts];
+        *(void **) &fn_hook = __flexiblas_hooks->dlagts.f77_hook_function[hook_pos_dlagts];
         fn_hook((void*) job, (void*) n, (void*) a, (void*) b, (void*) c, (void*) d, (void*) in, (void*) y, (void*) tol, (void*) info);
     } else {
         hook_pos_dlagts = 0;

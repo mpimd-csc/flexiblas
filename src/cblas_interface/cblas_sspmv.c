@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -111,8 +111,8 @@ void flexiblas_real_cblas_sspmv(const CBLAS_LAYOUT layout,
              const CBLAS_UPLO Uplo, const CBLAS_INT N,
              const float alpha, const float  *AP,
              const float  *X, const CBLAS_INT incX, const float beta,
-             float  *Y, const CBLAS_INT incY)
-            = current_backend->blas.sspmv.cblas_function;
+             float  *Y, const CBLAS_INT incY);
+        *(void **) & fn = current_backend->blas.sspmv.cblas_function;
         fn(layout,Uplo,N,alpha,AP,X,incX,beta,Y,incY);
     } else {
         extern int CBLAS_CallFromC;

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL_(chetrf_aa,CHETRF_AA)(char* uplo, blasint* n, float complex* a, b
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.chetrf_aa.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->chetrf_aa.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.chetrf_aa.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->chetrf_aa.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_chetrf_aa_(void* uplo, void* n, void* a, void* lda, void* ip
 {
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.chetrf_aa.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.chetrf_aa.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_chetrf_aa_(void* uplo, void* n, void* a, void* lda, void* i
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.chetrf_aa.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.chetrf_aa.f77_blas_function; 
 
     hook_pos_chetrf_aa ++;
     if( hook_pos_chetrf_aa < __flexiblas_hooks->chetrf_aa.nhook) {
-        fn_hook = __flexiblas_hooks->chetrf_aa.f77_hook_function[hook_pos_chetrf_aa];
+        *(void **) &fn_hook = __flexiblas_hooks->chetrf_aa.f77_hook_function[hook_pos_chetrf_aa];
         fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_chetrf_aa = 0;

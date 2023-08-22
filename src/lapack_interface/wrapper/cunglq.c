@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(cunglq,CUNGLQ)(blasint* m, blasint* n, blasint* k, float complex*
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cunglq.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cunglq.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cunglq.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cunglq.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cunglq_(void* m, void* n, void* k, void* a, void* lda, void*
 {
 	void (*fn) (void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.cunglq.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cunglq.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cunglq_(void* m, void* n, void* k, void* a, void* lda, void
 	void (*fn) (void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.cunglq.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cunglq.f77_blas_function; 
 
     hook_pos_cunglq ++;
     if( hook_pos_cunglq < __flexiblas_hooks->cunglq.nhook) {
-        fn_hook = __flexiblas_hooks->cunglq.f77_hook_function[hook_pos_cunglq];
+        *(void **) &fn_hook = __flexiblas_hooks->cunglq.f77_hook_function[hook_pos_cunglq];
         fn_hook((void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_cunglq = 0;

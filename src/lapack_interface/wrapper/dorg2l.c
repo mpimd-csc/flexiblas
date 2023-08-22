@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dorg2l,DORG2L)(blasint* m, blasint* n, blasint* k, double* a, bla
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dorg2l.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dorg2l.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dorg2l.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dorg2l.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dorg2l_(void* m, void* n, void* k, void* a, void* lda, void*
 {
 	void (*fn) (void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* info);
 
-	fn = current_backend->lapack.dorg2l.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dorg2l.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dorg2l_(void* m, void* n, void* k, void* a, void* lda, void
 	void (*fn) (void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* info);
 	void (*fn_hook) (void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* info);
 
-	fn      = current_backend->lapack.dorg2l.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dorg2l.f77_blas_function; 
 
     hook_pos_dorg2l ++;
     if( hook_pos_dorg2l < __flexiblas_hooks->dorg2l.nhook) {
-        fn_hook = __flexiblas_hooks->dorg2l.f77_hook_function[hook_pos_dorg2l];
+        *(void **) &fn_hook = __flexiblas_hooks->dorg2l.f77_hook_function[hook_pos_dorg2l];
         fn_hook((void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) info);
     } else {
         hook_pos_dorg2l = 0;

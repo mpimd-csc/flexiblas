@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(slartv,SLARTV)(blasint* n, float* x, blasint* incx, float* y, bla
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slartv.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slartv.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slartv.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slartv.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) c, (void*) s, (void*) incc); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slartv_(void* n, void* x, void* incx, void* y, void* incy, v
 {
 	void (*fn) (void* n, void* x, void* incx, void* y, void* incy, void* c, void* s, void* incc);
 
-	fn = current_backend->lapack.slartv.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slartv.f77_blas_function; 
 
 		fn((void*) n, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) c, (void*) s, (void*) incc); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slartv_(void* n, void* x, void* incx, void* y, void* incy, 
 	void (*fn) (void* n, void* x, void* incx, void* y, void* incy, void* c, void* s, void* incc);
 	void (*fn_hook) (void* n, void* x, void* incx, void* y, void* incy, void* c, void* s, void* incc);
 
-	fn      = current_backend->lapack.slartv.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slartv.f77_blas_function; 
 
     hook_pos_slartv ++;
     if( hook_pos_slartv < __flexiblas_hooks->slartv.nhook) {
-        fn_hook = __flexiblas_hooks->slartv.f77_hook_function[hook_pos_slartv];
+        *(void **) &fn_hook = __flexiblas_hooks->slartv.f77_hook_function[hook_pos_slartv];
         fn_hook((void*) n, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) c, (void*) s, (void*) incc);
     } else {
         hook_pos_slartv = 0;

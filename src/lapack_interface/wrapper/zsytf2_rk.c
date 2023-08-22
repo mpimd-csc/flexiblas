@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL_(zsytf2_rk,ZSYTF2_RK)(char* uplo, blasint* n, double complex* a, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zsytf2_rk.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zsytf2_rk.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zsytf2_rk.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zsytf2_rk.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zsytf2_rk_(void* uplo, void* n, void* a, void* lda, void* e,
 {
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* e, void* ipiv, void* info);
 
-	fn = current_backend->lapack.zsytf2_rk.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zsytf2_rk.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zsytf2_rk_(void* uplo, void* n, void* a, void* lda, void* e
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* e, void* ipiv, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* e, void* ipiv, void* info);
 
-	fn      = current_backend->lapack.zsytf2_rk.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zsytf2_rk.f77_blas_function; 
 
     hook_pos_zsytf2_rk ++;
     if( hook_pos_zsytf2_rk < __flexiblas_hooks->zsytf2_rk.nhook) {
-        fn_hook = __flexiblas_hooks->zsytf2_rk.f77_hook_function[hook_pos_zsytf2_rk];
+        *(void **) &fn_hook = __flexiblas_hooks->zsytf2_rk.f77_hook_function[hook_pos_zsytf2_rk];
         fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) info);
     } else {
         hook_pos_zsytf2_rk = 0;

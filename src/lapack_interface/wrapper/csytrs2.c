@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(csytrs2,CSYTRS2)(char* uplo, blasint* n, blasint* nrhs, float com
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.csytrs2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->csytrs2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.csytrs2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->csytrs2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_csytrs2_(void* uplo, void* n, void* nrhs, void* a, void* lda
 {
 	void (*fn) (void* uplo, void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* work, void* info);
 
-	fn = current_backend->lapack.csytrs2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.csytrs2.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_csytrs2_(void* uplo, void* n, void* nrhs, void* a, void* ld
 	void (*fn) (void* uplo, void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* work, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* work, void* info);
 
-	fn      = current_backend->lapack.csytrs2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.csytrs2.f77_blas_function; 
 
     hook_pos_csytrs2 ++;
     if( hook_pos_csytrs2 < __flexiblas_hooks->csytrs2.nhook) {
-        fn_hook = __flexiblas_hooks->csytrs2.f77_hook_function[hook_pos_csytrs2];
+        *(void **) &fn_hook = __flexiblas_hooks->csytrs2.f77_hook_function[hook_pos_csytrs2];
         fn_hook((void*) uplo, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) work, (void*) info);
     } else {
         hook_pos_csytrs2 = 0;

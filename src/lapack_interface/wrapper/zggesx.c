@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zggesx,ZGGESX)(char* jobvsl, char* jobvsr, char* sort, blasint* s
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zggesx.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zggesx.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zggesx.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zggesx.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobvsl, (void*) jobvsr, (void*) sort, (void*) selctg, (void*) sense, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) sdim, (void*) alpha, (void*) beta, (void*) vsl, (void*) ldvsl, (void*) vsr, (void*) ldvsr, (void*) rconde, (void*) rcondv, (void*) work, (void*) lwork, (void*) rwork, (void*) iwork, (void*) liwork, (void*) bwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zggesx_(void* jobvsl, void* jobvsr, void* sort, void* selctg
 {
 	void (*fn) (void* jobvsl, void* jobvsr, void* sort, void* selctg, void* sense, void* n, void* a, void* lda, void* b, void* ldb, void* sdim, void* alpha, void* beta, void* vsl, void* ldvsl, void* vsr, void* ldvsr, void* rconde, void* rcondv, void* work, void* lwork, void* rwork, void* iwork, void* liwork, void* bwork, void* info);
 
-	fn = current_backend->lapack.zggesx.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zggesx.f77_blas_function; 
 
 		fn((void*) jobvsl, (void*) jobvsr, (void*) sort, (void*) selctg, (void*) sense, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) sdim, (void*) alpha, (void*) beta, (void*) vsl, (void*) ldvsl, (void*) vsr, (void*) ldvsr, (void*) rconde, (void*) rcondv, (void*) work, (void*) lwork, (void*) rwork, (void*) iwork, (void*) liwork, (void*) bwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zggesx_(void* jobvsl, void* jobvsr, void* sort, void* selct
 	void (*fn) (void* jobvsl, void* jobvsr, void* sort, void* selctg, void* sense, void* n, void* a, void* lda, void* b, void* ldb, void* sdim, void* alpha, void* beta, void* vsl, void* ldvsl, void* vsr, void* ldvsr, void* rconde, void* rcondv, void* work, void* lwork, void* rwork, void* iwork, void* liwork, void* bwork, void* info);
 	void (*fn_hook) (void* jobvsl, void* jobvsr, void* sort, void* selctg, void* sense, void* n, void* a, void* lda, void* b, void* ldb, void* sdim, void* alpha, void* beta, void* vsl, void* ldvsl, void* vsr, void* ldvsr, void* rconde, void* rcondv, void* work, void* lwork, void* rwork, void* iwork, void* liwork, void* bwork, void* info);
 
-	fn      = current_backend->lapack.zggesx.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zggesx.f77_blas_function; 
 
     hook_pos_zggesx ++;
     if( hook_pos_zggesx < __flexiblas_hooks->zggesx.nhook) {
-        fn_hook = __flexiblas_hooks->zggesx.f77_hook_function[hook_pos_zggesx];
+        *(void **) &fn_hook = __flexiblas_hooks->zggesx.f77_hook_function[hook_pos_zggesx];
         fn_hook((void*) jobvsl, (void*) jobvsr, (void*) sort, (void*) selctg, (void*) sense, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) sdim, (void*) alpha, (void*) beta, (void*) vsl, (void*) ldvsl, (void*) vsr, (void*) ldvsr, (void*) rconde, (void*) rcondv, (void*) work, (void*) lwork, (void*) rwork, (void*) iwork, (void*) liwork, (void*) bwork, (void*) info);
     } else {
         hook_pos_zggesx = 0;

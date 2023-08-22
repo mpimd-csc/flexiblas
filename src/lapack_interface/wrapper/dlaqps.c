@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dlaqps,DLAQPS)(blasint* m, blasint* n, blasint* offset, blasint* 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlaqps.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlaqps.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlaqps.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlaqps.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) offset, (void*) nb, (void*) kb, (void*) a, (void*) lda, (void*) jpvt, (void*) tau, (void*) vn1, (void*) vn2, (void*) auxv, (void*) f, (void*) ldf); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlaqps_(void* m, void* n, void* offset, void* nb, void* kb, 
 {
 	void (*fn) (void* m, void* n, void* offset, void* nb, void* kb, void* a, void* lda, void* jpvt, void* tau, void* vn1, void* vn2, void* auxv, void* f, void* ldf);
 
-	fn = current_backend->lapack.dlaqps.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlaqps.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) offset, (void*) nb, (void*) kb, (void*) a, (void*) lda, (void*) jpvt, (void*) tau, (void*) vn1, (void*) vn2, (void*) auxv, (void*) f, (void*) ldf); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlaqps_(void* m, void* n, void* offset, void* nb, void* kb,
 	void (*fn) (void* m, void* n, void* offset, void* nb, void* kb, void* a, void* lda, void* jpvt, void* tau, void* vn1, void* vn2, void* auxv, void* f, void* ldf);
 	void (*fn_hook) (void* m, void* n, void* offset, void* nb, void* kb, void* a, void* lda, void* jpvt, void* tau, void* vn1, void* vn2, void* auxv, void* f, void* ldf);
 
-	fn      = current_backend->lapack.dlaqps.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlaqps.f77_blas_function; 
 
     hook_pos_dlaqps ++;
     if( hook_pos_dlaqps < __flexiblas_hooks->dlaqps.nhook) {
-        fn_hook = __flexiblas_hooks->dlaqps.f77_hook_function[hook_pos_dlaqps];
+        *(void **) &fn_hook = __flexiblas_hooks->dlaqps.f77_hook_function[hook_pos_dlaqps];
         fn_hook((void*) m, (void*) n, (void*) offset, (void*) nb, (void*) kb, (void*) a, (void*) lda, (void*) jpvt, (void*) tau, (void*) vn1, (void*) vn2, (void*) auxv, (void*) f, (void*) ldf);
     } else {
         hook_pos_dlaqps = 0;

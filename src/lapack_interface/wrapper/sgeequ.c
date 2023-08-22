@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(sgeequ,SGEEQU)(blasint* m, blasint* n, float* a, blasint* lda, fl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.sgeequ.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->sgeequ.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.sgeequ.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->sgeequ.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_sgeequ_(void* m, void* n, void* a, void* lda, void* r, void*
 {
 	void (*fn) (void* m, void* n, void* a, void* lda, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* info);
 
-	fn = current_backend->lapack.sgeequ.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.sgeequ.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_sgeequ_(void* m, void* n, void* a, void* lda, void* r, void
 	void (*fn) (void* m, void* n, void* a, void* lda, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* info);
 	void (*fn_hook) (void* m, void* n, void* a, void* lda, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* info);
 
-	fn      = current_backend->lapack.sgeequ.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.sgeequ.f77_blas_function; 
 
     hook_pos_sgeequ ++;
     if( hook_pos_sgeequ < __flexiblas_hooks->sgeequ.nhook) {
-        fn_hook = __flexiblas_hooks->sgeequ.f77_hook_function[hook_pos_sgeequ];
+        *(void **) &fn_hook = __flexiblas_hooks->sgeequ.f77_hook_function[hook_pos_sgeequ];
         fn_hook((void*) m, (void*) n, (void*) a, (void*) lda, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) info);
     } else {
         hook_pos_sgeequ = 0;

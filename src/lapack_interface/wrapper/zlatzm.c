@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zlatzm,ZLATZM)(char* side, blasint* m, blasint* n, double complex
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlatzm.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlatzm.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlatzm.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlatzm.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) side, (void*) m, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c1, (void*) c2, (void*) ldc, (void*) work); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zlatzm_(void* side, void* m, void* n, void* v, void* incv, v
 {
 	void (*fn) (void* side, void* m, void* n, void* v, void* incv, void* tau, void* c1, void* c2, void* ldc, void* work);
 
-	fn = current_backend->lapack.zlatzm.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlatzm.f77_blas_function; 
 
 		fn((void*) side, (void*) m, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c1, (void*) c2, (void*) ldc, (void*) work); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zlatzm_(void* side, void* m, void* n, void* v, void* incv, 
 	void (*fn) (void* side, void* m, void* n, void* v, void* incv, void* tau, void* c1, void* c2, void* ldc, void* work);
 	void (*fn_hook) (void* side, void* m, void* n, void* v, void* incv, void* tau, void* c1, void* c2, void* ldc, void* work);
 
-	fn      = current_backend->lapack.zlatzm.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlatzm.f77_blas_function; 
 
     hook_pos_zlatzm ++;
     if( hook_pos_zlatzm < __flexiblas_hooks->zlatzm.nhook) {
-        fn_hook = __flexiblas_hooks->zlatzm.f77_hook_function[hook_pos_zlatzm];
+        *(void **) &fn_hook = __flexiblas_hooks->zlatzm.f77_hook_function[hook_pos_zlatzm];
         fn_hook((void*) side, (void*) m, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c1, (void*) c2, (void*) ldc, (void*) work);
     } else {
         hook_pos_zlatzm = 0;

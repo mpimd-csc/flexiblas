@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(claqr1,CLAQR1)(blasint* n, float complex* h, blasint* ldh, float 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.claqr1.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->claqr1.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.claqr1.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->claqr1.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) h, (void*) ldh, (void*) s1, (void*) s2, (void*) v); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_claqr1_(void* n, void* h, void* ldh, void* s1, void* s2, voi
 {
 	void (*fn) (void* n, void* h, void* ldh, void* s1, void* s2, void* v);
 
-	fn = current_backend->lapack.claqr1.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.claqr1.f77_blas_function; 
 
 		fn((void*) n, (void*) h, (void*) ldh, (void*) s1, (void*) s2, (void*) v); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_claqr1_(void* n, void* h, void* ldh, void* s1, void* s2, vo
 	void (*fn) (void* n, void* h, void* ldh, void* s1, void* s2, void* v);
 	void (*fn_hook) (void* n, void* h, void* ldh, void* s1, void* s2, void* v);
 
-	fn      = current_backend->lapack.claqr1.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.claqr1.f77_blas_function; 
 
     hook_pos_claqr1 ++;
     if( hook_pos_claqr1 < __flexiblas_hooks->claqr1.nhook) {
-        fn_hook = __flexiblas_hooks->claqr1.f77_hook_function[hook_pos_claqr1];
+        *(void **) &fn_hook = __flexiblas_hooks->claqr1.f77_hook_function[hook_pos_claqr1];
         fn_hook((void*) n, (void*) h, (void*) ldh, (void*) s1, (void*) s2, (void*) v);
     } else {
         hook_pos_claqr1 = 0;

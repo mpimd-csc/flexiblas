@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 #include "cblas.h"
@@ -65,7 +65,7 @@ void flexiblas_real_cblas_saxpy( const CBLAS_INT N, const float alpha, const flo
 {
     if ( current_backend->blas.saxpy.cblas_function != NULL ) {
         void (*fn)  ( const CBLAS_INT N, const float alpha, const float *X, const CBLAS_INT incX, float *Y, const CBLAS_INT incY);
-        fn = current_backend->blas.saxpy.cblas_function;
+        *(void **) &fn = current_backend->blas.saxpy.cblas_function;
         fn(N,alpha,X,incX,Y,incY);
     } else {
         Int F77_N=N, F77_incX=incX, F77_incY=incY;

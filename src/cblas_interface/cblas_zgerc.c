@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -92,17 +92,19 @@ void flexiblas_real_cblas_zgerc(const CBLAS_LAYOUT layout, const CBLAS_INT M, co
 #define F77_incX incX
 #define F77_incY incy
 #define F77_lda lda
+    CBLAS_INT incy=incY;
+
 #endif
 
     if ( current_backend->blas.zgerc.cblas_function != NULL ) {
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_INT M, const CBLAS_INT N,
              const void *alpha, const void *X, const CBLAS_INT incX,
-             const void *Y, const CBLAS_INT incY, void *A, const CBLAS_INT lda)
-            = current_backend->blas.zgerc.cblas_function;
+             const void *Y, const CBLAS_INT incY, void *A, const CBLAS_INT lda);
+        *(void **) & fn = current_backend->blas.zgerc.cblas_function;
         fn(layout,M,N,alpha,X,incX,Y,incY,A,lda);
     } else {
-        CBLAS_INT n, i, tincy, incy=incY;
+        CBLAS_INT n, i, tincy;
         double *y, *yy, *ty, *st;
 
         extern int CBLAS_CallFromC;

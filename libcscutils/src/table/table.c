@@ -52,7 +52,7 @@ csc_table_t * csc_table_new(int continous_print ) {
         return NULL;
     }
     //DPRINTF(2, "[TABLE] New table: %lx\n", (unsigned long) t);
-    DPRINTF(2, "[TABLE] New table: %p\n", t);
+    DPRINTF(2, "[TABLE] New table: %p\n", (void *) t);
     return t;
 }
 
@@ -78,7 +78,7 @@ csc_table_t * csc_table_new_from_table(csc_table_t *table) {
 void csc_table_destroy(csc_table_t * t) {
     int i;
     //DPRINTF(2, "[TABLE] Destroy table: %lx\n", (unsigned long) t);
-    DPRINTF(2, "[TABLE] Destroy table: %p\n", t);
+    DPRINTF(2, "[TABLE] Destroy table: %p\n", (void *) t);
     if (!t) return;
     for (i = 0; i < t->number_of_columns; i++) {
         csc_table_column_destroy(t->columns[i]);
@@ -624,7 +624,7 @@ void csc_table_print_ascii(FILE *stream, csc_table_t *t, const char *colsep)
 
 void csc_table_print_fortran(csc_table_t *t, const char *colsep) {
     //DPRINTF(2, "[TABLE] Fortran Print table: %lx\n", (unsigned long) t);
-    DPRINTF(2, "[TABLE] Fortran Print table: %p\n", t);
+    DPRINTF(2, "[TABLE] Fortran Print table: %p\n", (void *) t);
     csc_table_print_ascii(stdout, t, colsep);
     return;
 }

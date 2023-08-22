@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(slasd3,SLASD3)(blasint* nl, blasint* nr, blasint* sqre, blasint* 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slasd3.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slasd3.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slasd3.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slasd3.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) nl, (void*) nr, (void*) sqre, (void*) k, (void*) d, (void*) q, (void*) ldq, (void*) dsigma, (void*) u, (void*) ldu, (void*) u2, (void*) ldu2, (void*) vt, (void*) ldvt, (void*) vt2, (void*) ldvt2, (void*) idxc, (void*) ctot, (void*) z, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slasd3_(void* nl, void* nr, void* sqre, void* k, void* d, vo
 {
 	void (*fn) (void* nl, void* nr, void* sqre, void* k, void* d, void* q, void* ldq, void* dsigma, void* u, void* ldu, void* u2, void* ldu2, void* vt, void* ldvt, void* vt2, void* ldvt2, void* idxc, void* ctot, void* z, void* info);
 
-	fn = current_backend->lapack.slasd3.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slasd3.f77_blas_function; 
 
 		fn((void*) nl, (void*) nr, (void*) sqre, (void*) k, (void*) d, (void*) q, (void*) ldq, (void*) dsigma, (void*) u, (void*) ldu, (void*) u2, (void*) ldu2, (void*) vt, (void*) ldvt, (void*) vt2, (void*) ldvt2, (void*) idxc, (void*) ctot, (void*) z, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slasd3_(void* nl, void* nr, void* sqre, void* k, void* d, v
 	void (*fn) (void* nl, void* nr, void* sqre, void* k, void* d, void* q, void* ldq, void* dsigma, void* u, void* ldu, void* u2, void* ldu2, void* vt, void* ldvt, void* vt2, void* ldvt2, void* idxc, void* ctot, void* z, void* info);
 	void (*fn_hook) (void* nl, void* nr, void* sqre, void* k, void* d, void* q, void* ldq, void* dsigma, void* u, void* ldu, void* u2, void* ldu2, void* vt, void* ldvt, void* vt2, void* ldvt2, void* idxc, void* ctot, void* z, void* info);
 
-	fn      = current_backend->lapack.slasd3.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slasd3.f77_blas_function; 
 
     hook_pos_slasd3 ++;
     if( hook_pos_slasd3 < __flexiblas_hooks->slasd3.nhook) {
-        fn_hook = __flexiblas_hooks->slasd3.f77_hook_function[hook_pos_slasd3];
+        *(void **) &fn_hook = __flexiblas_hooks->slasd3.f77_hook_function[hook_pos_slasd3];
         fn_hook((void*) nl, (void*) nr, (void*) sqre, (void*) k, (void*) d, (void*) q, (void*) ldq, (void*) dsigma, (void*) u, (void*) ldu, (void*) u2, (void*) ldu2, (void*) vt, (void*) ldvt, (void*) vt2, (void*) ldvt2, (void*) idxc, (void*) ctot, (void*) z, (void*) info);
     } else {
         hook_pos_slasd3 = 0;

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(ztrsen,ZTRSEN)(char* job, char* compq, blasint* select, blasint* 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ztrsen.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ztrsen.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ztrsen.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ztrsen.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) job, (void*) compq, (void*) select, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) w, (void*) m, (void*) s, (void*) sep, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ztrsen_(void* job, void* compq, void* select, void* n, void*
 {
 	void (*fn) (void* job, void* compq, void* select, void* n, void* t, void* ldt, void* q, void* ldq, void* w, void* m, void* s, void* sep, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.ztrsen.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ztrsen.f77_blas_function; 
 
 		fn((void*) job, (void*) compq, (void*) select, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) w, (void*) m, (void*) s, (void*) sep, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ztrsen_(void* job, void* compq, void* select, void* n, void
 	void (*fn) (void* job, void* compq, void* select, void* n, void* t, void* ldt, void* q, void* ldq, void* w, void* m, void* s, void* sep, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* job, void* compq, void* select, void* n, void* t, void* ldt, void* q, void* ldq, void* w, void* m, void* s, void* sep, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.ztrsen.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ztrsen.f77_blas_function; 
 
     hook_pos_ztrsen ++;
     if( hook_pos_ztrsen < __flexiblas_hooks->ztrsen.nhook) {
-        fn_hook = __flexiblas_hooks->ztrsen.f77_hook_function[hook_pos_ztrsen];
+        *(void **) &fn_hook = __flexiblas_hooks->ztrsen.f77_hook_function[hook_pos_ztrsen];
         fn_hook((void*) job, (void*) compq, (void*) select, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) w, (void*) m, (void*) s, (void*) sep, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_ztrsen = 0;

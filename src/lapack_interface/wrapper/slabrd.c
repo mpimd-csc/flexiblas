@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(slabrd,SLABRD)(blasint* m, blasint* n, blasint* nb, float* a, bla
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slabrd.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slabrd.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slabrd.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slabrd.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) nb, (void*) a, (void*) lda, (void*) d, (void*) e, (void*) tauq, (void*) taup, (void*) x, (void*) ldx, (void*) y, (void*) ldy); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slabrd_(void* m, void* n, void* nb, void* a, void* lda, void
 {
 	void (*fn) (void* m, void* n, void* nb, void* a, void* lda, void* d, void* e, void* tauq, void* taup, void* x, void* ldx, void* y, void* ldy);
 
-	fn = current_backend->lapack.slabrd.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slabrd.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) nb, (void*) a, (void*) lda, (void*) d, (void*) e, (void*) tauq, (void*) taup, (void*) x, (void*) ldx, (void*) y, (void*) ldy); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slabrd_(void* m, void* n, void* nb, void* a, void* lda, voi
 	void (*fn) (void* m, void* n, void* nb, void* a, void* lda, void* d, void* e, void* tauq, void* taup, void* x, void* ldx, void* y, void* ldy);
 	void (*fn_hook) (void* m, void* n, void* nb, void* a, void* lda, void* d, void* e, void* tauq, void* taup, void* x, void* ldx, void* y, void* ldy);
 
-	fn      = current_backend->lapack.slabrd.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slabrd.f77_blas_function; 
 
     hook_pos_slabrd ++;
     if( hook_pos_slabrd < __flexiblas_hooks->slabrd.nhook) {
-        fn_hook = __flexiblas_hooks->slabrd.f77_hook_function[hook_pos_slabrd];
+        *(void **) &fn_hook = __flexiblas_hooks->slabrd.f77_hook_function[hook_pos_slabrd];
         fn_hook((void*) m, (void*) n, (void*) nb, (void*) a, (void*) lda, (void*) d, (void*) e, (void*) tauq, (void*) taup, (void*) x, (void*) ldx, (void*) y, (void*) ldy);
     } else {
         hook_pos_slabrd = 0;

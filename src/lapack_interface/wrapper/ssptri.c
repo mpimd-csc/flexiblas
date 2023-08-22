@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(ssptri,SSPTRI)(char* uplo, blasint* n, float* ap, blasint* ipiv, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ssptri.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ssptri.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ssptri.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ssptri.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) ap, (void*) ipiv, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ssptri_(void* uplo, void* n, void* ap, void* ipiv, void* wor
 {
 	void (*fn) (void* uplo, void* n, void* ap, void* ipiv, void* work, void* info);
 
-	fn = current_backend->lapack.ssptri.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ssptri.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) ap, (void*) ipiv, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ssptri_(void* uplo, void* n, void* ap, void* ipiv, void* wo
 	void (*fn) (void* uplo, void* n, void* ap, void* ipiv, void* work, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* ap, void* ipiv, void* work, void* info);
 
-	fn      = current_backend->lapack.ssptri.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ssptri.f77_blas_function; 
 
     hook_pos_ssptri ++;
     if( hook_pos_ssptri < __flexiblas_hooks->ssptri.nhook) {
-        fn_hook = __flexiblas_hooks->ssptri.f77_hook_function[hook_pos_ssptri];
+        *(void **) &fn_hook = __flexiblas_hooks->ssptri.f77_hook_function[hook_pos_ssptri];
         fn_hook((void*) uplo, (void*) n, (void*) ap, (void*) ipiv, (void*) work, (void*) info);
     } else {
         hook_pos_ssptri = 0;

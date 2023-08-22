@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL_(ssycon_rook,SSYCON_ROOK)(char* uplo, blasint* n, float* a, blasi
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ssycon_rook.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ssycon_rook.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ssycon_rook.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ssycon_rook.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) iwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ssycon_rook_(void* uplo, void* n, void* a, void* lda, void* 
 {
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* anorm, void* rcond, void* work, void* iwork, void* info);
 
-	fn = current_backend->lapack.ssycon_rook.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ssycon_rook.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) iwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ssycon_rook_(void* uplo, void* n, void* a, void* lda, void*
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* anorm, void* rcond, void* work, void* iwork, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* anorm, void* rcond, void* work, void* iwork, void* info);
 
-	fn      = current_backend->lapack.ssycon_rook.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ssycon_rook.f77_blas_function; 
 
     hook_pos_ssycon_rook ++;
     if( hook_pos_ssycon_rook < __flexiblas_hooks->ssycon_rook.nhook) {
-        fn_hook = __flexiblas_hooks->ssycon_rook.f77_hook_function[hook_pos_ssycon_rook];
+        *(void **) &fn_hook = __flexiblas_hooks->ssycon_rook.f77_hook_function[hook_pos_ssycon_rook];
         fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) iwork, (void*) info);
     } else {
         hook_pos_ssycon_rook = 0;

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(cspr,CSPR)(char* uplo, blasint* n, float complex* alpha, float co
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cspr.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cspr.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cspr.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cspr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cspr_(void* uplo, void* n, void* alpha, void* x, void* incx,
 {
 	void (*fn) (void* uplo, void* n, void* alpha, void* x, void* incx, void* ap);
 
-	fn = current_backend->lapack.cspr.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cspr.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cspr_(void* uplo, void* n, void* alpha, void* x, void* incx
 	void (*fn) (void* uplo, void* n, void* alpha, void* x, void* incx, void* ap);
 	void (*fn_hook) (void* uplo, void* n, void* alpha, void* x, void* incx, void* ap);
 
-	fn      = current_backend->lapack.cspr.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cspr.f77_blas_function; 
 
     hook_pos_cspr ++;
     if( hook_pos_cspr < __flexiblas_hooks->cspr.nhook) {
-        fn_hook = __flexiblas_hooks->cspr.f77_hook_function[hook_pos_cspr];
+        *(void **) &fn_hook = __flexiblas_hooks->cspr.f77_hook_function[hook_pos_cspr];
         fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap);
     } else {
         hook_pos_cspr = 0;

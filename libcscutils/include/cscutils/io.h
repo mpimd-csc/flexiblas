@@ -27,7 +27,7 @@
 extern "C" {
 #endif
 #if __GNUC__ >= 4
-#define CSC_ATTR_SCANF(pos1, pos2)   __attribute__ ((format (scanf, pos1, pos2)));
+#define CSC_ATTR_SCANF(pos1, pos2)   __attribute__ ((format (scanf, pos1, pos2)))
 #else
 #define CSC_ATTR_SCANF(pos1, pos2)
 #endif

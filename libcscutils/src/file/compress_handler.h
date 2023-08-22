@@ -45,7 +45,7 @@ extern "C" {
     extern int _compressed_io_handler_len;
     extern _compressed_io_handler compress_fallback;
 
-    void csc_io_init ();
+    void csc_io_init (void);
 
 #ifdef  __cplusplus
 }

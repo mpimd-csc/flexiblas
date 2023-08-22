@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(slatps,SLATPS)(char* uplo, char* trans, char* diag, char* normin,
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slatps.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slatps.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slatps.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slatps.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) ap, (void*) x, (void*) scale, (void*) cnorm, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slatps_(void* uplo, void* trans, void* diag, void* normin, v
 {
 	void (*fn) (void* uplo, void* trans, void* diag, void* normin, void* n, void* ap, void* x, void* scale, void* cnorm, void* info);
 
-	fn = current_backend->lapack.slatps.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slatps.f77_blas_function; 
 
 		fn((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) ap, (void*) x, (void*) scale, (void*) cnorm, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slatps_(void* uplo, void* trans, void* diag, void* normin, 
 	void (*fn) (void* uplo, void* trans, void* diag, void* normin, void* n, void* ap, void* x, void* scale, void* cnorm, void* info);
 	void (*fn_hook) (void* uplo, void* trans, void* diag, void* normin, void* n, void* ap, void* x, void* scale, void* cnorm, void* info);
 
-	fn      = current_backend->lapack.slatps.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slatps.f77_blas_function; 
 
     hook_pos_slatps ++;
     if( hook_pos_slatps < __flexiblas_hooks->slatps.nhook) {
-        fn_hook = __flexiblas_hooks->slatps.f77_hook_function[hook_pos_slatps];
+        *(void **) &fn_hook = __flexiblas_hooks->slatps.f77_hook_function[hook_pos_slatps];
         fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) ap, (void*) x, (void*) scale, (void*) cnorm, (void*) info);
     } else {
         hook_pos_slatps = 0;

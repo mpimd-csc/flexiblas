@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -67,7 +67,7 @@ void flexiblas_real_cblas_scopy( const CBLAS_INT N, const float *X,const CBLAS_I
     void (*fn)  ( const CBLAS_INT N, const float *X, const CBLAS_INT incX, float *Y, const CBLAS_INT incY);
 
     if ( current_backend->blas.scopy.cblas_function != NULL ) {
-        fn = current_backend->blas.scopy.cblas_function;
+        *(void **) &fn = current_backend->blas.scopy.cblas_function;
         fn(N,X,incX,Y,incY);
     } else {
         Int F77_N=N, F77_incX=incX, F77_incY=incY;

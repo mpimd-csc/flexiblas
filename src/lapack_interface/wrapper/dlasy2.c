@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dlasy2,DLASY2)(blasint* ltranl, blasint* ltranr, blasint* isgn, b
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlasy2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlasy2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlasy2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlasy2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) ltranl, (void*) ltranr, (void*) isgn, (void*) n1, (void*) n2, (void*) tl, (void*) ldtl, (void*) tr, (void*) ldtr, (void*) b, (void*) ldb, (void*) scale, (void*) x, (void*) ldx, (void*) xnorm, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlasy2_(void* ltranl, void* ltranr, void* isgn, void* n1, vo
 {
 	void (*fn) (void* ltranl, void* ltranr, void* isgn, void* n1, void* n2, void* tl, void* ldtl, void* tr, void* ldtr, void* b, void* ldb, void* scale, void* x, void* ldx, void* xnorm, void* info);
 
-	fn = current_backend->lapack.dlasy2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlasy2.f77_blas_function; 
 
 		fn((void*) ltranl, (void*) ltranr, (void*) isgn, (void*) n1, (void*) n2, (void*) tl, (void*) ldtl, (void*) tr, (void*) ldtr, (void*) b, (void*) ldb, (void*) scale, (void*) x, (void*) ldx, (void*) xnorm, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlasy2_(void* ltranl, void* ltranr, void* isgn, void* n1, v
 	void (*fn) (void* ltranl, void* ltranr, void* isgn, void* n1, void* n2, void* tl, void* ldtl, void* tr, void* ldtr, void* b, void* ldb, void* scale, void* x, void* ldx, void* xnorm, void* info);
 	void (*fn_hook) (void* ltranl, void* ltranr, void* isgn, void* n1, void* n2, void* tl, void* ldtl, void* tr, void* ldtr, void* b, void* ldb, void* scale, void* x, void* ldx, void* xnorm, void* info);
 
-	fn      = current_backend->lapack.dlasy2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlasy2.f77_blas_function; 
 
     hook_pos_dlasy2 ++;
     if( hook_pos_dlasy2 < __flexiblas_hooks->dlasy2.nhook) {
-        fn_hook = __flexiblas_hooks->dlasy2.f77_hook_function[hook_pos_dlasy2];
+        *(void **) &fn_hook = __flexiblas_hooks->dlasy2.f77_hook_function[hook_pos_dlasy2];
         fn_hook((void*) ltranl, (void*) ltranr, (void*) isgn, (void*) n1, (void*) n2, (void*) tl, (void*) ldtl, (void*) tr, (void*) ldtr, (void*) b, (void*) ldb, (void*) scale, (void*) x, (void*) ldx, (void*) xnorm, (void*) info);
     } else {
         hook_pos_dlasy2 = 0;

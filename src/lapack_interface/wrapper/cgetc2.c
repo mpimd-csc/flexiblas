@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(cgetc2,CGETC2)(blasint* n, float complex* a, blasint* lda, blasin
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cgetc2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cgetc2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cgetc2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cgetc2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) jpiv, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cgetc2_(void* n, void* a, void* lda, void* ipiv, void* jpiv,
 {
 	void (*fn) (void* n, void* a, void* lda, void* ipiv, void* jpiv, void* info);
 
-	fn = current_backend->lapack.cgetc2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cgetc2.f77_blas_function; 
 
 		fn((void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) jpiv, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cgetc2_(void* n, void* a, void* lda, void* ipiv, void* jpiv
 	void (*fn) (void* n, void* a, void* lda, void* ipiv, void* jpiv, void* info);
 	void (*fn_hook) (void* n, void* a, void* lda, void* ipiv, void* jpiv, void* info);
 
-	fn      = current_backend->lapack.cgetc2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cgetc2.f77_blas_function; 
 
     hook_pos_cgetc2 ++;
     if( hook_pos_cgetc2 < __flexiblas_hooks->cgetc2.nhook) {
-        fn_hook = __flexiblas_hooks->cgetc2.f77_hook_function[hook_pos_cgetc2];
+        *(void **) &fn_hook = __flexiblas_hooks->cgetc2.f77_hook_function[hook_pos_cgetc2];
         fn_hook((void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) jpiv, (void*) info);
     } else {
         hook_pos_cgetc2 = 0;

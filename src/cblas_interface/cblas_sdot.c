@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -73,7 +73,7 @@ float flexiblas_real_cblas_sdot( const CBLAS_INT N, const float *X, const CBLAS_
     float d;
     if ( current_backend->blas.sdot.cblas_function != NULL ) {
         float (*fn)  ( const CBLAS_INT N, const float *X, const CBLAS_INT incX, const float *Y, const CBLAS_INT incY);
-        fn = current_backend->blas.sdot.cblas_function;
+        *(void **) &fn = current_backend->blas.sdot.cblas_function;
         d = fn(N,X,incX,Y,incY);
     } else {
         Int F77_N=N, F77_incX=incX, F77_incY=incY;

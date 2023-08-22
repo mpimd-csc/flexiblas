@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL_(slaorhr_col_getrfnp,SLAORHR_COL_GETRFNP)(blasint* m, blasint* n,
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slaorhr_col_getrfnp.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slaorhr_col_getrfnp.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slaorhr_col_getrfnp.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slaorhr_col_getrfnp.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) d, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slaorhr_col_getrfnp_(void* m, void* n, void* a, void* lda, v
 {
 	void (*fn) (void* m, void* n, void* a, void* lda, void* d, void* info);
 
-	fn = current_backend->lapack.slaorhr_col_getrfnp.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slaorhr_col_getrfnp.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) d, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slaorhr_col_getrfnp_(void* m, void* n, void* a, void* lda, 
 	void (*fn) (void* m, void* n, void* a, void* lda, void* d, void* info);
 	void (*fn_hook) (void* m, void* n, void* a, void* lda, void* d, void* info);
 
-	fn      = current_backend->lapack.slaorhr_col_getrfnp.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slaorhr_col_getrfnp.f77_blas_function; 
 
     hook_pos_slaorhr_col_getrfnp ++;
     if( hook_pos_slaorhr_col_getrfnp < __flexiblas_hooks->slaorhr_col_getrfnp.nhook) {
-        fn_hook = __flexiblas_hooks->slaorhr_col_getrfnp.f77_hook_function[hook_pos_slaorhr_col_getrfnp];
+        *(void **) &fn_hook = __flexiblas_hooks->slaorhr_col_getrfnp.f77_hook_function[hook_pos_slaorhr_col_getrfnp];
         fn_hook((void*) m, (void*) n, (void*) a, (void*) lda, (void*) d, (void*) info);
     } else {
         hook_pos_slaorhr_col_getrfnp = 0;

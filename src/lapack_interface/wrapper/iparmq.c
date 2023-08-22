@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -81,8 +81,8 @@ int FC_GLOBAL(iparmq,IPARMQ)(blasint* ispec, char* name, char* opts, blasint* n,
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.iparmq.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->iparmq.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.iparmq.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->iparmq.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) ispec, (void*) name, (void*) opts, (void*) n, (void*) ilo, (void*) ihi, (void*) lwork, ( fortran_charlen_t ) len_name, ( fortran_charlen_t ) len_opts); 
 		return ret; 
@@ -113,7 +113,7 @@ blasint flexiblas_real_iparmq_(void* ispec, void* name, void* opts, void* n, voi
 	blasint (*fn) (void* ispec, void* name, void* opts, void* n, void* ilo, void* ihi, void* lwork, fortran_charlen_t len_name, fortran_charlen_t len_opts);
 	blasint ret;
 
-	fn = current_backend->lapack.iparmq.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.iparmq.f77_blas_function; 
 
 		ret = fn((void*) ispec, (void*) name, (void*) opts, (void*) n, (void*) ilo, (void*) ihi, (void*) lwork, ( fortran_charlen_t ) len_name, ( fortran_charlen_t ) len_opts); 
 
@@ -137,11 +137,11 @@ blasint flexiblas_chain_iparmq_(void* ispec, void* name, void* opts, void* n, vo
 	blasint (*fn_hook) (void* ispec, void* name, void* opts, void* n, void* ilo, void* ihi, void* lwork, fortran_charlen_t len_name, fortran_charlen_t len_opts);
 	blasint ret;
 
-	fn      = current_backend->lapack.iparmq.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.iparmq.f77_blas_function; 
 
     hook_pos_iparmq ++;
     if( hook_pos_iparmq < __flexiblas_hooks->iparmq.nhook) {
-        fn_hook = __flexiblas_hooks->iparmq.f77_hook_function[hook_pos_iparmq];
+        *(void **) &fn_hook = __flexiblas_hooks->iparmq.f77_hook_function[hook_pos_iparmq];
         ret = fn_hook((void*) ispec, (void*) name, (void*) opts, (void*) n, (void*) ilo, (void*) ihi, (void*) lwork, ( fortran_charlen_t )len_name, ( fortran_charlen_t )len_opts);
     } else {
         hook_pos_iparmq = 0;

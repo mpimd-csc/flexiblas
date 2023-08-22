@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zhegst,ZHEGST)(blasint* itype, char* uplo, blasint* n, double com
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zhegst.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zhegst.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zhegst.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zhegst.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) itype, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zhegst_(void* itype, void* uplo, void* n, void* a, void* lda
 {
 	void (*fn) (void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info);
 
-	fn = current_backend->lapack.zhegst.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zhegst.f77_blas_function; 
 
 		fn((void*) itype, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zhegst_(void* itype, void* uplo, void* n, void* a, void* ld
 	void (*fn) (void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info);
 	void (*fn_hook) (void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info);
 
-	fn      = current_backend->lapack.zhegst.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zhegst.f77_blas_function; 
 
     hook_pos_zhegst ++;
     if( hook_pos_zhegst < __flexiblas_hooks->zhegst.nhook) {
-        fn_hook = __flexiblas_hooks->zhegst.f77_hook_function[hook_pos_zhegst];
+        *(void **) &fn_hook = __flexiblas_hooks->zhegst.f77_hook_function[hook_pos_zhegst];
         fn_hook((void*) itype, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info);
     } else {
         hook_pos_zhegst = 0;

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(ztprfb,ZTPRFB)(char* side, char* trans, char* direct, char* store
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ztprfb.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ztprfb.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ztprfb.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ztprfb.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) side, (void*) trans, (void*) direct, (void*) storev, (void*) m, (void*) n, (void*) k, (void*) l, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) work, (void*) ldwork); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ztprfb_(void* side, void* trans, void* direct, void* storev,
 {
 	void (*fn) (void* side, void* trans, void* direct, void* storev, void* m, void* n, void* k, void* l, void* v, void* ldv, void* t, void* ldt, void* a, void* lda, void* b, void* ldb, void* work, void* ldwork);
 
-	fn = current_backend->lapack.ztprfb.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ztprfb.f77_blas_function; 
 
 		fn((void*) side, (void*) trans, (void*) direct, (void*) storev, (void*) m, (void*) n, (void*) k, (void*) l, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) work, (void*) ldwork); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ztprfb_(void* side, void* trans, void* direct, void* storev
 	void (*fn) (void* side, void* trans, void* direct, void* storev, void* m, void* n, void* k, void* l, void* v, void* ldv, void* t, void* ldt, void* a, void* lda, void* b, void* ldb, void* work, void* ldwork);
 	void (*fn_hook) (void* side, void* trans, void* direct, void* storev, void* m, void* n, void* k, void* l, void* v, void* ldv, void* t, void* ldt, void* a, void* lda, void* b, void* ldb, void* work, void* ldwork);
 
-	fn      = current_backend->lapack.ztprfb.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ztprfb.f77_blas_function; 
 
     hook_pos_ztprfb ++;
     if( hook_pos_ztprfb < __flexiblas_hooks->ztprfb.nhook) {
-        fn_hook = __flexiblas_hooks->ztprfb.f77_hook_function[hook_pos_ztprfb];
+        *(void **) &fn_hook = __flexiblas_hooks->ztprfb.f77_hook_function[hook_pos_ztprfb];
         fn_hook((void*) side, (void*) trans, (void*) direct, (void*) storev, (void*) m, (void*) n, (void*) k, (void*) l, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) work, (void*) ldwork);
     } else {
         hook_pos_ztprfb = 0;

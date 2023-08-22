@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(sgbtf2,SGBTF2)(blasint* m, blasint* n, blasint* kl, blasint* ku, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.sgbtf2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->sgbtf2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.sgbtf2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->sgbtf2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) ipiv, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_sgbtf2_(void* m, void* n, void* kl, void* ku, void* ab, void
 {
 	void (*fn) (void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* ipiv, void* info);
 
-	fn = current_backend->lapack.sgbtf2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.sgbtf2.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) ipiv, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_sgbtf2_(void* m, void* n, void* kl, void* ku, void* ab, voi
 	void (*fn) (void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* ipiv, void* info);
 	void (*fn_hook) (void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* ipiv, void* info);
 
-	fn      = current_backend->lapack.sgbtf2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.sgbtf2.f77_blas_function; 
 
     hook_pos_sgbtf2 ++;
     if( hook_pos_sgbtf2 < __flexiblas_hooks->sgbtf2.nhook) {
-        fn_hook = __flexiblas_hooks->sgbtf2.f77_hook_function[hook_pos_sgbtf2];
+        *(void **) &fn_hook = __flexiblas_hooks->sgbtf2.f77_hook_function[hook_pos_sgbtf2];
         fn_hook((void*) m, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) ipiv, (void*) info);
     } else {
         hook_pos_sgbtf2 = 0;

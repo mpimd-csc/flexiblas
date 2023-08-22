@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 #include "cblas.h"
@@ -83,7 +83,8 @@ CBLAS_INDEX flexiblas_real_cblas_izamax( const CBLAS_INT N, const void *X, const
 #endif
 
     if ( current_backend->blas.izamax.cblas_function != NULL ) {
-        CBLAS_INDEX (*fn) ( const CBLAS_INT N, const void *X, const CBLAS_INT incX)  = current_backend->blas.izamax.cblas_function;
+        CBLAS_INDEX (*fn) ( const CBLAS_INT N, const void *X, const CBLAS_INT incX);
+        *(void **) &fn = current_backend->blas.izamax.cblas_function;
         iamax = fn(N,X,incX);
 
     } else {

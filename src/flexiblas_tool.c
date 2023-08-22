@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -204,7 +204,7 @@ static void print_usage(const char *prgmname) {
 }
 
 
-int print_config() {
+static int print_config(void) {
 	char * system_config_file, *user_config_file, *host_config_file, *env_config_file, *system_config_dir; ;
     flexiblas_mgmt_t *config;
 	char default_system[FLEXIBLAS_MGMT_MAX_BUFFER_LEN], default_user[FLEXIBLAS_MGMT_MAX_BUFFER_LEN];

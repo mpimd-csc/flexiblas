@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(clahqr,CLAHQR)(blasint* wantt, blasint* wantz, blasint* n, blasin
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.clahqr.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->clahqr.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.clahqr.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->clahqr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) wantt, (void*) wantz, (void*) n, (void*) ilo, (void*) ihi, (void*) h, (void*) ldh, (void*) w, (void*) iloz, (void*) ihiz, (void*) z, (void*) ldz, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_clahqr_(void* wantt, void* wantz, void* n, void* ilo, void* 
 {
 	void (*fn) (void* wantt, void* wantz, void* n, void* ilo, void* ihi, void* h, void* ldh, void* w, void* iloz, void* ihiz, void* z, void* ldz, void* info);
 
-	fn = current_backend->lapack.clahqr.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.clahqr.f77_blas_function; 
 
 		fn((void*) wantt, (void*) wantz, (void*) n, (void*) ilo, (void*) ihi, (void*) h, (void*) ldh, (void*) w, (void*) iloz, (void*) ihiz, (void*) z, (void*) ldz, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_clahqr_(void* wantt, void* wantz, void* n, void* ilo, void*
 	void (*fn) (void* wantt, void* wantz, void* n, void* ilo, void* ihi, void* h, void* ldh, void* w, void* iloz, void* ihiz, void* z, void* ldz, void* info);
 	void (*fn_hook) (void* wantt, void* wantz, void* n, void* ilo, void* ihi, void* h, void* ldh, void* w, void* iloz, void* ihiz, void* z, void* ldz, void* info);
 
-	fn      = current_backend->lapack.clahqr.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.clahqr.f77_blas_function; 
 
     hook_pos_clahqr ++;
     if( hook_pos_clahqr < __flexiblas_hooks->clahqr.nhook) {
-        fn_hook = __flexiblas_hooks->clahqr.f77_hook_function[hook_pos_clahqr];
+        *(void **) &fn_hook = __flexiblas_hooks->clahqr.f77_hook_function[hook_pos_clahqr];
         fn_hook((void*) wantt, (void*) wantz, (void*) n, (void*) ilo, (void*) ihi, (void*) h, (void*) ldh, (void*) w, (void*) iloz, (void*) ihiz, (void*) z, (void*) ldz, (void*) info);
     } else {
         hook_pos_clahqr = 0;

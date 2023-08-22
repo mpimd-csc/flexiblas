@@ -45,7 +45,7 @@
 
 
 
-double wtime()
+double wtime(void)
 {
 	struct timeval tv;
 	gettimeofday (&tv, NULL);

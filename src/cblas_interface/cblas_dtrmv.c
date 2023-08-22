@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -109,8 +109,8 @@ void flexiblas_real_cblas_dtrmv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
              const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
              const CBLAS_INT N, const double  *A, const CBLAS_INT lda,
-             double  *X, const CBLAS_INT incX)
-            = current_backend->blas.dtrmv.cblas_function;
+             double  *X, const CBLAS_INT incX);
+        *(void **) & fn = current_backend->blas.dtrmv.cblas_function;
         fn(layout,Uplo,TransA,Diag,N,A,lda,X,incX);
     } else {
 

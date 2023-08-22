@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -81,8 +81,8 @@ int FC_GLOBAL(iladiag,ILADIAG)(char* diag)
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.iladiag.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->iladiag.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.iladiag.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->iladiag.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) diag); 
 		return ret; 
@@ -113,7 +113,7 @@ blasint flexiblas_real_iladiag_(void* diag)
 	blasint (*fn) (void* diag);
 	blasint ret;
 
-	fn = current_backend->lapack.iladiag.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.iladiag.f77_blas_function; 
 
 		ret = fn((void*) diag); 
 
@@ -137,11 +137,11 @@ blasint flexiblas_chain_iladiag_(void* diag)
 	blasint (*fn_hook) (void* diag);
 	blasint ret;
 
-	fn      = current_backend->lapack.iladiag.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.iladiag.f77_blas_function; 
 
     hook_pos_iladiag ++;
     if( hook_pos_iladiag < __flexiblas_hooks->iladiag.nhook) {
-        fn_hook = __flexiblas_hooks->iladiag.f77_hook_function[hook_pos_iladiag];
+        *(void **) &fn_hook = __flexiblas_hooks->iladiag.f77_hook_function[hook_pos_iladiag];
         ret = fn_hook((void*) diag);
     } else {
         hook_pos_iladiag = 0;

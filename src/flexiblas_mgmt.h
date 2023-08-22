@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -122,8 +122,8 @@ extern "C" {
      */
     char *flexiblas_mgmt_location_to_string(flexiblas_mgmt_location_t loc);
 
-    void flexiblas_mgmt_init();
-    void flexiblas_mgmt_exit();
+    void flexiblas_mgmt_init(void);
+    void flexiblas_mgmt_exit(void);
 
     /**
      * @brief Loads the FlexiBLAS configuration.

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(slacn2,SLACN2)(blasint* n, float* v, float* x, blasint* isgn, flo
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slacn2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slacn2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slacn2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slacn2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) v, (void*) x, (void*) isgn, (void*) est, (void*) kase, (void*) isave); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slacn2_(void* n, void* v, void* x, void* isgn, void* est, vo
 {
 	void (*fn) (void* n, void* v, void* x, void* isgn, void* est, void* kase, void* isave);
 
-	fn = current_backend->lapack.slacn2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slacn2.f77_blas_function; 
 
 		fn((void*) n, (void*) v, (void*) x, (void*) isgn, (void*) est, (void*) kase, (void*) isave); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slacn2_(void* n, void* v, void* x, void* isgn, void* est, v
 	void (*fn) (void* n, void* v, void* x, void* isgn, void* est, void* kase, void* isave);
 	void (*fn_hook) (void* n, void* v, void* x, void* isgn, void* est, void* kase, void* isave);
 
-	fn      = current_backend->lapack.slacn2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slacn2.f77_blas_function; 
 
     hook_pos_slacn2 ++;
     if( hook_pos_slacn2 < __flexiblas_hooks->slacn2.nhook) {
-        fn_hook = __flexiblas_hooks->slacn2.f77_hook_function[hook_pos_slacn2];
+        *(void **) &fn_hook = __flexiblas_hooks->slacn2.f77_hook_function[hook_pos_slacn2];
         fn_hook((void*) n, (void*) v, (void*) x, (void*) isgn, (void*) est, (void*) kase, (void*) isave);
     } else {
         hook_pos_slacn2 = 0;

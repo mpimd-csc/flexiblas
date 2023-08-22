@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -81,8 +81,8 @@ float FC_GLOBAL(slamc3,SLAMC3)(float* a, float* b)
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slamc3.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slamc3.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slamc3.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slamc3.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) a, (void*) b); 
 		return ret; 
@@ -113,7 +113,7 @@ float flexiblas_real_slamc3_(void* a, void* b)
 	float (*fn) (void* a, void* b);
 	float ret;
 
-	fn = current_backend->lapack.slamc3.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slamc3.f77_blas_function; 
 
 		ret = fn((void*) a, (void*) b); 
 
@@ -137,11 +137,11 @@ float flexiblas_chain_slamc3_(void* a, void* b)
 	float (*fn_hook) (void* a, void* b);
 	float ret;
 
-	fn      = current_backend->lapack.slamc3.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slamc3.f77_blas_function; 
 
     hook_pos_slamc3 ++;
     if( hook_pos_slamc3 < __flexiblas_hooks->slamc3.nhook) {
-        fn_hook = __flexiblas_hooks->slamc3.f77_hook_function[hook_pos_slamc3];
+        *(void **) &fn_hook = __flexiblas_hooks->slamc3.f77_hook_function[hook_pos_slamc3];
         ret = fn_hook((void*) a, (void*) b);
     } else {
         hook_pos_slamc3 = 0;

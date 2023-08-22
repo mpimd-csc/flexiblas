@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(ztrsyl,ZTRSYL)(char* trana, char* tranb, blasint* isgn, blasint* 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ztrsyl.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ztrsyl.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ztrsyl.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ztrsyl.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) trana, (void*) tranb, (void*) isgn, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) ldc, (void*) scale, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ztrsyl_(void* trana, void* tranb, void* isgn, void* m, void*
 {
 	void (*fn) (void* trana, void* tranb, void* isgn, void* m, void* n, void* a, void* lda, void* b, void* ldb, void* c, void* ldc, void* scale, void* info);
 
-	fn = current_backend->lapack.ztrsyl.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ztrsyl.f77_blas_function; 
 
 		fn((void*) trana, (void*) tranb, (void*) isgn, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) ldc, (void*) scale, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ztrsyl_(void* trana, void* tranb, void* isgn, void* m, void
 	void (*fn) (void* trana, void* tranb, void* isgn, void* m, void* n, void* a, void* lda, void* b, void* ldb, void* c, void* ldc, void* scale, void* info);
 	void (*fn_hook) (void* trana, void* tranb, void* isgn, void* m, void* n, void* a, void* lda, void* b, void* ldb, void* c, void* ldc, void* scale, void* info);
 
-	fn      = current_backend->lapack.ztrsyl.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ztrsyl.f77_blas_function; 
 
     hook_pos_ztrsyl ++;
     if( hook_pos_ztrsyl < __flexiblas_hooks->ztrsyl.nhook) {
-        fn_hook = __flexiblas_hooks->ztrsyl.f77_hook_function[hook_pos_ztrsyl];
+        *(void **) &fn_hook = __flexiblas_hooks->ztrsyl.f77_hook_function[hook_pos_ztrsyl];
         fn_hook((void*) trana, (void*) tranb, (void*) isgn, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) ldc, (void*) scale, (void*) info);
     } else {
         hook_pos_ztrsyl = 0;

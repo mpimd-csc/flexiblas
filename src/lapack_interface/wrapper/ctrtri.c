@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(ctrtri,CTRTRI)(char* uplo, char* diag, blasint* n, float complex*
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ctrtri.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ctrtri.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ctrtri.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ctrtri.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ctrtri_(void* uplo, void* diag, void* n, void* a, void* lda,
 {
 	void (*fn) (void* uplo, void* diag, void* n, void* a, void* lda, void* info);
 
-	fn = current_backend->lapack.ctrtri.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ctrtri.f77_blas_function; 
 
 		fn((void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ctrtri_(void* uplo, void* diag, void* n, void* a, void* lda
 	void (*fn) (void* uplo, void* diag, void* n, void* a, void* lda, void* info);
 	void (*fn_hook) (void* uplo, void* diag, void* n, void* a, void* lda, void* info);
 
-	fn      = current_backend->lapack.ctrtri.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ctrtri.f77_blas_function; 
 
     hook_pos_ctrtri ++;
     if( hook_pos_ctrtri < __flexiblas_hooks->ctrtri.nhook) {
-        fn_hook = __flexiblas_hooks->ctrtri.f77_hook_function[hook_pos_ctrtri];
+        *(void **) &fn_hook = __flexiblas_hooks->ctrtri.f77_hook_function[hook_pos_ctrtri];
         fn_hook((void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) info);
     } else {
         hook_pos_ctrtri = 0;

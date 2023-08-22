@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zspsv,ZSPSV)(char* uplo, blasint* n, blasint* nrhs, double comple
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zspsv.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zspsv.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zspsv.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zspsv.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) ipiv, (void*) b, (void*) ldb, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zspsv_(void* uplo, void* n, void* nrhs, void* ap, void* ipiv
 {
 	void (*fn) (void* uplo, void* n, void* nrhs, void* ap, void* ipiv, void* b, void* ldb, void* info);
 
-	fn = current_backend->lapack.zspsv.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zspsv.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) ipiv, (void*) b, (void*) ldb, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zspsv_(void* uplo, void* n, void* nrhs, void* ap, void* ipi
 	void (*fn) (void* uplo, void* n, void* nrhs, void* ap, void* ipiv, void* b, void* ldb, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* nrhs, void* ap, void* ipiv, void* b, void* ldb, void* info);
 
-	fn      = current_backend->lapack.zspsv.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zspsv.f77_blas_function; 
 
     hook_pos_zspsv ++;
     if( hook_pos_zspsv < __flexiblas_hooks->zspsv.nhook) {
-        fn_hook = __flexiblas_hooks->zspsv.f77_hook_function[hook_pos_zspsv];
+        *(void **) &fn_hook = __flexiblas_hooks->zspsv.f77_hook_function[hook_pos_zspsv];
         fn_hook((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) ipiv, (void*) b, (void*) ldb, (void*) info);
     } else {
         hook_pos_zspsv = 0;

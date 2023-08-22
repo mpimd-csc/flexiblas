@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(strttf,STRTTF)(char* transr, char* uplo, blasint* n, float* a, bl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.strttf.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->strttf.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.strttf.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->strttf.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) arf, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_strttf_(void* transr, void* uplo, void* n, void* a, void* ld
 {
 	void (*fn) (void* transr, void* uplo, void* n, void* a, void* lda, void* arf, void* info);
 
-	fn = current_backend->lapack.strttf.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.strttf.f77_blas_function; 
 
 		fn((void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) arf, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_strttf_(void* transr, void* uplo, void* n, void* a, void* l
 	void (*fn) (void* transr, void* uplo, void* n, void* a, void* lda, void* arf, void* info);
 	void (*fn_hook) (void* transr, void* uplo, void* n, void* a, void* lda, void* arf, void* info);
 
-	fn      = current_backend->lapack.strttf.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.strttf.f77_blas_function; 
 
     hook_pos_strttf ++;
     if( hook_pos_strttf < __flexiblas_hooks->strttf.nhook) {
-        fn_hook = __flexiblas_hooks->strttf.f77_hook_function[hook_pos_strttf];
+        *(void **) &fn_hook = __flexiblas_hooks->strttf.f77_hook_function[hook_pos_strttf];
         fn_hook((void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) arf, (void*) info);
     } else {
         hook_pos_strttf = 0;

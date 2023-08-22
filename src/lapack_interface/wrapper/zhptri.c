@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zhptri,ZHPTRI)(char* uplo, blasint* n, double complex* ap, blasin
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zhptri.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zhptri.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zhptri.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zhptri.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) ap, (void*) ipiv, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zhptri_(void* uplo, void* n, void* ap, void* ipiv, void* wor
 {
 	void (*fn) (void* uplo, void* n, void* ap, void* ipiv, void* work, void* info);
 
-	fn = current_backend->lapack.zhptri.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zhptri.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) ap, (void*) ipiv, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zhptri_(void* uplo, void* n, void* ap, void* ipiv, void* wo
 	void (*fn) (void* uplo, void* n, void* ap, void* ipiv, void* work, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* ap, void* ipiv, void* work, void* info);
 
-	fn      = current_backend->lapack.zhptri.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zhptri.f77_blas_function; 
 
     hook_pos_zhptri ++;
     if( hook_pos_zhptri < __flexiblas_hooks->zhptri.nhook) {
-        fn_hook = __flexiblas_hooks->zhptri.f77_hook_function[hook_pos_zhptri];
+        *(void **) &fn_hook = __flexiblas_hooks->zhptri.f77_hook_function[hook_pos_zhptri];
         fn_hook((void*) uplo, (void*) n, (void*) ap, (void*) ipiv, (void*) work, (void*) info);
     } else {
         hook_pos_zhptri = 0;

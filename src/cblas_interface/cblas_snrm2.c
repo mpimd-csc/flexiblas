@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -80,8 +80,8 @@ float flexiblas_real_cblas_snrm2( const CBLAS_INT N, const float *X, const CBLAS
 #define F77_incX incX
 #endif
     if ( current_backend->blas.snrm2.cblas_function != NULL ) {
-        float (*fn) ( const CBLAS_INT N, const float *X, const CBLAS_INT incX)
-            = current_backend->blas.snrm2.cblas_function;
+        float (*fn) ( const CBLAS_INT N, const float *X, const CBLAS_INT incX);
+        *(void **) &fn = current_backend->blas.snrm2.cblas_function;
         nrm2 = fn(N,X,incX);
     } else {
         nrm2 = FC_GLOBAL(snrm2,SNRM2)( &F77_N, X, &F77_incX);

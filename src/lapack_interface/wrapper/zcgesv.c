@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zcgesv,ZCGESV)(blasint* n, blasint* nrhs, double complex* a, blas
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zcgesv.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zcgesv.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zcgesv.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zcgesv.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) work, (void*) swork, (void*) rwork, (void*) iter, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zcgesv_(void* n, void* nrhs, void* a, void* lda, void* ipiv,
 {
 	void (*fn) (void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* work, void* swork, void* rwork, void* iter, void* info);
 
-	fn = current_backend->lapack.zcgesv.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zcgesv.f77_blas_function; 
 
 		fn((void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) work, (void*) swork, (void*) rwork, (void*) iter, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zcgesv_(void* n, void* nrhs, void* a, void* lda, void* ipiv
 	void (*fn) (void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* work, void* swork, void* rwork, void* iter, void* info);
 	void (*fn_hook) (void* n, void* nrhs, void* a, void* lda, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* work, void* swork, void* rwork, void* iter, void* info);
 
-	fn      = current_backend->lapack.zcgesv.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zcgesv.f77_blas_function; 
 
     hook_pos_zcgesv ++;
     if( hook_pos_zcgesv < __flexiblas_hooks->zcgesv.nhook) {
-        fn_hook = __flexiblas_hooks->zcgesv.f77_hook_function[hook_pos_zcgesv];
+        *(void **) &fn_hook = __flexiblas_hooks->zcgesv.f77_hook_function[hook_pos_zcgesv];
         fn_hook((void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) ipiv, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) work, (void*) swork, (void*) rwork, (void*) iter, (void*) info);
     } else {
         hook_pos_zcgesv = 0;

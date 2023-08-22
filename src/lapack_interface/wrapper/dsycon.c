@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dsycon,DSYCON)(char* uplo, blasint* n, double* a, blasint* lda, b
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dsycon.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dsycon.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dsycon.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dsycon.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) iwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dsycon_(void* uplo, void* n, void* a, void* lda, void* ipiv,
 {
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* anorm, void* rcond, void* work, void* iwork, void* info);
 
-	fn = current_backend->lapack.dsycon.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dsycon.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) iwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dsycon_(void* uplo, void* n, void* a, void* lda, void* ipiv
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* anorm, void* rcond, void* work, void* iwork, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* anorm, void* rcond, void* work, void* iwork, void* info);
 
-	fn      = current_backend->lapack.dsycon.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dsycon.f77_blas_function; 
 
     hook_pos_dsycon ++;
     if( hook_pos_dsycon < __flexiblas_hooks->dsycon.nhook) {
-        fn_hook = __flexiblas_hooks->dsycon.f77_hook_function[hook_pos_dsycon];
+        *(void **) &fn_hook = __flexiblas_hooks->dsycon.f77_hook_function[hook_pos_dsycon];
         fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) iwork, (void*) info);
     } else {
         hook_pos_dsycon = 0;

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dlartv,DLARTV)(blasint* n, double* x, blasint* incx, double* y, b
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlartv.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlartv.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlartv.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlartv.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) c, (void*) s, (void*) incc); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlartv_(void* n, void* x, void* incx, void* y, void* incy, v
 {
 	void (*fn) (void* n, void* x, void* incx, void* y, void* incy, void* c, void* s, void* incc);
 
-	fn = current_backend->lapack.dlartv.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlartv.f77_blas_function; 
 
 		fn((void*) n, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) c, (void*) s, (void*) incc); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlartv_(void* n, void* x, void* incx, void* y, void* incy, 
 	void (*fn) (void* n, void* x, void* incx, void* y, void* incy, void* c, void* s, void* incc);
 	void (*fn_hook) (void* n, void* x, void* incx, void* y, void* incy, void* c, void* s, void* incc);
 
-	fn      = current_backend->lapack.dlartv.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlartv.f77_blas_function; 
 
     hook_pos_dlartv ++;
     if( hook_pos_dlartv < __flexiblas_hooks->dlartv.nhook) {
-        fn_hook = __flexiblas_hooks->dlartv.f77_hook_function[hook_pos_dlartv];
+        *(void **) &fn_hook = __flexiblas_hooks->dlartv.f77_hook_function[hook_pos_dlartv];
         fn_hook((void*) n, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) c, (void*) s, (void*) incc);
     } else {
         hook_pos_dlartv = 0;

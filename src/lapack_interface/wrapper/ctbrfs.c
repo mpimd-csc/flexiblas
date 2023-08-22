@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(ctbrfs,CTBRFS)(char* uplo, char* trans, char* diag, blasint* n, b
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ctbrfs.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ctbrfs.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ctbrfs.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ctbrfs.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) kd, (void*) nrhs, (void*) ab, (void*) ldab, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ctbrfs_(void* uplo, void* trans, void* diag, void* n, void* 
 {
 	void (*fn) (void* uplo, void* trans, void* diag, void* n, void* kd, void* nrhs, void* ab, void* ldab, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* rwork, void* info);
 
-	fn = current_backend->lapack.ctbrfs.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ctbrfs.f77_blas_function; 
 
 		fn((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) kd, (void*) nrhs, (void*) ab, (void*) ldab, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ctbrfs_(void* uplo, void* trans, void* diag, void* n, void*
 	void (*fn) (void* uplo, void* trans, void* diag, void* n, void* kd, void* nrhs, void* ab, void* ldab, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* rwork, void* info);
 	void (*fn_hook) (void* uplo, void* trans, void* diag, void* n, void* kd, void* nrhs, void* ab, void* ldab, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* rwork, void* info);
 
-	fn      = current_backend->lapack.ctbrfs.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ctbrfs.f77_blas_function; 
 
     hook_pos_ctbrfs ++;
     if( hook_pos_ctbrfs < __flexiblas_hooks->ctbrfs.nhook) {
-        fn_hook = __flexiblas_hooks->ctbrfs.f77_hook_function[hook_pos_ctbrfs];
+        *(void **) &fn_hook = __flexiblas_hooks->ctbrfs.f77_hook_function[hook_pos_ctbrfs];
         fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) kd, (void*) nrhs, (void*) ab, (void*) ldab, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info);
     } else {
         hook_pos_ctbrfs = 0;

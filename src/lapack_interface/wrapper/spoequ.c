@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(spoequ,SPOEQU)(blasint* n, float* a, blasint* lda, float* s, floa
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.spoequ.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->spoequ.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.spoequ.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->spoequ.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_spoequ_(void* n, void* a, void* lda, void* s, void* scond, v
 {
 	void (*fn) (void* n, void* a, void* lda, void* s, void* scond, void* amax, void* info);
 
-	fn = current_backend->lapack.spoequ.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.spoequ.f77_blas_function; 
 
 		fn((void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_spoequ_(void* n, void* a, void* lda, void* s, void* scond, 
 	void (*fn) (void* n, void* a, void* lda, void* s, void* scond, void* amax, void* info);
 	void (*fn_hook) (void* n, void* a, void* lda, void* s, void* scond, void* amax, void* info);
 
-	fn      = current_backend->lapack.spoequ.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.spoequ.f77_blas_function; 
 
     hook_pos_spoequ ++;
     if( hook_pos_spoequ < __flexiblas_hooks->spoequ.nhook) {
-        fn_hook = __flexiblas_hooks->spoequ.f77_hook_function[hook_pos_spoequ];
+        *(void **) &fn_hook = __flexiblas_hooks->spoequ.f77_hook_function[hook_pos_spoequ];
         fn_hook((void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) info);
     } else {
         hook_pos_spoequ = 0;

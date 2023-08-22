@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(cgttrf,CGTTRF)(blasint* n, float complex* dl, float complex* d, f
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cgttrf.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cgttrf.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cgttrf.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cgttrf.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) dl, (void*) d, (void*) du, (void*) du2, (void*) ipiv, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cgttrf_(void* n, void* dl, void* d, void* du, void* du2, voi
 {
 	void (*fn) (void* n, void* dl, void* d, void* du, void* du2, void* ipiv, void* info);
 
-	fn = current_backend->lapack.cgttrf.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cgttrf.f77_blas_function; 
 
 		fn((void*) n, (void*) dl, (void*) d, (void*) du, (void*) du2, (void*) ipiv, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cgttrf_(void* n, void* dl, void* d, void* du, void* du2, vo
 	void (*fn) (void* n, void* dl, void* d, void* du, void* du2, void* ipiv, void* info);
 	void (*fn_hook) (void* n, void* dl, void* d, void* du, void* du2, void* ipiv, void* info);
 
-	fn      = current_backend->lapack.cgttrf.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cgttrf.f77_blas_function; 
 
     hook_pos_cgttrf ++;
     if( hook_pos_cgttrf < __flexiblas_hooks->cgttrf.nhook) {
-        fn_hook = __flexiblas_hooks->cgttrf.f77_hook_function[hook_pos_cgttrf];
+        *(void **) &fn_hook = __flexiblas_hooks->cgttrf.f77_hook_function[hook_pos_cgttrf];
         fn_hook((void*) n, (void*) dl, (void*) d, (void*) du, (void*) du2, (void*) ipiv, (void*) info);
     } else {
         hook_pos_cgttrf = 0;

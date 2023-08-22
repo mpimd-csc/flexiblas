@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(slasd8,SLASD8)(blasint* icompq, blasint* k, float* d, float* z, f
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slasd8.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slasd8.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slasd8.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slasd8.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) icompq, (void*) k, (void*) d, (void*) z, (void*) vf, (void*) vl, (void*) difl, (void*) difr, (void*) lddifr, (void*) dsigma, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slasd8_(void* icompq, void* k, void* d, void* z, void* vf, v
 {
 	void (*fn) (void* icompq, void* k, void* d, void* z, void* vf, void* vl, void* difl, void* difr, void* lddifr, void* dsigma, void* work, void* info);
 
-	fn = current_backend->lapack.slasd8.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slasd8.f77_blas_function; 
 
 		fn((void*) icompq, (void*) k, (void*) d, (void*) z, (void*) vf, (void*) vl, (void*) difl, (void*) difr, (void*) lddifr, (void*) dsigma, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slasd8_(void* icompq, void* k, void* d, void* z, void* vf, 
 	void (*fn) (void* icompq, void* k, void* d, void* z, void* vf, void* vl, void* difl, void* difr, void* lddifr, void* dsigma, void* work, void* info);
 	void (*fn_hook) (void* icompq, void* k, void* d, void* z, void* vf, void* vl, void* difl, void* difr, void* lddifr, void* dsigma, void* work, void* info);
 
-	fn      = current_backend->lapack.slasd8.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slasd8.f77_blas_function; 
 
     hook_pos_slasd8 ++;
     if( hook_pos_slasd8 < __flexiblas_hooks->slasd8.nhook) {
-        fn_hook = __flexiblas_hooks->slasd8.f77_hook_function[hook_pos_slasd8];
+        *(void **) &fn_hook = __flexiblas_hooks->slasd8.f77_hook_function[hook_pos_slasd8];
         fn_hook((void*) icompq, (void*) k, (void*) d, (void*) z, (void*) vf, (void*) vl, (void*) difl, (void*) difr, (void*) lddifr, (void*) dsigma, (void*) work, (void*) info);
     } else {
         hook_pos_slasd8 = 0;

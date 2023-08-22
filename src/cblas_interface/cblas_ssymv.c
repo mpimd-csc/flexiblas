@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -110,8 +110,8 @@ void flexiblas_real_cblas_ssymv(const CBLAS_LAYOUT layout,
              const CBLAS_UPLO Uplo, const CBLAS_INT N,
              const float alpha, const float  *A, const CBLAS_INT lda,
              const float  *X, const CBLAS_INT incX, const float beta,
-             float  *Y, const CBLAS_INT incY)
-            = current_backend->blas.ssymv.cblas_function;
+             float  *Y, const CBLAS_INT incY);
+        *(void **) & fn = current_backend->blas.ssymv.cblas_function;
         fn(layout,Uplo,N,alpha,A,lda,X,incX,beta,Y,incY);
     } else {
 

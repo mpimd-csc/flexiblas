@@ -61,7 +61,7 @@ void FC_GLOBAL(dgemm,DGEMM)(const char * TRANSA, const char *TRANSB, Int *m, Int
 void FC_GLOBAL(dgemv,DGEMV)(const char * TRANSA, Int *m, Int *n, double *alpha, double *A, Int *lda, double *B, Int *incb, double *beta, double *C, Int *incc);
 
 
-double wtime()
+double wtime(void)
 {
 	struct timeval tv;
 	gettimeofday (&tv, NULL);

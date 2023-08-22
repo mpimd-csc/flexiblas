@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -81,8 +81,8 @@ double FC_GLOBAL(dlanst,DLANST)(char* norm, blasint* n, double* d, double* e)
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlanst.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlanst.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlanst.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlanst.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) norm, (void*) n, (void*) d, (void*) e); 
 		return ret; 
@@ -113,7 +113,7 @@ double flexiblas_real_dlanst_(void* norm, void* n, void* d, void* e)
 	double (*fn) (void* norm, void* n, void* d, void* e);
 	double ret;
 
-	fn = current_backend->lapack.dlanst.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlanst.f77_blas_function; 
 
 		ret = fn((void*) norm, (void*) n, (void*) d, (void*) e); 
 
@@ -137,11 +137,11 @@ double flexiblas_chain_dlanst_(void* norm, void* n, void* d, void* e)
 	double (*fn_hook) (void* norm, void* n, void* d, void* e);
 	double ret;
 
-	fn      = current_backend->lapack.dlanst.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlanst.f77_blas_function; 
 
     hook_pos_dlanst ++;
     if( hook_pos_dlanst < __flexiblas_hooks->dlanst.nhook) {
-        fn_hook = __flexiblas_hooks->dlanst.f77_hook_function[hook_pos_dlanst];
+        *(void **) &fn_hook = __flexiblas_hooks->dlanst.f77_hook_function[hook_pos_dlanst];
         ret = fn_hook((void*) norm, (void*) n, (void*) d, (void*) e);
     } else {
         hook_pos_dlanst = 0;

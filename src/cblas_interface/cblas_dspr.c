@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -97,8 +97,8 @@ void flexiblas_real_cblas_dspr(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
              const CBLAS_INT N, const double alpha, const double *X,
-             const CBLAS_INT incX, double *Ap)
-            = current_backend->blas.dspr.cblas_function;
+             const CBLAS_INT incX, double *Ap);
+        *(void **) &fn = current_backend->blas.dspr.cblas_function;
         fn(layout,Uplo,N,alpha,X,incX,Ap);
     } else {
         extern int CBLAS_CallFromC;

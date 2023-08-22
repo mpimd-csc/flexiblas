@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #ifndef FLEXIBLAS_REAL_CALLS_LAPACK_H
@@ -2666,10 +2666,10 @@ void flexiblas_real_dsbtrd_(void* vect, void* uplo, void* n, void* kd, void* ab,
 void flexiblas_real_dsbtrd(void* vect, void* uplo, void* n, void* kd, void* ab, void* ldab, void* d, void* e, void* q, void* ldq, void* work, void* info);
 void flexiblas_chain_dsbtrd_(void* vect, void* uplo, void* n, void* kd, void* ab, void* ldab, void* d, void* e, void* q, void* ldq, void* work, void* info);
 void flexiblas_chain_dsbtrd(void* vect, void* uplo, void* n, void* kd, void* ab, void* ldab, void* d, void* e, void* q, void* ldq, void* work, void* info);
-double flexiblas_real_dsecnd_();
-double flexiblas_real_dsecnd();
-double flexiblas_chain_dsecnd_();
-double flexiblas_chain_dsecnd();
+double flexiblas_real_dsecnd_(void);
+double flexiblas_real_dsecnd(void);
+double flexiblas_chain_dsecnd_(void);
+double flexiblas_chain_dsecnd(void);
 void flexiblas_real_dsfrk_(void* transr, void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c);
 void flexiblas_real_dsfrk(void* transr, void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c);
 void flexiblas_chain_dsfrk_(void* transr, void* uplo, void* trans, void* n, void* k, void* alpha, void* a, void* lda, void* beta, void* c);
@@ -3118,10 +3118,10 @@ void flexiblas_real_sdisna_(void* job, void* m, void* n, void* d, void* sep, voi
 void flexiblas_real_sdisna(void* job, void* m, void* n, void* d, void* sep, void* info);
 void flexiblas_chain_sdisna_(void* job, void* m, void* n, void* d, void* sep, void* info);
 void flexiblas_chain_sdisna(void* job, void* m, void* n, void* d, void* sep, void* info);
-float flexiblas_real_second_();
-float flexiblas_real_second();
-float flexiblas_chain_second_();
-float flexiblas_chain_second();
+float flexiblas_real_second_(void);
+float flexiblas_real_second(void);
+float flexiblas_chain_second_(void);
+float flexiblas_chain_second(void);
 void flexiblas_real_sgbbrd_(void* vect, void* m, void* n, void* ncc, void* kl, void* ku, void* ab, void* ldab, void* d, void* e, void* q, void* ldq, void* pt, void* ldpt, void* c, void* ldc, void* work, void* info);
 void flexiblas_real_sgbbrd(void* vect, void* m, void* n, void* ncc, void* kl, void* ku, void* ab, void* ldab, void* d, void* e, void* q, void* ldq, void* pt, void* ldpt, void* c, void* ldc, void* work, void* info);
 void flexiblas_chain_sgbbrd_(void* vect, void* m, void* n, void* ncc, void* kl, void* ku, void* ab, void* ldab, void* d, void* e, void* q, void* ldq, void* pt, void* ldpt, void* c, void* ldc, void* work, void* info);

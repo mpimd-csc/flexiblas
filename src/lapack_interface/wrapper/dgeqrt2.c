@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dgeqrt2,DGEQRT2)(blasint* m, blasint* n, double* a, blasint* lda,
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dgeqrt2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dgeqrt2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dgeqrt2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dgeqrt2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dgeqrt2_(void* m, void* n, void* a, void* lda, void* t, void
 {
 	void (*fn) (void* m, void* n, void* a, void* lda, void* t, void* ldt, void* info);
 
-	fn = current_backend->lapack.dgeqrt2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dgeqrt2.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dgeqrt2_(void* m, void* n, void* a, void* lda, void* t, voi
 	void (*fn) (void* m, void* n, void* a, void* lda, void* t, void* ldt, void* info);
 	void (*fn_hook) (void* m, void* n, void* a, void* lda, void* t, void* ldt, void* info);
 
-	fn      = current_backend->lapack.dgeqrt2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dgeqrt2.f77_blas_function; 
 
     hook_pos_dgeqrt2 ++;
     if( hook_pos_dgeqrt2 < __flexiblas_hooks->dgeqrt2.nhook) {
-        fn_hook = __flexiblas_hooks->dgeqrt2.f77_hook_function[hook_pos_dgeqrt2];
+        *(void **) &fn_hook = __flexiblas_hooks->dgeqrt2.f77_hook_function[hook_pos_dgeqrt2];
         fn_hook((void*) m, (void*) n, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) info);
     } else {
         hook_pos_dgeqrt2 = 0;

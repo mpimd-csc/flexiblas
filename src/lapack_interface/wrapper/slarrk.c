@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(slarrk,SLARRK)(blasint* n, blasint* iw, float* gl, float* gu, flo
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slarrk.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slarrk.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slarrk.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slarrk.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) iw, (void*) gl, (void*) gu, (void*) d, (void*) e2, (void*) pivmin, (void*) reltol, (void*) w, (void*) werr, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slarrk_(void* n, void* iw, void* gl, void* gu, void* d, void
 {
 	void (*fn) (void* n, void* iw, void* gl, void* gu, void* d, void* e2, void* pivmin, void* reltol, void* w, void* werr, void* info);
 
-	fn = current_backend->lapack.slarrk.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slarrk.f77_blas_function; 
 
 		fn((void*) n, (void*) iw, (void*) gl, (void*) gu, (void*) d, (void*) e2, (void*) pivmin, (void*) reltol, (void*) w, (void*) werr, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slarrk_(void* n, void* iw, void* gl, void* gu, void* d, voi
 	void (*fn) (void* n, void* iw, void* gl, void* gu, void* d, void* e2, void* pivmin, void* reltol, void* w, void* werr, void* info);
 	void (*fn_hook) (void* n, void* iw, void* gl, void* gu, void* d, void* e2, void* pivmin, void* reltol, void* w, void* werr, void* info);
 
-	fn      = current_backend->lapack.slarrk.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slarrk.f77_blas_function; 
 
     hook_pos_slarrk ++;
     if( hook_pos_slarrk < __flexiblas_hooks->slarrk.nhook) {
-        fn_hook = __flexiblas_hooks->slarrk.f77_hook_function[hook_pos_slarrk];
+        *(void **) &fn_hook = __flexiblas_hooks->slarrk.f77_hook_function[hook_pos_slarrk];
         fn_hook((void*) n, (void*) iw, (void*) gl, (void*) gu, (void*) d, (void*) e2, (void*) pivmin, (void*) reltol, (void*) w, (void*) werr, (void*) info);
     } else {
         hook_pos_slarrk = 0;

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -81,8 +81,8 @@ int FC_GLOBAL(sisnan,SISNAN)(float* sin)
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.sisnan.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->sisnan.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.sisnan.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->sisnan.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) sin); 
 		return ret; 
@@ -113,7 +113,7 @@ blasint flexiblas_real_sisnan_(void* sin)
 	blasint (*fn) (void* sin);
 	blasint ret;
 
-	fn = current_backend->lapack.sisnan.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.sisnan.f77_blas_function; 
 
 		ret = fn((void*) sin); 
 
@@ -137,11 +137,11 @@ blasint flexiblas_chain_sisnan_(void* sin)
 	blasint (*fn_hook) (void* sin);
 	blasint ret;
 
-	fn      = current_backend->lapack.sisnan.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.sisnan.f77_blas_function; 
 
     hook_pos_sisnan ++;
     if( hook_pos_sisnan < __flexiblas_hooks->sisnan.nhook) {
-        fn_hook = __flexiblas_hooks->sisnan.f77_hook_function[hook_pos_sisnan];
+        *(void **) &fn_hook = __flexiblas_hooks->sisnan.f77_hook_function[hook_pos_sisnan];
         ret = fn_hook((void*) sin);
     } else {
         hook_pos_sisnan = 0;

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(ssyswapr,SSYSWAPR)(char* uplo, blasint* n, float* a, blasint* lda
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ssyswapr.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ssyswapr.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ssyswapr.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ssyswapr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) i1, (void*) i2); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ssyswapr_(void* uplo, void* n, void* a, void* lda, void* i1,
 {
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* i1, void* i2);
 
-	fn = current_backend->lapack.ssyswapr.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ssyswapr.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) i1, (void*) i2); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ssyswapr_(void* uplo, void* n, void* a, void* lda, void* i1
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* i1, void* i2);
 	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* i1, void* i2);
 
-	fn      = current_backend->lapack.ssyswapr.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ssyswapr.f77_blas_function; 
 
     hook_pos_ssyswapr ++;
     if( hook_pos_ssyswapr < __flexiblas_hooks->ssyswapr.nhook) {
-        fn_hook = __flexiblas_hooks->ssyswapr.f77_hook_function[hook_pos_ssyswapr];
+        *(void **) &fn_hook = __flexiblas_hooks->ssyswapr.f77_hook_function[hook_pos_ssyswapr];
         fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) i1, (void*) i2);
     } else {
         hook_pos_ssyswapr = 0;

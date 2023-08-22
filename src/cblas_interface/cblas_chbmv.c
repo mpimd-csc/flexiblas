@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 #include "cblas.h"
@@ -102,6 +102,7 @@ void flexiblas_real_cblas_chbmv(const CBLAS_LAYOUT layout,
 #define F77_lda lda
 #define F77_incX incx
 #define F77_incY incY
+    CBLAS_INT incx=incX;
 #endif
 
     if ( current_backend->blas.chbmv.cblas_function != NULL ) {
@@ -110,11 +111,11 @@ void flexiblas_real_cblas_chbmv(const CBLAS_LAYOUT layout,
              const CBLAS_UPLO Uplo,const CBLAS_INT N,const CBLAS_INT K,
              const void *alpha, const void  *A, const CBLAS_INT lda,
              const void  *X, const CBLAS_INT incX, const void *beta,
-             void  *Y, const CBLAS_INT incY)
-            = current_backend->blas.chbmv.cblas_function;
+             void  *Y, const CBLAS_INT incY);
+        *(void **) &fn = current_backend->blas.chbmv.cblas_function;
         fn(layout,Uplo,N,K,alpha,A,lda,X,incX,beta,Y,incY);
     } else {
-        CBLAS_INT n, i=0, incx=incX;
+        CBLAS_INT n, i=0;
         const float *alp= (const float *)alpha, *bet = (const float *)beta;
         float *xx;
         float ALPHA[2],BETA[2];

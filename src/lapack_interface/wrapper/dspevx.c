@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dspevx,DSPEVX)(char* jobz, char* range, char* uplo, blasint* n, d
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dspevx.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dspevx.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dspevx.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dspevx.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) ap, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) iwork, (void*) ifail, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dspevx_(void* jobz, void* range, void* uplo, void* n, void* 
 {
 	void (*fn) (void* jobz, void* range, void* uplo, void* n, void* ap, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* iwork, void* ifail, void* info);
 
-	fn = current_backend->lapack.dspevx.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dspevx.f77_blas_function; 
 
 		fn((void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) ap, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) iwork, (void*) ifail, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dspevx_(void* jobz, void* range, void* uplo, void* n, void*
 	void (*fn) (void* jobz, void* range, void* uplo, void* n, void* ap, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* iwork, void* ifail, void* info);
 	void (*fn_hook) (void* jobz, void* range, void* uplo, void* n, void* ap, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* iwork, void* ifail, void* info);
 
-	fn      = current_backend->lapack.dspevx.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dspevx.f77_blas_function; 
 
     hook_pos_dspevx ++;
     if( hook_pos_dspevx < __flexiblas_hooks->dspevx.nhook) {
-        fn_hook = __flexiblas_hooks->dspevx.f77_hook_function[hook_pos_dspevx];
+        *(void **) &fn_hook = __flexiblas_hooks->dspevx.f77_hook_function[hook_pos_dspevx];
         fn_hook((void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) ap, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) iwork, (void*) ifail, (void*) info);
     } else {
         hook_pos_dspevx = 0;

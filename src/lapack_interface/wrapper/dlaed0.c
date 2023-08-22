@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dlaed0,DLAED0)(blasint* icompq, blasint* qsiz, blasint* n, double
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlaed0.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlaed0.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlaed0.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlaed0.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) icompq, (void*) qsiz, (void*) n, (void*) d, (void*) e, (void*) q, (void*) ldq, (void*) qstore, (void*) ldqs, (void*) work, (void*) iwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlaed0_(void* icompq, void* qsiz, void* n, void* d, void* e,
 {
 	void (*fn) (void* icompq, void* qsiz, void* n, void* d, void* e, void* q, void* ldq, void* qstore, void* ldqs, void* work, void* iwork, void* info);
 
-	fn = current_backend->lapack.dlaed0.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlaed0.f77_blas_function; 
 
 		fn((void*) icompq, (void*) qsiz, (void*) n, (void*) d, (void*) e, (void*) q, (void*) ldq, (void*) qstore, (void*) ldqs, (void*) work, (void*) iwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlaed0_(void* icompq, void* qsiz, void* n, void* d, void* e
 	void (*fn) (void* icompq, void* qsiz, void* n, void* d, void* e, void* q, void* ldq, void* qstore, void* ldqs, void* work, void* iwork, void* info);
 	void (*fn_hook) (void* icompq, void* qsiz, void* n, void* d, void* e, void* q, void* ldq, void* qstore, void* ldqs, void* work, void* iwork, void* info);
 
-	fn      = current_backend->lapack.dlaed0.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlaed0.f77_blas_function; 
 
     hook_pos_dlaed0 ++;
     if( hook_pos_dlaed0 < __flexiblas_hooks->dlaed0.nhook) {
-        fn_hook = __flexiblas_hooks->dlaed0.f77_hook_function[hook_pos_dlaed0];
+        *(void **) &fn_hook = __flexiblas_hooks->dlaed0.f77_hook_function[hook_pos_dlaed0];
         fn_hook((void*) icompq, (void*) qsiz, (void*) n, (void*) d, (void*) e, (void*) q, (void*) ldq, (void*) qstore, (void*) ldqs, (void*) work, (void*) iwork, (void*) info);
     } else {
         hook_pos_dlaed0 = 0;

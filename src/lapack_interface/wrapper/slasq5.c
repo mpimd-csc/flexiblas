@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(slasq5,SLASQ5)(blasint* i0, blasint* n0, float* z, blasint* pp, f
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slasq5.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slasq5.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slasq5.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slasq5.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) i0, (void*) n0, (void*) z, (void*) pp, (void*) tau, (void*) sigma, (void*) dmin, (void*) dmin1, (void*) dmin2, (void*) dn, (void*) dnm1, (void*) dnm2, (void*) ieee, (void*) eps); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slasq5_(void* i0, void* n0, void* z, void* pp, void* tau, vo
 {
 	void (*fn) (void* i0, void* n0, void* z, void* pp, void* tau, void* sigma, void* dmin, void* dmin1, void* dmin2, void* dn, void* dnm1, void* dnm2, void* ieee, void* eps);
 
-	fn = current_backend->lapack.slasq5.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slasq5.f77_blas_function; 
 
 		fn((void*) i0, (void*) n0, (void*) z, (void*) pp, (void*) tau, (void*) sigma, (void*) dmin, (void*) dmin1, (void*) dmin2, (void*) dn, (void*) dnm1, (void*) dnm2, (void*) ieee, (void*) eps); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slasq5_(void* i0, void* n0, void* z, void* pp, void* tau, v
 	void (*fn) (void* i0, void* n0, void* z, void* pp, void* tau, void* sigma, void* dmin, void* dmin1, void* dmin2, void* dn, void* dnm1, void* dnm2, void* ieee, void* eps);
 	void (*fn_hook) (void* i0, void* n0, void* z, void* pp, void* tau, void* sigma, void* dmin, void* dmin1, void* dmin2, void* dn, void* dnm1, void* dnm2, void* ieee, void* eps);
 
-	fn      = current_backend->lapack.slasq5.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slasq5.f77_blas_function; 
 
     hook_pos_slasq5 ++;
     if( hook_pos_slasq5 < __flexiblas_hooks->slasq5.nhook) {
-        fn_hook = __flexiblas_hooks->slasq5.f77_hook_function[hook_pos_slasq5];
+        *(void **) &fn_hook = __flexiblas_hooks->slasq5.f77_hook_function[hook_pos_slasq5];
         fn_hook((void*) i0, (void*) n0, (void*) z, (void*) pp, (void*) tau, (void*) sigma, (void*) dmin, (void*) dmin1, (void*) dmin2, (void*) dn, (void*) dnm1, (void*) dnm2, (void*) ieee, (void*) eps);
     } else {
         hook_pos_slasq5 = 0;

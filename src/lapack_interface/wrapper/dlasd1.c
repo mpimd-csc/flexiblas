@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dlasd1,DLASD1)(blasint* nl, blasint* nr, blasint* sqre, double* d
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlasd1.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlasd1.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlasd1.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlasd1.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) nl, (void*) nr, (void*) sqre, (void*) d, (void*) alpha, (void*) beta, (void*) u, (void*) ldu, (void*) vt, (void*) ldvt, (void*) idxq, (void*) iwork, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlasd1_(void* nl, void* nr, void* sqre, void* d, void* alpha
 {
 	void (*fn) (void* nl, void* nr, void* sqre, void* d, void* alpha, void* beta, void* u, void* ldu, void* vt, void* ldvt, void* idxq, void* iwork, void* work, void* info);
 
-	fn = current_backend->lapack.dlasd1.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlasd1.f77_blas_function; 
 
 		fn((void*) nl, (void*) nr, (void*) sqre, (void*) d, (void*) alpha, (void*) beta, (void*) u, (void*) ldu, (void*) vt, (void*) ldvt, (void*) idxq, (void*) iwork, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlasd1_(void* nl, void* nr, void* sqre, void* d, void* alph
 	void (*fn) (void* nl, void* nr, void* sqre, void* d, void* alpha, void* beta, void* u, void* ldu, void* vt, void* ldvt, void* idxq, void* iwork, void* work, void* info);
 	void (*fn_hook) (void* nl, void* nr, void* sqre, void* d, void* alpha, void* beta, void* u, void* ldu, void* vt, void* ldvt, void* idxq, void* iwork, void* work, void* info);
 
-	fn      = current_backend->lapack.dlasd1.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlasd1.f77_blas_function; 
 
     hook_pos_dlasd1 ++;
     if( hook_pos_dlasd1 < __flexiblas_hooks->dlasd1.nhook) {
-        fn_hook = __flexiblas_hooks->dlasd1.f77_hook_function[hook_pos_dlasd1];
+        *(void **) &fn_hook = __flexiblas_hooks->dlasd1.f77_hook_function[hook_pos_dlasd1];
         fn_hook((void*) nl, (void*) nr, (void*) sqre, (void*) d, (void*) alpha, (void*) beta, (void*) u, (void*) ldu, (void*) vt, (void*) ldvt, (void*) idxq, (void*) iwork, (void*) work, (void*) info);
     } else {
         hook_pos_dlasd1 = 0;

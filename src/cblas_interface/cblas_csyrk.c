@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -112,8 +112,8 @@ void flexiblas_real_cblas_csyrk(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
              const CBLAS_TRANSPOSE Trans, const CBLAS_INT N, const CBLAS_INT K,
              const void *alpha, const void  *A, const CBLAS_INT lda,
-             const void *beta, void  *C, const CBLAS_INT ldc)
-            = current_backend->blas.csyrk.cblas_function;
+             const void *beta, void  *C, const CBLAS_INT ldc);
+        *(void **) & fn = current_backend->blas.csyrk.cblas_function;
         fn(layout,Uplo,Trans,N,K,alpha,A,lda,beta,C,ldc);
     } else {
         extern int CBLAS_CallFromC;

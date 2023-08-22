@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dlasdq,DLASDQ)(char* uplo, blasint* sqre, blasint* n, blasint* nc
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlasdq.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlasdq.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlasdq.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlasdq.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) sqre, (void*) n, (void*) ncvt, (void*) nru, (void*) ncc, (void*) d, (void*) e, (void*) vt, (void*) ldvt, (void*) u, (void*) ldu, (void*) c, (void*) ldc, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlasdq_(void* uplo, void* sqre, void* n, void* ncvt, void* n
 {
 	void (*fn) (void* uplo, void* sqre, void* n, void* ncvt, void* nru, void* ncc, void* d, void* e, void* vt, void* ldvt, void* u, void* ldu, void* c, void* ldc, void* work, void* info);
 
-	fn = current_backend->lapack.dlasdq.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlasdq.f77_blas_function; 
 
 		fn((void*) uplo, (void*) sqre, (void*) n, (void*) ncvt, (void*) nru, (void*) ncc, (void*) d, (void*) e, (void*) vt, (void*) ldvt, (void*) u, (void*) ldu, (void*) c, (void*) ldc, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlasdq_(void* uplo, void* sqre, void* n, void* ncvt, void* 
 	void (*fn) (void* uplo, void* sqre, void* n, void* ncvt, void* nru, void* ncc, void* d, void* e, void* vt, void* ldvt, void* u, void* ldu, void* c, void* ldc, void* work, void* info);
 	void (*fn_hook) (void* uplo, void* sqre, void* n, void* ncvt, void* nru, void* ncc, void* d, void* e, void* vt, void* ldvt, void* u, void* ldu, void* c, void* ldc, void* work, void* info);
 
-	fn      = current_backend->lapack.dlasdq.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlasdq.f77_blas_function; 
 
     hook_pos_dlasdq ++;
     if( hook_pos_dlasdq < __flexiblas_hooks->dlasdq.nhook) {
-        fn_hook = __flexiblas_hooks->dlasdq.f77_hook_function[hook_pos_dlasdq];
+        *(void **) &fn_hook = __flexiblas_hooks->dlasdq.f77_hook_function[hook_pos_dlasdq];
         fn_hook((void*) uplo, (void*) sqre, (void*) n, (void*) ncvt, (void*) nru, (void*) ncc, (void*) d, (void*) e, (void*) vt, (void*) ldvt, (void*) u, (void*) ldu, (void*) c, (void*) ldc, (void*) work, (void*) info);
     } else {
         hook_pos_dlasdq = 0;

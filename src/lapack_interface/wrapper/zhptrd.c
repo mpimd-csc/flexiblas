@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zhptrd,ZHPTRD)(char* uplo, blasint* n, double complex* ap, double
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zhptrd.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zhptrd.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zhptrd.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zhptrd.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) ap, (void*) d, (void*) e, (void*) tau, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zhptrd_(void* uplo, void* n, void* ap, void* d, void* e, voi
 {
 	void (*fn) (void* uplo, void* n, void* ap, void* d, void* e, void* tau, void* info);
 
-	fn = current_backend->lapack.zhptrd.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zhptrd.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) ap, (void*) d, (void*) e, (void*) tau, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zhptrd_(void* uplo, void* n, void* ap, void* d, void* e, vo
 	void (*fn) (void* uplo, void* n, void* ap, void* d, void* e, void* tau, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* ap, void* d, void* e, void* tau, void* info);
 
-	fn      = current_backend->lapack.zhptrd.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zhptrd.f77_blas_function; 
 
     hook_pos_zhptrd ++;
     if( hook_pos_zhptrd < __flexiblas_hooks->zhptrd.nhook) {
-        fn_hook = __flexiblas_hooks->zhptrd.f77_hook_function[hook_pos_zhptrd];
+        *(void **) &fn_hook = __flexiblas_hooks->zhptrd.f77_hook_function[hook_pos_zhptrd];
         fn_hook((void*) uplo, (void*) n, (void*) ap, (void*) d, (void*) e, (void*) tau, (void*) info);
     } else {
         hook_pos_zhptrd = 0;

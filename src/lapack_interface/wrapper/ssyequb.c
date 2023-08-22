@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(ssyequb,SSYEQUB)(char* uplo, blasint* n, float* a, blasint* lda, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ssyequb.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ssyequb.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ssyequb.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ssyequb.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ssyequb_(void* uplo, void* n, void* a, void* lda, void* s, v
 {
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* work, void* info);
 
-	fn = current_backend->lapack.ssyequb.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ssyequb.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ssyequb_(void* uplo, void* n, void* a, void* lda, void* s, 
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* work, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* work, void* info);
 
-	fn      = current_backend->lapack.ssyequb.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ssyequb.f77_blas_function; 
 
     hook_pos_ssyequb ++;
     if( hook_pos_ssyequb < __flexiblas_hooks->ssyequb.nhook) {
-        fn_hook = __flexiblas_hooks->ssyequb.f77_hook_function[hook_pos_ssyequb];
+        *(void **) &fn_hook = __flexiblas_hooks->ssyequb.f77_hook_function[hook_pos_ssyequb];
         fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) work, (void*) info);
     } else {
         hook_pos_ssyequb = 0;

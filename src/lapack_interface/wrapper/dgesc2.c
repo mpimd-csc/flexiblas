@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dgesc2,DGESC2)(blasint* n, double* a, blasint* lda, double* rhs, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dgesc2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dgesc2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dgesc2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dgesc2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) a, (void*) lda, (void*) rhs, (void*) ipiv, (void*) jpiv, (void*) scale); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dgesc2_(void* n, void* a, void* lda, void* rhs, void* ipiv, 
 {
 	void (*fn) (void* n, void* a, void* lda, void* rhs, void* ipiv, void* jpiv, void* scale);
 
-	fn = current_backend->lapack.dgesc2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dgesc2.f77_blas_function; 
 
 		fn((void*) n, (void*) a, (void*) lda, (void*) rhs, (void*) ipiv, (void*) jpiv, (void*) scale); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dgesc2_(void* n, void* a, void* lda, void* rhs, void* ipiv,
 	void (*fn) (void* n, void* a, void* lda, void* rhs, void* ipiv, void* jpiv, void* scale);
 	void (*fn_hook) (void* n, void* a, void* lda, void* rhs, void* ipiv, void* jpiv, void* scale);
 
-	fn      = current_backend->lapack.dgesc2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dgesc2.f77_blas_function; 
 
     hook_pos_dgesc2 ++;
     if( hook_pos_dgesc2 < __flexiblas_hooks->dgesc2.nhook) {
-        fn_hook = __flexiblas_hooks->dgesc2.f77_hook_function[hook_pos_dgesc2];
+        *(void **) &fn_hook = __flexiblas_hooks->dgesc2.f77_hook_function[hook_pos_dgesc2];
         fn_hook((void*) n, (void*) a, (void*) lda, (void*) rhs, (void*) ipiv, (void*) jpiv, (void*) scale);
     } else {
         hook_pos_dgesc2 = 0;

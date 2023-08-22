@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(sgeqr,SGEQR)(blasint* m, blasint* n, float* a, blasint* lda, floa
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.sgeqr.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->sgeqr.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.sgeqr.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->sgeqr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) t, (void*) tsize, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_sgeqr_(void* m, void* n, void* a, void* lda, void* t, void* 
 {
 	void (*fn) (void* m, void* n, void* a, void* lda, void* t, void* tsize, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.sgeqr.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.sgeqr.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) t, (void*) tsize, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_sgeqr_(void* m, void* n, void* a, void* lda, void* t, void*
 	void (*fn) (void* m, void* n, void* a, void* lda, void* t, void* tsize, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* m, void* n, void* a, void* lda, void* t, void* tsize, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.sgeqr.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.sgeqr.f77_blas_function; 
 
     hook_pos_sgeqr ++;
     if( hook_pos_sgeqr < __flexiblas_hooks->sgeqr.nhook) {
-        fn_hook = __flexiblas_hooks->sgeqr.f77_hook_function[hook_pos_sgeqr];
+        *(void **) &fn_hook = __flexiblas_hooks->sgeqr.f77_hook_function[hook_pos_sgeqr];
         fn_hook((void*) m, (void*) n, (void*) a, (void*) lda, (void*) t, (void*) tsize, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_sgeqr = 0;

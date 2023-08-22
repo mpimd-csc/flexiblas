@@ -1,13 +1,13 @@
 FlexiBLAS - A BLAS and LAPACK wrapper library with runtime exchangeable backends
 ================================================================================
 
-**Version 3.2.1** 10.5281/zenodo.798186
+**Version 3.3.1** 10.5281/zenodo.798186
 
 **Project Website:** https://www.mpi-magdeburg.mpg.de/projects/flexiblas
 
 **Git Repository:** https://gitlab.mpi-magdeburg.mpg.de/software/flexiblas-release
 
-Copyright 2013-2022 by *Martin Köhler* (0000-0003-2338-9904)
+Copyright 2013-2023 by *Martin Köhler* (0000-0003-2338-9904)
                    and *Jens Saak* (0000-0001-5567-9637)
 
 ## Documentation

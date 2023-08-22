@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -81,8 +81,8 @@ float FC_GLOBAL(clantp,CLANTP)(char* norm, char* uplo, char* diag, blasint* n, f
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.clantp.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->clantp.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.clantp.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->clantp.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) norm, (void*) uplo, (void*) diag, (void*) n, (void*) ap, (void*) work); 
 		return ret; 
@@ -113,7 +113,7 @@ float flexiblas_real_clantp_(void* norm, void* uplo, void* diag, void* n, void* 
 	float (*fn) (void* norm, void* uplo, void* diag, void* n, void* ap, void* work);
 	float ret;
 
-	fn = current_backend->lapack.clantp.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.clantp.f77_blas_function; 
 
 		ret = fn((void*) norm, (void*) uplo, (void*) diag, (void*) n, (void*) ap, (void*) work); 
 
@@ -137,11 +137,11 @@ float flexiblas_chain_clantp_(void* norm, void* uplo, void* diag, void* n, void*
 	float (*fn_hook) (void* norm, void* uplo, void* diag, void* n, void* ap, void* work);
 	float ret;
 
-	fn      = current_backend->lapack.clantp.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.clantp.f77_blas_function; 
 
     hook_pos_clantp ++;
     if( hook_pos_clantp < __flexiblas_hooks->clantp.nhook) {
-        fn_hook = __flexiblas_hooks->clantp.f77_hook_function[hook_pos_clantp];
+        *(void **) &fn_hook = __flexiblas_hooks->clantp.f77_hook_function[hook_pos_clantp];
         ret = fn_hook((void*) norm, (void*) uplo, (void*) diag, (void*) n, (void*) ap, (void*) work);
     } else {
         hook_pos_clantp = 0;

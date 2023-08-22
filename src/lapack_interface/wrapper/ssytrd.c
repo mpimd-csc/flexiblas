@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(ssytrd,SSYTRD)(char* uplo, blasint* n, float* a, blasint* lda, fl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ssytrd.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ssytrd.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ssytrd.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ssytrd.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) d, (void*) e, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ssytrd_(void* uplo, void* n, void* a, void* lda, void* d, vo
 {
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* d, void* e, void* tau, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.ssytrd.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ssytrd.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) d, (void*) e, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ssytrd_(void* uplo, void* n, void* a, void* lda, void* d, v
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* d, void* e, void* tau, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* d, void* e, void* tau, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.ssytrd.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ssytrd.f77_blas_function; 
 
     hook_pos_ssytrd ++;
     if( hook_pos_ssytrd < __flexiblas_hooks->ssytrd.nhook) {
-        fn_hook = __flexiblas_hooks->ssytrd.f77_hook_function[hook_pos_ssytrd];
+        *(void **) &fn_hook = __flexiblas_hooks->ssytrd.f77_hook_function[hook_pos_ssytrd];
         fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) d, (void*) e, (void*) tau, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_ssytrd = 0;

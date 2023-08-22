@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dlaswp,DLASWP)(blasint* n, double* a, blasint* lda, blasint* k1, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlaswp.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlaswp.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlaswp.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlaswp.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) a, (void*) lda, (void*) k1, (void*) k2, (void*) ipiv, (void*) incx); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlaswp_(void* n, void* a, void* lda, void* k1, void* k2, voi
 {
 	void (*fn) (void* n, void* a, void* lda, void* k1, void* k2, void* ipiv, void* incx);
 
-	fn = current_backend->lapack.dlaswp.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlaswp.f77_blas_function; 
 
 		fn((void*) n, (void*) a, (void*) lda, (void*) k1, (void*) k2, (void*) ipiv, (void*) incx); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlaswp_(void* n, void* a, void* lda, void* k1, void* k2, vo
 	void (*fn) (void* n, void* a, void* lda, void* k1, void* k2, void* ipiv, void* incx);
 	void (*fn_hook) (void* n, void* a, void* lda, void* k1, void* k2, void* ipiv, void* incx);
 
-	fn      = current_backend->lapack.dlaswp.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlaswp.f77_blas_function; 
 
     hook_pos_dlaswp ++;
     if( hook_pos_dlaswp < __flexiblas_hooks->dlaswp.nhook) {
-        fn_hook = __flexiblas_hooks->dlaswp.f77_hook_function[hook_pos_dlaswp];
+        *(void **) &fn_hook = __flexiblas_hooks->dlaswp.f77_hook_function[hook_pos_dlaswp];
         fn_hook((void*) n, (void*) a, (void*) lda, (void*) k1, (void*) k2, (void*) ipiv, (void*) incx);
     } else {
         hook_pos_dlaswp = 0;

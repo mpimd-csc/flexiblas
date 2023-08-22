@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zlag2c,ZLAG2C)(blasint* m, blasint* n, double complex* a, blasint
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlag2c.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlag2c.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlag2c.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlag2c.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) sa, (void*) ldsa, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zlag2c_(void* m, void* n, void* a, void* lda, void* sa, void
 {
 	void (*fn) (void* m, void* n, void* a, void* lda, void* sa, void* ldsa, void* info);
 
-	fn = current_backend->lapack.zlag2c.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlag2c.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) sa, (void*) ldsa, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zlag2c_(void* m, void* n, void* a, void* lda, void* sa, voi
 	void (*fn) (void* m, void* n, void* a, void* lda, void* sa, void* ldsa, void* info);
 	void (*fn_hook) (void* m, void* n, void* a, void* lda, void* sa, void* ldsa, void* info);
 
-	fn      = current_backend->lapack.zlag2c.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlag2c.f77_blas_function; 
 
     hook_pos_zlag2c ++;
     if( hook_pos_zlag2c < __flexiblas_hooks->zlag2c.nhook) {
-        fn_hook = __flexiblas_hooks->zlag2c.f77_hook_function[hook_pos_zlag2c];
+        *(void **) &fn_hook = __flexiblas_hooks->zlag2c.f77_hook_function[hook_pos_zlag2c];
         fn_hook((void*) m, (void*) n, (void*) a, (void*) lda, (void*) sa, (void*) ldsa, (void*) info);
     } else {
         hook_pos_zlag2c = 0;

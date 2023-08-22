@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dgttrs,DGTTRS)(char* trans, blasint* n, blasint* nrhs, double* dl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dgttrs.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dgttrs.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dgttrs.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dgttrs.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) trans, (void*) n, (void*) nrhs, (void*) dl, (void*) d, (void*) du, (void*) du2, (void*) ipiv, (void*) b, (void*) ldb, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dgttrs_(void* trans, void* n, void* nrhs, void* dl, void* d,
 {
 	void (*fn) (void* trans, void* n, void* nrhs, void* dl, void* d, void* du, void* du2, void* ipiv, void* b, void* ldb, void* info);
 
-	fn = current_backend->lapack.dgttrs.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dgttrs.f77_blas_function; 
 
 		fn((void*) trans, (void*) n, (void*) nrhs, (void*) dl, (void*) d, (void*) du, (void*) du2, (void*) ipiv, (void*) b, (void*) ldb, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dgttrs_(void* trans, void* n, void* nrhs, void* dl, void* d
 	void (*fn) (void* trans, void* n, void* nrhs, void* dl, void* d, void* du, void* du2, void* ipiv, void* b, void* ldb, void* info);
 	void (*fn_hook) (void* trans, void* n, void* nrhs, void* dl, void* d, void* du, void* du2, void* ipiv, void* b, void* ldb, void* info);
 
-	fn      = current_backend->lapack.dgttrs.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dgttrs.f77_blas_function; 
 
     hook_pos_dgttrs ++;
     if( hook_pos_dgttrs < __flexiblas_hooks->dgttrs.nhook) {
-        fn_hook = __flexiblas_hooks->dgttrs.f77_hook_function[hook_pos_dgttrs];
+        *(void **) &fn_hook = __flexiblas_hooks->dgttrs.f77_hook_function[hook_pos_dgttrs];
         fn_hook((void*) trans, (void*) n, (void*) nrhs, (void*) dl, (void*) d, (void*) du, (void*) du2, (void*) ipiv, (void*) b, (void*) ldb, (void*) info);
     } else {
         hook_pos_dgttrs = 0;

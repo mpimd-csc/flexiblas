@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -89,8 +89,8 @@ void flexiblas_real_cblas_caxpby( const CBLAS_INT N, const void *alpha, const vo
    if ( current_backend->blas.caxpby.cblas_function != NULL ) {
 	   void (*fn)
 		 ( const CBLAS_INT N, const void *alpha, const void *X,
-                       const CBLAS_INT incX, const void *beta, void *Y, const CBLAS_INT incY)
-		   = current_backend->blas.caxpby.cblas_function;
+                       const CBLAS_INT incX, const void *beta, void *Y, const CBLAS_INT incY);
+       *(void **) &fn =  current_backend->blas.caxpby.cblas_function;
 	   fn(N,alpha,X,incX,beta, Y,incY);
    } else {
 	FC_GLOBAL(caxpby,CAXPBY)( &F77_N, alpha, X, &F77_incX, beta, Y, &F77_incY);

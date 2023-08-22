@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zlaein,ZLAEIN)(blasint* rightv, blasint* noinit, blasint* n, doub
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlaein.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlaein.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlaein.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlaein.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) rightv, (void*) noinit, (void*) n, (void*) h, (void*) ldh, (void*) w, (void*) v, (void*) b, (void*) ldb, (void*) rwork, (void*) eps3, (void*) smlnum, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zlaein_(void* rightv, void* noinit, void* n, void* h, void* 
 {
 	void (*fn) (void* rightv, void* noinit, void* n, void* h, void* ldh, void* w, void* v, void* b, void* ldb, void* rwork, void* eps3, void* smlnum, void* info);
 
-	fn = current_backend->lapack.zlaein.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlaein.f77_blas_function; 
 
 		fn((void*) rightv, (void*) noinit, (void*) n, (void*) h, (void*) ldh, (void*) w, (void*) v, (void*) b, (void*) ldb, (void*) rwork, (void*) eps3, (void*) smlnum, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zlaein_(void* rightv, void* noinit, void* n, void* h, void*
 	void (*fn) (void* rightv, void* noinit, void* n, void* h, void* ldh, void* w, void* v, void* b, void* ldb, void* rwork, void* eps3, void* smlnum, void* info);
 	void (*fn_hook) (void* rightv, void* noinit, void* n, void* h, void* ldh, void* w, void* v, void* b, void* ldb, void* rwork, void* eps3, void* smlnum, void* info);
 
-	fn      = current_backend->lapack.zlaein.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlaein.f77_blas_function; 
 
     hook_pos_zlaein ++;
     if( hook_pos_zlaein < __flexiblas_hooks->zlaein.nhook) {
-        fn_hook = __flexiblas_hooks->zlaein.f77_hook_function[hook_pos_zlaein];
+        *(void **) &fn_hook = __flexiblas_hooks->zlaein.f77_hook_function[hook_pos_zlaein];
         fn_hook((void*) rightv, (void*) noinit, (void*) n, (void*) h, (void*) ldh, (void*) w, (void*) v, (void*) b, (void*) ldb, (void*) rwork, (void*) eps3, (void*) smlnum, (void*) info);
     } else {
         hook_pos_zlaein = 0;

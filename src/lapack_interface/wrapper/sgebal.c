@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(sgebal,SGEBAL)(char* job, blasint* n, float* a, blasint* lda, bla
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.sgebal.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->sgebal.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.sgebal.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->sgebal.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) job, (void*) n, (void*) a, (void*) lda, (void*) ilo, (void*) ihi, (void*) scale, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_sgebal_(void* job, void* n, void* a, void* lda, void* ilo, v
 {
 	void (*fn) (void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info);
 
-	fn = current_backend->lapack.sgebal.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.sgebal.f77_blas_function; 
 
 		fn((void*) job, (void*) n, (void*) a, (void*) lda, (void*) ilo, (void*) ihi, (void*) scale, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_sgebal_(void* job, void* n, void* a, void* lda, void* ilo, 
 	void (*fn) (void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info);
 	void (*fn_hook) (void* job, void* n, void* a, void* lda, void* ilo, void* ihi, void* scale, void* info);
 
-	fn      = current_backend->lapack.sgebal.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.sgebal.f77_blas_function; 
 
     hook_pos_sgebal ++;
     if( hook_pos_sgebal < __flexiblas_hooks->sgebal.nhook) {
-        fn_hook = __flexiblas_hooks->sgebal.f77_hook_function[hook_pos_sgebal];
+        *(void **) &fn_hook = __flexiblas_hooks->sgebal.f77_hook_function[hook_pos_sgebal];
         fn_hook((void*) job, (void*) n, (void*) a, (void*) lda, (void*) ilo, (void*) ihi, (void*) scale, (void*) info);
     } else {
         hook_pos_sgebal = 0;

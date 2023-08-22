@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(slaqz3,SLAQZ3)(blasint* ilschur, blasint* ilq, blasint* ilz, blas
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slaqz3.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slaqz3.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slaqz3.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slaqz3.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) ilschur, (void*) ilq, (void*) ilz, (void*) n, (void*) ilo, (void*) ihi, (void*) nw, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) ns, (void*) nd, (void*) alphar, (void*) alphai, (void*) beta, (void*) qc, (void*) ldqc, (void*) zc, (void*) ldzc, (void*) work, (void*) lwork, (void*) rec, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slaqz3_(void* ilschur, void* ilq, void* ilz, void* n, void* 
 {
 	void (*fn) (void* ilschur, void* ilq, void* ilz, void* n, void* ilo, void* ihi, void* nw, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* ns, void* nd, void* alphar, void* alphai, void* beta, void* qc, void* ldqc, void* zc, void* ldzc, void* work, void* lwork, void* rec, void* info);
 
-	fn = current_backend->lapack.slaqz3.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slaqz3.f77_blas_function; 
 
 		fn((void*) ilschur, (void*) ilq, (void*) ilz, (void*) n, (void*) ilo, (void*) ihi, (void*) nw, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) ns, (void*) nd, (void*) alphar, (void*) alphai, (void*) beta, (void*) qc, (void*) ldqc, (void*) zc, (void*) ldzc, (void*) work, (void*) lwork, (void*) rec, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slaqz3_(void* ilschur, void* ilq, void* ilz, void* n, void*
 	void (*fn) (void* ilschur, void* ilq, void* ilz, void* n, void* ilo, void* ihi, void* nw, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* ns, void* nd, void* alphar, void* alphai, void* beta, void* qc, void* ldqc, void* zc, void* ldzc, void* work, void* lwork, void* rec, void* info);
 	void (*fn_hook) (void* ilschur, void* ilq, void* ilz, void* n, void* ilo, void* ihi, void* nw, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* ns, void* nd, void* alphar, void* alphai, void* beta, void* qc, void* ldqc, void* zc, void* ldzc, void* work, void* lwork, void* rec, void* info);
 
-	fn      = current_backend->lapack.slaqz3.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slaqz3.f77_blas_function; 
 
     hook_pos_slaqz3 ++;
     if( hook_pos_slaqz3 < __flexiblas_hooks->slaqz3.nhook) {
-        fn_hook = __flexiblas_hooks->slaqz3.f77_hook_function[hook_pos_slaqz3];
+        *(void **) &fn_hook = __flexiblas_hooks->slaqz3.f77_hook_function[hook_pos_slaqz3];
         fn_hook((void*) ilschur, (void*) ilq, (void*) ilz, (void*) n, (void*) ilo, (void*) ihi, (void*) nw, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) ns, (void*) nd, (void*) alphar, (void*) alphai, (void*) beta, (void*) qc, (void*) ldqc, (void*) zc, (void*) ldzc, (void*) work, (void*) lwork, (void*) rec, (void*) info);
     } else {
         hook_pos_slaqz3 = 0;

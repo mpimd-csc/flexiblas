@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(ztgex2,ZTGEX2)(blasint* wantq, blasint* wantz, blasint* n, double
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ztgex2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ztgex2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ztgex2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ztgex2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) wantq, (void*) wantz, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) j1, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ztgex2_(void* wantq, void* wantz, void* n, void* a, void* ld
 {
 	void (*fn) (void* wantq, void* wantz, void* n, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* j1, void* info);
 
-	fn = current_backend->lapack.ztgex2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ztgex2.f77_blas_function; 
 
 		fn((void*) wantq, (void*) wantz, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) j1, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ztgex2_(void* wantq, void* wantz, void* n, void* a, void* l
 	void (*fn) (void* wantq, void* wantz, void* n, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* j1, void* info);
 	void (*fn_hook) (void* wantq, void* wantz, void* n, void* a, void* lda, void* b, void* ldb, void* q, void* ldq, void* z, void* ldz, void* j1, void* info);
 
-	fn      = current_backend->lapack.ztgex2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ztgex2.f77_blas_function; 
 
     hook_pos_ztgex2 ++;
     if( hook_pos_ztgex2 < __flexiblas_hooks->ztgex2.nhook) {
-        fn_hook = __flexiblas_hooks->ztgex2.f77_hook_function[hook_pos_ztgex2];
+        *(void **) &fn_hook = __flexiblas_hooks->ztgex2.f77_hook_function[hook_pos_ztgex2];
         fn_hook((void*) wantq, (void*) wantz, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) j1, (void*) info);
     } else {
         hook_pos_ztgex2 = 0;

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dstev,DSTEV)(char* jobz, blasint* n, double* d, double* e, double
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dstev.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dstev.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dstev.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dstev.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dstev_(void* jobz, void* n, void* d, void* e, void* z, void*
 {
 	void (*fn) (void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info);
 
-	fn = current_backend->lapack.dstev.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dstev.f77_blas_function; 
 
 		fn((void*) jobz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dstev_(void* jobz, void* n, void* d, void* e, void* z, void
 	void (*fn) (void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info);
 	void (*fn_hook) (void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info);
 
-	fn      = current_backend->lapack.dstev.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dstev.f77_blas_function; 
 
     hook_pos_dstev ++;
     if( hook_pos_dstev < __flexiblas_hooks->dstev.nhook) {
-        fn_hook = __flexiblas_hooks->dstev.f77_hook_function[hook_pos_dstev];
+        *(void **) &fn_hook = __flexiblas_hooks->dstev.f77_hook_function[hook_pos_dstev];
         fn_hook((void*) jobz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info);
     } else {
         hook_pos_dstev = 0;

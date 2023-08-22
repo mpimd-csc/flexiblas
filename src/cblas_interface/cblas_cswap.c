@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -88,8 +88,8 @@ void flexiblas_real_cblas_cswap( const CBLAS_INT N, void *X, const CBLAS_INT inc
    if ( current_backend->blas.cswap.cblas_function != NULL ) {
 	   void (*fn)
 		  ( const CBLAS_INT N, void *X, const CBLAS_INT incX, void *Y,
-                       const CBLAS_INT incY)
-		   = current_backend->blas.cswap.cblas_function;
+                       const CBLAS_INT incY);
+       *(void **) &fn = current_backend->blas.cswap.cblas_function;
 	fn(N,X,incX,Y,incY);
    } else {
 	   FC_GLOBAL(cswap,CSWAP)( &F77_N, X, &F77_incX, Y, &F77_incY);

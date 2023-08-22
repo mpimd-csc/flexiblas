@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(stfsm,STFSM)(char* transr, char* side, char* uplo, char* trans, c
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.stfsm.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->stfsm.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.stfsm.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->stfsm.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) transr, (void*) side, (void*) uplo, (void*) trans, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) b, (void*) ldb); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_stfsm_(void* transr, void* side, void* uplo, void* trans, vo
 {
 	void (*fn) (void* transr, void* side, void* uplo, void* trans, void* diag, void* m, void* n, void* alpha, void* a, void* b, void* ldb);
 
-	fn = current_backend->lapack.stfsm.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.stfsm.f77_blas_function; 
 
 		fn((void*) transr, (void*) side, (void*) uplo, (void*) trans, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) b, (void*) ldb); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_stfsm_(void* transr, void* side, void* uplo, void* trans, v
 	void (*fn) (void* transr, void* side, void* uplo, void* trans, void* diag, void* m, void* n, void* alpha, void* a, void* b, void* ldb);
 	void (*fn_hook) (void* transr, void* side, void* uplo, void* trans, void* diag, void* m, void* n, void* alpha, void* a, void* b, void* ldb);
 
-	fn      = current_backend->lapack.stfsm.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.stfsm.f77_blas_function; 
 
     hook_pos_stfsm ++;
     if( hook_pos_stfsm < __flexiblas_hooks->stfsm.nhook) {
-        fn_hook = __flexiblas_hooks->stfsm.f77_hook_function[hook_pos_stfsm];
+        *(void **) &fn_hook = __flexiblas_hooks->stfsm.f77_hook_function[hook_pos_stfsm];
         fn_hook((void*) transr, (void*) side, (void*) uplo, (void*) trans, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) b, (void*) ldb);
     } else {
         hook_pos_stfsm = 0;

@@ -25,7 +25,7 @@
 #include <execinfo.h>
 #include <unistd.h>
 
-int csc_show_backtrace() {
+int csc_show_backtrace(void) {
     int j, nptrs;
 #define SIZE 200
     void *buffer[SIZE];
@@ -47,7 +47,7 @@ int csc_show_backtrace() {
 
 #else
 
-int csc_show_backtrace() {
+int csc_show_backtrace(void) {
     csc_info_message("Backtrace is not available.\n");
     return 1;
 }

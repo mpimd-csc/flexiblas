@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(slaqp2,SLAQP2)(blasint* m, blasint* n, blasint* offset, float* a,
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slaqp2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slaqp2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slaqp2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slaqp2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) offset, (void*) a, (void*) lda, (void*) jpvt, (void*) tau, (void*) vn1, (void*) vn2, (void*) work); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slaqp2_(void* m, void* n, void* offset, void* a, void* lda, 
 {
 	void (*fn) (void* m, void* n, void* offset, void* a, void* lda, void* jpvt, void* tau, void* vn1, void* vn2, void* work);
 
-	fn = current_backend->lapack.slaqp2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slaqp2.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) offset, (void*) a, (void*) lda, (void*) jpvt, (void*) tau, (void*) vn1, (void*) vn2, (void*) work); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slaqp2_(void* m, void* n, void* offset, void* a, void* lda,
 	void (*fn) (void* m, void* n, void* offset, void* a, void* lda, void* jpvt, void* tau, void* vn1, void* vn2, void* work);
 	void (*fn_hook) (void* m, void* n, void* offset, void* a, void* lda, void* jpvt, void* tau, void* vn1, void* vn2, void* work);
 
-	fn      = current_backend->lapack.slaqp2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slaqp2.f77_blas_function; 
 
     hook_pos_slaqp2 ++;
     if( hook_pos_slaqp2 < __flexiblas_hooks->slaqp2.nhook) {
-        fn_hook = __flexiblas_hooks->slaqp2.f77_hook_function[hook_pos_slaqp2];
+        *(void **) &fn_hook = __flexiblas_hooks->slaqp2.f77_hook_function[hook_pos_slaqp2];
         fn_hook((void*) m, (void*) n, (void*) offset, (void*) a, (void*) lda, (void*) jpvt, (void*) tau, (void*) vn1, (void*) vn2, (void*) work);
     } else {
         hook_pos_slaqp2 = 0;

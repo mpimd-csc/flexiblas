@@ -25,7 +25,7 @@
 
 extern void FC_GLOBAL(sgemm,SGEMM)(char* transa, char* transb, int* m, int* n, int* k, float* alpha, float* a, int* lda, float* b, int* ldb, float* beta, float* c, int* ldc);
 
-double wtime()
+double wtime(void)
 {
 	struct timeval tv;
 	gettimeofday (&tv, NULL);

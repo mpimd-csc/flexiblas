@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dladiv,DLADIV)(double* a, double* b, double* c, double* d, double
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dladiv.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dladiv.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dladiv.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dladiv.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) a, (void*) b, (void*) c, (void*) d, (void*) p, (void*) q); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dladiv_(void* a, void* b, void* c, void* d, void* p, void* q
 {
 	void (*fn) (void* a, void* b, void* c, void* d, void* p, void* q);
 
-	fn = current_backend->lapack.dladiv.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dladiv.f77_blas_function; 
 
 		fn((void*) a, (void*) b, (void*) c, (void*) d, (void*) p, (void*) q); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dladiv_(void* a, void* b, void* c, void* d, void* p, void* 
 	void (*fn) (void* a, void* b, void* c, void* d, void* p, void* q);
 	void (*fn_hook) (void* a, void* b, void* c, void* d, void* p, void* q);
 
-	fn      = current_backend->lapack.dladiv.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dladiv.f77_blas_function; 
 
     hook_pos_dladiv ++;
     if( hook_pos_dladiv < __flexiblas_hooks->dladiv.nhook) {
-        fn_hook = __flexiblas_hooks->dladiv.f77_hook_function[hook_pos_dladiv];
+        *(void **) &fn_hook = __flexiblas_hooks->dladiv.f77_hook_function[hook_pos_dladiv];
         fn_hook((void*) a, (void*) b, (void*) c, (void*) d, (void*) p, (void*) q);
     } else {
         hook_pos_dladiv = 0;

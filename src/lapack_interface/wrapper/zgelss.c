@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zgelss,ZGELSS)(blasint* m, blasint* n, blasint* nrhs, double comp
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zgelss.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zgelss.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zgelss.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zgelss.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) s, (void*) rcond, (void*) rank_bn, (void*) work, (void*) lwork, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zgelss_(void* m, void* n, void* nrhs, void* a, void* lda, vo
 {
 	void (*fn) (void* m, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* s, void* rcond, void* rank_bn, void* work, void* lwork, void* rwork, void* info);
 
-	fn = current_backend->lapack.zgelss.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zgelss.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) s, (void*) rcond, (void*) rank_bn, (void*) work, (void*) lwork, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zgelss_(void* m, void* n, void* nrhs, void* a, void* lda, v
 	void (*fn) (void* m, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* s, void* rcond, void* rank_bn, void* work, void* lwork, void* rwork, void* info);
 	void (*fn_hook) (void* m, void* n, void* nrhs, void* a, void* lda, void* b, void* ldb, void* s, void* rcond, void* rank_bn, void* work, void* lwork, void* rwork, void* info);
 
-	fn      = current_backend->lapack.zgelss.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zgelss.f77_blas_function; 
 
     hook_pos_zgelss ++;
     if( hook_pos_zgelss < __flexiblas_hooks->zgelss.nhook) {
-        fn_hook = __flexiblas_hooks->zgelss.f77_hook_function[hook_pos_zgelss];
+        *(void **) &fn_hook = __flexiblas_hooks->zgelss.f77_hook_function[hook_pos_zgelss];
         fn_hook((void*) m, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) s, (void*) rcond, (void*) rank_bn, (void*) work, (void*) lwork, (void*) rwork, (void*) info);
     } else {
         hook_pos_zgelss = 0;

@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -116,8 +116,8 @@ void flexiblas_real_cblas_ctrsm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side
              const CBLAS_UPLO Uplo, const CBLAS_TRANSPOSE TransA,
              const CBLAS_DIAG Diag, const CBLAS_INT M, const CBLAS_INT N,
              const void *alpha, const void  *A, const CBLAS_INT lda,
-             void  *B, const CBLAS_INT ldb)
-            = current_backend->blas.ctrsm.cblas_function;
+             void  *B, const CBLAS_INT ldb);
+        *(void**) & fn = current_backend->blas.ctrsm.cblas_function;
         fn(layout,Side,Uplo,TransA,Diag,M,N,alpha,A,lda,B,ldb);
     } else {
         extern int CBLAS_CallFromC;

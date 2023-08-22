@@ -140,7 +140,7 @@ void csc_table_comment_sysinfo(csc_table_t * t)
     memtotal = (memtotal+1023)/1024;
     memtotal *= 1024;
 
-    snprintf(buffer, 32767, "Memory: %llu GiB", memtotal/1024);
+    snprintf(buffer, 32767, "Memory: %llu GiB", (unsigned long long) memtotal/1024);
     csc_table_comment_add(t->comment, buffer);
     csc_table_comment_add(t->comment, "===========================");
     csc_table_comment_add(t->comment, "");

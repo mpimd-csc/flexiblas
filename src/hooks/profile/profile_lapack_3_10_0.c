@@ -40,7 +40,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -2155,8 +2155,8 @@ void hook_dlapll(Int * n, double* x, Int * incx, double* y, Int * incy, double* 
 
 
 
-extern float flexiblas_chain_second ();
-float hook_second()
+extern float flexiblas_chain_second (void);
+float hook_second(void)
 {
     float v;
     double helpTime;
@@ -23596,8 +23596,8 @@ void hook_cunmr3(char* side, char* trans, Int * m, Int * n, Int * k, Int * l, fl
 
 
 
-extern double flexiblas_chain_dsecnd ();
-double hook_dsecnd()
+extern double flexiblas_chain_dsecnd (void);
+double hook_dsecnd(void)
 {
     double v;
     double helpTime;

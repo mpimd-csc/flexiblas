@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zpprfs,ZPPRFS)(char* uplo, blasint* n, blasint* nrhs, double comp
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zpprfs.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zpprfs.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zpprfs.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zpprfs.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) afp, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zpprfs_(void* uplo, void* n, void* nrhs, void* ap, void* afp
 {
 	void (*fn) (void* uplo, void* n, void* nrhs, void* ap, void* afp, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* rwork, void* info);
 
-	fn = current_backend->lapack.zpprfs.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zpprfs.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) afp, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zpprfs_(void* uplo, void* n, void* nrhs, void* ap, void* af
 	void (*fn) (void* uplo, void* n, void* nrhs, void* ap, void* afp, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* rwork, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* nrhs, void* ap, void* afp, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* rwork, void* info);
 
-	fn      = current_backend->lapack.zpprfs.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zpprfs.f77_blas_function; 
 
     hook_pos_zpprfs ++;
     if( hook_pos_zpprfs < __flexiblas_hooks->zpprfs.nhook) {
-        fn_hook = __flexiblas_hooks->zpprfs.f77_hook_function[hook_pos_zpprfs];
+        *(void **) &fn_hook = __flexiblas_hooks->zpprfs.f77_hook_function[hook_pos_zpprfs];
         fn_hook((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) afp, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info);
     } else {
         hook_pos_zpprfs = 0;

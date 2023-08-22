@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zgeqrfp,ZGEQRFP)(blasint* m, blasint* n, double complex* a, blasi
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zgeqrfp.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zgeqrfp.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zgeqrfp.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zgeqrfp.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zgeqrfp_(void* m, void* n, void* a, void* lda, void* tau, vo
 {
 	void (*fn) (void* m, void* n, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.zgeqrfp.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zgeqrfp.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zgeqrfp_(void* m, void* n, void* a, void* lda, void* tau, v
 	void (*fn) (void* m, void* n, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* m, void* n, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.zgeqrfp.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zgeqrfp.f77_blas_function; 
 
     hook_pos_zgeqrfp ++;
     if( hook_pos_zgeqrfp < __flexiblas_hooks->zgeqrfp.nhook) {
-        fn_hook = __flexiblas_hooks->zgeqrfp.f77_hook_function[hook_pos_zgeqrfp];
+        *(void **) &fn_hook = __flexiblas_hooks->zgeqrfp.f77_hook_function[hook_pos_zgeqrfp];
         fn_hook((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_zgeqrfp = 0;

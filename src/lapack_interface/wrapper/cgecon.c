@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(cgecon,CGECON)(char* norm, blasint* n, float complex* a, blasint*
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cgecon.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cgecon.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cgecon.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cgecon.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cgecon_(void* norm, void* n, void* a, void* lda, void* anorm
 {
 	void (*fn) (void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info);
 
-	fn = current_backend->lapack.cgecon.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cgecon.f77_blas_function; 
 
 		fn((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cgecon_(void* norm, void* n, void* a, void* lda, void* anor
 	void (*fn) (void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info);
 	void (*fn_hook) (void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info);
 
-	fn      = current_backend->lapack.cgecon.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cgecon.f77_blas_function; 
 
     hook_pos_cgecon ++;
     if( hook_pos_cgecon < __flexiblas_hooks->cgecon.nhook) {
-        fn_hook = __flexiblas_hooks->cgecon.f77_hook_function[hook_pos_cgecon];
+        *(void **) &fn_hook = __flexiblas_hooks->cgecon.f77_hook_function[hook_pos_cgecon];
         fn_hook((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info);
     } else {
         hook_pos_cgecon = 0;

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(cgesvx,CGESVX)(char* fact, char* trans, blasint* n, blasint* nrhs
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cgesvx.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cgesvx.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cgesvx.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cgesvx.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) fact, (void*) trans, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) af, (void*) ldaf, (void*) ipiv, (void*) equed, (void*) r, (void*) c, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) rcond, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cgesvx_(void* fact, void* trans, void* n, void* nrhs, void* 
 {
 	void (*fn) (void* fact, void* trans, void* n, void* nrhs, void* a, void* lda, void* af, void* ldaf, void* ipiv, void* equed, void* r, void* c, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* rwork, void* info);
 
-	fn = current_backend->lapack.cgesvx.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cgesvx.f77_blas_function; 
 
 		fn((void*) fact, (void*) trans, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) af, (void*) ldaf, (void*) ipiv, (void*) equed, (void*) r, (void*) c, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) rcond, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cgesvx_(void* fact, void* trans, void* n, void* nrhs, void*
 	void (*fn) (void* fact, void* trans, void* n, void* nrhs, void* a, void* lda, void* af, void* ldaf, void* ipiv, void* equed, void* r, void* c, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* rwork, void* info);
 	void (*fn_hook) (void* fact, void* trans, void* n, void* nrhs, void* a, void* lda, void* af, void* ldaf, void* ipiv, void* equed, void* r, void* c, void* b, void* ldb, void* x, void* ldx, void* rcond, void* ferr, void* berr, void* work, void* rwork, void* info);
 
-	fn      = current_backend->lapack.cgesvx.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cgesvx.f77_blas_function; 
 
     hook_pos_cgesvx ++;
     if( hook_pos_cgesvx < __flexiblas_hooks->cgesvx.nhook) {
-        fn_hook = __flexiblas_hooks->cgesvx.f77_hook_function[hook_pos_cgesvx];
+        *(void **) &fn_hook = __flexiblas_hooks->cgesvx.f77_hook_function[hook_pos_cgesvx];
         fn_hook((void*) fact, (void*) trans, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) af, (void*) ldaf, (void*) ipiv, (void*) equed, (void*) r, (void*) c, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) rcond, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info);
     } else {
         hook_pos_cgesvx = 0;

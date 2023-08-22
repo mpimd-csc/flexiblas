@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -81,8 +81,8 @@ int FC_GLOBAL(ilaclc,ILACLC)(blasint* m, blasint* n, float complex* a, blasint* 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ilaclc.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ilaclc.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ilaclc.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ilaclc.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) m, (void*) n, (void*) a, (void*) lda); 
 		return ret; 
@@ -113,7 +113,7 @@ blasint flexiblas_real_ilaclc_(void* m, void* n, void* a, void* lda)
 	blasint (*fn) (void* m, void* n, void* a, void* lda);
 	blasint ret;
 
-	fn = current_backend->lapack.ilaclc.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ilaclc.f77_blas_function; 
 
 		ret = fn((void*) m, (void*) n, (void*) a, (void*) lda); 
 
@@ -137,11 +137,11 @@ blasint flexiblas_chain_ilaclc_(void* m, void* n, void* a, void* lda)
 	blasint (*fn_hook) (void* m, void* n, void* a, void* lda);
 	blasint ret;
 
-	fn      = current_backend->lapack.ilaclc.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ilaclc.f77_blas_function; 
 
     hook_pos_ilaclc ++;
     if( hook_pos_ilaclc < __flexiblas_hooks->ilaclc.nhook) {
-        fn_hook = __flexiblas_hooks->ilaclc.f77_hook_function[hook_pos_ilaclc];
+        *(void **) &fn_hook = __flexiblas_hooks->ilaclc.f77_hook_function[hook_pos_ilaclc];
         ret = fn_hook((void*) m, (void*) n, (void*) a, (void*) lda);
     } else {
         hook_pos_ilaclc = 0;

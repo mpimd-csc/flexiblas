@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dstegr,DSTEGR)(char* jobz, char* range, blasint* n, double* d, do
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dstegr.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dstegr.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dstegr.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dstegr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobz, (void*) range, (void*) n, (void*) d, (void*) e, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) isuppz, (void*) work, (void*) lwork, (void*) iwork, (void*) liwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dstegr_(void* jobz, void* range, void* n, void* d, void* e, 
 {
 	void (*fn) (void* jobz, void* range, void* n, void* d, void* e, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* isuppz, void* work, void* lwork, void* iwork, void* liwork, void* info);
 
-	fn = current_backend->lapack.dstegr.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dstegr.f77_blas_function; 
 
 		fn((void*) jobz, (void*) range, (void*) n, (void*) d, (void*) e, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) isuppz, (void*) work, (void*) lwork, (void*) iwork, (void*) liwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dstegr_(void* jobz, void* range, void* n, void* d, void* e,
 	void (*fn) (void* jobz, void* range, void* n, void* d, void* e, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* isuppz, void* work, void* lwork, void* iwork, void* liwork, void* info);
 	void (*fn_hook) (void* jobz, void* range, void* n, void* d, void* e, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* isuppz, void* work, void* lwork, void* iwork, void* liwork, void* info);
 
-	fn      = current_backend->lapack.dstegr.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dstegr.f77_blas_function; 
 
     hook_pos_dstegr ++;
     if( hook_pos_dstegr < __flexiblas_hooks->dstegr.nhook) {
-        fn_hook = __flexiblas_hooks->dstegr.f77_hook_function[hook_pos_dstegr];
+        *(void **) &fn_hook = __flexiblas_hooks->dstegr.f77_hook_function[hook_pos_dstegr];
         fn_hook((void*) jobz, (void*) range, (void*) n, (void*) d, (void*) e, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) isuppz, (void*) work, (void*) lwork, (void*) iwork, (void*) liwork, (void*) info);
     } else {
         hook_pos_dstegr = 0;

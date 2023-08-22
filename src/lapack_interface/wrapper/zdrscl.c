@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zdrscl,ZDRSCL)(blasint* n, double* sa, double complex* sx, blasin
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zdrscl.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zdrscl.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zdrscl.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zdrscl.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) sa, (void*) sx, (void*) incx); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zdrscl_(void* n, void* sa, void* sx, void* incx)
 {
 	void (*fn) (void* n, void* sa, void* sx, void* incx);
 
-	fn = current_backend->lapack.zdrscl.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zdrscl.f77_blas_function; 
 
 		fn((void*) n, (void*) sa, (void*) sx, (void*) incx); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zdrscl_(void* n, void* sa, void* sx, void* incx)
 	void (*fn) (void* n, void* sa, void* sx, void* incx);
 	void (*fn_hook) (void* n, void* sa, void* sx, void* incx);
 
-	fn      = current_backend->lapack.zdrscl.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zdrscl.f77_blas_function; 
 
     hook_pos_zdrscl ++;
     if( hook_pos_zdrscl < __flexiblas_hooks->zdrscl.nhook) {
-        fn_hook = __flexiblas_hooks->zdrscl.f77_hook_function[hook_pos_zdrscl];
+        *(void **) &fn_hook = __flexiblas_hooks->zdrscl.f77_hook_function[hook_pos_zdrscl];
         fn_hook((void*) n, (void*) sa, (void*) sx, (void*) incx);
     } else {
         hook_pos_zdrscl = 0;

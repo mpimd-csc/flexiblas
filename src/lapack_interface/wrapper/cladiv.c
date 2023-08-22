@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -82,9 +82,9 @@ float complex FC_GLOBAL(cladiv,CLADIV)(float complex* x, float complex* y)
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cladiv.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cladiv.f77_hook_function[0]; 
-	fn_intel = (void *) fn;
+	*(void **) & fn = current_backend->lapack.cladiv.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cladiv.f77_hook_function[0]; 
+	*(void **) & fn_intel = *(void **) &fn;
 	if ( fn_hook == NULL ) { 
 		if(current_backend->info.intel_interface == 0 ) {
 			ret = fn((void*) x, (void*) y); 
@@ -132,8 +132,8 @@ void flexiblas_real_cladiv_( float complex*returnvalue, void* x, void* y)
 	void (*fn_intel) (float complex *ret, void* x, void* y);
 	float complex ret;
 
-	fn = current_backend->lapack.cladiv.f77_blas_function; 
-	fn_intel = (void *) fn;
+	*(void **) & fn = current_backend->lapack.cladiv.f77_blas_function; 
+	*(void **) & fn_intel = *(void **) &fn;
 
 		if(current_backend->info.intel_interface == 0 ) {
 			ret = fn((void*) x, (void*) y); 
@@ -164,12 +164,12 @@ void flexiblas_chain_cladiv_( float complex* returnvalue, void* x, void* y)
 	void (*fn_hook) (float complex *ret, void* x, void* y);
 	float complex ret;
 
-	fn      = current_backend->lapack.cladiv.f77_blas_function; 
-	fn_intel = (void *) fn;
+	*(void **) &fn      = current_backend->lapack.cladiv.f77_blas_function; 
+	*(void **) & fn_intel = *(void **) &fn;
 
     hook_pos_cladiv ++;
     if( hook_pos_cladiv < __flexiblas_hooks->cladiv.nhook) {
-        fn_hook = __flexiblas_hooks->cladiv.f77_hook_function[hook_pos_cladiv];
+        *(void **) &fn_hook = __flexiblas_hooks->cladiv.f77_hook_function[hook_pos_cladiv];
         fn_hook( &ret, (void*) x, (void*) y);
     } else {
         hook_pos_cladiv = 0;

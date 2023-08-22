@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dstevd,DSTEVD)(char* jobz, blasint* n, double* d, double* e, doub
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dstevd.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dstevd.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dstevd.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dstevd.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) iwork, (void*) liwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dstevd_(void* jobz, void* n, void* d, void* e, void* z, void
 {
 	void (*fn) (void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* lwork, void* iwork, void* liwork, void* info);
 
-	fn = current_backend->lapack.dstevd.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dstevd.f77_blas_function; 
 
 		fn((void*) jobz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) iwork, (void*) liwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dstevd_(void* jobz, void* n, void* d, void* e, void* z, voi
 	void (*fn) (void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* lwork, void* iwork, void* liwork, void* info);
 	void (*fn_hook) (void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* lwork, void* iwork, void* liwork, void* info);
 
-	fn      = current_backend->lapack.dstevd.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dstevd.f77_blas_function; 
 
     hook_pos_dstevd ++;
     if( hook_pos_dstevd < __flexiblas_hooks->dstevd.nhook) {
-        fn_hook = __flexiblas_hooks->dstevd.f77_hook_function[hook_pos_dstevd];
+        *(void **) &fn_hook = __flexiblas_hooks->dstevd.f77_hook_function[hook_pos_dstevd];
         fn_hook((void*) jobz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) iwork, (void*) liwork, (void*) info);
     } else {
         hook_pos_dstevd = 0;

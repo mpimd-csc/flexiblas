@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -58,7 +58,7 @@ HIDDEN int __flexiblas_count_additional_paths = 0;
 /*-----------------------------------------------------------------------------
  *  Init default search path
  *-----------------------------------------------------------------------------*/
-HIDDEN void __flexiblas_init_default_paths() {
+HIDDEN void __flexiblas_init_default_paths(void) {
 	char *searchpath = strdup(FLEXIBLAS_DEFAULT_LIB_PATH);
 	char *path;
 	char *r = NULL;
@@ -79,7 +79,7 @@ HIDDEN void __flexiblas_init_default_paths() {
 /*
  * Add Search paths from FLEXIBLAS_LIBRARY_PATH
  */
-HIDDEN void __flexiblas_add_path_from_environment()
+HIDDEN void __flexiblas_add_path_from_environment(void)
 {
     char * v;
     char * p;
@@ -114,7 +114,7 @@ HIDDEN void __flexiblas_add_path(const char * path ) {
     __flexiblas_additional_paths[__flexiblas_count_additional_paths-1] = csc_str_remove_char(__flexiblas_additional_paths[__flexiblas_count_additional_paths-1], '\'');
 }
 
-HIDDEN void __flexiblas_free_paths() {
+HIDDEN void __flexiblas_free_paths(void) {
 	int i = 0;
 	for ( i = 0; i < __flexiblas_count_additional_paths; i++) {
 		free(__flexiblas_additional_paths[i]);

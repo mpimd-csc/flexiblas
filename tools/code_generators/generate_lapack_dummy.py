@@ -57,7 +57,7 @@ file_header = """
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 #include "flexiblas_config.h"
@@ -65,7 +65,7 @@ file_header = """
 
 """
 fn_head = """
-HIDDEN void flexiblas_lapack_dummy_function_not_called()
+HIDDEN void flexiblas_lapack_dummy_function_not_called(void)
 {
 """
 
@@ -97,6 +97,10 @@ def lapack_generate(version):
     fo.close()
 
 if __name__ == "__main__":
+    lapack_generate("3.11.0")
+    lapack_generate("3.11.0-wodprc")
+
+
     lapack_generate("3.10.1")
     lapack_generate("3.10.1-wodprc")
 

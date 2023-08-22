@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zpftri,ZPFTRI)(char* transr, char* uplo, blasint* n, double compl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zpftri.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zpftri.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zpftri.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zpftri.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zpftri_(void* transr, void* uplo, void* n, void* a, void* in
 {
 	void (*fn) (void* transr, void* uplo, void* n, void* a, void* info);
 
-	fn = current_backend->lapack.zpftri.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zpftri.f77_blas_function; 
 
 		fn((void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zpftri_(void* transr, void* uplo, void* n, void* a, void* i
 	void (*fn) (void* transr, void* uplo, void* n, void* a, void* info);
 	void (*fn_hook) (void* transr, void* uplo, void* n, void* a, void* info);
 
-	fn      = current_backend->lapack.zpftri.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zpftri.f77_blas_function; 
 
     hook_pos_zpftri ++;
     if( hook_pos_zpftri < __flexiblas_hooks->zpftri.nhook) {
-        fn_hook = __flexiblas_hooks->zpftri.f77_hook_function[hook_pos_zpftri];
+        *(void **) &fn_hook = __flexiblas_hooks->zpftri.f77_hook_function[hook_pos_zpftri];
         fn_hook((void*) transr, (void*) uplo, (void*) n, (void*) a, (void*) info);
     } else {
         hook_pos_zpftri = 0;

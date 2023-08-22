@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -63,8 +63,8 @@ extern "C" {
 
     HIDDEN void __flexiblas_add_path(const char * path );
     HIDDEN void __flexiblas_free_paths(void);
-    HIDDEN void __flexiblas_init_default_paths();
-    HIDDEN void __flexiblas_add_path_from_environment();
+    HIDDEN void __flexiblas_init_default_paths(void);
+    HIDDEN void __flexiblas_add_path_from_environment(void);
     HIDDEN void __flexiblas_add_path_from_config( flexiblas_mgmt_t * config, flexiblas_mgmt_location_t loc);
 
 #ifdef __cplusplus

@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -239,8 +239,8 @@ void FC_GLOBAL(caxpy,CAXPY)(blasint* n, float complex* ca, float complex* cx, bl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.caxpy.f77_blas_function;
-	fn_hook = __flexiblas_hooks->caxpy.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.caxpy.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->caxpy.f77_hook_function[0];
 	hook_pos_caxpy = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) ca, (void*) cx, (void*) incx, (void*) cy, (void*) incy);
@@ -269,8 +269,8 @@ void FC_GLOBAL(ccopy,CCOPY)(blasint* n, float complex* cx, blasint* incx, float 
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.ccopy.f77_blas_function;
-	fn_hook = __flexiblas_hooks->ccopy.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.ccopy.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->ccopy.f77_hook_function[0];
 	hook_pos_ccopy = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy);
@@ -302,11 +302,11 @@ void FC_GLOBAL(cdotc,CDOTC)( float complex* returnvalue, blasint* n, float compl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.cdotc.f77_blas_function;
-	fn_hook = __flexiblas_hooks->cdotc.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.cdotc.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->cdotc.f77_hook_function[0];
 	hook_pos_cdotc = 0;
-	fn_intel = (void *) fn;
-	fn_intel_hook = (void *) fn_hook;
+	*(void **) &fn_intel = current_backend->blas.cdotc.f77_blas_function;
+	*(void **) &fn_intel_hook = __flexiblas_hooks->cdotc.f77_hook_function[0];
 	if ( fn_hook != NULL) {
 		if(current_backend->info.intel_interface == 0 ) {
 				ret = fn_hook((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy);
@@ -346,11 +346,11 @@ void FC_GLOBAL(cdotu,CDOTU)( float complex* returnvalue, blasint* n, float compl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.cdotu.f77_blas_function;
-	fn_hook = __flexiblas_hooks->cdotu.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.cdotu.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->cdotu.f77_hook_function[0];
 	hook_pos_cdotu = 0;
-	fn_intel = (void *) fn;
-	fn_intel_hook = (void *) fn_hook;
+	*(void **) &fn_intel = current_backend->blas.cdotu.f77_blas_function;
+	*(void **) &fn_intel_hook = __flexiblas_hooks->cdotu.f77_hook_function[0];
 	if ( fn_hook != NULL) {
 		if(current_backend->info.intel_interface == 0 ) {
 				ret = fn_hook((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy);
@@ -387,8 +387,8 @@ void FC_GLOBAL(cgbmv,CGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, bl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.cgbmv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->cgbmv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.cgbmv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->cgbmv.f77_hook_function[0];
 	hook_pos_cgbmv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);
@@ -417,8 +417,8 @@ void FC_GLOBAL(cgemm,CGEMM)(char* transa, char* transb, blasint* m, blasint* n, 
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.cgemm.f77_blas_function;
-	fn_hook = __flexiblas_hooks->cgemm.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.cgemm.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->cgemm.f77_hook_function[0];
 	hook_pos_cgemm = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);
@@ -447,8 +447,8 @@ void FC_GLOBAL(cgemv,CGEMV)(char* trans, blasint* m, blasint* n, float complex* 
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.cgemv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->cgemv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.cgemv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->cgemv.f77_hook_function[0];
 	hook_pos_cgemv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);
@@ -477,8 +477,8 @@ void FC_GLOBAL(cgerc,CGERC)(blasint* m, blasint* n, float complex* alpha, float 
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.cgerc.f77_blas_function;
-	fn_hook = __flexiblas_hooks->cgerc.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.cgerc.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->cgerc.f77_hook_function[0];
 	hook_pos_cgerc = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);
@@ -507,8 +507,8 @@ void FC_GLOBAL(cgeru,CGERU)(blasint* m, blasint* n, float complex* alpha, float 
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.cgeru.f77_blas_function;
-	fn_hook = __flexiblas_hooks->cgeru.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.cgeru.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->cgeru.f77_hook_function[0];
 	hook_pos_cgeru = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);
@@ -537,8 +537,8 @@ void FC_GLOBAL(chbmv,CHBMV)(char* uplo, blasint* n, blasint* k, float complex* a
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.chbmv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->chbmv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.chbmv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->chbmv.f77_hook_function[0];
 	hook_pos_chbmv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);
@@ -567,8 +567,8 @@ void FC_GLOBAL(chemm,CHEMM)(char* side, char* uplo, blasint* m, blasint* n, floa
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.chemm.f77_blas_function;
-	fn_hook = __flexiblas_hooks->chemm.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.chemm.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->chemm.f77_hook_function[0];
 	hook_pos_chemm = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);
@@ -597,8 +597,8 @@ void FC_GLOBAL(chemv,CHEMV)(char* uplo, blasint* n, float complex* alpha, float 
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.chemv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->chemv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.chemv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->chemv.f77_hook_function[0];
 	hook_pos_chemv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);
@@ -627,8 +627,8 @@ void FC_GLOBAL(cher,CHER)(char* uplo, blasint* n, float* alpha, float complex* x
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.cher.f77_blas_function;
-	fn_hook = __flexiblas_hooks->cher.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.cher.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->cher.f77_hook_function[0];
 	hook_pos_cher = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda);
@@ -657,8 +657,8 @@ void FC_GLOBAL(cher2,CHER2)(char* uplo, blasint* n, float complex* alpha, float 
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.cher2.f77_blas_function;
-	fn_hook = __flexiblas_hooks->cher2.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.cher2.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->cher2.f77_hook_function[0];
 	hook_pos_cher2 = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);
@@ -687,8 +687,8 @@ void FC_GLOBAL(cher2k,CHER2K)(char* uplo, char* trans, blasint* n, blasint* k, f
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.cher2k.f77_blas_function;
-	fn_hook = __flexiblas_hooks->cher2k.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.cher2k.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->cher2k.f77_hook_function[0];
 	hook_pos_cher2k = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);
@@ -717,8 +717,8 @@ void FC_GLOBAL(cherk,CHERK)(char* uplo, char* trans, blasint* n, blasint* k, flo
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.cherk.f77_blas_function;
-	fn_hook = __flexiblas_hooks->cherk.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.cherk.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->cherk.f77_hook_function[0];
 	hook_pos_cherk = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc);
@@ -747,8 +747,8 @@ void FC_GLOBAL(chpmv,CHPMV)(char* uplo, blasint* n, float complex* alpha, float 
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.chpmv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->chpmv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.chpmv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->chpmv.f77_hook_function[0];
 	hook_pos_chpmv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);
@@ -777,8 +777,8 @@ void FC_GLOBAL(chpr,CHPR)(char* uplo, blasint* n, float* alpha, float complex* x
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.chpr.f77_blas_function;
-	fn_hook = __flexiblas_hooks->chpr.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.chpr.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->chpr.f77_hook_function[0];
 	hook_pos_chpr = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap);
@@ -807,8 +807,8 @@ void FC_GLOBAL(chpr2,CHPR2)(char* uplo, blasint* n, float complex* alpha, float 
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.chpr2.f77_blas_function;
-	fn_hook = __flexiblas_hooks->chpr2.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.chpr2.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->chpr2.f77_hook_function[0];
 	hook_pos_chpr2 = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap);
@@ -837,8 +837,8 @@ void FC_GLOBAL(crotg,CROTG)(float complex* ca, float complex* cb, float* c, floa
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.crotg.f77_blas_function;
-	fn_hook = __flexiblas_hooks->crotg.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.crotg.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->crotg.f77_hook_function[0];
 	hook_pos_crotg = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) ca, (void*) cb, (void*) c, (void*) s);
@@ -867,8 +867,8 @@ void FC_GLOBAL(cscal,CSCAL)(blasint* n, float complex* ca, float complex* cx, bl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.cscal.f77_blas_function;
-	fn_hook = __flexiblas_hooks->cscal.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.cscal.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->cscal.f77_hook_function[0];
 	hook_pos_cscal = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) ca, (void*) cx, (void*) incx);
@@ -897,8 +897,8 @@ void FC_GLOBAL(csrot,CSROT)(blasint* n, float complex* cx, blasint* incx, float 
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.csrot.f77_blas_function;
-	fn_hook = __flexiblas_hooks->csrot.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.csrot.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->csrot.f77_hook_function[0];
 	hook_pos_csrot = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s);
@@ -927,8 +927,8 @@ void FC_GLOBAL(csscal,CSSCAL)(blasint* n, float* sa, float complex* cx, blasint*
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.csscal.f77_blas_function;
-	fn_hook = __flexiblas_hooks->csscal.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.csscal.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->csscal.f77_hook_function[0];
 	hook_pos_csscal = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) sa, (void*) cx, (void*) incx);
@@ -957,8 +957,8 @@ void FC_GLOBAL(cswap,CSWAP)(blasint* n, float complex* cx, blasint* incx, float 
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.cswap.f77_blas_function;
-	fn_hook = __flexiblas_hooks->cswap.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.cswap.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->cswap.f77_hook_function[0];
 	hook_pos_cswap = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy);
@@ -987,8 +987,8 @@ void FC_GLOBAL(csymm,CSYMM)(char* side, char* uplo, blasint* m, blasint* n, floa
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.csymm.f77_blas_function;
-	fn_hook = __flexiblas_hooks->csymm.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.csymm.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->csymm.f77_hook_function[0];
 	hook_pos_csymm = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);
@@ -1017,8 +1017,8 @@ void FC_GLOBAL(csyr2k,CSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, f
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.csyr2k.f77_blas_function;
-	fn_hook = __flexiblas_hooks->csyr2k.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.csyr2k.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->csyr2k.f77_hook_function[0];
 	hook_pos_csyr2k = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);
@@ -1047,8 +1047,8 @@ void FC_GLOBAL(csyrk,CSYRK)(char* uplo, char* trans, blasint* n, blasint* k, flo
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.csyrk.f77_blas_function;
-	fn_hook = __flexiblas_hooks->csyrk.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.csyrk.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->csyrk.f77_hook_function[0];
 	hook_pos_csyrk = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc);
@@ -1077,8 +1077,8 @@ void FC_GLOBAL(ctbmv,CTBMV)(char* uplo, char* trans, char* diag, blasint* n, bla
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.ctbmv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->ctbmv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.ctbmv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->ctbmv.f77_hook_function[0];
 	hook_pos_ctbmv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx);
@@ -1107,8 +1107,8 @@ void FC_GLOBAL(ctbsv,CTBSV)(char* uplo, char* trans, char* diag, blasint* n, bla
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.ctbsv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->ctbsv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.ctbsv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->ctbsv.f77_hook_function[0];
 	hook_pos_ctbsv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx);
@@ -1137,8 +1137,8 @@ void FC_GLOBAL(ctpmv,CTPMV)(char* uplo, char* trans, char* diag, blasint* n, flo
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.ctpmv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->ctpmv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.ctpmv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->ctpmv.f77_hook_function[0];
 	hook_pos_ctpmv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx);
@@ -1167,8 +1167,8 @@ void FC_GLOBAL(ctpsv,CTPSV)(char* uplo, char* trans, char* diag, blasint* n, flo
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.ctpsv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->ctpsv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.ctpsv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->ctpsv.f77_hook_function[0];
 	hook_pos_ctpsv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx);
@@ -1197,8 +1197,8 @@ void FC_GLOBAL(ctrmm,CTRMM)(char* side, char* uplo, char* transa, char* diag, bl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.ctrmm.f77_blas_function;
-	fn_hook = __flexiblas_hooks->ctrmm.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.ctrmm.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->ctrmm.f77_hook_function[0];
 	hook_pos_ctrmm = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);
@@ -1227,8 +1227,8 @@ void FC_GLOBAL(ctrmv,CTRMV)(char* uplo, char* trans, char* diag, blasint* n, flo
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.ctrmv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->ctrmv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.ctrmv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->ctrmv.f77_hook_function[0];
 	hook_pos_ctrmv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx);
@@ -1257,8 +1257,8 @@ void FC_GLOBAL(ctrsm,CTRSM)(char* side, char* uplo, char* transa, char* diag, bl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.ctrsm.f77_blas_function;
-	fn_hook = __flexiblas_hooks->ctrsm.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.ctrsm.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->ctrsm.f77_hook_function[0];
 	hook_pos_ctrsm = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);
@@ -1287,8 +1287,8 @@ void FC_GLOBAL(ctrsv,CTRSV)(char* uplo, char* trans, char* diag, blasint* n, flo
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.ctrsv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->ctrsv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.ctrsv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->ctrsv.f77_hook_function[0];
 	hook_pos_ctrsv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx);
@@ -1318,8 +1318,8 @@ double FC_GLOBAL(dasum,DASUM)(blasint* n, double* dx, blasint* incx)
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dasum.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dasum.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dasum.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dasum.f77_hook_function[0];
 	hook_pos_dasum = 0;
 	if ( fn_hook != NULL) {
 		ret = fn_hook((void*) n, (void*) dx, (void*) incx);
@@ -1348,8 +1348,8 @@ void FC_GLOBAL(daxpy,DAXPY)(blasint* n, double* da, double* dx, blasint* incx, d
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.daxpy.f77_blas_function;
-	fn_hook = __flexiblas_hooks->daxpy.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.daxpy.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->daxpy.f77_hook_function[0];
 	hook_pos_daxpy = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) da, (void*) dx, (void*) incx, (void*) dy, (void*) incy);
@@ -1378,8 +1378,8 @@ void FC_GLOBAL(dcopy,DCOPY)(blasint* n, double* dx, blasint* incx, double* dy, b
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dcopy.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dcopy.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dcopy.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dcopy.f77_hook_function[0];
 	hook_pos_dcopy = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy);
@@ -1409,8 +1409,8 @@ double FC_GLOBAL(ddot,DDOT)(blasint* n, double* dx, blasint* incx, double* dy, b
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.ddot.f77_blas_function;
-	fn_hook = __flexiblas_hooks->ddot.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.ddot.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->ddot.f77_hook_function[0];
 	hook_pos_ddot = 0;
 	if ( fn_hook != NULL) {
 		ret = fn_hook((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy);
@@ -1439,8 +1439,8 @@ void FC_GLOBAL(dgbmv,DGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, bl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dgbmv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dgbmv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dgbmv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dgbmv.f77_hook_function[0];
 	hook_pos_dgbmv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);
@@ -1469,8 +1469,8 @@ void FC_GLOBAL(dgemm,DGEMM)(char* transa, char* transb, blasint* m, blasint* n, 
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dgemm.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dgemm.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dgemm.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dgemm.f77_hook_function[0];
 	hook_pos_dgemm = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);
@@ -1499,8 +1499,8 @@ void FC_GLOBAL(dgemv,DGEMV)(char* trans, blasint* m, blasint* n, double* alpha, 
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dgemv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dgemv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dgemv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dgemv.f77_hook_function[0];
 	hook_pos_dgemv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);
@@ -1529,8 +1529,8 @@ void FC_GLOBAL(dger,DGER)(blasint* m, blasint* n, double* alpha, double* x, blas
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dger.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dger.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dger.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dger.f77_hook_function[0];
 	hook_pos_dger = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);
@@ -1560,8 +1560,8 @@ double FC_GLOBAL(dnrm2,DNRM2)(blasint* n, double* x, blasint* incx)
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dnrm2.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dnrm2.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dnrm2.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dnrm2.f77_hook_function[0];
 	hook_pos_dnrm2 = 0;
 	if ( fn_hook != NULL) {
 		ret = fn_hook((void*) n, (void*) x, (void*) incx);
@@ -1590,8 +1590,8 @@ void FC_GLOBAL(drot,DROT)(blasint* n, double* dx, blasint* incx, double* dy, bla
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.drot.f77_blas_function;
-	fn_hook = __flexiblas_hooks->drot.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.drot.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->drot.f77_hook_function[0];
 	hook_pos_drot = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy, (void*) c, (void*) s);
@@ -1620,8 +1620,8 @@ void FC_GLOBAL(drotg,DROTG)(double* da, double* db, double* c, double* s)
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.drotg.f77_blas_function;
-	fn_hook = __flexiblas_hooks->drotg.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.drotg.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->drotg.f77_hook_function[0];
 	hook_pos_drotg = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) da, (void*) db, (void*) c, (void*) s);
@@ -1650,8 +1650,8 @@ void FC_GLOBAL(drotm,DROTM)(blasint* n, double* dx, blasint* incx, double* dy, b
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.drotm.f77_blas_function;
-	fn_hook = __flexiblas_hooks->drotm.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.drotm.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->drotm.f77_hook_function[0];
 	hook_pos_drotm = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy, (void*) dparam);
@@ -1680,8 +1680,8 @@ void FC_GLOBAL(drotmg,DROTMG)(double* dd1, double* dd2, double* dx1, double* dy1
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.drotmg.f77_blas_function;
-	fn_hook = __flexiblas_hooks->drotmg.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.drotmg.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->drotmg.f77_hook_function[0];
 	hook_pos_drotmg = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) dd1, (void*) dd2, (void*) dx1, (void*) dy1, (void*) dparam);
@@ -1710,8 +1710,8 @@ void FC_GLOBAL(dsbmv,DSBMV)(char* uplo, blasint* n, blasint* k, double* alpha, d
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dsbmv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dsbmv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dsbmv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dsbmv.f77_hook_function[0];
 	hook_pos_dsbmv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);
@@ -1740,8 +1740,8 @@ void FC_GLOBAL(dscal,DSCAL)(blasint* n, double* da, double* dx, blasint* incx)
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dscal.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dscal.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dscal.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dscal.f77_hook_function[0];
 	hook_pos_dscal = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) da, (void*) dx, (void*) incx);
@@ -1771,8 +1771,8 @@ double FC_GLOBAL(dsdot,DSDOT)(blasint* n, float* sx, blasint* incx, float* sy, b
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dsdot.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dsdot.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dsdot.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dsdot.f77_hook_function[0];
 	hook_pos_dsdot = 0;
 	if ( fn_hook != NULL) {
 		ret = fn_hook((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy);
@@ -1801,8 +1801,8 @@ void FC_GLOBAL(dspmv,DSPMV)(char* uplo, blasint* n, double* alpha, double* ap, d
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dspmv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dspmv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dspmv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dspmv.f77_hook_function[0];
 	hook_pos_dspmv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);
@@ -1831,8 +1831,8 @@ void FC_GLOBAL(dspr,DSPR)(char* uplo, blasint* n, double* alpha, double* x, blas
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dspr.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dspr.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dspr.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dspr.f77_hook_function[0];
 	hook_pos_dspr = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap);
@@ -1861,8 +1861,8 @@ void FC_GLOBAL(dspr2,DSPR2)(char* uplo, blasint* n, double* alpha, double* x, bl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dspr2.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dspr2.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dspr2.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dspr2.f77_hook_function[0];
 	hook_pos_dspr2 = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap);
@@ -1891,8 +1891,8 @@ void FC_GLOBAL(dswap,DSWAP)(blasint* n, double* dx, blasint* incx, double* dy, b
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dswap.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dswap.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dswap.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dswap.f77_hook_function[0];
 	hook_pos_dswap = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy);
@@ -1921,8 +1921,8 @@ void FC_GLOBAL(dsymm,DSYMM)(char* side, char* uplo, blasint* m, blasint* n, doub
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dsymm.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dsymm.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dsymm.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dsymm.f77_hook_function[0];
 	hook_pos_dsymm = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);
@@ -1951,8 +1951,8 @@ void FC_GLOBAL(dsymv,DSYMV)(char* uplo, blasint* n, double* alpha, double* a, bl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dsymv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dsymv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dsymv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dsymv.f77_hook_function[0];
 	hook_pos_dsymv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);
@@ -1981,8 +1981,8 @@ void FC_GLOBAL(dsyr,DSYR)(char* uplo, blasint* n, double* alpha, double* x, blas
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dsyr.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dsyr.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dsyr.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dsyr.f77_hook_function[0];
 	hook_pos_dsyr = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda);
@@ -2011,8 +2011,8 @@ void FC_GLOBAL(dsyr2,DSYR2)(char* uplo, blasint* n, double* alpha, double* x, bl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dsyr2.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dsyr2.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dsyr2.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dsyr2.f77_hook_function[0];
 	hook_pos_dsyr2 = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);
@@ -2041,8 +2041,8 @@ void FC_GLOBAL(dsyr2k,DSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, d
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dsyr2k.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dsyr2k.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dsyr2k.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dsyr2k.f77_hook_function[0];
 	hook_pos_dsyr2k = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);
@@ -2071,8 +2071,8 @@ void FC_GLOBAL(dsyrk,DSYRK)(char* uplo, char* trans, blasint* n, blasint* k, dou
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dsyrk.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dsyrk.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dsyrk.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dsyrk.f77_hook_function[0];
 	hook_pos_dsyrk = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc);
@@ -2101,8 +2101,8 @@ void FC_GLOBAL(dtbmv,DTBMV)(char* uplo, char* trans, char* diag, blasint* n, bla
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dtbmv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dtbmv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dtbmv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dtbmv.f77_hook_function[0];
 	hook_pos_dtbmv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx);
@@ -2131,8 +2131,8 @@ void FC_GLOBAL(dtbsv,DTBSV)(char* uplo, char* trans, char* diag, blasint* n, bla
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dtbsv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dtbsv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dtbsv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dtbsv.f77_hook_function[0];
 	hook_pos_dtbsv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx);
@@ -2161,8 +2161,8 @@ void FC_GLOBAL(dtpmv,DTPMV)(char* uplo, char* trans, char* diag, blasint* n, dou
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dtpmv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dtpmv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dtpmv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dtpmv.f77_hook_function[0];
 	hook_pos_dtpmv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx);
@@ -2191,8 +2191,8 @@ void FC_GLOBAL(dtpsv,DTPSV)(char* uplo, char* trans, char* diag, blasint* n, dou
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dtpsv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dtpsv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dtpsv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dtpsv.f77_hook_function[0];
 	hook_pos_dtpsv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx);
@@ -2221,8 +2221,8 @@ void FC_GLOBAL(dtrmm,DTRMM)(char* side, char* uplo, char* transa, char* diag, bl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dtrmm.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dtrmm.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dtrmm.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dtrmm.f77_hook_function[0];
 	hook_pos_dtrmm = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);
@@ -2251,8 +2251,8 @@ void FC_GLOBAL(dtrmv,DTRMV)(char* uplo, char* trans, char* diag, blasint* n, dou
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dtrmv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dtrmv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dtrmv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dtrmv.f77_hook_function[0];
 	hook_pos_dtrmv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx);
@@ -2281,8 +2281,8 @@ void FC_GLOBAL(dtrsm,DTRSM)(char* side, char* uplo, char* transa, char* diag, bl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dtrsm.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dtrsm.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dtrsm.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dtrsm.f77_hook_function[0];
 	hook_pos_dtrsm = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);
@@ -2311,8 +2311,8 @@ void FC_GLOBAL(dtrsv,DTRSV)(char* uplo, char* trans, char* diag, blasint* n, dou
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dtrsv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dtrsv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dtrsv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dtrsv.f77_hook_function[0];
 	hook_pos_dtrsv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx);
@@ -2342,8 +2342,8 @@ double FC_GLOBAL(dzasum,DZASUM)(blasint* n, double complex* zx, blasint* incx)
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dzasum.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dzasum.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dzasum.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dzasum.f77_hook_function[0];
 	hook_pos_dzasum = 0;
 	if ( fn_hook != NULL) {
 		ret = fn_hook((void*) n, (void*) zx, (void*) incx);
@@ -2373,8 +2373,8 @@ double FC_GLOBAL(dznrm2,DZNRM2)(blasint* n, double complex* x, blasint* incx)
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dznrm2.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dznrm2.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dznrm2.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dznrm2.f77_hook_function[0];
 	hook_pos_dznrm2 = 0;
 	if ( fn_hook != NULL) {
 		ret = fn_hook((void*) n, (void*) x, (void*) incx);
@@ -2404,8 +2404,8 @@ int FC_GLOBAL(icamax,ICAMAX)(blasint* n, float complex* cx, blasint* incx)
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.icamax.f77_blas_function;
-	fn_hook = __flexiblas_hooks->icamax.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.icamax.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->icamax.f77_hook_function[0];
 	hook_pos_icamax = 0;
 	if ( fn_hook != NULL) {
 		ret = fn_hook((void*) n, (void*) cx, (void*) incx);
@@ -2435,8 +2435,8 @@ int FC_GLOBAL(idamax,IDAMAX)(blasint* n, double* dx, blasint* incx)
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.idamax.f77_blas_function;
-	fn_hook = __flexiblas_hooks->idamax.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.idamax.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->idamax.f77_hook_function[0];
 	hook_pos_idamax = 0;
 	if ( fn_hook != NULL) {
 		ret = fn_hook((void*) n, (void*) dx, (void*) incx);
@@ -2466,8 +2466,8 @@ int FC_GLOBAL(isamax,ISAMAX)(blasint* n, float* sx, blasint* incx)
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.isamax.f77_blas_function;
-	fn_hook = __flexiblas_hooks->isamax.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.isamax.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->isamax.f77_hook_function[0];
 	hook_pos_isamax = 0;
 	if ( fn_hook != NULL) {
 		ret = fn_hook((void*) n, (void*) sx, (void*) incx);
@@ -2497,8 +2497,8 @@ int FC_GLOBAL(izamax,IZAMAX)(blasint* n, double complex* zx, blasint* incx)
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.izamax.f77_blas_function;
-	fn_hook = __flexiblas_hooks->izamax.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.izamax.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->izamax.f77_hook_function[0];
 	hook_pos_izamax = 0;
 	if ( fn_hook != NULL) {
 		ret = fn_hook((void*) n, (void*) zx, (void*) incx);
@@ -2528,8 +2528,8 @@ float FC_GLOBAL(sasum,SASUM)(blasint* n, float* sx, blasint* incx)
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.sasum.f77_blas_function;
-	fn_hook = __flexiblas_hooks->sasum.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.sasum.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->sasum.f77_hook_function[0];
 	hook_pos_sasum = 0;
 	if ( fn_hook != NULL) {
 		ret = fn_hook((void*) n, (void*) sx, (void*) incx);
@@ -2558,8 +2558,8 @@ void FC_GLOBAL(saxpy,SAXPY)(blasint* n, float* sa, float* sx, blasint* incx, flo
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.saxpy.f77_blas_function;
-	fn_hook = __flexiblas_hooks->saxpy.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.saxpy.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->saxpy.f77_hook_function[0];
 	hook_pos_saxpy = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) sa, (void*) sx, (void*) incx, (void*) sy, (void*) incy);
@@ -2589,8 +2589,8 @@ float FC_GLOBAL(scasum,SCASUM)(blasint* n, float complex* cx, blasint* incx)
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.scasum.f77_blas_function;
-	fn_hook = __flexiblas_hooks->scasum.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.scasum.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->scasum.f77_hook_function[0];
 	hook_pos_scasum = 0;
 	if ( fn_hook != NULL) {
 		ret = fn_hook((void*) n, (void*) cx, (void*) incx);
@@ -2620,8 +2620,8 @@ float FC_GLOBAL(scnrm2,SCNRM2)(blasint* n, float complex* x, blasint* incx)
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.scnrm2.f77_blas_function;
-	fn_hook = __flexiblas_hooks->scnrm2.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.scnrm2.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->scnrm2.f77_hook_function[0];
 	hook_pos_scnrm2 = 0;
 	if ( fn_hook != NULL) {
 		ret = fn_hook((void*) n, (void*) x, (void*) incx);
@@ -2650,8 +2650,8 @@ void FC_GLOBAL(scopy,SCOPY)(blasint* n, float* sx, blasint* incx, float* sy, bla
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.scopy.f77_blas_function;
-	fn_hook = __flexiblas_hooks->scopy.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.scopy.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->scopy.f77_hook_function[0];
 	hook_pos_scopy = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy);
@@ -2681,8 +2681,8 @@ float FC_GLOBAL(sdot,SDOT)(blasint* n, float* sx, blasint* incx, float* sy, blas
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.sdot.f77_blas_function;
-	fn_hook = __flexiblas_hooks->sdot.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.sdot.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->sdot.f77_hook_function[0];
 	hook_pos_sdot = 0;
 	if ( fn_hook != NULL) {
 		ret = fn_hook((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy);
@@ -2712,8 +2712,8 @@ float FC_GLOBAL(sdsdot,SDSDOT)(blasint* n, float* sb, float* sx, blasint* incx, 
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.sdsdot.f77_blas_function;
-	fn_hook = __flexiblas_hooks->sdsdot.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.sdsdot.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->sdsdot.f77_hook_function[0];
 	hook_pos_sdsdot = 0;
 	if ( fn_hook != NULL) {
 		ret = fn_hook((void*) n, (void*) sb, (void*) sx, (void*) incx, (void*) sy, (void*) incy);
@@ -2742,8 +2742,8 @@ void FC_GLOBAL(sgbmv,SGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, bl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.sgbmv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->sgbmv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.sgbmv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->sgbmv.f77_hook_function[0];
 	hook_pos_sgbmv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);
@@ -2772,8 +2772,8 @@ void FC_GLOBAL(sgemm,SGEMM)(char* transa, char* transb, blasint* m, blasint* n, 
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.sgemm.f77_blas_function;
-	fn_hook = __flexiblas_hooks->sgemm.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.sgemm.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->sgemm.f77_hook_function[0];
 	hook_pos_sgemm = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);
@@ -2802,8 +2802,8 @@ void FC_GLOBAL(sgemv,SGEMV)(char* trans, blasint* m, blasint* n, float* alpha, f
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.sgemv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->sgemv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.sgemv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->sgemv.f77_hook_function[0];
 	hook_pos_sgemv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);
@@ -2832,8 +2832,8 @@ void FC_GLOBAL(sger,SGER)(blasint* m, blasint* n, float* alpha, float* x, blasin
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.sger.f77_blas_function;
-	fn_hook = __flexiblas_hooks->sger.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.sger.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->sger.f77_hook_function[0];
 	hook_pos_sger = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);
@@ -2863,8 +2863,8 @@ float FC_GLOBAL(snrm2,SNRM2)(blasint* n, float* x, blasint* incx)
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.snrm2.f77_blas_function;
-	fn_hook = __flexiblas_hooks->snrm2.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.snrm2.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->snrm2.f77_hook_function[0];
 	hook_pos_snrm2 = 0;
 	if ( fn_hook != NULL) {
 		ret = fn_hook((void*) n, (void*) x, (void*) incx);
@@ -2893,8 +2893,8 @@ void FC_GLOBAL(srot,SROT)(blasint* n, float* sx, blasint* incx, float* sy, blasi
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.srot.f77_blas_function;
-	fn_hook = __flexiblas_hooks->srot.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.srot.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->srot.f77_hook_function[0];
 	hook_pos_srot = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy, (void*) c, (void*) s);
@@ -2923,8 +2923,8 @@ void FC_GLOBAL(srotg,SROTG)(float* sa, float* sb, float* c, float* s)
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.srotg.f77_blas_function;
-	fn_hook = __flexiblas_hooks->srotg.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.srotg.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->srotg.f77_hook_function[0];
 	hook_pos_srotg = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) sa, (void*) sb, (void*) c, (void*) s);
@@ -2953,8 +2953,8 @@ void FC_GLOBAL(srotm,SROTM)(blasint* n, float* sx, blasint* incx, float* sy, bla
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.srotm.f77_blas_function;
-	fn_hook = __flexiblas_hooks->srotm.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.srotm.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->srotm.f77_hook_function[0];
 	hook_pos_srotm = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy, (void*) sparam);
@@ -2983,8 +2983,8 @@ void FC_GLOBAL(srotmg,SROTMG)(float* sd1, float* sd2, float* sx1, float* sy1, fl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.srotmg.f77_blas_function;
-	fn_hook = __flexiblas_hooks->srotmg.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.srotmg.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->srotmg.f77_hook_function[0];
 	hook_pos_srotmg = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) sd1, (void*) sd2, (void*) sx1, (void*) sy1, (void*) sparam);
@@ -3013,8 +3013,8 @@ void FC_GLOBAL(ssbmv,SSBMV)(char* uplo, blasint* n, blasint* k, float* alpha, fl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.ssbmv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->ssbmv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.ssbmv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->ssbmv.f77_hook_function[0];
 	hook_pos_ssbmv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);
@@ -3043,8 +3043,8 @@ void FC_GLOBAL(sscal,SSCAL)(blasint* n, float* sa, float* sx, blasint* incx)
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.sscal.f77_blas_function;
-	fn_hook = __flexiblas_hooks->sscal.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.sscal.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->sscal.f77_hook_function[0];
 	hook_pos_sscal = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) sa, (void*) sx, (void*) incx);
@@ -3073,8 +3073,8 @@ void FC_GLOBAL(sspmv,SSPMV)(char* uplo, blasint* n, float* alpha, float* ap, flo
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.sspmv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->sspmv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.sspmv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->sspmv.f77_hook_function[0];
 	hook_pos_sspmv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);
@@ -3103,8 +3103,8 @@ void FC_GLOBAL(sspr,SSPR)(char* uplo, blasint* n, float* alpha, float* x, blasin
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.sspr.f77_blas_function;
-	fn_hook = __flexiblas_hooks->sspr.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.sspr.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->sspr.f77_hook_function[0];
 	hook_pos_sspr = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap);
@@ -3133,8 +3133,8 @@ void FC_GLOBAL(sspr2,SSPR2)(char* uplo, blasint* n, float* alpha, float* x, blas
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.sspr2.f77_blas_function;
-	fn_hook = __flexiblas_hooks->sspr2.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.sspr2.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->sspr2.f77_hook_function[0];
 	hook_pos_sspr2 = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap);
@@ -3163,8 +3163,8 @@ void FC_GLOBAL(sswap,SSWAP)(blasint* n, float* sx, blasint* incx, float* sy, bla
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.sswap.f77_blas_function;
-	fn_hook = __flexiblas_hooks->sswap.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.sswap.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->sswap.f77_hook_function[0];
 	hook_pos_sswap = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy);
@@ -3193,8 +3193,8 @@ void FC_GLOBAL(ssymm,SSYMM)(char* side, char* uplo, blasint* m, blasint* n, floa
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.ssymm.f77_blas_function;
-	fn_hook = __flexiblas_hooks->ssymm.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.ssymm.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->ssymm.f77_hook_function[0];
 	hook_pos_ssymm = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);
@@ -3223,8 +3223,8 @@ void FC_GLOBAL(ssymv,SSYMV)(char* uplo, blasint* n, float* alpha, float* a, blas
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.ssymv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->ssymv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.ssymv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->ssymv.f77_hook_function[0];
 	hook_pos_ssymv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);
@@ -3253,8 +3253,8 @@ void FC_GLOBAL(ssyr,SSYR)(char* uplo, blasint* n, float* alpha, float* x, blasin
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.ssyr.f77_blas_function;
-	fn_hook = __flexiblas_hooks->ssyr.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.ssyr.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->ssyr.f77_hook_function[0];
 	hook_pos_ssyr = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda);
@@ -3283,8 +3283,8 @@ void FC_GLOBAL(ssyr2,SSYR2)(char* uplo, blasint* n, float* alpha, float* x, blas
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.ssyr2.f77_blas_function;
-	fn_hook = __flexiblas_hooks->ssyr2.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.ssyr2.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->ssyr2.f77_hook_function[0];
 	hook_pos_ssyr2 = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);
@@ -3313,8 +3313,8 @@ void FC_GLOBAL(ssyr2k,SSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, f
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.ssyr2k.f77_blas_function;
-	fn_hook = __flexiblas_hooks->ssyr2k.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.ssyr2k.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->ssyr2k.f77_hook_function[0];
 	hook_pos_ssyr2k = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);
@@ -3343,8 +3343,8 @@ void FC_GLOBAL(ssyrk,SSYRK)(char* uplo, char* trans, blasint* n, blasint* k, flo
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.ssyrk.f77_blas_function;
-	fn_hook = __flexiblas_hooks->ssyrk.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.ssyrk.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->ssyrk.f77_hook_function[0];
 	hook_pos_ssyrk = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc);
@@ -3373,8 +3373,8 @@ void FC_GLOBAL(stbmv,STBMV)(char* uplo, char* trans, char* diag, blasint* n, bla
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.stbmv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->stbmv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.stbmv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->stbmv.f77_hook_function[0];
 	hook_pos_stbmv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx);
@@ -3403,8 +3403,8 @@ void FC_GLOBAL(stbsv,STBSV)(char* uplo, char* trans, char* diag, blasint* n, bla
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.stbsv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->stbsv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.stbsv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->stbsv.f77_hook_function[0];
 	hook_pos_stbsv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx);
@@ -3433,8 +3433,8 @@ void FC_GLOBAL(stpmv,STPMV)(char* uplo, char* trans, char* diag, blasint* n, flo
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.stpmv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->stpmv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.stpmv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->stpmv.f77_hook_function[0];
 	hook_pos_stpmv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx);
@@ -3463,8 +3463,8 @@ void FC_GLOBAL(stpsv,STPSV)(char* uplo, char* trans, char* diag, blasint* n, flo
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.stpsv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->stpsv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.stpsv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->stpsv.f77_hook_function[0];
 	hook_pos_stpsv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx);
@@ -3493,8 +3493,8 @@ void FC_GLOBAL(strmm,STRMM)(char* side, char* uplo, char* transa, char* diag, bl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.strmm.f77_blas_function;
-	fn_hook = __flexiblas_hooks->strmm.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.strmm.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->strmm.f77_hook_function[0];
 	hook_pos_strmm = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);
@@ -3523,8 +3523,8 @@ void FC_GLOBAL(strmv,STRMV)(char* uplo, char* trans, char* diag, blasint* n, flo
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.strmv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->strmv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.strmv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->strmv.f77_hook_function[0];
 	hook_pos_strmv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx);
@@ -3553,8 +3553,8 @@ void FC_GLOBAL(strsm,STRSM)(char* side, char* uplo, char* transa, char* diag, bl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.strsm.f77_blas_function;
-	fn_hook = __flexiblas_hooks->strsm.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.strsm.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->strsm.f77_hook_function[0];
 	hook_pos_strsm = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);
@@ -3583,8 +3583,8 @@ void FC_GLOBAL(strsv,STRSV)(char* uplo, char* trans, char* diag, blasint* n, flo
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.strsv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->strsv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.strsv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->strsv.f77_hook_function[0];
 	hook_pos_strsv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx);
@@ -3613,8 +3613,8 @@ void FC_GLOBAL(zaxpy,ZAXPY)(blasint* n, double complex* za, double complex* zx, 
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zaxpy.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zaxpy.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zaxpy.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zaxpy.f77_hook_function[0];
 	hook_pos_zaxpy = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) za, (void*) zx, (void*) incx, (void*) zy, (void*) incy);
@@ -3643,8 +3643,8 @@ void FC_GLOBAL(zcopy,ZCOPY)(blasint* n, double complex* zx, blasint* incx, doubl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zcopy.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zcopy.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zcopy.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zcopy.f77_hook_function[0];
 	hook_pos_zcopy = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy);
@@ -3676,11 +3676,11 @@ void FC_GLOBAL(zdotc,ZDOTC)( double complex* returnvalue, blasint* n, double com
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zdotc.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zdotc.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zdotc.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zdotc.f77_hook_function[0];
 	hook_pos_zdotc = 0;
-	fn_intel = (void *) fn;
-	fn_intel_hook = (void *) fn_hook;
+	*(void **) &fn_intel = current_backend->blas.zdotc.f77_blas_function;
+	*(void **) &fn_intel_hook = __flexiblas_hooks->zdotc.f77_hook_function[0];
 	if ( fn_hook != NULL) {
 		if(current_backend->info.intel_interface == 0 ) {
 				ret = fn_hook((void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy);
@@ -3720,11 +3720,11 @@ void FC_GLOBAL(zdotu,ZDOTU)( double complex* returnvalue, blasint* n, double com
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zdotu.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zdotu.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zdotu.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zdotu.f77_hook_function[0];
 	hook_pos_zdotu = 0;
-	fn_intel = (void *) fn;
-	fn_intel_hook = (void *) fn_hook;
+	*(void **) &fn_intel = current_backend->blas.zdotu.f77_blas_function;
+	*(void **) &fn_intel_hook = __flexiblas_hooks->zdotu.f77_hook_function[0];
 	if ( fn_hook != NULL) {
 		if(current_backend->info.intel_interface == 0 ) {
 				ret = fn_hook((void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy);
@@ -3761,8 +3761,8 @@ void FC_GLOBAL(zdrot,ZDROT)(blasint* n, double complex* cx, blasint* incx, doubl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zdrot.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zdrot.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zdrot.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zdrot.f77_hook_function[0];
 	hook_pos_zdrot = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s);
@@ -3791,8 +3791,8 @@ void FC_GLOBAL(zdscal,ZDSCAL)(blasint* n, double* da, double complex* zx, blasin
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zdscal.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zdscal.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zdscal.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zdscal.f77_hook_function[0];
 	hook_pos_zdscal = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) da, (void*) zx, (void*) incx);
@@ -3821,8 +3821,8 @@ void FC_GLOBAL(zgbmv,ZGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, bl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zgbmv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zgbmv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zgbmv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zgbmv.f77_hook_function[0];
 	hook_pos_zgbmv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);
@@ -3851,8 +3851,8 @@ void FC_GLOBAL(zgemm,ZGEMM)(char* transa, char* transb, blasint* m, blasint* n, 
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zgemm.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zgemm.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zgemm.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zgemm.f77_hook_function[0];
 	hook_pos_zgemm = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);
@@ -3881,8 +3881,8 @@ void FC_GLOBAL(zgemv,ZGEMV)(char* trans, blasint* m, blasint* n, double complex*
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zgemv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zgemv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zgemv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zgemv.f77_hook_function[0];
 	hook_pos_zgemv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);
@@ -3911,8 +3911,8 @@ void FC_GLOBAL(zgerc,ZGERC)(blasint* m, blasint* n, double complex* alpha, doubl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zgerc.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zgerc.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zgerc.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zgerc.f77_hook_function[0];
 	hook_pos_zgerc = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);
@@ -3941,8 +3941,8 @@ void FC_GLOBAL(zgeru,ZGERU)(blasint* m, blasint* n, double complex* alpha, doubl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zgeru.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zgeru.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zgeru.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zgeru.f77_hook_function[0];
 	hook_pos_zgeru = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);
@@ -3971,8 +3971,8 @@ void FC_GLOBAL(zhbmv,ZHBMV)(char* uplo, blasint* n, blasint* k, double complex* 
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zhbmv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zhbmv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zhbmv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zhbmv.f77_hook_function[0];
 	hook_pos_zhbmv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);
@@ -4001,8 +4001,8 @@ void FC_GLOBAL(zhemm,ZHEMM)(char* side, char* uplo, blasint* m, blasint* n, doub
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zhemm.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zhemm.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zhemm.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zhemm.f77_hook_function[0];
 	hook_pos_zhemm = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);
@@ -4031,8 +4031,8 @@ void FC_GLOBAL(zhemv,ZHEMV)(char* uplo, blasint* n, double complex* alpha, doubl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zhemv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zhemv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zhemv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zhemv.f77_hook_function[0];
 	hook_pos_zhemv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);
@@ -4061,8 +4061,8 @@ void FC_GLOBAL(zher,ZHER)(char* uplo, blasint* n, double* alpha, double complex*
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zher.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zher.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zher.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zher.f77_hook_function[0];
 	hook_pos_zher = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda);
@@ -4091,8 +4091,8 @@ void FC_GLOBAL(zher2,ZHER2)(char* uplo, blasint* n, double complex* alpha, doubl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zher2.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zher2.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zher2.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zher2.f77_hook_function[0];
 	hook_pos_zher2 = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda);
@@ -4121,8 +4121,8 @@ void FC_GLOBAL(zher2k,ZHER2K)(char* uplo, char* trans, blasint* n, blasint* k, d
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zher2k.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zher2k.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zher2k.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zher2k.f77_hook_function[0];
 	hook_pos_zher2k = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);
@@ -4151,8 +4151,8 @@ void FC_GLOBAL(zherk,ZHERK)(char* uplo, char* trans, blasint* n, blasint* k, dou
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zherk.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zherk.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zherk.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zherk.f77_hook_function[0];
 	hook_pos_zherk = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc);
@@ -4181,8 +4181,8 @@ void FC_GLOBAL(zhpmv,ZHPMV)(char* uplo, blasint* n, double complex* alpha, doubl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zhpmv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zhpmv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zhpmv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zhpmv.f77_hook_function[0];
 	hook_pos_zhpmv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy);
@@ -4211,8 +4211,8 @@ void FC_GLOBAL(zhpr,ZHPR)(char* uplo, blasint* n, double* alpha, double complex*
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zhpr.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zhpr.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zhpr.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zhpr.f77_hook_function[0];
 	hook_pos_zhpr = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap);
@@ -4241,8 +4241,8 @@ void FC_GLOBAL(zhpr2,ZHPR2)(char* uplo, blasint* n, double complex* alpha, doubl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zhpr2.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zhpr2.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zhpr2.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zhpr2.f77_hook_function[0];
 	hook_pos_zhpr2 = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap);
@@ -4271,8 +4271,8 @@ void FC_GLOBAL(zrotg,ZROTG)(double complex* ca, double complex* cb, double* c, d
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zrotg.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zrotg.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zrotg.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zrotg.f77_hook_function[0];
 	hook_pos_zrotg = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) ca, (void*) cb, (void*) c, (void*) s);
@@ -4301,8 +4301,8 @@ void FC_GLOBAL(zscal,ZSCAL)(blasint* n, double complex* za, double complex* zx, 
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zscal.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zscal.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zscal.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zscal.f77_hook_function[0];
 	hook_pos_zscal = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) za, (void*) zx, (void*) incx);
@@ -4331,8 +4331,8 @@ void FC_GLOBAL(zswap,ZSWAP)(blasint* n, double complex* zx, blasint* incx, doubl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zswap.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zswap.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zswap.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zswap.f77_hook_function[0];
 	hook_pos_zswap = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy);
@@ -4361,8 +4361,8 @@ void FC_GLOBAL(zsymm,ZSYMM)(char* side, char* uplo, blasint* m, blasint* n, doub
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zsymm.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zsymm.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zsymm.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zsymm.f77_hook_function[0];
 	hook_pos_zsymm = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);
@@ -4391,8 +4391,8 @@ void FC_GLOBAL(zsyr2k,ZSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, d
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zsyr2k.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zsyr2k.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zsyr2k.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zsyr2k.f77_hook_function[0];
 	hook_pos_zsyr2k = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc);
@@ -4421,8 +4421,8 @@ void FC_GLOBAL(zsyrk,ZSYRK)(char* uplo, char* trans, blasint* n, blasint* k, dou
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zsyrk.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zsyrk.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zsyrk.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zsyrk.f77_hook_function[0];
 	hook_pos_zsyrk = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc);
@@ -4451,8 +4451,8 @@ void FC_GLOBAL(ztbmv,ZTBMV)(char* uplo, char* trans, char* diag, blasint* n, bla
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.ztbmv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->ztbmv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.ztbmv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->ztbmv.f77_hook_function[0];
 	hook_pos_ztbmv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx);
@@ -4481,8 +4481,8 @@ void FC_GLOBAL(ztbsv,ZTBSV)(char* uplo, char* trans, char* diag, blasint* n, bla
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.ztbsv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->ztbsv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.ztbsv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->ztbsv.f77_hook_function[0];
 	hook_pos_ztbsv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx);
@@ -4511,8 +4511,8 @@ void FC_GLOBAL(ztpmv,ZTPMV)(char* uplo, char* trans, char* diag, blasint* n, dou
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.ztpmv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->ztpmv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.ztpmv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->ztpmv.f77_hook_function[0];
 	hook_pos_ztpmv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx);
@@ -4541,8 +4541,8 @@ void FC_GLOBAL(ztpsv,ZTPSV)(char* uplo, char* trans, char* diag, blasint* n, dou
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.ztpsv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->ztpsv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.ztpsv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->ztpsv.f77_hook_function[0];
 	hook_pos_ztpsv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx);
@@ -4571,8 +4571,8 @@ void FC_GLOBAL(ztrmm,ZTRMM)(char* side, char* uplo, char* transa, char* diag, bl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.ztrmm.f77_blas_function;
-	fn_hook = __flexiblas_hooks->ztrmm.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.ztrmm.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->ztrmm.f77_hook_function[0];
 	hook_pos_ztrmm = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);
@@ -4601,8 +4601,8 @@ void FC_GLOBAL(ztrmv,ZTRMV)(char* uplo, char* trans, char* diag, blasint* n, dou
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.ztrmv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->ztrmv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.ztrmv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->ztrmv.f77_hook_function[0];
 	hook_pos_ztrmv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx);
@@ -4631,8 +4631,8 @@ void FC_GLOBAL(ztrsm,ZTRSM)(char* side, char* uplo, char* transa, char* diag, bl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.ztrsm.f77_blas_function;
-	fn_hook = __flexiblas_hooks->ztrsm.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.ztrsm.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->ztrsm.f77_hook_function[0];
 	hook_pos_ztrsm = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);
@@ -4661,8 +4661,8 @@ void FC_GLOBAL(ztrsv,ZTRSV)(char* uplo, char* trans, char* diag, blasint* n, dou
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.ztrsv.f77_blas_function;
-	fn_hook = __flexiblas_hooks->ztrsv.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.ztrsv.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->ztrsv.f77_hook_function[0];
 	hook_pos_ztrsv = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx);
@@ -4691,8 +4691,8 @@ void FC_GLOBAL(caxpby,CAXPBY)(blasint* n, float complex* ca, float complex* cx, 
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.caxpby.f77_blas_function;
-	fn_hook = __flexiblas_hooks->caxpby.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.caxpby.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->caxpby.f77_hook_function[0];
 	hook_pos_caxpby = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) ca, (void*) cx, (void*) incx, (void*) cb, (void*) cy, (void*) incy);
@@ -4721,8 +4721,8 @@ void FC_GLOBAL(daxpby,DAXPBY)(blasint* n, double* da, double* dx, blasint* incx,
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.daxpby.f77_blas_function;
-	fn_hook = __flexiblas_hooks->daxpby.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.daxpby.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->daxpby.f77_hook_function[0];
 	hook_pos_daxpby = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) da, (void*) dx, (void*) incx, (void*) db, (void*) dy, (void*) incy);
@@ -4751,8 +4751,8 @@ void FC_GLOBAL(zaxpby,ZAXPBY)(blasint* n, double complex* za, double complex* zx
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zaxpby.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zaxpby.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zaxpby.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zaxpby.f77_hook_function[0];
 	hook_pos_zaxpby = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) za, (void*) zx, (void*) incx, (void*) zb, (void*) zy, (void*) incy);
@@ -4781,8 +4781,8 @@ void FC_GLOBAL(saxpby,SAXPBY)(blasint* n, float* sa, float* sx, blasint* incx, f
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.saxpby.f77_blas_function;
-	fn_hook = __flexiblas_hooks->saxpby.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.saxpby.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->saxpby.f77_hook_function[0];
 	hook_pos_saxpby = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) n, (void*) sa, (void*) sx, (void*) incx, (void*) sb, (void*) sy, (void*) incy);
@@ -4811,8 +4811,8 @@ void FC_GLOBAL(comatcopy,COMATCOPY)(char* order, char* trans, blasint* rows, bla
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.comatcopy.f77_blas_function;
-	fn_hook = __flexiblas_hooks->comatcopy.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.comatcopy.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->comatcopy.f77_hook_function[0];
 	hook_pos_comatcopy = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);
@@ -4841,8 +4841,8 @@ void FC_GLOBAL(zomatcopy,ZOMATCOPY)(char* order, char* trans, blasint* rows, bla
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zomatcopy.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zomatcopy.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zomatcopy.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zomatcopy.f77_hook_function[0];
 	hook_pos_zomatcopy = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);
@@ -4871,8 +4871,8 @@ void FC_GLOBAL(domatcopy,DOMATCOPY)(char* order, char* trans, blasint* rows, bla
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.domatcopy.f77_blas_function;
-	fn_hook = __flexiblas_hooks->domatcopy.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.domatcopy.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->domatcopy.f77_hook_function[0];
 	hook_pos_domatcopy = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);
@@ -4901,8 +4901,8 @@ void FC_GLOBAL(somatcopy,SOMATCOPY)(char* order, char* trans, blasint* rows, bla
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.somatcopy.f77_blas_function;
-	fn_hook = __flexiblas_hooks->somatcopy.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.somatcopy.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->somatcopy.f77_hook_function[0];
 	hook_pos_somatcopy = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb);
@@ -4931,8 +4931,8 @@ void FC_GLOBAL(cimatcopy,CIMATCOPY)(char* order, char* trans, blasint* rows, bla
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.cimatcopy.f77_blas_function;
-	fn_hook = __flexiblas_hooks->cimatcopy.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.cimatcopy.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->cimatcopy.f77_hook_function[0];
 	hook_pos_cimatcopy = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb);
@@ -4961,8 +4961,8 @@ void FC_GLOBAL(zimatcopy,ZIMATCOPY)(char* order, char* trans, blasint* rows, bla
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zimatcopy.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zimatcopy.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zimatcopy.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zimatcopy.f77_hook_function[0];
 	hook_pos_zimatcopy = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb);
@@ -4991,8 +4991,8 @@ void FC_GLOBAL(dimatcopy,DIMATCOPY)(char* order, char* trans, blasint* rows, bla
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dimatcopy.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dimatcopy.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dimatcopy.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dimatcopy.f77_hook_function[0];
 	hook_pos_dimatcopy = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb);
@@ -5021,8 +5021,8 @@ void FC_GLOBAL(simatcopy,SIMATCOPY)(char* order, char* trans, blasint* rows, bla
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.simatcopy.f77_blas_function;
-	fn_hook = __flexiblas_hooks->simatcopy.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.simatcopy.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->simatcopy.f77_hook_function[0];
 	hook_pos_simatcopy = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb);
@@ -5051,8 +5051,8 @@ void FC_GLOBAL(sgeadd,SGEADD)(blasint* m, blasint* n, float* alpha, float* a, bl
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.sgeadd.f77_blas_function;
-	fn_hook = __flexiblas_hooks->sgeadd.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.sgeadd.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->sgeadd.f77_hook_function[0];
 	hook_pos_sgeadd = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb);
@@ -5081,8 +5081,8 @@ void FC_GLOBAL(dgeadd,DGEADD)(blasint* m, blasint* n, double* alpha, double* a, 
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.dgeadd.f77_blas_function;
-	fn_hook = __flexiblas_hooks->dgeadd.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.dgeadd.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->dgeadd.f77_hook_function[0];
 	hook_pos_dgeadd = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb);
@@ -5111,8 +5111,8 @@ void FC_GLOBAL(cgeadd,CGEADD)(blasint* m, blasint* n, float complex* alpha, floa
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.cgeadd.f77_blas_function;
-	fn_hook = __flexiblas_hooks->cgeadd.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.cgeadd.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->cgeadd.f77_hook_function[0];
 	hook_pos_cgeadd = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb);
@@ -5141,8 +5141,8 @@ void FC_GLOBAL(zgeadd,ZGEADD)(blasint* m, blasint* n, double complex* alpha, dou
 		__flexiblas_backend_init(current_backend);
 		current_backend->post_init = 0;
 	}
-	fn = current_backend->blas.zgeadd.f77_blas_function;
-	fn_hook = __flexiblas_hooks->zgeadd.f77_hook_function[0];
+	*(void **) &fn = current_backend->blas.zgeadd.f77_blas_function;
+	*(void **) &fn_hook = __flexiblas_hooks->zgeadd.f77_hook_function[0];
 	hook_pos_zgeadd = 0;
 	if ( fn_hook != NULL) {
 		fn_hook((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb);

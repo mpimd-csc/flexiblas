@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(clapll,CLAPLL)(blasint* n, float complex* x, blasint* incx, float
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.clapll.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->clapll.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.clapll.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->clapll.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ssmin); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_clapll_(void* n, void* x, void* incx, void* y, void* incy, v
 {
 	void (*fn) (void* n, void* x, void* incx, void* y, void* incy, void* ssmin);
 
-	fn = current_backend->lapack.clapll.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.clapll.f77_blas_function; 
 
 		fn((void*) n, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ssmin); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_clapll_(void* n, void* x, void* incx, void* y, void* incy, 
 	void (*fn) (void* n, void* x, void* incx, void* y, void* incy, void* ssmin);
 	void (*fn_hook) (void* n, void* x, void* incx, void* y, void* incy, void* ssmin);
 
-	fn      = current_backend->lapack.clapll.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.clapll.f77_blas_function; 
 
     hook_pos_clapll ++;
     if( hook_pos_clapll < __flexiblas_hooks->clapll.nhook) {
-        fn_hook = __flexiblas_hooks->clapll.f77_hook_function[hook_pos_clapll];
+        *(void **) &fn_hook = __flexiblas_hooks->clapll.f77_hook_function[hook_pos_clapll];
         fn_hook((void*) n, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ssmin);
     } else {
         hook_pos_clapll = 0;

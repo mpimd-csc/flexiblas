@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dggsvp,DGGSVP)(char* jobu, char* jobv, char* jobq, blasint* m, bl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dggsvp.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dggsvp.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dggsvp.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dggsvp.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobu, (void*) jobv, (void*) jobq, (void*) m, (void*) p, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) tola, (void*) tolb, (void*) k, (void*) l, (void*) u, (void*) ldu, (void*) v, (void*) ldv, (void*) q, (void*) ldq, (void*) iwork, (void*) tau, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dggsvp_(void* jobu, void* jobv, void* jobq, void* m, void* p
 {
 	void (*fn) (void* jobu, void* jobv, void* jobq, void* m, void* p, void* n, void* a, void* lda, void* b, void* ldb, void* tola, void* tolb, void* k, void* l, void* u, void* ldu, void* v, void* ldv, void* q, void* ldq, void* iwork, void* tau, void* work, void* info);
 
-	fn = current_backend->lapack.dggsvp.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dggsvp.f77_blas_function; 
 
 		fn((void*) jobu, (void*) jobv, (void*) jobq, (void*) m, (void*) p, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) tola, (void*) tolb, (void*) k, (void*) l, (void*) u, (void*) ldu, (void*) v, (void*) ldv, (void*) q, (void*) ldq, (void*) iwork, (void*) tau, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dggsvp_(void* jobu, void* jobv, void* jobq, void* m, void* 
 	void (*fn) (void* jobu, void* jobv, void* jobq, void* m, void* p, void* n, void* a, void* lda, void* b, void* ldb, void* tola, void* tolb, void* k, void* l, void* u, void* ldu, void* v, void* ldv, void* q, void* ldq, void* iwork, void* tau, void* work, void* info);
 	void (*fn_hook) (void* jobu, void* jobv, void* jobq, void* m, void* p, void* n, void* a, void* lda, void* b, void* ldb, void* tola, void* tolb, void* k, void* l, void* u, void* ldu, void* v, void* ldv, void* q, void* ldq, void* iwork, void* tau, void* work, void* info);
 
-	fn      = current_backend->lapack.dggsvp.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dggsvp.f77_blas_function; 
 
     hook_pos_dggsvp ++;
     if( hook_pos_dggsvp < __flexiblas_hooks->dggsvp.nhook) {
-        fn_hook = __flexiblas_hooks->dggsvp.f77_hook_function[hook_pos_dggsvp];
+        *(void **) &fn_hook = __flexiblas_hooks->dggsvp.f77_hook_function[hook_pos_dggsvp];
         fn_hook((void*) jobu, (void*) jobv, (void*) jobq, (void*) m, (void*) p, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) tola, (void*) tolb, (void*) k, (void*) l, (void*) u, (void*) ldu, (void*) v, (void*) ldv, (void*) q, (void*) ldq, (void*) iwork, (void*) tau, (void*) work, (void*) info);
     } else {
         hook_pos_dggsvp = 0;

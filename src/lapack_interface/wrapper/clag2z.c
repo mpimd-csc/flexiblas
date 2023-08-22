@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(clag2z,CLAG2Z)(blasint* m, blasint* n, float complex* sa, blasint
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.clag2z.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->clag2z.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.clag2z.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->clag2z.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) sa, (void*) ldsa, (void*) a, (void*) lda, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_clag2z_(void* m, void* n, void* sa, void* ldsa, void* a, voi
 {
 	void (*fn) (void* m, void* n, void* sa, void* ldsa, void* a, void* lda, void* info);
 
-	fn = current_backend->lapack.clag2z.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.clag2z.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) sa, (void*) ldsa, (void*) a, (void*) lda, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_clag2z_(void* m, void* n, void* sa, void* ldsa, void* a, vo
 	void (*fn) (void* m, void* n, void* sa, void* ldsa, void* a, void* lda, void* info);
 	void (*fn_hook) (void* m, void* n, void* sa, void* ldsa, void* a, void* lda, void* info);
 
-	fn      = current_backend->lapack.clag2z.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.clag2z.f77_blas_function; 
 
     hook_pos_clag2z ++;
     if( hook_pos_clag2z < __flexiblas_hooks->clag2z.nhook) {
-        fn_hook = __flexiblas_hooks->clag2z.f77_hook_function[hook_pos_clag2z];
+        *(void **) &fn_hook = __flexiblas_hooks->clag2z.f77_hook_function[hook_pos_clag2z];
         fn_hook((void*) m, (void*) n, (void*) sa, (void*) ldsa, (void*) a, (void*) lda, (void*) info);
     } else {
         hook_pos_clag2z = 0;

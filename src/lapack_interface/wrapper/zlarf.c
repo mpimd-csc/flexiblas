@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zlarf,ZLARF)(char* side, blasint* m, blasint* n, double complex* 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlarf.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlarf.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlarf.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlarf.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) side, (void*) m, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c, (void*) ldc, (void*) work); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zlarf_(void* side, void* m, void* n, void* v, void* incv, vo
 {
 	void (*fn) (void* side, void* m, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work);
 
-	fn = current_backend->lapack.zlarf.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlarf.f77_blas_function; 
 
 		fn((void*) side, (void*) m, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c, (void*) ldc, (void*) work); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zlarf_(void* side, void* m, void* n, void* v, void* incv, v
 	void (*fn) (void* side, void* m, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work);
 	void (*fn_hook) (void* side, void* m, void* n, void* v, void* incv, void* tau, void* c, void* ldc, void* work);
 
-	fn      = current_backend->lapack.zlarf.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlarf.f77_blas_function; 
 
     hook_pos_zlarf ++;
     if( hook_pos_zlarf < __flexiblas_hooks->zlarf.nhook) {
-        fn_hook = __flexiblas_hooks->zlarf.f77_hook_function[hook_pos_zlarf];
+        *(void **) &fn_hook = __flexiblas_hooks->zlarf.f77_hook_function[hook_pos_zlarf];
         fn_hook((void*) side, (void*) m, (void*) n, (void*) v, (void*) incv, (void*) tau, (void*) c, (void*) ldc, (void*) work);
     } else {
         hook_pos_zlarf = 0;

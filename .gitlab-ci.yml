@@ -1,0 +1,33 @@
+stages:
+    - release
+
+release-job:
+        rules:
+            - if: $CI_COMMIT_TAG
+        stage: release
+        image: docker-registry.csc.mpi-magdeburg.mpg.de:5000/ci-images/minimal/ubuntu:jammy
+        script:
+                - |
+                  git clean -f
+                  export V=$(echo $CI_COMMIT_TAG | sed -e 's/^v//g')
+                  (git ls-files --recurse-submodules | tar --transform="s|^|flexiblas-$V/|g" -cvzf ../flexiblas-$V.tar.gz  -T- )
+                  (git ls-files --recurse-submodules | tar --transform="s|^|flexiblas-$V/|g" -cvzf ../flexiblas-$V.tar.bz2  -T- )
+                  (git ls-files --recurse-submodules | tar --transform="s|^|flexiblas-$V/|g" -cvzf ../flexiblas-$V.tar.xz  -T- )
+                  (cd tools; bash ./create-oct-package.sh)
+                  mv ./tools/flexiblas-octave.tar.gz flexiblas-octave-${V}.tar.gz
+                  set -x
+                  if [ -z "$CI_COMMIT_TAG" ]; then export CI_COMMIT_TAG=$(git describe) ; fi
+                  echo -n "release-cli create  --tag-name '$CI_COMMIT_TAG' --tag-message 'Version $CI_COMMIT_TAG' " >> release.sh
+                  echo -n "--description 'Release for Version $CI_COMMIT_TAG' --name 'Release $CI_COMMIT_TAG' " >> release.sh
+                  for i in "flexiblas-$V.tar.gz" "flexiblas-$V.tar.bz2" "flexiblas-$V.tar.xz"
+                  do
+                      curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file ../${i} ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/flexiblas-source/${CI_COMMIT_TAG}/${i}
+                      echo  -n " --assets-link '{\"name\":\"${i}\",\"url\":\"${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/flexiblas-source/${CI_COMMIT_TAG}/${i}\"}'" >> release.sh
+                  done
+                  for i  in "flexiblas-octave-${V}.tar.gz"
+                  do
+                  curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file ${i} ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/flexiblas-octave/${CI_COMMIT_TAG}/${i}
+                  echo -n  " --assets-link '{\"name\":\"GNU Octave Interface\",\"url\":\"${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/flexiblas-octave/${CI_COMMIT_TAG}/${i}\"}'" >> release.sh
+                  done
+                  cat release.sh
+                  bash release.sh

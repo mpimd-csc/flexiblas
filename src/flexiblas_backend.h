@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -101,12 +101,12 @@ typedef struct _flexiblas_option_t {
 } flexiblas_option_t;
 
 /* Routines from FlexiBLAS public API */
-extern int flexiblas_verbosity();
-extern flexiblas_mgmt_t * flexiblas_mgmt();
+extern int flexiblas_verbosity(void);
+extern flexiblas_mgmt_t * flexiblas_mgmt(void);
 extern void flexiblas_print_error(const char *prefix, const char *path, const int line, const char *fmt, ... );
 extern void flexiblas_print_warning(const char *prefix, const char *fmt, ... );
 extern void flexiblas_print_info(const char *prefix, const char *fmt, ... );
-extern double flexiblas_wtime();
+extern double flexiblas_wtime(void);
 
 
 #define FLEXIBLAS_INIT_FUNCTION_NAME "__flexiblas_initialize"

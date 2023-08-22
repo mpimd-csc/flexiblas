@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dgelqt,DGELQT)(blasint* m, blasint* n, blasint* mb, double* a, bl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dgelqt.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dgelqt.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dgelqt.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dgelqt.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) mb, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dgelqt_(void* m, void* n, void* mb, void* a, void* lda, void
 {
 	void (*fn) (void* m, void* n, void* mb, void* a, void* lda, void* t, void* ldt, void* work, void* info);
 
-	fn = current_backend->lapack.dgelqt.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dgelqt.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) mb, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dgelqt_(void* m, void* n, void* mb, void* a, void* lda, voi
 	void (*fn) (void* m, void* n, void* mb, void* a, void* lda, void* t, void* ldt, void* work, void* info);
 	void (*fn_hook) (void* m, void* n, void* mb, void* a, void* lda, void* t, void* ldt, void* work, void* info);
 
-	fn      = current_backend->lapack.dgelqt.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dgelqt.f77_blas_function; 
 
     hook_pos_dgelqt ++;
     if( hook_pos_dgelqt < __flexiblas_hooks->dgelqt.nhook) {
-        fn_hook = __flexiblas_hooks->dgelqt.f77_hook_function[hook_pos_dgelqt];
+        *(void **) &fn_hook = __flexiblas_hooks->dgelqt.f77_hook_function[hook_pos_dgelqt];
         fn_hook((void*) m, (void*) n, (void*) mb, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) work, (void*) info);
     } else {
         hook_pos_dgelqt = 0;

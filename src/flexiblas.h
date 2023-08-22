@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -150,7 +150,7 @@ int __flexiblas_load_blas_hooks(flexiblas_hook_t *backend, void *hook_handle);
 void __flexiblas_backend_init( flexiblas_backend_t * backend);
 
 
-flexiblas_mgmt_t * flexiblas_mgmt();
+flexiblas_mgmt_t * flexiblas_mgmt(void);
 
 double flexiblas_wtime(void);
 

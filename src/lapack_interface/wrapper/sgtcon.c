@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(sgtcon,SGTCON)(char* norm, blasint* n, float* dl, float* d, float
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.sgtcon.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->sgtcon.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.sgtcon.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->sgtcon.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du, (void*) du2, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) iwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_sgtcon_(void* norm, void* n, void* dl, void* d, void* du, vo
 {
 	void (*fn) (void* norm, void* n, void* dl, void* d, void* du, void* du2, void* ipiv, void* anorm, void* rcond, void* work, void* iwork, void* info);
 
-	fn = current_backend->lapack.sgtcon.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.sgtcon.f77_blas_function; 
 
 		fn((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du, (void*) du2, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) iwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_sgtcon_(void* norm, void* n, void* dl, void* d, void* du, v
 	void (*fn) (void* norm, void* n, void* dl, void* d, void* du, void* du2, void* ipiv, void* anorm, void* rcond, void* work, void* iwork, void* info);
 	void (*fn_hook) (void* norm, void* n, void* dl, void* d, void* du, void* du2, void* ipiv, void* anorm, void* rcond, void* work, void* iwork, void* info);
 
-	fn      = current_backend->lapack.sgtcon.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.sgtcon.f77_blas_function; 
 
     hook_pos_sgtcon ++;
     if( hook_pos_sgtcon < __flexiblas_hooks->sgtcon.nhook) {
-        fn_hook = __flexiblas_hooks->sgtcon.f77_hook_function[hook_pos_sgtcon];
+        *(void **) &fn_hook = __flexiblas_hooks->sgtcon.f77_hook_function[hook_pos_sgtcon];
         fn_hook((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du, (void*) du2, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) iwork, (void*) info);
     } else {
         hook_pos_sgtcon = 0;

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(shseqr,SHSEQR)(char* job, char* compz, blasint* n, blasint* ilo, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.shseqr.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->shseqr.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.shseqr.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->shseqr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) job, (void*) compz, (void*) n, (void*) ilo, (void*) ihi, (void*) h, (void*) ldh, (void*) wr, (void*) wi, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_shseqr_(void* job, void* compz, void* n, void* ilo, void* ih
 {
 	void (*fn) (void* job, void* compz, void* n, void* ilo, void* ihi, void* h, void* ldh, void* wr, void* wi, void* z, void* ldz, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.shseqr.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.shseqr.f77_blas_function; 
 
 		fn((void*) job, (void*) compz, (void*) n, (void*) ilo, (void*) ihi, (void*) h, (void*) ldh, (void*) wr, (void*) wi, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_shseqr_(void* job, void* compz, void* n, void* ilo, void* i
 	void (*fn) (void* job, void* compz, void* n, void* ilo, void* ihi, void* h, void* ldh, void* wr, void* wi, void* z, void* ldz, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* job, void* compz, void* n, void* ilo, void* ihi, void* h, void* ldh, void* wr, void* wi, void* z, void* ldz, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.shseqr.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.shseqr.f77_blas_function; 
 
     hook_pos_shseqr ++;
     if( hook_pos_shseqr < __flexiblas_hooks->shseqr.nhook) {
-        fn_hook = __flexiblas_hooks->shseqr.f77_hook_function[hook_pos_shseqr];
+        *(void **) &fn_hook = __flexiblas_hooks->shseqr.f77_hook_function[hook_pos_shseqr];
         fn_hook((void*) job, (void*) compz, (void*) n, (void*) ilo, (void*) ihi, (void*) h, (void*) ldh, (void*) wr, (void*) wi, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_shseqr = 0;

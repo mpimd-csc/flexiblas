@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -83,7 +83,8 @@ void flexiblas_real_cblas_daxpby( const CBLAS_INT N, const double alpha, const d
    #define F77_incY incY
 #endif
    if ( current_backend->blas.daxpby.cblas_function != NULL ) {
-	   void (*fn)(const CBLAS_INT , const double , const double *, const CBLAS_INT, const double, double *Y, const CBLAS_INT ) = current_backend->blas.daxpby.cblas_function;
+	   void (*fn)(const CBLAS_INT , const double , const double *, const CBLAS_INT, const double, double *Y, const CBLAS_INT );
+       *(void **) &fn = current_backend->blas.daxpby.cblas_function;
 	   fn(N,alpha,X,incX,beta, Y,incY);
    } else {
    	FC_GLOBAL(daxpby,DAXPBY)( &F77_N, &alpha, X, &F77_incX, &beta, Y, &F77_incY);

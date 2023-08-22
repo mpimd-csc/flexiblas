@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 #include "cblas.h"
@@ -65,7 +65,7 @@ void flexiblas_real_cblas_daxpy( const CBLAS_INT N, const double alpha, const do
 {
     if ( current_backend->blas.daxpy.cblas_function != NULL ) {
         void (*fn)  ( const CBLAS_INT N, const double alpha, const double *X, const CBLAS_INT incX, double *Y, const CBLAS_INT incY);
-        fn = current_backend->blas.daxpy.cblas_function;
+        *(void **) &fn = current_backend->blas.daxpy.cblas_function;
         fn(N,alpha,X,incX,Y,incY);
     } else {
         Int F77_N=N, F77_incX=incX, F77_incY=incY;

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(slarre,SLARRE)(char* range, blasint* n, float* vl, float* vu, bla
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slarre.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slarre.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slarre.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slarre.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) range, (void*) n, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) d, (void*) e, (void*) e2, (void*) rtol1, (void*) rtol2, (void*) spltol, (void*) nsplit, (void*) isplit, (void*) m, (void*) w, (void*) werr, (void*) wgap, (void*) iblock, (void*) indexw, (void*) gers, (void*) pivmin, (void*) work, (void*) iwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slarre_(void* range, void* n, void* vl, void* vu, void* il, 
 {
 	void (*fn) (void* range, void* n, void* vl, void* vu, void* il, void* iu, void* d, void* e, void* e2, void* rtol1, void* rtol2, void* spltol, void* nsplit, void* isplit, void* m, void* w, void* werr, void* wgap, void* iblock, void* indexw, void* gers, void* pivmin, void* work, void* iwork, void* info);
 
-	fn = current_backend->lapack.slarre.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slarre.f77_blas_function; 
 
 		fn((void*) range, (void*) n, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) d, (void*) e, (void*) e2, (void*) rtol1, (void*) rtol2, (void*) spltol, (void*) nsplit, (void*) isplit, (void*) m, (void*) w, (void*) werr, (void*) wgap, (void*) iblock, (void*) indexw, (void*) gers, (void*) pivmin, (void*) work, (void*) iwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slarre_(void* range, void* n, void* vl, void* vu, void* il,
 	void (*fn) (void* range, void* n, void* vl, void* vu, void* il, void* iu, void* d, void* e, void* e2, void* rtol1, void* rtol2, void* spltol, void* nsplit, void* isplit, void* m, void* w, void* werr, void* wgap, void* iblock, void* indexw, void* gers, void* pivmin, void* work, void* iwork, void* info);
 	void (*fn_hook) (void* range, void* n, void* vl, void* vu, void* il, void* iu, void* d, void* e, void* e2, void* rtol1, void* rtol2, void* spltol, void* nsplit, void* isplit, void* m, void* w, void* werr, void* wgap, void* iblock, void* indexw, void* gers, void* pivmin, void* work, void* iwork, void* info);
 
-	fn      = current_backend->lapack.slarre.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slarre.f77_blas_function; 
 
     hook_pos_slarre ++;
     if( hook_pos_slarre < __flexiblas_hooks->slarre.nhook) {
-        fn_hook = __flexiblas_hooks->slarre.f77_hook_function[hook_pos_slarre];
+        *(void **) &fn_hook = __flexiblas_hooks->slarre.f77_hook_function[hook_pos_slarre];
         fn_hook((void*) range, (void*) n, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) d, (void*) e, (void*) e2, (void*) rtol1, (void*) rtol2, (void*) spltol, (void*) nsplit, (void*) isplit, (void*) m, (void*) w, (void*) werr, (void*) wgap, (void*) iblock, (void*) indexw, (void*) gers, (void*) pivmin, (void*) work, (void*) iwork, (void*) info);
     } else {
         hook_pos_slarre = 0;

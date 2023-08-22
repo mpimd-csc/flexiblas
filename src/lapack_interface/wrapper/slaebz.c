@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(slaebz,SLAEBZ)(blasint* ijob, blasint* nitmax, blasint* n, blasin
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slaebz.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slaebz.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slaebz.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slaebz.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) ijob, (void*) nitmax, (void*) n, (void*) mmax, (void*) minp, (void*) nbmin, (void*) abstol, (void*) reltol, (void*) pivmin, (void*) d, (void*) e, (void*) e2, (void*) nval, (void*) ab, (void*) c, (void*) mout, (void*) nab, (void*) work, (void*) iwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slaebz_(void* ijob, void* nitmax, void* n, void* mmax, void*
 {
 	void (*fn) (void* ijob, void* nitmax, void* n, void* mmax, void* minp, void* nbmin, void* abstol, void* reltol, void* pivmin, void* d, void* e, void* e2, void* nval, void* ab, void* c, void* mout, void* nab, void* work, void* iwork, void* info);
 
-	fn = current_backend->lapack.slaebz.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slaebz.f77_blas_function; 
 
 		fn((void*) ijob, (void*) nitmax, (void*) n, (void*) mmax, (void*) minp, (void*) nbmin, (void*) abstol, (void*) reltol, (void*) pivmin, (void*) d, (void*) e, (void*) e2, (void*) nval, (void*) ab, (void*) c, (void*) mout, (void*) nab, (void*) work, (void*) iwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slaebz_(void* ijob, void* nitmax, void* n, void* mmax, void
 	void (*fn) (void* ijob, void* nitmax, void* n, void* mmax, void* minp, void* nbmin, void* abstol, void* reltol, void* pivmin, void* d, void* e, void* e2, void* nval, void* ab, void* c, void* mout, void* nab, void* work, void* iwork, void* info);
 	void (*fn_hook) (void* ijob, void* nitmax, void* n, void* mmax, void* minp, void* nbmin, void* abstol, void* reltol, void* pivmin, void* d, void* e, void* e2, void* nval, void* ab, void* c, void* mout, void* nab, void* work, void* iwork, void* info);
 
-	fn      = current_backend->lapack.slaebz.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slaebz.f77_blas_function; 
 
     hook_pos_slaebz ++;
     if( hook_pos_slaebz < __flexiblas_hooks->slaebz.nhook) {
-        fn_hook = __flexiblas_hooks->slaebz.f77_hook_function[hook_pos_slaebz];
+        *(void **) &fn_hook = __flexiblas_hooks->slaebz.f77_hook_function[hook_pos_slaebz];
         fn_hook((void*) ijob, (void*) nitmax, (void*) n, (void*) mmax, (void*) minp, (void*) nbmin, (void*) abstol, (void*) reltol, (void*) pivmin, (void*) d, (void*) e, (void*) e2, (void*) nval, (void*) ab, (void*) c, (void*) mout, (void*) nab, (void*) work, (void*) iwork, (void*) info);
     } else {
         hook_pos_slaebz = 0;

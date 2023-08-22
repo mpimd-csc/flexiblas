@@ -85,6 +85,11 @@ def lapack_generate(version):
     wrap_gnu.write_structure_declares("../../src/lapack_interface/structures_lapack_"+version2+".h", "LAPACK_STRUCTURES_H", major, minor, patch, extra)
 
 if __name__ == "__main__":
+    lapack_generate("3.11.0")
+    lapack_generate("3.11.0-wodprc")
+
+
+
     lapack_generate("3.10.1")
     lapack_generate("3.10.1-wodprc")
 

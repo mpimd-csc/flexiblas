@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zungtr,ZUNGTR)(char* uplo, blasint* n, double complex* a, blasint
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zungtr.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zungtr.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zungtr.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zungtr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zungtr_(void* uplo, void* n, void* a, void* lda, void* tau, 
 {
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.zungtr.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zungtr.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zungtr_(void* uplo, void* n, void* a, void* lda, void* tau,
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.zungtr.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zungtr.f77_blas_function; 
 
     hook_pos_zungtr ++;
     if( hook_pos_zungtr < __flexiblas_hooks->zungtr.nhook) {
-        fn_hook = __flexiblas_hooks->zungtr.f77_hook_function[hook_pos_zungtr];
+        *(void **) &fn_hook = __flexiblas_hooks->zungtr.f77_hook_function[hook_pos_zungtr];
         fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_zungtr = 0;

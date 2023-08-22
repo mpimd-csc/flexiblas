@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zlamswlq,ZLAMSWLQ)(char* side, char* trans, blasint* m, blasint* 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlamswlq.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlamswlq.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlamswlq.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlamswlq.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) mb, (void*) nb, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zlamswlq_(void* side, void* trans, void* m, void* n, void* k
 {
 	void (*fn) (void* side, void* trans, void* m, void* n, void* k, void* mb, void* nb, void* a, void* lda, void* t, void* ldt, void* c, void* ldc, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.zlamswlq.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlamswlq.f77_blas_function; 
 
 		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) mb, (void*) nb, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zlamswlq_(void* side, void* trans, void* m, void* n, void* 
 	void (*fn) (void* side, void* trans, void* m, void* n, void* k, void* mb, void* nb, void* a, void* lda, void* t, void* ldt, void* c, void* ldc, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* side, void* trans, void* m, void* n, void* k, void* mb, void* nb, void* a, void* lda, void* t, void* ldt, void* c, void* ldc, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.zlamswlq.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlamswlq.f77_blas_function; 
 
     hook_pos_zlamswlq ++;
     if( hook_pos_zlamswlq < __flexiblas_hooks->zlamswlq.nhook) {
-        fn_hook = __flexiblas_hooks->zlamswlq.f77_hook_function[hook_pos_zlamswlq];
+        *(void **) &fn_hook = __flexiblas_hooks->zlamswlq.f77_hook_function[hook_pos_zlamswlq];
         fn_hook((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) mb, (void*) nb, (void*) a, (void*) lda, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_zlamswlq = 0;

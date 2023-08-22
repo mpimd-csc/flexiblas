@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -93,7 +93,7 @@ static char * make_message(const char *fmt, va_list ap)
     return p;
 }
 
-int flexiblas_get_color_output() {
+int flexiblas_get_color_output(void) {
     return color_output;
 }
 

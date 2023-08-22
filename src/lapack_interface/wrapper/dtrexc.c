@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dtrexc,DTREXC)(char* compq, blasint* n, double* t, blasint* ldt, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dtrexc.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dtrexc.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dtrexc.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dtrexc.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dtrexc_(void* compq, void* n, void* t, void* ldt, void* q, v
 {
 	void (*fn) (void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info);
 
-	fn = current_backend->lapack.dtrexc.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dtrexc.f77_blas_function; 
 
 		fn((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dtrexc_(void* compq, void* n, void* t, void* ldt, void* q, 
 	void (*fn) (void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info);
 	void (*fn_hook) (void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info);
 
-	fn      = current_backend->lapack.dtrexc.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dtrexc.f77_blas_function; 
 
     hook_pos_dtrexc ++;
     if( hook_pos_dtrexc < __flexiblas_hooks->dtrexc.nhook) {
-        fn_hook = __flexiblas_hooks->dtrexc.f77_hook_function[hook_pos_dtrexc];
+        *(void **) &fn_hook = __flexiblas_hooks->dtrexc.f77_hook_function[hook_pos_dtrexc];
         fn_hook((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) work, (void*) info);
     } else {
         hook_pos_dtrexc = 0;

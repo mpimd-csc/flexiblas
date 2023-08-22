@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dgesvd,DGESVD)(char* jobu, char* jobvt, blasint* m, blasint* n, d
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dgesvd.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dgesvd.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dgesvd.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dgesvd.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobu, (void*) jobvt, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) u, (void*) ldu, (void*) vt, (void*) ldvt, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dgesvd_(void* jobu, void* jobvt, void* m, void* n, void* a, 
 {
 	void (*fn) (void* jobu, void* jobvt, void* m, void* n, void* a, void* lda, void* s, void* u, void* ldu, void* vt, void* ldvt, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.dgesvd.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dgesvd.f77_blas_function; 
 
 		fn((void*) jobu, (void*) jobvt, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) u, (void*) ldu, (void*) vt, (void*) ldvt, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dgesvd_(void* jobu, void* jobvt, void* m, void* n, void* a,
 	void (*fn) (void* jobu, void* jobvt, void* m, void* n, void* a, void* lda, void* s, void* u, void* ldu, void* vt, void* ldvt, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* jobu, void* jobvt, void* m, void* n, void* a, void* lda, void* s, void* u, void* ldu, void* vt, void* ldvt, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.dgesvd.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dgesvd.f77_blas_function; 
 
     hook_pos_dgesvd ++;
     if( hook_pos_dgesvd < __flexiblas_hooks->dgesvd.nhook) {
-        fn_hook = __flexiblas_hooks->dgesvd.f77_hook_function[hook_pos_dgesvd];
+        *(void **) &fn_hook = __flexiblas_hooks->dgesvd.f77_hook_function[hook_pos_dgesvd];
         fn_hook((void*) jobu, (void*) jobvt, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) u, (void*) ldu, (void*) vt, (void*) ldvt, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_dgesvd = 0;

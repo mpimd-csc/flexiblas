@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dsbgvx,DSBGVX)(char* jobz, char* range, char* uplo, blasint* n, b
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dsbgvx.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dsbgvx.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dsbgvx.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dsbgvx.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) ka, (void*) kb, (void*) ab, (void*) ldab, (void*) bb, (void*) ldbb, (void*) q, (void*) ldq, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) iwork, (void*) ifail, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dsbgvx_(void* jobz, void* range, void* uplo, void* n, void* 
 {
 	void (*fn) (void* jobz, void* range, void* uplo, void* n, void* ka, void* kb, void* ab, void* ldab, void* bb, void* ldbb, void* q, void* ldq, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* iwork, void* ifail, void* info);
 
-	fn = current_backend->lapack.dsbgvx.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dsbgvx.f77_blas_function; 
 
 		fn((void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) ka, (void*) kb, (void*) ab, (void*) ldab, (void*) bb, (void*) ldbb, (void*) q, (void*) ldq, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) iwork, (void*) ifail, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dsbgvx_(void* jobz, void* range, void* uplo, void* n, void*
 	void (*fn) (void* jobz, void* range, void* uplo, void* n, void* ka, void* kb, void* ab, void* ldab, void* bb, void* ldbb, void* q, void* ldq, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* iwork, void* ifail, void* info);
 	void (*fn_hook) (void* jobz, void* range, void* uplo, void* n, void* ka, void* kb, void* ab, void* ldab, void* bb, void* ldbb, void* q, void* ldq, void* vl, void* vu, void* il, void* iu, void* abstol, void* m, void* w, void* z, void* ldz, void* work, void* iwork, void* ifail, void* info);
 
-	fn      = current_backend->lapack.dsbgvx.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dsbgvx.f77_blas_function; 
 
     hook_pos_dsbgvx ++;
     if( hook_pos_dsbgvx < __flexiblas_hooks->dsbgvx.nhook) {
-        fn_hook = __flexiblas_hooks->dsbgvx.f77_hook_function[hook_pos_dsbgvx];
+        *(void **) &fn_hook = __flexiblas_hooks->dsbgvx.f77_hook_function[hook_pos_dsbgvx];
         fn_hook((void*) jobz, (void*) range, (void*) uplo, (void*) n, (void*) ka, (void*) kb, (void*) ab, (void*) ldab, (void*) bb, (void*) ldbb, (void*) q, (void*) ldq, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) m, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) iwork, (void*) ifail, (void*) info);
     } else {
         hook_pos_dsbgvx = 0;

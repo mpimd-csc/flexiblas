@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(spteqr,SPTEQR)(char* compz, blasint* n, float* d, float* e, float
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.spteqr.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->spteqr.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.spteqr.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->spteqr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_spteqr_(void* compz, void* n, void* d, void* e, void* z, voi
 {
 	void (*fn) (void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info);
 
-	fn = current_backend->lapack.spteqr.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.spteqr.f77_blas_function; 
 
 		fn((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_spteqr_(void* compz, void* n, void* d, void* e, void* z, vo
 	void (*fn) (void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info);
 	void (*fn_hook) (void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info);
 
-	fn      = current_backend->lapack.spteqr.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.spteqr.f77_blas_function; 
 
     hook_pos_spteqr ++;
     if( hook_pos_spteqr < __flexiblas_hooks->spteqr.nhook) {
-        fn_hook = __flexiblas_hooks->spteqr.f77_hook_function[hook_pos_spteqr];
+        *(void **) &fn_hook = __flexiblas_hooks->spteqr.f77_hook_function[hook_pos_spteqr];
         fn_hook((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info);
     } else {
         hook_pos_spteqr = 0;

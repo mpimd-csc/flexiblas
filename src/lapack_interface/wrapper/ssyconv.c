@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(ssyconv,SSYCONV)(char* uplo, char* way, blasint* n, float* a, bla
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ssyconv.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ssyconv.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ssyconv.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ssyconv.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) way, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) e, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ssyconv_(void* uplo, void* way, void* n, void* a, void* lda,
 {
 	void (*fn) (void* uplo, void* way, void* n, void* a, void* lda, void* ipiv, void* e, void* info);
 
-	fn = current_backend->lapack.ssyconv.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ssyconv.f77_blas_function; 
 
 		fn((void*) uplo, (void*) way, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) e, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ssyconv_(void* uplo, void* way, void* n, void* a, void* lda
 	void (*fn) (void* uplo, void* way, void* n, void* a, void* lda, void* ipiv, void* e, void* info);
 	void (*fn_hook) (void* uplo, void* way, void* n, void* a, void* lda, void* ipiv, void* e, void* info);
 
-	fn      = current_backend->lapack.ssyconv.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ssyconv.f77_blas_function; 
 
     hook_pos_ssyconv ++;
     if( hook_pos_ssyconv < __flexiblas_hooks->ssyconv.nhook) {
-        fn_hook = __flexiblas_hooks->ssyconv.f77_hook_function[hook_pos_ssyconv];
+        *(void **) &fn_hook = __flexiblas_hooks->ssyconv.f77_hook_function[hook_pos_ssyconv];
         fn_hook((void*) uplo, (void*) way, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) e, (void*) info);
     } else {
         hook_pos_ssyconv = 0;

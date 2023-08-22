@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -81,8 +81,8 @@ float FC_GLOBAL_(sroundup_lwork,SROUNDUP_LWORK)(blasint* lwork)
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.sroundup_lwork.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->sroundup_lwork.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.sroundup_lwork.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->sroundup_lwork.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) lwork); 
 		return ret; 
@@ -113,7 +113,7 @@ float flexiblas_real_sroundup_lwork_(void* lwork)
 	float (*fn) (void* lwork);
 	float ret;
 
-	fn = current_backend->lapack.sroundup_lwork.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.sroundup_lwork.f77_blas_function; 
 
 		ret = fn((void*) lwork); 
 
@@ -137,11 +137,11 @@ float flexiblas_chain_sroundup_lwork_(void* lwork)
 	float (*fn_hook) (void* lwork);
 	float ret;
 
-	fn      = current_backend->lapack.sroundup_lwork.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.sroundup_lwork.f77_blas_function; 
 
     hook_pos_sroundup_lwork ++;
     if( hook_pos_sroundup_lwork < __flexiblas_hooks->sroundup_lwork.nhook) {
-        fn_hook = __flexiblas_hooks->sroundup_lwork.f77_hook_function[hook_pos_sroundup_lwork];
+        *(void **) &fn_hook = __flexiblas_hooks->sroundup_lwork.f77_hook_function[hook_pos_sroundup_lwork];
         ret = fn_hook((void*) lwork);
     } else {
         hook_pos_sroundup_lwork = 0;

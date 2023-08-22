@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dlartgs,DLARTGS)(double* x, double* y, double* sigma, double* cs,
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlartgs.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlartgs.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlartgs.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlartgs.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) x, (void*) y, (void*) sigma, (void*) cs, (void*) sn); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlartgs_(void* x, void* y, void* sigma, void* cs, void* sn)
 {
 	void (*fn) (void* x, void* y, void* sigma, void* cs, void* sn);
 
-	fn = current_backend->lapack.dlartgs.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlartgs.f77_blas_function; 
 
 		fn((void*) x, (void*) y, (void*) sigma, (void*) cs, (void*) sn); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlartgs_(void* x, void* y, void* sigma, void* cs, void* sn)
 	void (*fn) (void* x, void* y, void* sigma, void* cs, void* sn);
 	void (*fn_hook) (void* x, void* y, void* sigma, void* cs, void* sn);
 
-	fn      = current_backend->lapack.dlartgs.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlartgs.f77_blas_function; 
 
     hook_pos_dlartgs ++;
     if( hook_pos_dlartgs < __flexiblas_hooks->dlartgs.nhook) {
-        fn_hook = __flexiblas_hooks->dlartgs.f77_hook_function[hook_pos_dlartgs];
+        *(void **) &fn_hook = __flexiblas_hooks->dlartgs.f77_hook_function[hook_pos_dlartgs];
         fn_hook((void*) x, (void*) y, (void*) sigma, (void*) cs, (void*) sn);
     } else {
         hook_pos_dlartgs = 0;

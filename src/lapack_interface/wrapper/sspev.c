@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(sspev,SSPEV)(char* jobz, char* uplo, blasint* n, float* ap, float
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.sspev.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->sspev.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.sspev.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->sspev.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobz, (void*) uplo, (void*) n, (void*) ap, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_sspev_(void* jobz, void* uplo, void* n, void* ap, void* w, v
 {
 	void (*fn) (void* jobz, void* uplo, void* n, void* ap, void* w, void* z, void* ldz, void* work, void* info);
 
-	fn = current_backend->lapack.sspev.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.sspev.f77_blas_function; 
 
 		fn((void*) jobz, (void*) uplo, (void*) n, (void*) ap, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_sspev_(void* jobz, void* uplo, void* n, void* ap, void* w, 
 	void (*fn) (void* jobz, void* uplo, void* n, void* ap, void* w, void* z, void* ldz, void* work, void* info);
 	void (*fn_hook) (void* jobz, void* uplo, void* n, void* ap, void* w, void* z, void* ldz, void* work, void* info);
 
-	fn      = current_backend->lapack.sspev.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.sspev.f77_blas_function; 
 
     hook_pos_sspev ++;
     if( hook_pos_sspev < __flexiblas_hooks->sspev.nhook) {
-        fn_hook = __flexiblas_hooks->sspev.f77_hook_function[hook_pos_sspev];
+        *(void **) &fn_hook = __flexiblas_hooks->sspev.f77_hook_function[hook_pos_sspev];
         fn_hook((void*) jobz, (void*) uplo, (void*) n, (void*) ap, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) info);
     } else {
         hook_pos_sspev = 0;

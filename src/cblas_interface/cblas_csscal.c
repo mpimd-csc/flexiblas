@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -95,8 +95,8 @@ void flexiblas_real_cblas_csscal( const CBLAS_INT N, const float alpha, void *X,
 
 	   void (*fn)
 		  ( const CBLAS_INT N, const float alpha, void *X,
-                       const CBLAS_INT incX)
-		   = current_backend->blas.csscal.cblas_function;
+                       const CBLAS_INT incX);
+       *(void **) & fn = current_backend->blas.csscal.cblas_function;
 	fn(N,alpha,X,incX);
    } else {
 	   FC_GLOBAL(csscal,CSSCAL)( &F77_N, &alpha, X, &F77_incX);

@@ -27,7 +27,7 @@
 
 #include "cscutils/counter.h"
 
-double csc_wtime()
+double csc_wtime(void)
 {
     struct timeval tv;
     double ret;
@@ -45,7 +45,7 @@ double csc_wtime_()
 }
 #endif
 
-double csc_ctime() {
+double csc_ctime(void) {
     clock_t  t = clock();
     return t / (double)(CLOCKS_PER_SEC);
 }

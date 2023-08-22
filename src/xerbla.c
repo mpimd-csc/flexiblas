@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -103,11 +103,14 @@ int __flexiblas_setup_xerbla(flexiblas_backend_t *backend)
         int user_xerbla = 0;
 		void *xerbla_symbol1 = dlsym(backend->library_handle,"xerbla_");
 		void *xerbla_symbol2 = dlsym(RTLD_DEFAULT,"xerbla_");
-		void *internal = (void*) &flexiblas_internal_xerbla;
+	    void (*flexiblas_internal) (char *, Int *, Int);
+        void *internal;
+        flexiblas_internal = flexiblas_internal_xerbla;
+        *(void **) &internal = *((void**) & flexiblas_internal);
 		DPRINTF(1, "Available XERBLA ( backend: 0x%lx, user defined: 0x%lx, FlexiBLAS: 0x%lx )\n",
 				(unsigned long)((void*)xerbla_symbol1),
 				(unsigned long)((void*)xerbla_symbol2),
-				(unsigned long)((void*)&flexiblas_internal_xerbla));
+				(unsigned long)((void*)internal));
 
 		if (internal == xerbla_symbol2) {
 			user_xerbla = 0;
@@ -129,7 +132,7 @@ int __flexiblas_setup_xerbla(flexiblas_backend_t *backend)
 
 void flexiblas_internal_xerbla(char *SNAME, Int *Info, Int len)  {
 	void (*fn) (char *SNAME, Int *info, Int len)  ;
-	fn = current_backend->xerbla.f77_blas_function;
+	*(void**) &fn = current_backend->xerbla.f77_blas_function;
 
 	if ( fn == NULL ) {
 		int _info = (int) *Info;
@@ -146,16 +149,16 @@ void flexiblas_internal_xerbla(char *SNAME, Int *Info, Int len)  {
 
 
 
-/* 
- * CBLAS related stuff 
- */ 
+/*
+ * CBLAS related stuff
+ */
 
 #ifdef FLEXIBLAS_CBLAS
 
 #ifndef __APPLE__
 extern void internal_cblas_xerbla(int info, const char *rout, const char *form, ...);
 #else
-/* This routine is designed for MacOS */ 
+/* This routine is designed for MacOS */
 void internal_cblas_xerbla(int info, const char *rout, const char *form, ...);
 void cblas_xerbla(int info, const char *rout, const char *form, ...)
 {
@@ -164,23 +167,23 @@ void cblas_xerbla(int info, const char *rout, const char *form, ...)
 		va_list ap;
 		void (*fn) ( int, const char*, const char*, ...);
 		size_t a1, a2, a3, a4, a5;
-		
+
 		fn = current_backend->xerbla.cblas_function;
 		va_start(ap, form);
 		fn(info, rout, form, a1, a2, a3, a4, a5);
-		va_end(ap);		
+		va_end(ap);
 	} else {
 		va_list ap;
 		void (*fn) ( int, const char*, const char*, ...);
 		size_t a1, a2, a3, a4, a5;
-		
+
 		fn = current_backend->xerbla.cblas_function;
 		va_start(ap, form);
 		internal_cblas_xerbla(info, rout, form, a1, a2, a3, a4, a5);
-		va_end(ap);		
+		va_end(ap);
 	}
 }
-#endif 
+#endif
 
 int __flexiblas_setup_cblas_xerbla(flexiblas_backend_t *backend)
 {
@@ -191,19 +194,24 @@ int __flexiblas_setup_cblas_xerbla(flexiblas_backend_t *backend)
 		void *xerbla_symbol1 = dlsym(backend->library_handle,"cblas_xerbla");
 		void *xerbla_symbol2 = dlsym(RTLD_DEFAULT,"cblas_xerbla");
 #ifndef __APPLE__
-		void *internal = (void*) &internal_cblas_xerbla;
+        void (*flexiblas_internal)(int, const char *, const char *, ...);
+	    flexiblas_internal = internal_cblas_xerbla;
+        void *internal;
+        *(void **) &internal = *((void**) & flexiblas_internal);
 		DPRINTF(1, "Available CBLAS_XERBLA ( backend: 0x%lx, user defined: 0x%lx, FlexiBLAS: 0x%lx )\n",
 				(unsigned long)((void*)xerbla_symbol1),
 				(unsigned long)((void*)xerbla_symbol2),
-				(unsigned long)((void*)&internal_cblas_xerbla));
-#else 
-		void *internal = (void*) &cblas_xerbla;
+				(unsigned long)((void*)internal));
+#else
+		void (*flexiblas_internal) (int, const char *, const char *, ...);
+        void *internal;
+        *(void**) &internal = (void*) &cblas_xerbla;
 		DPRINTF(1, "Available CBLAS_XERBLA ( backend: 0x%lx, user defined: 0x%lx, FlexiBLAS: 0x%lx)\n",
 				(unsigned long)((void*)xerbla_symbol1),
 				(unsigned long)((void*)xerbla_symbol2),
-				(unsigned long)((void*)&cblas_xerbla));
+				(unsigned long)((void*)internal));
 
-#endif 
+#endif
 		if (internal == xerbla_symbol2) {
 			user_xerbla = 0;
 		} else {

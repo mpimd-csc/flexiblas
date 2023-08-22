@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(claqsb,CLAQSB)(char* uplo, blasint* n, blasint* kd, float complex
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.claqsb.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->claqsb.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.claqsb.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->claqsb.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) s, (void*) scond, (void*) amax, (void*) equed); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_claqsb_(void* uplo, void* n, void* kd, void* ab, void* ldab,
 {
 	void (*fn) (void* uplo, void* n, void* kd, void* ab, void* ldab, void* s, void* scond, void* amax, void* equed);
 
-	fn = current_backend->lapack.claqsb.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.claqsb.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) s, (void*) scond, (void*) amax, (void*) equed); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_claqsb_(void* uplo, void* n, void* kd, void* ab, void* ldab
 	void (*fn) (void* uplo, void* n, void* kd, void* ab, void* ldab, void* s, void* scond, void* amax, void* equed);
 	void (*fn_hook) (void* uplo, void* n, void* kd, void* ab, void* ldab, void* s, void* scond, void* amax, void* equed);
 
-	fn      = current_backend->lapack.claqsb.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.claqsb.f77_blas_function; 
 
     hook_pos_claqsb ++;
     if( hook_pos_claqsb < __flexiblas_hooks->claqsb.nhook) {
-        fn_hook = __flexiblas_hooks->claqsb.f77_hook_function[hook_pos_claqsb];
+        *(void **) &fn_hook = __flexiblas_hooks->claqsb.f77_hook_function[hook_pos_claqsb];
         fn_hook((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) s, (void*) scond, (void*) amax, (void*) equed);
     } else {
         hook_pos_claqsb = 0;

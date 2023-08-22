@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(sorgl2,SORGL2)(blasint* m, blasint* n, blasint* k, float* a, blas
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.sorgl2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->sorgl2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.sorgl2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->sorgl2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_sorgl2_(void* m, void* n, void* k, void* a, void* lda, void*
 {
 	void (*fn) (void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* info);
 
-	fn = current_backend->lapack.sorgl2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.sorgl2.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_sorgl2_(void* m, void* n, void* k, void* a, void* lda, void
 	void (*fn) (void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* info);
 	void (*fn_hook) (void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* info);
 
-	fn      = current_backend->lapack.sorgl2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.sorgl2.f77_blas_function; 
 
     hook_pos_sorgl2 ++;
     if( hook_pos_sorgl2 < __flexiblas_hooks->sorgl2.nhook) {
-        fn_hook = __flexiblas_hooks->sorgl2.f77_hook_function[hook_pos_sorgl2];
+        *(void **) &fn_hook = __flexiblas_hooks->sorgl2.f77_hook_function[hook_pos_sorgl2];
         fn_hook((void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) info);
     } else {
         hook_pos_sorgl2 = 0;

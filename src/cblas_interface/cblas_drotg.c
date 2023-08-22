@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -73,8 +73,8 @@ void flexiblas_chain_cblas_drotg(  double *a, double *b, double *c, double *s)
 void flexiblas_real_cblas_drotg(  double *a, double *b, double *c, double *s)
 {
     if ( current_backend->blas.drotg.cblas_function != NULL ) {
-        void (*fn)(double *, double *, double *, double *)
-            = current_backend->blas.drotg.cblas_function;
+        void (*fn)(double *, double *, double *, double *);
+        *(void **) & fn = current_backend->blas.drotg.cblas_function;
         fn(a,b,c,s);
     } else {
         FC_GLOBAL(drotg,DROTG)(a,b,c,s);

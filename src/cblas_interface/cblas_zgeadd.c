@@ -40,7 +40,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -95,8 +95,8 @@ void flexiblas_real_cblas_zgeadd(const CBLAS_ORDER CORDER,
 #endif
 
     if ( current_backend->blas.zgeadd.cblas_function != NULL ) {
-        void (*fn)(const CBLAS_ORDER, const CBLAS_INT, const CBLAS_INT, const double complex*, double complex *, const CBLAS_INT, const double complex*, double complex *, const CBLAS_INT)
-            = current_backend->blas.zgeadd.cblas_function;
+        void (*fn)(const CBLAS_ORDER, const CBLAS_INT, const CBLAS_INT, const double complex*, double complex *, const CBLAS_INT, const double complex*, double complex *, const CBLAS_INT);
+        *(void **) & fn = current_backend->blas.zgeadd.cblas_function;
         fn(CORDER, crows, ccols, calpha, a, clda, cbeta, b, cldb);
     } else {
 #ifdef F77_INT

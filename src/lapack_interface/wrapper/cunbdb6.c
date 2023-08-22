@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(cunbdb6,CUNBDB6)(blasint* m1, blasint* m2, blasint* n, float comp
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.cunbdb6.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->cunbdb6.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.cunbdb6.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->cunbdb6.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m1, (void*) m2, (void*) n, (void*) x1, (void*) incx1, (void*) x2, (void*) incx2, (void*) q1, (void*) ldq1, (void*) q2, (void*) ldq2, (void*) work, (void*) lwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_cunbdb6_(void* m1, void* m2, void* n, void* x1, void* incx1,
 {
 	void (*fn) (void* m1, void* m2, void* n, void* x1, void* incx1, void* x2, void* incx2, void* q1, void* ldq1, void* q2, void* ldq2, void* work, void* lwork, void* info);
 
-	fn = current_backend->lapack.cunbdb6.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.cunbdb6.f77_blas_function; 
 
 		fn((void*) m1, (void*) m2, (void*) n, (void*) x1, (void*) incx1, (void*) x2, (void*) incx2, (void*) q1, (void*) ldq1, (void*) q2, (void*) ldq2, (void*) work, (void*) lwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_cunbdb6_(void* m1, void* m2, void* n, void* x1, void* incx1
 	void (*fn) (void* m1, void* m2, void* n, void* x1, void* incx1, void* x2, void* incx2, void* q1, void* ldq1, void* q2, void* ldq2, void* work, void* lwork, void* info);
 	void (*fn_hook) (void* m1, void* m2, void* n, void* x1, void* incx1, void* x2, void* incx2, void* q1, void* ldq1, void* q2, void* ldq2, void* work, void* lwork, void* info);
 
-	fn      = current_backend->lapack.cunbdb6.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.cunbdb6.f77_blas_function; 
 
     hook_pos_cunbdb6 ++;
     if( hook_pos_cunbdb6 < __flexiblas_hooks->cunbdb6.nhook) {
-        fn_hook = __flexiblas_hooks->cunbdb6.f77_hook_function[hook_pos_cunbdb6];
+        *(void **) &fn_hook = __flexiblas_hooks->cunbdb6.f77_hook_function[hook_pos_cunbdb6];
         fn_hook((void*) m1, (void*) m2, (void*) n, (void*) x1, (void*) incx1, (void*) x2, (void*) incx2, (void*) q1, (void*) ldq1, (void*) q2, (void*) ldq2, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_cunbdb6 = 0;

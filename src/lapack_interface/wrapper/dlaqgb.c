@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dlaqgb,DLAQGB)(blasint* m, blasint* n, blasint* kl, blasint* ku, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlaqgb.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlaqgb.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlaqgb.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlaqgb.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) equed); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlaqgb_(void* m, void* n, void* kl, void* ku, void* ab, void
 {
 	void (*fn) (void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* equed);
 
-	fn = current_backend->lapack.dlaqgb.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlaqgb.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) equed); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlaqgb_(void* m, void* n, void* kl, void* ku, void* ab, voi
 	void (*fn) (void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* equed);
 	void (*fn_hook) (void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* equed);
 
-	fn      = current_backend->lapack.dlaqgb.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlaqgb.f77_blas_function; 
 
     hook_pos_dlaqgb ++;
     if( hook_pos_dlaqgb < __flexiblas_hooks->dlaqgb.nhook) {
-        fn_hook = __flexiblas_hooks->dlaqgb.f77_hook_function[hook_pos_dlaqgb];
+        *(void **) &fn_hook = __flexiblas_hooks->dlaqgb.f77_hook_function[hook_pos_dlaqgb];
         fn_hook((void*) m, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) equed);
     } else {
         hook_pos_dlaqgb = 0;

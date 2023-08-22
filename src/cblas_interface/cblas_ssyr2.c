@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -105,8 +105,8 @@ void flexiblas_real_cblas_ssyr2(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
              const CBLAS_INT N, const float  alpha, const float  *X,
              const CBLAS_INT incX, const float  *Y, const CBLAS_INT incY, float  *A,
-             const CBLAS_INT lda)
-            = current_backend->blas.ssyr2.cblas_function;
+             const CBLAS_INT lda);
+        *(void **) &fn = current_backend->blas.ssyr2.cblas_function;
         fn(layout,Uplo,N,alpha,X,incX,Y,incY,A,lda);
     } else {
 

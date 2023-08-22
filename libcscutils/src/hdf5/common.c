@@ -50,7 +50,7 @@ int CSC_HDF5_COMPRESSION = CSC_HDF5_COMPRESS_NONE;
 
 int csc_hdf5_register_filters()
 {
-    int ret;
+    int ret = 0;
     if (H5Zfilter_avail(H5Z_FILTER_BZIP2) == 0 ) {
         ret = csc_hdf5_register_bzip2();
         /* printf("CSC_BZIP2_HDF5FILTER = %d\n", ret); */

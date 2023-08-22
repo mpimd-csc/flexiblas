@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(slarra,SLARRA)(blasint* n, float* d, float* e, float* e2, float* 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slarra.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slarra.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slarra.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slarra.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) d, (void*) e, (void*) e2, (void*) spltol, (void*) tnrm, (void*) nsplit, (void*) isplit, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slarra_(void* n, void* d, void* e, void* e2, void* spltol, v
 {
 	void (*fn) (void* n, void* d, void* e, void* e2, void* spltol, void* tnrm, void* nsplit, void* isplit, void* info);
 
-	fn = current_backend->lapack.slarra.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slarra.f77_blas_function; 
 
 		fn((void*) n, (void*) d, (void*) e, (void*) e2, (void*) spltol, (void*) tnrm, (void*) nsplit, (void*) isplit, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slarra_(void* n, void* d, void* e, void* e2, void* spltol, 
 	void (*fn) (void* n, void* d, void* e, void* e2, void* spltol, void* tnrm, void* nsplit, void* isplit, void* info);
 	void (*fn_hook) (void* n, void* d, void* e, void* e2, void* spltol, void* tnrm, void* nsplit, void* isplit, void* info);
 
-	fn      = current_backend->lapack.slarra.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slarra.f77_blas_function; 
 
     hook_pos_slarra ++;
     if( hook_pos_slarra < __flexiblas_hooks->slarra.nhook) {
-        fn_hook = __flexiblas_hooks->slarra.f77_hook_function[hook_pos_slarra];
+        *(void **) &fn_hook = __flexiblas_hooks->slarra.f77_hook_function[hook_pos_slarra];
         fn_hook((void*) n, (void*) d, (void*) e, (void*) e2, (void*) spltol, (void*) tnrm, (void*) nsplit, (void*) isplit, (void*) info);
     } else {
         hook_pos_slarra = 0;

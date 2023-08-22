@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(slasv2,SLASV2)(float* f, float* g, float* h, float* ssmin, float*
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slasv2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slasv2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slasv2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slasv2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) f, (void*) g, (void*) h, (void*) ssmin, (void*) ssmax, (void*) snr, (void*) csr, (void*) snl, (void*) csl); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slasv2_(void* f, void* g, void* h, void* ssmin, void* ssmax,
 {
 	void (*fn) (void* f, void* g, void* h, void* ssmin, void* ssmax, void* snr, void* csr, void* snl, void* csl);
 
-	fn = current_backend->lapack.slasv2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slasv2.f77_blas_function; 
 
 		fn((void*) f, (void*) g, (void*) h, (void*) ssmin, (void*) ssmax, (void*) snr, (void*) csr, (void*) snl, (void*) csl); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slasv2_(void* f, void* g, void* h, void* ssmin, void* ssmax
 	void (*fn) (void* f, void* g, void* h, void* ssmin, void* ssmax, void* snr, void* csr, void* snl, void* csl);
 	void (*fn_hook) (void* f, void* g, void* h, void* ssmin, void* ssmax, void* snr, void* csr, void* snl, void* csl);
 
-	fn      = current_backend->lapack.slasv2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slasv2.f77_blas_function; 
 
     hook_pos_slasv2 ++;
     if( hook_pos_slasv2 < __flexiblas_hooks->slasv2.nhook) {
-        fn_hook = __flexiblas_hooks->slasv2.f77_hook_function[hook_pos_slasv2];
+        *(void **) &fn_hook = __flexiblas_hooks->slasv2.f77_hook_function[hook_pos_slasv2];
         fn_hook((void*) f, (void*) g, (void*) h, (void*) ssmin, (void*) ssmax, (void*) snr, (void*) csr, (void*) snl, (void*) csl);
     } else {
         hook_pos_slasv2 = 0;

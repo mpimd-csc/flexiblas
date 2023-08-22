@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(stgsna,STGSNA)(char* job, char* howmny, blasint* select, blasint*
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.stgsna.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->stgsna.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.stgsna.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->stgsna.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) job, (void*) howmny, (void*) select, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) s, (void*) dif, (void*) mm, (void*) m, (void*) work, (void*) lwork, (void*) iwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_stgsna_(void* job, void* howmny, void* select, void* n, void
 {
 	void (*fn) (void* job, void* howmny, void* select, void* n, void* a, void* lda, void* b, void* ldb, void* vl, void* ldvl, void* vr, void* ldvr, void* s, void* dif, void* mm, void* m, void* work, void* lwork, void* iwork, void* info);
 
-	fn = current_backend->lapack.stgsna.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.stgsna.f77_blas_function; 
 
 		fn((void*) job, (void*) howmny, (void*) select, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) s, (void*) dif, (void*) mm, (void*) m, (void*) work, (void*) lwork, (void*) iwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_stgsna_(void* job, void* howmny, void* select, void* n, voi
 	void (*fn) (void* job, void* howmny, void* select, void* n, void* a, void* lda, void* b, void* ldb, void* vl, void* ldvl, void* vr, void* ldvr, void* s, void* dif, void* mm, void* m, void* work, void* lwork, void* iwork, void* info);
 	void (*fn_hook) (void* job, void* howmny, void* select, void* n, void* a, void* lda, void* b, void* ldb, void* vl, void* ldvl, void* vr, void* ldvr, void* s, void* dif, void* mm, void* m, void* work, void* lwork, void* iwork, void* info);
 
-	fn      = current_backend->lapack.stgsna.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.stgsna.f77_blas_function; 
 
     hook_pos_stgsna ++;
     if( hook_pos_stgsna < __flexiblas_hooks->stgsna.nhook) {
-        fn_hook = __flexiblas_hooks->stgsna.f77_hook_function[hook_pos_stgsna];
+        *(void **) &fn_hook = __flexiblas_hooks->stgsna.f77_hook_function[hook_pos_stgsna];
         fn_hook((void*) job, (void*) howmny, (void*) select, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) s, (void*) dif, (void*) mm, (void*) m, (void*) work, (void*) lwork, (void*) iwork, (void*) info);
     } else {
         hook_pos_stgsna = 0;

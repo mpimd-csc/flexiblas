@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(slaeda,SLAEDA)(blasint* n, blasint* tlvls, blasint* curlvl, blasi
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slaeda.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slaeda.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slaeda.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slaeda.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) tlvls, (void*) curlvl, (void*) curpbm, (void*) prmptr, (void*) perm, (void*) givptr, (void*) givcol, (void*) givnum, (void*) q, (void*) qptr, (void*) z, (void*) ztemp, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slaeda_(void* n, void* tlvls, void* curlvl, void* curpbm, vo
 {
 	void (*fn) (void* n, void* tlvls, void* curlvl, void* curpbm, void* prmptr, void* perm, void* givptr, void* givcol, void* givnum, void* q, void* qptr, void* z, void* ztemp, void* info);
 
-	fn = current_backend->lapack.slaeda.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slaeda.f77_blas_function; 
 
 		fn((void*) n, (void*) tlvls, (void*) curlvl, (void*) curpbm, (void*) prmptr, (void*) perm, (void*) givptr, (void*) givcol, (void*) givnum, (void*) q, (void*) qptr, (void*) z, (void*) ztemp, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slaeda_(void* n, void* tlvls, void* curlvl, void* curpbm, v
 	void (*fn) (void* n, void* tlvls, void* curlvl, void* curpbm, void* prmptr, void* perm, void* givptr, void* givcol, void* givnum, void* q, void* qptr, void* z, void* ztemp, void* info);
 	void (*fn_hook) (void* n, void* tlvls, void* curlvl, void* curpbm, void* prmptr, void* perm, void* givptr, void* givcol, void* givnum, void* q, void* qptr, void* z, void* ztemp, void* info);
 
-	fn      = current_backend->lapack.slaeda.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slaeda.f77_blas_function; 
 
     hook_pos_slaeda ++;
     if( hook_pos_slaeda < __flexiblas_hooks->slaeda.nhook) {
-        fn_hook = __flexiblas_hooks->slaeda.f77_hook_function[hook_pos_slaeda];
+        *(void **) &fn_hook = __flexiblas_hooks->slaeda.f77_hook_function[hook_pos_slaeda];
         fn_hook((void*) n, (void*) tlvls, (void*) curlvl, (void*) curpbm, (void*) prmptr, (void*) perm, (void*) givptr, (void*) givcol, (void*) givnum, (void*) q, (void*) qptr, (void*) z, (void*) ztemp, (void*) info);
     } else {
         hook_pos_slaeda = 0;

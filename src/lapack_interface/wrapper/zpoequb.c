@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zpoequb,ZPOEQUB)(blasint* n, double complex* a, blasint* lda, dou
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zpoequb.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zpoequb.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zpoequb.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zpoequb.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zpoequb_(void* n, void* a, void* lda, void* s, void* scond, 
 {
 	void (*fn) (void* n, void* a, void* lda, void* s, void* scond, void* amax, void* info);
 
-	fn = current_backend->lapack.zpoequb.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zpoequb.f77_blas_function; 
 
 		fn((void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zpoequb_(void* n, void* a, void* lda, void* s, void* scond,
 	void (*fn) (void* n, void* a, void* lda, void* s, void* scond, void* amax, void* info);
 	void (*fn_hook) (void* n, void* a, void* lda, void* s, void* scond, void* amax, void* info);
 
-	fn      = current_backend->lapack.zpoequb.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zpoequb.f77_blas_function; 
 
     hook_pos_zpoequb ++;
     if( hook_pos_zpoequb < __flexiblas_hooks->zpoequb.nhook) {
-        fn_hook = __flexiblas_hooks->zpoequb.f77_hook_function[hook_pos_zpoequb];
+        *(void **) &fn_hook = __flexiblas_hooks->zpoequb.f77_hook_function[hook_pos_zpoequb];
         fn_hook((void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) info);
     } else {
         hook_pos_zpoequb = 0;

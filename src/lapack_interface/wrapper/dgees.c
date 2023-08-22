@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dgees,DGEES)(char* jobvs, char* sort, blasint* select, blasint* n
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dgees.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dgees.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dgees.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dgees.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobvs, (void*) sort, (void*) select, (void*) n, (void*) a, (void*) lda, (void*) sdim, (void*) wr, (void*) wi, (void*) vs, (void*) ldvs, (void*) work, (void*) lwork, (void*) bwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dgees_(void* jobvs, void* sort, void* select, void* n, void*
 {
 	void (*fn) (void* jobvs, void* sort, void* select, void* n, void* a, void* lda, void* sdim, void* wr, void* wi, void* vs, void* ldvs, void* work, void* lwork, void* bwork, void* info);
 
-	fn = current_backend->lapack.dgees.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dgees.f77_blas_function; 
 
 		fn((void*) jobvs, (void*) sort, (void*) select, (void*) n, (void*) a, (void*) lda, (void*) sdim, (void*) wr, (void*) wi, (void*) vs, (void*) ldvs, (void*) work, (void*) lwork, (void*) bwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dgees_(void* jobvs, void* sort, void* select, void* n, void
 	void (*fn) (void* jobvs, void* sort, void* select, void* n, void* a, void* lda, void* sdim, void* wr, void* wi, void* vs, void* ldvs, void* work, void* lwork, void* bwork, void* info);
 	void (*fn_hook) (void* jobvs, void* sort, void* select, void* n, void* a, void* lda, void* sdim, void* wr, void* wi, void* vs, void* ldvs, void* work, void* lwork, void* bwork, void* info);
 
-	fn      = current_backend->lapack.dgees.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dgees.f77_blas_function; 
 
     hook_pos_dgees ++;
     if( hook_pos_dgees < __flexiblas_hooks->dgees.nhook) {
-        fn_hook = __flexiblas_hooks->dgees.f77_hook_function[hook_pos_dgees];
+        *(void **) &fn_hook = __flexiblas_hooks->dgees.f77_hook_function[hook_pos_dgees];
         fn_hook((void*) jobvs, (void*) sort, (void*) select, (void*) n, (void*) a, (void*) lda, (void*) sdim, (void*) wr, (void*) wi, (void*) vs, (void*) ldvs, (void*) work, (void*) lwork, (void*) bwork, (void*) info);
     } else {
         hook_pos_dgees = 0;

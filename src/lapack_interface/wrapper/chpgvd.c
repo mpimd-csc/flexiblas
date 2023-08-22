@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(chpgvd,CHPGVD)(blasint* itype, char* jobz, char* uplo, blasint* n
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.chpgvd.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->chpgvd.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.chpgvd.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->chpgvd.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) itype, (void*) jobz, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) iwork, (void*) liwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_chpgvd_(void* itype, void* jobz, void* uplo, void* n, void* 
 {
 	void (*fn) (void* itype, void* jobz, void* uplo, void* n, void* ap, void* bp, void* w, void* z, void* ldz, void* work, void* lwork, void* rwork, void* lrwork, void* iwork, void* liwork, void* info);
 
-	fn = current_backend->lapack.chpgvd.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.chpgvd.f77_blas_function; 
 
 		fn((void*) itype, (void*) jobz, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) iwork, (void*) liwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_chpgvd_(void* itype, void* jobz, void* uplo, void* n, void*
 	void (*fn) (void* itype, void* jobz, void* uplo, void* n, void* ap, void* bp, void* w, void* z, void* ldz, void* work, void* lwork, void* rwork, void* lrwork, void* iwork, void* liwork, void* info);
 	void (*fn_hook) (void* itype, void* jobz, void* uplo, void* n, void* ap, void* bp, void* w, void* z, void* ldz, void* work, void* lwork, void* rwork, void* lrwork, void* iwork, void* liwork, void* info);
 
-	fn      = current_backend->lapack.chpgvd.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.chpgvd.f77_blas_function; 
 
     hook_pos_chpgvd ++;
     if( hook_pos_chpgvd < __flexiblas_hooks->chpgvd.nhook) {
-        fn_hook = __flexiblas_hooks->chpgvd.f77_hook_function[hook_pos_chpgvd];
+        *(void **) &fn_hook = __flexiblas_hooks->chpgvd.f77_hook_function[hook_pos_chpgvd];
         fn_hook((void*) itype, (void*) jobz, (void*) uplo, (void*) n, (void*) ap, (void*) bp, (void*) w, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) rwork, (void*) lrwork, (void*) iwork, (void*) liwork, (void*) info);
     } else {
         hook_pos_chpgvd = 0;

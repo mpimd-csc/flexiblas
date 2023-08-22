@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -81,8 +81,8 @@ double FC_GLOBAL(zlanhs,ZLANHS)(char* norm, blasint* n, double complex* a, blasi
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlanhs.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlanhs.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlanhs.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlanhs.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) work); 
 		return ret; 
@@ -113,7 +113,7 @@ double flexiblas_real_zlanhs_(void* norm, void* n, void* a, void* lda, void* wor
 	double (*fn) (void* norm, void* n, void* a, void* lda, void* work);
 	double ret;
 
-	fn = current_backend->lapack.zlanhs.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlanhs.f77_blas_function; 
 
 		ret = fn((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) work); 
 
@@ -137,11 +137,11 @@ double flexiblas_chain_zlanhs_(void* norm, void* n, void* a, void* lda, void* wo
 	double (*fn_hook) (void* norm, void* n, void* a, void* lda, void* work);
 	double ret;
 
-	fn      = current_backend->lapack.zlanhs.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlanhs.f77_blas_function; 
 
     hook_pos_zlanhs ++;
     if( hook_pos_zlanhs < __flexiblas_hooks->zlanhs.nhook) {
-        fn_hook = __flexiblas_hooks->zlanhs.f77_hook_function[hook_pos_zlanhs];
+        *(void **) &fn_hook = __flexiblas_hooks->zlanhs.f77_hook_function[hook_pos_zlanhs];
         ret = fn_hook((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) work);
     } else {
         hook_pos_zlanhs = 0;

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(ctpqrt,CTPQRT)(blasint* m, blasint* n, blasint* l, blasint* nb, f
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ctpqrt.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ctpqrt.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ctpqrt.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ctpqrt.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) l, (void*) nb, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) t, (void*) ldt, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ctpqrt_(void* m, void* n, void* l, void* nb, void* a, void* 
 {
 	void (*fn) (void* m, void* n, void* l, void* nb, void* a, void* lda, void* b, void* ldb, void* t, void* ldt, void* work, void* info);
 
-	fn = current_backend->lapack.ctpqrt.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ctpqrt.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) l, (void*) nb, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) t, (void*) ldt, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ctpqrt_(void* m, void* n, void* l, void* nb, void* a, void*
 	void (*fn) (void* m, void* n, void* l, void* nb, void* a, void* lda, void* b, void* ldb, void* t, void* ldt, void* work, void* info);
 	void (*fn_hook) (void* m, void* n, void* l, void* nb, void* a, void* lda, void* b, void* ldb, void* t, void* ldt, void* work, void* info);
 
-	fn      = current_backend->lapack.ctpqrt.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ctpqrt.f77_blas_function; 
 
     hook_pos_ctpqrt ++;
     if( hook_pos_ctpqrt < __flexiblas_hooks->ctpqrt.nhook) {
-        fn_hook = __flexiblas_hooks->ctpqrt.f77_hook_function[hook_pos_ctpqrt];
+        *(void **) &fn_hook = __flexiblas_hooks->ctpqrt.f77_hook_function[hook_pos_ctpqrt];
         fn_hook((void*) m, (void*) n, (void*) l, (void*) nb, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) t, (void*) ldt, (void*) work, (void*) info);
     } else {
         hook_pos_ctpqrt = 0;

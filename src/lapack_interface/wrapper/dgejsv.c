@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dgejsv,DGEJSV)(char* joba, char* jobu, char* jobv, char* jobr, ch
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dgejsv.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dgejsv.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dgejsv.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dgejsv.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) joba, (void*) jobu, (void*) jobv, (void*) jobr, (void*) jobt, (void*) jobp, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) sva, (void*) u, (void*) ldu, (void*) v, (void*) ldv, (void*) work, (void*) lwork, (void*) iwork, (void*) info, ( fortran_charlen_t ) len_joba, ( fortran_charlen_t ) len_jobu, ( fortran_charlen_t ) len_jobv, ( fortran_charlen_t ) len_jobr, ( fortran_charlen_t ) len_jobt, ( fortran_charlen_t ) len_jobp); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dgejsv_(void* joba, void* jobu, void* jobv, void* jobr, void
 {
 	void (*fn) (void* joba, void* jobu, void* jobv, void* jobr, void* jobt, void* jobp, void* m, void* n, void* a, void* lda, void* sva, void* u, void* ldu, void* v, void* ldv, void* work, void* lwork, void* iwork, void* info, fortran_charlen_t len_joba, fortran_charlen_t len_jobu, fortran_charlen_t len_jobv, fortran_charlen_t len_jobr, fortran_charlen_t len_jobt, fortran_charlen_t len_jobp);
 
-	fn = current_backend->lapack.dgejsv.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dgejsv.f77_blas_function; 
 
 		fn((void*) joba, (void*) jobu, (void*) jobv, (void*) jobr, (void*) jobt, (void*) jobp, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) sva, (void*) u, (void*) ldu, (void*) v, (void*) ldv, (void*) work, (void*) lwork, (void*) iwork, (void*) info, ( fortran_charlen_t ) len_joba, ( fortran_charlen_t ) len_jobu, ( fortran_charlen_t ) len_jobv, ( fortran_charlen_t ) len_jobr, ( fortran_charlen_t ) len_jobt, ( fortran_charlen_t ) len_jobp); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dgejsv_(void* joba, void* jobu, void* jobv, void* jobr, voi
 	void (*fn) (void* joba, void* jobu, void* jobv, void* jobr, void* jobt, void* jobp, void* m, void* n, void* a, void* lda, void* sva, void* u, void* ldu, void* v, void* ldv, void* work, void* lwork, void* iwork, void* info, fortran_charlen_t len_joba, fortran_charlen_t len_jobu, fortran_charlen_t len_jobv, fortran_charlen_t len_jobr, fortran_charlen_t len_jobt, fortran_charlen_t len_jobp);
 	void (*fn_hook) (void* joba, void* jobu, void* jobv, void* jobr, void* jobt, void* jobp, void* m, void* n, void* a, void* lda, void* sva, void* u, void* ldu, void* v, void* ldv, void* work, void* lwork, void* iwork, void* info, fortran_charlen_t len_joba, fortran_charlen_t len_jobu, fortran_charlen_t len_jobv, fortran_charlen_t len_jobr, fortran_charlen_t len_jobt, fortran_charlen_t len_jobp);
 
-	fn      = current_backend->lapack.dgejsv.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dgejsv.f77_blas_function; 
 
     hook_pos_dgejsv ++;
     if( hook_pos_dgejsv < __flexiblas_hooks->dgejsv.nhook) {
-        fn_hook = __flexiblas_hooks->dgejsv.f77_hook_function[hook_pos_dgejsv];
+        *(void **) &fn_hook = __flexiblas_hooks->dgejsv.f77_hook_function[hook_pos_dgejsv];
         fn_hook((void*) joba, (void*) jobu, (void*) jobv, (void*) jobr, (void*) jobt, (void*) jobp, (void*) m, (void*) n, (void*) a, (void*) lda, (void*) sva, (void*) u, (void*) ldu, (void*) v, (void*) ldv, (void*) work, (void*) lwork, (void*) iwork, (void*) info, ( fortran_charlen_t ) len_joba, ( fortran_charlen_t ) len_jobu, ( fortran_charlen_t ) len_jobv, ( fortran_charlen_t ) len_jobr, ( fortran_charlen_t ) len_jobt, ( fortran_charlen_t ) len_jobp);
     } else {
         hook_pos_dgejsv = 0;

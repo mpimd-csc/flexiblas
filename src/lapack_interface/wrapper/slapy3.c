@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -81,8 +81,8 @@ float FC_GLOBAL(slapy3,SLAPY3)(float* x, float* y, float* z)
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slapy3.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slapy3.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slapy3.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slapy3.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) x, (void*) y, (void*) z); 
 		return ret; 
@@ -113,7 +113,7 @@ float flexiblas_real_slapy3_(void* x, void* y, void* z)
 	float (*fn) (void* x, void* y, void* z);
 	float ret;
 
-	fn = current_backend->lapack.slapy3.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slapy3.f77_blas_function; 
 
 		ret = fn((void*) x, (void*) y, (void*) z); 
 
@@ -137,11 +137,11 @@ float flexiblas_chain_slapy3_(void* x, void* y, void* z)
 	float (*fn_hook) (void* x, void* y, void* z);
 	float ret;
 
-	fn      = current_backend->lapack.slapy3.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slapy3.f77_blas_function; 
 
     hook_pos_slapy3 ++;
     if( hook_pos_slapy3 < __flexiblas_hooks->slapy3.nhook) {
-        fn_hook = __flexiblas_hooks->slapy3.f77_hook_function[hook_pos_slapy3];
+        *(void **) &fn_hook = __flexiblas_hooks->slapy3.f77_hook_function[hook_pos_slapy3];
         ret = fn_hook((void*) x, (void*) y, (void*) z);
     } else {
         hook_pos_slapy3 = 0;

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(clacon,CLACON)(blasint* n, float complex* v, float complex* x, fl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.clacon.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->clacon.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.clacon.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->clacon.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) v, (void*) x, (void*) est, (void*) kase); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_clacon_(void* n, void* v, void* x, void* est, void* kase)
 {
 	void (*fn) (void* n, void* v, void* x, void* est, void* kase);
 
-	fn = current_backend->lapack.clacon.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.clacon.f77_blas_function; 
 
 		fn((void*) n, (void*) v, (void*) x, (void*) est, (void*) kase); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_clacon_(void* n, void* v, void* x, void* est, void* kase)
 	void (*fn) (void* n, void* v, void* x, void* est, void* kase);
 	void (*fn_hook) (void* n, void* v, void* x, void* est, void* kase);
 
-	fn      = current_backend->lapack.clacon.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.clacon.f77_blas_function; 
 
     hook_pos_clacon ++;
     if( hook_pos_clacon < __flexiblas_hooks->clacon.nhook) {
-        fn_hook = __flexiblas_hooks->clacon.f77_hook_function[hook_pos_clacon];
+        *(void **) &fn_hook = __flexiblas_hooks->clacon.f77_hook_function[hook_pos_clacon];
         fn_hook((void*) n, (void*) v, (void*) x, (void*) est, (void*) kase);
     } else {
         hook_pos_clacon = 0;

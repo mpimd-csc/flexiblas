@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(slaev2,SLAEV2)(float* a, float* b, float* c, float* rt1, float* r
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slaev2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slaev2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slaev2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slaev2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slaev2_(void* a, void* b, void* c, void* rt1, void* rt2, voi
 {
 	void (*fn) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
 
-	fn = current_backend->lapack.slaev2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slaev2.f77_blas_function; 
 
 		fn((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slaev2_(void* a, void* b, void* c, void* rt1, void* rt2, vo
 	void (*fn) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
 	void (*fn_hook) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
 
-	fn      = current_backend->lapack.slaev2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slaev2.f77_blas_function; 
 
     hook_pos_slaev2 ++;
     if( hook_pos_slaev2 < __flexiblas_hooks->slaev2.nhook) {
-        fn_hook = __flexiblas_hooks->slaev2.f77_hook_function[hook_pos_slaev2];
+        *(void **) &fn_hook = __flexiblas_hooks->slaev2.f77_hook_function[hook_pos_slaev2];
         fn_hook((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1);
     } else {
         hook_pos_slaev2 = 0;

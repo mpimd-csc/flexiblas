@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zgerfs,ZGERFS)(char* trans, blasint* n, blasint* nrhs, double com
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zgerfs.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zgerfs.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zgerfs.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zgerfs.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) trans, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) af, (void*) ldaf, (void*) ipiv, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zgerfs_(void* trans, void* n, void* nrhs, void* a, void* lda
 {
 	void (*fn) (void* trans, void* n, void* nrhs, void* a, void* lda, void* af, void* ldaf, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* rwork, void* info);
 
-	fn = current_backend->lapack.zgerfs.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zgerfs.f77_blas_function; 
 
 		fn((void*) trans, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) af, (void*) ldaf, (void*) ipiv, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zgerfs_(void* trans, void* n, void* nrhs, void* a, void* ld
 	void (*fn) (void* trans, void* n, void* nrhs, void* a, void* lda, void* af, void* ldaf, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* rwork, void* info);
 	void (*fn_hook) (void* trans, void* n, void* nrhs, void* a, void* lda, void* af, void* ldaf, void* ipiv, void* b, void* ldb, void* x, void* ldx, void* ferr, void* berr, void* work, void* rwork, void* info);
 
-	fn      = current_backend->lapack.zgerfs.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zgerfs.f77_blas_function; 
 
     hook_pos_zgerfs ++;
     if( hook_pos_zgerfs < __flexiblas_hooks->zgerfs.nhook) {
-        fn_hook = __flexiblas_hooks->zgerfs.f77_hook_function[hook_pos_zgerfs];
+        *(void **) &fn_hook = __flexiblas_hooks->zgerfs.f77_hook_function[hook_pos_zgerfs];
         fn_hook((void*) trans, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) af, (void*) ldaf, (void*) ipiv, (void*) b, (void*) ldb, (void*) x, (void*) ldx, (void*) ferr, (void*) berr, (void*) work, (void*) rwork, (void*) info);
     } else {
         hook_pos_zgerfs = 0;

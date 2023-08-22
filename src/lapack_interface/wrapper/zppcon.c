@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zppcon,ZPPCON)(char* uplo, blasint* n, double complex* ap, double
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zppcon.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zppcon.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zppcon.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zppcon.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) ap, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zppcon_(void* uplo, void* n, void* ap, void* anorm, void* rc
 {
 	void (*fn) (void* uplo, void* n, void* ap, void* anorm, void* rcond, void* work, void* rwork, void* info);
 
-	fn = current_backend->lapack.zppcon.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zppcon.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) ap, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zppcon_(void* uplo, void* n, void* ap, void* anorm, void* r
 	void (*fn) (void* uplo, void* n, void* ap, void* anorm, void* rcond, void* work, void* rwork, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* ap, void* anorm, void* rcond, void* work, void* rwork, void* info);
 
-	fn      = current_backend->lapack.zppcon.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zppcon.f77_blas_function; 
 
     hook_pos_zppcon ++;
     if( hook_pos_zppcon < __flexiblas_hooks->zppcon.nhook) {
-        fn_hook = __flexiblas_hooks->zppcon.f77_hook_function[hook_pos_zppcon];
+        *(void **) &fn_hook = __flexiblas_hooks->zppcon.f77_hook_function[hook_pos_zppcon];
         fn_hook((void*) uplo, (void*) n, (void*) ap, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info);
     } else {
         hook_pos_zppcon = 0;

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(slabad,SLABAD)(float* small, float* large)
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slabad.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slabad.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slabad.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slabad.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) small, (void*) large); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slabad_(void* small, void* large)
 {
 	void (*fn) (void* small, void* large);
 
-	fn = current_backend->lapack.slabad.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slabad.f77_blas_function; 
 
 		fn((void*) small, (void*) large); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slabad_(void* small, void* large)
 	void (*fn) (void* small, void* large);
 	void (*fn_hook) (void* small, void* large);
 
-	fn      = current_backend->lapack.slabad.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slabad.f77_blas_function; 
 
     hook_pos_slabad ++;
     if( hook_pos_slabad < __flexiblas_hooks->slabad.nhook) {
-        fn_hook = __flexiblas_hooks->slabad.f77_hook_function[hook_pos_slabad];
+        *(void **) &fn_hook = __flexiblas_hooks->slabad.f77_hook_function[hook_pos_slabad];
         fn_hook((void*) small, (void*) large);
     } else {
         hook_pos_slabad = 0;

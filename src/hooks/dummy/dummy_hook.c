@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -60,7 +60,7 @@ FLEXIBLAS_HOOK_OPTIONS(
     FLEXIBLAS_HOOK_OPTION("debug-float", "Enable Debug with Float", FLEXIBLAS_OPTIONS_FLOAT, "0"),
     FLEXIBLAS_HOOK_OPTION("debug-string", "Enable Debug with Float", FLEXIBLAS_OPTIONS_STRING, "0"),
     FLEXIBLAS_HOOK_OPTIONS_END
-);
+)
 
 
 FLEXIBLAS_HOOK_REGISTER(
@@ -69,9 +69,9 @@ FLEXIBLAS_HOOK_REGISTER(
         dummy,  // Namespace for option getters
         "This is a Dummy Hook \n"
         "On Multiline comment.", // Description
-        "Martin Koehler");
+        "Martin Koehler")
 
-FLEXIBLAS_HOOK_INIT_FUNCTION () {
+FLEXIBLAS_HOOK_INIT_FUNCTION (void) {
     fprintf(stderr, "Dummy Init.\n");
     int dgb = FLEXIBLAS_HOOK_GET_OPTION_INT(dummy, "debug");
     printf("Debug Setting: %d\n", dgb);
@@ -84,7 +84,7 @@ FLEXIBLAS_HOOK_INIT_FUNCTION () {
 }
 
 
-FLEXIBLAS_HOOK_EXIT_FUNCTION () {
+FLEXIBLAS_HOOK_EXIT_FUNCTION (void) {
     fprintf(stderr, "Dummy Exit\n");
 }
 

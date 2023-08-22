@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zsyr,ZSYR)(char* uplo, blasint* n, double complex* alpha, double 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zsyr.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zsyr.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zsyr.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zsyr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zsyr_(void* uplo, void* n, void* alpha, void* x, void* incx,
 {
 	void (*fn) (void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda);
 
-	fn = current_backend->lapack.zsyr.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zsyr.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zsyr_(void* uplo, void* n, void* alpha, void* x, void* incx
 	void (*fn) (void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda);
 	void (*fn_hook) (void* uplo, void* n, void* alpha, void* x, void* incx, void* a, void* lda);
 
-	fn      = current_backend->lapack.zsyr.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zsyr.f77_blas_function; 
 
     hook_pos_zsyr ++;
     if( hook_pos_zsyr < __flexiblas_hooks->zsyr.nhook) {
-        fn_hook = __flexiblas_hooks->zsyr.f77_hook_function[hook_pos_zsyr];
+        *(void **) &fn_hook = __flexiblas_hooks->zsyr.f77_hook_function[hook_pos_zsyr];
         fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda);
     } else {
         hook_pos_zsyr = 0;

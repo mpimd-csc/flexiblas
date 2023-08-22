@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(ctgsja,CTGSJA)(char* jobu, char* jobv, char* jobq, blasint* m, bl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ctgsja.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ctgsja.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ctgsja.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ctgsja.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobu, (void*) jobv, (void*) jobq, (void*) m, (void*) p, (void*) n, (void*) k, (void*) l, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) tola, (void*) tolb, (void*) alpha, (void*) beta, (void*) u, (void*) ldu, (void*) v, (void*) ldv, (void*) q, (void*) ldq, (void*) work, (void*) ncycle, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ctgsja_(void* jobu, void* jobv, void* jobq, void* m, void* p
 {
 	void (*fn) (void* jobu, void* jobv, void* jobq, void* m, void* p, void* n, void* k, void* l, void* a, void* lda, void* b, void* ldb, void* tola, void* tolb, void* alpha, void* beta, void* u, void* ldu, void* v, void* ldv, void* q, void* ldq, void* work, void* ncycle, void* info);
 
-	fn = current_backend->lapack.ctgsja.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ctgsja.f77_blas_function; 
 
 		fn((void*) jobu, (void*) jobv, (void*) jobq, (void*) m, (void*) p, (void*) n, (void*) k, (void*) l, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) tola, (void*) tolb, (void*) alpha, (void*) beta, (void*) u, (void*) ldu, (void*) v, (void*) ldv, (void*) q, (void*) ldq, (void*) work, (void*) ncycle, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ctgsja_(void* jobu, void* jobv, void* jobq, void* m, void* 
 	void (*fn) (void* jobu, void* jobv, void* jobq, void* m, void* p, void* n, void* k, void* l, void* a, void* lda, void* b, void* ldb, void* tola, void* tolb, void* alpha, void* beta, void* u, void* ldu, void* v, void* ldv, void* q, void* ldq, void* work, void* ncycle, void* info);
 	void (*fn_hook) (void* jobu, void* jobv, void* jobq, void* m, void* p, void* n, void* k, void* l, void* a, void* lda, void* b, void* ldb, void* tola, void* tolb, void* alpha, void* beta, void* u, void* ldu, void* v, void* ldv, void* q, void* ldq, void* work, void* ncycle, void* info);
 
-	fn      = current_backend->lapack.ctgsja.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ctgsja.f77_blas_function; 
 
     hook_pos_ctgsja ++;
     if( hook_pos_ctgsja < __flexiblas_hooks->ctgsja.nhook) {
-        fn_hook = __flexiblas_hooks->ctgsja.f77_hook_function[hook_pos_ctgsja];
+        *(void **) &fn_hook = __flexiblas_hooks->ctgsja.f77_hook_function[hook_pos_ctgsja];
         fn_hook((void*) jobu, (void*) jobv, (void*) jobq, (void*) m, (void*) p, (void*) n, (void*) k, (void*) l, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) tola, (void*) tolb, (void*) alpha, (void*) beta, (void*) u, (void*) ldu, (void*) v, (void*) ldv, (void*) q, (void*) ldq, (void*) work, (void*) ncycle, (void*) info);
     } else {
         hook_pos_ctgsja = 0;

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(sgbbrd,SGBBRD)(char* vect, blasint* m, blasint* n, blasint* ncc, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.sgbbrd.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->sgbbrd.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.sgbbrd.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->sgbbrd.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) vect, (void*) m, (void*) n, (void*) ncc, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) d, (void*) e, (void*) q, (void*) ldq, (void*) pt, (void*) ldpt, (void*) c, (void*) ldc, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_sgbbrd_(void* vect, void* m, void* n, void* ncc, void* kl, v
 {
 	void (*fn) (void* vect, void* m, void* n, void* ncc, void* kl, void* ku, void* ab, void* ldab, void* d, void* e, void* q, void* ldq, void* pt, void* ldpt, void* c, void* ldc, void* work, void* info);
 
-	fn = current_backend->lapack.sgbbrd.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.sgbbrd.f77_blas_function; 
 
 		fn((void*) vect, (void*) m, (void*) n, (void*) ncc, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) d, (void*) e, (void*) q, (void*) ldq, (void*) pt, (void*) ldpt, (void*) c, (void*) ldc, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_sgbbrd_(void* vect, void* m, void* n, void* ncc, void* kl, 
 	void (*fn) (void* vect, void* m, void* n, void* ncc, void* kl, void* ku, void* ab, void* ldab, void* d, void* e, void* q, void* ldq, void* pt, void* ldpt, void* c, void* ldc, void* work, void* info);
 	void (*fn_hook) (void* vect, void* m, void* n, void* ncc, void* kl, void* ku, void* ab, void* ldab, void* d, void* e, void* q, void* ldq, void* pt, void* ldpt, void* c, void* ldc, void* work, void* info);
 
-	fn      = current_backend->lapack.sgbbrd.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.sgbbrd.f77_blas_function; 
 
     hook_pos_sgbbrd ++;
     if( hook_pos_sgbbrd < __flexiblas_hooks->sgbbrd.nhook) {
-        fn_hook = __flexiblas_hooks->sgbbrd.f77_hook_function[hook_pos_sgbbrd];
+        *(void **) &fn_hook = __flexiblas_hooks->sgbbrd.f77_hook_function[hook_pos_sgbbrd];
         fn_hook((void*) vect, (void*) m, (void*) n, (void*) ncc, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) d, (void*) e, (void*) q, (void*) ldq, (void*) pt, (void*) ldpt, (void*) c, (void*) ldc, (void*) work, (void*) info);
     } else {
         hook_pos_sgbbrd = 0;

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(slatrd,SLATRD)(char* uplo, blasint* n, blasint* nb, float* a, bla
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slatrd.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slatrd.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slatrd.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slatrd.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) nb, (void*) a, (void*) lda, (void*) e, (void*) tau, (void*) w, (void*) ldw); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slatrd_(void* uplo, void* n, void* nb, void* a, void* lda, v
 {
 	void (*fn) (void* uplo, void* n, void* nb, void* a, void* lda, void* e, void* tau, void* w, void* ldw);
 
-	fn = current_backend->lapack.slatrd.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slatrd.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) nb, (void*) a, (void*) lda, (void*) e, (void*) tau, (void*) w, (void*) ldw); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slatrd_(void* uplo, void* n, void* nb, void* a, void* lda, 
 	void (*fn) (void* uplo, void* n, void* nb, void* a, void* lda, void* e, void* tau, void* w, void* ldw);
 	void (*fn_hook) (void* uplo, void* n, void* nb, void* a, void* lda, void* e, void* tau, void* w, void* ldw);
 
-	fn      = current_backend->lapack.slatrd.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slatrd.f77_blas_function; 
 
     hook_pos_slatrd ++;
     if( hook_pos_slatrd < __flexiblas_hooks->slatrd.nhook) {
-        fn_hook = __flexiblas_hooks->slatrd.f77_hook_function[hook_pos_slatrd];
+        *(void **) &fn_hook = __flexiblas_hooks->slatrd.f77_hook_function[hook_pos_slatrd];
         fn_hook((void*) uplo, (void*) n, (void*) nb, (void*) a, (void*) lda, (void*) e, (void*) tau, (void*) w, (void*) ldw);
     } else {
         hook_pos_slatrd = 0;

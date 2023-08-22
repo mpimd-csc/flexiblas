@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zgbequ,ZGBEQU)(blasint* m, blasint* n, blasint* kl, blasint* ku, 
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zgbequ.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zgbequ.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zgbequ.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zgbequ.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) m, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zgbequ_(void* m, void* n, void* kl, void* ku, void* ab, void
 {
 	void (*fn) (void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* info);
 
-	fn = current_backend->lapack.zgbequ.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zgbequ.f77_blas_function; 
 
 		fn((void*) m, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zgbequ_(void* m, void* n, void* kl, void* ku, void* ab, voi
 	void (*fn) (void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* info);
 	void (*fn_hook) (void* m, void* n, void* kl, void* ku, void* ab, void* ldab, void* r, void* c, void* rowcnd, void* colcnd, void* amax, void* info);
 
-	fn      = current_backend->lapack.zgbequ.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zgbequ.f77_blas_function; 
 
     hook_pos_zgbequ ++;
     if( hook_pos_zgbequ < __flexiblas_hooks->zgbequ.nhook) {
-        fn_hook = __flexiblas_hooks->zgbequ.f77_hook_function[hook_pos_zgbequ];
+        *(void **) &fn_hook = __flexiblas_hooks->zgbequ.f77_hook_function[hook_pos_zgbequ];
         fn_hook((void*) m, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) r, (void*) c, (void*) rowcnd, (void*) colcnd, (void*) amax, (void*) info);
     } else {
         hook_pos_zgbequ = 0;

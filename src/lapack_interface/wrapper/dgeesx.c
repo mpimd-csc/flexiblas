@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dgeesx,DGEESX)(char* jobvs, char* sort, blasint* select, char* se
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dgeesx.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dgeesx.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dgeesx.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dgeesx.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) jobvs, (void*) sort, (void*) select, (void*) sense, (void*) n, (void*) a, (void*) lda, (void*) sdim, (void*) wr, (void*) wi, (void*) vs, (void*) ldvs, (void*) rconde, (void*) rcondv, (void*) work, (void*) lwork, (void*) iwork, (void*) liwork, (void*) bwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dgeesx_(void* jobvs, void* sort, void* select, void* sense, 
 {
 	void (*fn) (void* jobvs, void* sort, void* select, void* sense, void* n, void* a, void* lda, void* sdim, void* wr, void* wi, void* vs, void* ldvs, void* rconde, void* rcondv, void* work, void* lwork, void* iwork, void* liwork, void* bwork, void* info);
 
-	fn = current_backend->lapack.dgeesx.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dgeesx.f77_blas_function; 
 
 		fn((void*) jobvs, (void*) sort, (void*) select, (void*) sense, (void*) n, (void*) a, (void*) lda, (void*) sdim, (void*) wr, (void*) wi, (void*) vs, (void*) ldvs, (void*) rconde, (void*) rcondv, (void*) work, (void*) lwork, (void*) iwork, (void*) liwork, (void*) bwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dgeesx_(void* jobvs, void* sort, void* select, void* sense,
 	void (*fn) (void* jobvs, void* sort, void* select, void* sense, void* n, void* a, void* lda, void* sdim, void* wr, void* wi, void* vs, void* ldvs, void* rconde, void* rcondv, void* work, void* lwork, void* iwork, void* liwork, void* bwork, void* info);
 	void (*fn_hook) (void* jobvs, void* sort, void* select, void* sense, void* n, void* a, void* lda, void* sdim, void* wr, void* wi, void* vs, void* ldvs, void* rconde, void* rcondv, void* work, void* lwork, void* iwork, void* liwork, void* bwork, void* info);
 
-	fn      = current_backend->lapack.dgeesx.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dgeesx.f77_blas_function; 
 
     hook_pos_dgeesx ++;
     if( hook_pos_dgeesx < __flexiblas_hooks->dgeesx.nhook) {
-        fn_hook = __flexiblas_hooks->dgeesx.f77_hook_function[hook_pos_dgeesx];
+        *(void **) &fn_hook = __flexiblas_hooks->dgeesx.f77_hook_function[hook_pos_dgeesx];
         fn_hook((void*) jobvs, (void*) sort, (void*) select, (void*) sense, (void*) n, (void*) a, (void*) lda, (void*) sdim, (void*) wr, (void*) wi, (void*) vs, (void*) ldvs, (void*) rconde, (void*) rcondv, (void*) work, (void*) lwork, (void*) iwork, (void*) liwork, (void*) bwork, (void*) info);
     } else {
         hook_pos_dgeesx = 0;

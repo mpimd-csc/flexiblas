@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dgeevx,DGEEVX)(char* balanc, char* jobvl, char* jobvr, char* sens
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dgeevx.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dgeevx.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dgeevx.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dgeevx.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) balanc, (void*) jobvl, (void*) jobvr, (void*) sense, (void*) n, (void*) a, (void*) lda, (void*) wr, (void*) wi, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) ilo, (void*) ihi, (void*) scale, (void*) abnrm, (void*) rconde, (void*) rcondv, (void*) work, (void*) lwork, (void*) iwork, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dgeevx_(void* balanc, void* jobvl, void* jobvr, void* sense,
 {
 	void (*fn) (void* balanc, void* jobvl, void* jobvr, void* sense, void* n, void* a, void* lda, void* wr, void* wi, void* vl, void* ldvl, void* vr, void* ldvr, void* ilo, void* ihi, void* scale, void* abnrm, void* rconde, void* rcondv, void* work, void* lwork, void* iwork, void* info);
 
-	fn = current_backend->lapack.dgeevx.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dgeevx.f77_blas_function; 
 
 		fn((void*) balanc, (void*) jobvl, (void*) jobvr, (void*) sense, (void*) n, (void*) a, (void*) lda, (void*) wr, (void*) wi, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) ilo, (void*) ihi, (void*) scale, (void*) abnrm, (void*) rconde, (void*) rcondv, (void*) work, (void*) lwork, (void*) iwork, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dgeevx_(void* balanc, void* jobvl, void* jobvr, void* sense
 	void (*fn) (void* balanc, void* jobvl, void* jobvr, void* sense, void* n, void* a, void* lda, void* wr, void* wi, void* vl, void* ldvl, void* vr, void* ldvr, void* ilo, void* ihi, void* scale, void* abnrm, void* rconde, void* rcondv, void* work, void* lwork, void* iwork, void* info);
 	void (*fn_hook) (void* balanc, void* jobvl, void* jobvr, void* sense, void* n, void* a, void* lda, void* wr, void* wi, void* vl, void* ldvl, void* vr, void* ldvr, void* ilo, void* ihi, void* scale, void* abnrm, void* rconde, void* rcondv, void* work, void* lwork, void* iwork, void* info);
 
-	fn      = current_backend->lapack.dgeevx.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dgeevx.f77_blas_function; 
 
     hook_pos_dgeevx ++;
     if( hook_pos_dgeevx < __flexiblas_hooks->dgeevx.nhook) {
-        fn_hook = __flexiblas_hooks->dgeevx.f77_hook_function[hook_pos_dgeevx];
+        *(void **) &fn_hook = __flexiblas_hooks->dgeevx.f77_hook_function[hook_pos_dgeevx];
         fn_hook((void*) balanc, (void*) jobvl, (void*) jobvr, (void*) sense, (void*) n, (void*) a, (void*) lda, (void*) wr, (void*) wi, (void*) vl, (void*) ldvl, (void*) vr, (void*) ldvr, (void*) ilo, (void*) ihi, (void*) scale, (void*) abnrm, (void*) rconde, (void*) rcondv, (void*) work, (void*) lwork, (void*) iwork, (void*) info);
     } else {
         hook_pos_dgeevx = 0;

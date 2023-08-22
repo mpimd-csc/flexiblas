@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -69,7 +69,7 @@ void flexiblas_chain_cblas_simatcopy(const CBLAS_ORDER CORDER, const CBLAS_TRANS
 		     const CBLAS_INT crows, const CBLAS_INT ccols, const float calpha, float *a, const CBLAS_INT clda,
 		     const CBLAS_INT cldb)
 {
-	   void (*fn)(const CBLAS_ORDER, const CBLAS_TRANSPOSE, const CBLAS_INT, const CBLAS_INT, const float, float *, const CBLAS_INT, const CBLAS_INT) = current_backend->blas.simatcopy.cblas_function;
+	   void (*fn)(const CBLAS_ORDER, const CBLAS_TRANSPOSE, const CBLAS_INT, const CBLAS_INT, const float, float *, const CBLAS_INT, const CBLAS_INT);
 	   CBLAS_HOOK_ADVANCE(simatcopy);
        fn(CORDER, CTRANS, crows, ccols, calpha, a, clda, cldb);
 
@@ -91,7 +91,8 @@ void flexiblas_real_cblas_simatcopy(const CBLAS_ORDER CORDER, const CBLAS_TRANSP
    #define F77_LDB  cldb
 #endif
    if ( current_backend->blas.simatcopy.cblas_function != NULL ) {
-	   void (*fn)(const CBLAS_ORDER, const CBLAS_TRANSPOSE, const CBLAS_INT, const CBLAS_INT, const float, float *, const CBLAS_INT, const CBLAS_INT) = current_backend->blas.simatcopy.cblas_function;
+	   void (*fn)(const CBLAS_ORDER, const CBLAS_TRANSPOSE, const CBLAS_INT, const CBLAS_INT, const float, float *, const CBLAS_INT, const CBLAS_INT) ;
+       *(void **) &fn = current_backend->blas.simatcopy.cblas_function;
 	   fn(CORDER, CTRANS, crows, ccols, calpha, a, clda, cldb);
    } else {
 	char ORDER[2]=" ";

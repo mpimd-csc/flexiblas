@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dlasdt,DLASDT)(blasint* n, blasint* lvl, blasint* nd, blasint* in
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlasdt.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlasdt.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlasdt.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlasdt.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) lvl, (void*) nd, (void*) inode, (void*) ndiml, (void*) ndimr, (void*) msub); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlasdt_(void* n, void* lvl, void* nd, void* inode, void* ndi
 {
 	void (*fn) (void* n, void* lvl, void* nd, void* inode, void* ndiml, void* ndimr, void* msub);
 
-	fn = current_backend->lapack.dlasdt.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlasdt.f77_blas_function; 
 
 		fn((void*) n, (void*) lvl, (void*) nd, (void*) inode, (void*) ndiml, (void*) ndimr, (void*) msub); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlasdt_(void* n, void* lvl, void* nd, void* inode, void* nd
 	void (*fn) (void* n, void* lvl, void* nd, void* inode, void* ndiml, void* ndimr, void* msub);
 	void (*fn_hook) (void* n, void* lvl, void* nd, void* inode, void* ndiml, void* ndimr, void* msub);
 
-	fn      = current_backend->lapack.dlasdt.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlasdt.f77_blas_function; 
 
     hook_pos_dlasdt ++;
     if( hook_pos_dlasdt < __flexiblas_hooks->dlasdt.nhook) {
-        fn_hook = __flexiblas_hooks->dlasdt.f77_hook_function[hook_pos_dlasdt];
+        *(void **) &fn_hook = __flexiblas_hooks->dlasdt.f77_hook_function[hook_pos_dlasdt];
         fn_hook((void*) n, (void*) lvl, (void*) nd, (void*) inode, (void*) ndiml, (void*) ndimr, (void*) msub);
     } else {
         hook_pos_dlasdt = 0;

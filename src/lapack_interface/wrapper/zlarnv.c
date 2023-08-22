@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zlarnv,ZLARNV)(blasint* idist, blasint* iseed, blasint* n, double
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlarnv.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlarnv.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlarnv.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlarnv.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) idist, (void*) iseed, (void*) n, (void*) x); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zlarnv_(void* idist, void* iseed, void* n, void* x)
 {
 	void (*fn) (void* idist, void* iseed, void* n, void* x);
 
-	fn = current_backend->lapack.zlarnv.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlarnv.f77_blas_function; 
 
 		fn((void*) idist, (void*) iseed, (void*) n, (void*) x); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zlarnv_(void* idist, void* iseed, void* n, void* x)
 	void (*fn) (void* idist, void* iseed, void* n, void* x);
 	void (*fn_hook) (void* idist, void* iseed, void* n, void* x);
 
-	fn      = current_backend->lapack.zlarnv.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlarnv.f77_blas_function; 
 
     hook_pos_zlarnv ++;
     if( hook_pos_zlarnv < __flexiblas_hooks->zlarnv.nhook) {
-        fn_hook = __flexiblas_hooks->zlarnv.f77_hook_function[hook_pos_zlarnv];
+        *(void **) &fn_hook = __flexiblas_hooks->zlarnv.f77_hook_function[hook_pos_zlarnv];
         fn_hook((void*) idist, (void*) iseed, (void*) n, (void*) x);
     } else {
         hook_pos_zlarnv = 0;

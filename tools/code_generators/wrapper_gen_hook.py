@@ -85,6 +85,8 @@ class FortranFunction(object):
     def arg_list(self, void = False ):
         first = True
         s = ""
+        if len(self._args) == 0:
+            return "void"
         for i in self._args:
             if not void:
                 if self._cvars[i] == "int":

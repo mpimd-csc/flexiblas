@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(ztpttf,ZTPTTF)(char* transr, char* uplo, blasint* n, double compl
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.ztpttf.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->ztpttf.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.ztpttf.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->ztpttf.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) transr, (void*) uplo, (void*) n, (void*) ap, (void*) arf, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_ztpttf_(void* transr, void* uplo, void* n, void* ap, void* a
 {
 	void (*fn) (void* transr, void* uplo, void* n, void* ap, void* arf, void* info);
 
-	fn = current_backend->lapack.ztpttf.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.ztpttf.f77_blas_function; 
 
 		fn((void*) transr, (void*) uplo, (void*) n, (void*) ap, (void*) arf, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_ztpttf_(void* transr, void* uplo, void* n, void* ap, void* 
 	void (*fn) (void* transr, void* uplo, void* n, void* ap, void* arf, void* info);
 	void (*fn_hook) (void* transr, void* uplo, void* n, void* ap, void* arf, void* info);
 
-	fn      = current_backend->lapack.ztpttf.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.ztpttf.f77_blas_function; 
 
     hook_pos_ztpttf ++;
     if( hook_pos_ztpttf < __flexiblas_hooks->ztpttf.nhook) {
-        fn_hook = __flexiblas_hooks->ztpttf.f77_hook_function[hook_pos_ztpttf];
+        *(void **) &fn_hook = __flexiblas_hooks->ztpttf.f77_hook_function[hook_pos_ztpttf];
         fn_hook((void*) transr, (void*) uplo, (void*) n, (void*) ap, (void*) arf, (void*) info);
     } else {
         hook_pos_ztpttf = 0;

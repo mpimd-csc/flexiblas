@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dlaed2,DLAED2)(blasint* k, blasint* n, blasint* n1, double* d, do
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlaed2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlaed2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlaed2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlaed2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) k, (void*) n, (void*) n1, (void*) d, (void*) q, (void*) ldq, (void*) indxq, (void*) rho, (void*) z, (void*) dlamda, (void*) w, (void*) q2, (void*) indx, (void*) indxc, (void*) indxp, (void*) coltyp, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlaed2_(void* k, void* n, void* n1, void* d, void* q, void* 
 {
 	void (*fn) (void* k, void* n, void* n1, void* d, void* q, void* ldq, void* indxq, void* rho, void* z, void* dlamda, void* w, void* q2, void* indx, void* indxc, void* indxp, void* coltyp, void* info);
 
-	fn = current_backend->lapack.dlaed2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlaed2.f77_blas_function; 
 
 		fn((void*) k, (void*) n, (void*) n1, (void*) d, (void*) q, (void*) ldq, (void*) indxq, (void*) rho, (void*) z, (void*) dlamda, (void*) w, (void*) q2, (void*) indx, (void*) indxc, (void*) indxp, (void*) coltyp, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlaed2_(void* k, void* n, void* n1, void* d, void* q, void*
 	void (*fn) (void* k, void* n, void* n1, void* d, void* q, void* ldq, void* indxq, void* rho, void* z, void* dlamda, void* w, void* q2, void* indx, void* indxc, void* indxp, void* coltyp, void* info);
 	void (*fn_hook) (void* k, void* n, void* n1, void* d, void* q, void* ldq, void* indxq, void* rho, void* z, void* dlamda, void* w, void* q2, void* indx, void* indxc, void* indxp, void* coltyp, void* info);
 
-	fn      = current_backend->lapack.dlaed2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlaed2.f77_blas_function; 
 
     hook_pos_dlaed2 ++;
     if( hook_pos_dlaed2 < __flexiblas_hooks->dlaed2.nhook) {
-        fn_hook = __flexiblas_hooks->dlaed2.f77_hook_function[hook_pos_dlaed2];
+        *(void **) &fn_hook = __flexiblas_hooks->dlaed2.f77_hook_function[hook_pos_dlaed2];
         fn_hook((void*) k, (void*) n, (void*) n1, (void*) d, (void*) q, (void*) ldq, (void*) indxq, (void*) rho, (void*) z, (void*) dlamda, (void*) w, (void*) q2, (void*) indx, (void*) indxc, (void*) indxp, (void*) coltyp, (void*) info);
     } else {
         hook_pos_dlaed2 = 0;

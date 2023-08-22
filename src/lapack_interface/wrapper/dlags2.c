@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dlags2,DLAGS2)(blasint* upper, double* a1, double* a2, double* a3
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlags2.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlags2.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlags2.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlags2.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) upper, (void*) a1, (void*) a2, (void*) a3, (void*) b1, (void*) b2, (void*) b3, (void*) csu, (void*) snu, (void*) csv, (void*) snv, (void*) csq, (void*) snq); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlags2_(void* upper, void* a1, void* a2, void* a3, void* b1,
 {
 	void (*fn) (void* upper, void* a1, void* a2, void* a3, void* b1, void* b2, void* b3, void* csu, void* snu, void* csv, void* snv, void* csq, void* snq);
 
-	fn = current_backend->lapack.dlags2.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlags2.f77_blas_function; 
 
 		fn((void*) upper, (void*) a1, (void*) a2, (void*) a3, (void*) b1, (void*) b2, (void*) b3, (void*) csu, (void*) snu, (void*) csv, (void*) snv, (void*) csq, (void*) snq); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlags2_(void* upper, void* a1, void* a2, void* a3, void* b1
 	void (*fn) (void* upper, void* a1, void* a2, void* a3, void* b1, void* b2, void* b3, void* csu, void* snu, void* csv, void* snv, void* csq, void* snq);
 	void (*fn_hook) (void* upper, void* a1, void* a2, void* a3, void* b1, void* b2, void* b3, void* csu, void* snu, void* csv, void* snv, void* csq, void* snq);
 
-	fn      = current_backend->lapack.dlags2.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlags2.f77_blas_function; 
 
     hook_pos_dlags2 ++;
     if( hook_pos_dlags2 < __flexiblas_hooks->dlags2.nhook) {
-        fn_hook = __flexiblas_hooks->dlags2.f77_hook_function[hook_pos_dlags2];
+        *(void **) &fn_hook = __flexiblas_hooks->dlags2.f77_hook_function[hook_pos_dlags2];
         fn_hook((void*) upper, (void*) a1, (void*) a2, (void*) a3, (void*) b1, (void*) b2, (void*) b3, (void*) csu, (void*) snu, (void*) csv, (void*) snv, (void*) csq, (void*) snq);
     } else {
         hook_pos_dlags2 = 0;

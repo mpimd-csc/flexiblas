@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dlarrj,DLARRJ)(blasint* n, double* d, double* e2, blasint* ifirst
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dlarrj.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dlarrj.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dlarrj.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dlarrj.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) d, (void*) e2, (void*) ifirst, (void*) ilast, (void*) rtol, (void*) offset, (void*) w, (void*) werr, (void*) work, (void*) iwork, (void*) pivmin, (void*) spdiam, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dlarrj_(void* n, void* d, void* e2, void* ifirst, void* ilas
 {
 	void (*fn) (void* n, void* d, void* e2, void* ifirst, void* ilast, void* rtol, void* offset, void* w, void* werr, void* work, void* iwork, void* pivmin, void* spdiam, void* info);
 
-	fn = current_backend->lapack.dlarrj.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dlarrj.f77_blas_function; 
 
 		fn((void*) n, (void*) d, (void*) e2, (void*) ifirst, (void*) ilast, (void*) rtol, (void*) offset, (void*) w, (void*) werr, (void*) work, (void*) iwork, (void*) pivmin, (void*) spdiam, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dlarrj_(void* n, void* d, void* e2, void* ifirst, void* ila
 	void (*fn) (void* n, void* d, void* e2, void* ifirst, void* ilast, void* rtol, void* offset, void* w, void* werr, void* work, void* iwork, void* pivmin, void* spdiam, void* info);
 	void (*fn_hook) (void* n, void* d, void* e2, void* ifirst, void* ilast, void* rtol, void* offset, void* w, void* werr, void* work, void* iwork, void* pivmin, void* spdiam, void* info);
 
-	fn      = current_backend->lapack.dlarrj.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dlarrj.f77_blas_function; 
 
     hook_pos_dlarrj ++;
     if( hook_pos_dlarrj < __flexiblas_hooks->dlarrj.nhook) {
-        fn_hook = __flexiblas_hooks->dlarrj.f77_hook_function[hook_pos_dlarrj];
+        *(void **) &fn_hook = __flexiblas_hooks->dlarrj.f77_hook_function[hook_pos_dlarrj];
         fn_hook((void*) n, (void*) d, (void*) e2, (void*) ifirst, (void*) ilast, (void*) rtol, (void*) offset, (void*) w, (void*) werr, (void*) work, (void*) iwork, (void*) pivmin, (void*) spdiam, (void*) info);
     } else {
         hook_pos_dlarrj = 0;

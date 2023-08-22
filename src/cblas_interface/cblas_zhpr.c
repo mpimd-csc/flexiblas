@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -92,17 +92,19 @@ void flexiblas_real_cblas_zhpr(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
 #else
 #define F77_N N
 #define F77_incX incx
+    CBLAS_INT incx=incX;
+
 #endif
     if ( current_backend->blas.zhpr.cblas_function != NULL ) {
         void (*fn)
             (const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
              const CBLAS_INT N, const double alpha, const void *X,
-             const CBLAS_INT incX, void *A)
-            = current_backend->blas.zhpr.cblas_function;
+             const CBLAS_INT incX, void *A);
+        *(void **) &fn = current_backend->blas.zhpr.cblas_function;
         fn(layout,Uplo,N,alpha,X,incX,A);
 
     } else {
-        CBLAS_INT n, i, tincx, incx=incX;
+        CBLAS_INT n, i, tincx;
         double *x, *xx, *tx, *st;
 
         extern int CBLAS_CallFromC;

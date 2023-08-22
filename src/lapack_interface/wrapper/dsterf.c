@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(dsterf,DSTERF)(blasint* n, double* d, double* e, blasint* info)
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.dsterf.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->dsterf.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.dsterf.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->dsterf.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) d, (void*) e, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_dsterf_(void* n, void* d, void* e, void* info)
 {
 	void (*fn) (void* n, void* d, void* e, void* info);
 
-	fn = current_backend->lapack.dsterf.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.dsterf.f77_blas_function; 
 
 		fn((void*) n, (void*) d, (void*) e, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_dsterf_(void* n, void* d, void* e, void* info)
 	void (*fn) (void* n, void* d, void* e, void* info);
 	void (*fn_hook) (void* n, void* d, void* e, void* info);
 
-	fn      = current_backend->lapack.dsterf.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.dsterf.f77_blas_function; 
 
     hook_pos_dsterf ++;
     if( hook_pos_dsterf < __flexiblas_hooks->dsterf.nhook) {
-        fn_hook = __flexiblas_hooks->dsterf.f77_hook_function[hook_pos_dsterf];
+        *(void **) &fn_hook = __flexiblas_hooks->dsterf.f77_hook_function[hook_pos_dsterf];
         fn_hook((void*) n, (void*) d, (void*) e, (void*) info);
     } else {
         hook_pos_dsterf = 0;

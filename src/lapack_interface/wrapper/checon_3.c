@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL_(checon_3,CHECON_3)(char* uplo, blasint* n, float complex* a, bla
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.checon_3.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->checon_3.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.checon_3.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->checon_3.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) info); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_checon_3_(void* uplo, void* n, void* a, void* lda, void* e, 
 {
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* e, void* ipiv, void* anorm, void* rcond, void* work, void* info);
 
-	fn = current_backend->lapack.checon_3.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.checon_3.f77_blas_function; 
 
 		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) info); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_checon_3_(void* uplo, void* n, void* a, void* lda, void* e,
 	void (*fn) (void* uplo, void* n, void* a, void* lda, void* e, void* ipiv, void* anorm, void* rcond, void* work, void* info);
 	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* e, void* ipiv, void* anorm, void* rcond, void* work, void* info);
 
-	fn      = current_backend->lapack.checon_3.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.checon_3.f77_blas_function; 
 
     hook_pos_checon_3 ++;
     if( hook_pos_checon_3 < __flexiblas_hooks->checon_3.nhook) {
-        fn_hook = __flexiblas_hooks->checon_3.f77_hook_function[hook_pos_checon_3];
+        *(void **) &fn_hook = __flexiblas_hooks->checon_3.f77_hook_function[hook_pos_checon_3];
         fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) e, (void*) ipiv, (void*) anorm, (void*) rcond, (void*) work, (void*) info);
     } else {
         hook_pos_checon_3 = 0;

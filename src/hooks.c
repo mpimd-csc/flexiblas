@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -64,7 +64,7 @@
 static csc_map_t * hook_map = NULL;
 
 
-HIDDEN void __flexiblas_list_hooks()
+HIDDEN void __flexiblas_list_hooks(void)
 {
 
     int i ;
@@ -149,7 +149,7 @@ static char *__struppercase(char *str) {
 }
 
 
-HIDDEN void __flexiblas_add_hooks()
+HIDDEN void __flexiblas_add_hooks(void)
 {
 
     int i ;
@@ -251,7 +251,7 @@ HIDDEN char * __flexiblas_hook_sofile(char *name)
     }
 }
 
-HIDDEN void __flexiblas_exit_hook( )
+HIDDEN void __flexiblas_exit_hook(void)
 {
     csc_map_free(hook_map);
 }

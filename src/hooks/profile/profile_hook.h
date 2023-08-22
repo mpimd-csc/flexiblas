@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -2206,6 +2206,28 @@ extern "C" {
         /* LAPACK 3.10.1 */
         profile_data_t droundup_lwork;
         profile_data_t sroundup_lwork;
+
+        /* LAPACK 3.11.0 */
+        profile_data_t ctrsyl3;
+        profile_data_t dtrsyl3;
+        profile_data_t strsyl3;
+        profile_data_t ztrsyl3;
+        profile_data_t clatrs3;
+        profile_data_t dlatrs3;
+        profile_data_t slatrs3;
+        profile_data_t zlatrs3;
+        profile_data_t cgelst;
+        profile_data_t dgelst;
+        profile_data_t sgelst;
+        profile_data_t zgelst;
+        profile_data_t dlarmm;
+        profile_data_t slarmm;
+
+
+
+
+
+
 
     } blas_calls_t;
 

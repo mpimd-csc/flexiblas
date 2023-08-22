@@ -1,8 +1,14 @@
+flexiblas (3.3.0) focal; urgency=medium
+
+  * New minor release. See CHANGELOG
+
+ -- Martin Köhler <koehlerm@mpi-magdeburg.mpg.de>  Mon, 19 Dec 2022 20:52:04 +0100
+
 flexiblas (3.2.1) focal; urgency=medium
 
   * Bugfix release. See CHANGELOG
 
- -- Martin Koehler <koehlerm@mpi-magdeburg.mpg.de>  Thu, 12 Jul 2022 12:00:00 +0100
+ -- Martin Koehler <koehlerm@mpi-magdeburg.mpg.de>  Tue, 12 Jul 2022 12:00:00 +0100
 
 
 flexiblas (3.2.0) focal; urgency=medium

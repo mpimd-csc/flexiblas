@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(zlacrt,ZLACRT)(blasint* n, double complex* cx, blasint* incx, dou
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.zlacrt.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->zlacrt.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.zlacrt.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->zlacrt.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_zlacrt_(void* n, void* cx, void* incx, void* cy, void* incy,
 {
 	void (*fn) (void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s);
 
-	fn = current_backend->lapack.zlacrt.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.zlacrt.f77_blas_function; 
 
 		fn((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_zlacrt_(void* n, void* cx, void* incx, void* cy, void* incy
 	void (*fn) (void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s);
 	void (*fn_hook) (void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s);
 
-	fn      = current_backend->lapack.zlacrt.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.zlacrt.f77_blas_function; 
 
     hook_pos_zlacrt ++;
     if( hook_pos_zlacrt < __flexiblas_hooks->zlacrt.nhook) {
-        fn_hook = __flexiblas_hooks->zlacrt.f77_hook_function[hook_pos_zlacrt];
+        *(void **) &fn_hook = __flexiblas_hooks->zlacrt.f77_hook_function[hook_pos_zlacrt];
         fn_hook((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s);
     } else {
         hook_pos_zlacrt = 0;

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -81,8 +81,8 @@ char FC_GLOBAL_(chla_transtype,CHLA_TRANSTYPE)(blasint* trans)
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.chla_transtype.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->chla_transtype.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.chla_transtype.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->chla_transtype.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		ret = fn((void*) trans); 
 		return ret; 
@@ -113,7 +113,7 @@ char flexiblas_real_chla_transtype_(void* trans)
 	char (*fn) (void* trans);
 	char ret;
 
-	fn = current_backend->lapack.chla_transtype.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.chla_transtype.f77_blas_function; 
 
 		ret = fn((void*) trans); 
 
@@ -137,11 +137,11 @@ char flexiblas_chain_chla_transtype_(void* trans)
 	char (*fn_hook) (void* trans);
 	char ret;
 
-	fn      = current_backend->lapack.chla_transtype.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.chla_transtype.f77_blas_function; 
 
     hook_pos_chla_transtype ++;
     if( hook_pos_chla_transtype < __flexiblas_hooks->chla_transtype.nhook) {
-        fn_hook = __flexiblas_hooks->chla_transtype.f77_hook_function[hook_pos_chla_transtype];
+        *(void **) &fn_hook = __flexiblas_hooks->chla_transtype.f77_hook_function[hook_pos_chla_transtype];
         ret = fn_hook((void*) trans);
     } else {
         hook_pos_chla_transtype = 0;

@@ -39,7 +39,7 @@
  * Public License, version 3 (“GPLv3”)
  *
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
         
 #include <stdio.h>
@@ -80,8 +80,8 @@ void FC_GLOBAL(slamrg,SLAMRG)(blasint* n1, blasint* n2, float* a, blasint* strd1
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	fn = current_backend->lapack.slamrg.f77_blas_function; 
-	fn_hook = __flexiblas_hooks->slamrg.f77_hook_function[0]; 
+	*(void **) & fn = current_backend->lapack.slamrg.f77_blas_function; 
+	*(void **) & fn_hook = __flexiblas_hooks->slamrg.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
 		fn((void*) n1, (void*) n2, (void*) a, (void*) strd1, (void*) strd2, (void*) index_bn); 
 		return;
@@ -111,7 +111,7 @@ void flexiblas_real_slamrg_(void* n1, void* n2, void* a, void* strd1, void* strd
 {
 	void (*fn) (void* n1, void* n2, void* a, void* strd1, void* strd2, void* index_bn);
 
-	fn = current_backend->lapack.slamrg.f77_blas_function; 
+	*(void **) & fn = current_backend->lapack.slamrg.f77_blas_function; 
 
 		fn((void*) n1, (void*) n2, (void*) a, (void*) strd1, (void*) strd2, (void*) index_bn); 
 
@@ -134,11 +134,11 @@ void flexiblas_chain_slamrg_(void* n1, void* n2, void* a, void* strd1, void* str
 	void (*fn) (void* n1, void* n2, void* a, void* strd1, void* strd2, void* index_bn);
 	void (*fn_hook) (void* n1, void* n2, void* a, void* strd1, void* strd2, void* index_bn);
 
-	fn      = current_backend->lapack.slamrg.f77_blas_function; 
+	*(void **) &fn      = current_backend->lapack.slamrg.f77_blas_function; 
 
     hook_pos_slamrg ++;
     if( hook_pos_slamrg < __flexiblas_hooks->slamrg.nhook) {
-        fn_hook = __flexiblas_hooks->slamrg.f77_hook_function[hook_pos_slamrg];
+        *(void **) &fn_hook = __flexiblas_hooks->slamrg.f77_hook_function[hook_pos_slamrg];
         fn_hook((void*) n1, (void*) n2, (void*) a, (void*) strd1, (void*) strd2, (void*) index_bn);
     } else {
         hook_pos_slamrg = 0;

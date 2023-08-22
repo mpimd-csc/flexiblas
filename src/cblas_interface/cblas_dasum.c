@@ -39,7 +39,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) Martin Koehler, 2013-2022
+ * Copyright (C) Martin Koehler, 2013-2023
  */
 
 
@@ -86,7 +86,8 @@ double flexiblas_real_cblas_dasum( const CBLAS_INT N, const double *X, const CBL
 #endif
    if ( current_backend->blas.dasum.cblas_function != NULL ) {
 
-	   double (*fn)(const CBLAS_INT , const double *, const CBLAS_INT ) = current_backend->blas.dasum.cblas_function;
+	   double (*fn)(const CBLAS_INT , const double *, const CBLAS_INT );
+       *(void **) &fn = current_backend->blas.dasum.cblas_function;
 	   asum = fn(N,X,incX);
 
    } else {
