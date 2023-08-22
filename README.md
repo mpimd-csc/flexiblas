@@ -79,23 +79,23 @@ options:
 
     Enables 8-byte integers for the *Fortran* interface. Be aware that the
     application and the backend libraries must be compiled to support 8-byte
-    integers as well. Since most applications and libraries still us the
+    integers as well. Since most applications and libraries still use the
     classic 32-bit integers the default is `OFF`.
 
 * `-DCBLAS=ON/OFF`
 
     Enables the *CBLAS* frontend. If the backend itself contains a *CBLAS*
-    interface that one is used. Otherwise **FlexiBLAS** acts like the
+    interface that one is used. Otherwise, **FlexiBLAS** acts like the
     *CBLAS*-wrapper from *Netlib*. This option is set to `ON` by default.
 
 * `-DABI=GNU|Intel`
 
     Selects the ABI (Application Binary Interface) of the *Fortran* Interface.
-    By default the compiler used determines which ABI is used, but it can also
+    By default, the compiler used determines which ABI is used, but it can also
     be forced using this parameter. The difference between both ABIs is how
     complex values are returned from Functions. The *GNU*-style returns them as
     a normal return value on the stack. The *Intel* (*F2C*, *GNU F77*) style
-    returns them as an additional parameters in front of the proper function
+    returns them as additional parameters in front of the proper function
     arguments. That means it is a subroutine from the *C* point of view.
 
 * `-DBLASNAME=OFF`
@@ -113,13 +113,13 @@ options:
     Turn `ON`/`OFF` the build of an *Intel MKL* custom library instead of
     searching for the *MKL* directly. This is necessary if you plan to switch
     between single and multi-threaded *MKL* in your application. Turning this
-    option on requires to have the `MKLROOT` environment variable set properly
+    option on requires having the `MKLROOT` environment variable set properly
     and an *MKL* version >=11.1. The default is `OFF`.
 
 * `-DDEV=ON/OFF`
 
     Configures the build to work only in the build directory. In this
-    case **FlexiBLAS** searches in the root of the build directory for its
+    case, **FlexiBLAS** searches in the root of the build directory for its
     configuration file and the build directory is added to the default library
     search path. Turning on this option is only useful during the development in
     order to work independently from an installed **FlexiBLAS**. If you plan to
@@ -129,7 +129,7 @@ options:
 
     Enable/disable the automatic search for *BLAS* libraries during
     configuration. They need to be added separately using the `-DEXTRA` option
-    or configured afterwards. The default value is `ON`.
+    or configured afterward. The default value is `ON`.
 
 * `-DLAPACK=ON/OFF`
 
@@ -139,7 +139,7 @@ options:
 
 * `-DLAPACK_API_VERSION=VERSION`
 
-    Selects *LAPACK* API compatibility level. By default the newest one is used.
+    Selects *LAPACK* API compatibility level. By default, the newest one is used.
     If a *LAPACK* library loaded at runtime does not provide all functions and
     subroutines, the missing ones are loaded from the fallback.
     The following *LAPACK* versions are supported:
@@ -179,13 +179,13 @@ options:
 * `-DLINK_OPENMP=OFF/ON`
     Link FlexiBLAS against the compiler's OpenMP implementation. This might be
     necessary if Python/NumPy and OpenMP flags like OMP_PROC_BIND are used. Be
-    default this is avoided in order to avoid OpenMP as cross dependency in
-    application that do not required OpenMP. If the OS does not support the
+    default this is avoided in order to avoid OpenMP as cross-dependency in
+    applications that do not require OpenMP. If the OS does not support the
     `RTLD_NODELETE` flag in its `dlopen` call, setting this option to `ON` can
     be helpful.
 
 The `PROFILE=ON/OFF` option was removed from version 1.1.0 onward. Beginning
-with version 3.0.0 profiling is done using a hook functionality and is not
+with version 3.0.0 profiling is done using a hook functionality and is no
 longer compiled in **FlexiBLAS** directly. See the Profiling section for
 details.
 
@@ -203,13 +203,13 @@ On many Linux and *BSD* operating systems static versions of *BLAS* and *LAPACK*
 can be installed from the package management system. These versions can be used
 instead of **FlexiBLAS**'s internal fallback implementation. In order to use a
 provided static library providing a *BLAS* API it needs to be ensured that this
-library is compiled with support for position independent code (`-fPIC`).
+library is compiled with support for position-independent code (`-fPIC`).
 
 The *BLAS* implementation is set in the configuration procedure via
 ```
     cmake -DSYS_BLAS_LIBRARY=/absolute/path/to/liblas.a
 ```
-The *BLAS* library have to provided all functions and subroutines available in
+The *BLAS* library has to provide all functions and subroutines available in
 the reference *BLAS* implementation since *LAPACK* 3.0.
 
 The *LAPACK* fallback implementation can be provided in the same way via
@@ -219,7 +219,7 @@ The *LAPACK* fallback implementation can be provided in the same way via
 ```
 The *LAPACK* library must provide all symbols that the reference implementation
 from *NETLIB* with the given version provides. A list of supported *LAPACK*
-versions is given above.
+versions are given above.
 If the version is not specified *cmake* tries to obtain it with a call to
 *LAPACK*'s `ILAVER`. Note that the path must be absolute, the `~`-operator to
 reference the home directory is not allowed.
@@ -229,7 +229,7 @@ reference the home directory is not allowed.
 By default, **FlexiBLAS** tries to locate as many *BLAS* and *LAPACK*
 installations as possible on your system. If you want to add our own ones to the
 default setup you can pass the `-DEXTRA` option to *cmake*. It specifies a
-semicolon separated list of additional *BLAS* names that should be added. For
+semicolon-separated list of additional *BLAS* names that should be added. For
 each additional library name `name` in the list, a path needs to be specified via
 `-Dname_LIBRARY=PATH_TO_NAME`. If special linker flags are required the option
 `-Dname_LINKER_FLAGS="FLAGS"` can be passed to *cmake*. For example, if a custom
@@ -257,7 +257,7 @@ the following prerequisites need to be installed:
 	libblis64-serial-dev libblas-dev libblas64-dev liblapack-dev \
 	liblapack64-dev
 ```
-Afterwards you can build the *Debian* package out of the source code by typing:
+Afterwards, you can build the *Debian* package out of the source code by typing:
 ```
     fakeroot dpkg-buildpackage -us -uc
 ```
@@ -266,7 +266,7 @@ be cleaned using
 ```
     debian/rules clean
 ```
-The build process creates a set of packages which are available one directory
+The build process creates a set of packages that are available one directory
 level above. They are installed using:
 ```
     sudo dpkg -i ../libflexiblas*.deb
@@ -276,7 +276,7 @@ If you update from **FlexiBLAS** <= 2.0.0 please remove all related packages and
 configuration files before.
 
 ### Setup on Fedora
-If your are using Fedora Linux, you can install FlexiBLAS easily using `dnf`
+If you are using Fedora Linux, you can install FlexiBLAS easily using `dnf`
 since FlexiBLAS is part of Fedora Linux. Just type
 ```
 dnf install flexiblas
@@ -312,7 +312,7 @@ maintaining the Fedora integration.
 
 * Due to a bug in the *Ubuntu* *OpenBLAS* packages **FlexiBLAS** does not work
   with the **OpenBLAS** package versions between 0.2.6 and 0.2.8-4. If you have
-  one of these version installed, please update *OpenBLAS* before installing
+  one of these versions installed, please update *OpenBLAS* before installing
   **FlexiBLAS**.
 
 * If FlexiBLAS should be used on MacOS X and OpenBLAS is installed via `brew`,
@@ -328,7 +328,7 @@ The tests are executed using
 ```
      make test
 ```
-and use the *NETLIB BLAS* implementation by default in order to check the
+and use the *NETLIB BLAS* implementation by default in order to check 
 compliance with the reference implementation. Other *BLAS* and *LAPACK*
 implementations can be tested by setting the `FLEXIBLAS_TEST` environment
 variable. The variable has the same meaning as the `FLEXIBLAS` environment
@@ -365,18 +365,18 @@ and:
 in case of a 64-bit integer build.
 
 The files contain a mapping between the name of a backend and the corresponding
-name of the shared object. The setting in the user owned file overrides the
+name of the shared object. The setting in the user-owned file overrides the
 global settings. All settings are superseded eventually by setting environment
 variables. The syntax of the file is similar to the *KDE* configuration files or
-the *ini*-files known from early *MS-Windows* versions. Basically it is a
+the *ini*-files known from early *MS-Windows* versions. Basically, it is a
 key-value store with section support. In the first section of the configuration
-file are global definition like the default *BLAS* backend or the verbosity
+file are global definitions like the default *BLAS* backend or the verbosity
 level:
 
         default = NETLIB
         verbose = 0
 
-Than for each *BLAS* backend there is a block of the following style:
+Then for each *BLAS* backend, there is a block of the following style:
 
         [NAME_OF_THE_BACKEND]
         library = shared_object.so
@@ -389,7 +389,7 @@ absolute it tries to open the library directly. The name of the backend is
 case-insensitive!
 
 Additionally, one can define additional search paths in the first section.
-Therefore one has to add an key-value entry of the following style to the first
+Therefore one has to add a key-value entry of the following style to the first
 section:
 
         pathXXX = /additional/search/path
@@ -400,8 +400,8 @@ each additional search path.
 If no default mapping is set in one of the configuration files, **FlexiBLAS**
 will use the standard *Netlib* implementation.
 
-The user config files can be handle using the `flexiblas` tool. This tool can
-manage the user and the system configuration file, excluding the adding
+The user config files can be handled using the `flexiblas` tool. This tool can
+manage the user and the system configuration file, excluding adding
 additional search paths.
 
 The `flexiblas` tool can be used for example to:
@@ -428,19 +428,19 @@ in parallel.
 ## Selecting the Backend at Runtime
 
 The behavior of the **FlexiBLAS** wrapper is controlled by a set of environment
-variables described below and in the above mentioned configuration files. The
+variables described below and in the above-mentioned configuration files. The
 most important environment variable is called `FLEXIBLAS`. This variable
 describes the shared object library file where the backend *BLAS* implementation
 is contained. The variable supports three types of descriptions. If the value
 does not contain a `/` **FlexiBLAS** searches for the given name in
-`CMAKE_INSTALL_PREFIX/lib/flexiblas`. That means the value is interpreted as a
+`CMAKE_INSTALL_PREFIX/lib/flexiblas`. That means the value is interpreted as the
 name of one of the wrapper libraries. If it does not find it there, it searches
 the configuration files for a line matching the value and fetches the actual
-name of the shared object library from there. Otherwise the value is
+name of the shared object library from there. Otherwise, the value is
 interpreted as a full path description of the *BLAS* backend library shared
 object file to use. If the variable is not set, the *Netlib* reference *BLAS*,
 or the default from the configuration files is used. See the documentation for
-details on the names, syntax and locations of the configuration files.
+details on the names, syntax, and locations of the configuration files.
 
 ## Usage Example
 
@@ -451,7 +451,7 @@ use the following in an application to call the *ATLAS* instead of the default
         FLEXIBLAS="libblas_atlas.so" ./yourapp
 
 In case **FlexiBLAS** should use *OpenBLAS* and is registered as `OpenBLAS` in
-one of the configuration files the application can be stated like:
+one of the configuration files the application can be started as follows:
 
         FLEXIBLAS=OpenBLAS ./yourapp
 
@@ -469,7 +469,7 @@ Other libraries are not necessary.
 * `FLEXIBLAS=PATH/TO/BLAS`
 
     This is the main variable used by **FlexiBLAS**. It selects the *BLAS*
-    library which is used as backend this should be a shared object which
+    library which is used as the backend. This should be a shared object which
     contains or allows to resolve all symbols defined in the *Netlib* reference
     *BLAS* library. The default search path is
     `CMAKE_INSTALL_PREFIX/lib/flexiblas` or
@@ -481,8 +481,8 @@ Other libraries are not necessary.
     additional implementations can be used:
       * `libblas_openblas.so`  - to select *OpenBLAS*
       * `libblas_atlas.so`     - to select *ATLAS*
-    **FlexiBLAS** installs a command `flexiblas` that can be used to find list
-    all available backends (`flexiblas list`) and prescribe the users default
+    **FlexiBLAS** installs a command `flexiblas` that can be used to find a list
+    of all available backends (`flexiblas list`) and prescribe the users default
     (`flexiblas set NAME_OF_BACKEND`)
 
 * `FLEXIBLAS_VERBOSE=LEVEL`
@@ -497,7 +497,7 @@ Other libraries are not necessary.
 * `FLEXIBLAS_NOLAPACK=0/1`
 
     If set to one, **FlexiBLAS** does not load *LAPACK* from the backends. Only
-    the internal fallback is used. In this way a detailed profiling and logging
+    the internal fallback is used. In this way detailed profiling and logging
     is possible. The default value is `0`.
 
 * `FLEXIBLAS_COLOR_OUTPUT=0/1`
@@ -511,7 +511,7 @@ Other libraries are not necessary.
 
 * `FLEXIBLAS_LIBRARY_PATH=PATHS`
 
-    Add additional paths, in a colon separated list, to the search paths of the
+    Add additional paths, in a colon-separated list, to the search paths of the
     **FlexiBLAS** library. The paths are added in front of the search list.
 
 **Attention:** In the case of a 64-bit integer build, all environment variables
@@ -520,13 +520,13 @@ begin with `FLEXIBLAS64` instead of `FLEXIBLAS`.
 ## 64-Bit Integer Build
 
 As already mentioned in the case when the 64-bit integer interface is enabled,
-the names of all libraries, directories and environment variables are suffixed
+the names of all libraries, directories, and environment variables are suffixed
 by `64`, that means in order to link against the 64-bit library, you have to
 use:
 
         gcc -lflexiblas64 ...
 
-The flexiblas tool is now named `flexiblas64`. This allows to installed both
+The flexiblas tool is now named `flexiblas64`. This allows to installed of both
 variants on a single system.
 
 ## Profiling
@@ -543,19 +543,19 @@ variables:
 * `FLEXIBLAS_HOOK=libflexiblas_hook_profile.so`
 
     Loads the profile library and installs the functions hooks for it. If
-    already an other hook is loaded, The profile library can be chain-loaded by
+    already another hook is loaded, The profile library can be chain-loaded by
     adding it separated by a colon from the other hook libraries.
 
 * `FLEXIBLAS_PROFILE_FILE=FILENAME`
 
     Sets a filename to write profiling output to. If the variable is set, the
-    profiling output will be redirected to this file. Otherwise it is written to
+    profiling output will be redirected to this file. Otherwise, it is written to
     the standard error output `stderr` which is the default setting if the
     variable is not set.
 
 ## *Octave* Interface
 
-The *GNU Octave* interface is a separate package which can be downloaded from:
+The *GNU Octave* interface is a separate package that can be downloaded from:
 
 http://www.mpi-magdeburg.mpg.de/projects/flexiblas
 
@@ -564,7 +564,7 @@ and installed via:
         pkg install -verbose flexiblas-octave.tar.gz
 
 from the command-line prompt in *GNU Octave*. After installing the package you
-can get an overview about the installed functions by calling:
+can get an overview of the installed functions by calling:
 
         pkg describe -verbose flexiblas
 
@@ -589,13 +589,13 @@ We thank *Christian Himpe* (0000-0003-2194-6754) for documenting, testing, and
 providing feedback.
 
 We also thank *Iñaki Ucar* (0000-0001-6403-5550) for creating a *Fedora* package
-and pointing out Linux software maintainer related issues with the configuration
+and pointing out Linux software maintainer-related issues with the configuration
 and building process.
 
 ## Bug Reports
 
 If you find a bug in **FlexiBLAS** please prepare a minimal examples which
-reproduces the bug. Without a minimal examples we cannot fix the bug.
+reproduces the bug. Without minimal examples, we cannot fix the bug.
 Send feedback to:
 
 &#x6b;&#x6f;&#x65;&#x68;&#x6c;&#x65;&#x72;&#x6d;&#x40;&#x6d;&#x70;&#x69;&#x2d;&#x6d;&#x61;&#x67;&#x64;&#x65;&#x62;&#x75;&#x72;&#x67;&#x2e;&#x6d;&#x70;&#x67;&#x2e;&#x64;&#x65;
@@ -604,7 +604,7 @@ Send feedback to:
 
 The whole library is provided under the conditions of the *GPLv3* and later with
 a linking exception according to section 7 of the GNU General Public License,
-version 3 ("GPLv3"). This exception, written in COPYING.ADDITIONAL, is valid
+version 3 ("GPLv3"). This exception, is written in COPYING.ADDITIONAL, is valid
 for all files in the src/ directory. It allows to link FlexiBLAS against all
 software, open source or proprietary, without violating the GPL license as long
 as only the BLAS/LAPACK interface of the reference implementation is used.
