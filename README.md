@@ -1,13 +1,13 @@
 FlexiBLAS - A BLAS and LAPACK wrapper library with runtime exchangeable backends
 ================================================================================
 
-**Version 3.3.1** 10.5281/zenodo.798186
+**Version 3.4.0** - DOI: 10.5281/zenodo.10473997
 
 **Project Website:** https://www.mpi-magdeburg.mpg.de/projects/flexiblas
 
 **Git Repository:** https://gitlab.mpi-magdeburg.mpg.de/software/flexiblas-release
 
-Copyright 2013-2023 by *Martin Köhler* (0000-0003-2338-9904)
+Copyright 2013-2024 by *Martin Köhler* (0000-0003-2338-9904)
                    and *Jens Saak* (0000-0001-5567-9637)
 
 ## Documentation
@@ -146,6 +146,10 @@ options:
 
     | LAPACK_API_VERSION |                                          | Testing |
     |--------------------|------------------------------------------|---------|
+    | 3.12.0             | LAPACK 3.12.0                            |   yes   |
+    | 3.12.0-wodprc      | LAPACK 3.12.0 without deprecated routines|   yes   |
+    | 3.11.0             | LAPACK 3.11.0                            |   yes   |
+    | 3.11.0-wodprc      | LAPACK 3.11.0 without deprecated routines|   yes   |
     | 3.10.1             | LAPACK 3.10.1                            |   yes   |
     | 3.10.1-wodprc      | LAPACK 3.10.1 without deprecated routines|   yes   |
     | 3.10.0             | LAPACK 3.10.0                            |   yes   |
@@ -328,7 +332,7 @@ The tests are executed using
 ```
      make test
 ```
-and use the *NETLIB BLAS* implementation by default in order to check 
+and use the *NETLIB BLAS* implementation by default in order to check
 compliance with the reference implementation. Other *BLAS* and *LAPACK*
 implementations can be tested by setting the `FLEXIBLAS_TEST` environment
 variable. The variable has the same meaning as the `FLEXIBLAS` environment
@@ -602,12 +606,7 @@ Send feedback to:
 
 ## License
 
-The whole library is provided under the conditions of the *GPLv3* and later with
-a linking exception according to section 7 of the GNU General Public License,
-version 3 ("GPLv3"). This exception, is written in COPYING.ADDITIONAL, is valid
-for all files in the src/ directory. It allows to link FlexiBLAS against all
-software, open source or proprietary, without violating the GPL license as long
-as only the BLAS/LAPACK interface of the reference implementation is used.
+The whole library is provided under the conditions of the *LGPLv3* and later
 The testing code ( contained in `test/` ) and the *Reference Implementation*
 implementation (contained in `contributed/`) are covered by the
 license of *LAPACK* ( https://www.netlib.org/lapack ). See ``COPYING.NETLIB``

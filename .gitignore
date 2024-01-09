@@ -1,6 +1,7 @@
 
 *.aux
 *.ccls*
+*.diff
 *.log
 *.o
 *.oct

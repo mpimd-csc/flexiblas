@@ -229,7 +229,11 @@ ENDIF()
 #
 IF ( LAPACK )
 	# 3.7.1 and 3.7.0 share the same api/abi
-	IF(LAPACK_API_VERSION STREQUAL "3.11.0")
+	IF(LAPACK_API_VERSION STREQUAL "3.12.0")
+		SET(_LAPACK_FILE_SUFFIX 3_12_0)
+	ELSEIF (LAPACK_API_VERSION STREQUAL "3.12.0-wodprc")
+		SET(_LAPACK_FILE_SUFFIX 3_12_0-wodprc) #
+    ELSEIF(LAPACK_API_VERSION STREQUAL "3.11.0")
 		SET(_LAPACK_FILE_SUFFIX 3_11_0)
 	ELSEIF (LAPACK_API_VERSION STREQUAL "3.11.0-wodprc")
 		SET(_LAPACK_FILE_SUFFIX 3_11_0-wodprc) #
@@ -700,7 +704,7 @@ IF ( MKL_BUILDER STREQUAL ON)
 	ENDIF()
 	SET (MKL_LIST mkl_2018.3.list)
 	ADD_CUSTOM_TARGET(mkl_parallel COMMAND make -C "$ENV{MKLROOT}/tools/builder" ${MKL_TARGET} export=${CMAKE_CURRENT_SOURCE_DIR}/backends/intel_mkl/${MKL_LIST} name="${CMAKE_BINARY_DIR}/libflexiblas_mkl_custom_parallel" threading=parallel interface=${MKL_INTERFACE})
-	ADD_CUSTOM_TARGET(mkl_sequential COMMAND make -C "$ENV{MKLROOT}/tools/builder" ${MKL_TARGET} export=${CMAKE_CURRENT_SOURCE_DIR}/backends/intel_mkl/${MKL_LIST} name="${CMAKE_BINARY_DIR}/libflexiblas_mkl_custom_sequential" threading=parallel interface=${MKL_INTERFACE})
+	ADD_CUSTOM_TARGET(mkl_sequential COMMAND make -C "$ENV{MKLROOT}/tools/builder" ${MKL_TARGET} export=${CMAKE_CURRENT_SOURCE_DIR}/backends/intel_mkl/${MKL_LIST} name="${CMAKE_BINARY_DIR}/libflexiblas_mkl_custom_sequential" threading=sequential interface=${MKL_INTERFACE})
 	SET(MKL_PARALLEL ${CMAKE_BINARY_DIR}/libflexiblas_mkl_custom_parallel.so)
 	SET(MKL_SEQUENTIAL ${CMAKE_BINARY_DIR}/libflexiblas_mkl_custom_sequential.so)
 

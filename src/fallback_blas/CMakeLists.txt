@@ -22,16 +22,16 @@ SET (SRC
     )
 
 if( (CMAKE_Fortran_COMPILER_ID STREQUAL "VisualAge" ) OR  # CMake 2.6
-	(CMAKE_Fortran_COMPILER_ID STREQUAL "XL" ) )          # CMake 2.8
-	# 	if( "${CMAKE_Fortran_FLAGS}" MATCHES "-qflttrap=[a-zA-Z:]:enable" )
-	# 		set( FPE_EXIT TRUE )
-	# 	endif()
+    (CMAKE_Fortran_COMPILER_ID STREQUAL "XL" ) )          # CMake 2.8
+    # 	if( "${CMAKE_Fortran_FLAGS}" MATCHES "-qflttrap=[a-zA-Z:]:enable" )
+    # 		set( FPE_EXIT TRUE )
+    # 	endif()
 
-	if( NOT ("${CMAKE_Fortran_FLAGS}" MATCHES "-qfixed") )
-		message( STATUS "BLAS -- Enabling fixed format F90/F95 with -qfixed" )
-		set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -qfixed")
-		#         CACHE STRING "Flags for Fortran compiler." FORCE )
-	endif()
+    if( NOT ("${CMAKE_Fortran_FLAGS}" MATCHES "-qfixed") )
+        message( STATUS "BLAS -- Enabling fixed format F90/F95 with -qfixed" )
+        set( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -qfixed")
+        #         CACHE STRING "Flags for Fortran compiler." FORCE )
+    endif()
 endif()
 
 if ( SYS_BLAS_LIBRARY )
@@ -47,15 +47,15 @@ endif()
 
 target_include_directories(flexiblas_netlib PRIVATE ${PROJECT_BINARY_DIR}/include)
 
-if (APPLE) 
-   set_target_properties(flexiblas_netlib PROPERTIES LINK_FLAGS "-undefined dynamic_lookup -flat_namespace") 
+if (APPLE)
+    set_target_properties(flexiblas_netlib PROPERTIES LINK_FLAGS "-undefined dynamic_lookup -flat_namespace")
 endif()
 
 
 if (WIN32)
-	install(TARGETS flexiblas_netlib EXPORT flexiblas-targets LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR} RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
+    install(TARGETS flexiblas_netlib EXPORT flexiblas-targets LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR} RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
 else ()
-	SET(LIBNAME "${CMAKE_SHARED_LIBRARY_PREFIX}flexiblas_netlib${CMAKE_SHARED_LIBRARY_SUFFIX} ")
+    SET(LIBNAME "${CMAKE_SHARED_LIBRARY_PREFIX}flexiblas_netlib${CMAKE_SHARED_LIBRARY_SUFFIX} ")
     FILE(WRITE "${CMAKE_BINARY_DIR}/${FLEXIBLAS_RC_DIR}/NETLIB.conf" "[NETLIB]\nlibrary = ${LIBNAME}\n\n")
     INSTALL(FILES "${CMAKE_BINARY_DIR}/${FLEXIBLAS_RC_DIR}/NETLIB.conf" DESTINATION "${CMAKE_INSTALL_FULL_SYSCONFDIR}/${FLEXIBLAS_RC_DIR}/")
 

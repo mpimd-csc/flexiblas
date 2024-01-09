@@ -8,11 +8,11 @@ authors:
     given-names: "Jens"
     orcid: "https://orcid.org/0000-0001-5567-9637"
 title: "FlexiBLAS - A BLAS and LAPACK wrapper library with runtime exchangable backends"
-version: 3.3.1
-doi: 10.5281/zenodo.798186
+version: 3.4.0
+doi: 10.5281/zenodo.10473997
 date-released: 2022-01-17
 url: "https://github.com/mpimd-csc/flexiblas"
-license: GPL-3.0-or-later
+license: LGPL-3.0-or-later
 keywords:
  - "BLAS"
  - "LAPACK"

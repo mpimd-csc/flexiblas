@@ -13,6 +13,7 @@ Table of Contents
 5. Crash with LAPACK interface on IBM Power
 6. CBLAS Interface of BLIS
 7. Building with pre-built BLAS and LAPACK on MacOSX
+8. gcc >= 10.0 and LAPACK 3.7/3.8
 
 1. Profiling Numpy/Scipy with linked against FlexiBLAS
 ------------------------------------------------------
@@ -98,4 +99,15 @@ can cause an faulty memory access due to a copy operation with changing
 array length. The LAPACK/BLAS reference BLAS and LAPACK implementation shipped
 with FlexiBLAS fixes this error. On other systems this error was not detectable
 yet.
+
+8. gcc >= 10.0 and LAPACK 3.7/3.8
+---------------------------------
+The testing code for LAPACK 3.7.x and 3.8.0 contains some legacy Fortran codes
+that require the `-fallow-argument-mismatch` flag on recent GNU Fortran version.
+Beginning with gcc/gfortran 10.1.0 this flags needs to be set via
+```
+cmake ........ -DCMAKE_Fortran_FLAGS="-fallow-argument-mismatch"
+```
+while configuring FlexiBLAS. Alternatively, the tests can be disabled.
+
 

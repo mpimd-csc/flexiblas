@@ -1,19 +1,23 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# SPDX-License-Identifier: LGPL-3.0-or-later
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+# Copyright (C) 2013-2024 Martin Koehler
 #
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# This program is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation, either version 3 of the License, or (at your option)
+# any later version.
 #
-
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+# more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program. If not, see <https://www.gnu.org/licenses/>.
+#
 #
 # The scripts constructs the lapack wrappers in src/lapack_interface
 #
@@ -85,20 +89,17 @@ def lapack_generate(version):
     wrap_gnu.write_structure_declares("../../src/lapack_interface/structures_lapack_"+version2+".h", "LAPACK_STRUCTURES_H", major, minor, patch, extra)
 
 if __name__ == "__main__":
+    lapack_generate("3.12.0")
+    lapack_generate("3.12.0-wodprc")
+
     lapack_generate("3.11.0")
     lapack_generate("3.11.0-wodprc")
-
-
 
     lapack_generate("3.10.1")
     lapack_generate("3.10.1-wodprc")
 
-
-
-
     lapack_generate("3.10.0")
     lapack_generate("3.10.0-wodprc")
-
 
     lapack_generate("3.9.1")
     lapack_generate("3.9.1-wodprc")
