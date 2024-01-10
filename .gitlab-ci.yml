@@ -11,8 +11,8 @@ release-job:
                   git clean -f
                   export V=$(echo $CI_COMMIT_TAG | sed -e 's/^v//g')
                   (git ls-files --recurse-submodules | tar --transform="s|^|flexiblas-$V/|g" -cvzf ../flexiblas-$V.tar.gz  -T- )
-                  (git ls-files --recurse-submodules | tar --transform="s|^|flexiblas-$V/|g" -cvzf ../flexiblas-$V.tar.bz2  -T- )
-                  (git ls-files --recurse-submodules | tar --transform="s|^|flexiblas-$V/|g" -cvzf ../flexiblas-$V.tar.xz  -T- )
+                  (git ls-files --recurse-submodules | tar --transform="s|^|flexiblas-$V/|g" -cjzf ../flexiblas-$V.tar.bz2  -T- )
+                  (git ls-files --recurse-submodules | tar --transform="s|^|flexiblas-$V/|g" -cJzf ../flexiblas-$V.tar.xz  -T- )
                   (cd tools; bash ./create-oct-package.sh)
                   mv ./tools/flexiblas-octave.tar.gz flexiblas-octave-${V}.tar.gz
                   set -x

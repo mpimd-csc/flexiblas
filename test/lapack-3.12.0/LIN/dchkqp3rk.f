@@ -605,6 +605,9 @@
                   CALL DLACPY( 'All', M, NRHS, COPYB, LDA,
      $                         B,  LDA )
                   CALL ICOPY( N, IWORK( 1 ), 1, IWORK( N+1 ), 1 )
+                  DO I = 1, NTESTS
+                      RESULT( I ) = ZERO
+                  END DO
 *
                   ABSTOL = -1.0
                   RELTOL = -1.0
@@ -713,8 +716,8 @@
 *
                      DO J = 1, KFACT-1, 1
 
-                        DTEMP = (( ABS( A( (J-1)*M+J ) ) -
-     $                          ABS( A( (J)*M+J+1 ) ) ) /
+                        DTEMP = (( ABS( A( (J-1)*LDA+J ) ) -
+     $                          ABS( A( (J)*LDA+J+1 ) ) ) /
      $                          ABS( A(1) ) )
 *
                         IF( DTEMP.LT.ZERO ) THEN

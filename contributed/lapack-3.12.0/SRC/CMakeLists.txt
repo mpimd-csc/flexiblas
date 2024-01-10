@@ -34,6 +34,11 @@
 #  installation guide, LAPACK Working Note 41, for instructions.
 #
 #######################################################################
+set(BUILD_SINGLE 1)
+set(BUILD_DOUBLE 1)
+set(BUILD_COMPLEX 1)
+set(BUILD_COMPLEX16 1)
+set(BUILD_DEPRECATED 1)
 
 set(ALLAUX ilaenv.f ilaenv2stage.f ieeeck.f lsamen.f iparmq.f iparam2stage.F
    ilaprec.f ilatrans.f ilauplo.f iladiag.f chla_transtype.f la_xisnan.F90
@@ -478,7 +483,7 @@ set(ZXLASRC zgesvxx.f zgerfsx.f zla_gerfsx_extended.f zla_geamv.f
    zla_heamv.f zla_hercond_c.f zla_hercond_x.f zla_herpvgrw.f
    zla_lin_berr.f zlarscl2.f zlascl2.f zla_wwaddw.f)
 
- 
+if(BUILD_DEPRECATED)
   list(APPEND SLASRC DEPRECATED/sgegs.f DEPRECATED/sgegv.f DEPRECATED/sgelqs.f
     DEPRECATED/sgelsx.f DEPRECATED/sgeqpf.f DEPRECATED/sgeqrs.f DEPRECATED/sggsvd.f
     DEPRECATED/sggsvp.f DEPRECATED/slahrd.f DEPRECATED/slatzm.f DEPRECATED/stzrqf.f)
@@ -491,12 +496,29 @@ set(ZXLASRC zgesvxx.f zgerfsx.f zla_gerfsx_extended.f zla_geamv.f
   list(APPEND ZLASRC DEPRECATED/zgegs.f DEPRECATED/zgegv.f DEPRECATED/zgelqs.f
     DEPRECATED/zgelsx.f DEPRECATED/zgeqpf.f DEPRECATED/zgeqrs.f DEPRECATED/zggsvd.f
     DEPRECATED/zggsvp.f DEPRECATED/zlahrd.f DEPRECATED/zlatzm.f DEPRECATED/ztzrqf.f)
+endif()
+
+if(USE_XBLAS)
+  list(APPEND SLASRC ${SXLASRC})
+  list(APPEND DLASRC ${DXLASRC})
+  list(APPEND CLASRC ${CXLASRC})
+  list(APPEND ZLASRC ${ZXLASRC})
+endif()
+
 
 set(SOURCES)
-list(APPEND SOURCES ${SLASRC} ${DSLASRC} ${SCLAUX} ${ALLAUX})
-list(APPEND SOURCES ${DLASRC} ${DSLASRC} ${DZLAUX} ${ALLAUX})
-list(APPEND SOURCES ${CLASRC} ${ZCLASRC} ${SCLAUX} ${ALLAUX})
-list(APPEND SOURCES ${ZLASRC} ${ZCLASRC} ${DZLAUX} ${ALLAUX})
+if(BUILD_SINGLE)
+  list(APPEND SOURCES ${SLASRC} ${DSLASRC} ${SCLAUX} ${ALLAUX})
+endif()
+if(BUILD_DOUBLE)
+  list(APPEND SOURCES ${DLASRC} ${DSLASRC} ${DZLAUX} ${ALLAUX})
+endif()
+if(BUILD_COMPLEX)
+  list(APPEND SOURCES ${CLASRC} ${ZCLASRC} ${SCLAUX} ${ALLAUX})
+endif()
+if(BUILD_COMPLEX16)
+  list(APPEND SOURCES ${ZLASRC} ${ZCLASRC} ${DZLAUX} ${ALLAUX})
+endif()
 list(REMOVE_DUPLICATES SOURCES)
 
 add_library(flexiblas_fallback_lapack_objs OBJECT ${SOURCES})

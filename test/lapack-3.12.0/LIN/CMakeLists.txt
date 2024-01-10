@@ -1,3 +1,8 @@
+set(BUILD_SINGLE 1)
+set(BUILD_DOUBLE 1)
+set(BUILD_COMPLEX 1)
+set(BUILD_COMPLEX16 1)
+
 set(ALINTST
    aladhd.f alaerh.f alaesm.f alahd.f alareq.f
    alasum.f alasvm.f chkxer.f icopy.f ilaenv.f xlaenv.f xerbla.f)
@@ -9,7 +14,6 @@ set(DZLNTST dlaord.f)
 set(SLINTST schkaa.F
    schkeq.f schkgb.f schkge.f schkgt.f
    schklq.f schkpb.f schkpo.f schkps.f schkpp.f
-   schkpt.f schkq3.f schkql.f schkqr.f schkrq.f
    schkpt.f schkq3.f schkqp3rk.f schkql.f schkqr.f schkrq.f
    schksp.f schksy.f schksy_rook.f schksy_rk.f
    schksy_aa.f schksy_aa_2stage.f
@@ -243,18 +247,30 @@ macro(add_lin_executable name)
   target_link_libraries(${name} tmglib flexiblas)
 endmacro()
 
+if(BUILD_SINGLE)
   add_lin_executable(xlintsts ${ALINTST} ${SLINTST} ${SCLNTST})
   add_lin_executable(xlintstrfs ${SLINTSTRFP})
+endif()
 
+if(BUILD_DOUBLE)
   add_lin_executable(xlintstd ${ALINTST} ${DLINTST} ${DZLNTST})
   add_lin_executable(xlintstrfd ${DLINTSTRFP})
+endif()
 
+if(BUILD_SINGLE AND BUILD_DOUBLE)
   add_lin_executable(xlintstds ${DSLINTST})
+endif()
 
+if(BUILD_COMPLEX)
   add_lin_executable(xlintstc ${ALINTST} ${CLINTST} ${SCLNTST})
   add_lin_executable(xlintstrfc ${CLINTSTRFP})
+endif()
 
+if(BUILD_COMPLEX16)
   add_lin_executable(xlintstz ${ALINTST} ${ZLINTST} ${DZLNTST})
   add_lin_executable(xlintstrfz ${ZLINTSTRFP})
+endif()
 
+if(BUILD_COMPLEX AND BUILD_COMPLEX16)
   add_lin_executable(xlintstzc ${ZCLINTST})
+endif()

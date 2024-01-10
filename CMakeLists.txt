@@ -1,7 +1,7 @@
 INCLUDE(libcscutils/CMakeModules/CheckPolicy.cmake)
 CheckPolicy(CMP0048 NEW)
 
-PROJECT(FlexiBLAS LANGUAGES C Fortran VERSION 3.4.0)
+PROJECT(FlexiBLAS LANGUAGES C Fortran VERSION 3.4.1)
 cmake_minimum_required(VERSION 3.5.0)
 cmake_policy(SET CMP0054 NEW)
 
@@ -417,6 +417,9 @@ IF (INTEGER8 STREQUAL ON)
 ENDIF()
 
 IF ( TESTS )
+    SET(PYTHON_IGNORE_LIBRARY ON)
+    FIND_PACKAGE(PythonInterp)
+
     ENABLE_TESTING()
     add_subdirectory(test)
 ENDIF (TESTS)

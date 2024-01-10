@@ -26,6 +26,15 @@ add_subdirectory(MATGEN)
 add_subdirectory(LIN)
 add_subdirectory(EIG)
 
+# Only run this test if python 3 is found
+if(PYTHON_EXECUTABLE)
+    message(STATUS "Running Summary")
+    file(COPY ${PROJECT_SOURCE_DIR}/test/lapack-${LAPACK_TEST_VERSION}/lapack_testing.py DESTINATION ${PROJECT_BINARY_DIR}/test/lapack-${LAPACK_TEST_VERSION}/)
+    add_test(
+        NAME LAPACK_Test_Summary
+        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/test/lapack-${LAPACK_TEST_VERSION}"
+        COMMAND ${PYTHON_EXECUTABLE} "lapack_testing.py")
+endif()
 
 
 macro(add_lapack_test output input target)
@@ -41,7 +50,7 @@ macro(add_lapack_test output input target)
             -DINTDIR=${CMAKE_CFG_INTDIR}
             -P "${PROJECT_SOURCE_DIR}/test/lapack-${LAPACK_TEST_VERSION}/runtest.cmake")
 
-        if(PYTHON_EXECUTABLE AND LAPACK_TESTING_USE_PYTHON)
+        if(PYTHON_EXECUTABLE)
             set_property(
                 TEST LAPACK_Test_Summary
                 APPEND PROPERTY DEPENDS LAPACK-${testName}
@@ -206,13 +215,4 @@ add_lapack_test(zctest.out zctest.in xlintstzc)
 
 
 
-# Only run this test if python 3 is found
-if(PYTHON_EXECUTABLE)
-    message(STATUS "Running Summary")
-    file(COPY ${PROJECT_SOURCE_DIR}/test/lapack-${LAPACK_TEST_VERSION}/lapack_testing.py DESTINATION ${PROJECT_BINARY_DIR}/test/lapack-${LAPACK_TEST_VERSION}/)
-    add_test(
-        NAME LAPACK_Test_Summary
-        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/test/lapack-${LAPACK_TEST_VERSION}"
-        COMMAND ${PYTHON_EXECUTABLE} "lapack_testing.py")
-endif()
 

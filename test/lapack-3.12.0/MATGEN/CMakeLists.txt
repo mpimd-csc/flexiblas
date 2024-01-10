@@ -11,6 +11,12 @@
 #
 #######################################################################
 
+set(BUILD_SINGLE 1)
+set(BUILD_DOUBLE 1)
+set(BUILD_COMPLEX 1)
+set(BUILD_COMPLEX16 1)
+
+
 set(SCATGEN slatm1.f slatm7.f slaran.f slarnd.f)
 
 set(SMATGEN slatms.f slatme.f slatmr.f slatmt.f
@@ -33,11 +39,21 @@ set(ZMATGEN zlatms.f zlatme.f zlatmr.f zlatmt.f
 
 
 set(SOURCES)
+if(BUILD_SINGLE)
   list(APPEND SOURCES ${SMATGEN} ${SCATGEN})
+endif()
+if(BUILD_DOUBLE)
   list(APPEND SOURCES ${DMATGEN} ${DZATGEN})
+endif()
+if(BUILD_COMPLEX)
   list(APPEND SOURCES ${CMATGEN} ${SCATGEN})
+endif()
+if(BUILD_COMPLEX16)
   list(APPEND SOURCES ${ZMATGEN} ${DZATGEN})
+endif()
 list(REMOVE_DUPLICATES SOURCES)
 
 add_library(tmglib STATIC ${SOURCES})
-target_link_libraries(tmglib flexiblas)
+
+target_link_libraries(${TMGLIB} flexiblas)
+# lapack_install_library(${TMGLIB})
