@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_zungbr = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(zungbr,ZUNGBR)(char* vect, blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info)
+void FC_GLOBAL(zungbr,ZUNGBR)(char* vect, blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_vect)
 #else
-void FC_GLOBAL(zungbr,ZUNGBR)(char* vect, blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info)
+void FC_GLOBAL(zungbr,ZUNGBR)(char* vect, blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_vect)
 #endif
 {
-	void (*fn) (void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
-	void (*fn_hook) (void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
+	void (*fn) (void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_vect);
+	void (*fn_hook) (void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_vect);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL(zungbr,ZUNGBR)(char* vect, blasint* m, blasint* n, blasint* k, do
 	*(void **) & fn = current_backend->lapack.zungbr.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->zungbr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) vect, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
+		fn((void*) vect, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_vect); 
 		return;
 	} else {
 		hook_pos_zungbr = 0;
-		fn_hook((void*) vect, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info);
+		fn_hook((void*) vect, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_vect);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zungbr_(char* vect, blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zungbr,ZUNGBR)))));
+void zungbr_(char* vect, blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_vect) __attribute__((alias(MTS(FC_GLOBAL(zungbr,ZUNGBR)))));
 #else
 #ifndef __APPLE__
-void zungbr(char* vect, blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zungbr,ZUNGBR)))));
+void zungbr(char* vect, blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_vect) __attribute__((alias(MTS(FC_GLOBAL(zungbr,ZUNGBR)))));
 #else
-void zungbr(char* vect, blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info){ FC_GLOBAL(zungbr,ZUNGBR)((void*) vect, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); }
+void zungbr(char* vect, blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_vect){ FC_GLOBAL(zungbr,ZUNGBR)((void*) vect, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info, (flexiblas_fortran_charlen_t) len_vect); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void zungbr(char* vect, blasint* m, blasint* n, blasint* k, double complex* a, b
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_zungbr_(void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info)
+void flexiblas_real_zungbr_(void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_vect)
 {
-	void (*fn) (void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
+	void (*fn) (void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_vect);
 
 	*(void **) & fn = current_backend->lapack.zungbr.f77_blas_function; 
 
-		fn((void*) vect, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
+		fn((void*) vect, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_vect); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_zungbr(void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_zungbr_")));
+void flexiblas_real_zungbr(void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_vect) __attribute__((alias("flexiblas_real_zungbr_")));
 #else
-void flexiblas_real_zungbr(void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info){flexiblas_real_zungbr_((void*) vect, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info);}
+void flexiblas_real_zungbr(void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_vect){flexiblas_real_zungbr_((void*) vect, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info, (flexiblas_fortran_charlen_t) len_vect);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_zungbr(void* vect, void* m, void* n, void* k, void* a, void*
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_zungbr_(void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info)
+void flexiblas_chain_zungbr_(void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_vect)
 {
-	void (*fn) (void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
-	void (*fn_hook) (void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
+	void (*fn) (void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_vect);
+	void (*fn_hook) (void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_vect);
 
 	*(void **) &fn      = current_backend->lapack.zungbr.f77_blas_function; 
 
     hook_pos_zungbr ++;
     if( hook_pos_zungbr < __flexiblas_hooks->zungbr.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->zungbr.f77_hook_function[hook_pos_zungbr];
-        fn_hook((void*) vect, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info);
+        fn_hook((void*) vect, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_vect);
     } else {
         hook_pos_zungbr = 0;
-		fn((void*) vect, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
+		fn((void*) vect, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_vect); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_zungbr(void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_zungbr_")));
+void flexiblas_chain_zungbr(void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_vect) __attribute__((alias("flexiblas_chain_zungbr_")));
 #else
-void flexiblas_chain_zungbr(void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info){flexiblas_chain_zungbr_((void*) vect, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info);}
+void flexiblas_chain_zungbr(void* vect, void* m, void* n, void* k, void* a, void* lda, void* tau, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_vect){flexiblas_chain_zungbr_((void*) vect, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info, (flexiblas_fortran_charlen_t) len_vect);}
 #endif
 
 

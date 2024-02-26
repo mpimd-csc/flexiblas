@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_dsygst = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(dsygst,DSYGST)(blasint* itype, char* uplo, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, blasint* info)
+void FC_GLOBAL(dsygst,DSYGST)(blasint* itype, char* uplo, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo)
 #else
-void FC_GLOBAL(dsygst,DSYGST)(blasint* itype, char* uplo, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, blasint* info)
+void FC_GLOBAL(dsygst,DSYGST)(blasint* itype, char* uplo, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo)
 #endif
 {
-	void (*fn) (void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info);
-	void (*fn_hook) (void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info);
+	void (*fn) (void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info, flexiblas_fortran_charlen_t len_uplo);
+	void (*fn_hook) (void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info, flexiblas_fortran_charlen_t len_uplo);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL(dsygst,DSYGST)(blasint* itype, char* uplo, blasint* n, double* a,
 	*(void **) & fn = current_backend->lapack.dsygst.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->dsygst.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) itype, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info); 
+		fn((void*) itype, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo); 
 		return;
 	} else {
 		hook_pos_dsygst = 0;
-		fn_hook((void*) itype, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info);
+		fn_hook((void*) itype, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dsygst_(blasint* itype, char* uplo, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dsygst,DSYGST)))));
+void dsygst_(blasint* itype, char* uplo, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsygst,DSYGST)))));
 #else
 #ifndef __APPLE__
-void dsygst(blasint* itype, char* uplo, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dsygst,DSYGST)))));
+void dsygst(blasint* itype, char* uplo, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsygst,DSYGST)))));
 #else
-void dsygst(blasint* itype, char* uplo, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, blasint* info){ FC_GLOBAL(dsygst,DSYGST)((void*) itype, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info); }
+void dsygst(blasint* itype, char* uplo, blasint* n, double* a, blasint* lda, double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dsygst,DSYGST)((void*) itype, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void dsygst(blasint* itype, char* uplo, blasint* n, double* a, blasint* lda, dou
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_dsygst_(void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info)
+void flexiblas_real_dsygst_(void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info, flexiblas_fortran_charlen_t len_uplo)
 {
-	void (*fn) (void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info);
+	void (*fn) (void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info, flexiblas_fortran_charlen_t len_uplo);
 
 	*(void **) & fn = current_backend->lapack.dsygst.f77_blas_function; 
 
-		fn((void*) itype, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info); 
+		fn((void*) itype, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_dsygst(void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info) __attribute__((alias("flexiblas_real_dsygst_")));
+void flexiblas_real_dsygst(void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_real_dsygst_")));
 #else
-void flexiblas_real_dsygst(void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info){flexiblas_real_dsygst_((void*) itype, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info);}
+void flexiblas_real_dsygst(void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info, flexiblas_fortran_charlen_t len_uplo){flexiblas_real_dsygst_((void*) itype, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_dsygst(void* itype, void* uplo, void* n, void* a, void* lda,
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_dsygst_(void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info)
+void flexiblas_chain_dsygst_(void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info, flexiblas_fortran_charlen_t len_uplo)
 {
-	void (*fn) (void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info);
-	void (*fn_hook) (void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info);
+	void (*fn) (void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info, flexiblas_fortran_charlen_t len_uplo);
+	void (*fn_hook) (void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info, flexiblas_fortran_charlen_t len_uplo);
 
 	*(void **) &fn      = current_backend->lapack.dsygst.f77_blas_function; 
 
     hook_pos_dsygst ++;
     if( hook_pos_dsygst < __flexiblas_hooks->dsygst.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->dsygst.f77_hook_function[hook_pos_dsygst];
-        fn_hook((void*) itype, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info);
+        fn_hook((void*) itype, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo);
     } else {
         hook_pos_dsygst = 0;
-		fn((void*) itype, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info); 
+		fn((void*) itype, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_dsygst(void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info) __attribute__((alias("flexiblas_chain_dsygst_")));
+void flexiblas_chain_dsygst(void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_chain_dsygst_")));
 #else
-void flexiblas_chain_dsygst(void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info){flexiblas_chain_dsygst_((void*) itype, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info);}
+void flexiblas_chain_dsygst(void* itype, void* uplo, void* n, void* a, void* lda, void* b, void* ldb, void* info, flexiblas_fortran_charlen_t len_uplo){flexiblas_chain_dsygst_((void*) itype, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) info, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 

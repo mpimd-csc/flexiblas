@@ -56,7 +56,7 @@ class FortranFunction(object):
         self._cvars = {}
         self._array_args = {}
         self._returntype =""
-        self._charaterargs = list()
+        self._character_args = list()
         if func["block"] == "subroutine":
             self._subroutine = True
             self._function   = False
@@ -76,8 +76,8 @@ class FortranFunction(object):
             var = self._fvars[i]
             if "dimension" in var:
                 self._array_args[i] = var["dimension"]
-            if "charselector" in var:
-                self._charaterargs.append("len_"+i)
+            if var["typespec"] == "character":
+                self._character_args.append("len_"+i)
 
         if self._subroutine:
             self._returntype = "void"
@@ -106,7 +106,7 @@ class FortranFunction(object):
                 first = False
             else:
                 s += ", " + cdt + "* " + i
-        for i in self._charaterargs:
+        for i in self._character_args:
             s += ", int " + i
 
         return s
@@ -130,7 +130,7 @@ class FortranFunction(object):
                 for i in self._args:
                     s += ", "
                     s += "(void*) " + i
-                for i in self._charaterargs:
+                for i in self._character_args:
                     s += ", (int) " + i
                 s += ")"
             else:
@@ -141,7 +141,7 @@ class FortranFunction(object):
                         s += ", "
                     first = False
                     s += "(void*) " + i
-                for i in self._charaterargs:
+                for i in self._character_args:
                     s += ", (int) " + i
                 s += ")"
         else:
@@ -152,7 +152,7 @@ class FortranFunction(object):
                     s += ", "
                 first = False
                 s += "(void*) " + i
-            for i in self._charaterargs:
+            for i in self._character_args:
                     s += ", (int) " + i
             s += ")"
         return s

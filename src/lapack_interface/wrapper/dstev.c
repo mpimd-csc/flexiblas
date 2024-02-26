@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_dstev = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(dstev,DSTEV)(char* jobz, blasint* n, double* d, double* e, double* z, blasint* ldz, double* work, blasint* info)
+void FC_GLOBAL(dstev,DSTEV)(char* jobz, blasint* n, double* d, double* e, double* z, blasint* ldz, double* work, blasint* info, flexiblas_fortran_charlen_t len_jobz)
 #else
-void FC_GLOBAL(dstev,DSTEV)(char* jobz, blasint* n, double* d, double* e, double* z, blasint* ldz, double* work, blasint* info)
+void FC_GLOBAL(dstev,DSTEV)(char* jobz, blasint* n, double* d, double* e, double* z, blasint* ldz, double* work, blasint* info, flexiblas_fortran_charlen_t len_jobz)
 #endif
 {
-	void (*fn) (void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info);
-	void (*fn_hook) (void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info);
+	void (*fn) (void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_jobz);
+	void (*fn_hook) (void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_jobz);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL(dstev,DSTEV)(char* jobz, blasint* n, double* d, double* e, double
 	*(void **) & fn = current_backend->lapack.dstev.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->dstev.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) jobz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info); 
+		fn((void*) jobz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_jobz); 
 		return;
 	} else {
 		hook_pos_dstev = 0;
-		fn_hook((void*) jobz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info);
+		fn_hook((void*) jobz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_jobz);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dstev_(char* jobz, blasint* n, double* d, double* e, double* z, blasint* ldz, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dstev,DSTEV)))));
+void dstev_(char* jobz, blasint* n, double* d, double* e, double* z, blasint* ldz, double* work, blasint* info, flexiblas_fortran_charlen_t len_jobz) __attribute__((alias(MTS(FC_GLOBAL(dstev,DSTEV)))));
 #else
 #ifndef __APPLE__
-void dstev(char* jobz, blasint* n, double* d, double* e, double* z, blasint* ldz, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dstev,DSTEV)))));
+void dstev(char* jobz, blasint* n, double* d, double* e, double* z, blasint* ldz, double* work, blasint* info, flexiblas_fortran_charlen_t len_jobz) __attribute__((alias(MTS(FC_GLOBAL(dstev,DSTEV)))));
 #else
-void dstev(char* jobz, blasint* n, double* d, double* e, double* z, blasint* ldz, double* work, blasint* info){ FC_GLOBAL(dstev,DSTEV)((void*) jobz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info); }
+void dstev(char* jobz, blasint* n, double* d, double* e, double* z, blasint* ldz, double* work, blasint* info, flexiblas_fortran_charlen_t len_jobz){ FC_GLOBAL(dstev,DSTEV)((void*) jobz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info, (flexiblas_fortran_charlen_t) len_jobz); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void dstev(char* jobz, blasint* n, double* d, double* e, double* z, blasint* ldz
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_dstev_(void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info)
+void flexiblas_real_dstev_(void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_jobz)
 {
-	void (*fn) (void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info);
+	void (*fn) (void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_jobz);
 
 	*(void **) & fn = current_backend->lapack.dstev.f77_blas_function; 
 
-		fn((void*) jobz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info); 
+		fn((void*) jobz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_jobz); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_dstev(void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info) __attribute__((alias("flexiblas_real_dstev_")));
+void flexiblas_real_dstev(void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_jobz) __attribute__((alias("flexiblas_real_dstev_")));
 #else
-void flexiblas_real_dstev(void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info){flexiblas_real_dstev_((void*) jobz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info);}
+void flexiblas_real_dstev(void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_jobz){flexiblas_real_dstev_((void*) jobz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info, (flexiblas_fortran_charlen_t) len_jobz);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_dstev(void* jobz, void* n, void* d, void* e, void* z, void* 
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_dstev_(void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info)
+void flexiblas_chain_dstev_(void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_jobz)
 {
-	void (*fn) (void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info);
-	void (*fn_hook) (void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info);
+	void (*fn) (void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_jobz);
+	void (*fn_hook) (void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_jobz);
 
 	*(void **) &fn      = current_backend->lapack.dstev.f77_blas_function; 
 
     hook_pos_dstev ++;
     if( hook_pos_dstev < __flexiblas_hooks->dstev.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->dstev.f77_hook_function[hook_pos_dstev];
-        fn_hook((void*) jobz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info);
+        fn_hook((void*) jobz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_jobz);
     } else {
         hook_pos_dstev = 0;
-		fn((void*) jobz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info); 
+		fn((void*) jobz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_jobz); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_dstev(void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info) __attribute__((alias("flexiblas_chain_dstev_")));
+void flexiblas_chain_dstev(void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_jobz) __attribute__((alias("flexiblas_chain_dstev_")));
 #else
-void flexiblas_chain_dstev(void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info){flexiblas_chain_dstev_((void*) jobz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info);}
+void flexiblas_chain_dstev(void* jobz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_jobz){flexiblas_chain_dstev_((void*) jobz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info, (flexiblas_fortran_charlen_t) len_jobz);}
 #endif
 
 

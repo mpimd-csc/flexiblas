@@ -68,7 +68,7 @@ class FortranFunction(object):
         self._cvars = {}
         self._array_args = {}
         self._returntype =""
-        self._charaterargs = list()
+        self._character_args = list()
         if func["block"] == "subroutine":
             self._subroutine = True
             self._function   = False
@@ -88,8 +88,8 @@ class FortranFunction(object):
             var = self._fvars[i]
             if "dimension" in var:
                 self._array_args[i] = var["dimension"]
-            if "charselector" in var:
-                self._charaterargs.append("len_"+i)
+            if var["typespec"] == "character":
+                self._character_args.append("len_"+i)
 
         if self._subroutine:
             self._returntype = "void"
@@ -161,11 +161,11 @@ class FortranFunction(object):
                     s += ", (" + cdt + "*) " + i
                 else:
                     s += ", " + cdt + "* " + i
-        for i in self._charaterargs:
+        for i in self._character_args:
             if typecast:
-                s +=  ", (fortran_charlen_t) " + i
+                s +=  ", (flexiblas_fortran_charlen_t) " + i
             else:
-                s += ", fortran_charlen_t " + i
+                s += ", flexiblas_fortran_charlen_t " + i
         return s
 
     def _callfunction(self, transform_int_name = True, extraspace="", intwidth = 0 ):
@@ -183,8 +183,8 @@ class FortranFunction(object):
                         s += "(void*) _p{name:s}".format(name = i)
                     else:
                         s += "(void*) " + i
-                for i in self._charaterargs:
-                    s+= ", ( fortran_charlen_t ) " + i
+                for i in self._character_args:
+                    s+= ", ( flexiblas_fortran_charlen_t ) " + i
                 s += "); \n"
                 s += extraspace + "\t\t} else {\n"
                 s += extraspace + "\t\t\tfn_intel( &ret"
@@ -206,8 +206,8 @@ class FortranFunction(object):
                         s += "(void*) _p{name:s}".format(name = i)
                     else:
                         s += "(void*) " + i
-                for i in self._charaterargs:
-                    s+= ", ( fortran_charlen_t ) " + i
+                for i in self._character_args:
+                    s+= ", ( flexiblas_fortran_charlen_t ) " + i
                 s += "); \n"
         else:
             s += extraspace+ "\t\tfn("
@@ -220,8 +220,8 @@ class FortranFunction(object):
                     s += "(void*) _p{name:s}".format(name = i)
                 else:
                     s += "(void*) " + i
-            for i in self._charaterargs:
-                s+= ", ( fortran_charlen_t ) " + i
+            for i in self._character_args:
+                s+= ", ( flexiblas_fortran_charlen_t ) " + i
             s += "); \n"
         return s
 
@@ -248,8 +248,8 @@ class FortranFunction(object):
                         s += "(void*) _p{name:s}".format(name = i)
                     else:
                         s += "(void*) " + i
-                for i in self._charaterargs:
-                    s+= ", ( fortran_charlen_t )" + i
+                for i in self._character_args:
+                    s+= ", ( flexiblas_fortran_charlen_t )" + i
                 s += ");"
         else:
             s += extraspace+ "fn_hook("
@@ -262,8 +262,8 @@ class FortranFunction(object):
                     s += "(void*) _p{name:s}".format(name = i)
                 else:
                     s += "(void*) " + i
-            for i in self._charaterargs:
-                s+= ", ( fortran_charlen_t ) " + i
+            for i in self._character_args:
+                s+= ", ( flexiblas_fortran_charlen_t ) " + i
             s += ");"
         return s
 
@@ -626,8 +626,8 @@ static TLS_STORE uint8_t hook_pos_{funcname:s} = 0;
                 for i in self._args:
                     s += ", "
                     s += "(void*) " + i
-                for i in self._charaterargs:
-                    s+= ", ( fortran_charlen_t ) " + i
+                for i in self._character_args:
+                    s+= ", ( flexiblas_fortran_charlen_t ) " + i
 
                 s += ");\n"
                 s += """
@@ -646,8 +646,8 @@ static TLS_STORE uint8_t hook_pos_{funcname:s} = 0;
                         s += ", "
                     f = True
                     s += "(void*) " + i
-                for i in self._charaterargs:
-                    s+= ", ( fortran_charlen_t ) " + i
+                for i in self._character_args:
+                    s+= ", ( flexiblas_fortran_charlen_t ) " + i
 
                 s += ");\n"
                 s += "\t\treturn ret;\n";
@@ -659,8 +659,8 @@ static TLS_STORE uint8_t hook_pos_{funcname:s} = 0;
                         s += ", "
                     f = True
                     s += "(void*) " + i
-                for i in self._charaterargs:
-                    s+= ", ( fortran_charlen_t ) " + i
+                for i in self._character_args:
+                    s+= ", ( flexiblas_fortran_charlen_t ) " + i
                 s += ");\n"
                 s += "\t\treturn;\n";
 
@@ -839,16 +839,21 @@ class Wrapper(object):
         fn.write("#include \"flexiblas_fortran_mangle.h\"\n\n")
         fn.write("#include \"flexiblas.h\"\n\n")
         fn.write("""
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 \n
 """)
@@ -889,11 +894,22 @@ typedef int fortran_charlen_t;
         fn.write("#include \"flexiblas_fortran_mangle.h\"\n\n")
         fn.write("#include \"flexiblas.h\"\n\n")
         fn.write("""
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
+#if __GNUC__ > 7
+typedef size_t flexiblas_fortran_charlen_t;
+#else
+typedef int flexiblas_fortran_charlen_t;
+#endif
+#endif
 
-#ifdef INTEGER8
+
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 \n
 """)

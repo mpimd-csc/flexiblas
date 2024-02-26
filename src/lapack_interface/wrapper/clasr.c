@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_clasr = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(clasr,CLASR)(char* side, char* pivot, char* direct, blasint* m, blasint* n, float* c, float* s, float complex* a, blasint* lda)
+void FC_GLOBAL(clasr,CLASR)(char* side, char* pivot, char* direct, blasint* m, blasint* n, float* c, float* s, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_pivot, flexiblas_fortran_charlen_t len_direct)
 #else
-void FC_GLOBAL(clasr,CLASR)(char* side, char* pivot, char* direct, blasint* m, blasint* n, float* c, float* s, float complex* a, blasint* lda)
+void FC_GLOBAL(clasr,CLASR)(char* side, char* pivot, char* direct, blasint* m, blasint* n, float* c, float* s, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_pivot, flexiblas_fortran_charlen_t len_direct)
 #endif
 {
-	void (*fn) (void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda);
-	void (*fn_hook) (void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda);
+	void (*fn) (void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_pivot, flexiblas_fortran_charlen_t len_direct);
+	void (*fn_hook) (void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_pivot, flexiblas_fortran_charlen_t len_direct);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL(clasr,CLASR)(char* side, char* pivot, char* direct, blasint* m, b
 	*(void **) & fn = current_backend->lapack.clasr.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->clasr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) side, (void*) pivot, (void*) direct, (void*) m, (void*) n, (void*) c, (void*) s, (void*) a, (void*) lda); 
+		fn((void*) side, (void*) pivot, (void*) direct, (void*) m, (void*) n, (void*) c, (void*) s, (void*) a, (void*) lda, ( flexiblas_fortran_charlen_t ) len_side, ( flexiblas_fortran_charlen_t ) len_pivot, ( flexiblas_fortran_charlen_t ) len_direct); 
 		return;
 	} else {
 		hook_pos_clasr = 0;
-		fn_hook((void*) side, (void*) pivot, (void*) direct, (void*) m, (void*) n, (void*) c, (void*) s, (void*) a, (void*) lda);
+		fn_hook((void*) side, (void*) pivot, (void*) direct, (void*) m, (void*) n, (void*) c, (void*) s, (void*) a, (void*) lda, ( flexiblas_fortran_charlen_t ) len_side, ( flexiblas_fortran_charlen_t ) len_pivot, ( flexiblas_fortran_charlen_t ) len_direct);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void clasr_(char* side, char* pivot, char* direct, blasint* m, blasint* n, float* c, float* s, float complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(clasr,CLASR)))));
+void clasr_(char* side, char* pivot, char* direct, blasint* m, blasint* n, float* c, float* s, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_pivot, flexiblas_fortran_charlen_t len_direct) __attribute__((alias(MTS(FC_GLOBAL(clasr,CLASR)))));
 #else
 #ifndef __APPLE__
-void clasr(char* side, char* pivot, char* direct, blasint* m, blasint* n, float* c, float* s, float complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(clasr,CLASR)))));
+void clasr(char* side, char* pivot, char* direct, blasint* m, blasint* n, float* c, float* s, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_pivot, flexiblas_fortran_charlen_t len_direct) __attribute__((alias(MTS(FC_GLOBAL(clasr,CLASR)))));
 #else
-void clasr(char* side, char* pivot, char* direct, blasint* m, blasint* n, float* c, float* s, float complex* a, blasint* lda){ FC_GLOBAL(clasr,CLASR)((void*) side, (void*) pivot, (void*) direct, (void*) m, (void*) n, (void*) c, (void*) s, (void*) a, (void*) lda); }
+void clasr(char* side, char* pivot, char* direct, blasint* m, blasint* n, float* c, float* s, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_pivot, flexiblas_fortran_charlen_t len_direct){ FC_GLOBAL(clasr,CLASR)((void*) side, (void*) pivot, (void*) direct, (void*) m, (void*) n, (void*) c, (void*) s, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_pivot, (flexiblas_fortran_charlen_t) len_direct); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void clasr(char* side, char* pivot, char* direct, blasint* m, blasint* n, float*
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_clasr_(void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda)
+void flexiblas_real_clasr_(void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_pivot, flexiblas_fortran_charlen_t len_direct)
 {
-	void (*fn) (void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda);
+	void (*fn) (void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_pivot, flexiblas_fortran_charlen_t len_direct);
 
 	*(void **) & fn = current_backend->lapack.clasr.f77_blas_function; 
 
-		fn((void*) side, (void*) pivot, (void*) direct, (void*) m, (void*) n, (void*) c, (void*) s, (void*) a, (void*) lda); 
+		fn((void*) side, (void*) pivot, (void*) direct, (void*) m, (void*) n, (void*) c, (void*) s, (void*) a, (void*) lda, ( flexiblas_fortran_charlen_t ) len_side, ( flexiblas_fortran_charlen_t ) len_pivot, ( flexiblas_fortran_charlen_t ) len_direct); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_clasr(void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda) __attribute__((alias("flexiblas_real_clasr_")));
+void flexiblas_real_clasr(void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_pivot, flexiblas_fortran_charlen_t len_direct) __attribute__((alias("flexiblas_real_clasr_")));
 #else
-void flexiblas_real_clasr(void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda){flexiblas_real_clasr_((void*) side, (void*) pivot, (void*) direct, (void*) m, (void*) n, (void*) c, (void*) s, (void*) a, (void*) lda);}
+void flexiblas_real_clasr(void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_pivot, flexiblas_fortran_charlen_t len_direct){flexiblas_real_clasr_((void*) side, (void*) pivot, (void*) direct, (void*) m, (void*) n, (void*) c, (void*) s, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_pivot, (flexiblas_fortran_charlen_t) len_direct);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_clasr(void* side, void* pivot, void* direct, void* m, void* 
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_clasr_(void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda)
+void flexiblas_chain_clasr_(void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_pivot, flexiblas_fortran_charlen_t len_direct)
 {
-	void (*fn) (void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda);
-	void (*fn_hook) (void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda);
+	void (*fn) (void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_pivot, flexiblas_fortran_charlen_t len_direct);
+	void (*fn_hook) (void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_pivot, flexiblas_fortran_charlen_t len_direct);
 
 	*(void **) &fn      = current_backend->lapack.clasr.f77_blas_function; 
 
     hook_pos_clasr ++;
     if( hook_pos_clasr < __flexiblas_hooks->clasr.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->clasr.f77_hook_function[hook_pos_clasr];
-        fn_hook((void*) side, (void*) pivot, (void*) direct, (void*) m, (void*) n, (void*) c, (void*) s, (void*) a, (void*) lda);
+        fn_hook((void*) side, (void*) pivot, (void*) direct, (void*) m, (void*) n, (void*) c, (void*) s, (void*) a, (void*) lda, ( flexiblas_fortran_charlen_t ) len_side, ( flexiblas_fortran_charlen_t ) len_pivot, ( flexiblas_fortran_charlen_t ) len_direct);
     } else {
         hook_pos_clasr = 0;
-		fn((void*) side, (void*) pivot, (void*) direct, (void*) m, (void*) n, (void*) c, (void*) s, (void*) a, (void*) lda); 
+		fn((void*) side, (void*) pivot, (void*) direct, (void*) m, (void*) n, (void*) c, (void*) s, (void*) a, (void*) lda, ( flexiblas_fortran_charlen_t ) len_side, ( flexiblas_fortran_charlen_t ) len_pivot, ( flexiblas_fortran_charlen_t ) len_direct); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_clasr(void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda) __attribute__((alias("flexiblas_chain_clasr_")));
+void flexiblas_chain_clasr(void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_pivot, flexiblas_fortran_charlen_t len_direct) __attribute__((alias("flexiblas_chain_clasr_")));
 #else
-void flexiblas_chain_clasr(void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda){flexiblas_chain_clasr_((void*) side, (void*) pivot, (void*) direct, (void*) m, (void*) n, (void*) c, (void*) s, (void*) a, (void*) lda);}
+void flexiblas_chain_clasr(void* side, void* pivot, void* direct, void* m, void* n, void* c, void* s, void* a, void* lda, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_pivot, flexiblas_fortran_charlen_t len_direct){flexiblas_chain_clasr_((void*) side, (void*) pivot, (void*) direct, (void*) m, (void*) n, (void*) c, (void*) s, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_pivot, (flexiblas_fortran_charlen_t) len_direct);}
 #endif
 
 

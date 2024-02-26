@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_cpbcon = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(cpbcon,CPBCON)(char* uplo, blasint* n, blasint* kd, float complex* ab, blasint* ldab, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info)
+void FC_GLOBAL(cpbcon,CPBCON)(char* uplo, blasint* n, blasint* kd, float complex* ab, blasint* ldab, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo)
 #else
-void FC_GLOBAL(cpbcon,CPBCON)(char* uplo, blasint* n, blasint* kd, float complex* ab, blasint* ldab, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info)
+void FC_GLOBAL(cpbcon,CPBCON)(char* uplo, blasint* n, blasint* kd, float complex* ab, blasint* ldab, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo)
 #endif
 {
-	void (*fn) (void* uplo, void* n, void* kd, void* ab, void* ldab, void* anorm, void* rcond, void* work, void* rwork, void* info);
-	void (*fn_hook) (void* uplo, void* n, void* kd, void* ab, void* ldab, void* anorm, void* rcond, void* work, void* rwork, void* info);
+	void (*fn) (void* uplo, void* n, void* kd, void* ab, void* ldab, void* anorm, void* rcond, void* work, void* rwork, void* info, flexiblas_fortran_charlen_t len_uplo);
+	void (*fn_hook) (void* uplo, void* n, void* kd, void* ab, void* ldab, void* anorm, void* rcond, void* work, void* rwork, void* info, flexiblas_fortran_charlen_t len_uplo);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL(cpbcon,CPBCON)(char* uplo, blasint* n, blasint* kd, float complex
 	*(void **) & fn = current_backend->lapack.cpbcon.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->cpbcon.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info); 
+		fn((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo); 
 		return;
 	} else {
 		hook_pos_cpbcon = 0;
-		fn_hook((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info);
+		fn_hook((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void cpbcon_(char* uplo, blasint* n, blasint* kd, float complex* ab, blasint* ldab, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cpbcon,CPBCON)))));
+void cpbcon_(char* uplo, blasint* n, blasint* kd, float complex* ab, blasint* ldab, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(cpbcon,CPBCON)))));
 #else
 #ifndef __APPLE__
-void cpbcon(char* uplo, blasint* n, blasint* kd, float complex* ab, blasint* ldab, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cpbcon,CPBCON)))));
+void cpbcon(char* uplo, blasint* n, blasint* kd, float complex* ab, blasint* ldab, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(cpbcon,CPBCON)))));
 #else
-void cpbcon(char* uplo, blasint* n, blasint* kd, float complex* ab, blasint* ldab, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info){ FC_GLOBAL(cpbcon,CPBCON)((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info); }
+void cpbcon(char* uplo, blasint* n, blasint* kd, float complex* ab, blasint* ldab, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(cpbcon,CPBCON)((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void cpbcon(char* uplo, blasint* n, blasint* kd, float complex* ab, blasint* lda
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_cpbcon_(void* uplo, void* n, void* kd, void* ab, void* ldab, void* anorm, void* rcond, void* work, void* rwork, void* info)
+void flexiblas_real_cpbcon_(void* uplo, void* n, void* kd, void* ab, void* ldab, void* anorm, void* rcond, void* work, void* rwork, void* info, flexiblas_fortran_charlen_t len_uplo)
 {
-	void (*fn) (void* uplo, void* n, void* kd, void* ab, void* ldab, void* anorm, void* rcond, void* work, void* rwork, void* info);
+	void (*fn) (void* uplo, void* n, void* kd, void* ab, void* ldab, void* anorm, void* rcond, void* work, void* rwork, void* info, flexiblas_fortran_charlen_t len_uplo);
 
 	*(void **) & fn = current_backend->lapack.cpbcon.f77_blas_function; 
 
-		fn((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info); 
+		fn((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_cpbcon(void* uplo, void* n, void* kd, void* ab, void* ldab, void* anorm, void* rcond, void* work, void* rwork, void* info) __attribute__((alias("flexiblas_real_cpbcon_")));
+void flexiblas_real_cpbcon(void* uplo, void* n, void* kd, void* ab, void* ldab, void* anorm, void* rcond, void* work, void* rwork, void* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_real_cpbcon_")));
 #else
-void flexiblas_real_cpbcon(void* uplo, void* n, void* kd, void* ab, void* ldab, void* anorm, void* rcond, void* work, void* rwork, void* info){flexiblas_real_cpbcon_((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info);}
+void flexiblas_real_cpbcon(void* uplo, void* n, void* kd, void* ab, void* ldab, void* anorm, void* rcond, void* work, void* rwork, void* info, flexiblas_fortran_charlen_t len_uplo){flexiblas_real_cpbcon_((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_cpbcon(void* uplo, void* n, void* kd, void* ab, void* ldab, 
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_cpbcon_(void* uplo, void* n, void* kd, void* ab, void* ldab, void* anorm, void* rcond, void* work, void* rwork, void* info)
+void flexiblas_chain_cpbcon_(void* uplo, void* n, void* kd, void* ab, void* ldab, void* anorm, void* rcond, void* work, void* rwork, void* info, flexiblas_fortran_charlen_t len_uplo)
 {
-	void (*fn) (void* uplo, void* n, void* kd, void* ab, void* ldab, void* anorm, void* rcond, void* work, void* rwork, void* info);
-	void (*fn_hook) (void* uplo, void* n, void* kd, void* ab, void* ldab, void* anorm, void* rcond, void* work, void* rwork, void* info);
+	void (*fn) (void* uplo, void* n, void* kd, void* ab, void* ldab, void* anorm, void* rcond, void* work, void* rwork, void* info, flexiblas_fortran_charlen_t len_uplo);
+	void (*fn_hook) (void* uplo, void* n, void* kd, void* ab, void* ldab, void* anorm, void* rcond, void* work, void* rwork, void* info, flexiblas_fortran_charlen_t len_uplo);
 
 	*(void **) &fn      = current_backend->lapack.cpbcon.f77_blas_function; 
 
     hook_pos_cpbcon ++;
     if( hook_pos_cpbcon < __flexiblas_hooks->cpbcon.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->cpbcon.f77_hook_function[hook_pos_cpbcon];
-        fn_hook((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info);
+        fn_hook((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo);
     } else {
         hook_pos_cpbcon = 0;
-		fn((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info); 
+		fn((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_cpbcon(void* uplo, void* n, void* kd, void* ab, void* ldab, void* anorm, void* rcond, void* work, void* rwork, void* info) __attribute__((alias("flexiblas_chain_cpbcon_")));
+void flexiblas_chain_cpbcon(void* uplo, void* n, void* kd, void* ab, void* ldab, void* anorm, void* rcond, void* work, void* rwork, void* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_chain_cpbcon_")));
 #else
-void flexiblas_chain_cpbcon(void* uplo, void* n, void* kd, void* ab, void* ldab, void* anorm, void* rcond, void* work, void* rwork, void* info){flexiblas_chain_cpbcon_((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info);}
+void flexiblas_chain_cpbcon(void* uplo, void* n, void* kd, void* ab, void* ldab, void* anorm, void* rcond, void* work, void* rwork, void* info, flexiblas_fortran_charlen_t len_uplo){flexiblas_chain_cpbcon_((void*) uplo, (void*) n, (void*) kd, (void*) ab, (void*) ldab, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 

@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_dppequ = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(dppequ,DPPEQU)(char* uplo, blasint* n, double* ap, double* s, double* scond, double* amax, blasint* info)
+void FC_GLOBAL(dppequ,DPPEQU)(char* uplo, blasint* n, double* ap, double* s, double* scond, double* amax, blasint* info, flexiblas_fortran_charlen_t len_uplo)
 #else
-void FC_GLOBAL(dppequ,DPPEQU)(char* uplo, blasint* n, double* ap, double* s, double* scond, double* amax, blasint* info)
+void FC_GLOBAL(dppequ,DPPEQU)(char* uplo, blasint* n, double* ap, double* s, double* scond, double* amax, blasint* info, flexiblas_fortran_charlen_t len_uplo)
 #endif
 {
-	void (*fn) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info);
-	void (*fn_hook) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info);
+	void (*fn) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info, flexiblas_fortran_charlen_t len_uplo);
+	void (*fn_hook) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info, flexiblas_fortran_charlen_t len_uplo);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL(dppequ,DPPEQU)(char* uplo, blasint* n, double* ap, double* s, dou
 	*(void **) & fn = current_backend->lapack.dppequ.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->dppequ.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info); 
+		fn((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo); 
 		return;
 	} else {
 		hook_pos_dppequ = 0;
-		fn_hook((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info);
+		fn_hook((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dppequ_(char* uplo, blasint* n, double* ap, double* s, double* scond, double* amax, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dppequ,DPPEQU)))));
+void dppequ_(char* uplo, blasint* n, double* ap, double* s, double* scond, double* amax, blasint* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dppequ,DPPEQU)))));
 #else
 #ifndef __APPLE__
-void dppequ(char* uplo, blasint* n, double* ap, double* s, double* scond, double* amax, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dppequ,DPPEQU)))));
+void dppequ(char* uplo, blasint* n, double* ap, double* s, double* scond, double* amax, blasint* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dppequ,DPPEQU)))));
 #else
-void dppequ(char* uplo, blasint* n, double* ap, double* s, double* scond, double* amax, blasint* info){ FC_GLOBAL(dppequ,DPPEQU)((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info); }
+void dppequ(char* uplo, blasint* n, double* ap, double* s, double* scond, double* amax, blasint* info, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dppequ,DPPEQU)((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void dppequ(char* uplo, blasint* n, double* ap, double* s, double* scond, double
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_dppequ_(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info)
+void flexiblas_real_dppequ_(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info, flexiblas_fortran_charlen_t len_uplo)
 {
-	void (*fn) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info);
+	void (*fn) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info, flexiblas_fortran_charlen_t len_uplo);
 
 	*(void **) & fn = current_backend->lapack.dppequ.f77_blas_function; 
 
-		fn((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info); 
+		fn((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_dppequ(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info) __attribute__((alias("flexiblas_real_dppequ_")));
+void flexiblas_real_dppequ(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_real_dppequ_")));
 #else
-void flexiblas_real_dppequ(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info){flexiblas_real_dppequ_((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info);}
+void flexiblas_real_dppequ(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info, flexiblas_fortran_charlen_t len_uplo){flexiblas_real_dppequ_((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_dppequ(void* uplo, void* n, void* ap, void* s, void* scond, 
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_dppequ_(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info)
+void flexiblas_chain_dppequ_(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info, flexiblas_fortran_charlen_t len_uplo)
 {
-	void (*fn) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info);
-	void (*fn_hook) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info);
+	void (*fn) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info, flexiblas_fortran_charlen_t len_uplo);
+	void (*fn_hook) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info, flexiblas_fortran_charlen_t len_uplo);
 
 	*(void **) &fn      = current_backend->lapack.dppequ.f77_blas_function; 
 
     hook_pos_dppequ ++;
     if( hook_pos_dppequ < __flexiblas_hooks->dppequ.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->dppequ.f77_hook_function[hook_pos_dppequ];
-        fn_hook((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info);
+        fn_hook((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo);
     } else {
         hook_pos_dppequ = 0;
-		fn((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info); 
+		fn((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_dppequ(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info) __attribute__((alias("flexiblas_chain_dppequ_")));
+void flexiblas_chain_dppequ(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_chain_dppequ_")));
 #else
-void flexiblas_chain_dppequ(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info){flexiblas_chain_dppequ_((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info);}
+void flexiblas_chain_dppequ(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info, flexiblas_fortran_charlen_t len_uplo){flexiblas_chain_dppequ_((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 

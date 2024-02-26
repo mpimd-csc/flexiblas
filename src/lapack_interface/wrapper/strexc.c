@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_strexc = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(strexc,STREXC)(char* compq, blasint* n, float* t, blasint* ldt, float* q, blasint* ldq, blasint* ifst, blasint* ilst, float* work, blasint* info)
+void FC_GLOBAL(strexc,STREXC)(char* compq, blasint* n, float* t, blasint* ldt, float* q, blasint* ldq, blasint* ifst, blasint* ilst, float* work, blasint* info, flexiblas_fortran_charlen_t len_compq)
 #else
-void FC_GLOBAL(strexc,STREXC)(char* compq, blasint* n, float* t, blasint* ldt, float* q, blasint* ldq, blasint* ifst, blasint* ilst, float* work, blasint* info)
+void FC_GLOBAL(strexc,STREXC)(char* compq, blasint* n, float* t, blasint* ldt, float* q, blasint* ldq, blasint* ifst, blasint* ilst, float* work, blasint* info, flexiblas_fortran_charlen_t len_compq)
 #endif
 {
-	void (*fn) (void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info);
-	void (*fn_hook) (void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info);
+	void (*fn) (void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info, flexiblas_fortran_charlen_t len_compq);
+	void (*fn_hook) (void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info, flexiblas_fortran_charlen_t len_compq);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL(strexc,STREXC)(char* compq, blasint* n, float* t, blasint* ldt, f
 	*(void **) & fn = current_backend->lapack.strexc.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->strexc.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) work, (void*) info); 
+		fn((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_compq); 
 		return;
 	} else {
 		hook_pos_strexc = 0;
-		fn_hook((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) work, (void*) info);
+		fn_hook((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_compq);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void strexc_(char* compq, blasint* n, float* t, blasint* ldt, float* q, blasint* ldq, blasint* ifst, blasint* ilst, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(strexc,STREXC)))));
+void strexc_(char* compq, blasint* n, float* t, blasint* ldt, float* q, blasint* ldq, blasint* ifst, blasint* ilst, float* work, blasint* info, flexiblas_fortran_charlen_t len_compq) __attribute__((alias(MTS(FC_GLOBAL(strexc,STREXC)))));
 #else
 #ifndef __APPLE__
-void strexc(char* compq, blasint* n, float* t, blasint* ldt, float* q, blasint* ldq, blasint* ifst, blasint* ilst, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(strexc,STREXC)))));
+void strexc(char* compq, blasint* n, float* t, blasint* ldt, float* q, blasint* ldq, blasint* ifst, blasint* ilst, float* work, blasint* info, flexiblas_fortran_charlen_t len_compq) __attribute__((alias(MTS(FC_GLOBAL(strexc,STREXC)))));
 #else
-void strexc(char* compq, blasint* n, float* t, blasint* ldt, float* q, blasint* ldq, blasint* ifst, blasint* ilst, float* work, blasint* info){ FC_GLOBAL(strexc,STREXC)((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) work, (void*) info); }
+void strexc(char* compq, blasint* n, float* t, blasint* ldt, float* q, blasint* ldq, blasint* ifst, blasint* ilst, float* work, blasint* info, flexiblas_fortran_charlen_t len_compq){ FC_GLOBAL(strexc,STREXC)((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) work, (void*) info, (flexiblas_fortran_charlen_t) len_compq); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void strexc(char* compq, blasint* n, float* t, blasint* ldt, float* q, blasint* 
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_strexc_(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info)
+void flexiblas_real_strexc_(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info, flexiblas_fortran_charlen_t len_compq)
 {
-	void (*fn) (void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info);
+	void (*fn) (void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info, flexiblas_fortran_charlen_t len_compq);
 
 	*(void **) & fn = current_backend->lapack.strexc.f77_blas_function; 
 
-		fn((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) work, (void*) info); 
+		fn((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_compq); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_strexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info) __attribute__((alias("flexiblas_real_strexc_")));
+void flexiblas_real_strexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info, flexiblas_fortran_charlen_t len_compq) __attribute__((alias("flexiblas_real_strexc_")));
 #else
-void flexiblas_real_strexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info){flexiblas_real_strexc_((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) work, (void*) info);}
+void flexiblas_real_strexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info, flexiblas_fortran_charlen_t len_compq){flexiblas_real_strexc_((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) work, (void*) info, (flexiblas_fortran_charlen_t) len_compq);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_strexc(void* compq, void* n, void* t, void* ldt, void* q, vo
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_strexc_(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info)
+void flexiblas_chain_strexc_(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info, flexiblas_fortran_charlen_t len_compq)
 {
-	void (*fn) (void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info);
-	void (*fn_hook) (void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info);
+	void (*fn) (void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info, flexiblas_fortran_charlen_t len_compq);
+	void (*fn_hook) (void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info, flexiblas_fortran_charlen_t len_compq);
 
 	*(void **) &fn      = current_backend->lapack.strexc.f77_blas_function; 
 
     hook_pos_strexc ++;
     if( hook_pos_strexc < __flexiblas_hooks->strexc.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->strexc.f77_hook_function[hook_pos_strexc];
-        fn_hook((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) work, (void*) info);
+        fn_hook((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_compq);
     } else {
         hook_pos_strexc = 0;
-		fn((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) work, (void*) info); 
+		fn((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_compq); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_strexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info) __attribute__((alias("flexiblas_chain_strexc_")));
+void flexiblas_chain_strexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info, flexiblas_fortran_charlen_t len_compq) __attribute__((alias("flexiblas_chain_strexc_")));
 #else
-void flexiblas_chain_strexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info){flexiblas_chain_strexc_((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) work, (void*) info);}
+void flexiblas_chain_strexc(void* compq, void* n, void* t, void* ldt, void* q, void* ldq, void* ifst, void* ilst, void* work, void* info, flexiblas_fortran_charlen_t len_compq){flexiblas_chain_strexc_((void*) compq, (void*) n, (void*) t, (void*) ldt, (void*) q, (void*) ldq, (void*) ifst, (void*) ilst, (void*) work, (void*) info, (flexiblas_fortran_charlen_t) len_compq);}
 #endif
 
 

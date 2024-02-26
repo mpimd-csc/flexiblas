@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_slangb = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-float FC_GLOBAL(slangb,SLANGB)(char* norm, blasint* n, blasint* kl, blasint* ku, float* ab, blasint* ldab, float* work)
+float FC_GLOBAL(slangb,SLANGB)(char* norm, blasint* n, blasint* kl, blasint* ku, float* ab, blasint* ldab, float* work, flexiblas_fortran_charlen_t len_norm)
 #else
-float FC_GLOBAL(slangb,SLANGB)(char* norm, blasint* n, blasint* kl, blasint* ku, float* ab, blasint* ldab, float* work)
+float FC_GLOBAL(slangb,SLANGB)(char* norm, blasint* n, blasint* kl, blasint* ku, float* ab, blasint* ldab, float* work, flexiblas_fortran_charlen_t len_norm)
 #endif
 {
-	float (*fn) (void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work);
-	float (*fn_hook) (void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work);
+	float (*fn) (void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work, flexiblas_fortran_charlen_t len_norm);
+	float (*fn_hook) (void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work, flexiblas_fortran_charlen_t len_norm);
 	float ret;
 
     if ( current_backend->post_init != 0 ) {
@@ -59,21 +64,21 @@ float FC_GLOBAL(slangb,SLANGB)(char* norm, blasint* n, blasint* kl, blasint* ku,
 	*(void **) & fn = current_backend->lapack.slangb.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->slangb.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		ret = fn((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) work); 
+		ret = fn((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) work, ( flexiblas_fortran_charlen_t ) len_norm); 
 		return ret; 
 	} else {
 		hook_pos_slangb = 0;
-		ret=fn_hook((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) work);
+		ret=fn_hook((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) work, ( flexiblas_fortran_charlen_t ) len_norm);
 		return ret;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-float slangb_(char* norm, blasint* n, blasint* kl, blasint* ku, float* ab, blasint* ldab, float* work) __attribute__((alias(MTS(FC_GLOBAL(slangb,SLANGB)))));
+float slangb_(char* norm, blasint* n, blasint* kl, blasint* ku, float* ab, blasint* ldab, float* work, flexiblas_fortran_charlen_t len_norm) __attribute__((alias(MTS(FC_GLOBAL(slangb,SLANGB)))));
 #else
 #ifndef __APPLE__
-float slangb(char* norm, blasint* n, blasint* kl, blasint* ku, float* ab, blasint* ldab, float* work) __attribute__((alias(MTS(FC_GLOBAL(slangb,SLANGB)))));
+float slangb(char* norm, blasint* n, blasint* kl, blasint* ku, float* ab, blasint* ldab, float* work, flexiblas_fortran_charlen_t len_norm) __attribute__((alias(MTS(FC_GLOBAL(slangb,SLANGB)))));
 #else
-float slangb(char* norm, blasint* n, blasint* kl, blasint* ku, float* ab, blasint* ldab, float* work){ return FC_GLOBAL(slangb,SLANGB)((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) work); }
+float slangb(char* norm, blasint* n, blasint* kl, blasint* ku, float* ab, blasint* ldab, float* work, flexiblas_fortran_charlen_t len_norm){ return FC_GLOBAL(slangb,SLANGB)((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) work, (flexiblas_fortran_charlen_t) len_norm); }
 #endif
 #endif
 
@@ -83,21 +88,21 @@ float slangb(char* norm, blasint* n, blasint* kl, blasint* ku, float* ab, blasin
 /* Real Implementation for Hooks */
 
 
-float flexiblas_real_slangb_(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work)
+float flexiblas_real_slangb_(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work, flexiblas_fortran_charlen_t len_norm)
 {
-	float (*fn) (void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work);
+	float (*fn) (void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work, flexiblas_fortran_charlen_t len_norm);
 	float ret;
 
 	*(void **) & fn = current_backend->lapack.slangb.f77_blas_function; 
 
-		ret = fn((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) work); 
+		ret = fn((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) work, ( flexiblas_fortran_charlen_t ) len_norm); 
 
 	return ret ;
 }
 #ifndef __APPLE__
-float flexiblas_real_slangb(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work) __attribute__((alias("flexiblas_real_slangb_")));
+float flexiblas_real_slangb(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work, flexiblas_fortran_charlen_t len_norm) __attribute__((alias("flexiblas_real_slangb_")));
 #else
-float flexiblas_real_slangb(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work){return flexiblas_real_slangb_((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) work);}
+float flexiblas_real_slangb(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work, flexiblas_fortran_charlen_t len_norm){return flexiblas_real_slangb_((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) work, (flexiblas_fortran_charlen_t) len_norm);}
 #endif
 
 
@@ -106,10 +111,10 @@ float flexiblas_real_slangb(void* norm, void* n, void* kl, void* ku, void* ab, v
 /* Chainloader for Hooks */
 
 
-float flexiblas_chain_slangb_(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work)
+float flexiblas_chain_slangb_(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work, flexiblas_fortran_charlen_t len_norm)
 {
-	float (*fn) (void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work);
-	float (*fn_hook) (void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work);
+	float (*fn) (void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work, flexiblas_fortran_charlen_t len_norm);
+	float (*fn_hook) (void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work, flexiblas_fortran_charlen_t len_norm);
 	float ret;
 
 	*(void **) &fn      = current_backend->lapack.slangb.f77_blas_function; 
@@ -117,17 +122,17 @@ float flexiblas_chain_slangb_(void* norm, void* n, void* kl, void* ku, void* ab,
     hook_pos_slangb ++;
     if( hook_pos_slangb < __flexiblas_hooks->slangb.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->slangb.f77_hook_function[hook_pos_slangb];
-        ret = fn_hook((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) work);
+        ret = fn_hook((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) work, ( flexiblas_fortran_charlen_t )len_norm);
     } else {
         hook_pos_slangb = 0;
-		ret = fn((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) work); 
+		ret = fn((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) work, ( flexiblas_fortran_charlen_t ) len_norm); 
 	}
 	return ret ;
 }
 #ifndef __APPLE__
-float flexiblas_chain_slangb(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work) __attribute__((alias("flexiblas_chain_slangb_")));
+float flexiblas_chain_slangb(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work, flexiblas_fortran_charlen_t len_norm) __attribute__((alias("flexiblas_chain_slangb_")));
 #else
-float flexiblas_chain_slangb(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work){return flexiblas_chain_slangb_((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) work);}
+float flexiblas_chain_slangb(void* norm, void* n, void* kl, void* ku, void* ab, void* ldab, void* work, flexiblas_fortran_charlen_t len_norm){return flexiblas_chain_slangb_((void*) norm, (void*) n, (void*) kl, (void*) ku, (void*) ab, (void*) ldab, (void*) work, (flexiblas_fortran_charlen_t) len_norm);}
 #endif
 
 

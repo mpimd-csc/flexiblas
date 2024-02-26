@@ -143,7 +143,7 @@ void flexiblas_real_cblas_zgbmv(const CBLAS_LAYOUT layout,
         F77_TA = C2F_CHAR(&TA);
 #endif
         FC_GLOBAL(zgbmv,ZGBMV)(F77_TA, &F77_M, &F77_N, &F77_KL, &F77_KU, alpha,
-                A, &F77_lda, X, &F77_incX, beta, Y, &F77_incY);
+                A, &F77_lda, X, &F77_incX, beta, Y, &F77_incY, 1);
     }
     else if (layout == CblasRowMajor)
     {
@@ -226,10 +226,10 @@ void flexiblas_real_cblas_zgbmv(const CBLAS_LAYOUT layout,
 #endif
         if (TransA == CblasConjTrans)
             FC_GLOBAL(zgbmv,ZGBMV)(F77_TA, &F77_N, &F77_M, &F77_KU, &F77_KL, ALPHA,
-                    A ,&F77_lda, x,&F77_incX, BETA, Y, &F77_incY);
+                    A ,&F77_lda, x,&F77_incX, BETA, Y, &F77_incY, 1);
         else
             FC_GLOBAL(zgbmv,ZGBMV)(F77_TA, &F77_N, &F77_M, &F77_KU, &F77_KL, alpha,
-                    A ,&F77_lda, x,&F77_incX, beta, Y, &F77_incY);
+                    A ,&F77_lda, x,&F77_incX, beta, Y, &F77_incY, 1);
         if (TransA == CblasConjTrans)
         {
             if (x != X) free(x);

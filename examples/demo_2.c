@@ -77,7 +77,7 @@ int main (int argc, char **argv) {
 	}
 	ts = wtime();
 	for (i=0; i < 10; i++){
-		FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &n, B,&n, &beta, C, &n);
+		FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &n, B,&n, &beta, C, &n, 1, 1);
 	}
 	te = wtime();
 	printf("time: %lg\n", (te-ts)/10.0);

@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_dlamch = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-double FC_GLOBAL(dlamch,DLAMCH)(char* cmach)
+double FC_GLOBAL(dlamch,DLAMCH)(char* cmach, flexiblas_fortran_charlen_t len_cmach)
 #else
-double FC_GLOBAL(dlamch,DLAMCH)(char* cmach)
+double FC_GLOBAL(dlamch,DLAMCH)(char* cmach, flexiblas_fortran_charlen_t len_cmach)
 #endif
 {
-	double (*fn) (void* cmach);
-	double (*fn_hook) (void* cmach);
+	double (*fn) (void* cmach, flexiblas_fortran_charlen_t len_cmach);
+	double (*fn_hook) (void* cmach, flexiblas_fortran_charlen_t len_cmach);
 	double ret;
 
     if ( current_backend->post_init != 0 ) {
@@ -59,21 +64,21 @@ double FC_GLOBAL(dlamch,DLAMCH)(char* cmach)
 	*(void **) & fn = current_backend->lapack.dlamch.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->dlamch.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		ret = fn((void*) cmach); 
+		ret = fn((void*) cmach, ( flexiblas_fortran_charlen_t ) len_cmach); 
 		return ret; 
 	} else {
 		hook_pos_dlamch = 0;
-		ret=fn_hook((void*) cmach);
+		ret=fn_hook((void*) cmach, ( flexiblas_fortran_charlen_t ) len_cmach);
 		return ret;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-double dlamch_(char* cmach) __attribute__((alias(MTS(FC_GLOBAL(dlamch,DLAMCH)))));
+double dlamch_(char* cmach, flexiblas_fortran_charlen_t len_cmach) __attribute__((alias(MTS(FC_GLOBAL(dlamch,DLAMCH)))));
 #else
 #ifndef __APPLE__
-double dlamch(char* cmach) __attribute__((alias(MTS(FC_GLOBAL(dlamch,DLAMCH)))));
+double dlamch(char* cmach, flexiblas_fortran_charlen_t len_cmach) __attribute__((alias(MTS(FC_GLOBAL(dlamch,DLAMCH)))));
 #else
-double dlamch(char* cmach){ return FC_GLOBAL(dlamch,DLAMCH)((void*) cmach); }
+double dlamch(char* cmach, flexiblas_fortran_charlen_t len_cmach){ return FC_GLOBAL(dlamch,DLAMCH)((void*) cmach, (flexiblas_fortran_charlen_t) len_cmach); }
 #endif
 #endif
 
@@ -83,21 +88,21 @@ double dlamch(char* cmach){ return FC_GLOBAL(dlamch,DLAMCH)((void*) cmach); }
 /* Real Implementation for Hooks */
 
 
-double flexiblas_real_dlamch_(void* cmach)
+double flexiblas_real_dlamch_(void* cmach, flexiblas_fortran_charlen_t len_cmach)
 {
-	double (*fn) (void* cmach);
+	double (*fn) (void* cmach, flexiblas_fortran_charlen_t len_cmach);
 	double ret;
 
 	*(void **) & fn = current_backend->lapack.dlamch.f77_blas_function; 
 
-		ret = fn((void*) cmach); 
+		ret = fn((void*) cmach, ( flexiblas_fortran_charlen_t ) len_cmach); 
 
 	return ret ;
 }
 #ifndef __APPLE__
-double flexiblas_real_dlamch(void* cmach) __attribute__((alias("flexiblas_real_dlamch_")));
+double flexiblas_real_dlamch(void* cmach, flexiblas_fortran_charlen_t len_cmach) __attribute__((alias("flexiblas_real_dlamch_")));
 #else
-double flexiblas_real_dlamch(void* cmach){return flexiblas_real_dlamch_((void*) cmach);}
+double flexiblas_real_dlamch(void* cmach, flexiblas_fortran_charlen_t len_cmach){return flexiblas_real_dlamch_((void*) cmach, (flexiblas_fortran_charlen_t) len_cmach);}
 #endif
 
 
@@ -106,10 +111,10 @@ double flexiblas_real_dlamch(void* cmach){return flexiblas_real_dlamch_((void*) 
 /* Chainloader for Hooks */
 
 
-double flexiblas_chain_dlamch_(void* cmach)
+double flexiblas_chain_dlamch_(void* cmach, flexiblas_fortran_charlen_t len_cmach)
 {
-	double (*fn) (void* cmach);
-	double (*fn_hook) (void* cmach);
+	double (*fn) (void* cmach, flexiblas_fortran_charlen_t len_cmach);
+	double (*fn_hook) (void* cmach, flexiblas_fortran_charlen_t len_cmach);
 	double ret;
 
 	*(void **) &fn      = current_backend->lapack.dlamch.f77_blas_function; 
@@ -117,17 +122,17 @@ double flexiblas_chain_dlamch_(void* cmach)
     hook_pos_dlamch ++;
     if( hook_pos_dlamch < __flexiblas_hooks->dlamch.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->dlamch.f77_hook_function[hook_pos_dlamch];
-        ret = fn_hook((void*) cmach);
+        ret = fn_hook((void*) cmach, ( flexiblas_fortran_charlen_t )len_cmach);
     } else {
         hook_pos_dlamch = 0;
-		ret = fn((void*) cmach); 
+		ret = fn((void*) cmach, ( flexiblas_fortran_charlen_t ) len_cmach); 
 	}
 	return ret ;
 }
 #ifndef __APPLE__
-double flexiblas_chain_dlamch(void* cmach) __attribute__((alias("flexiblas_chain_dlamch_")));
+double flexiblas_chain_dlamch(void* cmach, flexiblas_fortran_charlen_t len_cmach) __attribute__((alias("flexiblas_chain_dlamch_")));
 #else
-double flexiblas_chain_dlamch(void* cmach){return flexiblas_chain_dlamch_((void*) cmach);}
+double flexiblas_chain_dlamch(void* cmach, flexiblas_fortran_charlen_t len_cmach){return flexiblas_chain_dlamch_((void*) cmach, (flexiblas_fortran_charlen_t) len_cmach);}
 #endif
 
 

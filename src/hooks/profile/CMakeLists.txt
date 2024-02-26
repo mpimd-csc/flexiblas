@@ -3,13 +3,13 @@ IF ( LAPACK )
 	  profile_hook.c
 	  profile_blas.c
 	  profile_lapack_${_LAPACK_FILE_SUFFIX}.c  )
-  ELSE()
+ELSE()
 	ADD_LIBRARY(flexiblas_hook_profile SHARED
 	  profile_hook.c
 	  profile_blas.c
  	)
-  ENDIF()
-IF (INTEGER8 STREQUAL ON)
+ENDIF()
+IF (FLEXIBLAS_INTEGER8 STREQUAL ON)
   SET(EXTRA_FLAGS "-DBACKEND_INTEGER8")
 ELSE ()
   SET(EXTRA_FLAGS "")

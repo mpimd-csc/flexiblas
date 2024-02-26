@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_ilauplo = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-int FC_GLOBAL(ilauplo,ILAUPLO)(char* uplo)
+int FC_GLOBAL(ilauplo,ILAUPLO)(char* uplo, flexiblas_fortran_charlen_t len_uplo)
 #else
-int FC_GLOBAL(ilauplo,ILAUPLO)(char* uplo)
+int FC_GLOBAL(ilauplo,ILAUPLO)(char* uplo, flexiblas_fortran_charlen_t len_uplo)
 #endif
 {
-	blasint (*fn) (void* uplo);
-	blasint (*fn_hook) (void* uplo);
+	blasint (*fn) (void* uplo, flexiblas_fortran_charlen_t len_uplo);
+	blasint (*fn_hook) (void* uplo, flexiblas_fortran_charlen_t len_uplo);
 	blasint ret;
 
     if ( current_backend->post_init != 0 ) {
@@ -59,21 +64,21 @@ int FC_GLOBAL(ilauplo,ILAUPLO)(char* uplo)
 	*(void **) & fn = current_backend->lapack.ilauplo.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->ilauplo.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		ret = fn((void*) uplo); 
+		ret = fn((void*) uplo, ( flexiblas_fortran_charlen_t ) len_uplo); 
 		return ret; 
 	} else {
 		hook_pos_ilauplo = 0;
-		ret=fn_hook((void*) uplo);
+		ret=fn_hook((void*) uplo, ( flexiblas_fortran_charlen_t ) len_uplo);
 		return ret;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-int ilauplo_(char* uplo) __attribute__((alias(MTS(FC_GLOBAL(ilauplo,ILAUPLO)))));
+int ilauplo_(char* uplo, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ilauplo,ILAUPLO)))));
 #else
 #ifndef __APPLE__
-int ilauplo(char* uplo) __attribute__((alias(MTS(FC_GLOBAL(ilauplo,ILAUPLO)))));
+int ilauplo(char* uplo, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ilauplo,ILAUPLO)))));
 #else
-int ilauplo(char* uplo){ return FC_GLOBAL(ilauplo,ILAUPLO)((void*) uplo); }
+int ilauplo(char* uplo, flexiblas_fortran_charlen_t len_uplo){ return FC_GLOBAL(ilauplo,ILAUPLO)((void*) uplo, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -83,21 +88,21 @@ int ilauplo(char* uplo){ return FC_GLOBAL(ilauplo,ILAUPLO)((void*) uplo); }
 /* Real Implementation for Hooks */
 
 
-blasint flexiblas_real_ilauplo_(void* uplo)
+blasint flexiblas_real_ilauplo_(void* uplo, flexiblas_fortran_charlen_t len_uplo)
 {
-	blasint (*fn) (void* uplo);
+	blasint (*fn) (void* uplo, flexiblas_fortran_charlen_t len_uplo);
 	blasint ret;
 
 	*(void **) & fn = current_backend->lapack.ilauplo.f77_blas_function; 
 
-		ret = fn((void*) uplo); 
+		ret = fn((void*) uplo, ( flexiblas_fortran_charlen_t ) len_uplo); 
 
 	return ret ;
 }
 #ifndef __APPLE__
-blasint flexiblas_real_ilauplo(void* uplo) __attribute__((alias("flexiblas_real_ilauplo_")));
+blasint flexiblas_real_ilauplo(void* uplo, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_real_ilauplo_")));
 #else
-blasint flexiblas_real_ilauplo(void* uplo){return flexiblas_real_ilauplo_((void*) uplo);}
+blasint flexiblas_real_ilauplo(void* uplo, flexiblas_fortran_charlen_t len_uplo){return flexiblas_real_ilauplo_((void*) uplo, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 
@@ -106,10 +111,10 @@ blasint flexiblas_real_ilauplo(void* uplo){return flexiblas_real_ilauplo_((void*
 /* Chainloader for Hooks */
 
 
-blasint flexiblas_chain_ilauplo_(void* uplo)
+blasint flexiblas_chain_ilauplo_(void* uplo, flexiblas_fortran_charlen_t len_uplo)
 {
-	blasint (*fn) (void* uplo);
-	blasint (*fn_hook) (void* uplo);
+	blasint (*fn) (void* uplo, flexiblas_fortran_charlen_t len_uplo);
+	blasint (*fn_hook) (void* uplo, flexiblas_fortran_charlen_t len_uplo);
 	blasint ret;
 
 	*(void **) &fn      = current_backend->lapack.ilauplo.f77_blas_function; 
@@ -117,17 +122,17 @@ blasint flexiblas_chain_ilauplo_(void* uplo)
     hook_pos_ilauplo ++;
     if( hook_pos_ilauplo < __flexiblas_hooks->ilauplo.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->ilauplo.f77_hook_function[hook_pos_ilauplo];
-        ret = fn_hook((void*) uplo);
+        ret = fn_hook((void*) uplo, ( flexiblas_fortran_charlen_t )len_uplo);
     } else {
         hook_pos_ilauplo = 0;
-		ret = fn((void*) uplo); 
+		ret = fn((void*) uplo, ( flexiblas_fortran_charlen_t ) len_uplo); 
 	}
 	return ret ;
 }
 #ifndef __APPLE__
-blasint flexiblas_chain_ilauplo(void* uplo) __attribute__((alias("flexiblas_chain_ilauplo_")));
+blasint flexiblas_chain_ilauplo(void* uplo, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_chain_ilauplo_")));
 #else
-blasint flexiblas_chain_ilauplo(void* uplo){return flexiblas_chain_ilauplo_((void*) uplo);}
+blasint flexiblas_chain_ilauplo(void* uplo, flexiblas_fortran_charlen_t len_uplo){return flexiblas_chain_ilauplo_((void*) uplo, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 

@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_cgecon = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(cgecon,CGECON)(char* norm, blasint* n, float complex* a, blasint* lda, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info)
+void FC_GLOBAL(cgecon,CGECON)(char* norm, blasint* n, float complex* a, blasint* lda, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_norm)
 #else
-void FC_GLOBAL(cgecon,CGECON)(char* norm, blasint* n, float complex* a, blasint* lda, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info)
+void FC_GLOBAL(cgecon,CGECON)(char* norm, blasint* n, float complex* a, blasint* lda, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_norm)
 #endif
 {
-	void (*fn) (void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info);
-	void (*fn_hook) (void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info);
+	void (*fn) (void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info, flexiblas_fortran_charlen_t len_norm);
+	void (*fn_hook) (void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info, flexiblas_fortran_charlen_t len_norm);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL(cgecon,CGECON)(char* norm, blasint* n, float complex* a, blasint*
 	*(void **) & fn = current_backend->lapack.cgecon.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->cgecon.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info); 
+		fn((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_norm); 
 		return;
 	} else {
 		hook_pos_cgecon = 0;
-		fn_hook((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info);
+		fn_hook((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_norm);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void cgecon_(char* norm, blasint* n, float complex* a, blasint* lda, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cgecon,CGECON)))));
+void cgecon_(char* norm, blasint* n, float complex* a, blasint* lda, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_norm) __attribute__((alias(MTS(FC_GLOBAL(cgecon,CGECON)))));
 #else
 #ifndef __APPLE__
-void cgecon(char* norm, blasint* n, float complex* a, blasint* lda, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cgecon,CGECON)))));
+void cgecon(char* norm, blasint* n, float complex* a, blasint* lda, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_norm) __attribute__((alias(MTS(FC_GLOBAL(cgecon,CGECON)))));
 #else
-void cgecon(char* norm, blasint* n, float complex* a, blasint* lda, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info){ FC_GLOBAL(cgecon,CGECON)((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info); }
+void cgecon(char* norm, blasint* n, float complex* a, blasint* lda, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_norm){ FC_GLOBAL(cgecon,CGECON)((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info, (flexiblas_fortran_charlen_t) len_norm); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void cgecon(char* norm, blasint* n, float complex* a, blasint* lda, float* anorm
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_cgecon_(void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info)
+void flexiblas_real_cgecon_(void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info, flexiblas_fortran_charlen_t len_norm)
 {
-	void (*fn) (void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info);
+	void (*fn) (void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info, flexiblas_fortran_charlen_t len_norm);
 
 	*(void **) & fn = current_backend->lapack.cgecon.f77_blas_function; 
 
-		fn((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info); 
+		fn((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_norm); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_cgecon(void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info) __attribute__((alias("flexiblas_real_cgecon_")));
+void flexiblas_real_cgecon(void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info, flexiblas_fortran_charlen_t len_norm) __attribute__((alias("flexiblas_real_cgecon_")));
 #else
-void flexiblas_real_cgecon(void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info){flexiblas_real_cgecon_((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info);}
+void flexiblas_real_cgecon(void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info, flexiblas_fortran_charlen_t len_norm){flexiblas_real_cgecon_((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info, (flexiblas_fortran_charlen_t) len_norm);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_cgecon(void* norm, void* n, void* a, void* lda, void* anorm,
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_cgecon_(void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info)
+void flexiblas_chain_cgecon_(void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info, flexiblas_fortran_charlen_t len_norm)
 {
-	void (*fn) (void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info);
-	void (*fn_hook) (void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info);
+	void (*fn) (void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info, flexiblas_fortran_charlen_t len_norm);
+	void (*fn_hook) (void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info, flexiblas_fortran_charlen_t len_norm);
 
 	*(void **) &fn      = current_backend->lapack.cgecon.f77_blas_function; 
 
     hook_pos_cgecon ++;
     if( hook_pos_cgecon < __flexiblas_hooks->cgecon.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->cgecon.f77_hook_function[hook_pos_cgecon];
-        fn_hook((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info);
+        fn_hook((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_norm);
     } else {
         hook_pos_cgecon = 0;
-		fn((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info); 
+		fn((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_norm); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_cgecon(void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info) __attribute__((alias("flexiblas_chain_cgecon_")));
+void flexiblas_chain_cgecon(void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info, flexiblas_fortran_charlen_t len_norm) __attribute__((alias("flexiblas_chain_cgecon_")));
 #else
-void flexiblas_chain_cgecon(void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info){flexiblas_chain_cgecon_((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info);}
+void flexiblas_chain_cgecon(void* norm, void* n, void* a, void* lda, void* anorm, void* rcond, void* work, void* rwork, void* info, flexiblas_fortran_charlen_t len_norm){flexiblas_chain_cgecon_((void*) norm, (void*) n, (void*) a, (void*) lda, (void*) anorm, (void*) rcond, (void*) work, (void*) rwork, (void*) info, (flexiblas_fortran_charlen_t) len_norm);}
 #endif
 
 

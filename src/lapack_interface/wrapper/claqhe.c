@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_claqhe = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(claqhe,CLAQHE)(char* uplo, blasint* n, float complex* a, blasint* lda, float* s, float* scond, float* amax, char* equed)
+void FC_GLOBAL(claqhe,CLAQHE)(char* uplo, blasint* n, float complex* a, blasint* lda, float* s, float* scond, float* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed)
 #else
-void FC_GLOBAL(claqhe,CLAQHE)(char* uplo, blasint* n, float complex* a, blasint* lda, float* s, float* scond, float* amax, char* equed)
+void FC_GLOBAL(claqhe,CLAQHE)(char* uplo, blasint* n, float complex* a, blasint* lda, float* s, float* scond, float* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed)
 #endif
 {
-	void (*fn) (void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed);
-	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed);
+	void (*fn) (void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
+	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL(claqhe,CLAQHE)(char* uplo, blasint* n, float complex* a, blasint*
 	*(void **) & fn = current_backend->lapack.claqhe.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->claqhe.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) equed); 
+		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) equed, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_equed); 
 		return;
 	} else {
 		hook_pos_claqhe = 0;
-		fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) equed);
+		fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) equed, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_equed);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void claqhe_(char* uplo, blasint* n, float complex* a, blasint* lda, float* s, float* scond, float* amax, char* equed) __attribute__((alias(MTS(FC_GLOBAL(claqhe,CLAQHE)))));
+void claqhe_(char* uplo, blasint* n, float complex* a, blasint* lda, float* s, float* scond, float* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed) __attribute__((alias(MTS(FC_GLOBAL(claqhe,CLAQHE)))));
 #else
 #ifndef __APPLE__
-void claqhe(char* uplo, blasint* n, float complex* a, blasint* lda, float* s, float* scond, float* amax, char* equed) __attribute__((alias(MTS(FC_GLOBAL(claqhe,CLAQHE)))));
+void claqhe(char* uplo, blasint* n, float complex* a, blasint* lda, float* s, float* scond, float* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed) __attribute__((alias(MTS(FC_GLOBAL(claqhe,CLAQHE)))));
 #else
-void claqhe(char* uplo, blasint* n, float complex* a, blasint* lda, float* s, float* scond, float* amax, char* equed){ FC_GLOBAL(claqhe,CLAQHE)((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) equed); }
+void claqhe(char* uplo, blasint* n, float complex* a, blasint* lda, float* s, float* scond, float* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed){ FC_GLOBAL(claqhe,CLAQHE)((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) equed, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_equed); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void claqhe(char* uplo, blasint* n, float complex* a, blasint* lda, float* s, fl
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_claqhe_(void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed)
+void flexiblas_real_claqhe_(void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed)
 {
-	void (*fn) (void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed);
+	void (*fn) (void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
 
 	*(void **) & fn = current_backend->lapack.claqhe.f77_blas_function; 
 
-		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) equed); 
+		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) equed, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_equed); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_claqhe(void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed) __attribute__((alias("flexiblas_real_claqhe_")));
+void flexiblas_real_claqhe(void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed) __attribute__((alias("flexiblas_real_claqhe_")));
 #else
-void flexiblas_real_claqhe(void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed){flexiblas_real_claqhe_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) equed);}
+void flexiblas_real_claqhe(void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed){flexiblas_real_claqhe_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) equed, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_equed);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_claqhe(void* uplo, void* n, void* a, void* lda, void* s, voi
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_claqhe_(void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed)
+void flexiblas_chain_claqhe_(void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed)
 {
-	void (*fn) (void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed);
-	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed);
+	void (*fn) (void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
+	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
 
 	*(void **) &fn      = current_backend->lapack.claqhe.f77_blas_function; 
 
     hook_pos_claqhe ++;
     if( hook_pos_claqhe < __flexiblas_hooks->claqhe.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->claqhe.f77_hook_function[hook_pos_claqhe];
-        fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) equed);
+        fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) equed, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_equed);
     } else {
         hook_pos_claqhe = 0;
-		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) equed); 
+		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) equed, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_equed); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_claqhe(void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed) __attribute__((alias("flexiblas_chain_claqhe_")));
+void flexiblas_chain_claqhe(void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed) __attribute__((alias("flexiblas_chain_claqhe_")));
 #else
-void flexiblas_chain_claqhe(void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed){flexiblas_chain_claqhe_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) equed);}
+void flexiblas_chain_claqhe(void* uplo, void* n, void* a, void* lda, void* s, void* scond, void* amax, void* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed){flexiblas_chain_claqhe_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) s, (void*) scond, (void*) amax, (void*) equed, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_equed);}
 #endif
 
 

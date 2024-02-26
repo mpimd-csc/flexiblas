@@ -88,7 +88,7 @@ int main (int argc, char **argv) {
     {
         int id = omp_get_thread_num();
     	for (i=0; i < 400; i++){
-	    	FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A[id], &n, B[id],&n, &beta, C[id], &n);
+	    	FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A[id], &n, B[id],&n, &beta, C[id], &n, 1, 1);
     	}
     }
 

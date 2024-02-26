@@ -28,44 +28,54 @@
 #include <math.h>
 #include "flexiblas_fortran_mangle.h"
 #ifndef Int
-#ifndef INTEGER8 
+#ifndef INTEGER8
 #define Int 	int
-#else 
+#else
 #include <stdint.h>
 #define Int 	int64_t
 #endif
 #endif
 
-void FC_GLOBAL(dgemm,DGEMM)(char *, char *, Int *, Int *, Int *, double *, double *, Int *, double *, Int *, double *, double *, Int *); 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
+#if __GNUC__ > 7
+typedef size_t flexiblas_fortran_charlen_t;
+#else
+typedef int flexiblas_fortran_charlen_t;
+#endif
+#endif
+
+
+void FC_GLOBAL(dgemm,DGEMM)(char *, char *, Int *, Int *, Int *, double *, double *, Int *, double *, Int *, double *, double *, Int *, flexiblas_fortran_charlen_t len1, flexiblas_fortran_charlen_t len2);
 
 
 void xerbla_(char *name, Int *info, Int len){
-	char * ptr = malloc ( sizeof(char) * (len + 1)); 
-	strncpy(ptr, name, len); 
-	ptr[len] = '\0'; 
+	char * ptr = malloc ( sizeof(char) * (len + 1));
+	strncpy(ptr, name, len);
+	ptr[len] = '\0';
 	printf("name: %s\n", ptr);
 	printf("info: %d\n", (int) *info);
 	printf("len:  %d\n", (int) len);
-	free(ptr); 
+	free(ptr);
 }
 
 int main(int argc, const char *argv[])
 {
-	Int n,m,k; 
-	Int lda, ldb, ldc; 
-	double alpha, beta; 
-	double A[10],B[10],C[10]; 
+	Int n,m,k;
+	Int lda, ldb, ldc;
+	double alpha, beta;
+	double A[10],B[10],C[10];
 
-	m = 2; 
-	n = 2; 
-	k = 2; 
-	lda = 1; 
-	ldb = 2; 
-	ldc = 0; 
-	alpha = beta = 1; 
-	// printf("xerbla_: %lx\n", (unsigned long)((void*)&xerbla_));  
-	FC_GLOBAL(dgemm,DGEMM)("N", "N", &m, &n, &k, &alpha, A, &lda, B, &ldb, &beta, C, &ldc); 
-	
+	m = 2;
+	n = 2;
+	k = 2;
+	lda = 1;
+	ldb = 2;
+	ldc = 0;
+	alpha = beta = 1;
+	// printf("xerbla_: %lx\n", (unsigned long)((void*)&xerbla_));
+	FC_GLOBAL(dgemm,DGEMM)("N", "N", &m, &n, &k, &alpha, A, &lda, B, &ldb, &beta, C, &ldc, 1, 1);
+
 
 	return 0;
 }

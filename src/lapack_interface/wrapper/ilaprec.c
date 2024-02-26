@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_ilaprec = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-int FC_GLOBAL(ilaprec,ILAPREC)(char* prec)
+int FC_GLOBAL(ilaprec,ILAPREC)(char* prec, flexiblas_fortran_charlen_t len_prec)
 #else
-int FC_GLOBAL(ilaprec,ILAPREC)(char* prec)
+int FC_GLOBAL(ilaprec,ILAPREC)(char* prec, flexiblas_fortran_charlen_t len_prec)
 #endif
 {
-	blasint (*fn) (void* prec);
-	blasint (*fn_hook) (void* prec);
+	blasint (*fn) (void* prec, flexiblas_fortran_charlen_t len_prec);
+	blasint (*fn_hook) (void* prec, flexiblas_fortran_charlen_t len_prec);
 	blasint ret;
 
     if ( current_backend->post_init != 0 ) {
@@ -59,21 +64,21 @@ int FC_GLOBAL(ilaprec,ILAPREC)(char* prec)
 	*(void **) & fn = current_backend->lapack.ilaprec.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->ilaprec.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		ret = fn((void*) prec); 
+		ret = fn((void*) prec, ( flexiblas_fortran_charlen_t ) len_prec); 
 		return ret; 
 	} else {
 		hook_pos_ilaprec = 0;
-		ret=fn_hook((void*) prec);
+		ret=fn_hook((void*) prec, ( flexiblas_fortran_charlen_t ) len_prec);
 		return ret;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-int ilaprec_(char* prec) __attribute__((alias(MTS(FC_GLOBAL(ilaprec,ILAPREC)))));
+int ilaprec_(char* prec, flexiblas_fortran_charlen_t len_prec) __attribute__((alias(MTS(FC_GLOBAL(ilaprec,ILAPREC)))));
 #else
 #ifndef __APPLE__
-int ilaprec(char* prec) __attribute__((alias(MTS(FC_GLOBAL(ilaprec,ILAPREC)))));
+int ilaprec(char* prec, flexiblas_fortran_charlen_t len_prec) __attribute__((alias(MTS(FC_GLOBAL(ilaprec,ILAPREC)))));
 #else
-int ilaprec(char* prec){ return FC_GLOBAL(ilaprec,ILAPREC)((void*) prec); }
+int ilaprec(char* prec, flexiblas_fortran_charlen_t len_prec){ return FC_GLOBAL(ilaprec,ILAPREC)((void*) prec, (flexiblas_fortran_charlen_t) len_prec); }
 #endif
 #endif
 
@@ -83,21 +88,21 @@ int ilaprec(char* prec){ return FC_GLOBAL(ilaprec,ILAPREC)((void*) prec); }
 /* Real Implementation for Hooks */
 
 
-blasint flexiblas_real_ilaprec_(void* prec)
+blasint flexiblas_real_ilaprec_(void* prec, flexiblas_fortran_charlen_t len_prec)
 {
-	blasint (*fn) (void* prec);
+	blasint (*fn) (void* prec, flexiblas_fortran_charlen_t len_prec);
 	blasint ret;
 
 	*(void **) & fn = current_backend->lapack.ilaprec.f77_blas_function; 
 
-		ret = fn((void*) prec); 
+		ret = fn((void*) prec, ( flexiblas_fortran_charlen_t ) len_prec); 
 
 	return ret ;
 }
 #ifndef __APPLE__
-blasint flexiblas_real_ilaprec(void* prec) __attribute__((alias("flexiblas_real_ilaprec_")));
+blasint flexiblas_real_ilaprec(void* prec, flexiblas_fortran_charlen_t len_prec) __attribute__((alias("flexiblas_real_ilaprec_")));
 #else
-blasint flexiblas_real_ilaprec(void* prec){return flexiblas_real_ilaprec_((void*) prec);}
+blasint flexiblas_real_ilaprec(void* prec, flexiblas_fortran_charlen_t len_prec){return flexiblas_real_ilaprec_((void*) prec, (flexiblas_fortran_charlen_t) len_prec);}
 #endif
 
 
@@ -106,10 +111,10 @@ blasint flexiblas_real_ilaprec(void* prec){return flexiblas_real_ilaprec_((void*
 /* Chainloader for Hooks */
 
 
-blasint flexiblas_chain_ilaprec_(void* prec)
+blasint flexiblas_chain_ilaprec_(void* prec, flexiblas_fortran_charlen_t len_prec)
 {
-	blasint (*fn) (void* prec);
-	blasint (*fn_hook) (void* prec);
+	blasint (*fn) (void* prec, flexiblas_fortran_charlen_t len_prec);
+	blasint (*fn_hook) (void* prec, flexiblas_fortran_charlen_t len_prec);
 	blasint ret;
 
 	*(void **) &fn      = current_backend->lapack.ilaprec.f77_blas_function; 
@@ -117,17 +122,17 @@ blasint flexiblas_chain_ilaprec_(void* prec)
     hook_pos_ilaprec ++;
     if( hook_pos_ilaprec < __flexiblas_hooks->ilaprec.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->ilaprec.f77_hook_function[hook_pos_ilaprec];
-        ret = fn_hook((void*) prec);
+        ret = fn_hook((void*) prec, ( flexiblas_fortran_charlen_t )len_prec);
     } else {
         hook_pos_ilaprec = 0;
-		ret = fn((void*) prec); 
+		ret = fn((void*) prec, ( flexiblas_fortran_charlen_t ) len_prec); 
 	}
 	return ret ;
 }
 #ifndef __APPLE__
-blasint flexiblas_chain_ilaprec(void* prec) __attribute__((alias("flexiblas_chain_ilaprec_")));
+blasint flexiblas_chain_ilaprec(void* prec, flexiblas_fortran_charlen_t len_prec) __attribute__((alias("flexiblas_chain_ilaprec_")));
 #else
-blasint flexiblas_chain_ilaprec(void* prec){return flexiblas_chain_ilaprec_((void*) prec);}
+blasint flexiblas_chain_ilaprec(void* prec, flexiblas_fortran_charlen_t len_prec){return flexiblas_chain_ilaprec_((void*) prec, (flexiblas_fortran_charlen_t) len_prec);}
 #endif
 
 

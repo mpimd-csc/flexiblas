@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_dgemqrt = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(dgemqrt,DGEMQRT)(char* side, char* trans, blasint* m, blasint* n, blasint* k, blasint* nb, double* v, blasint* ldv, double* t, blasint* ldt, double* c, blasint* ldc, double* work, blasint* info)
+void FC_GLOBAL(dgemqrt,DGEMQRT)(char* side, char* trans, blasint* m, blasint* n, blasint* k, blasint* nb, double* v, blasint* ldv, double* t, blasint* ldt, double* c, blasint* ldc, double* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans)
 #else
-void FC_GLOBAL(dgemqrt,DGEMQRT)(char* side, char* trans, blasint* m, blasint* n, blasint* k, blasint* nb, double* v, blasint* ldv, double* t, blasint* ldt, double* c, blasint* ldc, double* work, blasint* info)
+void FC_GLOBAL(dgemqrt,DGEMQRT)(char* side, char* trans, blasint* m, blasint* n, blasint* k, blasint* nb, double* v, blasint* ldv, double* t, blasint* ldt, double* c, blasint* ldc, double* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans)
 #endif
 {
-	void (*fn) (void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info);
-	void (*fn_hook) (void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info);
+	void (*fn) (void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+	void (*fn_hook) (void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL(dgemqrt,DGEMQRT)(char* side, char* trans, blasint* m, blasint* n,
 	*(void **) & fn = current_backend->lapack.dgemqrt.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->dgemqrt.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) nb, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) info); 
+		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) nb, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_side, ( flexiblas_fortran_charlen_t ) len_trans); 
 		return;
 	} else {
 		hook_pos_dgemqrt = 0;
-		fn_hook((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) nb, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) info);
+		fn_hook((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) nb, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_side, ( flexiblas_fortran_charlen_t ) len_trans);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dgemqrt_(char* side, char* trans, blasint* m, blasint* n, blasint* k, blasint* nb, double* v, blasint* ldv, double* t, blasint* ldt, double* c, blasint* ldc, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dgemqrt,DGEMQRT)))));
+void dgemqrt_(char* side, char* trans, blasint* m, blasint* n, blasint* k, blasint* nb, double* v, blasint* ldv, double* t, blasint* ldt, double* c, blasint* ldc, double* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dgemqrt,DGEMQRT)))));
 #else
 #ifndef __APPLE__
-void dgemqrt(char* side, char* trans, blasint* m, blasint* n, blasint* k, blasint* nb, double* v, blasint* ldv, double* t, blasint* ldt, double* c, blasint* ldc, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dgemqrt,DGEMQRT)))));
+void dgemqrt(char* side, char* trans, blasint* m, blasint* n, blasint* k, blasint* nb, double* v, blasint* ldv, double* t, blasint* ldt, double* c, blasint* ldc, double* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dgemqrt,DGEMQRT)))));
 #else
-void dgemqrt(char* side, char* trans, blasint* m, blasint* n, blasint* k, blasint* nb, double* v, blasint* ldv, double* t, blasint* ldt, double* c, blasint* ldc, double* work, blasint* info){ FC_GLOBAL(dgemqrt,DGEMQRT)((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) nb, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) info); }
+void dgemqrt(char* side, char* trans, blasint* m, blasint* n, blasint* k, blasint* nb, double* v, blasint* ldv, double* t, blasint* ldt, double* c, blasint* ldc, double* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(dgemqrt,DGEMQRT)((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) nb, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) info, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void dgemqrt(char* side, char* trans, blasint* m, blasint* n, blasint* k, blasin
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_dgemqrt_(void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info)
+void flexiblas_real_dgemqrt_(void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans)
 {
-	void (*fn) (void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info);
+	void (*fn) (void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
 	*(void **) & fn = current_backend->lapack.dgemqrt.f77_blas_function; 
 
-		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) nb, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) info); 
+		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) nb, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_side, ( flexiblas_fortran_charlen_t ) len_trans); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_dgemqrt(void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info) __attribute__((alias("flexiblas_real_dgemqrt_")));
+void flexiblas_real_dgemqrt(void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans) __attribute__((alias("flexiblas_real_dgemqrt_")));
 #else
-void flexiblas_real_dgemqrt(void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info){flexiblas_real_dgemqrt_((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) nb, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) info);}
+void flexiblas_real_dgemqrt(void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans){flexiblas_real_dgemqrt_((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) nb, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) info, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_trans);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_dgemqrt(void* side, void* trans, void* m, void* n, void* k, 
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_dgemqrt_(void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info)
+void flexiblas_chain_dgemqrt_(void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans)
 {
-	void (*fn) (void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info);
-	void (*fn_hook) (void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info);
+	void (*fn) (void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+	void (*fn_hook) (void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
 	*(void **) &fn      = current_backend->lapack.dgemqrt.f77_blas_function; 
 
     hook_pos_dgemqrt ++;
     if( hook_pos_dgemqrt < __flexiblas_hooks->dgemqrt.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->dgemqrt.f77_hook_function[hook_pos_dgemqrt];
-        fn_hook((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) nb, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) info);
+        fn_hook((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) nb, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_side, ( flexiblas_fortran_charlen_t ) len_trans);
     } else {
         hook_pos_dgemqrt = 0;
-		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) nb, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) info); 
+		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) nb, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_side, ( flexiblas_fortran_charlen_t ) len_trans); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_dgemqrt(void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info) __attribute__((alias("flexiblas_chain_dgemqrt_")));
+void flexiblas_chain_dgemqrt(void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans) __attribute__((alias("flexiblas_chain_dgemqrt_")));
 #else
-void flexiblas_chain_dgemqrt(void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info){flexiblas_chain_dgemqrt_((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) nb, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) info);}
+void flexiblas_chain_dgemqrt(void* side, void* trans, void* m, void* n, void* k, void* nb, void* v, void* ldv, void* t, void* ldt, void* c, void* ldc, void* work, void* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans){flexiblas_chain_dgemqrt_((void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) nb, (void*) v, (void*) ldv, (void*) t, (void*) ldt, (void*) c, (void*) ldc, (void*) work, (void*) info, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_trans);}
 #endif
 
 

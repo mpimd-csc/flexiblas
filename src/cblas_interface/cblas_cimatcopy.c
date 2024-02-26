@@ -97,7 +97,7 @@ void flexiblas_real_cblas_cimatcopy(const CBLAS_ORDER CORDER, const CBLAS_TRANSP
             default:
                 TRANS[0]='X';
         }
-        FC_GLOBAL(cimatcopy,CIMATCOPY)( ORDER, TRANS, &F77_ROWS, &F77_COLS, calpha, a, &F77_LDA, &F77_LDB);
+        FC_GLOBAL(cimatcopy,CIMATCOPY)( ORDER, TRANS, &F77_ROWS, &F77_COLS, calpha, a, &F77_LDA, &F77_LDB, 1, 1);
     }
     current_backend->blas.cimatcopy.calls[POS_CBLAS] ++;
 }

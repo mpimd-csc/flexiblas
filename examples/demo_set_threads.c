@@ -26,7 +26,18 @@
 #include "flexiblas_fortran_mangle.h"
 #include "flexiblas_api.h"
 
-extern void FC_GLOBAL(sgemm,SGEMM)(char* transa, char* transb, int* m, int* n, int* k, float* alpha, float* a, int* lda, float* b, int* ldb, float* beta, float* c, int* ldc);
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
+#if __GNUC__ > 7
+typedef size_t flexiblas_fortran_charlen_t;
+#else
+typedef int flexiblas_fortran_charlen_t;
+#endif
+#endif
+
+
+
+extern void FC_GLOBAL(sgemm,SGEMM)(char* transa, char* transb, int* m, int* n, int* k, float* alpha, float* a, int* lda, float* b, int* ldb, float* beta, float* c, int* ldc, flexiblas_fortran_charlen_t len1, flexiblas_fortran_charlen_t len2);
 
 double wtime(void)
 {
@@ -42,7 +53,7 @@ void gemm(int N, float *A, float *B, float *C)
     double flops = pow((N/1000.0),3)*2.0;
 
     tic = wtime();
-    FC_GLOBAL(sgemm,SGEMM)("N", "N", &N, &N, &N, &fone, A, &N, B, &N , &fone, C, &N);
+    FC_GLOBAL(sgemm,SGEMM)("N", "N", &N, &N, &N, &fone, A, &N, B, &N , &fone, C, &N, 1, 1);
     toc = wtime();
 
     printf("Time: %20lg, \tGFlops = %lg \n", toc-tic, flops/(toc-tic));

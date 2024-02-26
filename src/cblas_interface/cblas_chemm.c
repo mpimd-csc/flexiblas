@@ -133,7 +133,7 @@ void flexiblas_real_cblas_chemm(const CBLAS_LAYOUT layout, const  CBLAS_SIDE Sid
 #endif
 
             FC_GLOBAL(chemm,CHEMM)(F77_SD, F77_UL, &F77_M, &F77_N, alpha, A, &F77_lda,
-                    B, &F77_ldb, beta, C, &F77_ldc);
+                    B, &F77_ldb, beta, C, &F77_ldc, 1, 1);
         } else if (layout == CblasRowMajor)
         {
             RowMajorStrg = 1;
@@ -163,7 +163,7 @@ void flexiblas_real_cblas_chemm(const CBLAS_LAYOUT layout, const  CBLAS_SIDE Sid
 #endif
 
             FC_GLOBAL(chemm,CHEMM)(F77_SD, F77_UL, &F77_N, &F77_M, alpha, A,
-                    &F77_lda, B, &F77_ldb, beta, C, &F77_ldc);
+                    &F77_lda, B, &F77_ldb, beta, C, &F77_ldc, 1, 1);
         }
         else  cblas_xerbla(1, "cblas_chemm", "Illegal layout setting, %d\n", layout);
         CBLAS_CallFromC = 0;

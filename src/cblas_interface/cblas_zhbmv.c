@@ -122,7 +122,7 @@ void flexiblas_real_cblas_zhbmv(const CBLAS_LAYOUT layout,
             F77_UL = C2F_CHAR(&UL);
 #endif
             FC_GLOBAL(zhbmv,ZHBMV)(F77_UL, &F77_N, &F77_K, alpha, A, &F77_lda, X,
-                    &F77_incX, beta, Y, &F77_incY);
+                    &F77_incX, beta, Y, &F77_incY, 1);
         }
         else if (layout == CblasRowMajor)
         {
@@ -197,7 +197,7 @@ void flexiblas_real_cblas_zhbmv(const CBLAS_LAYOUT layout,
             F77_UL = C2F_CHAR(&UL);
 #endif
             FC_GLOBAL(zhbmv,ZHBMV)(F77_UL, &F77_N, &F77_K, ALPHA,
-                    A ,&F77_lda, x,&F77_incX, BETA, Y, &F77_incY);
+                    A ,&F77_lda, x,&F77_incX, BETA, Y, &F77_incY, 1);
         }
         else
         {

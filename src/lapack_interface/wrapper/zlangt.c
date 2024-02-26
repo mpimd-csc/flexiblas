@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_zlangt = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-double FC_GLOBAL(zlangt,ZLANGT)(char* norm, blasint* n, double complex* dl, double complex* d, double complex* du)
+double FC_GLOBAL(zlangt,ZLANGT)(char* norm, blasint* n, double complex* dl, double complex* d, double complex* du, flexiblas_fortran_charlen_t len_norm)
 #else
-double FC_GLOBAL(zlangt,ZLANGT)(char* norm, blasint* n, double complex* dl, double complex* d, double complex* du)
+double FC_GLOBAL(zlangt,ZLANGT)(char* norm, blasint* n, double complex* dl, double complex* d, double complex* du, flexiblas_fortran_charlen_t len_norm)
 #endif
 {
-	double (*fn) (void* norm, void* n, void* dl, void* d, void* du);
-	double (*fn_hook) (void* norm, void* n, void* dl, void* d, void* du);
+	double (*fn) (void* norm, void* n, void* dl, void* d, void* du, flexiblas_fortran_charlen_t len_norm);
+	double (*fn_hook) (void* norm, void* n, void* dl, void* d, void* du, flexiblas_fortran_charlen_t len_norm);
 	double ret;
 
     if ( current_backend->post_init != 0 ) {
@@ -59,21 +64,21 @@ double FC_GLOBAL(zlangt,ZLANGT)(char* norm, blasint* n, double complex* dl, doub
 	*(void **) & fn = current_backend->lapack.zlangt.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->zlangt.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		ret = fn((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du); 
+		ret = fn((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du, ( flexiblas_fortran_charlen_t ) len_norm); 
 		return ret; 
 	} else {
 		hook_pos_zlangt = 0;
-		ret=fn_hook((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du);
+		ret=fn_hook((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du, ( flexiblas_fortran_charlen_t ) len_norm);
 		return ret;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-double zlangt_(char* norm, blasint* n, double complex* dl, double complex* d, double complex* du) __attribute__((alias(MTS(FC_GLOBAL(zlangt,ZLANGT)))));
+double zlangt_(char* norm, blasint* n, double complex* dl, double complex* d, double complex* du, flexiblas_fortran_charlen_t len_norm) __attribute__((alias(MTS(FC_GLOBAL(zlangt,ZLANGT)))));
 #else
 #ifndef __APPLE__
-double zlangt(char* norm, blasint* n, double complex* dl, double complex* d, double complex* du) __attribute__((alias(MTS(FC_GLOBAL(zlangt,ZLANGT)))));
+double zlangt(char* norm, blasint* n, double complex* dl, double complex* d, double complex* du, flexiblas_fortran_charlen_t len_norm) __attribute__((alias(MTS(FC_GLOBAL(zlangt,ZLANGT)))));
 #else
-double zlangt(char* norm, blasint* n, double complex* dl, double complex* d, double complex* du){ return FC_GLOBAL(zlangt,ZLANGT)((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du); }
+double zlangt(char* norm, blasint* n, double complex* dl, double complex* d, double complex* du, flexiblas_fortran_charlen_t len_norm){ return FC_GLOBAL(zlangt,ZLANGT)((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du, (flexiblas_fortran_charlen_t) len_norm); }
 #endif
 #endif
 
@@ -83,21 +88,21 @@ double zlangt(char* norm, blasint* n, double complex* dl, double complex* d, dou
 /* Real Implementation for Hooks */
 
 
-double flexiblas_real_zlangt_(void* norm, void* n, void* dl, void* d, void* du)
+double flexiblas_real_zlangt_(void* norm, void* n, void* dl, void* d, void* du, flexiblas_fortran_charlen_t len_norm)
 {
-	double (*fn) (void* norm, void* n, void* dl, void* d, void* du);
+	double (*fn) (void* norm, void* n, void* dl, void* d, void* du, flexiblas_fortran_charlen_t len_norm);
 	double ret;
 
 	*(void **) & fn = current_backend->lapack.zlangt.f77_blas_function; 
 
-		ret = fn((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du); 
+		ret = fn((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du, ( flexiblas_fortran_charlen_t ) len_norm); 
 
 	return ret ;
 }
 #ifndef __APPLE__
-double flexiblas_real_zlangt(void* norm, void* n, void* dl, void* d, void* du) __attribute__((alias("flexiblas_real_zlangt_")));
+double flexiblas_real_zlangt(void* norm, void* n, void* dl, void* d, void* du, flexiblas_fortran_charlen_t len_norm) __attribute__((alias("flexiblas_real_zlangt_")));
 #else
-double flexiblas_real_zlangt(void* norm, void* n, void* dl, void* d, void* du){return flexiblas_real_zlangt_((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du);}
+double flexiblas_real_zlangt(void* norm, void* n, void* dl, void* d, void* du, flexiblas_fortran_charlen_t len_norm){return flexiblas_real_zlangt_((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du, (flexiblas_fortran_charlen_t) len_norm);}
 #endif
 
 
@@ -106,10 +111,10 @@ double flexiblas_real_zlangt(void* norm, void* n, void* dl, void* d, void* du){r
 /* Chainloader for Hooks */
 
 
-double flexiblas_chain_zlangt_(void* norm, void* n, void* dl, void* d, void* du)
+double flexiblas_chain_zlangt_(void* norm, void* n, void* dl, void* d, void* du, flexiblas_fortran_charlen_t len_norm)
 {
-	double (*fn) (void* norm, void* n, void* dl, void* d, void* du);
-	double (*fn_hook) (void* norm, void* n, void* dl, void* d, void* du);
+	double (*fn) (void* norm, void* n, void* dl, void* d, void* du, flexiblas_fortran_charlen_t len_norm);
+	double (*fn_hook) (void* norm, void* n, void* dl, void* d, void* du, flexiblas_fortran_charlen_t len_norm);
 	double ret;
 
 	*(void **) &fn      = current_backend->lapack.zlangt.f77_blas_function; 
@@ -117,17 +122,17 @@ double flexiblas_chain_zlangt_(void* norm, void* n, void* dl, void* d, void* du)
     hook_pos_zlangt ++;
     if( hook_pos_zlangt < __flexiblas_hooks->zlangt.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->zlangt.f77_hook_function[hook_pos_zlangt];
-        ret = fn_hook((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du);
+        ret = fn_hook((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du, ( flexiblas_fortran_charlen_t )len_norm);
     } else {
         hook_pos_zlangt = 0;
-		ret = fn((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du); 
+		ret = fn((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du, ( flexiblas_fortran_charlen_t ) len_norm); 
 	}
 	return ret ;
 }
 #ifndef __APPLE__
-double flexiblas_chain_zlangt(void* norm, void* n, void* dl, void* d, void* du) __attribute__((alias("flexiblas_chain_zlangt_")));
+double flexiblas_chain_zlangt(void* norm, void* n, void* dl, void* d, void* du, flexiblas_fortran_charlen_t len_norm) __attribute__((alias("flexiblas_chain_zlangt_")));
 #else
-double flexiblas_chain_zlangt(void* norm, void* n, void* dl, void* d, void* du){return flexiblas_chain_zlangt_((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du);}
+double flexiblas_chain_zlangt(void* norm, void* n, void* dl, void* d, void* du, flexiblas_fortran_charlen_t len_norm){return flexiblas_chain_zlangt_((void*) norm, (void*) n, (void*) dl, (void*) d, (void*) du, (flexiblas_fortran_charlen_t) len_norm);}
 #endif
 
 

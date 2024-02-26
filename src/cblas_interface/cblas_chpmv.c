@@ -121,7 +121,7 @@ void flexiblas_real_cblas_chpmv(const CBLAS_LAYOUT layout,
             F77_UL = C2F_CHAR(&UL);
 #endif
             FC_GLOBAL(chpmv,CHPMV)(F77_UL, &F77_N, alpha, AP, X,
-                    &F77_incX, beta, Y, &F77_incY);
+                    &F77_incX, beta, Y, &F77_incY, 1);
         }
         else if (layout == CblasRowMajor)
         {
@@ -198,7 +198,7 @@ void flexiblas_real_cblas_chpmv(const CBLAS_LAYOUT layout,
 #endif
 
             FC_GLOBAL(chpmv,CHPMV)(F77_UL, &F77_N, ALPHA,
-                    AP, x, &F77_incX, BETA, Y, &F77_incY);
+                    AP, x, &F77_incX, BETA, Y, &F77_incY, 1);
         }
         else
         {

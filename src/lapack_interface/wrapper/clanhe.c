@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_clanhe = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-float FC_GLOBAL(clanhe,CLANHE)(char* norm, char* uplo, blasint* n, float complex* a, blasint* lda, float* work)
+float FC_GLOBAL(clanhe,CLANHE)(char* norm, char* uplo, blasint* n, float complex* a, blasint* lda, float* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo)
 #else
-float FC_GLOBAL(clanhe,CLANHE)(char* norm, char* uplo, blasint* n, float complex* a, blasint* lda, float* work)
+float FC_GLOBAL(clanhe,CLANHE)(char* norm, char* uplo, blasint* n, float complex* a, blasint* lda, float* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo)
 #endif
 {
-	float (*fn) (void* norm, void* uplo, void* n, void* a, void* lda, void* work);
-	float (*fn_hook) (void* norm, void* uplo, void* n, void* a, void* lda, void* work);
+	float (*fn) (void* norm, void* uplo, void* n, void* a, void* lda, void* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
+	float (*fn_hook) (void* norm, void* uplo, void* n, void* a, void* lda, void* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
 	float ret;
 
     if ( current_backend->post_init != 0 ) {
@@ -59,21 +64,21 @@ float FC_GLOBAL(clanhe,CLANHE)(char* norm, char* uplo, blasint* n, float complex
 	*(void **) & fn = current_backend->lapack.clanhe.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->clanhe.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		ret = fn((void*) norm, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) work); 
+		ret = fn((void*) norm, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) work, ( flexiblas_fortran_charlen_t ) len_norm, ( flexiblas_fortran_charlen_t ) len_uplo); 
 		return ret; 
 	} else {
 		hook_pos_clanhe = 0;
-		ret=fn_hook((void*) norm, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) work);
+		ret=fn_hook((void*) norm, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) work, ( flexiblas_fortran_charlen_t ) len_norm, ( flexiblas_fortran_charlen_t ) len_uplo);
 		return ret;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-float clanhe_(char* norm, char* uplo, blasint* n, float complex* a, blasint* lda, float* work) __attribute__((alias(MTS(FC_GLOBAL(clanhe,CLANHE)))));
+float clanhe_(char* norm, char* uplo, blasint* n, float complex* a, blasint* lda, float* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(clanhe,CLANHE)))));
 #else
 #ifndef __APPLE__
-float clanhe(char* norm, char* uplo, blasint* n, float complex* a, blasint* lda, float* work) __attribute__((alias(MTS(FC_GLOBAL(clanhe,CLANHE)))));
+float clanhe(char* norm, char* uplo, blasint* n, float complex* a, blasint* lda, float* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(clanhe,CLANHE)))));
 #else
-float clanhe(char* norm, char* uplo, blasint* n, float complex* a, blasint* lda, float* work){ return FC_GLOBAL(clanhe,CLANHE)((void*) norm, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) work); }
+float clanhe(char* norm, char* uplo, blasint* n, float complex* a, blasint* lda, float* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo){ return FC_GLOBAL(clanhe,CLANHE)((void*) norm, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) work, (flexiblas_fortran_charlen_t) len_norm, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -83,21 +88,21 @@ float clanhe(char* norm, char* uplo, blasint* n, float complex* a, blasint* lda,
 /* Real Implementation for Hooks */
 
 
-float flexiblas_real_clanhe_(void* norm, void* uplo, void* n, void* a, void* lda, void* work)
+float flexiblas_real_clanhe_(void* norm, void* uplo, void* n, void* a, void* lda, void* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo)
 {
-	float (*fn) (void* norm, void* uplo, void* n, void* a, void* lda, void* work);
+	float (*fn) (void* norm, void* uplo, void* n, void* a, void* lda, void* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
 	float ret;
 
 	*(void **) & fn = current_backend->lapack.clanhe.f77_blas_function; 
 
-		ret = fn((void*) norm, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) work); 
+		ret = fn((void*) norm, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) work, ( flexiblas_fortran_charlen_t ) len_norm, ( flexiblas_fortran_charlen_t ) len_uplo); 
 
 	return ret ;
 }
 #ifndef __APPLE__
-float flexiblas_real_clanhe(void* norm, void* uplo, void* n, void* a, void* lda, void* work) __attribute__((alias("flexiblas_real_clanhe_")));
+float flexiblas_real_clanhe(void* norm, void* uplo, void* n, void* a, void* lda, void* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_real_clanhe_")));
 #else
-float flexiblas_real_clanhe(void* norm, void* uplo, void* n, void* a, void* lda, void* work){return flexiblas_real_clanhe_((void*) norm, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) work);}
+float flexiblas_real_clanhe(void* norm, void* uplo, void* n, void* a, void* lda, void* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo){return flexiblas_real_clanhe_((void*) norm, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) work, (flexiblas_fortran_charlen_t) len_norm, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 
@@ -106,10 +111,10 @@ float flexiblas_real_clanhe(void* norm, void* uplo, void* n, void* a, void* lda,
 /* Chainloader for Hooks */
 
 
-float flexiblas_chain_clanhe_(void* norm, void* uplo, void* n, void* a, void* lda, void* work)
+float flexiblas_chain_clanhe_(void* norm, void* uplo, void* n, void* a, void* lda, void* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo)
 {
-	float (*fn) (void* norm, void* uplo, void* n, void* a, void* lda, void* work);
-	float (*fn_hook) (void* norm, void* uplo, void* n, void* a, void* lda, void* work);
+	float (*fn) (void* norm, void* uplo, void* n, void* a, void* lda, void* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
+	float (*fn_hook) (void* norm, void* uplo, void* n, void* a, void* lda, void* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
 	float ret;
 
 	*(void **) &fn      = current_backend->lapack.clanhe.f77_blas_function; 
@@ -117,17 +122,17 @@ float flexiblas_chain_clanhe_(void* norm, void* uplo, void* n, void* a, void* ld
     hook_pos_clanhe ++;
     if( hook_pos_clanhe < __flexiblas_hooks->clanhe.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->clanhe.f77_hook_function[hook_pos_clanhe];
-        ret = fn_hook((void*) norm, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) work);
+        ret = fn_hook((void*) norm, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) work, ( flexiblas_fortran_charlen_t )len_norm, ( flexiblas_fortran_charlen_t )len_uplo);
     } else {
         hook_pos_clanhe = 0;
-		ret = fn((void*) norm, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) work); 
+		ret = fn((void*) norm, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) work, ( flexiblas_fortran_charlen_t ) len_norm, ( flexiblas_fortran_charlen_t ) len_uplo); 
 	}
 	return ret ;
 }
 #ifndef __APPLE__
-float flexiblas_chain_clanhe(void* norm, void* uplo, void* n, void* a, void* lda, void* work) __attribute__((alias("flexiblas_chain_clanhe_")));
+float flexiblas_chain_clanhe(void* norm, void* uplo, void* n, void* a, void* lda, void* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_chain_clanhe_")));
 #else
-float flexiblas_chain_clanhe(void* norm, void* uplo, void* n, void* a, void* lda, void* work){return flexiblas_chain_clanhe_((void*) norm, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) work);}
+float flexiblas_chain_clanhe(void* norm, void* uplo, void* n, void* a, void* lda, void* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo){return flexiblas_chain_clanhe_((void*) norm, (void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) work, (flexiblas_fortran_charlen_t) len_norm, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 

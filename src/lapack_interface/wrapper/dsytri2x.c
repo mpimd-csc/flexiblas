@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_dsytri2x = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(dsytri2x,DSYTRI2X)(char* uplo, blasint* n, double* a, blasint* lda, blasint* ipiv, double* work, blasint* nb, blasint* info)
+void FC_GLOBAL(dsytri2x,DSYTRI2X)(char* uplo, blasint* n, double* a, blasint* lda, blasint* ipiv, double* work, blasint* nb, blasint* info, flexiblas_fortran_charlen_t len_uplo)
 #else
-void FC_GLOBAL(dsytri2x,DSYTRI2X)(char* uplo, blasint* n, double* a, blasint* lda, blasint* ipiv, double* work, blasint* nb, blasint* info)
+void FC_GLOBAL(dsytri2x,DSYTRI2X)(char* uplo, blasint* n, double* a, blasint* lda, blasint* ipiv, double* work, blasint* nb, blasint* info, flexiblas_fortran_charlen_t len_uplo)
 #endif
 {
-	void (*fn) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* nb, void* info);
-	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* nb, void* info);
+	void (*fn) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* nb, void* info, flexiblas_fortran_charlen_t len_uplo);
+	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* nb, void* info, flexiblas_fortran_charlen_t len_uplo);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL(dsytri2x,DSYTRI2X)(char* uplo, blasint* n, double* a, blasint* ld
 	*(void **) & fn = current_backend->lapack.dsytri2x.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->dsytri2x.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) nb, (void*) info); 
+		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) nb, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo); 
 		return;
 	} else {
 		hook_pos_dsytri2x = 0;
-		fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) nb, (void*) info);
+		fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) nb, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dsytri2x_(char* uplo, blasint* n, double* a, blasint* lda, blasint* ipiv, double* work, blasint* nb, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dsytri2x,DSYTRI2X)))));
+void dsytri2x_(char* uplo, blasint* n, double* a, blasint* lda, blasint* ipiv, double* work, blasint* nb, blasint* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsytri2x,DSYTRI2X)))));
 #else
 #ifndef __APPLE__
-void dsytri2x(char* uplo, blasint* n, double* a, blasint* lda, blasint* ipiv, double* work, blasint* nb, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dsytri2x,DSYTRI2X)))));
+void dsytri2x(char* uplo, blasint* n, double* a, blasint* lda, blasint* ipiv, double* work, blasint* nb, blasint* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsytri2x,DSYTRI2X)))));
 #else
-void dsytri2x(char* uplo, blasint* n, double* a, blasint* lda, blasint* ipiv, double* work, blasint* nb, blasint* info){ FC_GLOBAL(dsytri2x,DSYTRI2X)((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) nb, (void*) info); }
+void dsytri2x(char* uplo, blasint* n, double* a, blasint* lda, blasint* ipiv, double* work, blasint* nb, blasint* info, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dsytri2x,DSYTRI2X)((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) nb, (void*) info, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void dsytri2x(char* uplo, blasint* n, double* a, blasint* lda, blasint* ipiv, do
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_dsytri2x_(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* nb, void* info)
+void flexiblas_real_dsytri2x_(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* nb, void* info, flexiblas_fortran_charlen_t len_uplo)
 {
-	void (*fn) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* nb, void* info);
+	void (*fn) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* nb, void* info, flexiblas_fortran_charlen_t len_uplo);
 
 	*(void **) & fn = current_backend->lapack.dsytri2x.f77_blas_function; 
 
-		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) nb, (void*) info); 
+		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) nb, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_dsytri2x(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* nb, void* info) __attribute__((alias("flexiblas_real_dsytri2x_")));
+void flexiblas_real_dsytri2x(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* nb, void* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_real_dsytri2x_")));
 #else
-void flexiblas_real_dsytri2x(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* nb, void* info){flexiblas_real_dsytri2x_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) nb, (void*) info);}
+void flexiblas_real_dsytri2x(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* nb, void* info, flexiblas_fortran_charlen_t len_uplo){flexiblas_real_dsytri2x_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) nb, (void*) info, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_dsytri2x(void* uplo, void* n, void* a, void* lda, void* ipiv
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_dsytri2x_(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* nb, void* info)
+void flexiblas_chain_dsytri2x_(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* nb, void* info, flexiblas_fortran_charlen_t len_uplo)
 {
-	void (*fn) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* nb, void* info);
-	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* nb, void* info);
+	void (*fn) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* nb, void* info, flexiblas_fortran_charlen_t len_uplo);
+	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* nb, void* info, flexiblas_fortran_charlen_t len_uplo);
 
 	*(void **) &fn      = current_backend->lapack.dsytri2x.f77_blas_function; 
 
     hook_pos_dsytri2x ++;
     if( hook_pos_dsytri2x < __flexiblas_hooks->dsytri2x.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->dsytri2x.f77_hook_function[hook_pos_dsytri2x];
-        fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) nb, (void*) info);
+        fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) nb, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo);
     } else {
         hook_pos_dsytri2x = 0;
-		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) nb, (void*) info); 
+		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) nb, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_dsytri2x(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* nb, void* info) __attribute__((alias("flexiblas_chain_dsytri2x_")));
+void flexiblas_chain_dsytri2x(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* nb, void* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_chain_dsytri2x_")));
 #else
-void flexiblas_chain_dsytri2x(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* nb, void* info){flexiblas_chain_dsytri2x_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) nb, (void*) info);}
+void flexiblas_chain_dsytri2x(void* uplo, void* n, void* a, void* lda, void* ipiv, void* work, void* nb, void* info, flexiblas_fortran_charlen_t len_uplo){flexiblas_chain_dsytri2x_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) work, (void*) nb, (void*) info, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 

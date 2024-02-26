@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_cunm22 = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(cunm22,CUNM22)(char* side, char* trans, blasint* m, blasint* n, blasint* n1, blasint* n2, float complex* q, blasint* ldq, float complex* c, blasint* ldc, float complex* work, blasint* lwork, blasint* info)
+void FC_GLOBAL(cunm22,CUNM22)(char* side, char* trans, blasint* m, blasint* n, blasint* n1, blasint* n2, float complex* q, blasint* ldq, float complex* c, blasint* ldc, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans)
 #else
-void FC_GLOBAL(cunm22,CUNM22)(char* side, char* trans, blasint* m, blasint* n, blasint* n1, blasint* n2, float complex* q, blasint* ldq, float complex* c, blasint* ldc, float complex* work, blasint* lwork, blasint* info)
+void FC_GLOBAL(cunm22,CUNM22)(char* side, char* trans, blasint* m, blasint* n, blasint* n1, blasint* n2, float complex* q, blasint* ldq, float complex* c, blasint* ldc, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans)
 #endif
 {
-	void (*fn) (void* side, void* trans, void* m, void* n, void* n1, void* n2, void* q, void* ldq, void* c, void* ldc, void* work, void* lwork, void* info);
-	void (*fn_hook) (void* side, void* trans, void* m, void* n, void* n1, void* n2, void* q, void* ldq, void* c, void* ldc, void* work, void* lwork, void* info);
+	void (*fn) (void* side, void* trans, void* m, void* n, void* n1, void* n2, void* q, void* ldq, void* c, void* ldc, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+	void (*fn_hook) (void* side, void* trans, void* m, void* n, void* n1, void* n2, void* q, void* ldq, void* c, void* ldc, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL(cunm22,CUNM22)(char* side, char* trans, blasint* m, blasint* n, b
 	*(void **) & fn = current_backend->lapack.cunm22.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->cunm22.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) n1, (void*) n2, (void*) q, (void*) ldq, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info); 
+		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) n1, (void*) n2, (void*) q, (void*) ldq, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_side, ( flexiblas_fortran_charlen_t ) len_trans); 
 		return;
 	} else {
 		hook_pos_cunm22 = 0;
-		fn_hook((void*) side, (void*) trans, (void*) m, (void*) n, (void*) n1, (void*) n2, (void*) q, (void*) ldq, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info);
+		fn_hook((void*) side, (void*) trans, (void*) m, (void*) n, (void*) n1, (void*) n2, (void*) q, (void*) ldq, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_side, ( flexiblas_fortran_charlen_t ) len_trans);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void cunm22_(char* side, char* trans, blasint* m, blasint* n, blasint* n1, blasint* n2, float complex* q, blasint* ldq, float complex* c, blasint* ldc, float complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cunm22,CUNM22)))));
+void cunm22_(char* side, char* trans, blasint* m, blasint* n, blasint* n1, blasint* n2, float complex* q, blasint* ldq, float complex* c, blasint* ldc, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cunm22,CUNM22)))));
 #else
 #ifndef __APPLE__
-void cunm22(char* side, char* trans, blasint* m, blasint* n, blasint* n1, blasint* n2, float complex* q, blasint* ldq, float complex* c, blasint* ldc, float complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cunm22,CUNM22)))));
+void cunm22(char* side, char* trans, blasint* m, blasint* n, blasint* n1, blasint* n2, float complex* q, blasint* ldq, float complex* c, blasint* ldc, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cunm22,CUNM22)))));
 #else
-void cunm22(char* side, char* trans, blasint* m, blasint* n, blasint* n1, blasint* n2, float complex* q, blasint* ldq, float complex* c, blasint* ldc, float complex* work, blasint* lwork, blasint* info){ FC_GLOBAL(cunm22,CUNM22)((void*) side, (void*) trans, (void*) m, (void*) n, (void*) n1, (void*) n2, (void*) q, (void*) ldq, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info); }
+void cunm22(char* side, char* trans, blasint* m, blasint* n, blasint* n1, blasint* n2, float complex* q, blasint* ldq, float complex* c, blasint* ldc, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(cunm22,CUNM22)((void*) side, (void*) trans, (void*) m, (void*) n, (void*) n1, (void*) n2, (void*) q, (void*) ldq, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void cunm22(char* side, char* trans, blasint* m, blasint* n, blasint* n1, blasin
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_cunm22_(void* side, void* trans, void* m, void* n, void* n1, void* n2, void* q, void* ldq, void* c, void* ldc, void* work, void* lwork, void* info)
+void flexiblas_real_cunm22_(void* side, void* trans, void* m, void* n, void* n1, void* n2, void* q, void* ldq, void* c, void* ldc, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans)
 {
-	void (*fn) (void* side, void* trans, void* m, void* n, void* n1, void* n2, void* q, void* ldq, void* c, void* ldc, void* work, void* lwork, void* info);
+	void (*fn) (void* side, void* trans, void* m, void* n, void* n1, void* n2, void* q, void* ldq, void* c, void* ldc, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
 	*(void **) & fn = current_backend->lapack.cunm22.f77_blas_function; 
 
-		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) n1, (void*) n2, (void*) q, (void*) ldq, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info); 
+		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) n1, (void*) n2, (void*) q, (void*) ldq, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_side, ( flexiblas_fortran_charlen_t ) len_trans); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_cunm22(void* side, void* trans, void* m, void* n, void* n1, void* n2, void* q, void* ldq, void* c, void* ldc, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_cunm22_")));
+void flexiblas_real_cunm22(void* side, void* trans, void* m, void* n, void* n1, void* n2, void* q, void* ldq, void* c, void* ldc, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans) __attribute__((alias("flexiblas_real_cunm22_")));
 #else
-void flexiblas_real_cunm22(void* side, void* trans, void* m, void* n, void* n1, void* n2, void* q, void* ldq, void* c, void* ldc, void* work, void* lwork, void* info){flexiblas_real_cunm22_((void*) side, (void*) trans, (void*) m, (void*) n, (void*) n1, (void*) n2, (void*) q, (void*) ldq, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info);}
+void flexiblas_real_cunm22(void* side, void* trans, void* m, void* n, void* n1, void* n2, void* q, void* ldq, void* c, void* ldc, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans){flexiblas_real_cunm22_((void*) side, (void*) trans, (void*) m, (void*) n, (void*) n1, (void*) n2, (void*) q, (void*) ldq, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_trans);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_cunm22(void* side, void* trans, void* m, void* n, void* n1, 
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_cunm22_(void* side, void* trans, void* m, void* n, void* n1, void* n2, void* q, void* ldq, void* c, void* ldc, void* work, void* lwork, void* info)
+void flexiblas_chain_cunm22_(void* side, void* trans, void* m, void* n, void* n1, void* n2, void* q, void* ldq, void* c, void* ldc, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans)
 {
-	void (*fn) (void* side, void* trans, void* m, void* n, void* n1, void* n2, void* q, void* ldq, void* c, void* ldc, void* work, void* lwork, void* info);
-	void (*fn_hook) (void* side, void* trans, void* m, void* n, void* n1, void* n2, void* q, void* ldq, void* c, void* ldc, void* work, void* lwork, void* info);
+	void (*fn) (void* side, void* trans, void* m, void* n, void* n1, void* n2, void* q, void* ldq, void* c, void* ldc, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+	void (*fn_hook) (void* side, void* trans, void* m, void* n, void* n1, void* n2, void* q, void* ldq, void* c, void* ldc, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
 	*(void **) &fn      = current_backend->lapack.cunm22.f77_blas_function; 
 
     hook_pos_cunm22 ++;
     if( hook_pos_cunm22 < __flexiblas_hooks->cunm22.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->cunm22.f77_hook_function[hook_pos_cunm22];
-        fn_hook((void*) side, (void*) trans, (void*) m, (void*) n, (void*) n1, (void*) n2, (void*) q, (void*) ldq, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info);
+        fn_hook((void*) side, (void*) trans, (void*) m, (void*) n, (void*) n1, (void*) n2, (void*) q, (void*) ldq, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_side, ( flexiblas_fortran_charlen_t ) len_trans);
     } else {
         hook_pos_cunm22 = 0;
-		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) n1, (void*) n2, (void*) q, (void*) ldq, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info); 
+		fn((void*) side, (void*) trans, (void*) m, (void*) n, (void*) n1, (void*) n2, (void*) q, (void*) ldq, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_side, ( flexiblas_fortran_charlen_t ) len_trans); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_cunm22(void* side, void* trans, void* m, void* n, void* n1, void* n2, void* q, void* ldq, void* c, void* ldc, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_cunm22_")));
+void flexiblas_chain_cunm22(void* side, void* trans, void* m, void* n, void* n1, void* n2, void* q, void* ldq, void* c, void* ldc, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans) __attribute__((alias("flexiblas_chain_cunm22_")));
 #else
-void flexiblas_chain_cunm22(void* side, void* trans, void* m, void* n, void* n1, void* n2, void* q, void* ldq, void* c, void* ldc, void* work, void* lwork, void* info){flexiblas_chain_cunm22_((void*) side, (void*) trans, (void*) m, (void*) n, (void*) n1, (void*) n2, (void*) q, (void*) ldq, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info);}
+void flexiblas_chain_cunm22(void* side, void* trans, void* m, void* n, void* n1, void* n2, void* q, void* ldq, void* c, void* ldc, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans){flexiblas_chain_cunm22_((void*) side, (void*) trans, (void*) m, (void*) n, (void*) n1, (void*) n2, (void*) q, (void*) ldq, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_trans);}
 #endif
 
 

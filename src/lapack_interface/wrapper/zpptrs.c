@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_zpptrs = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(zpptrs,ZPPTRS)(char* uplo, blasint* n, blasint* nrhs, double complex* ap, double complex* b, blasint* ldb, blasint* info)
+void FC_GLOBAL(zpptrs,ZPPTRS)(char* uplo, blasint* n, blasint* nrhs, double complex* ap, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo)
 #else
-void FC_GLOBAL(zpptrs,ZPPTRS)(char* uplo, blasint* n, blasint* nrhs, double complex* ap, double complex* b, blasint* ldb, blasint* info)
+void FC_GLOBAL(zpptrs,ZPPTRS)(char* uplo, blasint* n, blasint* nrhs, double complex* ap, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo)
 #endif
 {
-	void (*fn) (void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info);
-	void (*fn_hook) (void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info);
+	void (*fn) (void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info, flexiblas_fortran_charlen_t len_uplo);
+	void (*fn_hook) (void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info, flexiblas_fortran_charlen_t len_uplo);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL(zpptrs,ZPPTRS)(char* uplo, blasint* n, blasint* nrhs, double comp
 	*(void **) & fn = current_backend->lapack.zpptrs.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->zpptrs.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) b, (void*) ldb, (void*) info); 
+		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) b, (void*) ldb, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo); 
 		return;
 	} else {
 		hook_pos_zpptrs = 0;
-		fn_hook((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) b, (void*) ldb, (void*) info);
+		fn_hook((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) b, (void*) ldb, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zpptrs_(char* uplo, blasint* n, blasint* nrhs, double complex* ap, double complex* b, blasint* ldb, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zpptrs,ZPPTRS)))));
+void zpptrs_(char* uplo, blasint* n, blasint* nrhs, double complex* ap, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zpptrs,ZPPTRS)))));
 #else
 #ifndef __APPLE__
-void zpptrs(char* uplo, blasint* n, blasint* nrhs, double complex* ap, double complex* b, blasint* ldb, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zpptrs,ZPPTRS)))));
+void zpptrs(char* uplo, blasint* n, blasint* nrhs, double complex* ap, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zpptrs,ZPPTRS)))));
 #else
-void zpptrs(char* uplo, blasint* n, blasint* nrhs, double complex* ap, double complex* b, blasint* ldb, blasint* info){ FC_GLOBAL(zpptrs,ZPPTRS)((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) b, (void*) ldb, (void*) info); }
+void zpptrs(char* uplo, blasint* n, blasint* nrhs, double complex* ap, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zpptrs,ZPPTRS)((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) b, (void*) ldb, (void*) info, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void zpptrs(char* uplo, blasint* n, blasint* nrhs, double complex* ap, double co
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_zpptrs_(void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info)
+void flexiblas_real_zpptrs_(void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info, flexiblas_fortran_charlen_t len_uplo)
 {
-	void (*fn) (void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info);
+	void (*fn) (void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info, flexiblas_fortran_charlen_t len_uplo);
 
 	*(void **) & fn = current_backend->lapack.zpptrs.f77_blas_function; 
 
-		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) b, (void*) ldb, (void*) info); 
+		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) b, (void*) ldb, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_zpptrs(void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info) __attribute__((alias("flexiblas_real_zpptrs_")));
+void flexiblas_real_zpptrs(void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_real_zpptrs_")));
 #else
-void flexiblas_real_zpptrs(void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info){flexiblas_real_zpptrs_((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) b, (void*) ldb, (void*) info);}
+void flexiblas_real_zpptrs(void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info, flexiblas_fortran_charlen_t len_uplo){flexiblas_real_zpptrs_((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) b, (void*) ldb, (void*) info, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_zpptrs(void* uplo, void* n, void* nrhs, void* ap, void* b, v
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_zpptrs_(void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info)
+void flexiblas_chain_zpptrs_(void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info, flexiblas_fortran_charlen_t len_uplo)
 {
-	void (*fn) (void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info);
-	void (*fn_hook) (void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info);
+	void (*fn) (void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info, flexiblas_fortran_charlen_t len_uplo);
+	void (*fn_hook) (void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info, flexiblas_fortran_charlen_t len_uplo);
 
 	*(void **) &fn      = current_backend->lapack.zpptrs.f77_blas_function; 
 
     hook_pos_zpptrs ++;
     if( hook_pos_zpptrs < __flexiblas_hooks->zpptrs.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->zpptrs.f77_hook_function[hook_pos_zpptrs];
-        fn_hook((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) b, (void*) ldb, (void*) info);
+        fn_hook((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) b, (void*) ldb, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo);
     } else {
         hook_pos_zpptrs = 0;
-		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) b, (void*) ldb, (void*) info); 
+		fn((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) b, (void*) ldb, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_zpptrs(void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info) __attribute__((alias("flexiblas_chain_zpptrs_")));
+void flexiblas_chain_zpptrs(void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_chain_zpptrs_")));
 #else
-void flexiblas_chain_zpptrs(void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info){flexiblas_chain_zpptrs_((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) b, (void*) ldb, (void*) info);}
+void flexiblas_chain_zpptrs(void* uplo, void* n, void* nrhs, void* ap, void* b, void* ldb, void* info, flexiblas_fortran_charlen_t len_uplo){flexiblas_chain_zpptrs_((void*) uplo, (void*) n, (void*) nrhs, (void*) ap, (void*) b, (void*) ldb, (void*) info, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 

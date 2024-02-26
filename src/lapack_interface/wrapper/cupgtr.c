@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_cupgtr = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(cupgtr,CUPGTR)(char* uplo, blasint* n, float complex* ap, float complex* tau, float complex* q, blasint* ldq, float complex* work, blasint* info)
+void FC_GLOBAL(cupgtr,CUPGTR)(char* uplo, blasint* n, float complex* ap, float complex* tau, float complex* q, blasint* ldq, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo)
 #else
-void FC_GLOBAL(cupgtr,CUPGTR)(char* uplo, blasint* n, float complex* ap, float complex* tau, float complex* q, blasint* ldq, float complex* work, blasint* info)
+void FC_GLOBAL(cupgtr,CUPGTR)(char* uplo, blasint* n, float complex* ap, float complex* tau, float complex* q, blasint* ldq, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo)
 #endif
 {
-	void (*fn) (void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info);
-	void (*fn_hook) (void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info);
+	void (*fn) (void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info, flexiblas_fortran_charlen_t len_uplo);
+	void (*fn_hook) (void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info, flexiblas_fortran_charlen_t len_uplo);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL(cupgtr,CUPGTR)(char* uplo, blasint* n, float complex* ap, float c
 	*(void **) & fn = current_backend->lapack.cupgtr.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->cupgtr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) uplo, (void*) n, (void*) ap, (void*) tau, (void*) q, (void*) ldq, (void*) work, (void*) info); 
+		fn((void*) uplo, (void*) n, (void*) ap, (void*) tau, (void*) q, (void*) ldq, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo); 
 		return;
 	} else {
 		hook_pos_cupgtr = 0;
-		fn_hook((void*) uplo, (void*) n, (void*) ap, (void*) tau, (void*) q, (void*) ldq, (void*) work, (void*) info);
+		fn_hook((void*) uplo, (void*) n, (void*) ap, (void*) tau, (void*) q, (void*) ldq, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void cupgtr_(char* uplo, blasint* n, float complex* ap, float complex* tau, float complex* q, blasint* ldq, float complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cupgtr,CUPGTR)))));
+void cupgtr_(char* uplo, blasint* n, float complex* ap, float complex* tau, float complex* q, blasint* ldq, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(cupgtr,CUPGTR)))));
 #else
 #ifndef __APPLE__
-void cupgtr(char* uplo, blasint* n, float complex* ap, float complex* tau, float complex* q, blasint* ldq, float complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cupgtr,CUPGTR)))));
+void cupgtr(char* uplo, blasint* n, float complex* ap, float complex* tau, float complex* q, blasint* ldq, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(cupgtr,CUPGTR)))));
 #else
-void cupgtr(char* uplo, blasint* n, float complex* ap, float complex* tau, float complex* q, blasint* ldq, float complex* work, blasint* info){ FC_GLOBAL(cupgtr,CUPGTR)((void*) uplo, (void*) n, (void*) ap, (void*) tau, (void*) q, (void*) ldq, (void*) work, (void*) info); }
+void cupgtr(char* uplo, blasint* n, float complex* ap, float complex* tau, float complex* q, blasint* ldq, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(cupgtr,CUPGTR)((void*) uplo, (void*) n, (void*) ap, (void*) tau, (void*) q, (void*) ldq, (void*) work, (void*) info, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void cupgtr(char* uplo, blasint* n, float complex* ap, float complex* tau, float
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_cupgtr_(void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info)
+void flexiblas_real_cupgtr_(void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info, flexiblas_fortran_charlen_t len_uplo)
 {
-	void (*fn) (void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info);
+	void (*fn) (void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info, flexiblas_fortran_charlen_t len_uplo);
 
 	*(void **) & fn = current_backend->lapack.cupgtr.f77_blas_function; 
 
-		fn((void*) uplo, (void*) n, (void*) ap, (void*) tau, (void*) q, (void*) ldq, (void*) work, (void*) info); 
+		fn((void*) uplo, (void*) n, (void*) ap, (void*) tau, (void*) q, (void*) ldq, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_cupgtr(void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info) __attribute__((alias("flexiblas_real_cupgtr_")));
+void flexiblas_real_cupgtr(void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_real_cupgtr_")));
 #else
-void flexiblas_real_cupgtr(void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info){flexiblas_real_cupgtr_((void*) uplo, (void*) n, (void*) ap, (void*) tau, (void*) q, (void*) ldq, (void*) work, (void*) info);}
+void flexiblas_real_cupgtr(void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info, flexiblas_fortran_charlen_t len_uplo){flexiblas_real_cupgtr_((void*) uplo, (void*) n, (void*) ap, (void*) tau, (void*) q, (void*) ldq, (void*) work, (void*) info, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_cupgtr(void* uplo, void* n, void* ap, void* tau, void* q, vo
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_cupgtr_(void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info)
+void flexiblas_chain_cupgtr_(void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info, flexiblas_fortran_charlen_t len_uplo)
 {
-	void (*fn) (void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info);
-	void (*fn_hook) (void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info);
+	void (*fn) (void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info, flexiblas_fortran_charlen_t len_uplo);
+	void (*fn_hook) (void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info, flexiblas_fortran_charlen_t len_uplo);
 
 	*(void **) &fn      = current_backend->lapack.cupgtr.f77_blas_function; 
 
     hook_pos_cupgtr ++;
     if( hook_pos_cupgtr < __flexiblas_hooks->cupgtr.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->cupgtr.f77_hook_function[hook_pos_cupgtr];
-        fn_hook((void*) uplo, (void*) n, (void*) ap, (void*) tau, (void*) q, (void*) ldq, (void*) work, (void*) info);
+        fn_hook((void*) uplo, (void*) n, (void*) ap, (void*) tau, (void*) q, (void*) ldq, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo);
     } else {
         hook_pos_cupgtr = 0;
-		fn((void*) uplo, (void*) n, (void*) ap, (void*) tau, (void*) q, (void*) ldq, (void*) work, (void*) info); 
+		fn((void*) uplo, (void*) n, (void*) ap, (void*) tau, (void*) q, (void*) ldq, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_cupgtr(void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info) __attribute__((alias("flexiblas_chain_cupgtr_")));
+void flexiblas_chain_cupgtr(void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_chain_cupgtr_")));
 #else
-void flexiblas_chain_cupgtr(void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info){flexiblas_chain_cupgtr_((void*) uplo, (void*) n, (void*) ap, (void*) tau, (void*) q, (void*) ldq, (void*) work, (void*) info);}
+void flexiblas_chain_cupgtr(void* uplo, void* n, void* ap, void* tau, void* q, void* ldq, void* work, void* info, flexiblas_fortran_charlen_t len_uplo){flexiblas_chain_cupgtr_((void*) uplo, (void*) n, (void*) ap, (void*) tau, (void*) q, (void*) ldq, (void*) work, (void*) info, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 

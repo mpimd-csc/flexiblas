@@ -25,8 +25,9 @@
 #define PROFILE_HOOK_H
 
 #include "cscutils/table.h"
+#include "flexiblas_config.h"
 
-#ifdef INTEGER8
+#ifdef FLEXIBLAS_INTEGER8
 #define     ENV_FLEXIBLAS_PROFILE_FILE "FLEXIBLAS64_PROFILE_FILE"
 #else
 #define     ENV_FLEXIBLAS_PROFILE_FILE "FLEXIBLAS_PROFILE_FILE"

@@ -20,6 +20,15 @@
 
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
+#if __GNUC__ > 7
+typedef size_t flexiblas_fortran_charlen_t;
+#else
+typedef int flexiblas_fortran_charlen_t;
+#endif
+#endif
+
 
 
 void FC_GLOBAL(somatcopy,SOMATCOPY)( char* ORDER, char* TRANS, Int *rows, Int *cols, float *alpha, float *a, Int *lda, float *b, Int *ldb);
@@ -28,7 +37,7 @@ void FC_GLOBAL(comatcopy,COMATCOPY)( char* ORDER, char* TRANS, Int *rows, Int *c
 void FC_GLOBAL(zomatcopy,ZOMATCOPY)( char* ORDER, char* TRANS, Int *rows, Int *cols, double complex *alpha, double complex *a, Int *lda, double complex *b, Int *ldb);
 void FC_GLOBAL(xerbla,XERBLA)(char *name, Int *code, Int len);
 
-void FNAME( char* ORDER, char* TRANS, Int *rows, Int *cols, FLOAT *alpha, FLOAT *a, Int *lda, Int *ldb)
+void FNAME( char* ORDER, char* TRANS, Int *rows, Int *cols, FLOAT *alpha, FLOAT *a, Int *lda, Int *ldb, flexiblas_fortran_charlen_t len1, flexiblas_fortran_charlen_t len2)
 {
 
 	char Order, Trans;

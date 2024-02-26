@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_dlaset = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(dlaset,DLASET)(char* uplo, blasint* m, blasint* n, double* alpha, double* beta, double* a, blasint* lda)
+void FC_GLOBAL(dlaset,DLASET)(char* uplo, blasint* m, blasint* n, double* alpha, double* beta, double* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo)
 #else
-void FC_GLOBAL(dlaset,DLASET)(char* uplo, blasint* m, blasint* n, double* alpha, double* beta, double* a, blasint* lda)
+void FC_GLOBAL(dlaset,DLASET)(char* uplo, blasint* m, blasint* n, double* alpha, double* beta, double* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo)
 #endif
 {
-	void (*fn) (void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda);
-	void (*fn_hook) (void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda);
+	void (*fn) (void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda, flexiblas_fortran_charlen_t len_uplo);
+	void (*fn_hook) (void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda, flexiblas_fortran_charlen_t len_uplo);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL(dlaset,DLASET)(char* uplo, blasint* m, blasint* n, double* alpha,
 	*(void **) & fn = current_backend->lapack.dlaset.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->dlaset.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) beta, (void*) a, (void*) lda); 
+		fn((void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) beta, (void*) a, (void*) lda, ( flexiblas_fortran_charlen_t ) len_uplo); 
 		return;
 	} else {
 		hook_pos_dlaset = 0;
-		fn_hook((void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) beta, (void*) a, (void*) lda);
+		fn_hook((void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) beta, (void*) a, (void*) lda, ( flexiblas_fortran_charlen_t ) len_uplo);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dlaset_(char* uplo, blasint* m, blasint* n, double* alpha, double* beta, double* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(dlaset,DLASET)))));
+void dlaset_(char* uplo, blasint* m, blasint* n, double* alpha, double* beta, double* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dlaset,DLASET)))));
 #else
 #ifndef __APPLE__
-void dlaset(char* uplo, blasint* m, blasint* n, double* alpha, double* beta, double* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(dlaset,DLASET)))));
+void dlaset(char* uplo, blasint* m, blasint* n, double* alpha, double* beta, double* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dlaset,DLASET)))));
 #else
-void dlaset(char* uplo, blasint* m, blasint* n, double* alpha, double* beta, double* a, blasint* lda){ FC_GLOBAL(dlaset,DLASET)((void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) beta, (void*) a, (void*) lda); }
+void dlaset(char* uplo, blasint* m, blasint* n, double* alpha, double* beta, double* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dlaset,DLASET)((void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) beta, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void dlaset(char* uplo, blasint* m, blasint* n, double* alpha, double* beta, dou
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_dlaset_(void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda)
+void flexiblas_real_dlaset_(void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda, flexiblas_fortran_charlen_t len_uplo)
 {
-	void (*fn) (void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda);
+	void (*fn) (void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda, flexiblas_fortran_charlen_t len_uplo);
 
 	*(void **) & fn = current_backend->lapack.dlaset.f77_blas_function; 
 
-		fn((void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) beta, (void*) a, (void*) lda); 
+		fn((void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) beta, (void*) a, (void*) lda, ( flexiblas_fortran_charlen_t ) len_uplo); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_dlaset(void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda) __attribute__((alias("flexiblas_real_dlaset_")));
+void flexiblas_real_dlaset(void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_real_dlaset_")));
 #else
-void flexiblas_real_dlaset(void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda){flexiblas_real_dlaset_((void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) beta, (void*) a, (void*) lda);}
+void flexiblas_real_dlaset(void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda, flexiblas_fortran_charlen_t len_uplo){flexiblas_real_dlaset_((void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) beta, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_dlaset(void* uplo, void* m, void* n, void* alpha, void* beta
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_dlaset_(void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda)
+void flexiblas_chain_dlaset_(void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda, flexiblas_fortran_charlen_t len_uplo)
 {
-	void (*fn) (void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda);
-	void (*fn_hook) (void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda);
+	void (*fn) (void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda, flexiblas_fortran_charlen_t len_uplo);
+	void (*fn_hook) (void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda, flexiblas_fortran_charlen_t len_uplo);
 
 	*(void **) &fn      = current_backend->lapack.dlaset.f77_blas_function; 
 
     hook_pos_dlaset ++;
     if( hook_pos_dlaset < __flexiblas_hooks->dlaset.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->dlaset.f77_hook_function[hook_pos_dlaset];
-        fn_hook((void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) beta, (void*) a, (void*) lda);
+        fn_hook((void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) beta, (void*) a, (void*) lda, ( flexiblas_fortran_charlen_t ) len_uplo);
     } else {
         hook_pos_dlaset = 0;
-		fn((void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) beta, (void*) a, (void*) lda); 
+		fn((void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) beta, (void*) a, (void*) lda, ( flexiblas_fortran_charlen_t ) len_uplo); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_dlaset(void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda) __attribute__((alias("flexiblas_chain_dlaset_")));
+void flexiblas_chain_dlaset(void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_chain_dlaset_")));
 #else
-void flexiblas_chain_dlaset(void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda){flexiblas_chain_dlaset_((void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) beta, (void*) a, (void*) lda);}
+void flexiblas_chain_dlaset(void* uplo, void* m, void* n, void* alpha, void* beta, void* a, void* lda, flexiblas_fortran_charlen_t len_uplo){flexiblas_chain_dlaset_((void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) beta, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 

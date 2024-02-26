@@ -24,6 +24,7 @@
 #include <ctype.h>
 #include <stdint.h>
 #include "flexiblas.h"
+#include "flexiblas_config.h"
 #include "flexiblas_fortran_mangle.h"
 
 /* #if defined(__alpha__) || defined(__sparc64__) || defined(__x86_64__) || defined(__ia64__)
@@ -34,7 +35,7 @@ typedef int logical;
 typedef int ftnlen;
 #endif */
 
-#ifdef INTEGER8
+#ifdef FLEXIBLAS_INTEGER8
 typedef int64_t logical;
 typedef int ftnlen;
 typedef int64_t pint;
@@ -56,7 +57,7 @@ logical lsame(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len)
     __attribute__((alias(MTS(FC_GLOBAL(lsame,LSAME)))));
 logical lsamen(pint * n, char *ca, char *cb, ftnlen ca_len, ftnlen cb_len)
     __attribute__((alias(MTS(FC_GLOBAL(lsamen,LSAMEN)))));
-#endif 
+#endif
 #endif
 
 logical FC_GLOBAL(lsame,LSAME)(char *ca, char *cb, ftnlen ca_len, ftnlen cb_len)

@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_ilatrans = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-int FC_GLOBAL(ilatrans,ILATRANS)(char* trans)
+int FC_GLOBAL(ilatrans,ILATRANS)(char* trans, flexiblas_fortran_charlen_t len_trans)
 #else
-int FC_GLOBAL(ilatrans,ILATRANS)(char* trans)
+int FC_GLOBAL(ilatrans,ILATRANS)(char* trans, flexiblas_fortran_charlen_t len_trans)
 #endif
 {
-	blasint (*fn) (void* trans);
-	blasint (*fn_hook) (void* trans);
+	blasint (*fn) (void* trans, flexiblas_fortran_charlen_t len_trans);
+	blasint (*fn_hook) (void* trans, flexiblas_fortran_charlen_t len_trans);
 	blasint ret;
 
     if ( current_backend->post_init != 0 ) {
@@ -59,21 +64,21 @@ int FC_GLOBAL(ilatrans,ILATRANS)(char* trans)
 	*(void **) & fn = current_backend->lapack.ilatrans.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->ilatrans.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		ret = fn((void*) trans); 
+		ret = fn((void*) trans, ( flexiblas_fortran_charlen_t ) len_trans); 
 		return ret; 
 	} else {
 		hook_pos_ilatrans = 0;
-		ret=fn_hook((void*) trans);
+		ret=fn_hook((void*) trans, ( flexiblas_fortran_charlen_t ) len_trans);
 		return ret;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-int ilatrans_(char* trans) __attribute__((alias(MTS(FC_GLOBAL(ilatrans,ILATRANS)))));
+int ilatrans_(char* trans, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(ilatrans,ILATRANS)))));
 #else
 #ifndef __APPLE__
-int ilatrans(char* trans) __attribute__((alias(MTS(FC_GLOBAL(ilatrans,ILATRANS)))));
+int ilatrans(char* trans, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(ilatrans,ILATRANS)))));
 #else
-int ilatrans(char* trans){ return FC_GLOBAL(ilatrans,ILATRANS)((void*) trans); }
+int ilatrans(char* trans, flexiblas_fortran_charlen_t len_trans){ return FC_GLOBAL(ilatrans,ILATRANS)((void*) trans, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -83,21 +88,21 @@ int ilatrans(char* trans){ return FC_GLOBAL(ilatrans,ILATRANS)((void*) trans); }
 /* Real Implementation for Hooks */
 
 
-blasint flexiblas_real_ilatrans_(void* trans)
+blasint flexiblas_real_ilatrans_(void* trans, flexiblas_fortran_charlen_t len_trans)
 {
-	blasint (*fn) (void* trans);
+	blasint (*fn) (void* trans, flexiblas_fortran_charlen_t len_trans);
 	blasint ret;
 
 	*(void **) & fn = current_backend->lapack.ilatrans.f77_blas_function; 
 
-		ret = fn((void*) trans); 
+		ret = fn((void*) trans, ( flexiblas_fortran_charlen_t ) len_trans); 
 
 	return ret ;
 }
 #ifndef __APPLE__
-blasint flexiblas_real_ilatrans(void* trans) __attribute__((alias("flexiblas_real_ilatrans_")));
+blasint flexiblas_real_ilatrans(void* trans, flexiblas_fortran_charlen_t len_trans) __attribute__((alias("flexiblas_real_ilatrans_")));
 #else
-blasint flexiblas_real_ilatrans(void* trans){return flexiblas_real_ilatrans_((void*) trans);}
+blasint flexiblas_real_ilatrans(void* trans, flexiblas_fortran_charlen_t len_trans){return flexiblas_real_ilatrans_((void*) trans, (flexiblas_fortran_charlen_t) len_trans);}
 #endif
 
 
@@ -106,10 +111,10 @@ blasint flexiblas_real_ilatrans(void* trans){return flexiblas_real_ilatrans_((vo
 /* Chainloader for Hooks */
 
 
-blasint flexiblas_chain_ilatrans_(void* trans)
+blasint flexiblas_chain_ilatrans_(void* trans, flexiblas_fortran_charlen_t len_trans)
 {
-	blasint (*fn) (void* trans);
-	blasint (*fn_hook) (void* trans);
+	blasint (*fn) (void* trans, flexiblas_fortran_charlen_t len_trans);
+	blasint (*fn_hook) (void* trans, flexiblas_fortran_charlen_t len_trans);
 	blasint ret;
 
 	*(void **) &fn      = current_backend->lapack.ilatrans.f77_blas_function; 
@@ -117,17 +122,17 @@ blasint flexiblas_chain_ilatrans_(void* trans)
     hook_pos_ilatrans ++;
     if( hook_pos_ilatrans < __flexiblas_hooks->ilatrans.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->ilatrans.f77_hook_function[hook_pos_ilatrans];
-        ret = fn_hook((void*) trans);
+        ret = fn_hook((void*) trans, ( flexiblas_fortran_charlen_t )len_trans);
     } else {
         hook_pos_ilatrans = 0;
-		ret = fn((void*) trans); 
+		ret = fn((void*) trans, ( flexiblas_fortran_charlen_t ) len_trans); 
 	}
 	return ret ;
 }
 #ifndef __APPLE__
-blasint flexiblas_chain_ilatrans(void* trans) __attribute__((alias("flexiblas_chain_ilatrans_")));
+blasint flexiblas_chain_ilatrans(void* trans, flexiblas_fortran_charlen_t len_trans) __attribute__((alias("flexiblas_chain_ilatrans_")));
 #else
-blasint flexiblas_chain_ilatrans(void* trans){return flexiblas_chain_ilatrans_((void*) trans);}
+blasint flexiblas_chain_ilatrans(void* trans, flexiblas_fortran_charlen_t len_trans){return flexiblas_chain_ilatrans_((void*) trans, (flexiblas_fortran_charlen_t) len_trans);}
 #endif
 
 

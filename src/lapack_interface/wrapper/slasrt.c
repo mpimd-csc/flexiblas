@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_slasrt = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(slasrt,SLASRT)(char* id, blasint* n, float* d, blasint* info)
+void FC_GLOBAL(slasrt,SLASRT)(char* id, blasint* n, float* d, blasint* info, flexiblas_fortran_charlen_t len_id)
 #else
-void FC_GLOBAL(slasrt,SLASRT)(char* id, blasint* n, float* d, blasint* info)
+void FC_GLOBAL(slasrt,SLASRT)(char* id, blasint* n, float* d, blasint* info, flexiblas_fortran_charlen_t len_id)
 #endif
 {
-	void (*fn) (void* id, void* n, void* d, void* info);
-	void (*fn_hook) (void* id, void* n, void* d, void* info);
+	void (*fn) (void* id, void* n, void* d, void* info, flexiblas_fortran_charlen_t len_id);
+	void (*fn_hook) (void* id, void* n, void* d, void* info, flexiblas_fortran_charlen_t len_id);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL(slasrt,SLASRT)(char* id, blasint* n, float* d, blasint* info)
 	*(void **) & fn = current_backend->lapack.slasrt.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->slasrt.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) id, (void*) n, (void*) d, (void*) info); 
+		fn((void*) id, (void*) n, (void*) d, (void*) info, ( flexiblas_fortran_charlen_t ) len_id); 
 		return;
 	} else {
 		hook_pos_slasrt = 0;
-		fn_hook((void*) id, (void*) n, (void*) d, (void*) info);
+		fn_hook((void*) id, (void*) n, (void*) d, (void*) info, ( flexiblas_fortran_charlen_t ) len_id);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void slasrt_(char* id, blasint* n, float* d, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(slasrt,SLASRT)))));
+void slasrt_(char* id, blasint* n, float* d, blasint* info, flexiblas_fortran_charlen_t len_id) __attribute__((alias(MTS(FC_GLOBAL(slasrt,SLASRT)))));
 #else
 #ifndef __APPLE__
-void slasrt(char* id, blasint* n, float* d, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(slasrt,SLASRT)))));
+void slasrt(char* id, blasint* n, float* d, blasint* info, flexiblas_fortran_charlen_t len_id) __attribute__((alias(MTS(FC_GLOBAL(slasrt,SLASRT)))));
 #else
-void slasrt(char* id, blasint* n, float* d, blasint* info){ FC_GLOBAL(slasrt,SLASRT)((void*) id, (void*) n, (void*) d, (void*) info); }
+void slasrt(char* id, blasint* n, float* d, blasint* info, flexiblas_fortran_charlen_t len_id){ FC_GLOBAL(slasrt,SLASRT)((void*) id, (void*) n, (void*) d, (void*) info, (flexiblas_fortran_charlen_t) len_id); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void slasrt(char* id, blasint* n, float* d, blasint* info){ FC_GLOBAL(slasrt,SLA
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_slasrt_(void* id, void* n, void* d, void* info)
+void flexiblas_real_slasrt_(void* id, void* n, void* d, void* info, flexiblas_fortran_charlen_t len_id)
 {
-	void (*fn) (void* id, void* n, void* d, void* info);
+	void (*fn) (void* id, void* n, void* d, void* info, flexiblas_fortran_charlen_t len_id);
 
 	*(void **) & fn = current_backend->lapack.slasrt.f77_blas_function; 
 
-		fn((void*) id, (void*) n, (void*) d, (void*) info); 
+		fn((void*) id, (void*) n, (void*) d, (void*) info, ( flexiblas_fortran_charlen_t ) len_id); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_slasrt(void* id, void* n, void* d, void* info) __attribute__((alias("flexiblas_real_slasrt_")));
+void flexiblas_real_slasrt(void* id, void* n, void* d, void* info, flexiblas_fortran_charlen_t len_id) __attribute__((alias("flexiblas_real_slasrt_")));
 #else
-void flexiblas_real_slasrt(void* id, void* n, void* d, void* info){flexiblas_real_slasrt_((void*) id, (void*) n, (void*) d, (void*) info);}
+void flexiblas_real_slasrt(void* id, void* n, void* d, void* info, flexiblas_fortran_charlen_t len_id){flexiblas_real_slasrt_((void*) id, (void*) n, (void*) d, (void*) info, (flexiblas_fortran_charlen_t) len_id);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_slasrt(void* id, void* n, void* d, void* info){flexiblas_rea
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_slasrt_(void* id, void* n, void* d, void* info)
+void flexiblas_chain_slasrt_(void* id, void* n, void* d, void* info, flexiblas_fortran_charlen_t len_id)
 {
-	void (*fn) (void* id, void* n, void* d, void* info);
-	void (*fn_hook) (void* id, void* n, void* d, void* info);
+	void (*fn) (void* id, void* n, void* d, void* info, flexiblas_fortran_charlen_t len_id);
+	void (*fn_hook) (void* id, void* n, void* d, void* info, flexiblas_fortran_charlen_t len_id);
 
 	*(void **) &fn      = current_backend->lapack.slasrt.f77_blas_function; 
 
     hook_pos_slasrt ++;
     if( hook_pos_slasrt < __flexiblas_hooks->slasrt.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->slasrt.f77_hook_function[hook_pos_slasrt];
-        fn_hook((void*) id, (void*) n, (void*) d, (void*) info);
+        fn_hook((void*) id, (void*) n, (void*) d, (void*) info, ( flexiblas_fortran_charlen_t ) len_id);
     } else {
         hook_pos_slasrt = 0;
-		fn((void*) id, (void*) n, (void*) d, (void*) info); 
+		fn((void*) id, (void*) n, (void*) d, (void*) info, ( flexiblas_fortran_charlen_t ) len_id); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_slasrt(void* id, void* n, void* d, void* info) __attribute__((alias("flexiblas_chain_slasrt_")));
+void flexiblas_chain_slasrt(void* id, void* n, void* d, void* info, flexiblas_fortran_charlen_t len_id) __attribute__((alias("flexiblas_chain_slasrt_")));
 #else
-void flexiblas_chain_slasrt(void* id, void* n, void* d, void* info){flexiblas_chain_slasrt_((void*) id, (void*) n, (void*) d, (void*) info);}
+void flexiblas_chain_slasrt(void* id, void* n, void* d, void* info, flexiblas_fortran_charlen_t len_id){flexiblas_chain_slasrt_((void*) id, (void*) n, (void*) d, (void*) info, (flexiblas_fortran_charlen_t) len_id);}
 #endif
 
 

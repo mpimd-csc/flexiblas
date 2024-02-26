@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_zsyswapr = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(zsyswapr,ZSYSWAPR)(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* i1, blasint* i2)
+void FC_GLOBAL(zsyswapr,ZSYSWAPR)(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* i1, blasint* i2, flexiblas_fortran_charlen_t len_uplo)
 #else
-void FC_GLOBAL(zsyswapr,ZSYSWAPR)(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* i1, blasint* i2)
+void FC_GLOBAL(zsyswapr,ZSYSWAPR)(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* i1, blasint* i2, flexiblas_fortran_charlen_t len_uplo)
 #endif
 {
-	void (*fn) (void* uplo, void* n, void* a, void* lda, void* i1, void* i2);
-	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* i1, void* i2);
+	void (*fn) (void* uplo, void* n, void* a, void* lda, void* i1, void* i2, flexiblas_fortran_charlen_t len_uplo);
+	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* i1, void* i2, flexiblas_fortran_charlen_t len_uplo);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL(zsyswapr,ZSYSWAPR)(char* uplo, blasint* n, double complex* a, bla
 	*(void **) & fn = current_backend->lapack.zsyswapr.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->zsyswapr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) i1, (void*) i2); 
+		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) i1, (void*) i2, ( flexiblas_fortran_charlen_t ) len_uplo); 
 		return;
 	} else {
 		hook_pos_zsyswapr = 0;
-		fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) i1, (void*) i2);
+		fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) i1, (void*) i2, ( flexiblas_fortran_charlen_t ) len_uplo);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zsyswapr_(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* i1, blasint* i2) __attribute__((alias(MTS(FC_GLOBAL(zsyswapr,ZSYSWAPR)))));
+void zsyswapr_(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* i1, blasint* i2, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zsyswapr,ZSYSWAPR)))));
 #else
 #ifndef __APPLE__
-void zsyswapr(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* i1, blasint* i2) __attribute__((alias(MTS(FC_GLOBAL(zsyswapr,ZSYSWAPR)))));
+void zsyswapr(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* i1, blasint* i2, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zsyswapr,ZSYSWAPR)))));
 #else
-void zsyswapr(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* i1, blasint* i2){ FC_GLOBAL(zsyswapr,ZSYSWAPR)((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) i1, (void*) i2); }
+void zsyswapr(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* i1, blasint* i2, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zsyswapr,ZSYSWAPR)((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) i1, (void*) i2, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void zsyswapr(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* 
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_zsyswapr_(void* uplo, void* n, void* a, void* lda, void* i1, void* i2)
+void flexiblas_real_zsyswapr_(void* uplo, void* n, void* a, void* lda, void* i1, void* i2, flexiblas_fortran_charlen_t len_uplo)
 {
-	void (*fn) (void* uplo, void* n, void* a, void* lda, void* i1, void* i2);
+	void (*fn) (void* uplo, void* n, void* a, void* lda, void* i1, void* i2, flexiblas_fortran_charlen_t len_uplo);
 
 	*(void **) & fn = current_backend->lapack.zsyswapr.f77_blas_function; 
 
-		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) i1, (void*) i2); 
+		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) i1, (void*) i2, ( flexiblas_fortran_charlen_t ) len_uplo); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_zsyswapr(void* uplo, void* n, void* a, void* lda, void* i1, void* i2) __attribute__((alias("flexiblas_real_zsyswapr_")));
+void flexiblas_real_zsyswapr(void* uplo, void* n, void* a, void* lda, void* i1, void* i2, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_real_zsyswapr_")));
 #else
-void flexiblas_real_zsyswapr(void* uplo, void* n, void* a, void* lda, void* i1, void* i2){flexiblas_real_zsyswapr_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) i1, (void*) i2);}
+void flexiblas_real_zsyswapr(void* uplo, void* n, void* a, void* lda, void* i1, void* i2, flexiblas_fortran_charlen_t len_uplo){flexiblas_real_zsyswapr_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) i1, (void*) i2, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_zsyswapr(void* uplo, void* n, void* a, void* lda, void* i1, 
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_zsyswapr_(void* uplo, void* n, void* a, void* lda, void* i1, void* i2)
+void flexiblas_chain_zsyswapr_(void* uplo, void* n, void* a, void* lda, void* i1, void* i2, flexiblas_fortran_charlen_t len_uplo)
 {
-	void (*fn) (void* uplo, void* n, void* a, void* lda, void* i1, void* i2);
-	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* i1, void* i2);
+	void (*fn) (void* uplo, void* n, void* a, void* lda, void* i1, void* i2, flexiblas_fortran_charlen_t len_uplo);
+	void (*fn_hook) (void* uplo, void* n, void* a, void* lda, void* i1, void* i2, flexiblas_fortran_charlen_t len_uplo);
 
 	*(void **) &fn      = current_backend->lapack.zsyswapr.f77_blas_function; 
 
     hook_pos_zsyswapr ++;
     if( hook_pos_zsyswapr < __flexiblas_hooks->zsyswapr.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->zsyswapr.f77_hook_function[hook_pos_zsyswapr];
-        fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) i1, (void*) i2);
+        fn_hook((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) i1, (void*) i2, ( flexiblas_fortran_charlen_t ) len_uplo);
     } else {
         hook_pos_zsyswapr = 0;
-		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) i1, (void*) i2); 
+		fn((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) i1, (void*) i2, ( flexiblas_fortran_charlen_t ) len_uplo); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_zsyswapr(void* uplo, void* n, void* a, void* lda, void* i1, void* i2) __attribute__((alias("flexiblas_chain_zsyswapr_")));
+void flexiblas_chain_zsyswapr(void* uplo, void* n, void* a, void* lda, void* i1, void* i2, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_chain_zsyswapr_")));
 #else
-void flexiblas_chain_zsyswapr(void* uplo, void* n, void* a, void* lda, void* i1, void* i2){flexiblas_chain_zsyswapr_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) i1, (void*) i2);}
+void flexiblas_chain_zsyswapr(void* uplo, void* n, void* a, void* lda, void* i1, void* i2, flexiblas_fortran_charlen_t len_uplo){flexiblas_chain_zsyswapr_((void*) uplo, (void*) n, (void*) a, (void*) lda, (void*) i1, (void*) i2, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 

@@ -29,41 +29,41 @@
 #ifdef INTEGER8
 #define Int int64_t
 #define USE_BLAS_64
-#else 
+#else
 #define Int int
-#endif 
+#endif
 
-#ifdef BLAS_INTERFACE_INTEL 
+#ifdef BLAS_INTERFACE_INTEL
 #include "blas_intel.h"
 #include "extblas_intel.h"
-#else 
+#else
 #include "blas_gnu.h"
 #include "extblas_gnu.h"
-#endif 
+#endif
 #ifdef FLEXIBLAS_CBLAS
-#include "cblas.h" 
-#endif 
+#include "cblas.h"
+#endif
 
 
-#define SWAP_INT(X,Y) {int _x = (X); (X) = (Y); (Y) = _x; } 
+#define SWAP_INT(X,Y) {int _x = (X); (X) = (Y); (Y) = _x; }
 
 int main(int argc, const char *argv[])
 {
 	/* Square matrices  */
 	{
-		float  col_A[16] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16}; 
-		float  alpha = 2; 
-		Int rows, cols, lda, ldb, i,j; 
-		Int rowst, colst; 
-		rows = lda = 4; 
-		cols = 4; 
-		ldb = 4; 
-		rowst = 4; 
-		colst = 4; 
+		float  col_A[16] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+		float  alpha = 2;
+		Int rows, cols, lda, ldb, i,j;
+		Int rowst, colst;
+		rows = lda = 4;
+		cols = 4;
+		ldb = 4;
+		rowst = 4;
+		colst = 4;
 
 		printf("Single\n");
 		/* OMATCOPY_2N */
-		FC_GLOBAL(simatcopy,SIMATCOPY)("C", "N", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(simatcopy,SIMATCOPY)("C", "N", &rows, &cols, &alpha, col_A, &lda, &ldb, 1, 1);
 		printf("IMATCOPY_2N\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -72,7 +72,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2R */
-		FC_GLOBAL(simatcopy,SIMATCOPY)("C", "R", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(simatcopy,SIMATCOPY)("C", "R", &rows, &cols, &alpha, col_A, &lda, &ldb, 1, 1);
 		printf("IMATCOPY_2R\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -81,7 +81,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2T */
-		FC_GLOBAL(simatcopy,SIMATCOPY)("C", "T", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(simatcopy,SIMATCOPY)("C", "T", &rows, &cols, &alpha, col_A, &lda, &ldb, 1, 1);
 		printf("OMATCOPY_2T\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -90,7 +90,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2C */
-		FC_GLOBAL(simatcopy,SIMATCOPY)("C", "C", &rows, &cols, &alpha, col_A, &lda,&ldb); 
+		FC_GLOBAL(simatcopy,SIMATCOPY)("C", "C", &rows, &cols, &alpha, col_A, &lda,&ldb, 1, 1);
 		printf("OMATCOPY_2C\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -103,19 +103,19 @@ int main(int argc, const char *argv[])
 	}
 
 	{
-		double   col_A[16] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16}; 
-		double   alpha = 2; 
-		Int rows, cols, lda, ldb, i,j; 
-		Int rowst, colst; 
-		rows = lda = 4; 
-		cols = 4; 
-		ldb = 4; 
-		rowst = 4; 
-		colst = 4; 
+		double   col_A[16] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+		double   alpha = 2;
+		Int rows, cols, lda, ldb, i,j;
+		Int rowst, colst;
+		rows = lda = 4;
+		cols = 4;
+		ldb = 4;
+		rowst = 4;
+		colst = 4;
 
 		printf("Double\n");
 		/* OMATCOPY_2N */
-		FC_GLOBAL(dimatcopy,DIMATCOPY)("C", "N", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(dimatcopy,DIMATCOPY)("C", "N", &rows, &cols, &alpha, col_A, &lda, &ldb, 1, 1);
 		printf("OMATCOPY_2N\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -124,7 +124,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2R */
-		FC_GLOBAL(dimatcopy,DIMATCOPY)("C", "R", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(dimatcopy,DIMATCOPY)("C", "R", &rows, &cols, &alpha, col_A, &lda, &ldb, 1, 1);
 		printf("OMATCOPY_2R\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -133,7 +133,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2T */
-		FC_GLOBAL(dimatcopy,DIMATCOPY)("C", "T", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(dimatcopy,DIMATCOPY)("C", "T", &rows, &cols, &alpha, col_A, &lda, &ldb, 1, 1);
 		printf("OMATCOPY_2T\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -142,7 +142,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2C */
-		FC_GLOBAL(dimatcopy,DIMATCOPY)("C", "C", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(dimatcopy,DIMATCOPY)("C", "C", &rows, &cols, &alpha, col_A, &lda, &ldb, 1, 1);
 		printf("OMATCOPY_2C\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -156,19 +156,19 @@ int main(int argc, const char *argv[])
 
 	/* Square matrices  */
 	{
-		float complex  col_A[16] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16}; 
-		float complex  alpha = 2+I; 
-		Int rows, cols, lda, ldb, i,j; 
-		Int rowst, colst; 
-		rows = lda = 4; 
-		cols = 4; 
-		ldb = 4; 
-		rowst = 4; 
-		colst = 4; 
+		float complex  col_A[16] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+		float complex  alpha = 2+I;
+		Int rows, cols, lda, ldb, i,j;
+		Int rowst, colst;
+		rows = lda = 4;
+		cols = 4;
+		ldb = 4;
+		rowst = 4;
+		colst = 4;
 
 		printf("Single\n");
 		/* OMATCOPY_2N */
-		FC_GLOBAL(cimatcopy,CIMATCOPY)("C", "N", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(cimatcopy,CIMATCOPY)("C", "N", &rows, &cols, &alpha, col_A, &lda, &ldb, 1, 1);
 		printf("IMATCOPY_2N\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -177,7 +177,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2R */
-		FC_GLOBAL(cimatcopy,CIMATCOPY)("C", "R", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(cimatcopy,CIMATCOPY)("C", "R", &rows, &cols, &alpha, col_A, &lda, &ldb, 1, 1);
 		printf("IMATCOPY_2R\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -186,7 +186,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2T */
-		FC_GLOBAL(cimatcopy,CIMATCOPY)("C", "T", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(cimatcopy,CIMATCOPY)("C", "T", &rows, &cols, &alpha, col_A, &lda, &ldb, 1, 1);
 		printf("OMATCOPY_2T\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -195,7 +195,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2C */
-		FC_GLOBAL(cimatcopy,CIMATCOPY)("C", "C", &rows, &cols, &alpha, col_A, &lda,&ldb); 
+		FC_GLOBAL(cimatcopy,CIMATCOPY)("C", "C", &rows, &cols, &alpha, col_A, &lda,&ldb, 1, 1);
 		printf("OMATCOPY_2C\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -208,19 +208,19 @@ int main(int argc, const char *argv[])
 	}
 
 	{
-		double complex  col_A[16] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16}; 
-		double complex  alpha = 2+I; 
-		Int rows, cols, lda, ldb, i,j; 
-		Int rowst, colst; 
-		rows = lda = 4; 
-		cols = 4; 
-		ldb = 4; 
-		rowst = 4; 
-		colst = 4; 
+		double complex  col_A[16] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+		double complex  alpha = 2+I;
+		Int rows, cols, lda, ldb, i,j;
+		Int rowst, colst;
+		rows = lda = 4;
+		cols = 4;
+		ldb = 4;
+		rowst = 4;
+		colst = 4;
 
 		printf("Double\n");
 		/* OMATCOPY_2N */
-		FC_GLOBAL(zimatcopy,ZIMATCOPY)("C", "N", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(zimatcopy,ZIMATCOPY)("C", "N", &rows, &cols, &alpha, col_A, &lda, &ldb, 1, 1);
 		printf("OMATCOPY_2N\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -229,7 +229,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2R */
-		FC_GLOBAL(zimatcopy,ZIMATCOPY)("C", "R", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(zimatcopy,ZIMATCOPY)("C", "R", &rows, &cols, &alpha, col_A, &lda, &ldb, 1, 1);
 		printf("OMATCOPY_2R\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -238,7 +238,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2T */
-		FC_GLOBAL(zimatcopy,ZIMATCOPY)("C", "T", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(zimatcopy,ZIMATCOPY)("C", "T", &rows, &cols, &alpha, col_A, &lda, &ldb, 1, 1);
 		printf("OMATCOPY_2T\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -247,7 +247,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2C */
-		FC_GLOBAL(zimatcopy,ZIMATCOPY)("C", "C", &rows, &cols, &alpha, col_A, &lda, &ldb); 
+		FC_GLOBAL(zimatcopy,ZIMATCOPY)("C", "C", &rows, &cols, &alpha, col_A, &lda, &ldb, 1, 1);
 		printf("OMATCOPY_2C\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -262,22 +262,22 @@ int main(int argc, const char *argv[])
 	printf("\n\n");
 	printf("CBLAS\n");
 	printf("\n\n");
-	
+
 	/* Square matrices  */
 	{
-		float  col_A[16] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16}; 
-		float  alpha = 2; 
-		int rows, cols, lda, ldb, i,j; 
-		int rowst, colst; 
-		rows = lda = 4; 
-		cols = 4; 
-		ldb = 4; 
-		rowst = 4; 
-		colst = 4; 
+		float  col_A[16] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+		float  alpha = 2;
+		int rows, cols, lda, ldb, i,j;
+		int rowst, colst;
+		rows = lda = 4;
+		cols = 4;
+		ldb = 4;
+		rowst = 4;
+		colst = 4;
 
 		printf("Single\n");
 		/* OMATCOPY_2N */
-		cblas_simatcopy(CblasColMajor, CblasNoTrans, rows, cols, alpha, col_A, lda, ldb); 
+		cblas_simatcopy(CblasColMajor, CblasNoTrans, rows, cols, alpha, col_A, lda, ldb);
 		printf("IMATCOPY_2N\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -286,7 +286,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2R */
-		cblas_simatcopy(CblasColMajor, CblasConjNoTrans, rows, cols, alpha, col_A, lda, ldb); 
+		cblas_simatcopy(CblasColMajor, CblasConjNoTrans, rows, cols, alpha, col_A, lda, ldb);
 		printf("IMATCOPY_2R\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -295,7 +295,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2T */
-		cblas_simatcopy(CblasColMajor, CblasTrans, rows, cols, alpha, col_A, lda, ldb); 
+		cblas_simatcopy(CblasColMajor, CblasTrans, rows, cols, alpha, col_A, lda, ldb);
 		printf("OMATCOPY_2T\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -304,7 +304,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2C */
-		cblas_simatcopy(CblasColMajor, CblasConjTrans, rows, cols, alpha, col_A, lda,ldb); 
+		cblas_simatcopy(CblasColMajor, CblasConjTrans, rows, cols, alpha, col_A, lda,ldb);
 		printf("OMATCOPY_2C\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -317,19 +317,19 @@ int main(int argc, const char *argv[])
 	}
 
 	{
-		double   col_A[16] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16}; 
-		double   alpha = 2; 
-		int rows, cols, lda, ldb, i,j; 
-		int rowst, colst; 
-		rows = lda = 4; 
-		cols = 4; 
-		ldb = 4; 
-		rowst = 4; 
-		colst = 4; 
+		double   col_A[16] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+		double   alpha = 2;
+		int rows, cols, lda, ldb, i,j;
+		int rowst, colst;
+		rows = lda = 4;
+		cols = 4;
+		ldb = 4;
+		rowst = 4;
+		colst = 4;
 
 		printf("Double\n");
 		/* OMATCOPY_2N */
-		cblas_dimatcopy(CblasColMajor, CblasNoTrans, rows, cols, alpha, col_A, lda, ldb); 
+		cblas_dimatcopy(CblasColMajor, CblasNoTrans, rows, cols, alpha, col_A, lda, ldb);
 		printf("OMATCOPY_2N\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -338,7 +338,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2R */
-		cblas_dimatcopy(CblasColMajor, CblasConjNoTrans, rows, cols, alpha, col_A, lda, ldb); 
+		cblas_dimatcopy(CblasColMajor, CblasConjNoTrans, rows, cols, alpha, col_A, lda, ldb);
 		printf("OMATCOPY_2R\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -347,7 +347,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2T */
-		cblas_dimatcopy(CblasColMajor, CblasTrans, rows, cols, alpha, col_A, lda, ldb); 
+		cblas_dimatcopy(CblasColMajor, CblasTrans, rows, cols, alpha, col_A, lda, ldb);
 		printf("OMATCOPY_2T\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -356,7 +356,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2C */
-		cblas_dimatcopy(CblasColMajor, CblasConjTrans, rows, cols, alpha, col_A, lda, ldb); 
+		cblas_dimatcopy(CblasColMajor, CblasConjTrans, rows, cols, alpha, col_A, lda, ldb);
 		printf("OMATCOPY_2C\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -370,19 +370,19 @@ int main(int argc, const char *argv[])
 
 	/* Square matrices  */
 	{
-		float complex  col_A[16] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16}; 
-		float complex  alpha = 2+I; 
-		int rows, cols, lda, ldb, i,j; 
-		int rowst, colst; 
-		rows = lda = 4; 
-		cols = 4; 
-		ldb = 4; 
-		rowst = 4; 
-		colst = 4; 
+		float complex  col_A[16] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+		float complex  alpha = 2+I;
+		int rows, cols, lda, ldb, i,j;
+		int rowst, colst;
+		rows = lda = 4;
+		cols = 4;
+		ldb = 4;
+		rowst = 4;
+		colst = 4;
 
 		printf("Single\n");
 		/* OMATCOPY_2N */
-		cblas_cimatcopy(CblasColMajor, CblasNoTrans, rows, cols, &alpha, col_A, lda, ldb); 
+		cblas_cimatcopy(CblasColMajor, CblasNoTrans, rows, cols, &alpha, col_A, lda, ldb);
 		printf("IMATCOPY_2N\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -391,7 +391,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2R */
-		cblas_cimatcopy(CblasColMajor, CblasConjNoTrans, rows, cols, &alpha, col_A, lda, ldb); 
+		cblas_cimatcopy(CblasColMajor, CblasConjNoTrans, rows, cols, &alpha, col_A, lda, ldb);
 		printf("IMATCOPY_2R\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -400,7 +400,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2T */
-		cblas_cimatcopy(CblasColMajor, CblasTrans, rows, cols, &alpha, col_A, lda, ldb); 
+		cblas_cimatcopy(CblasColMajor, CblasTrans, rows, cols, &alpha, col_A, lda, ldb);
 		printf("OMATCOPY_2T\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -409,7 +409,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2C */
-		cblas_cimatcopy(CblasColMajor, CblasConjTrans, rows, cols, &alpha, col_A, lda,ldb); 
+		cblas_cimatcopy(CblasColMajor, CblasConjTrans, rows, cols, &alpha, col_A, lda,ldb);
 		printf("OMATCOPY_2C\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -422,19 +422,19 @@ int main(int argc, const char *argv[])
 	}
 
 	{
-		double complex  col_A[16] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16}; 
-		double complex  alpha = 2+I; 
-		int rows, cols, lda, ldb, i,j; 
-		int rowst, colst; 
-		rows = lda = 4; 
-		cols = 4; 
-		ldb = 4; 
-		rowst = 4; 
-		colst = 4; 
+		double complex  col_A[16] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+		double complex  alpha = 2+I;
+		int rows, cols, lda, ldb, i,j;
+		int rowst, colst;
+		rows = lda = 4;
+		cols = 4;
+		ldb = 4;
+		rowst = 4;
+		colst = 4;
 
 		printf("Double\n");
 		/* OMATCOPY_2N */
-		cblas_zimatcopy(CblasColMajor, CblasNoTrans, rows, cols, &alpha, col_A, lda, ldb); 
+		cblas_zimatcopy(CblasColMajor, CblasNoTrans, rows, cols, &alpha, col_A, lda, ldb);
 		printf("OMATCOPY_2N\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -443,7 +443,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2R */
-		cblas_zimatcopy(CblasColMajor, CblasConjNoTrans, rows, cols, &alpha, col_A, lda, ldb); 
+		cblas_zimatcopy(CblasColMajor, CblasConjNoTrans, rows, cols, &alpha, col_A, lda, ldb);
 		printf("OMATCOPY_2R\n");
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < cols; j++) {
@@ -452,7 +452,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2T */
-		cblas_zimatcopy(CblasColMajor, CblasTrans, rows, cols, &alpha, col_A, lda, ldb); 
+		cblas_zimatcopy(CblasColMajor, CblasTrans, rows, cols, &alpha, col_A, lda, ldb);
 		printf("OMATCOPY_2T\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {
@@ -461,7 +461,7 @@ int main(int argc, const char *argv[])
 			printf("\n");
 		}
 		/* OMATCOPY_2C */
-		cblas_zimatcopy(CblasColMajor, CblasConjTrans, rows, cols, &alpha, col_A, lda, ldb); 
+		cblas_zimatcopy(CblasColMajor, CblasConjTrans, rows, cols, &alpha, col_A, lda, ldb);
 		printf("OMATCOPY_2C\n");
 		for (i = 0; i < rowst; i++) {
 			for (j = 0; j < colst; j++) {

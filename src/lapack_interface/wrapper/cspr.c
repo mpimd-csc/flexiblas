@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_cspr = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(cspr,CSPR)(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* ap)
+void FC_GLOBAL(cspr,CSPR)(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* ap, flexiblas_fortran_charlen_t len_uplo)
 #else
-void FC_GLOBAL(cspr,CSPR)(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* ap)
+void FC_GLOBAL(cspr,CSPR)(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* ap, flexiblas_fortran_charlen_t len_uplo)
 #endif
 {
-	void (*fn) (void* uplo, void* n, void* alpha, void* x, void* incx, void* ap);
-	void (*fn_hook) (void* uplo, void* n, void* alpha, void* x, void* incx, void* ap);
+	void (*fn) (void* uplo, void* n, void* alpha, void* x, void* incx, void* ap, flexiblas_fortran_charlen_t len_uplo);
+	void (*fn_hook) (void* uplo, void* n, void* alpha, void* x, void* incx, void* ap, flexiblas_fortran_charlen_t len_uplo);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL(cspr,CSPR)(char* uplo, blasint* n, float complex* alpha, float co
 	*(void **) & fn = current_backend->lapack.cspr.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->cspr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap); 
+		fn((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap, ( flexiblas_fortran_charlen_t ) len_uplo); 
 		return;
 	} else {
 		hook_pos_cspr = 0;
-		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap);
+		fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap, ( flexiblas_fortran_charlen_t ) len_uplo);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void cspr_(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* ap) __attribute__((alias(MTS(FC_GLOBAL(cspr,CSPR)))));
+void cspr_(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(cspr,CSPR)))));
 #else
 #ifndef __APPLE__
-void cspr(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* ap) __attribute__((alias(MTS(FC_GLOBAL(cspr,CSPR)))));
+void cspr(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(cspr,CSPR)))));
 #else
-void cspr(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* ap){ FC_GLOBAL(cspr,CSPR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap); }
+void cspr(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* ap, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(cspr,CSPR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void cspr(char* uplo, blasint* n, float complex* alpha, float complex* x, blasin
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_cspr_(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap)
+void flexiblas_real_cspr_(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap, flexiblas_fortran_charlen_t len_uplo)
 {
-	void (*fn) (void* uplo, void* n, void* alpha, void* x, void* incx, void* ap);
+	void (*fn) (void* uplo, void* n, void* alpha, void* x, void* incx, void* ap, flexiblas_fortran_charlen_t len_uplo);
 
 	*(void **) & fn = current_backend->lapack.cspr.f77_blas_function; 
 
-		fn((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap); 
+		fn((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap, ( flexiblas_fortran_charlen_t ) len_uplo); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_cspr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap) __attribute__((alias("flexiblas_real_cspr_")));
+void flexiblas_real_cspr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_real_cspr_")));
 #else
-void flexiblas_real_cspr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap){flexiblas_real_cspr_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap);}
+void flexiblas_real_cspr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap, flexiblas_fortran_charlen_t len_uplo){flexiblas_real_cspr_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_cspr(void* uplo, void* n, void* alpha, void* x, void* incx, 
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_cspr_(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap)
+void flexiblas_chain_cspr_(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap, flexiblas_fortran_charlen_t len_uplo)
 {
-	void (*fn) (void* uplo, void* n, void* alpha, void* x, void* incx, void* ap);
-	void (*fn_hook) (void* uplo, void* n, void* alpha, void* x, void* incx, void* ap);
+	void (*fn) (void* uplo, void* n, void* alpha, void* x, void* incx, void* ap, flexiblas_fortran_charlen_t len_uplo);
+	void (*fn_hook) (void* uplo, void* n, void* alpha, void* x, void* incx, void* ap, flexiblas_fortran_charlen_t len_uplo);
 
 	*(void **) &fn      = current_backend->lapack.cspr.f77_blas_function; 
 
     hook_pos_cspr ++;
     if( hook_pos_cspr < __flexiblas_hooks->cspr.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->cspr.f77_hook_function[hook_pos_cspr];
-        fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap);
+        fn_hook((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap, ( flexiblas_fortran_charlen_t ) len_uplo);
     } else {
         hook_pos_cspr = 0;
-		fn((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap); 
+		fn((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap, ( flexiblas_fortran_charlen_t ) len_uplo); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_cspr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap) __attribute__((alias("flexiblas_chain_cspr_")));
+void flexiblas_chain_cspr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_chain_cspr_")));
 #else
-void flexiblas_chain_cspr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap){flexiblas_chain_cspr_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap);}
+void flexiblas_chain_cspr(void* uplo, void* n, void* alpha, void* x, void* incx, void* ap, flexiblas_fortran_charlen_t len_uplo){flexiblas_chain_cspr_((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 

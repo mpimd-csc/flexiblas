@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_cpteqr = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(cpteqr,CPTEQR)(char* compz, blasint* n, float* d, float* e, float complex* z, blasint* ldz, float* work, blasint* info)
+void FC_GLOBAL(cpteqr,CPTEQR)(char* compz, blasint* n, float* d, float* e, float complex* z, blasint* ldz, float* work, blasint* info, flexiblas_fortran_charlen_t len_compz)
 #else
-void FC_GLOBAL(cpteqr,CPTEQR)(char* compz, blasint* n, float* d, float* e, float complex* z, blasint* ldz, float* work, blasint* info)
+void FC_GLOBAL(cpteqr,CPTEQR)(char* compz, blasint* n, float* d, float* e, float complex* z, blasint* ldz, float* work, blasint* info, flexiblas_fortran_charlen_t len_compz)
 #endif
 {
-	void (*fn) (void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info);
-	void (*fn_hook) (void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info);
+	void (*fn) (void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_compz);
+	void (*fn_hook) (void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_compz);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL(cpteqr,CPTEQR)(char* compz, blasint* n, float* d, float* e, float
 	*(void **) & fn = current_backend->lapack.cpteqr.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->cpteqr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info); 
+		fn((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_compz); 
 		return;
 	} else {
 		hook_pos_cpteqr = 0;
-		fn_hook((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info);
+		fn_hook((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_compz);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void cpteqr_(char* compz, blasint* n, float* d, float* e, float complex* z, blasint* ldz, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cpteqr,CPTEQR)))));
+void cpteqr_(char* compz, blasint* n, float* d, float* e, float complex* z, blasint* ldz, float* work, blasint* info, flexiblas_fortran_charlen_t len_compz) __attribute__((alias(MTS(FC_GLOBAL(cpteqr,CPTEQR)))));
 #else
 #ifndef __APPLE__
-void cpteqr(char* compz, blasint* n, float* d, float* e, float complex* z, blasint* ldz, float* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cpteqr,CPTEQR)))));
+void cpteqr(char* compz, blasint* n, float* d, float* e, float complex* z, blasint* ldz, float* work, blasint* info, flexiblas_fortran_charlen_t len_compz) __attribute__((alias(MTS(FC_GLOBAL(cpteqr,CPTEQR)))));
 #else
-void cpteqr(char* compz, blasint* n, float* d, float* e, float complex* z, blasint* ldz, float* work, blasint* info){ FC_GLOBAL(cpteqr,CPTEQR)((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info); }
+void cpteqr(char* compz, blasint* n, float* d, float* e, float complex* z, blasint* ldz, float* work, blasint* info, flexiblas_fortran_charlen_t len_compz){ FC_GLOBAL(cpteqr,CPTEQR)((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info, (flexiblas_fortran_charlen_t) len_compz); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void cpteqr(char* compz, blasint* n, float* d, float* e, float complex* z, blasi
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_cpteqr_(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info)
+void flexiblas_real_cpteqr_(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_compz)
 {
-	void (*fn) (void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info);
+	void (*fn) (void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_compz);
 
 	*(void **) & fn = current_backend->lapack.cpteqr.f77_blas_function; 
 
-		fn((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info); 
+		fn((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_compz); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_cpteqr(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info) __attribute__((alias("flexiblas_real_cpteqr_")));
+void flexiblas_real_cpteqr(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_compz) __attribute__((alias("flexiblas_real_cpteqr_")));
 #else
-void flexiblas_real_cpteqr(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info){flexiblas_real_cpteqr_((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info);}
+void flexiblas_real_cpteqr(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_compz){flexiblas_real_cpteqr_((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info, (flexiblas_fortran_charlen_t) len_compz);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_cpteqr(void* compz, void* n, void* d, void* e, void* z, void
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_cpteqr_(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info)
+void flexiblas_chain_cpteqr_(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_compz)
 {
-	void (*fn) (void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info);
-	void (*fn_hook) (void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info);
+	void (*fn) (void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_compz);
+	void (*fn_hook) (void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_compz);
 
 	*(void **) &fn      = current_backend->lapack.cpteqr.f77_blas_function; 
 
     hook_pos_cpteqr ++;
     if( hook_pos_cpteqr < __flexiblas_hooks->cpteqr.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->cpteqr.f77_hook_function[hook_pos_cpteqr];
-        fn_hook((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info);
+        fn_hook((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_compz);
     } else {
         hook_pos_cpteqr = 0;
-		fn((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info); 
+		fn((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_compz); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_cpteqr(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info) __attribute__((alias("flexiblas_chain_cpteqr_")));
+void flexiblas_chain_cpteqr(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_compz) __attribute__((alias("flexiblas_chain_cpteqr_")));
 #else
-void flexiblas_chain_cpteqr(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info){flexiblas_chain_cpteqr_((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info);}
+void flexiblas_chain_cpteqr(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_compz){flexiblas_chain_cpteqr_((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info, (flexiblas_fortran_charlen_t) len_compz);}
 #endif
 
 

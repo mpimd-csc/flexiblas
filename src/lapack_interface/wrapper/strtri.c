@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_strtri = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(strtri,STRTRI)(char* uplo, char* diag, blasint* n, float* a, blasint* lda, blasint* info)
+void FC_GLOBAL(strtri,STRTRI)(char* uplo, char* diag, blasint* n, float* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag)
 #else
-void FC_GLOBAL(strtri,STRTRI)(char* uplo, char* diag, blasint* n, float* a, blasint* lda, blasint* info)
+void FC_GLOBAL(strtri,STRTRI)(char* uplo, char* diag, blasint* n, float* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag)
 #endif
 {
-	void (*fn) (void* uplo, void* diag, void* n, void* a, void* lda, void* info);
-	void (*fn_hook) (void* uplo, void* diag, void* n, void* a, void* lda, void* info);
+	void (*fn) (void* uplo, void* diag, void* n, void* a, void* lda, void* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
+	void (*fn_hook) (void* uplo, void* diag, void* n, void* a, void* lda, void* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL(strtri,STRTRI)(char* uplo, char* diag, blasint* n, float* a, blas
 	*(void **) & fn = current_backend->lapack.strtri.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->strtri.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) info); 
+		fn((void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_diag); 
 		return;
 	} else {
 		hook_pos_strtri = 0;
-		fn_hook((void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) info);
+		fn_hook((void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_diag);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void strtri_(char* uplo, char* diag, blasint* n, float* a, blasint* lda, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(strtri,STRTRI)))));
+void strtri_(char* uplo, char* diag, blasint* n, float* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strtri,STRTRI)))));
 #else
 #ifndef __APPLE__
-void strtri(char* uplo, char* diag, blasint* n, float* a, blasint* lda, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(strtri,STRTRI)))));
+void strtri(char* uplo, char* diag, blasint* n, float* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strtri,STRTRI)))));
 #else
-void strtri(char* uplo, char* diag, blasint* n, float* a, blasint* lda, blasint* info){ FC_GLOBAL(strtri,STRTRI)((void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) info); }
+void strtri(char* uplo, char* diag, blasint* n, float* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(strtri,STRTRI)((void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) info, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void strtri(char* uplo, char* diag, blasint* n, float* a, blasint* lda, blasint*
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_strtri_(void* uplo, void* diag, void* n, void* a, void* lda, void* info)
+void flexiblas_real_strtri_(void* uplo, void* diag, void* n, void* a, void* lda, void* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag)
 {
-	void (*fn) (void* uplo, void* diag, void* n, void* a, void* lda, void* info);
+	void (*fn) (void* uplo, void* diag, void* n, void* a, void* lda, void* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
 
 	*(void **) & fn = current_backend->lapack.strtri.f77_blas_function; 
 
-		fn((void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) info); 
+		fn((void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_diag); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_strtri(void* uplo, void* diag, void* n, void* a, void* lda, void* info) __attribute__((alias("flexiblas_real_strtri_")));
+void flexiblas_real_strtri(void* uplo, void* diag, void* n, void* a, void* lda, void* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag) __attribute__((alias("flexiblas_real_strtri_")));
 #else
-void flexiblas_real_strtri(void* uplo, void* diag, void* n, void* a, void* lda, void* info){flexiblas_real_strtri_((void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) info);}
+void flexiblas_real_strtri(void* uplo, void* diag, void* n, void* a, void* lda, void* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag){flexiblas_real_strtri_((void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) info, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_diag);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_strtri(void* uplo, void* diag, void* n, void* a, void* lda, 
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_strtri_(void* uplo, void* diag, void* n, void* a, void* lda, void* info)
+void flexiblas_chain_strtri_(void* uplo, void* diag, void* n, void* a, void* lda, void* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag)
 {
-	void (*fn) (void* uplo, void* diag, void* n, void* a, void* lda, void* info);
-	void (*fn_hook) (void* uplo, void* diag, void* n, void* a, void* lda, void* info);
+	void (*fn) (void* uplo, void* diag, void* n, void* a, void* lda, void* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
+	void (*fn_hook) (void* uplo, void* diag, void* n, void* a, void* lda, void* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
 
 	*(void **) &fn      = current_backend->lapack.strtri.f77_blas_function; 
 
     hook_pos_strtri ++;
     if( hook_pos_strtri < __flexiblas_hooks->strtri.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->strtri.f77_hook_function[hook_pos_strtri];
-        fn_hook((void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) info);
+        fn_hook((void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_diag);
     } else {
         hook_pos_strtri = 0;
-		fn((void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) info); 
+		fn((void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_diag); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_strtri(void* uplo, void* diag, void* n, void* a, void* lda, void* info) __attribute__((alias("flexiblas_chain_strtri_")));
+void flexiblas_chain_strtri(void* uplo, void* diag, void* n, void* a, void* lda, void* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag) __attribute__((alias("flexiblas_chain_strtri_")));
 #else
-void flexiblas_chain_strtri(void* uplo, void* diag, void* n, void* a, void* lda, void* info){flexiblas_chain_strtri_((void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) info);}
+void flexiblas_chain_strtri(void* uplo, void* diag, void* n, void* a, void* lda, void* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag){flexiblas_chain_strtri_((void*) uplo, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) info, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_diag);}
 #endif
 
 

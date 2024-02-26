@@ -25,24 +25,24 @@
 
 #include <string.h>
 #include "flexiblas_mgmt.h"
+#include "flexiblas_config.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #ifndef Int
-#ifndef INTEGER8
+#ifndef FLEXIBLAS_INTEGER8
 #define Int 	int
-#define blasint int
 #else
 #include <stdint.h>
 #define Int 	int64_t
-#define blasint int64_t
 #endif
 #endif
 
 #ifndef blasint
-#ifdef INTEGER8
+#ifdef FLEXIBLAS_INTEGER8
+#include <stdint.h>
 #define blasint int64_t
 #else
 #define blasint int

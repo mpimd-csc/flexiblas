@@ -18,12 +18,18 @@
  */
 
 
-
-
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
+#if __GNUC__ > 7
+typedef size_t flexiblas_fortran_charlen_t;
+#else
+typedef int flexiblas_fortran_charlen_t;
+#endif
+#endif
 
 void FC_GLOBAL(xerbla,XERBLA)(char *name, Int *info, Int len);
 
-void FNAME( char* ORDER, char* TRANS, Int *rows, Int *cols, FLOAT *alpha, FLOAT *a, Int *lda, FLOAT *b, Int *ldb)
+void FNAME( char* ORDER, char* TRANS, Int *rows, Int *cols, FLOAT *alpha, FLOAT *a, Int *lda, FLOAT *b, Int *ldb, flexiblas_fortran_charlen_t len1, flexiblas_fortran_charlen_t len2)
 {
 
 	char Order, Trans;

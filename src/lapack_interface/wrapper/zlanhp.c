@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_zlanhp = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-double FC_GLOBAL(zlanhp,ZLANHP)(char* norm, char* uplo, blasint* n, double complex* ap, double* work)
+double FC_GLOBAL(zlanhp,ZLANHP)(char* norm, char* uplo, blasint* n, double complex* ap, double* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo)
 #else
-double FC_GLOBAL(zlanhp,ZLANHP)(char* norm, char* uplo, blasint* n, double complex* ap, double* work)
+double FC_GLOBAL(zlanhp,ZLANHP)(char* norm, char* uplo, blasint* n, double complex* ap, double* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo)
 #endif
 {
-	double (*fn) (void* norm, void* uplo, void* n, void* ap, void* work);
-	double (*fn_hook) (void* norm, void* uplo, void* n, void* ap, void* work);
+	double (*fn) (void* norm, void* uplo, void* n, void* ap, void* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
+	double (*fn_hook) (void* norm, void* uplo, void* n, void* ap, void* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
 	double ret;
 
     if ( current_backend->post_init != 0 ) {
@@ -59,21 +64,21 @@ double FC_GLOBAL(zlanhp,ZLANHP)(char* norm, char* uplo, blasint* n, double compl
 	*(void **) & fn = current_backend->lapack.zlanhp.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->zlanhp.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		ret = fn((void*) norm, (void*) uplo, (void*) n, (void*) ap, (void*) work); 
+		ret = fn((void*) norm, (void*) uplo, (void*) n, (void*) ap, (void*) work, ( flexiblas_fortran_charlen_t ) len_norm, ( flexiblas_fortran_charlen_t ) len_uplo); 
 		return ret; 
 	} else {
 		hook_pos_zlanhp = 0;
-		ret=fn_hook((void*) norm, (void*) uplo, (void*) n, (void*) ap, (void*) work);
+		ret=fn_hook((void*) norm, (void*) uplo, (void*) n, (void*) ap, (void*) work, ( flexiblas_fortran_charlen_t ) len_norm, ( flexiblas_fortran_charlen_t ) len_uplo);
 		return ret;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-double zlanhp_(char* norm, char* uplo, blasint* n, double complex* ap, double* work) __attribute__((alias(MTS(FC_GLOBAL(zlanhp,ZLANHP)))));
+double zlanhp_(char* norm, char* uplo, blasint* n, double complex* ap, double* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zlanhp,ZLANHP)))));
 #else
 #ifndef __APPLE__
-double zlanhp(char* norm, char* uplo, blasint* n, double complex* ap, double* work) __attribute__((alias(MTS(FC_GLOBAL(zlanhp,ZLANHP)))));
+double zlanhp(char* norm, char* uplo, blasint* n, double complex* ap, double* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zlanhp,ZLANHP)))));
 #else
-double zlanhp(char* norm, char* uplo, blasint* n, double complex* ap, double* work){ return FC_GLOBAL(zlanhp,ZLANHP)((void*) norm, (void*) uplo, (void*) n, (void*) ap, (void*) work); }
+double zlanhp(char* norm, char* uplo, blasint* n, double complex* ap, double* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo){ return FC_GLOBAL(zlanhp,ZLANHP)((void*) norm, (void*) uplo, (void*) n, (void*) ap, (void*) work, (flexiblas_fortran_charlen_t) len_norm, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -83,21 +88,21 @@ double zlanhp(char* norm, char* uplo, blasint* n, double complex* ap, double* wo
 /* Real Implementation for Hooks */
 
 
-double flexiblas_real_zlanhp_(void* norm, void* uplo, void* n, void* ap, void* work)
+double flexiblas_real_zlanhp_(void* norm, void* uplo, void* n, void* ap, void* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo)
 {
-	double (*fn) (void* norm, void* uplo, void* n, void* ap, void* work);
+	double (*fn) (void* norm, void* uplo, void* n, void* ap, void* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
 	double ret;
 
 	*(void **) & fn = current_backend->lapack.zlanhp.f77_blas_function; 
 
-		ret = fn((void*) norm, (void*) uplo, (void*) n, (void*) ap, (void*) work); 
+		ret = fn((void*) norm, (void*) uplo, (void*) n, (void*) ap, (void*) work, ( flexiblas_fortran_charlen_t ) len_norm, ( flexiblas_fortran_charlen_t ) len_uplo); 
 
 	return ret ;
 }
 #ifndef __APPLE__
-double flexiblas_real_zlanhp(void* norm, void* uplo, void* n, void* ap, void* work) __attribute__((alias("flexiblas_real_zlanhp_")));
+double flexiblas_real_zlanhp(void* norm, void* uplo, void* n, void* ap, void* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_real_zlanhp_")));
 #else
-double flexiblas_real_zlanhp(void* norm, void* uplo, void* n, void* ap, void* work){return flexiblas_real_zlanhp_((void*) norm, (void*) uplo, (void*) n, (void*) ap, (void*) work);}
+double flexiblas_real_zlanhp(void* norm, void* uplo, void* n, void* ap, void* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo){return flexiblas_real_zlanhp_((void*) norm, (void*) uplo, (void*) n, (void*) ap, (void*) work, (flexiblas_fortran_charlen_t) len_norm, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 
@@ -106,10 +111,10 @@ double flexiblas_real_zlanhp(void* norm, void* uplo, void* n, void* ap, void* wo
 /* Chainloader for Hooks */
 
 
-double flexiblas_chain_zlanhp_(void* norm, void* uplo, void* n, void* ap, void* work)
+double flexiblas_chain_zlanhp_(void* norm, void* uplo, void* n, void* ap, void* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo)
 {
-	double (*fn) (void* norm, void* uplo, void* n, void* ap, void* work);
-	double (*fn_hook) (void* norm, void* uplo, void* n, void* ap, void* work);
+	double (*fn) (void* norm, void* uplo, void* n, void* ap, void* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
+	double (*fn_hook) (void* norm, void* uplo, void* n, void* ap, void* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
 	double ret;
 
 	*(void **) &fn      = current_backend->lapack.zlanhp.f77_blas_function; 
@@ -117,17 +122,17 @@ double flexiblas_chain_zlanhp_(void* norm, void* uplo, void* n, void* ap, void* 
     hook_pos_zlanhp ++;
     if( hook_pos_zlanhp < __flexiblas_hooks->zlanhp.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->zlanhp.f77_hook_function[hook_pos_zlanhp];
-        ret = fn_hook((void*) norm, (void*) uplo, (void*) n, (void*) ap, (void*) work);
+        ret = fn_hook((void*) norm, (void*) uplo, (void*) n, (void*) ap, (void*) work, ( flexiblas_fortran_charlen_t )len_norm, ( flexiblas_fortran_charlen_t )len_uplo);
     } else {
         hook_pos_zlanhp = 0;
-		ret = fn((void*) norm, (void*) uplo, (void*) n, (void*) ap, (void*) work); 
+		ret = fn((void*) norm, (void*) uplo, (void*) n, (void*) ap, (void*) work, ( flexiblas_fortran_charlen_t ) len_norm, ( flexiblas_fortran_charlen_t ) len_uplo); 
 	}
 	return ret ;
 }
 #ifndef __APPLE__
-double flexiblas_chain_zlanhp(void* norm, void* uplo, void* n, void* ap, void* work) __attribute__((alias("flexiblas_chain_zlanhp_")));
+double flexiblas_chain_zlanhp(void* norm, void* uplo, void* n, void* ap, void* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_chain_zlanhp_")));
 #else
-double flexiblas_chain_zlanhp(void* norm, void* uplo, void* n, void* ap, void* work){return flexiblas_chain_zlanhp_((void*) norm, (void*) uplo, (void*) n, (void*) ap, (void*) work);}
+double flexiblas_chain_zlanhp(void* norm, void* uplo, void* n, void* ap, void* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo){return flexiblas_chain_zlanhp_((void*) norm, (void*) uplo, (void*) n, (void*) ap, (void*) work, (flexiblas_fortran_charlen_t) len_norm, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 

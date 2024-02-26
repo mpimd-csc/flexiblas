@@ -52,12 +52,21 @@
 
 /* BLAS Backend Int Size  */
 #ifndef Int
-#ifndef INTEGER8
+#ifndef FLEXIBLAS_INTEGER8
 #define Int 	int
 #else
 #define Int 	int64_t
 #endif
 #endif
+
+#ifndef blasint
+#ifndef FLEXIBLAS_INTEGER8
+#define blasint 	int
+#else
+#define blasint 	int64_t
+#endif
+#endif
+
 
 #include "cscutils/inifile.h"
 #include "flexiblas_structures.h"

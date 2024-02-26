@@ -104,7 +104,7 @@ void flexiblas_real_cblas_cher(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
             F77_UL = C2F_CHAR(&UL);
 #endif
 
-            FC_GLOBAL(cher,CHER)(F77_UL, &F77_N, &alpha, X, &F77_incX, A, &F77_lda);
+            FC_GLOBAL(cher,CHER)(F77_UL, &F77_N, &alpha, X, &F77_incX, A, &F77_lda, 1);
 
         }  else if (layout == CblasRowMajor)
         {
@@ -155,7 +155,7 @@ void flexiblas_real_cblas_cher(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo,
             else  {
                 COPY_CONST_PTR(x,X);
             }
-            FC_GLOBAL(cher,CHER)(F77_UL, &F77_N, &alpha, x, &F77_incX, A, &F77_lda);
+            FC_GLOBAL(cher,CHER)(F77_UL, &F77_N, &alpha, x, &F77_incX, A, &F77_lda, 1);
         } else
         {
             cblas_xerbla(1, "cblas_cher","Illegal layout setting, %d\n", layout);

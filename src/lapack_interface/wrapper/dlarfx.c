@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_dlarfx = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(dlarfx,DLARFX)(char* side, blasint* m, blasint* n, double* v, double* tau, double* c, blasint* ldc, double* work)
+void FC_GLOBAL(dlarfx,DLARFX)(char* side, blasint* m, blasint* n, double* v, double* tau, double* c, blasint* ldc, double* work, flexiblas_fortran_charlen_t len_side)
 #else
-void FC_GLOBAL(dlarfx,DLARFX)(char* side, blasint* m, blasint* n, double* v, double* tau, double* c, blasint* ldc, double* work)
+void FC_GLOBAL(dlarfx,DLARFX)(char* side, blasint* m, blasint* n, double* v, double* tau, double* c, blasint* ldc, double* work, flexiblas_fortran_charlen_t len_side)
 #endif
 {
-	void (*fn) (void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work);
-	void (*fn_hook) (void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work);
+	void (*fn) (void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work, flexiblas_fortran_charlen_t len_side);
+	void (*fn_hook) (void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work, flexiblas_fortran_charlen_t len_side);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL(dlarfx,DLARFX)(char* side, blasint* m, blasint* n, double* v, dou
 	*(void **) & fn = current_backend->lapack.dlarfx.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->dlarfx.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) side, (void*) m, (void*) n, (void*) v, (void*) tau, (void*) c, (void*) ldc, (void*) work); 
+		fn((void*) side, (void*) m, (void*) n, (void*) v, (void*) tau, (void*) c, (void*) ldc, (void*) work, ( flexiblas_fortran_charlen_t ) len_side); 
 		return;
 	} else {
 		hook_pos_dlarfx = 0;
-		fn_hook((void*) side, (void*) m, (void*) n, (void*) v, (void*) tau, (void*) c, (void*) ldc, (void*) work);
+		fn_hook((void*) side, (void*) m, (void*) n, (void*) v, (void*) tau, (void*) c, (void*) ldc, (void*) work, ( flexiblas_fortran_charlen_t ) len_side);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dlarfx_(char* side, blasint* m, blasint* n, double* v, double* tau, double* c, blasint* ldc, double* work) __attribute__((alias(MTS(FC_GLOBAL(dlarfx,DLARFX)))));
+void dlarfx_(char* side, blasint* m, blasint* n, double* v, double* tau, double* c, blasint* ldc, double* work, flexiblas_fortran_charlen_t len_side) __attribute__((alias(MTS(FC_GLOBAL(dlarfx,DLARFX)))));
 #else
 #ifndef __APPLE__
-void dlarfx(char* side, blasint* m, blasint* n, double* v, double* tau, double* c, blasint* ldc, double* work) __attribute__((alias(MTS(FC_GLOBAL(dlarfx,DLARFX)))));
+void dlarfx(char* side, blasint* m, blasint* n, double* v, double* tau, double* c, blasint* ldc, double* work, flexiblas_fortran_charlen_t len_side) __attribute__((alias(MTS(FC_GLOBAL(dlarfx,DLARFX)))));
 #else
-void dlarfx(char* side, blasint* m, blasint* n, double* v, double* tau, double* c, blasint* ldc, double* work){ FC_GLOBAL(dlarfx,DLARFX)((void*) side, (void*) m, (void*) n, (void*) v, (void*) tau, (void*) c, (void*) ldc, (void*) work); }
+void dlarfx(char* side, blasint* m, blasint* n, double* v, double* tau, double* c, blasint* ldc, double* work, flexiblas_fortran_charlen_t len_side){ FC_GLOBAL(dlarfx,DLARFX)((void*) side, (void*) m, (void*) n, (void*) v, (void*) tau, (void*) c, (void*) ldc, (void*) work, (flexiblas_fortran_charlen_t) len_side); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void dlarfx(char* side, blasint* m, blasint* n, double* v, double* tau, double* 
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_dlarfx_(void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work)
+void flexiblas_real_dlarfx_(void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work, flexiblas_fortran_charlen_t len_side)
 {
-	void (*fn) (void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work);
+	void (*fn) (void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work, flexiblas_fortran_charlen_t len_side);
 
 	*(void **) & fn = current_backend->lapack.dlarfx.f77_blas_function; 
 
-		fn((void*) side, (void*) m, (void*) n, (void*) v, (void*) tau, (void*) c, (void*) ldc, (void*) work); 
+		fn((void*) side, (void*) m, (void*) n, (void*) v, (void*) tau, (void*) c, (void*) ldc, (void*) work, ( flexiblas_fortran_charlen_t ) len_side); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_dlarfx(void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work) __attribute__((alias("flexiblas_real_dlarfx_")));
+void flexiblas_real_dlarfx(void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work, flexiblas_fortran_charlen_t len_side) __attribute__((alias("flexiblas_real_dlarfx_")));
 #else
-void flexiblas_real_dlarfx(void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work){flexiblas_real_dlarfx_((void*) side, (void*) m, (void*) n, (void*) v, (void*) tau, (void*) c, (void*) ldc, (void*) work);}
+void flexiblas_real_dlarfx(void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work, flexiblas_fortran_charlen_t len_side){flexiblas_real_dlarfx_((void*) side, (void*) m, (void*) n, (void*) v, (void*) tau, (void*) c, (void*) ldc, (void*) work, (flexiblas_fortran_charlen_t) len_side);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_dlarfx(void* side, void* m, void* n, void* v, void* tau, voi
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_dlarfx_(void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work)
+void flexiblas_chain_dlarfx_(void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work, flexiblas_fortran_charlen_t len_side)
 {
-	void (*fn) (void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work);
-	void (*fn_hook) (void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work);
+	void (*fn) (void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work, flexiblas_fortran_charlen_t len_side);
+	void (*fn_hook) (void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work, flexiblas_fortran_charlen_t len_side);
 
 	*(void **) &fn      = current_backend->lapack.dlarfx.f77_blas_function; 
 
     hook_pos_dlarfx ++;
     if( hook_pos_dlarfx < __flexiblas_hooks->dlarfx.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->dlarfx.f77_hook_function[hook_pos_dlarfx];
-        fn_hook((void*) side, (void*) m, (void*) n, (void*) v, (void*) tau, (void*) c, (void*) ldc, (void*) work);
+        fn_hook((void*) side, (void*) m, (void*) n, (void*) v, (void*) tau, (void*) c, (void*) ldc, (void*) work, ( flexiblas_fortran_charlen_t ) len_side);
     } else {
         hook_pos_dlarfx = 0;
-		fn((void*) side, (void*) m, (void*) n, (void*) v, (void*) tau, (void*) c, (void*) ldc, (void*) work); 
+		fn((void*) side, (void*) m, (void*) n, (void*) v, (void*) tau, (void*) c, (void*) ldc, (void*) work, ( flexiblas_fortran_charlen_t ) len_side); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_dlarfx(void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work) __attribute__((alias("flexiblas_chain_dlarfx_")));
+void flexiblas_chain_dlarfx(void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work, flexiblas_fortran_charlen_t len_side) __attribute__((alias("flexiblas_chain_dlarfx_")));
 #else
-void flexiblas_chain_dlarfx(void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work){flexiblas_chain_dlarfx_((void*) side, (void*) m, (void*) n, (void*) v, (void*) tau, (void*) c, (void*) ldc, (void*) work);}
+void flexiblas_chain_dlarfx(void* side, void* m, void* n, void* v, void* tau, void* c, void* ldc, void* work, flexiblas_fortran_charlen_t len_side){flexiblas_chain_dlarfx_((void*) side, (void*) m, (void*) n, (void*) v, (void*) tau, (void*) c, (void*) ldc, (void*) work, (flexiblas_fortran_charlen_t) len_side);}
 #endif
 
 

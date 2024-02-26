@@ -1,3 +1,8 @@
+3.4.2-rc1 (February 26, 2024)
+-----------------------------
+- Fix hidden Fortran arguments in all routines. Fixes Github Issue #45
+
+
 3.4.1 (January 10, 2023)
 ------------------------
 - Fix uninitialized values in C/ZGEQP3RK existing in LAPACK 3.12.0.

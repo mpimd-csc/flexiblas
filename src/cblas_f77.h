@@ -24,8 +24,9 @@
 #include <complex.h>
 #include "flexiblas_fortran_mangle.h"
 #include "flexiblas.h"
+#include "flexiblas_config.h"
 
-#ifdef INTEGER8
+#ifdef FLEXIBLAS_INTEGER8
 	#include <stdint.h>
 	#define F77_INT int64_t
 #endif
@@ -43,6 +44,16 @@
    #define FINT const int *
    #define FINT2 int *
 #endif
+
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
+#if __GNUC__ > 7
+typedef size_t flexiblas_fortran_charlen_t;
+#else
+typedef int flexiblas_fortran_charlen_t;
+#endif
+#endif
+
 
 
 #define COPY_CONST_PTR(a,b) memcpy(&a, &b, sizeof(void*))
@@ -139,81 +150,81 @@ extern "C" {
 
 /* Single Precision */
 
-   void FC_GLOBAL(sgemv,SGEMV)(FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
-   void FC_GLOBAL(sgbmv,SGBMV)(FCHAR, FINT, FINT, FINT, FINT, const float *,  const float *, FINT, const float *, FINT, const float *, float *, FINT);
-   void FC_GLOBAL(ssymv,SSYMV)(FCHAR, FINT, const float *, const float *, FINT, const float *,  FINT, const float *, float *, FINT);
-   void FC_GLOBAL(ssbmv,SSBMV)(FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
-   void FC_GLOBAL(sspmv,SSPMV)(FCHAR, FINT, const float *, const float *, const float *, FINT, const float *, float *, FINT);
-   void FC_GLOBAL(strmv,STRMV)( FCHAR, FCHAR, FCHAR, FINT, const float *, FINT, float *, FINT);
-   void FC_GLOBAL(stbmv,STBMV)( FCHAR, FCHAR, FCHAR, FINT, FINT, const float *, FINT, float *, FINT);
-   void FC_GLOBAL(strsv,STRSV)( FCHAR, FCHAR, FCHAR, FINT, const float *, FINT, float *, FINT);
-   void FC_GLOBAL(stbsv,STBSV)( FCHAR, FCHAR, FCHAR, FINT, FINT, const float *, FINT, float *, FINT);
-   void FC_GLOBAL(stpmv,STPMV)( FCHAR, FCHAR, FCHAR, FINT, const float *, float *, FINT);
-   void FC_GLOBAL(stpsv,STPSV)( FCHAR, FCHAR, FCHAR, FINT, const float *, float *, FINT);
+   void FC_GLOBAL(sgemv,SGEMV)(FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT, flexiblas_fortran_charlen_t );
+   void FC_GLOBAL(sgbmv,SGBMV)(FCHAR, FINT, FINT, FINT, FINT, const float *,  const float *, FINT, const float *, FINT, const float *, float *, FINT, flexiblas_fortran_charlen_t );
+   void FC_GLOBAL(ssymv,SSYMV)(FCHAR, FINT, const float *, const float *, FINT, const float *,  FINT, const float *, float *, FINT, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(ssbmv,SSBMV)(FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(sspmv,SSPMV)(FCHAR, FINT, const float *, const float *, const float *, FINT, const float *, float *, FINT, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(strmv,STRMV)( FCHAR, FCHAR, FCHAR, FINT, const float *, FINT, float *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(stbmv,STBMV)( FCHAR, FCHAR, FCHAR, FINT, FINT, const float *, FINT, float *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(strsv,STRSV)( FCHAR, FCHAR, FCHAR, FINT, const float *, FINT, float *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(stbsv,STBSV)( FCHAR, FCHAR, FCHAR, FINT, FINT, const float *, FINT, float *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(stpmv,STPMV)( FCHAR, FCHAR, FCHAR, FINT, const float *, float *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(stpsv,STPSV)( FCHAR, FCHAR, FCHAR, FINT, const float *, float *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
    void FC_GLOBAL(sger,SGER)( FINT, FINT, const float *, const float *, FINT, const float *, FINT, float *, FINT);
-   void FC_GLOBAL(ssyr,SSYR)(FCHAR, FINT, const float *, const float *, FINT, float *, FINT);
-   void FC_GLOBAL(sspr,SSPR)(FCHAR, FINT, const float *, const float *, FINT, float *);
-   void FC_GLOBAL(sspr2,SSPR2)(FCHAR, FINT, const float *, const float *, FINT, const float *, FINT,  float *);
-   void FC_GLOBAL(ssyr2,SSYR2)(FCHAR, FINT, const float *, const float *, FINT, const float *, FINT,  float *, FINT);
+   void FC_GLOBAL(ssyr,SSYR)(FCHAR, FINT, const float *, const float *, FINT, float *, FINT, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(sspr,SSPR)(FCHAR, FINT, const float *, const float *, FINT, float *, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(sspr2,SSPR2)(FCHAR, FINT, const float *, const float *, FINT, const float *, FINT,  float *, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(ssyr2,SSYR2)(FCHAR, FINT, const float *, const float *, FINT, const float *, FINT,  float *, FINT, flexiblas_fortran_charlen_t);
 
 /* Double Precision */
 
-   void FC_GLOBAL(dgemv,DGEMV)(FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
-   void FC_GLOBAL(dgbmv,DGBMV)(FCHAR, FINT, FINT, FINT, FINT, const double *,  const double *, FINT, const double *, FINT, const double *, double *, FINT);
-   void FC_GLOBAL(dsymv,DSYMV)(FCHAR, FINT, const double *, const double *, FINT, const double *,  FINT, const double *, double *, FINT);
-   void FC_GLOBAL(dsbmv,DSBMV)(FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
-   void FC_GLOBAL(dspmv,DSPMV)(FCHAR, FINT, const double *, const double *, const double *, FINT, const double *, double *, FINT);
-   void FC_GLOBAL(dtrmv,DTRMV)( FCHAR, FCHAR, FCHAR, FINT, const double *, FINT, double *, FINT);
-   void FC_GLOBAL(dtbmv,DTBMV)( FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, FINT, double *, FINT);
-   void FC_GLOBAL(dtrsv,DTRSV)( FCHAR, FCHAR, FCHAR, FINT, const double *, FINT, double *, FINT);
-   void FC_GLOBAL(dtbsv,DTBSV)( FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, FINT, double *, FINT);
-   void FC_GLOBAL(dtpmv,DTPMV)( FCHAR, FCHAR, FCHAR, FINT, const double *, double *, FINT);
-   void FC_GLOBAL(dtpsv,DTPSV)( FCHAR, FCHAR, FCHAR, FINT, const double *, double *, FINT);
+   void FC_GLOBAL(dgemv,DGEMV)(FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(dgbmv,DGBMV)(FCHAR, FINT, FINT, FINT, FINT, const double *,  const double *, FINT, const double *, FINT, const double *, double *, FINT, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(dsymv,DSYMV)(FCHAR, FINT, const double *, const double *, FINT, const double *,  FINT, const double *, double *, FINT, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(dsbmv,DSBMV)(FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(dspmv,DSPMV)(FCHAR, FINT, const double *, const double *, const double *, FINT, const double *, double *, FINT, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(dtrmv,DTRMV)( FCHAR, FCHAR, FCHAR, FINT, const double *, FINT, double *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(dtbmv,DTBMV)( FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, FINT, double *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(dtrsv,DTRSV)( FCHAR, FCHAR, FCHAR, FINT, const double *, FINT, double *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(dtbsv,DTBSV)( FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, FINT, double *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(dtpmv,DTPMV)( FCHAR, FCHAR, FCHAR, FINT, const double *, double *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(dtpsv,DTPSV)( FCHAR, FCHAR, FCHAR, FINT, const double *, double *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
    void FC_GLOBAL(dger,DGER)( FINT, FINT, const double *, const double *, FINT, const double *, FINT, double *, FINT);
-   void FC_GLOBAL(dsyr,DSYR)(FCHAR, FINT, const double *, const double *, FINT, double *, FINT);
-   void FC_GLOBAL(dspr,DSPR)(FCHAR, FINT, const double *, const double *, FINT, double *);
-   void FC_GLOBAL(dspr2,DSPR2)(FCHAR, FINT, const double *, const double *, FINT, const double *, FINT,  double *);
-   void FC_GLOBAL(dsyr2,DSYR2)(FCHAR, FINT, const double *, const double *, FINT, const double *, FINT,  double *, FINT);
+   void FC_GLOBAL(dsyr,DSYR)(FCHAR, FINT, const double *, const double *, FINT, double *, FINT, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(dspr,DSPR)(FCHAR, FINT, const double *, const double *, FINT, double *, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(dspr2,DSPR2)(FCHAR, FINT, const double *, const double *, FINT, const double *, FINT,  double *, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(dsyr2,DSYR2)(FCHAR, FINT, const double *, const double *, FINT, const double *, FINT,  double *, FINT, flexiblas_fortran_charlen_t);
 
 /* Single Complex Precision */
 
-   void FC_GLOBAL(cgemv,CGEMV)(FCHAR, FINT, FINT, const void *, const void *, FINT, const void *, FINT, const void *, void *, FINT);
-   void FC_GLOBAL(cgbmv,CGBMV)(FCHAR, FINT, FINT, FINT, FINT, const void *,  const void *, FINT, const void *, FINT, const void *, void *, FINT);
-   void FC_GLOBAL(chemv,CHEMV)(FCHAR, FINT, const void *, const void *, FINT, const void *, FINT, const void *, void *, FINT);
-   void FC_GLOBAL(chbmv,CHBMV)(FCHAR, FINT, FINT, const void *, const void *, FINT, const void *, FINT, const void *, void *, FINT);
-   void FC_GLOBAL(chpmv,CHPMV)(FCHAR, FINT, const void *, const void *, const void *, FINT, const void *, void *, FINT);
-   void FC_GLOBAL(ctrmv,CTRMV)( FCHAR, FCHAR, FCHAR, FINT, const void *, FINT, void *, FINT);
-   void FC_GLOBAL(ctbmv,CTBMV)( FCHAR, FCHAR, FCHAR, FINT, FINT, const void *, FINT, void *, FINT);
-   void FC_GLOBAL(ctpmv,CTPMV)( FCHAR, FCHAR, FCHAR, FINT, const void *, void *, FINT);
-   void FC_GLOBAL(ctrsv,CTRSV)( FCHAR, FCHAR, FCHAR, FINT, const void *, FINT, void *, FINT);
-   void FC_GLOBAL(ctbsv,CTBSV)( FCHAR, FCHAR, FCHAR, FINT, FINT, const void *, FINT, void *, FINT);
-   void FC_GLOBAL(ctpsv,CTPSV)( FCHAR, FCHAR, FCHAR, FINT, const void *, void *,FINT);
+   void FC_GLOBAL(cgemv,CGEMV)(FCHAR, FINT, FINT, const void *, const void *, FINT, const void *, FINT, const void *, void *, FINT, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(cgbmv,CGBMV)(FCHAR, FINT, FINT, FINT, FINT, const void *,  const void *, FINT, const void *, FINT, const void *, void *, FINT, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(chemv,CHEMV)(FCHAR, FINT, const void *, const void *, FINT, const void *, FINT, const void *, void *, FINT, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(chbmv,CHBMV)(FCHAR, FINT, FINT, const void *, const void *, FINT, const void *, FINT, const void *, void *, FINT, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(chpmv,CHPMV)(FCHAR, FINT, const void *, const void *, const void *, FINT, const void *, void *, FINT, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(ctrmv,CTRMV)( FCHAR, FCHAR, FCHAR, FINT, const void *, FINT, void *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(ctbmv,CTBMV)( FCHAR, FCHAR, FCHAR, FINT, FINT, const void *, FINT, void *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(ctpmv,CTPMV)( FCHAR, FCHAR, FCHAR, FINT, const void *, void *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(ctrsv,CTRSV)( FCHAR, FCHAR, FCHAR, FINT, const void *, FINT, void *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(ctbsv,CTBSV)( FCHAR, FCHAR, FCHAR, FINT, FINT, const void *, FINT, void *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(ctpsv,CTPSV)( FCHAR, FCHAR, FCHAR, FINT, const void *, void *,FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
    void FC_GLOBAL(cgerc,CGERC)( FINT, FINT, const void *, const void *, FINT, const void *, FINT, void *, FINT);
    void FC_GLOBAL(cgeru,CGERU)( FINT, FINT, const void *, const void *, FINT, const void *, FINT, void *,  FINT);
-   void FC_GLOBAL(cher,CHER)(FCHAR, FINT, const float *, const void *, FINT, void *, FINT);
-   void FC_GLOBAL(cher2,CHER2)(FCHAR, FINT, const void *, const void *, FINT, const void *, FINT, void *, FINT);
-   void FC_GLOBAL(chpr,CHPR)(FCHAR, FINT, const float *, const void *, FINT, void *);
-   void FC_GLOBAL(chpr2,CHPR2)(FCHAR, FINT, const float *, const void *, FINT, const void *, FINT, void *);
+   void FC_GLOBAL(cher,CHER)(FCHAR, FINT, const float *, const void *, FINT, void *, FINT, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(cher2,CHER2)(FCHAR, FINT, const void *, const void *, FINT, const void *, FINT, void *, FINT, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(chpr,CHPR)(FCHAR, FINT, const float *, const void *, FINT, void *, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(chpr2,CHPR2)(FCHAR, FINT, const float *, const void *, FINT, const void *, FINT, void *, flexiblas_fortran_charlen_t);
 
 /* Double Complex Precision */
 
-   void FC_GLOBAL(zgemv,ZGEMV)(FCHAR, FINT, FINT, const void *, const void *, FINT, const void *, FINT, const void *, void *, FINT);
-   void FC_GLOBAL(zgbmv,ZGBMV)(FCHAR, FINT, FINT, FINT, FINT, const void *,  const void *, FINT, const void *, FINT, const void *, void *, FINT);
-   void FC_GLOBAL(zhemv,ZHEMV)(FCHAR, FINT, const void *, const void *, FINT, const void *, FINT, const void *, void *, FINT);
-   void FC_GLOBAL(zhbmv,ZHBMV)(FCHAR, FINT, FINT, const void *, const void *, FINT, const void *, FINT, const void *, void *, FINT);
-   void FC_GLOBAL(zhpmv,ZHPMV)(FCHAR, FINT, const void *, const void *, const void *, FINT, const void *, void *, FINT);
-   void FC_GLOBAL(ztrmv,ZTRMV)( FCHAR, FCHAR, FCHAR, FINT, const void *, FINT, void *, FINT);
-   void FC_GLOBAL(ztbmv,ZTBMV)( FCHAR, FCHAR, FCHAR, FINT, FINT, const void *, FINT, void *, FINT);
-   void FC_GLOBAL(ztpmv,ZTPMV)( FCHAR, FCHAR, FCHAR, FINT, const void *, void *, FINT);
-   void FC_GLOBAL(ztrsv,ZTRSV)( FCHAR, FCHAR, FCHAR, FINT, const void *, FINT, void *, FINT);
-   void FC_GLOBAL(ztbsv,ZTBSV)( FCHAR, FCHAR, FCHAR, FINT, FINT, const void *, FINT, void *, FINT);
-   void FC_GLOBAL(ztpsv,ZTPSV)( FCHAR, FCHAR, FCHAR, FINT, const void *, void *,FINT);
+   void FC_GLOBAL(zgemv,ZGEMV)(FCHAR, FINT, FINT, const void *, const void *, FINT, const void *, FINT, const void *, void *, FINT, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(zgbmv,ZGBMV)(FCHAR, FINT, FINT, FINT, FINT, const void *,  const void *, FINT, const void *, FINT, const void *, void *, FINT, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(zhemv,ZHEMV)(FCHAR, FINT, const void *, const void *, FINT, const void *, FINT, const void *, void *, FINT, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(zhbmv,ZHBMV)(FCHAR, FINT, FINT, const void *, const void *, FINT, const void *, FINT, const void *, void *, FINT, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(zhpmv,ZHPMV)(FCHAR, FINT, const void *, const void *, const void *, FINT, const void *, void *, FINT, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(ztrmv,ZTRMV)( FCHAR, FCHAR, FCHAR, FINT, const void *, FINT, void *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(ztbmv,ZTBMV)( FCHAR, FCHAR, FCHAR, FINT, FINT, const void *, FINT, void *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(ztpmv,ZTPMV)( FCHAR, FCHAR, FCHAR, FINT, const void *, void *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(ztrsv,ZTRSV)( FCHAR, FCHAR, FCHAR, FINT, const void *, FINT, void *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(ztbsv,ZTBSV)( FCHAR, FCHAR, FCHAR, FINT, FINT, const void *, FINT, void *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(ztpsv,ZTPSV)( FCHAR, FCHAR, FCHAR, FINT, const void *, void *,FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
    void FC_GLOBAL(zgerc,ZGERC)( FINT, FINT, const void *, const void *, FINT, const void *, FINT, void *, FINT);
    void FC_GLOBAL(zgeru,ZGERU)( FINT, FINT, const void *, const void *, FINT, const void *, FINT, void *,  FINT);
-   void FC_GLOBAL(zher,ZHER)(FCHAR, FINT, const double *, const void *, FINT, void *, FINT);
-   void FC_GLOBAL(zher2,ZHER2)(FCHAR, FINT, const void *, const void *, FINT, const void *, FINT, void *, FINT);
-   void FC_GLOBAL(zhpr,ZHPR)(FCHAR, FINT, const double *, const void *, FINT, void *);
-   void FC_GLOBAL(zhpr2,ZHPR2)(FCHAR, FINT, const double *, const void *, FINT, const void *, FINT, void *);
+   void FC_GLOBAL(zher,ZHER)(FCHAR, FINT, const double *, const void *, FINT, void *, FINT, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(zher2,ZHER2)(FCHAR, FINT, const void *, const void *, FINT, const void *, FINT, void *, FINT, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(zhpr,ZHPR)(FCHAR, FINT, const double *, const void *, FINT, void *, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(zhpr2,ZHPR2)(FCHAR, FINT, const double *, const void *, FINT, const void *, FINT, void *, flexiblas_fortran_charlen_t);
 
 /*
  * Level 3 Fortran Prototypes
@@ -221,45 +232,45 @@ extern "C" {
 
 /* Single Precision */
 
-   void FC_GLOBAL(sgemm,SGEMM)(FCHAR, FCHAR, FINT, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
-   void FC_GLOBAL(ssymm,SSYMM)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
-   void FC_GLOBAL(ssyrk,SSYRK)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, float *, FINT);
-   void FC_GLOBAL(ssyr2k,SSYR2K)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
-   void FC_GLOBAL(strmm,STRMM)(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, float *, FINT);
-   void FC_GLOBAL(strsm,STRSM)(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, float *, FINT);
+   void FC_GLOBAL(sgemm,SGEMM)(FCHAR, FCHAR, FINT, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(ssymm,SSYMM)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(ssyrk,SSYRK)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, float *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(ssyr2k,SSYR2K)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(strmm,STRMM)(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, float *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(strsm,STRSM)(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, float *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
 
 /* Double Precision */
 
-   void FC_GLOBAL(dgemm,DGEMM)(FCHAR, FCHAR, FINT, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
-   void FC_GLOBAL(dsymm,DSYMM)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
-   void FC_GLOBAL(dsyrk,DSYRK)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, double *, FINT);
-   void FC_GLOBAL(dsyr2k,DSYR2K)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
-   void FC_GLOBAL(dtrmm,DTRMM)(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, double *, FINT);
-   void FC_GLOBAL(dtrsm,DTRSM)(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, double *, FINT);
+   void FC_GLOBAL(dgemm,DGEMM)(FCHAR, FCHAR, FINT, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(dsymm,DSYMM)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(dsyrk,DSYRK)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, double *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(dsyr2k,DSYR2K)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(dtrmm,DTRMM)(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, double *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(dtrsm,DTRSM)(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, double *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
 
 /* Single Complex Precision */
 
-   void FC_GLOBAL(cgemm,CGEMM)(FCHAR, FCHAR, FINT, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
-   void FC_GLOBAL(csymm,CSYMM)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
-   void FC_GLOBAL(chemm,CHEMM)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
-   void FC_GLOBAL(csyrk,CSYRK)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, float *, FINT);
-   void FC_GLOBAL(cherk,CHERK)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, float *, FINT);
-   void FC_GLOBAL(csyr2k,CSYR2K)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
-   void FC_GLOBAL(cher2k,CHER2K)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT);
-   void FC_GLOBAL(ctrmm,CTRMM)(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, float *, FINT);
-   void FC_GLOBAL(ctrsm,CTRSM)(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, float *, FINT);
+   void FC_GLOBAL(cgemm,CGEMM)(FCHAR, FCHAR, FINT, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(csymm,CSYMM)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(chemm,CHEMM)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(csyrk,CSYRK)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, float *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(cherk,CHERK)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, float *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(csyr2k,CSYR2K)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(cher2k,CHER2K)(FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(ctrmm,CTRMM)(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, float *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(ctrsm,CTRSM)(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, float *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
 
 /* Double Complex Precision */
 
-   void FC_GLOBAL(zgemm,ZGEMM)(FCHAR, FCHAR, FINT, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
-   void FC_GLOBAL(zsymm,ZSYMM)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
-   void FC_GLOBAL(zhemm,ZHEMM)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
-   void FC_GLOBAL(zsyrk,ZSYRK)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, double *, FINT);
-   void FC_GLOBAL(zherk,ZHERK)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, double *, FINT);
-   void FC_GLOBAL(zsyr2k,ZSYR2K)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
-   void FC_GLOBAL(zher2k,ZHER2K)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT);
-   void FC_GLOBAL(ztrmm,ZTRMM)(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, double *, FINT);
-   void FC_GLOBAL(ztrsm,ZTRSM)(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, double *, FINT);
+   void FC_GLOBAL(zgemm,ZGEMM)(FCHAR, FCHAR, FINT, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(zsymm,ZSYMM)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(zhemm,ZHEMM)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(zsyrk,ZSYRK)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, double *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(zherk,ZHERK)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, double *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(zsyr2k,ZSYR2K)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(zher2k,ZHER2K)(FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(ztrmm,ZTRMM)(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, double *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(ztrsm,ZTRSM)(FCHAR, FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, double *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
 
 
 /* BLAS Extensions  */
@@ -268,15 +279,15 @@ extern "C" {
    void FC_GLOBAL(caxpby,CAXPBY)( FINT, const float *, const void *, FINT, const void *, void*, FINT);
    void FC_GLOBAL(zaxpby,ZAXPBY)( FINT, const float *, const void *, FINT, const void *, void*, FINT);
 
-   void FC_GLOBAL(somatcopy,SOMATCOPY)(FCHAR, FCHAR, FINT, FINT, const float * , const float*, FINT, float *, FINT);
-   void FC_GLOBAL(domatcopy,DOMATCOPY)(FCHAR, FCHAR, FINT, FINT, const double * , const double*, FINT, double *, FINT);
-   void FC_GLOBAL(comatcopy,COMATCOPY)(FCHAR, FCHAR, FINT, FINT, const void * , const void*, FINT, void *, FINT);
-   void FC_GLOBAL(zomatcopy,ZOMATCOPY)(FCHAR, FCHAR, FINT, FINT, const void * , const void*, FINT, void *, FINT);
+   void FC_GLOBAL(somatcopy,SOMATCOPY)(FCHAR, FCHAR, FINT, FINT, const float * , const float*, FINT, float *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(domatcopy,DOMATCOPY)(FCHAR, FCHAR, FINT, FINT, const double * , const double*, FINT, double *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(comatcopy,COMATCOPY)(FCHAR, FCHAR, FINT, FINT, const void * , const void*, FINT, void *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(zomatcopy,ZOMATCOPY)(FCHAR, FCHAR, FINT, FINT, const void * , const void*, FINT, void *, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
 
-   void FC_GLOBAL(simatcopy,SIMATCOPY)(FCHAR, FCHAR, FINT, FINT, const float * , float*, FINT, FINT);
-   void FC_GLOBAL(dimatcopy,DIMATCOPY)(FCHAR, FCHAR, FINT, FINT, const double * ,double*, FINT, FINT);
-   void FC_GLOBAL(cimatcopy,CIMATCOPY)(FCHAR, FCHAR, FINT, FINT, const void * , void*, FINT, FINT);
-   void FC_GLOBAL(zimatcopy,ZIMATCOPY)(FCHAR, FCHAR, FINT, FINT, const void * , void*, FINT, FINT);
+   void FC_GLOBAL(simatcopy,SIMATCOPY)(FCHAR, FCHAR, FINT, FINT, const float * , float*, FINT, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(dimatcopy,DIMATCOPY)(FCHAR, FCHAR, FINT, FINT, const double * ,double*, FINT, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(cimatcopy,CIMATCOPY)(FCHAR, FCHAR, FINT, FINT, const void * , void*, FINT, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
+   void FC_GLOBAL(zimatcopy,ZIMATCOPY)(FCHAR, FCHAR, FINT, FINT, const void * , void*, FINT, FINT, flexiblas_fortran_charlen_t, flexiblas_fortran_charlen_t);
 
    void FC_GLOBAL(sgeadd,SGEADD)(FINT, FINT, const float *, float *, FINT, const float *, float *, FINT);
    void FC_GLOBAL(dgeadd,DGEADD)(FINT, FINT, const double *, double *, FINT, const double *, double *, FINT);

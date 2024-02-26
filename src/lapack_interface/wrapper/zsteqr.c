@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_zsteqr = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(zsteqr,ZSTEQR)(char* compz, blasint* n, double* d, double* e, double complex* z, blasint* ldz, double* work, blasint* info)
+void FC_GLOBAL(zsteqr,ZSTEQR)(char* compz, blasint* n, double* d, double* e, double complex* z, blasint* ldz, double* work, blasint* info, flexiblas_fortran_charlen_t len_compz)
 #else
-void FC_GLOBAL(zsteqr,ZSTEQR)(char* compz, blasint* n, double* d, double* e, double complex* z, blasint* ldz, double* work, blasint* info)
+void FC_GLOBAL(zsteqr,ZSTEQR)(char* compz, blasint* n, double* d, double* e, double complex* z, blasint* ldz, double* work, blasint* info, flexiblas_fortran_charlen_t len_compz)
 #endif
 {
-	void (*fn) (void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info);
-	void (*fn_hook) (void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info);
+	void (*fn) (void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_compz);
+	void (*fn_hook) (void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_compz);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL(zsteqr,ZSTEQR)(char* compz, blasint* n, double* d, double* e, dou
 	*(void **) & fn = current_backend->lapack.zsteqr.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->zsteqr.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info); 
+		fn((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_compz); 
 		return;
 	} else {
 		hook_pos_zsteqr = 0;
-		fn_hook((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info);
+		fn_hook((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_compz);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zsteqr_(char* compz, blasint* n, double* d, double* e, double complex* z, blasint* ldz, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zsteqr,ZSTEQR)))));
+void zsteqr_(char* compz, blasint* n, double* d, double* e, double complex* z, blasint* ldz, double* work, blasint* info, flexiblas_fortran_charlen_t len_compz) __attribute__((alias(MTS(FC_GLOBAL(zsteqr,ZSTEQR)))));
 #else
 #ifndef __APPLE__
-void zsteqr(char* compz, blasint* n, double* d, double* e, double complex* z, blasint* ldz, double* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zsteqr,ZSTEQR)))));
+void zsteqr(char* compz, blasint* n, double* d, double* e, double complex* z, blasint* ldz, double* work, blasint* info, flexiblas_fortran_charlen_t len_compz) __attribute__((alias(MTS(FC_GLOBAL(zsteqr,ZSTEQR)))));
 #else
-void zsteqr(char* compz, blasint* n, double* d, double* e, double complex* z, blasint* ldz, double* work, blasint* info){ FC_GLOBAL(zsteqr,ZSTEQR)((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info); }
+void zsteqr(char* compz, blasint* n, double* d, double* e, double complex* z, blasint* ldz, double* work, blasint* info, flexiblas_fortran_charlen_t len_compz){ FC_GLOBAL(zsteqr,ZSTEQR)((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info, (flexiblas_fortran_charlen_t) len_compz); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void zsteqr(char* compz, blasint* n, double* d, double* e, double complex* z, bl
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_zsteqr_(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info)
+void flexiblas_real_zsteqr_(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_compz)
 {
-	void (*fn) (void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info);
+	void (*fn) (void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_compz);
 
 	*(void **) & fn = current_backend->lapack.zsteqr.f77_blas_function; 
 
-		fn((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info); 
+		fn((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_compz); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_zsteqr(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info) __attribute__((alias("flexiblas_real_zsteqr_")));
+void flexiblas_real_zsteqr(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_compz) __attribute__((alias("flexiblas_real_zsteqr_")));
 #else
-void flexiblas_real_zsteqr(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info){flexiblas_real_zsteqr_((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info);}
+void flexiblas_real_zsteqr(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_compz){flexiblas_real_zsteqr_((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info, (flexiblas_fortran_charlen_t) len_compz);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_zsteqr(void* compz, void* n, void* d, void* e, void* z, void
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_zsteqr_(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info)
+void flexiblas_chain_zsteqr_(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_compz)
 {
-	void (*fn) (void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info);
-	void (*fn_hook) (void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info);
+	void (*fn) (void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_compz);
+	void (*fn_hook) (void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_compz);
 
 	*(void **) &fn      = current_backend->lapack.zsteqr.f77_blas_function; 
 
     hook_pos_zsteqr ++;
     if( hook_pos_zsteqr < __flexiblas_hooks->zsteqr.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->zsteqr.f77_hook_function[hook_pos_zsteqr];
-        fn_hook((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info);
+        fn_hook((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_compz);
     } else {
         hook_pos_zsteqr = 0;
-		fn((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info); 
+		fn((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info, ( flexiblas_fortran_charlen_t ) len_compz); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_zsteqr(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info) __attribute__((alias("flexiblas_chain_zsteqr_")));
+void flexiblas_chain_zsteqr(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_compz) __attribute__((alias("flexiblas_chain_zsteqr_")));
 #else
-void flexiblas_chain_zsteqr(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info){flexiblas_chain_zsteqr_((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info);}
+void flexiblas_chain_zsteqr(void* compz, void* n, void* d, void* e, void* z, void* ldz, void* work, void* info, flexiblas_fortran_charlen_t len_compz){flexiblas_chain_zsteqr_((void*) compz, (void*) n, (void*) d, (void*) e, (void*) z, (void*) ldz, (void*) work, (void*) info, (flexiblas_fortran_charlen_t) len_compz);}
 #endif
 
 

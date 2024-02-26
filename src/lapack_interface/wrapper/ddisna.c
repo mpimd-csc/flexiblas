@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_ddisna = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(ddisna,DDISNA)(char* job, blasint* m, blasint* n, double* d, double* sep, blasint* info)
+void FC_GLOBAL(ddisna,DDISNA)(char* job, blasint* m, blasint* n, double* d, double* sep, blasint* info, flexiblas_fortran_charlen_t len_job)
 #else
-void FC_GLOBAL(ddisna,DDISNA)(char* job, blasint* m, blasint* n, double* d, double* sep, blasint* info)
+void FC_GLOBAL(ddisna,DDISNA)(char* job, blasint* m, blasint* n, double* d, double* sep, blasint* info, flexiblas_fortran_charlen_t len_job)
 #endif
 {
-	void (*fn) (void* job, void* m, void* n, void* d, void* sep, void* info);
-	void (*fn_hook) (void* job, void* m, void* n, void* d, void* sep, void* info);
+	void (*fn) (void* job, void* m, void* n, void* d, void* sep, void* info, flexiblas_fortran_charlen_t len_job);
+	void (*fn_hook) (void* job, void* m, void* n, void* d, void* sep, void* info, flexiblas_fortran_charlen_t len_job);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL(ddisna,DDISNA)(char* job, blasint* m, blasint* n, double* d, doub
 	*(void **) & fn = current_backend->lapack.ddisna.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->ddisna.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) job, (void*) m, (void*) n, (void*) d, (void*) sep, (void*) info); 
+		fn((void*) job, (void*) m, (void*) n, (void*) d, (void*) sep, (void*) info, ( flexiblas_fortran_charlen_t ) len_job); 
 		return;
 	} else {
 		hook_pos_ddisna = 0;
-		fn_hook((void*) job, (void*) m, (void*) n, (void*) d, (void*) sep, (void*) info);
+		fn_hook((void*) job, (void*) m, (void*) n, (void*) d, (void*) sep, (void*) info, ( flexiblas_fortran_charlen_t ) len_job);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void ddisna_(char* job, blasint* m, blasint* n, double* d, double* sep, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ddisna,DDISNA)))));
+void ddisna_(char* job, blasint* m, blasint* n, double* d, double* sep, blasint* info, flexiblas_fortran_charlen_t len_job) __attribute__((alias(MTS(FC_GLOBAL(ddisna,DDISNA)))));
 #else
 #ifndef __APPLE__
-void ddisna(char* job, blasint* m, blasint* n, double* d, double* sep, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(ddisna,DDISNA)))));
+void ddisna(char* job, blasint* m, blasint* n, double* d, double* sep, blasint* info, flexiblas_fortran_charlen_t len_job) __attribute__((alias(MTS(FC_GLOBAL(ddisna,DDISNA)))));
 #else
-void ddisna(char* job, blasint* m, blasint* n, double* d, double* sep, blasint* info){ FC_GLOBAL(ddisna,DDISNA)((void*) job, (void*) m, (void*) n, (void*) d, (void*) sep, (void*) info); }
+void ddisna(char* job, blasint* m, blasint* n, double* d, double* sep, blasint* info, flexiblas_fortran_charlen_t len_job){ FC_GLOBAL(ddisna,DDISNA)((void*) job, (void*) m, (void*) n, (void*) d, (void*) sep, (void*) info, (flexiblas_fortran_charlen_t) len_job); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void ddisna(char* job, blasint* m, blasint* n, double* d, double* sep, blasint* 
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_ddisna_(void* job, void* m, void* n, void* d, void* sep, void* info)
+void flexiblas_real_ddisna_(void* job, void* m, void* n, void* d, void* sep, void* info, flexiblas_fortran_charlen_t len_job)
 {
-	void (*fn) (void* job, void* m, void* n, void* d, void* sep, void* info);
+	void (*fn) (void* job, void* m, void* n, void* d, void* sep, void* info, flexiblas_fortran_charlen_t len_job);
 
 	*(void **) & fn = current_backend->lapack.ddisna.f77_blas_function; 
 
-		fn((void*) job, (void*) m, (void*) n, (void*) d, (void*) sep, (void*) info); 
+		fn((void*) job, (void*) m, (void*) n, (void*) d, (void*) sep, (void*) info, ( flexiblas_fortran_charlen_t ) len_job); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_ddisna(void* job, void* m, void* n, void* d, void* sep, void* info) __attribute__((alias("flexiblas_real_ddisna_")));
+void flexiblas_real_ddisna(void* job, void* m, void* n, void* d, void* sep, void* info, flexiblas_fortran_charlen_t len_job) __attribute__((alias("flexiblas_real_ddisna_")));
 #else
-void flexiblas_real_ddisna(void* job, void* m, void* n, void* d, void* sep, void* info){flexiblas_real_ddisna_((void*) job, (void*) m, (void*) n, (void*) d, (void*) sep, (void*) info);}
+void flexiblas_real_ddisna(void* job, void* m, void* n, void* d, void* sep, void* info, flexiblas_fortran_charlen_t len_job){flexiblas_real_ddisna_((void*) job, (void*) m, (void*) n, (void*) d, (void*) sep, (void*) info, (flexiblas_fortran_charlen_t) len_job);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_ddisna(void* job, void* m, void* n, void* d, void* sep, void
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_ddisna_(void* job, void* m, void* n, void* d, void* sep, void* info)
+void flexiblas_chain_ddisna_(void* job, void* m, void* n, void* d, void* sep, void* info, flexiblas_fortran_charlen_t len_job)
 {
-	void (*fn) (void* job, void* m, void* n, void* d, void* sep, void* info);
-	void (*fn_hook) (void* job, void* m, void* n, void* d, void* sep, void* info);
+	void (*fn) (void* job, void* m, void* n, void* d, void* sep, void* info, flexiblas_fortran_charlen_t len_job);
+	void (*fn_hook) (void* job, void* m, void* n, void* d, void* sep, void* info, flexiblas_fortran_charlen_t len_job);
 
 	*(void **) &fn      = current_backend->lapack.ddisna.f77_blas_function; 
 
     hook_pos_ddisna ++;
     if( hook_pos_ddisna < __flexiblas_hooks->ddisna.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->ddisna.f77_hook_function[hook_pos_ddisna];
-        fn_hook((void*) job, (void*) m, (void*) n, (void*) d, (void*) sep, (void*) info);
+        fn_hook((void*) job, (void*) m, (void*) n, (void*) d, (void*) sep, (void*) info, ( flexiblas_fortran_charlen_t ) len_job);
     } else {
         hook_pos_ddisna = 0;
-		fn((void*) job, (void*) m, (void*) n, (void*) d, (void*) sep, (void*) info); 
+		fn((void*) job, (void*) m, (void*) n, (void*) d, (void*) sep, (void*) info, ( flexiblas_fortran_charlen_t ) len_job); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_ddisna(void* job, void* m, void* n, void* d, void* sep, void* info) __attribute__((alias("flexiblas_chain_ddisna_")));
+void flexiblas_chain_ddisna(void* job, void* m, void* n, void* d, void* sep, void* info, flexiblas_fortran_charlen_t len_job) __attribute__((alias("flexiblas_chain_ddisna_")));
 #else
-void flexiblas_chain_ddisna(void* job, void* m, void* n, void* d, void* sep, void* info){flexiblas_chain_ddisna_((void*) job, (void*) m, (void*) n, (void*) d, (void*) sep, (void*) info);}
+void flexiblas_chain_ddisna(void* job, void* m, void* n, void* d, void* sep, void* info, flexiblas_fortran_charlen_t len_job){flexiblas_chain_ddisna_((void*) job, (void*) m, (void*) n, (void*) d, (void*) sep, (void*) info, (flexiblas_fortran_charlen_t) len_job);}
 #endif
 
 

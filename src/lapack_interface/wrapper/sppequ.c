@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_sppequ = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(sppequ,SPPEQU)(char* uplo, blasint* n, float* ap, float* s, float* scond, float* amax, blasint* info)
+void FC_GLOBAL(sppequ,SPPEQU)(char* uplo, blasint* n, float* ap, float* s, float* scond, float* amax, blasint* info, flexiblas_fortran_charlen_t len_uplo)
 #else
-void FC_GLOBAL(sppequ,SPPEQU)(char* uplo, blasint* n, float* ap, float* s, float* scond, float* amax, blasint* info)
+void FC_GLOBAL(sppequ,SPPEQU)(char* uplo, blasint* n, float* ap, float* s, float* scond, float* amax, blasint* info, flexiblas_fortran_charlen_t len_uplo)
 #endif
 {
-	void (*fn) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info);
-	void (*fn_hook) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info);
+	void (*fn) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info, flexiblas_fortran_charlen_t len_uplo);
+	void (*fn_hook) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info, flexiblas_fortran_charlen_t len_uplo);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL(sppequ,SPPEQU)(char* uplo, blasint* n, float* ap, float* s, float
 	*(void **) & fn = current_backend->lapack.sppequ.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->sppequ.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info); 
+		fn((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo); 
 		return;
 	} else {
 		hook_pos_sppequ = 0;
-		fn_hook((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info);
+		fn_hook((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void sppequ_(char* uplo, blasint* n, float* ap, float* s, float* scond, float* amax, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sppequ,SPPEQU)))));
+void sppequ_(char* uplo, blasint* n, float* ap, float* s, float* scond, float* amax, blasint* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(sppequ,SPPEQU)))));
 #else
 #ifndef __APPLE__
-void sppequ(char* uplo, blasint* n, float* ap, float* s, float* scond, float* amax, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sppequ,SPPEQU)))));
+void sppequ(char* uplo, blasint* n, float* ap, float* s, float* scond, float* amax, blasint* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(sppequ,SPPEQU)))));
 #else
-void sppequ(char* uplo, blasint* n, float* ap, float* s, float* scond, float* amax, blasint* info){ FC_GLOBAL(sppequ,SPPEQU)((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info); }
+void sppequ(char* uplo, blasint* n, float* ap, float* s, float* scond, float* amax, blasint* info, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(sppequ,SPPEQU)((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void sppequ(char* uplo, blasint* n, float* ap, float* s, float* scond, float* am
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_sppequ_(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info)
+void flexiblas_real_sppequ_(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info, flexiblas_fortran_charlen_t len_uplo)
 {
-	void (*fn) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info);
+	void (*fn) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info, flexiblas_fortran_charlen_t len_uplo);
 
 	*(void **) & fn = current_backend->lapack.sppequ.f77_blas_function; 
 
-		fn((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info); 
+		fn((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_sppequ(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info) __attribute__((alias("flexiblas_real_sppequ_")));
+void flexiblas_real_sppequ(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_real_sppequ_")));
 #else
-void flexiblas_real_sppequ(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info){flexiblas_real_sppequ_((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info);}
+void flexiblas_real_sppequ(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info, flexiblas_fortran_charlen_t len_uplo){flexiblas_real_sppequ_((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_sppequ(void* uplo, void* n, void* ap, void* s, void* scond, 
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_sppequ_(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info)
+void flexiblas_chain_sppequ_(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info, flexiblas_fortran_charlen_t len_uplo)
 {
-	void (*fn) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info);
-	void (*fn_hook) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info);
+	void (*fn) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info, flexiblas_fortran_charlen_t len_uplo);
+	void (*fn_hook) (void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info, flexiblas_fortran_charlen_t len_uplo);
 
 	*(void **) &fn      = current_backend->lapack.sppequ.f77_blas_function; 
 
     hook_pos_sppequ ++;
     if( hook_pos_sppequ < __flexiblas_hooks->sppequ.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->sppequ.f77_hook_function[hook_pos_sppequ];
-        fn_hook((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info);
+        fn_hook((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo);
     } else {
         hook_pos_sppequ = 0;
-		fn((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info); 
+		fn((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_sppequ(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info) __attribute__((alias("flexiblas_chain_sppequ_")));
+void flexiblas_chain_sppequ(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias("flexiblas_chain_sppequ_")));
 #else
-void flexiblas_chain_sppequ(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info){flexiblas_chain_sppequ_((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info);}
+void flexiblas_chain_sppequ(void* uplo, void* n, void* ap, void* s, void* scond, void* amax, void* info, flexiblas_fortran_charlen_t len_uplo){flexiblas_chain_sppequ_((void*) uplo, (void*) n, (void*) ap, (void*) s, (void*) scond, (void*) amax, (void*) info, (flexiblas_fortran_charlen_t) len_uplo);}
 #endif
 
 

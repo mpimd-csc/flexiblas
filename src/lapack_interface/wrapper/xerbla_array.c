@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_xerbla_array = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL_(xerbla_array,XERBLA_ARRAY)(char* srname_array, blasint* srname_len, blasint* info, fortran_charlen_t len_srname_array)
+void FC_GLOBAL_(xerbla_array,XERBLA_ARRAY)(char* srname_array, blasint* srname_len, blasint* info, flexiblas_fortran_charlen_t len_srname_array)
 #else
-void FC_GLOBAL_(xerbla_array,XERBLA_ARRAY)(char* srname_array, blasint* srname_len, blasint* info, fortran_charlen_t len_srname_array)
+void FC_GLOBAL_(xerbla_array,XERBLA_ARRAY)(char* srname_array, blasint* srname_len, blasint* info, flexiblas_fortran_charlen_t len_srname_array)
 #endif
 {
-	void (*fn) (void* srname_array, void* srname_len, void* info, fortran_charlen_t len_srname_array);
-	void (*fn_hook) (void* srname_array, void* srname_len, void* info, fortran_charlen_t len_srname_array);
+	void (*fn) (void* srname_array, void* srname_len, void* info, flexiblas_fortran_charlen_t len_srname_array);
+	void (*fn_hook) (void* srname_array, void* srname_len, void* info, flexiblas_fortran_charlen_t len_srname_array);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL_(xerbla_array,XERBLA_ARRAY)(char* srname_array, blasint* srname_l
 	*(void **) & fn = current_backend->lapack.xerbla_array.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->xerbla_array.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) srname_array, (void*) srname_len, (void*) info, ( fortran_charlen_t ) len_srname_array); 
+		fn((void*) srname_array, (void*) srname_len, (void*) info, ( flexiblas_fortran_charlen_t ) len_srname_array); 
 		return;
 	} else {
 		hook_pos_xerbla_array = 0;
-		fn_hook((void*) srname_array, (void*) srname_len, (void*) info, ( fortran_charlen_t ) len_srname_array);
+		fn_hook((void*) srname_array, (void*) srname_len, (void*) info, ( flexiblas_fortran_charlen_t ) len_srname_array);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void xerbla_array_(char* srname_array, blasint* srname_len, blasint* info, fortran_charlen_t len_srname_array) __attribute__((alias(MTS(FC_GLOBAL_(xerbla_array,XERBLA_ARRAY)))));
+void xerbla_array_(char* srname_array, blasint* srname_len, blasint* info, flexiblas_fortran_charlen_t len_srname_array) __attribute__((alias(MTS(FC_GLOBAL_(xerbla_array,XERBLA_ARRAY)))));
 #else
 #ifndef __APPLE__
-void xerbla_array(char* srname_array, blasint* srname_len, blasint* info, fortran_charlen_t len_srname_array) __attribute__((alias(MTS(FC_GLOBAL_(xerbla_array,XERBLA_ARRAY)))));
+void xerbla_array(char* srname_array, blasint* srname_len, blasint* info, flexiblas_fortran_charlen_t len_srname_array) __attribute__((alias(MTS(FC_GLOBAL_(xerbla_array,XERBLA_ARRAY)))));
 #else
-void xerbla_array(char* srname_array, blasint* srname_len, blasint* info, fortran_charlen_t len_srname_array){ FC_GLOBAL_(xerbla_array,XERBLA_ARRAY)((void*) srname_array, (void*) srname_len, (void*) info, (fortran_charlen_t) len_srname_array); }
+void xerbla_array(char* srname_array, blasint* srname_len, blasint* info, flexiblas_fortran_charlen_t len_srname_array){ FC_GLOBAL_(xerbla_array,XERBLA_ARRAY)((void*) srname_array, (void*) srname_len, (void*) info, (flexiblas_fortran_charlen_t) len_srname_array); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void xerbla_array(char* srname_array, blasint* srname_len, blasint* info, fortra
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_xerbla_array_(void* srname_array, void* srname_len, void* info, fortran_charlen_t len_srname_array)
+void flexiblas_real_xerbla_array_(void* srname_array, void* srname_len, void* info, flexiblas_fortran_charlen_t len_srname_array)
 {
-	void (*fn) (void* srname_array, void* srname_len, void* info, fortran_charlen_t len_srname_array);
+	void (*fn) (void* srname_array, void* srname_len, void* info, flexiblas_fortran_charlen_t len_srname_array);
 
 	*(void **) & fn = current_backend->lapack.xerbla_array.f77_blas_function; 
 
-		fn((void*) srname_array, (void*) srname_len, (void*) info, ( fortran_charlen_t ) len_srname_array); 
+		fn((void*) srname_array, (void*) srname_len, (void*) info, ( flexiblas_fortran_charlen_t ) len_srname_array); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_xerbla_array(void* srname_array, void* srname_len, void* info, fortran_charlen_t len_srname_array) __attribute__((alias("flexiblas_real_xerbla_array_")));
+void flexiblas_real_xerbla_array(void* srname_array, void* srname_len, void* info, flexiblas_fortran_charlen_t len_srname_array) __attribute__((alias("flexiblas_real_xerbla_array_")));
 #else
-void flexiblas_real_xerbla_array(void* srname_array, void* srname_len, void* info, fortran_charlen_t len_srname_array){flexiblas_real_xerbla_array_((void*) srname_array, (void*) srname_len, (void*) info, (fortran_charlen_t) len_srname_array);}
+void flexiblas_real_xerbla_array(void* srname_array, void* srname_len, void* info, flexiblas_fortran_charlen_t len_srname_array){flexiblas_real_xerbla_array_((void*) srname_array, (void*) srname_len, (void*) info, (flexiblas_fortran_charlen_t) len_srname_array);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_xerbla_array(void* srname_array, void* srname_len, void* inf
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_xerbla_array_(void* srname_array, void* srname_len, void* info, fortran_charlen_t len_srname_array)
+void flexiblas_chain_xerbla_array_(void* srname_array, void* srname_len, void* info, flexiblas_fortran_charlen_t len_srname_array)
 {
-	void (*fn) (void* srname_array, void* srname_len, void* info, fortran_charlen_t len_srname_array);
-	void (*fn_hook) (void* srname_array, void* srname_len, void* info, fortran_charlen_t len_srname_array);
+	void (*fn) (void* srname_array, void* srname_len, void* info, flexiblas_fortran_charlen_t len_srname_array);
+	void (*fn_hook) (void* srname_array, void* srname_len, void* info, flexiblas_fortran_charlen_t len_srname_array);
 
 	*(void **) &fn      = current_backend->lapack.xerbla_array.f77_blas_function; 
 
     hook_pos_xerbla_array ++;
     if( hook_pos_xerbla_array < __flexiblas_hooks->xerbla_array.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->xerbla_array.f77_hook_function[hook_pos_xerbla_array];
-        fn_hook((void*) srname_array, (void*) srname_len, (void*) info, ( fortran_charlen_t ) len_srname_array);
+        fn_hook((void*) srname_array, (void*) srname_len, (void*) info, ( flexiblas_fortran_charlen_t ) len_srname_array);
     } else {
         hook_pos_xerbla_array = 0;
-		fn((void*) srname_array, (void*) srname_len, (void*) info, ( fortran_charlen_t ) len_srname_array); 
+		fn((void*) srname_array, (void*) srname_len, (void*) info, ( flexiblas_fortran_charlen_t ) len_srname_array); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_xerbla_array(void* srname_array, void* srname_len, void* info, fortran_charlen_t len_srname_array) __attribute__((alias("flexiblas_chain_xerbla_array_")));
+void flexiblas_chain_xerbla_array(void* srname_array, void* srname_len, void* info, flexiblas_fortran_charlen_t len_srname_array) __attribute__((alias("flexiblas_chain_xerbla_array_")));
 #else
-void flexiblas_chain_xerbla_array(void* srname_array, void* srname_len, void* info, fortran_charlen_t len_srname_array){flexiblas_chain_xerbla_array_((void*) srname_array, (void*) srname_len, (void*) info, (fortran_charlen_t) len_srname_array);}
+void flexiblas_chain_xerbla_array(void* srname_array, void* srname_len, void* info, flexiblas_fortran_charlen_t len_srname_array){flexiblas_chain_xerbla_array_((void*) srname_array, (void*) srname_len, (void*) info, (flexiblas_fortran_charlen_t) len_srname_array);}
 #endif
 
 

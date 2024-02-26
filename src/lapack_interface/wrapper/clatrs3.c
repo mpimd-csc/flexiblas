@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_clatrs3 = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(clatrs3,CLATRS3)(char* uplo, char* trans, char* diag, char* normin, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* x, blasint* ldx, float* scale, float* cnorm, float* work, blasint* lwork, blasint* info)
+void FC_GLOBAL(clatrs3,CLATRS3)(char* uplo, char* trans, char* diag, char* normin, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* x, blasint* ldx, float* scale, float* cnorm, float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin)
 #else
-void FC_GLOBAL(clatrs3,CLATRS3)(char* uplo, char* trans, char* diag, char* normin, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* x, blasint* ldx, float* scale, float* cnorm, float* work, blasint* lwork, blasint* info)
+void FC_GLOBAL(clatrs3,CLATRS3)(char* uplo, char* trans, char* diag, char* normin, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* x, blasint* ldx, float* scale, float* cnorm, float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin)
 #endif
 {
-	void (*fn) (void* uplo, void* trans, void* diag, void* normin, void* n, void* nrhs, void* a, void* lda, void* x, void* ldx, void* scale, void* cnorm, void* work, void* lwork, void* info);
-	void (*fn_hook) (void* uplo, void* trans, void* diag, void* normin, void* n, void* nrhs, void* a, void* lda, void* x, void* ldx, void* scale, void* cnorm, void* work, void* lwork, void* info);
+	void (*fn) (void* uplo, void* trans, void* diag, void* normin, void* n, void* nrhs, void* a, void* lda, void* x, void* ldx, void* scale, void* cnorm, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin);
+	void (*fn_hook) (void* uplo, void* trans, void* diag, void* normin, void* n, void* nrhs, void* a, void* lda, void* x, void* ldx, void* scale, void* cnorm, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -58,21 +63,21 @@ void FC_GLOBAL(clatrs3,CLATRS3)(char* uplo, char* trans, char* diag, char* normi
 	*(void **) & fn = current_backend->lapack.clatrs3.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->clatrs3.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		fn((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) x, (void*) ldx, (void*) scale, (void*) cnorm, (void*) work, (void*) lwork, (void*) info); 
+		fn((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) x, (void*) ldx, (void*) scale, (void*) cnorm, (void*) work, (void*) lwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_trans, ( flexiblas_fortran_charlen_t ) len_diag, ( flexiblas_fortran_charlen_t ) len_normin); 
 		return;
 	} else {
 		hook_pos_clatrs3 = 0;
-		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) x, (void*) ldx, (void*) scale, (void*) cnorm, (void*) work, (void*) lwork, (void*) info);
+		fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) x, (void*) ldx, (void*) scale, (void*) cnorm, (void*) work, (void*) lwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_trans, ( flexiblas_fortran_charlen_t ) len_diag, ( flexiblas_fortran_charlen_t ) len_normin);
 		return;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void clatrs3_(char* uplo, char* trans, char* diag, char* normin, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* x, blasint* ldx, float* scale, float* cnorm, float* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(clatrs3,CLATRS3)))));
+void clatrs3_(char* uplo, char* trans, char* diag, char* normin, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* x, blasint* ldx, float* scale, float* cnorm, float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin) __attribute__((alias(MTS(FC_GLOBAL(clatrs3,CLATRS3)))));
 #else
 #ifndef __APPLE__
-void clatrs3(char* uplo, char* trans, char* diag, char* normin, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* x, blasint* ldx, float* scale, float* cnorm, float* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(clatrs3,CLATRS3)))));
+void clatrs3(char* uplo, char* trans, char* diag, char* normin, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* x, blasint* ldx, float* scale, float* cnorm, float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin) __attribute__((alias(MTS(FC_GLOBAL(clatrs3,CLATRS3)))));
 #else
-void clatrs3(char* uplo, char* trans, char* diag, char* normin, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* x, blasint* ldx, float* scale, float* cnorm, float* work, blasint* lwork, blasint* info){ FC_GLOBAL(clatrs3,CLATRS3)((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) x, (void*) ldx, (void*) scale, (void*) cnorm, (void*) work, (void*) lwork, (void*) info); }
+void clatrs3(char* uplo, char* trans, char* diag, char* normin, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* x, blasint* ldx, float* scale, float* cnorm, float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin){ FC_GLOBAL(clatrs3,CLATRS3)((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) x, (void*) ldx, (void*) scale, (void*) cnorm, (void*) work, (void*) lwork, (void*) info, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag, (flexiblas_fortran_charlen_t) len_normin); }
 #endif
 #endif
 
@@ -82,20 +87,20 @@ void clatrs3(char* uplo, char* trans, char* diag, char* normin, blasint* n, blas
 /* Real Implementation for Hooks */
 
 
-void flexiblas_real_clatrs3_(void* uplo, void* trans, void* diag, void* normin, void* n, void* nrhs, void* a, void* lda, void* x, void* ldx, void* scale, void* cnorm, void* work, void* lwork, void* info)
+void flexiblas_real_clatrs3_(void* uplo, void* trans, void* diag, void* normin, void* n, void* nrhs, void* a, void* lda, void* x, void* ldx, void* scale, void* cnorm, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin)
 {
-	void (*fn) (void* uplo, void* trans, void* diag, void* normin, void* n, void* nrhs, void* a, void* lda, void* x, void* ldx, void* scale, void* cnorm, void* work, void* lwork, void* info);
+	void (*fn) (void* uplo, void* trans, void* diag, void* normin, void* n, void* nrhs, void* a, void* lda, void* x, void* ldx, void* scale, void* cnorm, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin);
 
 	*(void **) & fn = current_backend->lapack.clatrs3.f77_blas_function; 
 
-		fn((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) x, (void*) ldx, (void*) scale, (void*) cnorm, (void*) work, (void*) lwork, (void*) info); 
+		fn((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) x, (void*) ldx, (void*) scale, (void*) cnorm, (void*) work, (void*) lwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_trans, ( flexiblas_fortran_charlen_t ) len_diag, ( flexiblas_fortran_charlen_t ) len_normin); 
 
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_real_clatrs3(void* uplo, void* trans, void* diag, void* normin, void* n, void* nrhs, void* a, void* lda, void* x, void* ldx, void* scale, void* cnorm, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_clatrs3_")));
+void flexiblas_real_clatrs3(void* uplo, void* trans, void* diag, void* normin, void* n, void* nrhs, void* a, void* lda, void* x, void* ldx, void* scale, void* cnorm, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin) __attribute__((alias("flexiblas_real_clatrs3_")));
 #else
-void flexiblas_real_clatrs3(void* uplo, void* trans, void* diag, void* normin, void* n, void* nrhs, void* a, void* lda, void* x, void* ldx, void* scale, void* cnorm, void* work, void* lwork, void* info){flexiblas_real_clatrs3_((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) x, (void*) ldx, (void*) scale, (void*) cnorm, (void*) work, (void*) lwork, (void*) info);}
+void flexiblas_real_clatrs3(void* uplo, void* trans, void* diag, void* normin, void* n, void* nrhs, void* a, void* lda, void* x, void* ldx, void* scale, void* cnorm, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin){flexiblas_real_clatrs3_((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) x, (void*) ldx, (void*) scale, (void*) cnorm, (void*) work, (void*) lwork, (void*) info, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag, (flexiblas_fortran_charlen_t) len_normin);}
 #endif
 
 
@@ -104,27 +109,27 @@ void flexiblas_real_clatrs3(void* uplo, void* trans, void* diag, void* normin, v
 /* Chainloader for Hooks */
 
 
-void flexiblas_chain_clatrs3_(void* uplo, void* trans, void* diag, void* normin, void* n, void* nrhs, void* a, void* lda, void* x, void* ldx, void* scale, void* cnorm, void* work, void* lwork, void* info)
+void flexiblas_chain_clatrs3_(void* uplo, void* trans, void* diag, void* normin, void* n, void* nrhs, void* a, void* lda, void* x, void* ldx, void* scale, void* cnorm, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin)
 {
-	void (*fn) (void* uplo, void* trans, void* diag, void* normin, void* n, void* nrhs, void* a, void* lda, void* x, void* ldx, void* scale, void* cnorm, void* work, void* lwork, void* info);
-	void (*fn_hook) (void* uplo, void* trans, void* diag, void* normin, void* n, void* nrhs, void* a, void* lda, void* x, void* ldx, void* scale, void* cnorm, void* work, void* lwork, void* info);
+	void (*fn) (void* uplo, void* trans, void* diag, void* normin, void* n, void* nrhs, void* a, void* lda, void* x, void* ldx, void* scale, void* cnorm, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin);
+	void (*fn_hook) (void* uplo, void* trans, void* diag, void* normin, void* n, void* nrhs, void* a, void* lda, void* x, void* ldx, void* scale, void* cnorm, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin);
 
 	*(void **) &fn      = current_backend->lapack.clatrs3.f77_blas_function; 
 
     hook_pos_clatrs3 ++;
     if( hook_pos_clatrs3 < __flexiblas_hooks->clatrs3.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->clatrs3.f77_hook_function[hook_pos_clatrs3];
-        fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) x, (void*) ldx, (void*) scale, (void*) cnorm, (void*) work, (void*) lwork, (void*) info);
+        fn_hook((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) x, (void*) ldx, (void*) scale, (void*) cnorm, (void*) work, (void*) lwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_trans, ( flexiblas_fortran_charlen_t ) len_diag, ( flexiblas_fortran_charlen_t ) len_normin);
     } else {
         hook_pos_clatrs3 = 0;
-		fn((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) x, (void*) ldx, (void*) scale, (void*) cnorm, (void*) work, (void*) lwork, (void*) info); 
+		fn((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) x, (void*) ldx, (void*) scale, (void*) cnorm, (void*) work, (void*) lwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_trans, ( flexiblas_fortran_charlen_t ) len_diag, ( flexiblas_fortran_charlen_t ) len_normin); 
 	}
 	return;
 }
 #ifndef __APPLE__
-void flexiblas_chain_clatrs3(void* uplo, void* trans, void* diag, void* normin, void* n, void* nrhs, void* a, void* lda, void* x, void* ldx, void* scale, void* cnorm, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_clatrs3_")));
+void flexiblas_chain_clatrs3(void* uplo, void* trans, void* diag, void* normin, void* n, void* nrhs, void* a, void* lda, void* x, void* ldx, void* scale, void* cnorm, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin) __attribute__((alias("flexiblas_chain_clatrs3_")));
 #else
-void flexiblas_chain_clatrs3(void* uplo, void* trans, void* diag, void* normin, void* n, void* nrhs, void* a, void* lda, void* x, void* ldx, void* scale, void* cnorm, void* work, void* lwork, void* info){flexiblas_chain_clatrs3_((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) x, (void*) ldx, (void*) scale, (void*) cnorm, (void*) work, (void*) lwork, (void*) info);}
+void flexiblas_chain_clatrs3(void* uplo, void* trans, void* diag, void* normin, void* n, void* nrhs, void* a, void* lda, void* x, void* ldx, void* scale, void* cnorm, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin){flexiblas_chain_clatrs3_((void*) uplo, (void*) trans, (void*) diag, (void*) normin, (void*) n, (void*) nrhs, (void*) a, (void*) lda, (void*) x, (void*) ldx, (void*) scale, (void*) cnorm, (void*) work, (void*) lwork, (void*) info, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag, (flexiblas_fortran_charlen_t) len_normin);}
 #endif
 
 

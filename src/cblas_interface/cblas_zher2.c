@@ -112,7 +112,7 @@ void flexiblas_real_cblas_zher2(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo
 #endif
 
             FC_GLOBAL(zher2,ZHER2)(F77_UL, &F77_N, alpha, X, &F77_incX,
-                    Y, &F77_incY, A, &F77_lda);
+                    Y, &F77_incY, A, &F77_lda, 1);
 
         }  else if (layout == CblasRowMajor)
         {
@@ -192,7 +192,7 @@ void flexiblas_real_cblas_zher2(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo
                 COPY_CONST_PTR(y,Y);
             }
             FC_GLOBAL(zher2,ZHER2)(F77_UL, &F77_N, alpha, y, &F77_incY, x,
-                    &F77_incX, A, &F77_lda);
+                    &F77_incX, A, &F77_lda, 1);
         } else
         {
             cblas_xerbla(1, "cblas_zher2","Illegal layout setting, %d\n", layout);

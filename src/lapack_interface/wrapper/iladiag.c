@@ -27,29 +27,34 @@
 #include "flexiblas.h"
 
 
+#ifndef FLEXIBLAS_CHARLEN_T
+#define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
-typedef size_t fortran_charlen_t;
+typedef size_t flexiblas_fortran_charlen_t;
 #else
-typedef int fortran_charlen_t;
+typedef int flexiblas_fortran_charlen_t;
+#endif
 #endif
 
-#ifdef INTEGER8
+#ifndef blasint
+#ifdef FLEXIBLAS_INTEGER8
 #define blasint int64_t
 #else
 #define blasint int
+#endif
 #endif
 
 
 
 static TLS_STORE uint8_t hook_pos_iladiag = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-int FC_GLOBAL(iladiag,ILADIAG)(char* diag)
+int FC_GLOBAL(iladiag,ILADIAG)(char* diag, flexiblas_fortran_charlen_t len_diag)
 #else
-int FC_GLOBAL(iladiag,ILADIAG)(char* diag)
+int FC_GLOBAL(iladiag,ILADIAG)(char* diag, flexiblas_fortran_charlen_t len_diag)
 #endif
 {
-	blasint (*fn) (void* diag);
-	blasint (*fn_hook) (void* diag);
+	blasint (*fn) (void* diag, flexiblas_fortran_charlen_t len_diag);
+	blasint (*fn_hook) (void* diag, flexiblas_fortran_charlen_t len_diag);
 	blasint ret;
 
     if ( current_backend->post_init != 0 ) {
@@ -59,21 +64,21 @@ int FC_GLOBAL(iladiag,ILADIAG)(char* diag)
 	*(void **) & fn = current_backend->lapack.iladiag.f77_blas_function; 
 	*(void **) & fn_hook = __flexiblas_hooks->iladiag.f77_hook_function[0]; 
 	if ( fn_hook == NULL ) { 
-		ret = fn((void*) diag); 
+		ret = fn((void*) diag, ( flexiblas_fortran_charlen_t ) len_diag); 
 		return ret; 
 	} else {
 		hook_pos_iladiag = 0;
-		ret=fn_hook((void*) diag);
+		ret=fn_hook((void*) diag, ( flexiblas_fortran_charlen_t ) len_diag);
 		return ret;
 	}
 }
 #ifdef FLEXIBLAS_ABI_IBM
-int iladiag_(char* diag) __attribute__((alias(MTS(FC_GLOBAL(iladiag,ILADIAG)))));
+int iladiag_(char* diag, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(iladiag,ILADIAG)))));
 #else
 #ifndef __APPLE__
-int iladiag(char* diag) __attribute__((alias(MTS(FC_GLOBAL(iladiag,ILADIAG)))));
+int iladiag(char* diag, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(iladiag,ILADIAG)))));
 #else
-int iladiag(char* diag){ return FC_GLOBAL(iladiag,ILADIAG)((void*) diag); }
+int iladiag(char* diag, flexiblas_fortran_charlen_t len_diag){ return FC_GLOBAL(iladiag,ILADIAG)((void*) diag, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -83,21 +88,21 @@ int iladiag(char* diag){ return FC_GLOBAL(iladiag,ILADIAG)((void*) diag); }
 /* Real Implementation for Hooks */
 
 
-blasint flexiblas_real_iladiag_(void* diag)
+blasint flexiblas_real_iladiag_(void* diag, flexiblas_fortran_charlen_t len_diag)
 {
-	blasint (*fn) (void* diag);
+	blasint (*fn) (void* diag, flexiblas_fortran_charlen_t len_diag);
 	blasint ret;
 
 	*(void **) & fn = current_backend->lapack.iladiag.f77_blas_function; 
 
-		ret = fn((void*) diag); 
+		ret = fn((void*) diag, ( flexiblas_fortran_charlen_t ) len_diag); 
 
 	return ret ;
 }
 #ifndef __APPLE__
-blasint flexiblas_real_iladiag(void* diag) __attribute__((alias("flexiblas_real_iladiag_")));
+blasint flexiblas_real_iladiag(void* diag, flexiblas_fortran_charlen_t len_diag) __attribute__((alias("flexiblas_real_iladiag_")));
 #else
-blasint flexiblas_real_iladiag(void* diag){return flexiblas_real_iladiag_((void*) diag);}
+blasint flexiblas_real_iladiag(void* diag, flexiblas_fortran_charlen_t len_diag){return flexiblas_real_iladiag_((void*) diag, (flexiblas_fortran_charlen_t) len_diag);}
 #endif
 
 
@@ -106,10 +111,10 @@ blasint flexiblas_real_iladiag(void* diag){return flexiblas_real_iladiag_((void*
 /* Chainloader for Hooks */
 
 
-blasint flexiblas_chain_iladiag_(void* diag)
+blasint flexiblas_chain_iladiag_(void* diag, flexiblas_fortran_charlen_t len_diag)
 {
-	blasint (*fn) (void* diag);
-	blasint (*fn_hook) (void* diag);
+	blasint (*fn) (void* diag, flexiblas_fortran_charlen_t len_diag);
+	blasint (*fn_hook) (void* diag, flexiblas_fortran_charlen_t len_diag);
 	blasint ret;
 
 	*(void **) &fn      = current_backend->lapack.iladiag.f77_blas_function; 
@@ -117,17 +122,17 @@ blasint flexiblas_chain_iladiag_(void* diag)
     hook_pos_iladiag ++;
     if( hook_pos_iladiag < __flexiblas_hooks->iladiag.nhook) {
         *(void **) &fn_hook = __flexiblas_hooks->iladiag.f77_hook_function[hook_pos_iladiag];
-        ret = fn_hook((void*) diag);
+        ret = fn_hook((void*) diag, ( flexiblas_fortran_charlen_t )len_diag);
     } else {
         hook_pos_iladiag = 0;
-		ret = fn((void*) diag); 
+		ret = fn((void*) diag, ( flexiblas_fortran_charlen_t ) len_diag); 
 	}
 	return ret ;
 }
 #ifndef __APPLE__
-blasint flexiblas_chain_iladiag(void* diag) __attribute__((alias("flexiblas_chain_iladiag_")));
+blasint flexiblas_chain_iladiag(void* diag, flexiblas_fortran_charlen_t len_diag) __attribute__((alias("flexiblas_chain_iladiag_")));
 #else
-blasint flexiblas_chain_iladiag(void* diag){return flexiblas_chain_iladiag_((void*) diag);}
+blasint flexiblas_chain_iladiag(void* diag, flexiblas_fortran_charlen_t len_diag){return flexiblas_chain_iladiag_((void*) diag, (flexiblas_fortran_charlen_t) len_diag);}
 #endif
 
 

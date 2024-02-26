@@ -68,7 +68,7 @@ int main ( int argc, char **argv ) {
     csum = 0;
     for (runs = 0;  runs < RUNS; runs++) {
         __asm__ __volatile__ ("rdtsc" : "=a"(los), "=d"(his));
-        FC_GLOBAL(dsyrk,DSYRK)("U","N", &N, &N, &DA, NULL, &incx, &DA, NULL, &incx);
+        FC_GLOBAL(dsyrk,DSYRK)("U","N", &N, &N, &DA, NULL, &incx, &DA, NULL, &incx, 1, 1);
         __asm__ __volatile__ ("rdtsc" : "=a"(loe), "=d"(hie));
         cs = (int64_t) (( (unsigned long long)los)|( ((unsigned long long)his)<<32 ));
         ce = (int64_t) (( (unsigned long long)loe)|( ((unsigned long long)hie)<<32 ));
@@ -79,7 +79,7 @@ int main ( int argc, char **argv ) {
     csum = 0;
     for (runs = 0;  runs < RUNS; runs++) {
         __asm__ __volatile__ ("rdtsc" : "=a"(los), "=d"(his));
-        FC_GLOBAL(dgemv,DGEMV)("N", &N, &N, &DA, NULL, &incx, NULL, &incx, &DA, NULL, &incx);
+        FC_GLOBAL(dgemv,DGEMV)("N", &N, &N, &DA, NULL, &incx, NULL, &incx, &DA, NULL, &incx, 1);
         __asm__ __volatile__ ("rdtsc" : "=a"(loe), "=d"(hie));
         cs = (int64_t) (( (unsigned long long)los)|( ((unsigned long long)his)<<32 ));
         ce = (int64_t) (( (unsigned long long)loe)|( ((unsigned long long)hie)<<32 ));
@@ -91,7 +91,7 @@ int main ( int argc, char **argv ) {
     csum = 0;
     for (runs = 0;  runs < RUNS; runs++) {
         __asm__ __volatile__ ("rdtsc" : "=a"(los), "=d"(his));
-        FC_GLOBAL(dgemm,DGEMM)("N","N", &N, &N, &N , &DA, NULL, &incx, NULL, &incy, &DA, NULL, &incx);
+        FC_GLOBAL(dgemm,DGEMM)("N","N", &N, &N, &N , &DA, NULL, &incx, NULL, &incy, &DA, NULL, &incx, 1, 1);
         __asm__ __volatile__ ("rdtsc" : "=a"(loe), "=d"(hie));
         cs = (int64_t) (( (unsigned long long)los)|( ((unsigned long long)his)<<32 ));
         ce = (int64_t) (( (unsigned long long)loe)|( ((unsigned long long)hie)<<32 ));
