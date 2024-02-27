@@ -1,7 +1,10 @@
+3.4.2-rc2 (February 28, 2024)
+-----------------------------
+- Wrong BLAS detection with INTEGER8=ON
+
 3.4.2-rc2 (February 27, 2024)
 -----------------------------
 - Wrong filenames in INTEGER8 Build
-
 
 3.4.2-rc1 (February 26, 2024)
 -----------------------------

@@ -10,7 +10,7 @@ IF ( NOT DUMMY_HOOK)
         dummy_hook.c
         )
 
-    IF (FLEXIBLAS_INTEGER8 STREQUAL ON)
+    IF (FLEXIBLAS_INTEGER8)
         SET(EXTRA_FLAGS "-DBACKEND_INTEGER8")
     ELSE ()
         SET(EXTRA_FLAGS "")
