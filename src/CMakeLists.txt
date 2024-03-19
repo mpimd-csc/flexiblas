@@ -665,7 +665,7 @@ FOREACH(ADDITIONAL_BLAS ${EXTRA})
     IF (${ADDITIONAL_BLAS}_LIBRARY)
         BuildBackendBlas(${ADDITIONAL_BLAS} backends/generic/backend.c)
     ELSE()
-        MESSAGE(FATAL_ERROR "-- ${ADDITIONAL_BLAS}_LIRBRAY missing.")
+        MESSAGE(FATAL_ERROR "-- ${ADDITIONAL_BLAS}_LIBRARY missing.")
     ENDIF()
 ENDFOREACH()
 
