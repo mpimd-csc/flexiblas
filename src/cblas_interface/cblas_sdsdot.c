@@ -59,7 +59,7 @@ float flexiblas_real_cblas_sdsdot( const CBLAS_INT N, const float alpha, const f
         d = fn(N,alpha, X,incX,Y,incY);
     } else {
         Int F77_N=N, F77_incX=incX, F77_incY=incY;
-        d = FC_GLOBAL(sdsdot,SDSDOT)( &F77_N, &alpha, X, &F77_incX, Y, &F77_incY);
+        d = FC_GLOBAL(sdsdot,SDSDOT)( (blasint *)(uintptr_t)&F77_N, (float *)(uintptr_t) &alpha, (float *)(uintptr_t) X, (blasint *)(uintptr_t)&F77_incX, (float *)(uintptr_t)Y, (blasint *)(uintptr_t)&F77_incY);
     }
     return d;
 }

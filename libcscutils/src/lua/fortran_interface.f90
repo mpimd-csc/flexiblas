@@ -126,7 +126,7 @@ MODULE CSC_LUA
             IMPORT
             TYPE(C_PTR), INTENT(IN), VALUE :: LUA
             CHARACTER(KIND=C_CHAR), INTENT(IN)     :: FNAME
-            INTEGER(KIND = C_INT), INTENT(OUT) :: R1
+            INTEGER(KIND = C_INT), INTENT(INOUT) :: R1
             INTEGER(KIND = C_INT) :: CSC_LUA_CALL_ARG_0_RET_I_C
         END FUNCTION
 
@@ -135,8 +135,8 @@ MODULE CSC_LUA
             IMPORT
             TYPE(C_PTR), INTENT(IN), VALUE :: LUA
             CHARACTER(KIND=C_CHAR), INTENT(IN)     :: FNAME
-            INTEGER(KIND = C_INT), INTENT(OUT) :: R1
-            INTEGER(KIND = C_INT), INTENT(OUT) :: R2
+            INTEGER(KIND = C_INT), INTENT(INOUT) :: R1
+            INTEGER(KIND = C_INT), INTENT(INOUT) :: R2
             INTEGER(KIND = C_INT) :: CSC_LUA_CALL_ARG_0_RET_II_C
         END FUNCTION
 
@@ -146,7 +146,7 @@ MODULE CSC_LUA
             TYPE(C_PTR), INTENT(IN), VALUE :: LUA
             CHARACTER(KIND=C_CHAR), INTENT(IN)     :: FNAME
             INTEGER(KIND = C_INT), INTENT(IN), VALUE :: I1
-            INTEGER(KIND = C_INT), INTENT(OUT) :: R1
+            INTEGER(KIND = C_INT), INTENT(INOUT) :: R1
             INTEGER(KIND = C_INT) :: CSC_LUA_CALL_ARG_I_RET_I_C
         END FUNCTION
 
@@ -157,7 +157,7 @@ MODULE CSC_LUA
             CHARACTER(KIND=C_CHAR), INTENT(IN)     :: FNAME
             INTEGER(KIND = C_INT), INTENT(IN), VALUE :: I1
             INTEGER(KIND = C_INT), INTENT(IN), VALUE :: I2
-            INTEGER(KIND = C_INT), INTENT(OUT) :: R1
+            INTEGER(KIND = C_INT), INTENT(INOUT) :: R1
             INTEGER(KIND = C_INT) :: CSC_LUA_CALL_ARG_II_RET_I_C
         END FUNCTION
 
@@ -169,7 +169,7 @@ MODULE CSC_LUA
             INTEGER(KIND = C_INT), INTENT(IN), VALUE :: I1
             INTEGER(KIND = C_INT), INTENT(IN), VALUE :: I2
             INTEGER(KIND = C_INT), INTENT(IN), VALUE :: I3
-            INTEGER(KIND = C_INT), INTENT(OUT) :: R1
+            INTEGER(KIND = C_INT), INTENT(INOUT) :: R1
             INTEGER(KIND = C_INT) :: CSC_LUA_CALL_ARG_III_RET_I_C
         END FUNCTION
 
@@ -181,7 +181,7 @@ MODULE CSC_LUA
             CHARACTER(KIND=C_CHAR), INTENT(IN)     :: I1
             INTEGER(KIND = C_INT), INTENT(IN), VALUE :: I2
             INTEGER(KIND = C_INT), INTENT(IN), VALUE :: I3
-            INTEGER(KIND = C_INT), INTENT(OUT) :: R1
+            INTEGER(KIND = C_INT), INTENT(INOUT) :: R1
             INTEGER(KIND = C_INT) :: CSC_LUA_CALL_ARG_SII_RET_I_C
         END FUNCTION
 
@@ -566,6 +566,7 @@ CONTAINS
             RETURN
         END IF
 
+        CR1 = 0
 
         RET = CSC_LUA_CALL_ARG_0_RET_I_C( LUA, NAME // C_NULL_CHAR,  CR1)
 
@@ -617,6 +618,7 @@ CONTAINS
         END IF
 
         CI1 = INT(I1, KIND = C_INT)
+        CR1 = 0
 
         RET = CSC_LUA_CALL_ARG_I_RET_I_C( LUA, NAME // C_NULL_CHAR, CI1, CR1)
 
@@ -670,7 +672,7 @@ CONTAINS
 
         CI1 = INT(I1, KIND = C_INT)
         CI2 = INT(I2, KIND = C_INT)
-
+        CR1 = 0
 
         RET = CSC_LUA_CALL_ARG_II_RET_I_C( LUA, NAME // C_NULL_CHAR, CI1, CI2, CR1)
 
@@ -726,6 +728,7 @@ CONTAINS
         CI1 = INT(I1, KIND = C_INT)
         CI2 = INT(I2, KIND = C_INT)
         CI3 = INT(I3, KIND = C_INT)
+        CR1 = 0
 
         RET = CSC_LUA_CALL_ARG_III_RET_I_C( LUA, NAME // C_NULL_CHAR, CI1, CI2, CI3, CR1)
 
@@ -781,6 +784,7 @@ CONTAINS
 
         CI2 = INT(I2, KIND = C_INT)
         CI3 = INT(I3, KIND = C_INT)
+        CR1 = 0
 
         RET = CSC_LUA_CALL_ARG_SII_RET_I_C( LUA, NAME // C_NULL_CHAR, I1 // C_NULL_CHAR, CI2, CI3, CR1)
 
@@ -864,6 +868,9 @@ CONTAINS
             INFO = 1
             RETURN
         END IF
+
+        CR1 = 0
+        CR2 = 0
 
         RET = CSC_LUA_CALL_ARG_0_RET_II_C( LUA, NAME // C_NULL_CHAR, CR1, CR2 )
 

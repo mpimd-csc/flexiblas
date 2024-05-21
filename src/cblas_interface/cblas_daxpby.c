@@ -63,7 +63,7 @@ void flexiblas_real_cblas_daxpby( const CBLAS_INT N, const double alpha, const d
        *(void **) &fn = current_backend->blas.daxpby.cblas_function;
 	   fn(N,alpha,X,incX,beta, Y,incY);
    } else {
-   	FC_GLOBAL(daxpby,DAXPBY)( &F77_N, &alpha, X, &F77_incX, &beta, Y, &F77_incY);
+   	FC_GLOBAL(daxpby,DAXPBY)( (blasint *)(uintptr_t)&F77_N, (double *)(uintptr_t)&alpha, (double *)(uintptr_t) X, (blasint *)(uintptr_t)&F77_incX, (double *)(uintptr_t) &beta, Y, (blasint *)(uintptr_t)&F77_incY);
    }
    current_backend->blas.daxpby.calls[POS_CBLAS] ++;
 

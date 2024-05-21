@@ -30,7 +30,7 @@
 #include <string.h>
 
 #include "flexiblas_fortran_mangle.h"
-/* #include "flexiblas.h" */
+#include "flexiblas_fortran_char_len.h"
 
 #ifndef Int
 #ifndef INTEGER8

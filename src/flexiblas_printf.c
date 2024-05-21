@@ -18,8 +18,6 @@
  */
 
 
-
-
 #include "flexiblas.h"
 #include <errno.h>
 #include <stddef.h>
@@ -98,6 +96,7 @@ void flexiblas_print_error(const char *prefix, const char *path, const int line,
          len = 3 * (strlen(prefix) + strlen(PRINT_PREFIX COLOR_RESET COLOR_RED)) + strlen(message) + 2 + strlen(path) + 12;
     }
 
+    (void) line;
     localbuffer = (char *) malloc(sizeof(char) * (len));
     if (!localbuffer) {
         free(message);

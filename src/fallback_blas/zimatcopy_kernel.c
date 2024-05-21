@@ -17,24 +17,11 @@
     with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef FLEXIBLAS_CHARLEN_T
-#define FLEXIBLAS_CHARLEN_T
-#if __GNUC__ > 7
-typedef size_t flexiblas_fortran_charlen_t;
-#else
-typedef int flexiblas_fortran_charlen_t;
-#endif
-#endif
-
-
-
-
-
-void FC_GLOBAL(somatcopy,SOMATCOPY)( char* ORDER, char* TRANS, Int *rows, Int *cols, float *alpha, float *a, Int *lda, float *b, Int *ldb);
-void FC_GLOBAL(domatcopy,DOMATCOPY)( char* ORDER, char* TRANS, Int *rows, Int *cols, double *alpha, double *a, Int *lda, double *b, Int *ldb);
-void FC_GLOBAL(comatcopy,COMATCOPY)( char* ORDER, char* TRANS, Int *rows, Int *cols, float complex *alpha, float complex *a, Int *lda, float complex *b, Int *ldb);
-void FC_GLOBAL(zomatcopy,ZOMATCOPY)( char* ORDER, char* TRANS, Int *rows, Int *cols, double complex *alpha, double complex *a, Int *lda, double complex *b, Int *ldb);
-void FC_GLOBAL(xerbla,XERBLA)(char *name, Int *info, Int len);
+void FC_GLOBAL(somatcopy,SOMATCOPY)( char* ORDER, char* TRANS, Int *rows, Int *cols, float *alpha, float *a, Int *lda, float *b, Int *ldb, flexiblas_fortran_charlen_t l1, flexiblas_fortran_charlen_t l2);
+void FC_GLOBAL(domatcopy,DOMATCOPY)( char* ORDER, char* TRANS, Int *rows, Int *cols, double *alpha, double *a, Int *lda, double *b, Int *ldb, flexiblas_fortran_charlen_t l1, flexiblas_fortran_charlen_t l2);
+void FC_GLOBAL(comatcopy,COMATCOPY)( char* ORDER, char* TRANS, Int *rows, Int *cols, float complex *alpha, float complex *a, Int *lda, float complex *b, Int *ldb, flexiblas_fortran_charlen_t l1, flexiblas_fortran_charlen_t l2);
+void FC_GLOBAL(zomatcopy,ZOMATCOPY)( char* ORDER, char* TRANS, Int *rows, Int *cols, double complex *alpha, double complex *a, Int *lda, double complex *b, Int *ldb, flexiblas_fortran_charlen_t l1, flexiblas_fortran_charlen_t l2);
+void FC_GLOBAL(xerbla,XERBLA)(char *name, Int *info, flexiblas_fortran_charlen_t len);
 
 void FNAME( char* ORDER, char* TRANS, Int *rows, Int *cols, FLOAT *alpha, FLOAT *a, Int *lda, Int *ldb, flexiblas_fortran_charlen_t len1, flexiblas_fortran_charlen_t len2)
 {
@@ -50,6 +37,8 @@ void FNAME( char* ORDER, char* TRANS, Int *rows, Int *cols, FLOAT *alpha, FLOAT 
 
 	Order = toupper(*ORDER);
 	Trans = toupper(*TRANS);
+
+    if ( len1 < 0 || len2 < 0 ) info = 0;
 
 	if ( Order != 'C' && Order != 'R' ) {
 		info = 1;
@@ -192,11 +181,11 @@ void FNAME( char* ORDER, char* TRANS, Int *rows, Int *cols, FLOAT *alpha, FLOAT 
 		{
 			_temp = (FLOAT) 1.0;
 #ifndef _DOUBLE_PRECISION
-	  		FC_GLOBAL(comatcopy,COMATCOPY)("C","N", rows, cols, alpha, a, lda, b, ldb );
-	  		FC_GLOBAL(comatcopy,COMATCOPY)("C","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(comatcopy,COMATCOPY)("C","N", rows, cols, alpha, a, lda, b, ldb ,1 ,1);
+	  		FC_GLOBAL(comatcopy,COMATCOPY)("C","N", rows, cols, &_temp , b, ldb, a, ldb ,1 ,1);
 #else
-	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("C","N", rows, cols, alpha, a, lda, b, ldb );
-	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("C","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("C","N", rows, cols, alpha, a, lda, b, ldb ,1 ,1);
+	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("C","N", rows, cols, &_temp , b, ldb, a, ldb ,1 ,1);
 
 #endif
 			free(b);
@@ -206,11 +195,11 @@ void FNAME( char* ORDER, char* TRANS, Int *rows, Int *cols, FLOAT *alpha, FLOAT 
 		{
 			_temp = (FLOAT) 1.0;
 #ifndef _DOUBLE_PRECISION
-	  		FC_GLOBAL(comatcopy,COMATCOPY)("C","R", rows, cols, alpha, a, lda, b, ldb );
-	  		FC_GLOBAL(comatcopy,COMATCOPY)("C","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(comatcopy,COMATCOPY)("C","R", rows, cols, alpha, a, lda, b, ldb ,1 ,1);
+	  		FC_GLOBAL(comatcopy,COMATCOPY)("C","N", rows, cols, &_temp , b, ldb, a, ldb ,1 ,1);
 #else
-	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("C","R", rows, cols, alpha, a, lda, b, ldb );
-	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("C","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("C","R", rows, cols, alpha, a, lda, b, ldb ,1 ,1);
+	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("C","N", rows, cols, &_temp , b, ldb, a, ldb ,1 ,1);
 #endif
 			free(b);
 			return;
@@ -219,11 +208,11 @@ void FNAME( char* ORDER, char* TRANS, Int *rows, Int *cols, FLOAT *alpha, FLOAT 
 		{
 			_temp = (FLOAT) 1.0;
 #ifndef _DOUBLE_PRECISION
-	  		FC_GLOBAL(comatcopy,COMATCOPY)("C","T", rows, cols, alpha, a, lda, b, ldb );
-	  		FC_GLOBAL(comatcopy,COMATCOPY)("C","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(comatcopy,COMATCOPY)("C","T", rows, cols, alpha, a, lda, b, ldb ,1 ,1);
+	  		FC_GLOBAL(comatcopy,COMATCOPY)("C","N", rows, cols, &_temp , b, ldb, a, ldb ,1 ,1);
 #else
-	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("C","T", rows, cols, alpha, a, lda, b, ldb );
-	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("C","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("C","T", rows, cols, alpha, a, lda, b, ldb ,1 ,1);
+	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("C","N", rows, cols, &_temp , b, ldb, a, ldb ,1 ,1);
 #endif
 			free(b);
 			return;
@@ -232,11 +221,11 @@ void FNAME( char* ORDER, char* TRANS, Int *rows, Int *cols, FLOAT *alpha, FLOAT 
 		{
 			_temp = (FLOAT) 1.0;
 #ifndef _DOUBLE_PRECISION
-	  		FC_GLOBAL(comatcopy,COMATCOPY)("C","C", rows, cols, alpha, a, lda, b, ldb );
-	  		FC_GLOBAL(comatcopy,COMATCOPY)("C","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(comatcopy,COMATCOPY)("C","C", rows, cols, alpha, a, lda, b, ldb ,1 ,1);
+	  		FC_GLOBAL(comatcopy,COMATCOPY)("C","N", rows, cols, &_temp , b, ldb, a, ldb ,1 ,1);
 #else
-	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("C","C", rows, cols, alpha, a, lda, b, ldb );
-	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("C","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("C","C", rows, cols, alpha, a, lda, b, ldb ,1 ,1);
+	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("C","N", rows, cols, &_temp , b, ldb, a, ldb ,1 ,1);
 #endif
 
 			free(b);
@@ -251,11 +240,11 @@ void FNAME( char* ORDER, char* TRANS, Int *rows, Int *cols, FLOAT *alpha, FLOAT 
 		{
 			_temp = (FLOAT) 1.0;
 #ifndef _DOUBLE_PRECISION
-	  		FC_GLOBAL(comatcopy,COMATCOPY)("R","N", rows, cols, alpha, a, lda, b, ldb );
-	  		FC_GLOBAL(comatcopy,COMATCOPY)("R","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(comatcopy,COMATCOPY)("R","N", rows, cols, alpha, a, lda, b, ldb ,1 ,1);
+	  		FC_GLOBAL(comatcopy,COMATCOPY)("R","N", rows, cols, &_temp , b, ldb, a, ldb ,1 ,1);
 #else
-	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("R","N", rows, cols, alpha, a, lda, b, ldb );
-	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("R","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("R","N", rows, cols, alpha, a, lda, b, ldb ,1 ,1);
+	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("R","N", rows, cols, &_temp , b, ldb, a, ldb ,1 ,1);
 #endif
 			free(b);
 			return;
@@ -264,11 +253,11 @@ void FNAME( char* ORDER, char* TRANS, Int *rows, Int *cols, FLOAT *alpha, FLOAT 
 		{
 			_temp = (FLOAT) 1.0;
 #ifndef _DOUBLE_PRECISION
-	  		FC_GLOBAL(comatcopy,COMATCOPY)("R","R", rows, cols, alpha, a, lda, b, ldb );
-	  		FC_GLOBAL(comatcopy,COMATCOPY)("R","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(comatcopy,COMATCOPY)("R","R", rows, cols, alpha, a, lda, b, ldb ,1 ,1);
+	  		FC_GLOBAL(comatcopy,COMATCOPY)("R","N", rows, cols, &_temp , b, ldb, a, ldb ,1 ,1);
 #else
-	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("R","R", rows, cols, alpha, a, lda, b, ldb );
-	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("R","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("R","R", rows, cols, alpha, a, lda, b, ldb ,1 ,1);
+	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("R","N", rows, cols, &_temp , b, ldb, a, ldb ,1 ,1);
 #endif
 			free(b);
 			return;
@@ -277,11 +266,11 @@ void FNAME( char* ORDER, char* TRANS, Int *rows, Int *cols, FLOAT *alpha, FLOAT 
 		{
 			_temp = (FLOAT) 1.0;
 #ifndef _DOUBLE_PRECISION
-	  		FC_GLOBAL(comatcopy,COMATCOPY)("R","T", rows, cols, alpha, a, lda, b, ldb );
-	  		FC_GLOBAL(comatcopy,COMATCOPY)("R","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(comatcopy,COMATCOPY)("R","T", rows, cols, alpha, a, lda, b, ldb ,1 ,1);
+	  		FC_GLOBAL(comatcopy,COMATCOPY)("R","N", rows, cols, &_temp , b, ldb, a, ldb ,1 ,1);
 #else
-	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("R","T", rows, cols, alpha, a, lda, b, ldb );
-	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("R","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("R","T", rows, cols, alpha, a, lda, b, ldb ,1 ,1);
+	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("R","N", rows, cols, &_temp , b, ldb, a, ldb ,1 ,1);
 #endif
 			free(b);
 			return;
@@ -290,11 +279,11 @@ void FNAME( char* ORDER, char* TRANS, Int *rows, Int *cols, FLOAT *alpha, FLOAT 
 		{
 			_temp = (FLOAT) 1.0;
 #ifndef _DOUBLE_PRECISION
-	  		FC_GLOBAL(comatcopy,COMATCOPY)("R","C", rows, cols, alpha, a, lda, b, ldb );
-	  		FC_GLOBAL(comatcopy,COMATCOPY)("R","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(comatcopy,COMATCOPY)("R","C", rows, cols, alpha, a, lda, b, ldb ,1 ,1);
+	  		FC_GLOBAL(comatcopy,COMATCOPY)("R","N", rows, cols, &_temp , b, ldb, a, ldb ,1 ,1);
 #else
-	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("R","C", rows, cols, alpha, a, lda, b, ldb );
-	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("R","N", rows, cols, &_temp , b, ldb, a, ldb );
+	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("R","C", rows, cols, alpha, a, lda, b, ldb ,1 ,1);
+	  		FC_GLOBAL(zomatcopy,ZOMATCOPY)("R","N", rows, cols, &_temp , b, ldb, a, ldb ,1 ,1);
 #endif
 			free(b);
 			return;

@@ -54,12 +54,12 @@ void flexiblas_chain_cblas_drotmg( double *d1, double *d2, double *b1,
 }
 
 void flexiblas_real_cblas_drotmg( double *d1, double *d2, double *b1,
-        const double b2, double *p)
+        double b2, double *p)
 {
     if ( current_backend->blas.drotmg.cblas_function != NULL ) {
         void (*fn)
             ( double *d1, double *d2, double *b1,
-              const double b2, double *p);
+              double b2, double *p);
         *(void **) & fn = current_backend->blas.drotmg.cblas_function;
         fn(d1,d2,b1,b2,p);
     } else {

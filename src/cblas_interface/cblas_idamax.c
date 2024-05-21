@@ -64,7 +64,7 @@ CBLAS_INDEX flexiblas_real_cblas_idamax( const CBLAS_INT N, const double *X, con
         *(void **) &fn = current_backend->blas.idamax.cblas_function;
         iamax = fn(N,X,incX);
     } else {
-        iamax = FC_GLOBAL(idamax,IDAMAX)( &F77_N, X, &F77_incX);
+        iamax = FC_GLOBAL(idamax,IDAMAX)( (blasint *)(uintptr_t)&F77_N, (double *)(uintptr_t) X, (blasint *)(uintptr_t)&F77_incX);
         iamax = iamax ? iamax-1 : 0;
     }
     return iamax;

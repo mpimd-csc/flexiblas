@@ -5,6 +5,7 @@ LIST(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules")
 INCLUDE(SetPolicy)
 SET_POLICY(CMP0075 NEW)
 SET_POLICY(CMP0063 NEW)
+SET_POLICY(CMP0069 NEW)
 
 INCLUDE(EnablePedanticC)
 
@@ -89,6 +90,36 @@ INCLUDE(CheckCCompilerFlag)
 INCLUDE(CheckBlasZdotcMKL)
 INCLUDE(CMakeHelpers)
 
+if(${CMAKE_SYSTEM_NAME} STREQUAL Linux)
+    file(STRINGS /proc/self/status _cmake_process_status)
+
+    # Grab the PID of the parent process
+    string(REGEX MATCH "PPid:[ \t]*([0-9]*)" _ ${_cmake_process_status})
+
+    # Grab the absolute path of the parent process
+    if ( CMAKE_VERSION VERSION_GREATER 3.13.99)
+        file(READ_SYMLINK /proc/${CMAKE_MATCH_1}/exe _cmake_parent_process_path)
+    else()
+        execute_process(COMMAND readlink /proc/${CMAKE_MATCH_1}/exe OUTPUT_VARIABLE _cmake_parent_process_path)
+    endif()
+
+    # Compute CMake arguments only if CMake was not invoked by the native build
+    # system, to avoid dropping user specified options on re-triggers.
+    if(NOT ${_cmake_parent_process_path} STREQUAL ${CMAKE_MAKE_PROGRAM})
+        execute_process(COMMAND bash -c "tr '\\0' ' ' < /proc/$PPID/cmdline"
+                        OUTPUT_VARIABLE _cmake_args)
+
+        string(STRIP "${_cmake_args}" _cmake_args)
+
+        set(CMAKE_ARGS "${_cmake_args}"
+            CACHE STRING "CMake command line args (set by end user)" FORCE)
+    endif()
+    message(STATUS "User Specified CMake Arguments: ${CMAKE_ARGS}")
+else()
+    SET(CMAKE_ARGS "")
+endif()
+
+
 #
 # DECOMPOSE_FEATURES
 #
@@ -158,6 +189,13 @@ IF(CMAKE_USE_PTHREADS_INIT)
     CHECK_FEATURE_NEEDED(pthread_yield pthread.h CSC_HAVE_PTHREAD_YIELD PTHREAD_YIELD_FEATURE)
 ENDIF()
 SET(CMAKE_REQUIRED_LIBRARIES ${_X})
+
+FIND_PACKAGE(OpenMP)
+    IF(OPENMP_FOUND)
+        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+        SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${OpenMP_Fortran_FLAGS}" )
+    ENDIF()
 
 #
 # Common FEATURES
@@ -249,12 +287,6 @@ IF(TRACE_ENABLE)
     MESSAGE_COLOR("")
     MESSAGE_COLOR(STATUS COLOR_BOLD_BLUE "Features for CSC-Tracewriter")
 
-    FIND_PACKAGE(OpenMP)
-    IF(OPENMP_FOUND)
-        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-        SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${OpenMP_Fortran_FLAGS}")
-    ENDIF()
 ENDIF()
 
 

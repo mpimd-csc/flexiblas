@@ -112,8 +112,8 @@ MODULE CSC_HDF5
             IMPORT
             INTEGER(CSC_HDF5_T), INTENT(IN), VALUE :: ROOT
             CHARACTER(C_CHAR), INTENT(IN)   :: DNAME
-            INTEGER(C_SIZE_T), INTENT(OUT)  :: ROWS
-            INTEGER(C_SIZE_T), INTENT(OUT)  :: COLS
+            INTEGER(C_SIZE_T), INTENT(INOUT)  :: ROWS
+            INTEGER(C_SIZE_T), INTENT(INOUT)  :: COLS
             INTEGER(C_INT) :: CSC_HDF5_MATRIX_SIZE_C
         END FUNCTION
 
@@ -1296,6 +1296,8 @@ CONTAINS
         INTEGER(C_INT)    :: RET
 
         RET  =  0
+        LROWS = 0
+        LCOLS = 0
         RET = CSC_HDF5_MATRIX_SIZE_C(ROOT, DNAME//C_NULL_CHAR, LROWS, LCOLS)
         ROWS = INT(LROWS)
         COLS = INT(LCOLS)

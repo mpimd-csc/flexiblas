@@ -27,6 +27,8 @@
 #include "cscutils/table.h"
 
 
+#define MIN(A,B) ((A)<(B))?(A):(B)
+
 static void print_row_latex(FILE *stream, csc_table_t *t, int r )
 {
     int i;
@@ -105,7 +107,7 @@ int csc_table_save_latex(const char *filename, csc_table_t *t, int standalone)
     FILE *fp;
     int c;
     int r;
-    char SAVE_COMMENT[CSC_TABLE_MAXLEN];
+    char SAVE_COMMENT[CSC_TABLE_MAXLEN+1];
 
     if (!filename) return -1;
     if (!t) return -1;
@@ -116,7 +118,9 @@ int csc_table_save_latex(const char *filename, csc_table_t *t, int standalone)
         return -1;
     }
 
-    strncpy(SAVE_COMMENT, t->comment->start, CSC_TABLE_MAXLEN);
+    size_t ml = MIN(strlen(t->comment->start), CSC_TABLE_MAXLEN)+1;
+    memcpy(SAVE_COMMENT, t->comment->start, ml*sizeof(char));
+    t->comment->start[ml] = 0;
     strncpy(t->comment->start, "% ", CSC_TABLE_MAXLEN);
 
     /* Standalone    */
@@ -159,7 +163,8 @@ int csc_table_save_latex(const char *filename, csc_table_t *t, int standalone)
         fprintf(fp, "\\end{document}\n");
     }
 
-    strncpy(t->comment->start, SAVE_COMMENT, CSC_TABLE_MAXLEN);
+    memcpy(t->comment->start, SAVE_COMMENT, ml*sizeof(char));
+    t->comment->start[ml] = 0;
     fclose(fp);
     return 0;
 }

@@ -70,6 +70,6 @@ void flexiblas_real_cblas_zaxpby( const CBLAS_INT N, const void *alpha, const vo
        *(void **) & fn = current_backend->blas.zaxpby.cblas_function;
 	   fn(N,alpha,X,incX,beta, Y,incY);
    } else {
-	FC_GLOBAL(zaxpby,ZAXPBY)( &F77_N, alpha, X, &F77_incX, beta, Y, &F77_incY);
+	FC_GLOBAL(zaxpby,ZAXPBY)( (blasint *)(uintptr_t)&F77_N, (void *)(uintptr_t) alpha, (void *)(uintptr_t) X, (blasint *)(uintptr_t)&F77_incX, (void *)(uintptr_t) beta, Y, (blasint *)(uintptr_t)&F77_incY);
    }
 }

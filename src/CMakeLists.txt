@@ -302,7 +302,7 @@ ENDIF()
 
 FIND_PACKAGE(OpenMP)
 
-INCLUDE_DIRECTORIES(${INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+INCLUDE_DIRECTORIES(${INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/lapack_interface)
 add_library(flexiblas SHARED ${SRC}) #  $<TARGET_OBJECTS:cscutils_src>)
 add_executable(flexiblas-tool flexiblas_tool.c tool/hookhandling.c tool/blashandling.c ${COMMON_SRC} ) # $<TARGET_OBJECTS:cscutils_src>)
 
@@ -665,7 +665,7 @@ FOREACH(ADDITIONAL_BLAS ${EXTRA})
     IF (${ADDITIONAL_BLAS}_LIBRARY)
         BuildBackendBlas(${ADDITIONAL_BLAS} backends/generic/backend.c)
     ELSE()
-        MESSAGE(FATAL_ERROR "-- ${ADDITIONAL_BLAS}_LIBRARY missing.")
+        MESSAGE(FATAL_ERROR "-- ${ADDITIONAL_BLAS}_LIBRARY is not set.")
     ENDIF()
 ENDFOREACH()
 

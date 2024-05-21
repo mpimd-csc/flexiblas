@@ -82,7 +82,7 @@ void flexiblas_real_cblas_ctpmv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo
         fn(layout,Uplo,TransA,Diag,N,Ap,X,incX);
     } else {
         CBLAS_INT n, i=0, tincX;
-        float *st=0,*x=(float *)X;
+        float *st=0,*x=(float *)(uintptr_t)X;
         extern int CBLAS_CallFromC;
         extern int RowMajorStrg;
         RowMajorStrg = 0;
@@ -123,7 +123,7 @@ void flexiblas_real_cblas_ctpmv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo
             F77_TA = C2F_CHAR(&TA);
             F77_DI = C2F_CHAR(&DI);
 #endif
-            FC_GLOBAL(ctpmv,CTPMV)( F77_UL, F77_TA, F77_DI, &F77_N, Ap, X, &F77_incX, 1, 1,1 );
+            FC_GLOBAL(ctpmv,CTPMV)( F77_UL, F77_TA, F77_DI, (blasint *)(uintptr_t)&F77_N, (void *)(uintptr_t) Ap, X, (blasint *)(uintptr_t)&F77_incX, 1, 1,1 );
         }
         else if (layout == CblasRowMajor)
         {
@@ -185,7 +185,7 @@ void flexiblas_real_cblas_ctpmv(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo
             F77_DI = C2F_CHAR(&DI);
 #endif
 
-            FC_GLOBAL(ctpmv,CTPMV)( F77_UL, F77_TA, F77_DI, &F77_N, Ap, X,&F77_incX, 1, 1, 1);
+            FC_GLOBAL(ctpmv,CTPMV)( F77_UL, F77_TA, F77_DI, (blasint *)(uintptr_t)&F77_N, (void *)(uintptr_t) Ap, X,(blasint *)(uintptr_t)&F77_incX, 1, 1, 1);
             if (TransA == CblasConjTrans)
             {
                 if (N > 0)

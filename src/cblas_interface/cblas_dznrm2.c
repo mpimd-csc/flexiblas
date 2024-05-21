@@ -64,7 +64,7 @@ double flexiblas_real_cblas_dznrm2( const CBLAS_INT N, const void *X, const CBLA
         *(void **) & fn = current_backend->blas.dznrm2.cblas_function;
         nrm2 = fn(N,X,incX);
     } else {
-        nrm2 =  FC_GLOBAL(dznrm2,DZNRM2)( &F77_N, X, &F77_incX);
+        nrm2 =  FC_GLOBAL(dznrm2,DZNRM2)( (blasint *)(uintptr_t)&F77_N, (double complex*)(uintptr_t) X, (blasint *)(uintptr_t)&F77_incX);
     }
     return nrm2;
 }

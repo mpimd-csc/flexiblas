@@ -20,7 +20,7 @@ SUBROUTINE CAXPBY(N,CA,CX,INCX,CB,CY,INCY)
     IMPLICIT NONE
     !     .. Scalar Arguments ..
     COMPLEX CA,CB
-    INTEGER*4 INCX,INCY,N
+    INTEGER INCX,INCY,N
     !     ..
     !     .. Array Arguments ..
     COMPLEX CX(*),CY(*)
@@ -42,7 +42,7 @@ SUBROUTINE CAXPBY(N,CA,CX,INCX,CB,CY,INCY)
     !  =====================================================================
     !
     !     .. Local Scalars ..
-    INTEGER*4 I,IX,IY, IONE
+    INTEGER I,IX,IY, IONE
     PARAMETER (IONE = 1)
     !     ..
     !     .. External Functions ..

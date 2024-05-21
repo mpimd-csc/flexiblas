@@ -31,8 +31,8 @@ FLEXIBLAS_INFO_FUNCTION(info)
 #else
 	info -> backend_integer_size = sizeof(int);
 #endif
-#if defined(__ICC) || (defined(__PGI) && !defined(__PPC__) )
-	info -> intel_interface = 1;
+#if defined(__ICC) || defined(__INTEL_LLVM_COMPILER) || (defined(__PGI) && !defined(__PPC__) ) || defined(__aocc__)
+	info -> intel_interface = -1;
 #else
 	info -> intel_interface = 0;
 #endif

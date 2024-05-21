@@ -68,7 +68,7 @@ void flexiblas_real_cblas_srotm( const CBLAS_INT N, float *X, const CBLAS_INT in
         *(void**) &fn = current_backend->blas.srotm.cblas_function;
         fn(N,X,incX,Y,incY,P);
     } else {
-        FC_GLOBAL(srotm,SROTM)( &F77_N, X, &F77_incX, Y, &F77_incY, P);
+        FC_GLOBAL(srotm,SROTM)( (blasint *)(uintptr_t)&F77_N, X, (blasint *)(uintptr_t)&F77_incX, Y, (blasint *)(uintptr_t)&F77_incY, (float *)(uintptr_t) P);
     }
     return;
 }

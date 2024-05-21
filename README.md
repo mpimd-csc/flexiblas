@@ -1,7 +1,7 @@
 FlexiBLAS - A BLAS and LAPACK wrapper library with runtime exchangeable backends
 ================================================================================
 
-**Version 3.4.2** - DOI: 10.5281/zenodo.10722217
+**Version 3.4.3** - DOI: 10.5281/zenodo.11121688
 
 **Project Website:** https://www.mpi-magdeburg.mpg.de/projects/flexiblas
 
@@ -188,6 +188,10 @@ options:
     `RTLD_NODELETE` flag in its `dlopen` call, setting this option to `ON` can
     be helpful.
 
+* `-DLTO=ON/OFF`
+    Enables the Link Time Optimization in the compiler, if supported. By default
+    this is enabled.
+
 The `PROFILE=ON/OFF` option was removed from version 1.1.0 onward. Beginning
 with version 3.0.0 profiling is done using a hook functionality and is no
 longer compiled in **FlexiBLAS** directly. See the Profiling section for
@@ -200,6 +204,16 @@ The following *BLAS* backends are tested during development:
 * [*OpenBLAS*](http://www.openblas.net/)
 * [*BLIS*](https://github.com/flame/blis)
 * [*Intel MKL*](https://software.intel.com/content/www/us/en/develop/tools/math-kernel-library.html)
+
+The following compilers are tested:
+
+* GCC >= 6.x
+* Intel icc/ifort Classic 2021
+* Intel icx/ifx oneAPI >= 2022
+* LLVM CLANG/FLANG >= 18
+* AMD AOCC 4.2.0
+
+Other compilers might work, but not tested.
 
 ### Setup with precompiled reference BLAS and LAPACK
 
@@ -295,24 +309,30 @@ maintaining the Fedora integration.
 ### Caveats
 
 * If **FlexiBLAS** is not automatically selected by the `update-alternatives`
-  mechanism you have to select it via:
+  mechanism you have to select it via (Ubuntu and Debian derivatives):
 
-        sudo update-alternatives --config libblas.so
-        sudo update-alternatives --config libblas.so.3
-        sudo update-alternatives --config libblas.so.3gf
+        sudo update-alternatives --config libblas64.so.3-x86_64-linux-gnu
+        sudo update-alternatives --config libblas.so.3-x86_64-linux-gnu
+        sudo update-alternatives --config libblas64.so-x86_64-linux-gnu
+        sudo update-alternatives --config libblas.so-x86_64-linux-gnu
 
-    The last line is only necessary up to *Ubuntu 12.04* and *Debian 6*.
+  On non-Debian based systems the names may differ. If your are using a
+  non-x86_64 architecture, you have to adjust the architecture triplet
+  accordingly.
 
 * **FlexiBLAS** requires that you use the reference implementation of *LAPACK*
   that means if `update-alternatives` uses the *LAPACK* implementation provided
-  by *ATLAS* many programs will fail. Please install the reference *LAPACK*
-  package and set it in the `update-alternatives` mechanism via
+  by other BLAS libaries many programs will fail. Please select **FlexiBLAS** as
+  well via:
 
-        sudo update-alternatives --config liblapack.so
-        sudo update-alternatives --config liblapack.so.3
-        sudo update-alternatives --config liblapack.so.3gf
+        sudo update-alternatives --config liblapack64.so.3-x86_64-linux-gnu
+        sudo update-alternatives --config liblapack.so.3-x86_64-linux-gnu
+        sudo update-alternatives --config liblapack64.so-x86_64-linux-gnu
+        sudo update-alternatives --config liblapack.so-x86_64-linux-gnu
 
-  The last one is only necessary up to *Ubuntu 12.04* and *Debian 6*.
+  On non-Debian based systems the names may differ. If your are using a
+  non-x86_64 architecture, you have to adjust the architecture triplet
+  accordingly.
 
 * Due to a bug in the *Ubuntu* *OpenBLAS* packages **FlexiBLAS** does not work
   with the **OpenBLAS** package versions between 0.2.6 and 0.2.8-4. If you have
@@ -324,6 +344,9 @@ maintaining the Fedora integration.
   ```
   export CMAKE_PREFIX_PATH=/usr/local/opt/openblas:$CMAKE_PREFIX_PATH
   ```
+
+* If the Intel Compiler suite is used, please ensure that either the classic or
+  the LLVM based compilers are used for both, C and Fortran.
 
 
 ### Testing

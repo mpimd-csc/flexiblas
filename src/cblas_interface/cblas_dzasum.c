@@ -68,7 +68,7 @@ double flexiblas_real_cblas_dzasum( const CBLAS_INT N, const void *X, const CBLA
         *(void **) &fn = current_backend->blas.dzasum.cblas_function;
         asum  = fn(N,X,incX);
     } else {
-        asum = FC_GLOBAL(dzasum,DZASUM)( &F77_N, X, &F77_incX);
+        asum = FC_GLOBAL(dzasum,DZASUM)( (blasint *)(uintptr_t)&F77_N, (double complex*)(uintptr_t) X, (blasint *)(uintptr_t)&F77_incX);
     }
     return asum;
 }

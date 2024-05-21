@@ -72,7 +72,7 @@ void flexiblas_real_cblas_cscal( const CBLAS_INT N, const void *alpha, void *X,
         *(void **) & fn = current_backend->blas.cscal.cblas_function;
         fn(N,alpha,X,incX);
     } else {
-        FC_GLOBAL(cscal,CSCAL)( &F77_N, alpha, X, &F77_incX);
+        FC_GLOBAL(cscal,CSCAL)( (blasint *)(uintptr_t)&F77_N, (void *)(uintptr_t) alpha, X, (blasint *)(uintptr_t)&F77_incX);
     }
 }
 

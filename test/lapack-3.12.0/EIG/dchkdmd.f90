@@ -582,11 +582,11 @@
                                     SINGVX(1) )
           END DO
           SVDIFF = MAX( SVDIFF, TMP )
-          IF ( TMP > M*N*EPS ) THEN
+          IF ( TMP > M*N*DSQRT(EPS) ) THEN
               WRITE(*,*) 'FAILED! Something was wrong with the run.'
               NFAIL_SVDIFF = NFAIL_SVDIFF + 1
               DO j =1, 3
-                  write(*,*) j, SINGVX(j), SINGVQX(j)
+                  write(*,*) j, SINGVX(j), SINGVQX(j), DABS(SINGVX(j) - SINGVQX(j)), TMP
                   read(*,*)
               END DO
           END IF

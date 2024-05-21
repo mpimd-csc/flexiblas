@@ -93,8 +93,8 @@ void flexiblas_real_cblas_cgerc(const CBLAS_LAYOUT layout, const CBLAS_INT M, co
         CBLAS_CallFromC = 1;
         if (layout == CblasColMajor)
         {
-            FC_GLOBAL(cgerc,CGERC)( &F77_M, &F77_N, alpha, X, &F77_incX, Y, &F77_incY, A,
-                    &F77_lda);
+            FC_GLOBAL(cgerc,CGERC)( (blasint *)(uintptr_t)&F77_M, (blasint *)(uintptr_t)&F77_N, (void *)(uintptr_t) alpha, (void *)(uintptr_t) X, (blasint *)(uintptr_t)&F77_incX, (void *)(uintptr_t) Y, (blasint *)(uintptr_t)&F77_incY, A,
+                    (blasint *)(uintptr_t)&F77_lda);
         }  else if (layout == CblasRowMajor)
         {
             RowMajorStrg = 1;
@@ -134,8 +134,8 @@ void flexiblas_real_cblas_cgerc(const CBLAS_LAYOUT layout, const CBLAS_INT M, co
                 COPY_CONST_PTR(y,Y);
             }
 
-            FC_GLOBAL(cgeru,CGERU)( &F77_N, &F77_M, alpha, y, &F77_incY, X, &F77_incX, A,
-                    &F77_lda);
+            FC_GLOBAL(cgeru,CGERU)( (blasint *)(uintptr_t)&F77_N, (blasint *)(uintptr_t)&F77_M, (void *)(uintptr_t) alpha, (void *)(uintptr_t) y, (blasint *)(uintptr_t)&F77_incY, (void *)(uintptr_t) X, (blasint *)(uintptr_t)&F77_incX, A,
+                    (blasint *)(uintptr_t)&F77_lda);
             if(Y!=y)
                 free(y);
 

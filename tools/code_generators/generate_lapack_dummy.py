@@ -42,17 +42,22 @@ file_header = """
     You should have received a copy of the GNU General Public License along
     with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-
+#include <stddef.h>
+#include <stdint.h>
 #include "flexiblas_config.h"
 #include "flexiblas_fortran_mangle.h"
+#include "flexiblas_fortran_char_len.h"
 
 """
 fn_head = """
 HIDDEN void flexiblas_lapack_dummy_function_not_called(void)
 {
+    size_t k = 0;
+    void *addr[10240];
 """
 
-fn_foot = """
+fn_foot = """;
+    addr[0] = addr[1];
 }
 """
 
@@ -68,13 +73,11 @@ def lapack_generate(version):
 
     fo = open(output, 'w');
     fo.write(file_header);
-
-    for fn in data:
-        fo.write('void FC_GLOBAL(' + fn + ',' + fn.upper()  + ')(void);\n');
+    fo.write("#include \"lapack_"+version2+".h\"\n\n")
 
     fo.write(fn_head)
     for fn in data:
-        fo.write('    FC_GLOBAL(' + fn + ',' + fn.upper()  + ')();\n');
+        fo.write('    addr[k++] = (void *)((size_t) &(FC_GLOBAL(' + fn + ',' + fn.upper()  + ')));\n');
     fo.write(fn_foot);
 
     fo.close()

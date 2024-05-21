@@ -43,7 +43,7 @@ FLEXIBLAS_INFO_FUNCTION(info) {
 
 /* Specify that the interface is intel compatible */
 #ifdef ZDOTC_MKL
-	info -> intel_interface = 1;
+	info -> intel_interface = -1;
 #else
 	info -> intel_interface = 0;
 #endif

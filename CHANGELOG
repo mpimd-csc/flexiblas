@@ -1,3 +1,18 @@
+3.4.3 (May 21, 2024)
+-------------------
+- new header file `include/flexiblas/flexiblas_fortran_char_len.h`
+- Various bugfixes with Intel Classic and OneAPI compilers (Closes GH: #49)
+- remove duplicate '/' when searchin for shared objects
+- working with clang and flang (LLVM)
+- working with AMD AOCC.
+- Integer overflow in AXPBY with INTEGER8=ON fixed.
+- runtime detection of the complex return value API
+- runtime detection of the integer size in the backend
+- Fix typo. (Closes GH: #50)
+- Fix LTO type mismatch (except of contributed LAPACK sources and tests)
+  (Closes: #51)
+- New config option "-DLTO=ON/OFF"
+
 3.4.2 (February 28, 2024)
 -------------------------
 - Wrong BLAS detection with INTEGER8=ON

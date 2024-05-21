@@ -45,7 +45,7 @@ else()
 endif()
 
 
-target_include_directories(flexiblas_netlib PRIVATE ${PROJECT_BINARY_DIR}/include)
+target_include_directories(flexiblas_netlib PRIVATE ${PROJECT_BINARY_DIR}/include ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/src)
 
 if (APPLE)
     set_target_properties(flexiblas_netlib PROPERTIES LINK_FLAGS "-undefined dynamic_lookup -flat_namespace")

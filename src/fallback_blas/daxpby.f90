@@ -20,7 +20,7 @@
 SUBROUTINE DAXPBY(N,DA,DX,INCX,DB,DY,INCY)
     !     .. Scalar Arguments ..
     DOUBLE PRECISION DA, DB
-    INTEGER*4 INCX,INCY,N
+    INTEGER INCX,INCY,N
     !     ..
     !     .. Array Arguments ..
     DOUBLE PRECISION DX(*),DY(*)
@@ -42,7 +42,7 @@ SUBROUTINE DAXPBY(N,DA,DX,INCX,DB,DY,INCY)
     !  =====================================================================
     !
     !     .. Local Scalars ..
-    INTEGER*4 I,IX,IY,M,MP1
+    INTEGER I,IX,IY,M,MP1
     !     ..
     !     .. Intrinsic Functions ..
     INTRINSIC MOD

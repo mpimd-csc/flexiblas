@@ -79,7 +79,9 @@ char *csc_sysinfo_ccompiler(void)
     return make_message("IBM XLC (Old, non Clang version) -- Please look yourself");
 #elif defined(__ICC)
     // Intel
-    return make_message("Intel C/C++ %d.%d.%d", __INTEL_COMPILER/100, 0, __INTEL_COMPILER_UPDATE);
+    return make_message("Intel C/C++ Classic %d.%d.%d", __INTEL_COMPILER/100, 0, __INTEL_COMPILER_UPDATE);
+#elif defined(__INTEL_CLANG_COMPILER)
+    return make_message("Intel LLVM C/C++ %d.%d", __INTEL_CLANG_COMPILER/10000, __INTEL_CLANG_COMPILER % 10000);
 #elif defined(__PGI)
     // PGI
     return make_message("PGI %d.%d.%d", __PGIC__, __PGIC_MINOR__, __PGIC_PATCHLEVEL__);

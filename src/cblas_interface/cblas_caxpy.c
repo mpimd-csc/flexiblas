@@ -38,7 +38,7 @@ void flexiblas_real_cblas_caxpy( const CBLAS_INT N, const void *alpha, const voi
         fn(N,alpha,X,incX,Y,incY);
     } else {
         Int F77_N=N, F77_incX=incX, F77_incY=incY;
-        FC_GLOBAL(caxpy,CAXPY)( &F77_N, alpha, X, &F77_incX, Y, &F77_incY);
+        FC_GLOBAL(caxpy,CAXPY)( (blasint *)(uintptr_t)&F77_N, (void *)(uintptr_t) alpha, (void *)(uintptr_t) X, (blasint *)(uintptr_t)&F77_incX, Y, (blasint *)(uintptr_t)&F77_incY);
     }
     return;
 }

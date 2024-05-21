@@ -37,6 +37,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <limits.h>
+#include "cscutils/strutils.h"
 #ifndef __WIN32__
 #define DLOPEN_FLAGS (RTLD_NOW|RTLD_LOCAL)
 #else
@@ -188,6 +189,7 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
 
 		if ( flags < 0 ) {
 			dlerror();
+            csc_strremovedup(filepath, '/');
 #ifdef HAVE_RTLD_NODELETE
 			handle = dlopen(filepath, RTLD_LAZY | RTLD_LOCAL | RTLD_NODELETE);
 #else
@@ -348,6 +350,7 @@ HIDDEN int __flexiblas_dl_symbol_exist( const char *libname, const char *symbol_
 
 	if( found ) {
         void *sym = NULL;
+        csc_strremovedup(filepath,'/');
         dlerror();
         handle = dlopen(filepath, RTLD_LAZY | RTLD_LOCAL);
         if (!handle) {

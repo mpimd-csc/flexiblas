@@ -51,13 +51,7 @@ void flexiblas_chain_cblas_dscal( const CBLAS_INT N, const double alpha, double 
 
 void flexiblas_real_cblas_dscal( const CBLAS_INT N, const double alpha, double *X, const CBLAS_INT incX)
 {
-#ifdef F77_INT
-   F77_INT F77_N=N, F77_incX=incX;
-#else
-   #define F77_N N
-   #define F77_incX incX
-#endif
-
+   blasint F77_N=N, F77_incX=incX;
    if ( current_backend->blas.dscal.cblas_function != NULL ) {
 	   void (*fn)
 		 ( const CBLAS_INT N, const double alpha, double *X,
@@ -65,6 +59,7 @@ void flexiblas_real_cblas_dscal( const CBLAS_INT N, const double alpha, double *
        *(void **) &fn = current_backend->blas.dscal.cblas_function;
 	   fn(N,alpha,X,incX);
    } else {
-	FC_GLOBAL(dscal,DSCAL)( &F77_N, &alpha, X, &F77_incX);
+        double calpha = alpha;
+        FC_GLOBAL(dscal,DSCAL)( &F77_N, &calpha, X,&F77_incX);
    }
 }

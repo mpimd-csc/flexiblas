@@ -38,9 +38,7 @@ int main(int argc, char **argv)
     csc_table_set_entry(t, cnb, (long) 128);
     csc_table_set_entry(t, ctime, (double) 2.234);
 
-    csc_table_comment_sysinfo(t);
-
-
+    csc_table_comment_allinfo(t);
 
     csc_table_print_ascii(stdout, t,"  ");
 

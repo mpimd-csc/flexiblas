@@ -838,25 +838,7 @@ class Wrapper(object):
         fn.write("#include <complex.h>\n\n")
         fn.write("#include \"flexiblas_fortran_mangle.h\"\n\n")
         fn.write("#include \"flexiblas.h\"\n\n")
-        fn.write("""
-#ifndef FLEXIBLAS_CHARLEN_T
-#define FLEXIBLAS_CHARLEN_T
-#if __GNUC__ > 7
-typedef size_t flexiblas_fortran_charlen_t;
-#else
-typedef int flexiblas_fortran_charlen_t;
-#endif
-#endif
-
-#ifndef blasint
-#ifdef FLEXIBLAS_INTEGER8
-#define blasint int64_t
-#else
-#define blasint int
-#endif
-#endif
-\n
-""")
+        fn.write("#include \"flexiblas_fortran_char_len.h\"\n\n")
 
         # declare structures
         # if skip_struct == False:
@@ -893,26 +875,8 @@ typedef int flexiblas_fortran_charlen_t;
         fn.write("#include <complex.h>\n\n")
         fn.write("#include \"flexiblas_fortran_mangle.h\"\n\n")
         fn.write("#include \"flexiblas.h\"\n\n")
-        fn.write("""
-#ifndef FLEXIBLAS_CHARLEN_T
-#define FLEXIBLAS_CHARLEN_T
-#if __GNUC__ > 7
-typedef size_t flexiblas_fortran_charlen_t;
-#else
-typedef int flexiblas_fortran_charlen_t;
-#endif
-#endif
+        fn.write("#include \"flexiblas_fortran_char_len.h\"\n\n")
 
-
-#ifndef blasint
-#ifdef FLEXIBLAS_INTEGER8
-#define blasint int64_t
-#else
-#define blasint int
-#endif
-#endif
-\n
-""")
         for i,f in self.functions.items():
             fn.write(f.wrapper_real(intel_interface = self.config.intel, part=pt) + "\n")
             fn.write("\n")

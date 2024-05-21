@@ -45,7 +45,7 @@ void flexiblas_real_cblas_saxpy( const CBLAS_INT N, const float alpha, const flo
         fn(N,alpha,X,incX,Y,incY);
     } else {
         Int F77_N=N, F77_incX=incX, F77_incY=incY;
-        FC_GLOBAL(saxpy,SAXPY)( &F77_N, &alpha, X, &F77_incX, Y, &F77_incY);
+        FC_GLOBAL(saxpy,SAXPY)( (blasint *)(uintptr_t)&F77_N, (float *)(uintptr_t) &alpha, (float *)(uintptr_t) X, (blasint *)(uintptr_t)&F77_incX, Y, (blasint *)(uintptr_t)&F77_incY);
     }
 }
 

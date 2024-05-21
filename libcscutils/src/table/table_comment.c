@@ -22,6 +22,8 @@
 #include <string.h>
 #include <stdarg.h>
 #include <time.h>
+#include <omp.h>
+
 #include "cscutils/error_message.h"
 #include "cscutils/strutils.h"
 #include "cscutils/table.h"
@@ -98,7 +100,6 @@ void csc_table_comment_sysinfo(csc_table_t * t)
 
     char * tmp, *tmp2;
 
-    csc_table_comment_add(t->comment, "");
     csc_table_comment_add(t->comment, "=== System Information ===");
     tmp = csc_sysinfo_hostname();
     snprintf(buffer, 32767, "Hostname: %s", tmp);
@@ -132,7 +133,7 @@ void csc_table_comment_sysinfo(csc_table_t * t)
     snprintf(buffer, 32767, "CPU Cores: %u", count);
     csc_table_comment_add(t->comment, buffer);
 
-    size_t memfree, memtotal, swapfree, swaptotal;
+    size_t memfree, memtotal = 0 , swapfree, swaptotal;
     csc_sysinfo_memory(&memtotal, &memfree, &swaptotal, &swapfree);
 
     memtotal /= 1024;
@@ -142,12 +143,136 @@ void csc_table_comment_sysinfo(csc_table_t * t)
 
     snprintf(buffer, 32767, "Memory: %llu GiB", (unsigned long long) memtotal/1024);
     csc_table_comment_add(t->comment, buffer);
+
     csc_table_comment_add(t->comment, "===========================");
     csc_table_comment_add(t->comment, "");
     return;
 
 }
 
+// https://man7.org/linux/man-pages/man7/environ.7.html
+extern char **environ;
+void csc_table_comment_openmp_info(csc_table_t *t)
+{
+#ifdef _OPENMP
+    int i = 0;
+    if ( ! t ) return;
+    csc_table_comment_add(t->comment, "=== OpenMP Environment  ===");
+    for ( i = 0; environ[i] != NULL; i++) {
+        const char * s = environ[i];
+        if (strstr(s, "OMP") == s) {
+            csc_table_comment_add(t->comment, s);
+        }
+    }
+    csc_table_comment_add(t->comment, "omp_get_num_threads: %d", omp_get_num_threads());
+    csc_table_comment_add(t->comment, "omp_get_num_procs: %d", omp_get_num_procs());
+    csc_table_comment_add(t->comment, "omp_get_dynamic: %d", omp_get_dynamic());
+    csc_table_comment_add(t->comment, "omp_get_nested: %d", omp_get_nested());
+    omp_sched_t sched;
+    int mod;
+    omp_get_schedule(&sched, &mod);
+    switch(sched) {
+        case omp_sched_static:
+            csc_table_comment_add(t->comment, "omp_get_schedule: static (%d)", mod);
+            break;
+        case omp_sched_dynamic:
+            csc_table_comment_add(t->comment, "omp_get_schedule: dynamic (%d)", mod);
+            break;
+        case omp_sched_guided:
+            csc_table_comment_add(t->comment, "omp_get_schedule: guided (%d)", mod);
+            break;
+        case omp_sched_auto:
+            csc_table_comment_add(t->comment, "omp_get_schedule: auto (%d)", mod);
+            break;
+        default:
+            csc_table_comment_add(t->comment, "omp_get_schedule: %d (%d)", (int) sched, mod);
+    }
+    csc_table_comment_add(t->comment, "omp_get_thread_limit: %d", omp_get_thread_limit());
+    csc_table_comment_add(t->comment, "omp_get_max_active_levels: %d", omp_get_max_active_levels());
+#if _OPENMP > 201107
+    omp_proc_bind_t pr = omp_get_proc_bind();
+    switch(pr) {
+        case omp_proc_bind_false:
+            csc_table_comment_add(t->comment, "omp_get_proc_bind: false");
+            break;
+        case omp_proc_bind_true:
+            csc_table_comment_add(t->comment, "omp_get_proc_bind: true");
+            break;
+        case omp_proc_bind_close:
+            csc_table_comment_add(t->comment, "omp_get_proc_bind: close");
+            break;
+        case omp_proc_bind_master:
+            csc_table_comment_add(t->comment, "omp_get_proc_bind: master");
+
+            break;
+        case omp_proc_bind_spread:
+            csc_table_comment_add(t->comment, "omp_get_proc_bind: spread");
+
+            break;
+        default:
+            csc_table_comment_add(t->comment, "omp_get_proc_bind: %d", (int) pr);
+    }
+#endif
+    csc_table_comment_add(t->comment, "===========================");
+    csc_table_comment_add(t->comment, "");
+#else
+    return;
+#endif
+
+}
+
+void csc_table_comment_cmake(csc_table_t *t)
+{
+    if ( ! t ) return;
+
+    csc_table_comment_add(t->comment, "=== CMAKE Command Line ====");
+    csc_table_comment_add(t->comment, "%s", csc_sysinfo_cmake_args());
+    csc_table_comment_add(t->comment, "===========================");
+    csc_table_comment_add(t->comment, "");
+
+
+
+}
+
+void csc_table_comment_compilerflags(csc_table_t *t)
+{
+    if ( ! t ) return;
+    const char *cf = csc_sysinfo_c_flags();
+    const char *cxxf = csc_sysinfo_cxx_flags();
+    const char *ff = csc_sysinfo_fortran_flags();
+    const char *hipf = csc_sysinfo_hip_flags();
+    const char *cudaf = csc_sysinfo_cuda_flags();
+
+    csc_table_comment_add(t->comment, "=== Compiler Flags ========");
+
+    if ( cf ) {
+        csc_table_comment_add(t->comment, "C:       %s", cf);
+    }
+    if ( cxxf ) {
+        csc_table_comment_add(t->comment, "C++:     %s", cxxf);
+    }
+    if ( ff ) {
+        csc_table_comment_add(t->comment, "Fortran: %s", ff);
+    }
+    if ( hipf ) {
+        csc_table_comment_add(t->comment, "HIP:     %s", hipf);
+    }
+    if ( cudaf ) {
+        csc_table_comment_add(t->comment, "CUDA:    %s", cudaf);
+    }
+
+    csc_table_comment_add(t->comment, "===========================");
+    csc_table_comment_add(t->comment, "");
+    return;
+}
+
+void csc_table_comment_allinfo(csc_table_t * t)
+{
+    csc_table_comment_sysinfo(t);
+    csc_table_comment_openmp_info(t);
+    csc_table_comment_cmake(t);
+    csc_table_comment_compilerflags(t);
+}
 
 /* Internal functions  */
 void csc_table_comment_print(FILE *stream, csc_table_comment_t *c) {

@@ -60,7 +60,7 @@ float flexiblas_real_cblas_snrm2( const CBLAS_INT N, const float *X, const CBLAS
         *(void **) &fn = current_backend->blas.snrm2.cblas_function;
         nrm2 = fn(N,X,incX);
     } else {
-        nrm2 = FC_GLOBAL(snrm2,SNRM2)( &F77_N, X, &F77_incX);
+        nrm2 = FC_GLOBAL(snrm2,SNRM2)( (blasint *)(uintptr_t)&F77_N, (float *)(uintptr_t) X, (blasint *)(uintptr_t)&F77_incX);
     }
     return nrm2;
 }

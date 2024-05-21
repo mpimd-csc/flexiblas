@@ -83,14 +83,13 @@ void flexiblas_real_cblas_sger(const CBLAS_LAYOUT layout, const CBLAS_INT M, con
         CBLAS_CallFromC = 1;
         if (layout == CblasColMajor)
         {
-            FC_GLOBAL(sger,SGER)( &F77_M, &F77_N, &alpha, X, &F77_incX, Y, &F77_incY, A,
-                    &F77_lda);
+            FC_GLOBAL(sger,SGER)( (blasint *)(uintptr_t)&F77_M, (blasint *)(uintptr_t)&F77_N, (float *)(uintptr_t) &alpha, (float *)(uintptr_t) X, (blasint *)(uintptr_t)&F77_incX, (float *)(uintptr_t) Y, (blasint *)(uintptr_t)&F77_incY, A, (blasint *)(uintptr_t)&F77_lda);
         }
         else if (layout == CblasRowMajor)
         {
             RowMajorStrg = 1;
-            FC_GLOBAL(sger,SGER)( &F77_N, &F77_M ,&alpha, Y, &F77_incY, X, &F77_incX, A,
-                    &F77_lda);
+            FC_GLOBAL(sger,SGER)( (blasint *)(uintptr_t)&F77_N, (blasint *)(uintptr_t)&F77_M , (float *)(uintptr_t) &alpha,  (float *)(uintptr_t) Y, (blasint *)(uintptr_t)&F77_incY,  (float *)(uintptr_t) X, (blasint *)(uintptr_t)&F77_incX, A,
+                    (blasint *)(uintptr_t)&F77_lda);
 
         }
         else cblas_xerbla(1, "cblas_sger", "Illegal layout setting, %d\n", layout);

@@ -21,7 +21,7 @@
 SUBROUTINE ZAXPBY(N,ZA,ZX,INCX,ZB,ZY,INCY)
     !     .. Scalar Arguments ..
     DOUBLE COMPLEX ZA,ZB
-    INTEGER*4 INCX,INCY,N
+    INTEGER INCX,INCY,N
     !     ..
     !     .. Array Arguments ..
     DOUBLE COMPLEX ZX(*),ZY(*)
@@ -43,7 +43,7 @@ SUBROUTINE ZAXPBY(N,ZA,ZX,INCX,ZB,ZY,INCY)
     !  =====================================================================
     !
     !     .. Local Scalars ..
-    INTEGER*4 I,IX,IY
+    INTEGER I,IX,IY
     !     ..
     !     .. External Functions ..
     DOUBLE PRECISION DCABS1

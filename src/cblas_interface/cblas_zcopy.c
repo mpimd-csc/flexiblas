@@ -45,7 +45,7 @@ void flexiblas_real_cblas_zcopy( const CBLAS_INT N, const void *X,const CBLAS_IN
         fn(N,X,incX,Y,incY);
     } else {
         Int F77_N=N, F77_incX=incX, F77_incY=incY;
-        FC_GLOBAL(zcopy,ZCOPY)( &F77_N, X, &F77_incX, Y, &F77_incY);
+        FC_GLOBAL(zcopy,ZCOPY)( (blasint *)(uintptr_t)&F77_N, (void *)(uintptr_t) X, (blasint *)(uintptr_t)&F77_incX, Y, (blasint *)(uintptr_t)&F77_incY);
     }
     return;
 }

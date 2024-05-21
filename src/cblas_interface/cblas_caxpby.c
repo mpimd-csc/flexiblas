@@ -55,13 +55,8 @@ void flexiblas_chain_cblas_caxpby( const CBLAS_INT N, const void *alpha, const v
 void flexiblas_real_cblas_caxpby( const CBLAS_INT N, const void *alpha, const void *X,
                        const CBLAS_INT incX, const void *beta, void *Y, const CBLAS_INT incY)
 {
-#ifdef F77_INT
-   F77_INT F77_N=N, F77_incX=incX, F77_incY=incY;
-#else
-   #define F77_N N
-   #define F77_incX incX
-   #define F77_incY incY
-#endif
+   blasint F77_N=N, F77_incX=incX, F77_incY=incY;
+
    if ( current_backend->blas.caxpby.cblas_function != NULL ) {
 	   void (*fn)
 		 ( const CBLAS_INT N, const void *alpha, const void *X,
@@ -69,6 +64,6 @@ void flexiblas_real_cblas_caxpby( const CBLAS_INT N, const void *alpha, const vo
        *(void **) &fn =  current_backend->blas.caxpby.cblas_function;
 	   fn(N,alpha,X,incX,beta, Y,incY);
    } else {
-	FC_GLOBAL(caxpby,CAXPBY)( &F77_N, alpha, X, &F77_incX, beta, Y, &F77_incY);
+    	FC_GLOBAL(caxpby,CAXPBY)( &F77_N, (void *)(uintptr_t) alpha, (void *)(uintptr_t) X, (blasint *)(uintptr_t)&F77_incX, (void *)(uintptr_t) beta, Y, (blasint *)(uintptr_t)&F77_incY);
    }
 }

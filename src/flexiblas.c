@@ -197,6 +197,44 @@ static void flexiblas_load_info(void *library, flexiblas_backend_t *backend)
         DPRINTF(1,"No BLAS Info found in given backend. Using default.\n");
         h_info_default(&(backend->info));
     }
+
+#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+    backend->info.intel_interface = 0;
+#else
+
+    /* Get the complex return type */
+    backend->info.intel_interface = 0;
+    flexiblas_complex_interface_t cpx_interface = __flexiblas_get_complex_interface(library);
+    if ( cpx_interface == FLEXIBLAS_COMPLEX_INTEL_INTERFACE) {
+        backend->info.intel_interface = 1;
+    } else if ( cpx_interface == FLEXIBLAS_COMPLEX_GNU_INTERFACE) {
+        backend->info.intel_interface = 0;
+    } else {
+        DPRINTF(1,"Could not detect the complex-return-value interface style. Assuming GNU style.");
+        backend->info.intel_interface = 0;
+    }
+
+#endif
+
+    /* Get the Integer size of the backend */
+    flexiblas_interface_t interface = __flexiblas_get_interface(library);
+    if ( interface == FLEXIBLAS_INTERFACE_LP64 )
+    {
+        DPRINTF(1, "--> BLAS uses LP64.\n");
+#ifdef FLEXIBLAS_INTEGER8
+        DPRINTF_WARN(0, "The selected BLAS backend uses 4-byte integers (e.g. the LP64 model), but FlexiBLAS was configured with -DINTEGER8=ON. This causes problems in almost all use cases. Please select a different backend or recompile FlexiBLAS.\n");
+#endif
+    }
+    else if ( interface == FLEXIBLAS_INTERFACE_ILP64 )
+    {
+        DPRINTF(1, "--> BLAS uses ILP64.\n");
+#ifndef FLEXIBLAS_INTEGER8
+        DPRINTF_WARN(0, "The selected BLAS backend uses 8-byte integers (e.g. the ILP64 model), but FlexiBLAS was configured with -DINTEGER8=OFF. This causes problems in almost all uses cases. Please select a different backend or recompile FlexiBLAS.\n");
+#endif
+    } else {
+        DPRINTF(1, "--> BLAS integer model unknown.\n");
+    }
+
 }
 
 /*-----------------------------------------------------------------------------

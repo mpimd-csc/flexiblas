@@ -128,6 +128,26 @@ MODULE CSC_TABLE
             TYPE(C_PTR), VALUE :: TAB
         END SUBROUTINE CSC_TABLE_COMMENT_SYSINFO
 
+        SUBROUTINE CSC_TABLE_COMMENT_CMAKE(TAB) BIND(C, name = "csc_table_comment_cmake")
+            IMPORT
+            TYPE(C_PTR), VALUE :: TAB
+        END SUBROUTINE CSC_TABLE_COMMENT_CMAKE
+
+        SUBROUTINE CSC_TABLE_COMMENT_OPENMP_INFO(TAB) BIND(C, name = "csc_table_comment_openmp_info")
+            IMPORT
+            TYPE(C_PTR), VALUE :: TAB
+        END SUBROUTINE CSC_TABLE_COMMENT_OPENMP_INFO
+
+        SUBROUTINE CSC_TABLE_COMMENT_COMPILERFLAGS(TAB) BIND(C, name = "csc_table_comment_compilerflags")
+            IMPORT
+            TYPE(C_PTR), VALUE :: TAB
+        END SUBROUTINE CSC_TABLE_COMMENT_COMPILERFLAGS
+
+        SUBROUTINE CSC_TABLE_COMMENT_ALLINFO(TAB) BIND(C, name = "csc_table_comment_allinfo")
+            IMPORT
+            TYPE(C_PTR), VALUE :: TAB
+        END SUBROUTINE CSC_TABLE_COMMENT_ALLINFO
+
 
         FUNCTION CSC_TABLE_MAX_ROW_C(TAB, COL) BIND(C, name = "csc_table_max_row")
             IMPORT

@@ -107,6 +107,16 @@ extern "C" {
      */
     int csc_lua_run(csc_lua_t lua);
 
+    /**
+     * \brief Create a new LUA thread
+     * \param[in] lua Lua state to create the new thread from.
+     * \returm NULL in case of an error, a new lua object on success.
+     *
+     * The csc_lua_new_thread function created a new LUA thread with the
+     * same globals as the input thread \i lua but with its own execution
+     * stack.
+     */
+    csc_lua_t csc_lua_new_thread(csc_lua_t lua);
 
     /**
      * \brief Set a global integer variable.

@@ -1494,7 +1494,7 @@ int csc_hdf5_sparse_write (csc_hdf5_content_t type, csc_hdf5_field_t number_fiel
 /* Write a coordinate Real matrix with 4 byte integers   */
 int csc_hdf5_sparse_read (csc_hdf5_content_t *type, csc_hdf5_field_t *number_field, csc_hdf5_field_t integer_field, hid_t root, const char *dset_name, size_t *rows, size_t *cols, size_t *nnz, void *rowptr, void *colptr, void *values)
 {
-    herr_t err;
+    herr_t err = 0;
     hid_t sparse_group = -1, did,tid;
     unsigned long ul_rows, ul_cols, ul_nnz;
     hid_t integer_type;

@@ -62,7 +62,7 @@ void cblas_drot(const CBLAS_INT N, double *X, const CBLAS_INT incX,
         *(void **) &fn = current_backend->blas.drot.cblas_function;
         fn(N,X,incX,Y,incY,c,s);
     } else {
-        FC_GLOBAL(drot,DROT)(&F77_N, X, &F77_incX, Y, &F77_incY, &c, &s);
+        FC_GLOBAL(drot,DROT)((blasint *)(uintptr_t)&F77_N, X, (blasint *)(uintptr_t)&F77_incX, Y, (blasint *)(uintptr_t)&F77_incY, (double *)(uintptr_t) &c, (double *)(uintptr_t) &s);
     }
     return;
 }

@@ -68,6 +68,7 @@ static void stackDump (lua_State *L) {
 
 
 
+
 csc_lua_t csc_lua_init(void)
 {
     lua_State *state;
@@ -79,6 +80,15 @@ csc_lua_t csc_lua_init(void)
     }
     luaL_openlibs(state);
     return (csc_lua_t) state;
+}
+
+csc_lua_t csc_lua_new_thread(csc_lua_t lua)
+{
+    lua_State *newstate;
+    lua_State *oldstate = lua;
+    if ( oldstate == NULL ) return NULL;
+    newstate = lua_newthread(oldstate);
+    return newstate;
 }
 
 void csc_lua_finalize(csc_lua_t lua)
@@ -239,6 +249,7 @@ int csc_lua_call_arg_0_ret_i(csc_lua_t lua, const char * name , int *r1)
         lua_pop(state, 1);  /* Remove the nil value return from get global */
         return -1;
     }
+    *r1 = 0;
     lua_pcall(state, 0, 1,0);
     *r1 = lua_tointeger(state,-1);
     lua_pop(state, 1);
@@ -258,6 +269,8 @@ int csc_lua_call_arg_0_ret_ii(csc_lua_t lua, const char * name , int *r1, int *r
         lua_pop(state, 1);  /* Remove the nil value return from get global */
         return -1;
     }
+    *r1 = 0;
+    *r2 = 0;
     lua_pcall(state, 0, 2,0);
     *r1 = lua_tointeger(state,-2);
     *r2 = lua_tointeger(state,-1);
@@ -279,7 +292,7 @@ int csc_lua_call_arg_i_ret_i(csc_lua_t lua, const char * name , int i1, int *r1)
         return -1;
     }
     lua_pushinteger(state, i1);
-
+    *r1 = 0;
     lua_pcall(state, 1, 1,0);
     *r1 = lua_tointeger(state,-1);
     lua_pop(state, 1);
@@ -305,7 +318,7 @@ int csc_lua_call_arg_ii_ret_i(csc_lua_t lua, const char * name , int i1, int i2,
 
     lua_pushinteger(state, i1);
     lua_pushinteger(state, i2);
-
+    *r1 = 0;
     lua_pcall(state, 2, 1,0);
     *r1 = lua_tointeger(state,-1);
     lua_pop(state, 1);
@@ -326,7 +339,7 @@ int csc_lua_call_arg_iii_ret_i(csc_lua_t lua, const char * name , int i1, int i2
         lua_pop(state, 1);  /* Remove the nil value return from get global */
         return -1;
     }
-
+    *r1 = 0;
     lua_pushinteger(state, i1);
     lua_pushinteger(state, i2);
     lua_pushinteger(state, i3);
@@ -352,7 +365,7 @@ int csc_lua_call_arg_sii_ret_i(csc_lua_t lua, const char * name , const char * i
         lua_pop(state, 1);  /* Remove the nil value return from get global */
         return -1;
     }
-
+    *r1 = 0;
     lua_pushstring(state, i1);
     lua_pushinteger(state, i2);
     lua_pushinteger(state, i3);

@@ -20,7 +20,7 @@
 SUBROUTINE SAXPBY(N,SA,SX,INCX,SB,SY,INCY)
     !     .. Scalar Arguments ..
     REAL SA,SB
-    INTEGER*4 INCX,INCY,N
+    INTEGER INCX,INCY,N
     !     ..
     !     .. Array Arguments ..
     REAL SX(*),SY(*)
@@ -43,7 +43,7 @@ SUBROUTINE SAXPBY(N,SA,SX,INCX,SB,SY,INCY)
     !  =====================================================================
     !
     !     .. Local Scalars ..
-    INTEGER*4 I,IX,IY,M,MP1
+    INTEGER I,IX,IY,M,MP1
     !     ..
     !     .. Intrinsic Functions ..
     INTRINSIC MOD

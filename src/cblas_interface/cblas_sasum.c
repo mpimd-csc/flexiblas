@@ -67,7 +67,7 @@ float flexiblas_real_cblas_sasum( const CBLAS_INT N, const float *X, const CBLAS
 	   asum = fn(N,X,incX);
 
    } else {
-	   asum = FC_GLOBAL(sasum,SASUM)( &F77_N, X, &F77_incX);
+	   asum = FC_GLOBAL(sasum,SASUM)( (blasint *)(uintptr_t)&F77_N, (float *)(uintptr_t) X, (blasint *)(uintptr_t)&F77_incX);
    }
 
    return asum;

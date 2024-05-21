@@ -98,7 +98,7 @@ void flexiblas_real_cblas_zhpmv(const CBLAS_LAYOUT layout,
         const double *alp= (const double *)alpha, *bet = (const double *)beta;
         double ALPHA[2],BETA[2];
         CBLAS_INT tincY, tincx;
-        double *x, *xx, *y=(double *)Y, *st=0, *tx;
+        double *x, *xx, *y=(double *)(uintptr_t)Y, *st=0, *tx;
         extern int CBLAS_CallFromC;
         extern int RowMajorStrg;
         RowMajorStrg = 0;
@@ -120,8 +120,8 @@ void flexiblas_real_cblas_zhpmv(const CBLAS_LAYOUT layout,
 #ifdef F77_CHAR
             F77_UL = C2F_CHAR(&UL);
 #endif
-            FC_GLOBAL(zhpmv,ZHPMV)(F77_UL, &F77_N, alpha, AP, X,
-                    &F77_incX, beta, Y, &F77_incY, 1);
+            FC_GLOBAL(zhpmv,ZHPMV)(F77_UL, (blasint *)(uintptr_t)&F77_N, (void *)(uintptr_t) alpha, (void *)(uintptr_t) AP, (void *)(uintptr_t) X,
+                    (blasint *)(uintptr_t)&F77_incX, (void *)(uintptr_t) beta, Y, (blasint *)(uintptr_t)&F77_incY, 1);
         }
         else if (layout == CblasRowMajor)
         {
@@ -197,8 +197,8 @@ void flexiblas_real_cblas_zhpmv(const CBLAS_LAYOUT layout,
             F77_UL = C2F_CHAR(&UL);
 #endif
 
-            FC_GLOBAL(zhpmv,ZHPMV)(F77_UL, &F77_N, ALPHA,
-                    AP, x, &F77_incX, BETA, Y, &F77_incY, 1);
+            FC_GLOBAL(zhpmv,ZHPMV)(F77_UL, (blasint *)(uintptr_t)&F77_N, (void *)(uintptr_t) ALPHA,
+                    (void *)(uintptr_t) AP, (void *)(uintptr_t) x, (blasint *)(uintptr_t)&F77_incX, (void *)(uintptr_t) BETA, Y, (blasint *)(uintptr_t)&F77_incY, 1);
         }
         else
         {

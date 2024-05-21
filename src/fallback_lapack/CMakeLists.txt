@@ -87,7 +87,7 @@ if (APPLE)
    set_target_properties(flexiblas_fallback_lapack PROPERTIES LINK_FLAGS "-undefined dynamic_lookup ")
 endif()
 
-target_include_directories(flexiblas_fallback_lapack PRIVATE ${PROJECT_BINARY_DIR}/include)
+target_include_directories(flexiblas_fallback_lapack PRIVATE ${PROJECT_BINARY_DIR}/include ${PROJECT_SOURCE_DIR}/src/lapack_interface/ ${PROJECT_SOURCE_DIR/src})
 
 install(TARGETS flexiblas_fallback_lapack LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR})
 SET_TARGET_PROPERTIES(flexiblas_fallback_lapack  PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")

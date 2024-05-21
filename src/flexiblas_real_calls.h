@@ -29,24 +29,8 @@
 extern "C" {
 #endif
 
+#include "flexiblas_fortran_char_len.h"
 
-#ifndef FLEXIBLAS_CHARLEN_T
-#define FLEXIBLAS_CHARLEN_T
-#if __GNUC__ > 7
-typedef size_t flexiblas_fortran_charlen_t;
-#else
-typedef int flexiblas_fortran_charlen_t;
-#endif
-#endif
-
-#ifndef blasint
-#ifdef FLEXIBLAS_INTEGER8
-#include <stdint.h>
-#define blasint int64_t
-#else
-#define blasint int
-#endif
-#endif
 void flexiblas_real_caxpy_(void* n, void* ca, void* cx, void* incx, void* cy, void* incy);
 void flexiblas_real_caxpy(void* n, void* ca, void* cx, void* incx, void* cy, void* incy);
 void flexiblas_chain_caxpy_(void* n, void* ca, void* cx, void* incx, void* cy, void* incy);

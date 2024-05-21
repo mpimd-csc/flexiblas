@@ -140,7 +140,7 @@ void flexiblas_real_cblas_dtrmm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side
                 RowMajorStrg = 0;
                 return;
             }
-            FC_GLOBAL(dtrmm,DTRMM)(F77_SD, F77_UL, F77_TA, F77_DI, &F77_M, &F77_N, &alpha, A, &F77_lda, B, &F77_ldb, 1, 1, 1,1);
+            FC_GLOBAL(dtrmm,DTRMM)(F77_SD, F77_UL, F77_TA, F77_DI, (blasint *)(uintptr_t)&F77_M, (blasint *)(uintptr_t)&F77_N, (double *)(uintptr_t)&alpha, (double *)(uintptr_t)A, (blasint *)(uintptr_t)&F77_lda, B, (blasint *)(uintptr_t)&F77_ldb, 1, 1, 1,1);
         } else if (layout == CblasRowMajor)
         {
             RowMajorStrg = 1;
@@ -185,7 +185,7 @@ void flexiblas_real_cblas_dtrmm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side
                 return;
             }
 
-            FC_GLOBAL(dtrmm,DTRMM)(F77_SD, F77_UL, F77_TA, F77_DI, &F77_N, &F77_M, &alpha, A, &F77_lda, B, &F77_ldb, 1, 1, 1,1);
+            FC_GLOBAL(dtrmm,DTRMM)(F77_SD, F77_UL, F77_TA, F77_DI, (blasint *)(uintptr_t)&F77_N, (blasint *)(uintptr_t)&F77_M, (double *)(uintptr_t)&alpha, (double *)(uintptr_t)A, (blasint *)(uintptr_t)&F77_lda, B, (blasint *)(uintptr_t)&F77_ldb, 1, 1, 1,1);
         }
         else cblas_xerbla(1, "cblas_dtrmm", "Illegal layout setting, %d\n", layout);
         CBLAS_CallFromC = 0;

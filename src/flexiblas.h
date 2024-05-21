@@ -93,6 +93,18 @@
 #define FLEXIBLAS_ENV_ENV_RC  0x06
 #define FLEXIBLAS_ENV_GLOBAL_RC_DIR 0x07
 
+typedef enum {
+    FLEXIBLAS_COMPLEX_NONE_INTERFACE = -1,
+    FLEXIBLAS_COMPLEX_GNU_INTERFACE = 0,
+    FLEXIBLAS_COMPLEX_INTEL_INTERFACE = 1
+} flexiblas_complex_interface_t;
+
+typedef enum {
+    FLEXIBLAS_INTERFACE_NONE = -1,
+    FLEXIBLAS_INTERFACE_LP64 = 0,
+    FLEXIBLAS_INTERFACE_ILP64 = 1
+} flexiblas_interface_t;
+
 /*  Global Vars */
 extern flexiblas_backend_t *current_backend ;
 extern flexiblas_backend_t **loaded_backends;
@@ -131,6 +143,9 @@ void __flexiblas_load_get_num_threads(flexiblas_backend_t * backend);
 int __flexiblas_load_cblas_function( void * handle , struct flexiblas_blasfn * fn, const char *name);
 int __flexiblas_load_fortran_function( void * handle , struct flexiblas_blasfn * fn, const char *name);
 int __flexiblas_load_blas_hooks(flexiblas_hook_t *backend, void *hook_handle);
+void * __flexiblas_lookup_fortran_function(void * handle, const char *name);
+flexiblas_complex_interface_t __flexiblas_get_complex_interface(void *handle);
+flexiblas_interface_t __flexiblas_get_interface(void *handle);
 
 void __flexiblas_backend_init( flexiblas_backend_t * backend);
 

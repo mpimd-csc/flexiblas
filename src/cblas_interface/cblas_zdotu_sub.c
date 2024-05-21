@@ -49,9 +49,9 @@ void flexiblas_real_cblas_zdotu_sub( const CBLAS_INT N, const void *X, const CBL
         double complex d;
         Int F77_N=N, F77_incX=incX, F77_incY=incY;
 #ifdef FLEXIBLAS_ABI_INTEL
-        FC_GLOBAL(zdotu,ZDOTC)( &d, &F77_N, X, &F77_incX, Y, &F77_incY);
+        FC_GLOBAL(zdotu,ZDOTC)( &d, (blasint *)(uintptr_t)&F77_N, (void *)(uintptr_t) X, (blasint *)(uintptr_t)&F77_incX, (void *)(uintptr_t) Y, (blasint *)(uintptr_t)&F77_incY);
 #else
-        d = FC_GLOBAL(zdotu,ZDOTC)( &F77_N, X, &F77_incX, Y, &F77_incY);
+        d = FC_GLOBAL(zdotu,ZDOTC)( (blasint *)(uintptr_t)&F77_N, (void *)(uintptr_t) X, (blasint *)(uintptr_t)&F77_incX, (void *)(uintptr_t) Y, (blasint *)(uintptr_t)&F77_incY);
 #endif
         *((double complex *) dotc) = d;
     }

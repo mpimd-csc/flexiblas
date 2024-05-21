@@ -62,7 +62,7 @@ void cblas_srot(const CBLAS_INT N, float *X, const CBLAS_INT incX,
         *(void **) &fn  = current_backend->blas.srot.cblas_function;
         fn(N,X,incX,Y,incY,c,s);
     } else {
-        FC_GLOBAL(srot,SROT)(&F77_N, X, &F77_incX, Y, &F77_incY, &c, &s);
+        FC_GLOBAL(srot,SROT)((blasint *)(uintptr_t)&F77_N, X, (blasint *)(uintptr_t)&F77_incX, Y, (blasint *)(uintptr_t)&F77_incY, (float *)(uintptr_t) &c, (float *)(uintptr_t) &s);
     }
     return;
 }

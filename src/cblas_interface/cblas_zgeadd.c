@@ -90,7 +90,7 @@ void flexiblas_real_cblas_zgeadd(const CBLAS_ORDER CORDER,
             rows = cols;
             cols = t;
         }
-        FC_GLOBAL(zgeadd,ZGEADD)( &rows, &cols, calpha, a, &F77_LDA, cbeta, b, &F77_LDB);
+        FC_GLOBAL(zgeadd,ZGEADD)( &rows, &cols, (void *)(uintptr_t) calpha, (void *)(uintptr_t) a, (blasint *)(uintptr_t)&F77_LDA, (void *)(uintptr_t) cbeta, b, (blasint *)(uintptr_t)&F77_LDB);
     }
 }
 

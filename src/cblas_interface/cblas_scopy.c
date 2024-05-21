@@ -47,7 +47,7 @@ void flexiblas_real_cblas_scopy( const CBLAS_INT N, const float *X,const CBLAS_I
         fn(N,X,incX,Y,incY);
     } else {
         Int F77_N=N, F77_incX=incX, F77_incY=incY;
-        FC_GLOBAL(scopy,SCOPY)( &F77_N, X, &F77_incX, Y, &F77_incY);
+        FC_GLOBAL(scopy,SCOPY)( (blasint *)(uintptr_t)&F77_N, (float *)(uintptr_t) X, (blasint *)(uintptr_t)&F77_incX, Y, (blasint *)(uintptr_t)&F77_incY);
     }
 }
 

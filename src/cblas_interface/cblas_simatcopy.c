@@ -95,7 +95,7 @@ void flexiblas_real_cblas_simatcopy(const CBLAS_ORDER CORDER, const CBLAS_TRANSP
 		default:
 			TRANS[0]='X';
 	}
-   	FC_GLOBAL(simatcopy,SIMATCOPY)( ORDER, TRANS, &F77_ROWS, &F77_COLS, &calpha, a, &F77_LDA, &F77_LDB, 1, 1);
+   	FC_GLOBAL(simatcopy,SIMATCOPY)( ORDER, TRANS, (blasint *)(uintptr_t)&F77_ROWS, (blasint *)(uintptr_t)&F77_COLS,  (float *)(uintptr_t) &calpha, a, (blasint *)(uintptr_t)&F77_LDA, (blasint *)(uintptr_t)&F77_LDB, 1, 1);
    }
 }
 

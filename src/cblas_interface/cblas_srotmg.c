@@ -54,7 +54,7 @@ void flexiblas_chain_cblas_srotmg( float *d1, float *d2, float *b1,
 }
 
 void flexiblas_real_cblas_srotmg( float *d1, float *d2, float *b1,
-        const float b2, float *p)
+        float b2, float *p)
 {
     if ( current_backend->blas.srotmg.cblas_function != NULL ) {
         void (*fn)

@@ -1,6 +1,6 @@
 Name: flexiblas
-Version: 3.4.2
-Date: 2024-02-28
+Version: 3.4.3
+Date: 2024-05-21
 Author: Martin Koehler <koehlerm@mpi-magdeburg.mpg.de>
 Maintainer: Martin Koehler <koehlerm@mpi-magdeburg.mpg.de>
 Title: FlexiBLAS API Interface for Octave

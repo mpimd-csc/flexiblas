@@ -97,7 +97,7 @@ void flexiblas_real_cblas_comatcopy(const CBLAS_ORDER CORDER, const CBLAS_TRANSP
 		default:
 			TRANS[0]='X';
 	}
-   	FC_GLOBAL(comatcopy,COMATCOPY)( ORDER, TRANS, &F77_ROWS, &F77_COLS, calpha, a, &F77_LDA, b, &F77_LDB, 1, 1);
+   	FC_GLOBAL(comatcopy,COMATCOPY)( ORDER, TRANS, (blasint *)(uintptr_t)&F77_ROWS, (blasint *)(uintptr_t)&F77_COLS, (void *)(uintptr_t) calpha, (void *)(uintptr_t) a, (blasint *)(uintptr_t)&F77_LDA, b, (blasint *)(uintptr_t)&F77_LDB, 1, 1);
    }
 }
 

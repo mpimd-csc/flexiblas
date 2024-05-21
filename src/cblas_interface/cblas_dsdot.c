@@ -50,7 +50,7 @@ double flexiblas_real_cblas_dsdot( const CBLAS_INT N, const float *X, const CBLA
         d = fn(N,X,incX,Y,incY);
     } else {
         Int F77_N=N, F77_incX=incX, F77_incY=incY;
-        d = FC_GLOBAL(dsdot,DSDOT)( &F77_N, X, &F77_incX, Y, &F77_incY);
+        d = FC_GLOBAL(dsdot,DSDOT)( (blasint *)(uintptr_t)&F77_N, (float *)(uintptr_t)X, (blasint *)(uintptr_t)&F77_incX,(float *)(uintptr_t) Y, (blasint *)(uintptr_t)&F77_incY);
     }
     return d;
 

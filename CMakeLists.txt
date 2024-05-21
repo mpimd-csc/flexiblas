@@ -1,9 +1,11 @@
+cmake_minimum_required(VERSION 3.9.0)
 INCLUDE(libcscutils/CMakeModules/CheckPolicy.cmake)
 CheckPolicy(CMP0048 NEW)
 
-PROJECT(FlexiBLAS LANGUAGES C Fortran VERSION 3.4.2)
-cmake_minimum_required(VERSION 3.5.0)
+PROJECT(FlexiBLAS LANGUAGES C Fortran VERSION 3.4.3)
 cmake_policy(SET CMP0054 NEW)
+cmake_policy(SET CMP0069 NEW)
+
 
 #
 # FlexiBLAS version setup
@@ -27,7 +29,7 @@ INCLUDE (CheckFeatureNeeded)
 INCLUDE (PreventInSourceBuilds)
 INCLUDE (PreventInBuildInstalls)
 INCLUDE (CMakeHelpers)
-
+INCLUDE (CheckIPOSupported)
 #
 # Options
 #
@@ -41,6 +43,7 @@ OPTION(MKL_BUILDER "Build MKL support with Intel MKLs Custom library builder" OF
 OPTION(EXAMPLES "Build Examples" ON)
 OPTION(BLAS_AUTO_DETECT "Enabled the BLAS auto detection during configuration" ON)
 OPTION(LINK_OPENMP "Link OpenMP to FlexiBLAS" OFF)
+OPTION(LTO "Enable Link Time Optimization / IPO" ON)
 
 IF (NOT DEFINED FLEXIBLAS_DEFAULT_BLAS)
     SET(FLEXIBLAS_DEFAULT_BLAS "NETLIB")
@@ -90,6 +93,12 @@ IF ( CMAKE_C_COMPILER_ID STREQUAL "GNU" AND CMAKE_C_COMPILER_VERSION VERSION_LES
 	ADD_DEFINITIONS(-DLAPACK_DEEP_BIND)
 ENDIF()
 
+IF ( (CMAKE_C_COMPILER_ID STREQUAL "Intel" AND CMAKE_Fortran_COMPILER_ID STREQUAL "IntelLLVM")
+    OR (CMAKE_C_COMPILER_ID STREQUAL "IntelLLVM" AND CMAKE_Fortran_COMPILER_ID STREQUAL "Intel"))
+    MESSAGE_COLOR(FATAL_ERROR COLOR_BOLD_RED "Mixing Classic and LLVM based Intel compilers is not possible. Specify proper C and Fortran Compilers.")
+ENDIF()
+
+
 INCLUDE(ccache)
 
 
@@ -100,31 +109,71 @@ SET(LIBS m)
 INCLUDE(CheckCCompilerFlag)
 INCLUDE(CheckFortranCompilerFlag)
 
+
 INCLUDE(EnablePedanticC)
 INCLUDE(EnableStrictPrototypesC)
 INCLUDE(EnableCastQual)
 
+IF (LTO STREQUAL ON )
+    check_ipo_supported(RESULT IPO_SUPPORT OUTPUT IPO_OUTPUT LANGUAGES C Fortran)
+    IF (IPO_SUPPORT)
+        MESSAGE(STATUS "LTO/IPO enabled.")
+        SET(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+    ELSE()
+        MESSAGE(STATUS "IPO_SUPPORT not available: ${IPO_OUTPUT}")
+    ENDIF()
+ENDIF()
+
+SET(CMAKE_C_STANDARD_REQUIRED 1)
+SET(CMAKE_C_STANDARD 99)
 
 IF ( ${CMAKE_C_COMPILER_ID} STREQUAL "GNU")
     check_c_compiler_flag("-fstack-protector-strong" C_STACK_PROTECTOR)
     check_c_compiler_flag("-fstack-clash-protection" C_STACK_CLASH)
+    check_c_compiler_flag("-Wlto-type-mismatch" C_W_LTO_TYPE_MISMATCH)
+    check_c_compiler_flag("-Wunused-parameter" C_W_UNUSED_PARAMETER)
+    check_c_compiler_flag("-Wunused-but-set-parameter" C_W_UNUSED_BUT_SET_PARAMETER)
+
     check_fortran_compiler_flag("-fstack-protector-strong" FC_STACK_PROTECTOR)
     check_fortran_compiler_flag("-fstack-clash-protection" FC_STACK_CLASH)
+    check_fortran_compiler_flag("-Wlto-type-mismatch" FC_W_LTO_TYPE_MISMATCH)
+    check_fortran_compiler_flag("-Wunused-parameter" FC_W_UNUSED_PARAMETER)
+    check_fortran_compiler_flag("-Wunused-but-set-parameter" FC_W_UNUSED_BUT_SET_PARAMETER)
 
 
-    SET( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
     IF(C_STACK_PROTECTOR)
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fstack-protector-strong")
     ENDIF()
     IF (C_STACK_CLASH)
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fstack-clash-protection")
     ENDIF()
+    IF (C_W_LTO_TYPE_MISMATCH)
+        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wlto-type-mismatch")
+    ENDIF()
+    IF (C_W_UNUSED_PARAMETER)
+        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wunused-parameter")
+    ENDIF()
+    IF (C_W_UNUSED_BUT_SET_PARAMETER)
+        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wunused-but-set-parameter")
+    ENDIF()
+
     IF(FC_STACK_PROTECTOR)
         SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fstack-protector-strong")
     ENDIF()
     IF (FC_STACK_CLASH)
         SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fstack-clash-protection")
     ENDIF()
+    IF (FC_W_LTO_TYPE_MISMATCH)
+        SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Wlto-type-mismatch")
+    ENDIF()
+
+    IF (FC_W_UNUSED_PARAMETER)
+        SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Wunused-parameter")
+    ENDIF()
+    IF (FC_W_UNUSED_BUT_SET_PARAMETER)
+        SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Wunused-but-set-parameter")
+    ENDIF()
+
 ENDIF()
 
 IF (DEBUG STREQUAL ON)
@@ -151,7 +200,7 @@ ENDIF()
 
 
 IF (NOT DEFINED ABI)
-	IF ( ${CMAKE_Fortran_COMPILER_ID} STREQUAL "Intel")
+    IF ( ${CMAKE_Fortran_COMPILER_ID} STREQUAL "Intel" OR ${CMAKE_Fortran_COMPILER_ID} STREQUAL "IntelLLVM")
 		SET(ABI "Intel" CACHE STRING "ABI of the Fortran Interface")
 	ELSEIF ( ${CMAKE_Fortran_COMPILER_ID} STREQUAL "PGI" )
 		SET(ABI "Intel" CACHE STRING "ABI of the Fortran Interface")
@@ -357,6 +406,7 @@ INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/src)
 CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/config.h.in ${CMAKE_BINARY_DIR}/include/flexiblas_config.h)
 
 
+
 add_subdirectory(src)
 
 IF(EXAMPLES STREQUAL "ON")
@@ -386,6 +436,7 @@ INSTALL(FILES   ${CMAKE_SOURCE_DIR}/src/flexiblas_backend.h
 		${CMAKE_SOURCE_DIR}/src/flexiblas_dummy_fortran.h
 		${CMAKE_SOURCE_DIR}/src/flexiblas_dummy_cblas.h
 		${CMAKE_SOURCE_DIR}/src/flexiblas_mgmt.h
+        ${CMAKE_SOURCE_DIR}/src/flexiblas_fortran_char_len.h
 		DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/${FLEXIBLAS_INCLUDE_PREFIX}/)
 
 IF(CBLAS STREQUAL ON)

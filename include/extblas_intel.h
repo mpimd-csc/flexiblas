@@ -23,6 +23,8 @@
 #include <stdint.h>
 
 #include "flexiblas_fortran_mangle.h"
+#include "flexiblas_fortran_char_len.h"
+
 #include <complex.h>
 
 #ifdef __cplusplus
@@ -30,25 +32,6 @@ extern "C" {
 #endif
 
 #include "flexiblas_config.h"
-
-
-#ifndef FLEXIBLAS_CHARLEN_T
-#define FLEXIBLAS_CHARLEN_T
-#if __GNUC__ > 7
-typedef size_t flexiblas_fortran_charlen_t;
-#else
-typedef int flexiblas_fortran_charlen_t;
-#endif
-#endif
-
-#ifndef blasint
-#ifdef FLEXIBLAS_INTEGER8
-#include <stdint.h>
-#define blasint int64_t
-#else
-#define blasint int
-#endif
-#endif
 
 
 void FC_GLOBAL(caxpby,CAXPBY)(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cb, float complex* cy, blasint* incy);

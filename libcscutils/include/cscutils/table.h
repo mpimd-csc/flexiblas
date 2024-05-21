@@ -20,6 +20,7 @@
 #ifndef CSC_TABLE_H
 #define CSC_TABLE_H
 #include "cscutils/cscutils_config.h"
+#include <stdio.h>
 
 #ifdef  __cplusplus
 extern "C" {
@@ -73,7 +74,7 @@ extern "C" {
       * initialized with "#" to obtain an output which is easily parsed by \b sed or \b awk.
       */
     typedef struct _csc_table_comment_t {
-        char start[CSC_TABLE_MAXLEN];       /**< The comment start string. Printed in front of every comment line. */
+        char start[CSC_TABLE_MAXLEN+1];       /**< The comment start string. Printed in front of every comment line. */
         char **lines;                       /**< Array of strings containing the comments. */
         int len;                            /**< Number of elements in lines. */
     } csc_table_comment_t;
@@ -98,14 +99,14 @@ extern "C" {
      */
     typedef struct _csc_table_column_t {
         csc_table_value_t type;         /**< Data type of the cell entries. */
-        char name[CSC_TABLE_MAXLEN];    /**< Name of the column. Used as headline while printing. */
+        char name[CSC_TABLE_MAXLEN+1];    /**< Name of the column. Used as headline while printing. */
         union {
             long   *integer_values;     /**< Array containing the integer values of the cell entries. */
             double *float_values;       /**< Array containing the double precision values of the cell entries. */
             char  **string_values;      /**< Array containing the strings in the cell entries. */
             void *ptr;                  /**< Array for future extension and generic access to the other entries. */
         } v;                            /**< Union representing the column entries. */
-        char format_str[CSC_TABLE_MAXLEN]; /**< Printf compatible format string for the table cells. */
+        char format_str[CSC_TABLE_MAXLEN+1]; /**< Printf compatible format string for the table cells. */
         csc_table_formater_t formater; /**< Format function for the table cells. If it is set than the format_str is ignored. */
         int *set;                      /**< Array which indicates which rows in the column are set.  */
         int len;                       /**< Number of elments in the column. */
@@ -183,6 +184,15 @@ extern "C" {
      *
      */
     void csc_table_print_ascii(FILE *stream, csc_table_t *table, const char *colsep);
+
+    /**
+     * \brief Print the current row.
+     * \param[in] t Table to print
+     *
+     * The csc_table_print_current_row function prints the current
+     * active row to the stdout.
+     */
+    void csc_table_print_current_row(csc_table_t *t);
 
     /**
      * \internal
@@ -506,7 +516,6 @@ extern "C" {
      /**
      * @brief Append a brief system information to the comments of a table.
      * @param[in]   t       Table to operate on
-     * @return zero on sucess, non-zero otherwise.
      *
      * The csc_table_comment_sysinfo function appends a brief system information to
      * the comments of the table. This looks like:
@@ -524,6 +533,62 @@ extern "C" {
      *
      */
     void csc_table_comment_sysinfo(csc_table_t * t);
+
+    /**
+     * @brief Append a brief OpenMP information to the comments of a table.
+     * @param[in]   t       Table to operate on
+     *
+     * The csc_table_comment_openmp_info function appends a brief OpenMP information to
+     * the comments of the table. This looks like:
+     * \code
+     * # === OpenMP Environment  ===
+     * # omp_get_num_threads: 1
+     * # omp_get_num_procs: 6
+     * # omp_get_dynamic: 0
+     * # omp_get_nested: 0
+     * # omp_get_schedule: dynamic (1)
+     * # omp_get_thread_limit: 2147483647
+     * # omp_get_max_active_levels: 2147483647
+     * # omp_get_proc_bind: false
+     * # ===========================
+     * \endcode
+     *
+     */
+    void csc_table_comment_openmp_info(csc_table_t *t);
+
+    /**
+     * @brief Append the CMake command line to the comments of a table.
+     * @param[in]   t       Table to operate on
+     *
+     * The csc_table_comment_cmake adds the CMake command line to
+     * the comments of the table.
+     */
+    void csc_table_comment_cmake(csc_table_t *t);
+
+    /**
+     * @brief Append the used compiler flags to he comments of a table.
+     * @param[in]   t       Table to operate on
+     *
+     * The csc_table_comment_compilerflags adds the used compiler flags
+     * the comments of the table. This depends on the set of enabled
+     * languages.
+     */
+    void csc_table_comment_compilerflags(csc_table_t *t);
+
+    /**
+     * @brief Append all additional informations to the comments of a table.
+     * @param[in]   t       Table to operate on
+     *
+     * The csc_table_comment_allinfo adds the information from
+     *
+     * \li csc_table_comment_sysinfo
+     * \li csc_table_comment_openmp_info
+     * \li csc_table_comment_cmake
+     * \li csc_table_comment_compilerflags
+     *
+     * to the comments of the given table.
+     */
+    void csc_table_comment_allinfo(csc_table_t * t);
 
     /**
      * @brief Change the sign which introduces the comments.

@@ -48,7 +48,7 @@ int CSC_HDF5_COMPRESSION = CSC_HDF5_COMPRESS_NONE;
 
 
 
-int csc_hdf5_register_filters()
+int csc_hdf5_register_filters(void)
 {
     int ret = 0;
     if (H5Zfilter_avail(H5Z_FILTER_BZIP2) == 0 ) {
@@ -103,12 +103,12 @@ int csc_hdf5_has_compression(csc_hdf5_compression_t comp) {
     return 0;
 }
 
-csc_hdf5_compression_t csc_hdf5_get_compression()
+csc_hdf5_compression_t csc_hdf5_get_compression(void)
 {
     return CSC_HDF5_COMPRESSION;
 }
 
-int  csc_hdf5_get_compression_int()
+int  csc_hdf5_get_compression_int(void)
 {
     return (int) CSC_HDF5_COMPRESSION;
 }

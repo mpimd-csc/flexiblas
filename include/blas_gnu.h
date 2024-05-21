@@ -30,26 +30,7 @@ extern "C" {
 #endif
 
 #include "flexiblas_config.h"
-
-
-#ifndef FLEXIBLAS_CHARLEN_T
-#define FLEXIBLAS_CHARLEN_T
-#if __GNUC__ > 7
-typedef size_t flexiblas_fortran_charlen_t;
-#else
-typedef int flexiblas_fortran_charlen_t;
-#endif
-#endif
-
-#ifndef blasint
-#ifdef FLEXIBLAS_INTEGER8
-#include <stdint.h>
-#define blasint int64_t
-#else
-#define blasint int
-#endif
-#endif
-
+#include "flexiblas_fortran_char_len.h"
 
 void FC_GLOBAL(caxpy,CAXPY)(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cy, blasint* incy);
 

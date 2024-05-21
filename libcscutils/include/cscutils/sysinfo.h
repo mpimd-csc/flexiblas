@@ -279,6 +279,68 @@ extern "C" {
 
     int csc_sysinfo_cpuinfo(int *lcpu, int *pcpu, int *ht);
 
+
+    /**
+     * @brief Get the CMake command line from compile time.
+     * @return String containing the CMake command line.
+     *
+     * The csc_sysinfo_cmake_args function returns a static string containing
+     * the CMake command line parameters from compile-time. This is only possible
+     * on Linux due to restrictions in CMake. On all other platforms, NULL is returned.
+     */
+    const char *csc_sysinfo_cmake_args(void);
+
+    /**
+     * @brief Return the C flags used in compilation.
+     * @return String containing the used C flags.
+     *
+     * The csc_sysinfo_c_flags function returns a static string containing
+     * the C flags used during compilation. If C is not supported or enabled
+     * NULL is returned.
+     */
+    const char *csc_sysinfo_c_flags(void);
+
+    /**
+     * @brief Return the C++ flags used in compilation.
+     * @return String containing the used C++ flags.
+     *
+     * The csc_sysinfo_cxx_flags function returns a static string containing
+     * the C++ flags used during compilation. If C++ is not supported or enabled
+     * NULL is returned.
+     */
+    const char *csc_sysinfo_cxx_flags(void);
+
+    /**
+     * @brief Return the Fortran flags used in compilation.
+     * @return String containing the used Fortran flags.
+     *
+     * The csc_sysinfo_fortran_flags function returns a static string containing
+     * the Fortran flags used during compilation. If Fortran is not supported or enabled
+     * NULL is returned.
+     */
+    const char *csc_sysinfo_fortran_flags(void);
+
+    /**
+     * @brief Return the HIP flags used in compilation.
+     * @return String containing the used HIP flags.
+     *
+     * The csc_sysinfo_hip_flags function returns a static string containing
+     * the HIP flags used during compilation. If HIP is not supported or enabled
+     * NULL is returned.
+     */
+    const char *csc_sysinfo_hip_flags(void);
+
+    /**
+     * @brief Return the CUDA flags used in compilation.
+     * @return String containing the used CUDA flags.
+     *
+     * The csc_sysinfo_cuda_flags function returns a static string containing
+     * the CUDA flags used during compilation. If CUDA is not supported or enabled
+     * NULL is returned.
+     */
+    const char *csc_sysinfo_cuda_flags(void);
+
+
     /** @} */
 #ifdef  __cplusplus
 }

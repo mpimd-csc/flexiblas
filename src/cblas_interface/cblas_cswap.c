@@ -68,7 +68,7 @@ void flexiblas_real_cblas_cswap( const CBLAS_INT N, void *X, const CBLAS_INT inc
        *(void **) &fn = current_backend->blas.cswap.cblas_function;
 	fn(N,X,incX,Y,incY);
    } else {
-	   FC_GLOBAL(cswap,CSWAP)( &F77_N, X, &F77_incX, Y, &F77_incY);
+	   FC_GLOBAL(cswap,CSWAP)( (blasint *)(uintptr_t)&F77_N, X, (blasint *)(uintptr_t)&F77_incX, Y, (blasint *)(uintptr_t)&F77_incY);
    }
 }
 

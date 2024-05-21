@@ -68,7 +68,7 @@ float flexiblas_real_cblas_scasum( const CBLAS_INT N, const void *X, const CBLAS
         *(void **) & fn = current_backend->blas.scasum.cblas_function;
         asum  = fn(N,X,incX);
     } else {
-        asum = FC_GLOBAL(scasum,SCASUM)( &F77_N, X, &F77_incX);
+        asum = FC_GLOBAL(scasum,SCASUM)( (blasint *)(uintptr_t)&F77_N, (float complex*)(uintptr_t) X, (blasint *)(uintptr_t)&F77_incX);
     }
     return asum;
 }

@@ -82,7 +82,7 @@ void flexiblas_real_cblas_dgeadd(const CBLAS_ORDER CORDER,
             rows = cols;
             cols = t;
         }
-        FC_GLOBAL(dgeadd,DGEADD)( &rows, &cols, &calpha, a, &F77_LDA, &cbeta, b, &F77_LDB);
+        FC_GLOBAL(dgeadd,DGEADD)( &rows, &cols, (double *)(uintptr_t)&calpha, (double *)(uintptr_t)a, (blasint *)(uintptr_t)&F77_LDA, (double *)(uintptr_t) &cbeta, b, (blasint *)(uintptr_t)&F77_LDB);
     }
 }
 

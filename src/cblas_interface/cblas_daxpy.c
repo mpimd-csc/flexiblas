@@ -45,7 +45,7 @@ void flexiblas_real_cblas_daxpy( const CBLAS_INT N, const double alpha, const do
         fn(N,alpha,X,incX,Y,incY);
     } else {
         Int F77_N=N, F77_incX=incX, F77_incY=incY;
-        FC_GLOBAL(daxpy,DAXPY)( &F77_N, &alpha, X, &F77_incX, Y, &F77_incY);
+        FC_GLOBAL(daxpy,DAXPY)( (blasint *)(uintptr_t)&F77_N, (double *)(uintptr_t)&alpha, (double *)(uintptr_t)X, (blasint *)(uintptr_t)&F77_incX, Y, (blasint *)(uintptr_t)&F77_incY);
     }
 }
 

@@ -67,7 +67,7 @@ double flexiblas_real_cblas_dasum( const CBLAS_INT N, const double *X, const CBL
 	   asum = fn(N,X,incX);
 
    } else {
-	   asum = FC_GLOBAL(dasum,DASUM)( &F77_N, X, &F77_incX);
+	   asum = FC_GLOBAL(dasum,DASUM)( (blasint *)(uintptr_t)&F77_N, (double *)(uintptr_t) X, (blasint *)(uintptr_t)&F77_incX);
    }
 
    return asum;

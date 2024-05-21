@@ -36,7 +36,7 @@ int csc_hdf5_group_exist(hid_t base, const char *path)
     int ret = 0;
 	char *pch;
 	char *pathc;
-    char *saveptr;
+    char *saveptr = NULL;
 	pathc = strdup(path);
 	pch = strtok_r(pathc, "/", &saveptr);
 	while (pch != NULL) {

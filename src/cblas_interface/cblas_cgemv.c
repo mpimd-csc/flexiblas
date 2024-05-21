@@ -98,7 +98,7 @@ void flexiblas_real_cblas_cgemv(const CBLAS_LAYOUT layout,
         float *xx;;
         float ALPHA[2],BETA[2];
         CBLAS_INT tincY, tincx;
-        float *x = NULL, *y=(float *)Y, *st=0, *tx=0;
+        float *x = NULL, *y=(float *)(uintptr_t)Y, *st=0, *tx=0;
         const float *stx = x;
         extern int CBLAS_CallFromC;
         extern int RowMajorStrg;
@@ -124,8 +124,8 @@ void flexiblas_real_cblas_cgemv(const CBLAS_LAYOUT layout,
 #ifdef F77_CHAR
             F77_TA = C2F_CHAR(&TA);
 #endif
-            FC_GLOBAL(cgemv,CGEMV)(F77_TA, &F77_M, &F77_N, alpha, A, &F77_lda, X, &F77_incX,
-                    beta, Y, &F77_incY, 1);
+            FC_GLOBAL(cgemv,CGEMV)(F77_TA, (blasint *)(uintptr_t)&F77_M, (blasint *)(uintptr_t)&F77_N, (void *)(uintptr_t) alpha, (void *)(uintptr_t) A, (blasint *)(uintptr_t)&F77_lda, (void *)(uintptr_t) X, (blasint *)(uintptr_t)&F77_incX,
+                    (void *)(uintptr_t) beta, Y, (blasint *)(uintptr_t)&F77_incY, 1);
         }
         else if (layout == CblasRowMajor)
         {
@@ -200,11 +200,11 @@ void flexiblas_real_cblas_cgemv(const CBLAS_LAYOUT layout,
             F77_TA = C2F_CHAR(&TA);
 #endif
             if (TransA == CblasConjTrans)
-                FC_GLOBAL(cgemv,CGEMV)(F77_TA, &F77_N, &F77_M, ALPHA, A, &F77_lda, stx,
-                        &F77_incX, BETA, Y, &F77_incY, 1);
+                FC_GLOBAL(cgemv,CGEMV)(F77_TA, (blasint *)(uintptr_t)&F77_N, (blasint *)(uintptr_t)&F77_M, (void *)(uintptr_t) ALPHA, (void *)(uintptr_t) A, (blasint *)(uintptr_t)&F77_lda, (void *)(uintptr_t) stx,
+                        (blasint *)(uintptr_t)&F77_incX, (void *)(uintptr_t) BETA, Y, (blasint *)(uintptr_t)&F77_incY, 1);
             else
-                FC_GLOBAL(cgemv,CGEMV)(F77_TA, &F77_N, &F77_M, alpha, A, &F77_lda, x,
-                        &F77_incX, beta, Y, &F77_incY, 1);
+                FC_GLOBAL(cgemv,CGEMV)(F77_TA, (blasint *)(uintptr_t)&F77_N, (blasint *)(uintptr_t)&F77_M, (void *)(uintptr_t) alpha, (void *)(uintptr_t) A, (blasint *)(uintptr_t)&F77_lda, (void *)(uintptr_t) x,
+                        (blasint *)(uintptr_t)&F77_incX, (void *)(uintptr_t) beta, Y, (blasint *)(uintptr_t)&F77_incY, 1);
 
             if (TransA == CblasConjTrans)
             {

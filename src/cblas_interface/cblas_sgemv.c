@@ -108,7 +108,7 @@ void flexiblas_real_cblas_sgemv(const CBLAS_LAYOUT layout,
 #ifdef F77_CHAR
             F77_TA = C2F_CHAR(&TA);
 #endif
-            FC_GLOBAL(sgemv,SGEMV)(F77_TA, &F77_M, &F77_N, &alpha, A, &F77_lda, X, &F77_incX, &beta, Y, &F77_incY, 1);
+            FC_GLOBAL(sgemv,SGEMV)(F77_TA, (blasint *)(uintptr_t)&F77_M, (blasint *)(uintptr_t)&F77_N, (float *)(uintptr_t) &alpha, (float *)(uintptr_t) A, (blasint *)(uintptr_t)&F77_lda, (float *)(uintptr_t) X, (blasint *)(uintptr_t)&F77_incX, (float *)(uintptr_t) &beta, Y, (blasint *)(uintptr_t)&F77_incY, 1);
         }
         else if (layout == CblasRowMajor)
         {
@@ -126,7 +126,7 @@ void flexiblas_real_cblas_sgemv(const CBLAS_LAYOUT layout,
 #ifdef F77_CHAR
             F77_TA = C2F_CHAR(&TA);
 #endif
-            FC_GLOBAL(sgemv,SGEMV)(F77_TA, &F77_N, &F77_M, &alpha, A, &F77_lda, X,  &F77_incX, &beta, Y, &F77_incY, 1);
+            FC_GLOBAL(sgemv,SGEMV)(F77_TA, (blasint *)(uintptr_t)&F77_N, (blasint *)(uintptr_t)&F77_M, (float *)(uintptr_t) &alpha, (float *)(uintptr_t) A, (blasint *)(uintptr_t)&F77_lda, (float *)(uintptr_t) X,  (blasint *)(uintptr_t)&F77_incX, (float *)(uintptr_t) &beta, Y, (blasint *)(uintptr_t)&F77_incY, 1);
         }
         else cblas_xerbla(1, "cblas_sgemv", "Illegal layout setting, %d\n", layout);
         CBLAS_CallFromC = 0;
