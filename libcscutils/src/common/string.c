@@ -29,15 +29,16 @@
 void csc_strremovedup(char * str, char dup)
 {
     size_t len = strlen(str);
-    size_t k, l;
-    for ( k = 0; k < len -1; k++) {
+    size_t k = 0, l;
+    while ( k < len -1 ) {
         if ( str[k] == str[k+1] && str[k] == dup) {
             for (l = k; l < len-1; l++) {
-                str[k] = str[k+1];
+                str[l] = str[l+1];
             }
             str[len-1] = 0;
             len--;
         }
+        k++;
     }
     return;
 }
