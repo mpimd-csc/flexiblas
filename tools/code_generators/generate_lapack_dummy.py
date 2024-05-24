@@ -44,20 +44,21 @@ file_header = """
  */
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
 #include "flexiblas_config.h"
 #include "flexiblas_fortran_mangle.h"
 #include "flexiblas_fortran_char_len.h"
 
 """
 fn_head = """
+
+HIDDEN void *__flexiblas_lapack_addr[10240];
 HIDDEN void flexiblas_lapack_dummy_function_not_called(void)
 {
     size_t k = 0;
-    void *addr[10240];
 """
 
 fn_foot = """;
-    addr[0] = addr[1];
 }
 """
 
@@ -77,7 +78,7 @@ def lapack_generate(version):
 
     fo.write(fn_head)
     for fn in data:
-        fo.write('    addr[k++] = (void *)((size_t) &(FC_GLOBAL(' + fn + ',' + fn.upper()  + ')));\n');
+        fo.write('    __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(' + fn + ',' + fn.upper()  + ')));\n');
     fo.write(fn_foot);
 
     fo.close()

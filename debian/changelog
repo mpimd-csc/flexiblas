@@ -1,4 +1,10 @@
-flexiblas (3.4.3) UNRELEASED; urgency=medium
+flexiblas (3.4.4) focal; urgency=medium
+
+  * New patch release. See CHANGELOG
+
+ -- Martin Koehler <koehlerm@mpi-magdeburg.mpg.de>  Fri, 24 May 2024 10:21:52 +0200
+
+flexiblas (3.4.3) focal; urgency=medium
 
   * New patch release. See CHANGELOG
 
