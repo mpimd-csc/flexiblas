@@ -40,7 +40,7 @@ SUBROUTINE SGEADD(M, N, ALPHA, A, LDA, BETA, B, LDB)
     ENDIF
 
     DO COL = 1, N
-        B(1:M, COL) = BETA * B(1:M, COL) + ALPHA * A(1:M, COL)
+    B(1:M, COL) = BETA * B(1:M, COL) + ALPHA * A(1:M, COL)
     END DO
 END SUBROUTINE
 

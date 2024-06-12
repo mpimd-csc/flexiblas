@@ -60,16 +60,16 @@ SUBROUTINE SAXPBY(N,SA,SX,INCX,SB,SY,INCY)
         M = MOD(N,4)
         IF (M.NE.0) THEN
             DO I = 1,M
-                SY(I) = SB*SY(I) + SA*SX(I)
+            SY(I) = SB*SY(I) + SA*SX(I)
             END DO
         END IF
         IF (N.LT.4) RETURN
         MP1 = M + 1
         DO I = MP1,N,4
-            SY(I) =   SB*SY(I) + SA*SX(I)
-            SY(I+1) = SB*SY(I+1) + SA*SX(I+1)
-            SY(I+2) = SB*SY(I+2) + SA*SX(I+2)
-            SY(I+3) = SB*SY(I+3) + SA*SX(I+3)
+        SY(I) =   SB*SY(I) + SA*SX(I)
+        SY(I+1) = SB*SY(I+1) + SA*SX(I+1)
+        SY(I+2) = SB*SY(I+2) + SA*SX(I+2)
+        SY(I+3) = SB*SY(I+3) + SA*SX(I+3)
         END DO
     ELSE
         !
@@ -81,9 +81,9 @@ SUBROUTINE SAXPBY(N,SA,SX,INCX,SB,SY,INCY)
         IF (INCX.LT.0) IX = (-N+1)*INCX + 1
         IF (INCY.LT.0) IY = (-N+1)*INCY + 1
         DO I = 1,N
-            SY(IY) = SB*SY(IY) + SA*SX(IX)
-            IX = IX + INCX
-            IY = IY + INCY
+        SY(IY) = SB*SY(IY) + SA*SX(IX)
+        IX = IX + INCX
+        IY = IY + INCY
         END DO
     END IF
     RETURN

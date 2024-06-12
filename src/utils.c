@@ -1,21 +1,21 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 
 
@@ -31,21 +31,21 @@
 #include <sys/types.h>
 #ifdef HAVE_SYS_STAT_H
 #include <sys/stat.h>
-#endif 
+#endif
 #include <unistd.h>
 #ifdef HAVE_SYSMACRO_H
 #include <sys/sysmacros.h>
-#endif 
+#endif
 
 #include "cscutils/strutils.h"
 
 HIDDEN int __flexiblas_file_exist(const char *path) {
     if ( path == NULL ) return 0;
-	if( access( path, F_OK ) == 0  ) {
-		return -1;
-	} else {
-		return 0;
-	}
+    if( access( path, F_OK ) == 0  ) {
+        return -1;
+    } else {
+        return 0;
+    }
 }
 
 HIDDEN int __flexiblas_directory_exists(const char * path)
@@ -59,7 +59,7 @@ HIDDEN int __flexiblas_directory_exists(const char * path)
 
 HIDDEN int __flexiblas_str_endwith(const char * haystack, const char *needle )
 {
-     if (!haystack || !needle)
+    if (!haystack || !needle)
         return 0;
     size_t lenhaystack = strlen(haystack);
     size_t lenneedle = strlen(needle);
@@ -69,88 +69,88 @@ HIDDEN int __flexiblas_str_endwith(const char * haystack, const char *needle )
 }
 
 HIDDEN char *__flexiblas_getenv(int what) {
-	static char container[MAX_BUFFER_SIZE];
-	container[0] = '\0';
-	switch (what) {
-		case FLEXIBLAS_ENV_SO_EXTENSION:
-			#ifdef __APPLE__
-			snprintf(container, MAX_BUFFER_SIZE, ".dylib");
-			#else
-			#ifdef __WIN32__
-			snprintf(container, MAX_BUFFER_SIZE, ".dll");
-			#else
-			snprintf(container, MAX_BUFFER_SIZE, ".so");
-			#endif
-			#endif
-			break;
-		case FLEXIBLAS_ENV_HOMEDIR:
-			#ifdef __WIN32__
-			snprintf(container,MAX_BUFFER_SIZE,"%s\\%s\\",getenv("HOMEDRIVE"),getenv("HOMEPATH"));
-			#else
-			snprintf(container,MAX_BUFFER_SIZE,"%s",getenv("HOME"));
-			#endif
-			break;
-		case FLEXIBLAS_ENV_GLOBAL_RC:
-			#ifdef __WIN32__
-			snprintf(container,MAX_BUFFER_SIZE,"%s\\%s", getenv("SYSTEMROOT"), FLEXIBLAS_RC);
-			#else
-			snprintf(container,MAX_BUFFER_SIZE,"%s/%s",CMAKE_INSTALL_FULL_SYSCONFDIR,FLEXIBLAS_RC);
-			#endif
-			break;
+    static char container[MAX_BUFFER_SIZE];
+    container[0] = '\0';
+    switch (what) {
+        case FLEXIBLAS_ENV_SO_EXTENSION:
+#ifdef __APPLE__
+            snprintf(container, MAX_BUFFER_SIZE, ".dylib");
+#else
+#ifdef __WIN32__
+            snprintf(container, MAX_BUFFER_SIZE, ".dll");
+#else
+            snprintf(container, MAX_BUFFER_SIZE, ".so");
+#endif
+#endif
+            break;
+        case FLEXIBLAS_ENV_HOMEDIR:
+#ifdef __WIN32__
+            snprintf(container,MAX_BUFFER_SIZE,"%s\\%s\\",getenv("HOMEDRIVE"),getenv("HOMEPATH"));
+#else
+            snprintf(container,MAX_BUFFER_SIZE,"%s",getenv("HOME"));
+#endif
+            break;
+        case FLEXIBLAS_ENV_GLOBAL_RC:
+#ifdef __WIN32__
+            snprintf(container,MAX_BUFFER_SIZE,"%s\\%s", getenv("SYSTEMROOT"), FLEXIBLAS_RC);
+#else
+            snprintf(container,MAX_BUFFER_SIZE,"%s/%s",CMAKE_INSTALL_FULL_SYSCONFDIR,FLEXIBLAS_RC);
+#endif
+            break;
         case FLEXIBLAS_ENV_GLOBAL_RC_DIR:
-            #ifdef __WIN32__
-            #warning NOT IMPLEMENTED
-            #else
-			snprintf(container,MAX_BUFFER_SIZE,"%s/%s/",CMAKE_INSTALL_FULL_SYSCONFDIR,FLEXIBLAS_RC_DIR);
-            #endif
+#ifdef __WIN32__
+#warning NOT IMPLEMENTED
+#else
+            snprintf(container,MAX_BUFFER_SIZE,"%s/%s/",CMAKE_INSTALL_FULL_SYSCONFDIR,FLEXIBLAS_RC_DIR);
+#endif
             break;
         case FLEXIBLAS_ENV_USER_RC:
-			#ifdef __WIN32__
-			snprintf(container,MAX_BUFFER_SIZE,"%s\\%s",getenv("APPDATA"), FLEXIBLAS_RC);
-			#else
-			snprintf(container,MAX_BUFFER_SIZE,"%s/.%s", getenv("HOME"), FLEXIBLAS_RC);
-			#endif
-			break;
+#ifdef __WIN32__
+            snprintf(container,MAX_BUFFER_SIZE,"%s\\%s",getenv("APPDATA"), FLEXIBLAS_RC);
+#else
+            snprintf(container,MAX_BUFFER_SIZE,"%s/.%s", getenv("HOME"), FLEXIBLAS_RC);
+#endif
+            break;
         case FLEXIBLAS_ENV_HOST_RC:
-    		#ifdef __WIN32__
-            #error Not implemented
-			#else
+#ifdef __WIN32__
+#error Not implemented
+#else
             {
                 char hostname[MAX_BUFFER_SIZE-20];
                 gethostname(hostname, MAX_BUFFER_SIZE-20);
-    			snprintf(container,MAX_BUFFER_SIZE,"%s/.%s.%s", getenv("HOME"), FLEXIBLAS_RC, hostname);
+                snprintf(container,MAX_BUFFER_SIZE,"%s/.%s.%s", getenv("HOME"), FLEXIBLAS_RC, hostname);
                 csc_str_remove_char(container, '"');
                 csc_str_remove_char(container, '\"');
 
             }
-			#endif
-			break;
+#endif
+            break;
 
 
-		default:
-			return NULL;
-	}
-	return strdup(container);
+        default:
+            return NULL;
+    }
+    return strdup(container);
 }
 
 HIDDEN void __flexiblas_print_copyright (int prefix) {
-	if (prefix){
+    if (prefix){
         fprintf(stderr, "<%s>\n", PRINT_PREFIX );
-		fprintf(stderr, "<" PRINT_PREFIX "> FlexiBLAS, version " FLEXIBLAS_VERSION "\n");
-		fprintf(stderr, "<" PRINT_PREFIX "> Copyright (C) " FLEXIBLAS_YEARS " Martin Koehler and others.\n");
-		fprintf(stderr, "<" PRINT_PREFIX "> This is free software; see the source code for copying conditions.\n");
-		fprintf(stderr, "<" PRINT_PREFIX "> There is ABSOLUTELY NO WARRANTY; not even for MERCHANTABILITY or\n");
-		fprintf(stderr, "<" PRINT_PREFIX "> FITNESS FOR A PARTICULAR PURPOSE.\n");
-		fprintf(stderr, "<" PRINT_PREFIX "> \n");
-	} else {
-		printf("FlexiBLAS, version " FLEXIBLAS_VERSION "\n");
-		printf("Copyright (C) " FLEXIBLAS_YEARS " Martin Koehler and others.\n");
-		printf("This is free software; see the source code for copying conditions.\n");
-		printf("There is ABSOLUTELY NO WARRANTY; not even for MERCHANTABILITY or\n");
-		printf("FITNESS FOR A PARTICULAR PURPOSE.\n");
-		printf("\n");
-	}
-	return;
+        fprintf(stderr, "<" PRINT_PREFIX "> FlexiBLAS, version " FLEXIBLAS_VERSION "\n");
+        fprintf(stderr, "<" PRINT_PREFIX "> Copyright (C) " FLEXIBLAS_YEARS " Martin Koehler and others.\n");
+        fprintf(stderr, "<" PRINT_PREFIX "> This is free software; see the source code for copying conditions.\n");
+        fprintf(stderr, "<" PRINT_PREFIX "> There is ABSOLUTELY NO WARRANTY; not even for MERCHANTABILITY or\n");
+        fprintf(stderr, "<" PRINT_PREFIX "> FITNESS FOR A PARTICULAR PURPOSE.\n");
+        fprintf(stderr, "<" PRINT_PREFIX "> \n");
+    } else {
+        printf("FlexiBLAS, version " FLEXIBLAS_VERSION "\n");
+        printf("Copyright (C) " FLEXIBLAS_YEARS " Martin Koehler and others.\n");
+        printf("This is free software; see the source code for copying conditions.\n");
+        printf("There is ABSOLUTELY NO WARRANTY; not even for MERCHANTABILITY or\n");
+        printf("FITNESS FOR A PARTICULAR PURPOSE.\n");
+        printf("\n");
+    }
+    return;
 }
 
 
@@ -162,28 +162,28 @@ HIDDEN void __flexiblas_print_copyright (int prefix) {
 HIDDEN int __flexiblas_insert_fallback_blas(flexiblas_mgmt_t *config)
 {
     int ret = 0;
-	char *SO_EXTENSION = __flexiblas_getenv(FLEXIBLAS_ENV_SO_EXTENSION);
-	size_t len=strlen(FALLBACK_NAME)+strlen(SO_EXTENSION)+2;
-	char *tmp = (char *) calloc(len,sizeof(char));
-	char *tmp2;
+    char *SO_EXTENSION = __flexiblas_getenv(FLEXIBLAS_ENV_SO_EXTENSION);
+    size_t len=strlen(FALLBACK_NAME)+strlen(SO_EXTENSION)+2;
+    char *tmp = (char *) calloc(len,sizeof(char));
+    char *tmp2;
 
-	snprintf(tmp,len, "%s%s", FALLBACK_NAME,SO_EXTENSION);
-	len = strlen("libflexiblas_netlib")+strlen(SO_EXTENSION)+2;
-	tmp2 = (char*) calloc(len,sizeof(char));
-	snprintf(tmp2,len, "libflexiblas_netlib%s", SO_EXTENSION);
+    snprintf(tmp,len, "%s%s", FALLBACK_NAME,SO_EXTENSION);
+    len = strlen("libflexiblas_netlib")+strlen(SO_EXTENSION)+2;
+    tmp2 = (char*) calloc(len,sizeof(char));
+    snprintf(tmp2,len, "libflexiblas_netlib%s", SO_EXTENSION);
 
-	if ( flexiblas_mgmt_blas_add(config, FLEXIBLAS_GLOBAL, "NETLIB", tmp2, NULL)){
-	    DPRINTF(0,"Can not insert Netlib BLAS library.\n");
+    if ( flexiblas_mgmt_blas_add(config, FLEXIBLAS_GLOBAL, "NETLIB", tmp2, NULL)){
+        DPRINTF(0,"Can not insert Netlib BLAS library.\n");
         ret ++;
-	}
-	if (  flexiblas_mgmt_blas_add(config, FLEXIBLAS_GLOBAL, "__FALLBACK__", tmp2, NULL)) {
-		DPRINTF(0,"Can not insert Netlib BLAS library as fallback.\n");
+    }
+    if (  flexiblas_mgmt_blas_add(config, FLEXIBLAS_GLOBAL, "__FALLBACK__", tmp2, NULL)) {
+        DPRINTF(0,"Can not insert Netlib BLAS library as fallback.\n");
         ret++;
-	}
+    }
 
-	free(tmp);
-	free(tmp2);
-	free(SO_EXTENSION);
-	return ret;
+    free(tmp);
+    free(tmp2);
+    free(SO_EXTENSION);
+    return ret;
 }
 

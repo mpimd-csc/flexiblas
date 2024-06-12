@@ -1,21 +1,21 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 
 
@@ -2506,27 +2506,27 @@ extern "C" {
     } flexiblas_hook_t;
 
 
-typedef struct _flexiblas_backend_t {
-    char* name;
-    void* library_handle;
-    int post_init;
-    int hook_init;
-    pthread_mutex_t post_init_mutex;
-    flexiblas_info_t info;
-    flexiblas_init_function_t init_function;
-    flexiblas_exit_function_t exit_function;
-    flexiblas_info_function_t info_function;
-    flexiblas_set_num_threads_function_t set_num_threads_function[2];
-    flexiblas_get_num_threads_function_t get_num_threads_function[2];
-    flexiblas_get_num_procs_function_t   get_num_procs_function[2];
-    flexiblas_blas_backend_t    blas;
-    struct flexiblas_blasfn xerbla;
+    typedef struct _flexiblas_backend_t {
+        char* name;
+        void* library_handle;
+        int post_init;
+        int hook_init;
+        pthread_mutex_t post_init_mutex;
+        flexiblas_info_t info;
+        flexiblas_init_function_t init_function;
+        flexiblas_exit_function_t exit_function;
+        flexiblas_info_function_t info_function;
+        flexiblas_set_num_threads_function_t set_num_threads_function[2];
+        flexiblas_get_num_threads_function_t get_num_threads_function[2];
+        flexiblas_get_num_procs_function_t   get_num_procs_function[2];
+        flexiblas_blas_backend_t    blas;
+        struct flexiblas_blasfn xerbla;
 #ifdef FLEXIBLAS_LAPACK
-    flexiblas_lapack_backend_t  lapack;
+        flexiblas_lapack_backend_t  lapack;
 #endif
-} flexiblas_backend_t;
+    } flexiblas_backend_t;
 
-// extern flexiblas_backend_t *current_backend;
+    // extern flexiblas_backend_t *current_backend;
 #ifdef __cplusplus
 }
 #endif

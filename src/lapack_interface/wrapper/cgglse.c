@@ -1,21 +1,21 @@
-//    SPDX-License-Identifier: LGPL-3.0-or-later
+//  SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,23 +36,23 @@ void FC_GLOBAL(cgglse,CGGLSE)(blasint* m, blasint* n, blasint* p, float complex*
 void FC_GLOBAL(cgglse,CGGLSE)(blasint* m, blasint* n, blasint* p, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* c, float complex* d, float complex* x, float complex* work, blasint* lwork, blasint* info)
 #endif
 {
-	void (*fn) (void* m, void* n, void* p, void* a, void* lda, void* b, void* ldb, void* c, void* d, void* x, void* work, void* lwork, void* info);
-	void (*fn_hook) (void* m, void* n, void* p, void* a, void* lda, void* b, void* ldb, void* c, void* d, void* x, void* work, void* lwork, void* info);
+    void (*fn) (void* m, void* n, void* p, void* a, void* lda, void* b, void* ldb, void* c, void* d, void* x, void* work, void* lwork, void* info);
+    void (*fn_hook) (void* m, void* n, void* p, void* a, void* lda, void* b, void* ldb, void* c, void* d, void* x, void* work, void* lwork, void* info);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	*(void **) & fn = current_backend->lapack.cgglse.f77_blas_function; 
-	*(void **) & fn_hook = __flexiblas_hooks->cgglse.f77_hook_function[0]; 
-	if ( fn_hook == NULL ) { 
-		fn((void*) m, (void*) n, (void*) p, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) d, (void*) x, (void*) work, (void*) lwork, (void*) info); 
-		return;
-	} else {
-		hook_pos_cgglse = 0;
-		fn_hook((void*) m, (void*) n, (void*) p, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) d, (void*) x, (void*) work, (void*) lwork, (void*) info);
-		return;
-	}
+    *(void **) & fn = current_backend->lapack.cgglse.f77_blas_function;
+    *(void **) & fn_hook = __flexiblas_hooks->cgglse.f77_hook_function[0];
+    if ( fn_hook == NULL ) {
+        fn((void*) m, (void*) n, (void*) p, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) d, (void*) x, (void*) work, (void*) lwork, (void*) info);
+        return;
+    } else {
+        hook_pos_cgglse = 0;
+        fn_hook((void*) m, (void*) n, (void*) p, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) d, (void*) x, (void*) work, (void*) lwork, (void*) info);
+        return;
+    }
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void cgglse_(blasint* m, blasint* n, blasint* p, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* c, float complex* d, float complex* x, float complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cgglse,CGGLSE)))));
@@ -72,13 +72,13 @@ void cgglse(blasint* m, blasint* n, blasint* p, float complex* a, blasint* lda, 
 
 void flexiblas_real_cgglse_(void* m, void* n, void* p, void* a, void* lda, void* b, void* ldb, void* c, void* d, void* x, void* work, void* lwork, void* info)
 {
-	void (*fn) (void* m, void* n, void* p, void* a, void* lda, void* b, void* ldb, void* c, void* d, void* x, void* work, void* lwork, void* info);
+    void (*fn) (void* m, void* n, void* p, void* a, void* lda, void* b, void* ldb, void* c, void* d, void* x, void* work, void* lwork, void* info);
 
-	*(void **) & fn = current_backend->lapack.cgglse.f77_blas_function; 
+    *(void **) & fn = current_backend->lapack.cgglse.f77_blas_function;
 
-		fn((void*) m, (void*) n, (void*) p, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) d, (void*) x, (void*) work, (void*) lwork, (void*) info); 
+    fn((void*) m, (void*) n, (void*) p, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) d, (void*) x, (void*) work, (void*) lwork, (void*) info);
 
-	return;
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_real_cgglse(void* m, void* n, void* p, void* a, void* lda, void* b, void* ldb, void* c, void* d, void* x, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_cgglse_")));
@@ -94,10 +94,10 @@ void flexiblas_real_cgglse(void* m, void* n, void* p, void* a, void* lda, void* 
 
 void flexiblas_chain_cgglse_(void* m, void* n, void* p, void* a, void* lda, void* b, void* ldb, void* c, void* d, void* x, void* work, void* lwork, void* info)
 {
-	void (*fn) (void* m, void* n, void* p, void* a, void* lda, void* b, void* ldb, void* c, void* d, void* x, void* work, void* lwork, void* info);
-	void (*fn_hook) (void* m, void* n, void* p, void* a, void* lda, void* b, void* ldb, void* c, void* d, void* x, void* work, void* lwork, void* info);
+    void (*fn) (void* m, void* n, void* p, void* a, void* lda, void* b, void* ldb, void* c, void* d, void* x, void* work, void* lwork, void* info);
+    void (*fn_hook) (void* m, void* n, void* p, void* a, void* lda, void* b, void* ldb, void* c, void* d, void* x, void* work, void* lwork, void* info);
 
-	*(void **) &fn      = current_backend->lapack.cgglse.f77_blas_function; 
+    *(void **) &fn      = current_backend->lapack.cgglse.f77_blas_function;
 
     hook_pos_cgglse ++;
     if( hook_pos_cgglse < __flexiblas_hooks->cgglse.nhook) {
@@ -105,9 +105,9 @@ void flexiblas_chain_cgglse_(void* m, void* n, void* p, void* a, void* lda, void
         fn_hook((void*) m, (void*) n, (void*) p, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) d, (void*) x, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_cgglse = 0;
-		fn((void*) m, (void*) n, (void*) p, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) d, (void*) x, (void*) work, (void*) lwork, (void*) info); 
-	}
-	return;
+        fn((void*) m, (void*) n, (void*) p, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) c, (void*) d, (void*) x, (void*) work, (void*) lwork, (void*) info);
+    }
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_chain_cgglse(void* m, void* n, void* p, void* a, void* lda, void* b, void* ldb, void* c, void* d, void* x, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_cgglse_")));

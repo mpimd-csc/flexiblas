@@ -1,21 +1,21 @@
-//    SPDX-License-Identifier: LGPL-3.0-or-later
+//  SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,23 +36,23 @@ void FC_GLOBAL(dptts2,DPTTS2)(blasint* n, blasint* nrhs, double* d, double* e, d
 void FC_GLOBAL(dptts2,DPTTS2)(blasint* n, blasint* nrhs, double* d, double* e, double* b, blasint* ldb)
 #endif
 {
-	void (*fn) (void* n, void* nrhs, void* d, void* e, void* b, void* ldb);
-	void (*fn_hook) (void* n, void* nrhs, void* d, void* e, void* b, void* ldb);
+    void (*fn) (void* n, void* nrhs, void* d, void* e, void* b, void* ldb);
+    void (*fn_hook) (void* n, void* nrhs, void* d, void* e, void* b, void* ldb);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	*(void **) & fn = current_backend->lapack.dptts2.f77_blas_function; 
-	*(void **) & fn_hook = __flexiblas_hooks->dptts2.f77_hook_function[0]; 
-	if ( fn_hook == NULL ) { 
-		fn((void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) b, (void*) ldb); 
-		return;
-	} else {
-		hook_pos_dptts2 = 0;
-		fn_hook((void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) b, (void*) ldb);
-		return;
-	}
+    *(void **) & fn = current_backend->lapack.dptts2.f77_blas_function;
+    *(void **) & fn_hook = __flexiblas_hooks->dptts2.f77_hook_function[0];
+    if ( fn_hook == NULL ) {
+        fn((void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) b, (void*) ldb);
+        return;
+    } else {
+        hook_pos_dptts2 = 0;
+        fn_hook((void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) b, (void*) ldb);
+        return;
+    }
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void dptts2_(blasint* n, blasint* nrhs, double* d, double* e, double* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(dptts2,DPTTS2)))));
@@ -72,13 +72,13 @@ void dptts2(blasint* n, blasint* nrhs, double* d, double* e, double* b, blasint*
 
 void flexiblas_real_dptts2_(void* n, void* nrhs, void* d, void* e, void* b, void* ldb)
 {
-	void (*fn) (void* n, void* nrhs, void* d, void* e, void* b, void* ldb);
+    void (*fn) (void* n, void* nrhs, void* d, void* e, void* b, void* ldb);
 
-	*(void **) & fn = current_backend->lapack.dptts2.f77_blas_function; 
+    *(void **) & fn = current_backend->lapack.dptts2.f77_blas_function;
 
-		fn((void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) b, (void*) ldb); 
+    fn((void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) b, (void*) ldb);
 
-	return;
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_real_dptts2(void* n, void* nrhs, void* d, void* e, void* b, void* ldb) __attribute__((alias("flexiblas_real_dptts2_")));
@@ -94,10 +94,10 @@ void flexiblas_real_dptts2(void* n, void* nrhs, void* d, void* e, void* b, void*
 
 void flexiblas_chain_dptts2_(void* n, void* nrhs, void* d, void* e, void* b, void* ldb)
 {
-	void (*fn) (void* n, void* nrhs, void* d, void* e, void* b, void* ldb);
-	void (*fn_hook) (void* n, void* nrhs, void* d, void* e, void* b, void* ldb);
+    void (*fn) (void* n, void* nrhs, void* d, void* e, void* b, void* ldb);
+    void (*fn_hook) (void* n, void* nrhs, void* d, void* e, void* b, void* ldb);
 
-	*(void **) &fn      = current_backend->lapack.dptts2.f77_blas_function; 
+    *(void **) &fn      = current_backend->lapack.dptts2.f77_blas_function;
 
     hook_pos_dptts2 ++;
     if( hook_pos_dptts2 < __flexiblas_hooks->dptts2.nhook) {
@@ -105,9 +105,9 @@ void flexiblas_chain_dptts2_(void* n, void* nrhs, void* d, void* e, void* b, voi
         fn_hook((void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) b, (void*) ldb);
     } else {
         hook_pos_dptts2 = 0;
-		fn((void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) b, (void*) ldb); 
-	}
-	return;
+        fn((void*) n, (void*) nrhs, (void*) d, (void*) e, (void*) b, (void*) ldb);
+    }
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_chain_dptts2(void* n, void* nrhs, void* d, void* e, void* b, void* ldb) __attribute__((alias("flexiblas_chain_dptts2_")));

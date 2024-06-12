@@ -1,21 +1,21 @@
-//    SPDX-License-Identifier: LGPL-3.0-or-later
+//  SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,23 +36,23 @@ void FC_GLOBAL(dlasd5,DLASD5)(blasint* i, double* d, double* z, double* delta, d
 void FC_GLOBAL(dlasd5,DLASD5)(blasint* i, double* d, double* z, double* delta, double* rho, double* dsigma, double* work)
 #endif
 {
-	void (*fn) (void* i, void* d, void* z, void* delta, void* rho, void* dsigma, void* work);
-	void (*fn_hook) (void* i, void* d, void* z, void* delta, void* rho, void* dsigma, void* work);
+    void (*fn) (void* i, void* d, void* z, void* delta, void* rho, void* dsigma, void* work);
+    void (*fn_hook) (void* i, void* d, void* z, void* delta, void* rho, void* dsigma, void* work);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	*(void **) & fn = current_backend->lapack.dlasd5.f77_blas_function; 
-	*(void **) & fn_hook = __flexiblas_hooks->dlasd5.f77_hook_function[0]; 
-	if ( fn_hook == NULL ) { 
-		fn((void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) dsigma, (void*) work); 
-		return;
-	} else {
-		hook_pos_dlasd5 = 0;
-		fn_hook((void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) dsigma, (void*) work);
-		return;
-	}
+    *(void **) & fn = current_backend->lapack.dlasd5.f77_blas_function;
+    *(void **) & fn_hook = __flexiblas_hooks->dlasd5.f77_hook_function[0];
+    if ( fn_hook == NULL ) {
+        fn((void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) dsigma, (void*) work);
+        return;
+    } else {
+        hook_pos_dlasd5 = 0;
+        fn_hook((void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) dsigma, (void*) work);
+        return;
+    }
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void dlasd5_(blasint* i, double* d, double* z, double* delta, double* rho, double* dsigma, double* work) __attribute__((alias(MTS(FC_GLOBAL(dlasd5,DLASD5)))));
@@ -72,13 +72,13 @@ void dlasd5(blasint* i, double* d, double* z, double* delta, double* rho, double
 
 void flexiblas_real_dlasd5_(void* i, void* d, void* z, void* delta, void* rho, void* dsigma, void* work)
 {
-	void (*fn) (void* i, void* d, void* z, void* delta, void* rho, void* dsigma, void* work);
+    void (*fn) (void* i, void* d, void* z, void* delta, void* rho, void* dsigma, void* work);
 
-	*(void **) & fn = current_backend->lapack.dlasd5.f77_blas_function; 
+    *(void **) & fn = current_backend->lapack.dlasd5.f77_blas_function;
 
-		fn((void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) dsigma, (void*) work); 
+    fn((void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) dsigma, (void*) work);
 
-	return;
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_real_dlasd5(void* i, void* d, void* z, void* delta, void* rho, void* dsigma, void* work) __attribute__((alias("flexiblas_real_dlasd5_")));
@@ -94,10 +94,10 @@ void flexiblas_real_dlasd5(void* i, void* d, void* z, void* delta, void* rho, vo
 
 void flexiblas_chain_dlasd5_(void* i, void* d, void* z, void* delta, void* rho, void* dsigma, void* work)
 {
-	void (*fn) (void* i, void* d, void* z, void* delta, void* rho, void* dsigma, void* work);
-	void (*fn_hook) (void* i, void* d, void* z, void* delta, void* rho, void* dsigma, void* work);
+    void (*fn) (void* i, void* d, void* z, void* delta, void* rho, void* dsigma, void* work);
+    void (*fn_hook) (void* i, void* d, void* z, void* delta, void* rho, void* dsigma, void* work);
 
-	*(void **) &fn      = current_backend->lapack.dlasd5.f77_blas_function; 
+    *(void **) &fn      = current_backend->lapack.dlasd5.f77_blas_function;
 
     hook_pos_dlasd5 ++;
     if( hook_pos_dlasd5 < __flexiblas_hooks->dlasd5.nhook) {
@@ -105,9 +105,9 @@ void flexiblas_chain_dlasd5_(void* i, void* d, void* z, void* delta, void* rho, 
         fn_hook((void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) dsigma, (void*) work);
     } else {
         hook_pos_dlasd5 = 0;
-		fn((void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) dsigma, (void*) work); 
-	}
-	return;
+        fn((void*) i, (void*) d, (void*) z, (void*) delta, (void*) rho, (void*) dsigma, (void*) work);
+    }
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_chain_dlasd5(void* i, void* d, void* z, void* delta, void* rho, void* dsigma, void* work) __attribute__((alias("flexiblas_chain_dlasd5_")));

@@ -1,21 +1,21 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 
 
@@ -87,61 +87,61 @@ void flexiblas_mgmt_exit(void)
 
 /*  Internal wrapper around getenv  */
 static char *__flexiblas_mgmt_getenv(int what) {
-	char container[MAX_BUFFER_SIZE];
-	container[0] = '\0';
-	switch (what) {
-		case FLEXIBLAS_ENV_SO_EXTENSION:
-			#ifdef __APPLE__
-			snprintf(container, MAX_BUFFER_SIZE, ".dylib");
-			#else
-			#ifdef __WIN32__
-			snprintf(container, MAX_BUFFER_SIZE, ".dll");
-			#else
-			snprintf(container, MAX_BUFFER_SIZE, ".so");
-			#endif
-			#endif
-			break;
-		case FLEXIBLAS_ENV_HOMEDIR:
-			#ifdef __WIN32__
-			snprintf(container,MAX_BUFFER_SIZE,"%s\\%s\\",getenv("HOMEDRIVE"),getenv("HOMEPATH"));
-			#else
-			snprintf(container,MAX_BUFFER_SIZE,"%s",getenv("HOME"));
-			#endif
-			break;
-		case FLEXIBLAS_ENV_GLOBAL_RC:
-			#ifdef __WIN32__
-			snprintf(container,MAX_BUFFER_SIZE,"%s\\%s", getenv("SYSTEMROOT"), FLEXIBLAS_RC);
-			#else
-			snprintf(container,MAX_BUFFER_SIZE,"%s/%s",CMAKE_INSTALL_FULL_SYSCONFDIR,FLEXIBLAS_RC);
-			#endif
-			break;
-        case FLEXIBLAS_ENV_GLOBAL_RC_DIR:
-            #ifdef __WIN32__
-            #warning NOT IMPLEMENTED
-            #else
-			snprintf(container,MAX_BUFFER_SIZE,"%s/%s/",CMAKE_INSTALL_FULL_SYSCONFDIR,FLEXIBLAS_RC_DIR);
-            #endif
+    char container[MAX_BUFFER_SIZE];
+    container[0] = '\0';
+    switch (what) {
+        case FLEXIBLAS_ENV_SO_EXTENSION:
+#ifdef __APPLE__
+            snprintf(container, MAX_BUFFER_SIZE, ".dylib");
+#else
+#ifdef __WIN32__
+            snprintf(container, MAX_BUFFER_SIZE, ".dll");
+#else
+            snprintf(container, MAX_BUFFER_SIZE, ".so");
+#endif
+#endif
             break;
-		case FLEXIBLAS_ENV_USER_RC:
-			#ifdef __WIN32__
-			snprintf(container,MAX_BUFFER_SIZE,"%s\\%s",getenv("APPDATA"), FLEXIBLAS_RC);
-			#else
-			snprintf(container,MAX_BUFFER_SIZE,"%s/.%s", getenv("HOME"), FLEXIBLAS_RC);
-			#endif
-			break;
+        case FLEXIBLAS_ENV_HOMEDIR:
+#ifdef __WIN32__
+            snprintf(container,MAX_BUFFER_SIZE,"%s\\%s\\",getenv("HOMEDRIVE"),getenv("HOMEPATH"));
+#else
+            snprintf(container,MAX_BUFFER_SIZE,"%s",getenv("HOME"));
+#endif
+            break;
+        case FLEXIBLAS_ENV_GLOBAL_RC:
+#ifdef __WIN32__
+            snprintf(container,MAX_BUFFER_SIZE,"%s\\%s", getenv("SYSTEMROOT"), FLEXIBLAS_RC);
+#else
+            snprintf(container,MAX_BUFFER_SIZE,"%s/%s",CMAKE_INSTALL_FULL_SYSCONFDIR,FLEXIBLAS_RC);
+#endif
+            break;
+        case FLEXIBLAS_ENV_GLOBAL_RC_DIR:
+#ifdef __WIN32__
+#warning NOT IMPLEMENTED
+#else
+            snprintf(container,MAX_BUFFER_SIZE,"%s/%s/",CMAKE_INSTALL_FULL_SYSCONFDIR,FLEXIBLAS_RC_DIR);
+#endif
+            break;
+        case FLEXIBLAS_ENV_USER_RC:
+#ifdef __WIN32__
+            snprintf(container,MAX_BUFFER_SIZE,"%s\\%s",getenv("APPDATA"), FLEXIBLAS_RC);
+#else
+            snprintf(container,MAX_BUFFER_SIZE,"%s/.%s", getenv("HOME"), FLEXIBLAS_RC);
+#endif
+            break;
         case FLEXIBLAS_ENV_HOST_RC:
-    		#ifdef __WIN32__
-            #error Not implemented
-			#else
+#ifdef __WIN32__
+#error Not implemented
+#else
             {
                 char hostname[MAX_BUFFER_SIZE-32];
                 gethostname(hostname, MAX_BUFFER_SIZE-32);
-    			snprintf(container,MAX_BUFFER_SIZE,"%s/.%s.%s", getenv("HOME"), FLEXIBLAS_RC, hostname);
+                snprintf(container,MAX_BUFFER_SIZE,"%s/.%s.%s", getenv("HOME"), FLEXIBLAS_RC, hostname);
             }
-			#endif
-			break;
+#endif
+            break;
         case FLEXIBLAS_ENV_ENV_RC:
-            #ifndef __WIN32__
+#ifndef __WIN32__
             {
                 if ( getenv("FLEXIBLAS_CONFIG") != NULL ) {
                     snprintf(container, MAX_BUFFER_SIZE, "%s", getenv("FLEXIBLAS_CONFIG"));
@@ -151,12 +151,12 @@ static char *__flexiblas_mgmt_getenv(int what) {
                     return NULL;
                 }
             }
-            #endif
+#endif
             break;
-		default:
-			return NULL;
-	}
-	return strdup(container);
+        default:
+            return NULL;
+    }
+    return strdup(container);
 }
 #undef MAX_BUFFER_SIZE
 
@@ -208,7 +208,7 @@ char *flexiblas_mgmt_location(flexiblas_mgmt_location_t loc)
     } else if ( loc == FLEXIBLAS_USER ) {
         return __flexiblas_mgmt_getenv(FLEXIBLAS_ENV_USER_RC);
     } else if (loc == FLEXIBLAS_HOST ) {
-    	return __flexiblas_mgmt_getenv(FLEXIBLAS_ENV_HOST_RC);
+        return __flexiblas_mgmt_getenv(FLEXIBLAS_ENV_HOST_RC);
     } else if (loc == FLEXIBLAS_ENV) {
         return __flexiblas_mgmt_getenv(FLEXIBLAS_ENV_ENV_RC);
     }
@@ -315,7 +315,7 @@ flexiblas_mgmt_t * flexiblas_mgmt_load_config(void)
             free(xpath);
         }
 
-       closedir(dir);
+        closedir(dir);
     } else {
         DPRINTF_WARN(1, "Configuration directory %s does not exists.\n",path);
     }
@@ -558,18 +558,18 @@ iter_start:
             strncpy(blas_name, sec_name, FLEXIBLAS_MGMT_MAX_BUFFER_LEN);
 
         if ( (csc_ini_section_getstring(sec, "library", &tmp) != CSC_INI_SUCCESS) ) {
-			strncpy(library, "", FLEXIBLAS_MGMT_MAX_BUFFER_LEN);
+            strncpy(library, "", FLEXIBLAS_MGMT_MAX_BUFFER_LEN);
             library[0] = 0;
-		} else {
-			strncpy(library, tmp, FLEXIBLAS_MGMT_MAX_BUFFER_LEN);
-		}
+        } else {
+            strncpy(library, tmp, FLEXIBLAS_MGMT_MAX_BUFFER_LEN);
+        }
 
         if ( (csc_ini_section_getstring(sec, "comment", &tmp) != CSC_INI_SUCCESS) ) {
-			strncpy(comment, "", FLEXIBLAS_MGMT_MAX_BUFFER_LEN);
+            strncpy(comment, "", FLEXIBLAS_MGMT_MAX_BUFFER_LEN);
             comment[0] = 0;
-		} else {
-			strncpy(comment, tmp, FLEXIBLAS_MGMT_MAX_BUFFER_LEN);
-		}
+        } else {
+            strncpy(comment, tmp, FLEXIBLAS_MGMT_MAX_BUFFER_LEN);
+        }
         *help = iter;
         return 1;
     } else {
@@ -586,7 +586,7 @@ int flexiblas_mgmt_list_paths(flexiblas_mgmt_t * config, flexiblas_mgmt_location
 {
     csc_ini_iterator_t iter;
     csc_ini_section_t *sec;
-	csc_ini_kvstore_t  *kv;
+    csc_ini_kvstore_t  *kv;
 
     iter = * help;
 
@@ -617,7 +617,7 @@ iter:
 
     if ( csc_strbegin(key, "path")) {
         strncpy(path, csc_ini_getvalue(kv), FLEXIBLAS_MGMT_MAX_BUFFER_LEN);
-	} else {
+    } else {
         goto iter;
     }
     *help = iter;
@@ -629,7 +629,7 @@ static char flexiblas_mgmt_searchpath[] = FLEXIBLAS_DEFAULT_LIB_PATH;
 
 int flexiblas_mgmt_list_default_paths(char *path, void **help)
 {
-	char *r;
+    char *r;
     // printf("%s\n", flexiblas_mgmt_searchpath);
     if ( *help == NULL ) {
         strncpy(path, strtok_r(flexiblas_mgmt_searchpath, ":",&r), FLEXIBLAS_MGMT_MAX_BUFFER_LEN);
@@ -714,7 +714,7 @@ int flexiblas_mgmt_get_active_default(flexiblas_mgmt_t *config, flexiblas_mgmt_l
         /* Use the compile-time default.  */
         strncpy(def, FLEXIBLAS_DEFAULT_BLAS , FLEXIBLAS_MGMT_MAX_BUFFER_LEN);
         return 0;
-	}
+    }
 
     return -1;
 }
@@ -764,10 +764,10 @@ int flexiblas_mgmt_set_default(flexiblas_mgmt_t *config, flexiblas_mgmt_location
 
     if (def == NULL ){
         ret = csc_ini_key_remove(ini, CSC_INI_DEFAULT_SECTION, "default");
-		if ( ret != CSC_INI_NOSECTION && ret != CSC_INI_NOKEY && ret != CSC_INI_SUCCESS){
-			printf("Failed to delete default BLAS from %s. Exit\n", flexiblas_mgmt_location_to_string(loc));
+        if ( ret != CSC_INI_NOSECTION && ret != CSC_INI_NOKEY && ret != CSC_INI_SUCCESS){
+            printf("Failed to delete default BLAS from %s. Exit\n", flexiblas_mgmt_location_to_string(loc));
             return -1;
-		}
+        }
         return 0;
     }
 
@@ -776,9 +776,9 @@ int flexiblas_mgmt_set_default(flexiblas_mgmt_t *config, flexiblas_mgmt_location
         def2 = csc_struppercase(def2);
         if ( csc_ini_setstring(ini, CSC_INI_DEFAULT_SECTION, "default", def2) != CSC_INI_SUCCESS) {
             free(def2);
-			printf("Failed to set default to %s. Exit\n", def);
+            printf("Failed to set default to %s. Exit\n", def);
             return -1;
-		}
+        }
         free(def2);
         return 0;
     }
@@ -806,11 +806,11 @@ int flexiblas_mgmt_blas_get(flexiblas_mgmt_t *config, flexiblas_mgmt_location_t 
         return -1;
     } else {
         if ( (csc_ini_section_getstring(sec, "library", &tmp) != CSC_INI_SUCCESS) ) {
-			strncpy(library, "", FLEXIBLAS_MGMT_MAX_BUFFER_LEN);
+            strncpy(library, "", FLEXIBLAS_MGMT_MAX_BUFFER_LEN);
             library[0] = 0;
-		} else {
-			strncpy(library, tmp, FLEXIBLAS_MGMT_MAX_BUFFER_LEN);
-		}
+        } else {
+            strncpy(library, tmp, FLEXIBLAS_MGMT_MAX_BUFFER_LEN);
+        }
 
         if ( comment != NULL) {
             if ( (csc_ini_section_getstring(sec, "comment", &tmp) != CSC_INI_SUCCESS) ) {
@@ -851,9 +851,9 @@ int flexiblas_mgmt_blas_get2(flexiblas_mgmt_t *config,  flexiblas_mgmt_location_
 }
 
 int flexiblas_mgmt_blas_add (flexiblas_mgmt_t *config, flexiblas_mgmt_location_t loc,
-            char *name, char *so_name, char*comment)
+        char *name, char *so_name, char*comment)
 {
-	char *iname = NULL;
+    char *iname = NULL;
     csc_ini_error_t ret;
     csc_ini_file_t *ini;
 
@@ -868,23 +868,23 @@ int flexiblas_mgmt_blas_add (flexiblas_mgmt_t *config, flexiblas_mgmt_location_t
     if ( loc == FLEXIBLAS_GLOBAL_DIR) return -1;
 
     iname = strdup(name);
-	iname = csc_struppercase(iname);
+    iname = csc_struppercase(iname);
 
     ret = csc_ini_setstring(ini, iname, "library", so_name);
-	if ( ret != CSC_INI_SUCCESS ) {
-		printf("Failed to set the library entry for %s. Exit.\n", iname);
+    if ( ret != CSC_INI_SUCCESS ) {
+        printf("Failed to set the library entry for %s. Exit.\n", iname);
         free(iname);
         return -1;
-	}
+    }
 
     if ( comment != NULL) {
-		ret = csc_ini_setstring(ini, iname, "comment", comment);
-		if ( ret != CSC_INI_SUCCESS) {
-			printf("Failed to set the comment for %s. Exit.\n", iname);
+        ret = csc_ini_setstring(ini, iname, "comment", comment);
+        if ( ret != CSC_INI_SUCCESS) {
+            printf("Failed to set the comment for %s. Exit.\n", iname);
             free(iname);
             return -1;
-		}
-	}
+        }
+    }
     free(iname);
     flexiblas_mgmt_update_name_list(config);
 
@@ -893,7 +893,7 @@ int flexiblas_mgmt_blas_add (flexiblas_mgmt_t *config, flexiblas_mgmt_location_t
 
 int flexiblas_mgmt_blas_remove(flexiblas_mgmt_t *config, flexiblas_mgmt_location_t loc, char *name)
 {
-	char *iname = NULL;
+    char *iname = NULL;
     csc_ini_error_t ret;
     csc_ini_file_t *ini;
 
@@ -908,7 +908,7 @@ int flexiblas_mgmt_blas_remove(flexiblas_mgmt_t *config, flexiblas_mgmt_location
 
 
     iname = strdup(name);
-	iname = csc_struppercase(iname);
+    iname = csc_struppercase(iname);
     ret = csc_ini_section_remove(ini, iname);
     if ( ret!=CSC_INI_SUCCESS) {
         printf("Failed to remove %s from %s.\n", name, flexiblas_mgmt_location_to_string(loc));
@@ -992,7 +992,7 @@ int flexiblas_mgmt_get_property(flexiblas_mgmt_t *config, flexiblas_mgmt_locatio
 }
 
 int flexiblas_mgmt_get_active_property(flexiblas_mgmt_t *config, flexiblas_mgmt_location_t *loc,
-            flexiblas_mgmt_property_t prop, void *buffer)
+        flexiblas_mgmt_property_t prop, void *buffer)
 {
     int ret_system, ret_user, ret_host, ret_env;
     if ( config == NULL)
@@ -1053,7 +1053,7 @@ int flexiblas_mgmt_set_property(flexiblas_mgmt_t *config, flexiblas_mgmt_locatio
                 break;
         }
     } else {
-         switch(prop) {
+        switch(prop) {
             case FLEXIBLAS_PROP_VERBOSE:
                 csc_ini_setinteger(ini, CSC_INI_DEFAULT_SECTION, "verbose", *((int *) buffer));
                 break;
@@ -1114,7 +1114,7 @@ int flexiblas_mgmt_get_key(flexiblas_mgmt_t *config, flexiblas_mgmt_location_t l
 
 
 int flexiblas_mgmt_get_active_key(flexiblas_mgmt_t *config, flexiblas_mgmt_location_t *loc,
-            char *section, char *key, char*buffer)
+        char *section, char *key, char*buffer)
 {
     int ret_system, ret_user, ret_host, ret_env;
     if ( config == NULL)

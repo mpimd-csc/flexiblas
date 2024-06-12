@@ -1,21 +1,21 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 
 
@@ -111,8 +111,8 @@ int enable_hook(flexiblas_mgmt_location_t loc, char *name)
     }
 
     if (!  __flexiblas_hook_exists(name)) {
-         printf("Hook %s does not exists.\n", name);
-         ecode = 1; goto fin;
+        printf("Hook %s does not exists.\n", name);
+        ecode = 1; goto fin;
     }
 
     if ( flexiblas_mgmt_hook_enable(config, loc, name)) {
@@ -138,16 +138,16 @@ int  show_hook(char *name)
     void *handle = NULL;
 
     if (! __flexiblas_hook_exists(name)) {
-         printf("No hook named %s is found.\n", name);
-         ecode = 1;
-         goto fin;
+        printf("No hook named %s is found.\n", name);
+        ecode = 1;
+        goto fin;
     }
 
     sofile = __flexiblas_hook_sofile(name);
     if (!sofile) {
-         printf("No hook named %s is found.\n", name);
-         ecode = 1;
-         goto fin;
+        printf("No hook named %s is found.\n", name);
+        ecode = 1;
+        goto fin;
     }
 
     dlerror();
@@ -359,8 +359,8 @@ int hook_option_set(flexiblas_mgmt_location_t loc, char *hookname, char *option,
 
     sofile = __flexiblas_hook_sofile(hookname);
     if (!sofile) {
-         printf("No hook named %s is found.\n", hookname);
-         return -1;
+        printf("No hook named %s is found.\n", hookname);
+        return -1;
     }
 
     handle = __flexiblas_dlopen(sofile, RTLD_LAZY | RTLD_LOCAL, NULL);

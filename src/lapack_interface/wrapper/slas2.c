@@ -1,21 +1,21 @@
-//    SPDX-License-Identifier: LGPL-3.0-or-later
+//  SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,23 +36,23 @@ void FC_GLOBAL(slas2,SLAS2)(float* f, float* g, float* h, float* ssmin, float* s
 void FC_GLOBAL(slas2,SLAS2)(float* f, float* g, float* h, float* ssmin, float* ssmax)
 #endif
 {
-	void (*fn) (void* f, void* g, void* h, void* ssmin, void* ssmax);
-	void (*fn_hook) (void* f, void* g, void* h, void* ssmin, void* ssmax);
+    void (*fn) (void* f, void* g, void* h, void* ssmin, void* ssmax);
+    void (*fn_hook) (void* f, void* g, void* h, void* ssmin, void* ssmax);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	*(void **) & fn = current_backend->lapack.slas2.f77_blas_function; 
-	*(void **) & fn_hook = __flexiblas_hooks->slas2.f77_hook_function[0]; 
-	if ( fn_hook == NULL ) { 
-		fn((void*) f, (void*) g, (void*) h, (void*) ssmin, (void*) ssmax); 
-		return;
-	} else {
-		hook_pos_slas2 = 0;
-		fn_hook((void*) f, (void*) g, (void*) h, (void*) ssmin, (void*) ssmax);
-		return;
-	}
+    *(void **) & fn = current_backend->lapack.slas2.f77_blas_function;
+    *(void **) & fn_hook = __flexiblas_hooks->slas2.f77_hook_function[0];
+    if ( fn_hook == NULL ) {
+        fn((void*) f, (void*) g, (void*) h, (void*) ssmin, (void*) ssmax);
+        return;
+    } else {
+        hook_pos_slas2 = 0;
+        fn_hook((void*) f, (void*) g, (void*) h, (void*) ssmin, (void*) ssmax);
+        return;
+    }
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void slas2_(float* f, float* g, float* h, float* ssmin, float* ssmax) __attribute__((alias(MTS(FC_GLOBAL(slas2,SLAS2)))));
@@ -72,13 +72,13 @@ void slas2(float* f, float* g, float* h, float* ssmin, float* ssmax){ FC_GLOBAL(
 
 void flexiblas_real_slas2_(void* f, void* g, void* h, void* ssmin, void* ssmax)
 {
-	void (*fn) (void* f, void* g, void* h, void* ssmin, void* ssmax);
+    void (*fn) (void* f, void* g, void* h, void* ssmin, void* ssmax);
 
-	*(void **) & fn = current_backend->lapack.slas2.f77_blas_function; 
+    *(void **) & fn = current_backend->lapack.slas2.f77_blas_function;
 
-		fn((void*) f, (void*) g, (void*) h, (void*) ssmin, (void*) ssmax); 
+    fn((void*) f, (void*) g, (void*) h, (void*) ssmin, (void*) ssmax);
 
-	return;
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_real_slas2(void* f, void* g, void* h, void* ssmin, void* ssmax) __attribute__((alias("flexiblas_real_slas2_")));
@@ -94,10 +94,10 @@ void flexiblas_real_slas2(void* f, void* g, void* h, void* ssmin, void* ssmax){f
 
 void flexiblas_chain_slas2_(void* f, void* g, void* h, void* ssmin, void* ssmax)
 {
-	void (*fn) (void* f, void* g, void* h, void* ssmin, void* ssmax);
-	void (*fn_hook) (void* f, void* g, void* h, void* ssmin, void* ssmax);
+    void (*fn) (void* f, void* g, void* h, void* ssmin, void* ssmax);
+    void (*fn_hook) (void* f, void* g, void* h, void* ssmin, void* ssmax);
 
-	*(void **) &fn      = current_backend->lapack.slas2.f77_blas_function; 
+    *(void **) &fn      = current_backend->lapack.slas2.f77_blas_function;
 
     hook_pos_slas2 ++;
     if( hook_pos_slas2 < __flexiblas_hooks->slas2.nhook) {
@@ -105,9 +105,9 @@ void flexiblas_chain_slas2_(void* f, void* g, void* h, void* ssmin, void* ssmax)
         fn_hook((void*) f, (void*) g, (void*) h, (void*) ssmin, (void*) ssmax);
     } else {
         hook_pos_slas2 = 0;
-		fn((void*) f, (void*) g, (void*) h, (void*) ssmin, (void*) ssmax); 
-	}
-	return;
+        fn((void*) f, (void*) g, (void*) h, (void*) ssmin, (void*) ssmax);
+    }
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_chain_slas2(void* f, void* g, void* h, void* ssmin, void* ssmax) __attribute__((alias("flexiblas_chain_slas2_")));

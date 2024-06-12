@@ -1,22 +1,23 @@
 
-//    SPDX-License-Identifier: LGPL-3.0-or-later
+//  SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -28,7 +29,7 @@
 
 
 
-void *__flexiblas_lapack_addr[10240];
+HIDDEN void *__flexiblas_lapack_addr[10240];
 HIDDEN void flexiblas_lapack_dummy_function_not_called(void)
 {
     size_t k = 0;
@@ -1663,5 +1664,4 @@ HIDDEN void flexiblas_lapack_dummy_function_not_called(void)
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(zunmtr,ZUNMTR)));
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(zupgtr,ZUPGTR)));
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(zupmtr,ZUPMTR)));
-;
 }

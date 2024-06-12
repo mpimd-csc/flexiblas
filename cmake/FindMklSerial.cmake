@@ -39,50 +39,50 @@ IF (NOT( MKL_FRONTEND_LIBRARY AND MKL_MIDDLE_LIBRARY AND MKL_CORE_LIBRARY ))
 ENDIF()
 
 SET(MKL_VERSION_CODE
-"#include <stdio.h>
-#include <stdlib.h>
+    "#include <stdio.h>
+    #include <stdlib.h>
 
-struct version_t {int major\; int minor\; int patch\; void* helper[32]\;}\;
-extern void MKL_Get_Version(struct version_t * v)\;
+    struct version_t {int major\; int minor\; int patch\; void* helper[32]\;}\;
+    extern void MKL_Get_Version(struct version_t * v)\;
 
-int main (void) {
- struct version_t v\;
- MKL_Get_Version(&v)\;
- printf(\"%d.%d.%d\",v.major,v.minor,v.patch)\;
-}
-")
+    int main (void) {
+    struct version_t v\;
+    MKL_Get_Version(&v)\;
+    printf(\"%d.%d.%d\",v.major,v.minor,v.patch)\;
+    }
+    ")
 
-FILE(WRITE ${CMAKE_BINARY_DIR}/mkltest.c ${MKL_VERSION_CODE})
-TRY_RUN(_RUN_RES _COMPILE_RES ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/mkltest.c
-    LINK_LIBRARIES ${MKL_FRONTEND_LIBRARY} ${MKL_MIDDLE_LIBRARY} ${MKL_CORE_LIBRARY} ${CMAKE_THREAD_LIBS_INIT} m
-    COMPILE_OUTPUT_VARIABLE COMPILE_OUT
-    RUN_OUTPUT_VARIABLE RUN_OUT)
-IF(FIND_DEBUG)
-    MESSAGE(STATUS "_RUN_RES : ${_RUN_RES}")
-    MESSAGE(STATUS "_COMPILE_RES: ${_COMPILE_RES}")
-    MESSAGE(STATUS "COMPILE_OUT: ${COMPILE_OUT}")
-    MESSAGE(STATUS "RUN_OUT: ${RUN_OUT}")
-ENDIF()
-FILE(REMOVE ${CMAKE_BINARY_DIR}/mkltest.c)
+    FILE(WRITE ${CMAKE_BINARY_DIR}/mkltest.c ${MKL_VERSION_CODE})
+    TRY_RUN(_RUN_RES _COMPILE_RES ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/mkltest.c
+        LINK_LIBRARIES ${MKL_FRONTEND_LIBRARY} ${MKL_MIDDLE_LIBRARY} ${MKL_CORE_LIBRARY} ${CMAKE_THREAD_LIBS_INIT} m
+        COMPILE_OUTPUT_VARIABLE COMPILE_OUT
+        RUN_OUTPUT_VARIABLE RUN_OUT)
+    IF(FIND_DEBUG)
+        MESSAGE(STATUS "_RUN_RES : ${_RUN_RES}")
+        MESSAGE(STATUS "_COMPILE_RES: ${_COMPILE_RES}")
+        MESSAGE(STATUS "COMPILE_OUT: ${COMPILE_OUT}")
+        MESSAGE(STATUS "RUN_OUT: ${RUN_OUT}")
+    ENDIF()
+    FILE(REMOVE ${CMAKE_BINARY_DIR}/mkltest.c)
 
-IF (_RUN_RES AND NOT _COMPILE_RES)
-    MESSAGE(STATUS "MKL Serial with ${MKL_FRONTEND_LIBRARY} ${MKL_MIDDLE_LIBRARY} ${MKL_CORE_LIBRARY} does not compile an example program.")
-ELSE()
-    SET(MklSerial_LIBRARY ${MKL_FRONTEND_LIBRARY} ${MKL_MIDDLE_LIBRARY} ${MKL_CORE_LIBRARY} ${CMAKE_THREAD_LIBS_INIT} m)
-    SET(MklSerial_VERSION ${RUN_OUT})
-ENDIF()
+    IF (_RUN_RES AND NOT _COMPILE_RES)
+        MESSAGE(STATUS "MKL Serial with ${MKL_FRONTEND_LIBRARY} ${MKL_MIDDLE_LIBRARY} ${MKL_CORE_LIBRARY} does not compile an example program.")
+    ELSE()
+        SET(MklSerial_LIBRARY ${MKL_FRONTEND_LIBRARY} ${MKL_MIDDLE_LIBRARY} ${MKL_CORE_LIBRARY} ${CMAKE_THREAD_LIBS_INIT} m)
+        SET(MklSerial_VERSION ${RUN_OUT})
+    ENDIF()
 
-#
-# Call ILAVER to obtain LAPACK compatability level
-#
-SET(LAPACK_VERSION_CODE
-    "PROGRAM LAPACKV
-    INTEGER :: MA,MI,PA
-    EXTERNAL ILAVER
-    CALL ILAVER(MA, MI, PA)
-    WRITE(*,'(I2,\".\",I2,\".\",I2)', advance=\"no\")  MA, MI, PA
-    END PROGRAM"
-)
+    #
+    # Call ILAVER to obtain LAPACK compatability level
+    #
+    SET(LAPACK_VERSION_CODE
+        "PROGRAM LAPACKV
+        INTEGER :: MA,MI,PA
+        EXTERNAL ILAVER
+        CALL ILAVER(MA, MI, PA)
+        WRITE(*,'(I2,\".\",I2,\".\",I2)', advance=\"no\")  MA, MI, PA
+        END PROGRAM"
+        )
 
     file(WRITE ${PROJECT_BINARY_DIR}/mkl_lapack_version_test.f90 ${LAPACK_VERSION_CODE})
     try_run(LV_RUN_STATE_Fortran LV_COMPILE_STATE_Fortran
@@ -90,18 +90,18 @@ SET(LAPACK_VERSION_CODE
         LINK_LIBRARIES ${MKL_FRONTEND_LIBRARY} ${MKL_MIDDLE_LIBRARY} ${MKL_CORE_LIBRARY} ${CMAKE_THREAD_LIBS_INIT} m
         RUN_OUTPUT_VARIABLE MKL_LAPACK_VERSION
         COMPILE_OUTPUT_VARIABLE LAPACK_TRY_OUTPUT)
-FILE(REMOVE ${CMAKE_BINARY_DIR}/mkl_lapack_version_test.f90)
-STRING(REPLACE " " "" MklSerial_LAPACK_VERSION "${MKL_LAPACK_VERSION}")
+    FILE(REMOVE ${CMAKE_BINARY_DIR}/mkl_lapack_version_test.f90)
+    STRING(REPLACE " " "" MklSerial_LAPACK_VERSION "${MKL_LAPACK_VERSION}")
 
-MESSAGE(STATUS "MKL: ${MKL_FRONTEND_LIBRARY} ${MKL_MIDDLE_LIBRARY} ${MKL_CORE_LIBRARY} contains LAPACK ${MKL_LAPACK_VERSION}")
+    MESSAGE(STATUS "MKL: ${MKL_FRONTEND_LIBRARY} ${MKL_MIDDLE_LIBRARY} ${MKL_CORE_LIBRARY} contains LAPACK ${MKL_LAPACK_VERSION}")
 
-include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(MklSerial REQUIRED_VARS MklSerial_LIBRARY)
+    include(FindPackageHandleStandardArgs)
+    find_package_handle_standard_args(MklSerial REQUIRED_VARS MklSerial_LIBRARY)
 
-UNSET(SEARCH_PATH)
-UNSET(MKL_FRONTEND_LIBRARY)
-UNSET(MKL_FRONTEND)
-UNSET(MKL_MIDDLE_LIBRARY)
-UNSET(MKL_CORE_LIBRARY)
-UNSET(MKL_MIDDLE)
-UNSET(MKL_CORE)
+    UNSET(SEARCH_PATH)
+    UNSET(MKL_FRONTEND_LIBRARY)
+    UNSET(MKL_FRONTEND)
+    UNSET(MKL_MIDDLE_LIBRARY)
+    UNSET(MKL_CORE_LIBRARY)
+    UNSET(MKL_MIDDLE)
+    UNSET(MKL_CORE)

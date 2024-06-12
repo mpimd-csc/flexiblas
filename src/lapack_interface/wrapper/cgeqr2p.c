@@ -1,21 +1,21 @@
-//    SPDX-License-Identifier: LGPL-3.0-or-later
+//  SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,23 +36,23 @@ void FC_GLOBAL(cgeqr2p,CGEQR2P)(blasint* m, blasint* n, float complex* a, blasin
 void FC_GLOBAL(cgeqr2p,CGEQR2P)(blasint* m, blasint* n, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* info)
 #endif
 {
-	void (*fn) (void* m, void* n, void* a, void* lda, void* tau, void* work, void* info);
-	void (*fn_hook) (void* m, void* n, void* a, void* lda, void* tau, void* work, void* info);
+    void (*fn) (void* m, void* n, void* a, void* lda, void* tau, void* work, void* info);
+    void (*fn_hook) (void* m, void* n, void* a, void* lda, void* tau, void* work, void* info);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	*(void **) & fn = current_backend->lapack.cgeqr2p.f77_blas_function; 
-	*(void **) & fn_hook = __flexiblas_hooks->cgeqr2p.f77_hook_function[0]; 
-	if ( fn_hook == NULL ) { 
-		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) info); 
-		return;
-	} else {
-		hook_pos_cgeqr2p = 0;
-		fn_hook((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) info);
-		return;
-	}
+    *(void **) & fn = current_backend->lapack.cgeqr2p.f77_blas_function;
+    *(void **) & fn_hook = __flexiblas_hooks->cgeqr2p.f77_hook_function[0];
+    if ( fn_hook == NULL ) {
+        fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) info);
+        return;
+    } else {
+        hook_pos_cgeqr2p = 0;
+        fn_hook((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) info);
+        return;
+    }
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void cgeqr2p_(blasint* m, blasint* n, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cgeqr2p,CGEQR2P)))));
@@ -72,13 +72,13 @@ void cgeqr2p(blasint* m, blasint* n, float complex* a, blasint* lda, float compl
 
 void flexiblas_real_cgeqr2p_(void* m, void* n, void* a, void* lda, void* tau, void* work, void* info)
 {
-	void (*fn) (void* m, void* n, void* a, void* lda, void* tau, void* work, void* info);
+    void (*fn) (void* m, void* n, void* a, void* lda, void* tau, void* work, void* info);
 
-	*(void **) & fn = current_backend->lapack.cgeqr2p.f77_blas_function; 
+    *(void **) & fn = current_backend->lapack.cgeqr2p.f77_blas_function;
 
-		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) info); 
+    fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) info);
 
-	return;
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_real_cgeqr2p(void* m, void* n, void* a, void* lda, void* tau, void* work, void* info) __attribute__((alias("flexiblas_real_cgeqr2p_")));
@@ -94,10 +94,10 @@ void flexiblas_real_cgeqr2p(void* m, void* n, void* a, void* lda, void* tau, voi
 
 void flexiblas_chain_cgeqr2p_(void* m, void* n, void* a, void* lda, void* tau, void* work, void* info)
 {
-	void (*fn) (void* m, void* n, void* a, void* lda, void* tau, void* work, void* info);
-	void (*fn_hook) (void* m, void* n, void* a, void* lda, void* tau, void* work, void* info);
+    void (*fn) (void* m, void* n, void* a, void* lda, void* tau, void* work, void* info);
+    void (*fn_hook) (void* m, void* n, void* a, void* lda, void* tau, void* work, void* info);
 
-	*(void **) &fn      = current_backend->lapack.cgeqr2p.f77_blas_function; 
+    *(void **) &fn      = current_backend->lapack.cgeqr2p.f77_blas_function;
 
     hook_pos_cgeqr2p ++;
     if( hook_pos_cgeqr2p < __flexiblas_hooks->cgeqr2p.nhook) {
@@ -105,9 +105,9 @@ void flexiblas_chain_cgeqr2p_(void* m, void* n, void* a, void* lda, void* tau, v
         fn_hook((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) info);
     } else {
         hook_pos_cgeqr2p = 0;
-		fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) info); 
-	}
-	return;
+        fn((void*) m, (void*) n, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) info);
+    }
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_chain_cgeqr2p(void* m, void* n, void* a, void* lda, void* tau, void* work, void* info) __attribute__((alias("flexiblas_chain_cgeqr2p_")));

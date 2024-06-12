@@ -1,21 +1,21 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 
 #ifndef CBLAS_F77_H
@@ -28,22 +28,22 @@
 #include "flexiblas_fortran_char_len.h"
 
 #ifdef FLEXIBLAS_INTEGER8
-	#include <stdint.h>
-	#define F77_INT int64_t
+#include <stdint.h>
+#define F77_INT int64_t
 #endif
 
 #ifdef  F77_CHAR
-   #define FCHAR F77_CHAR
+#define FCHAR F77_CHAR
 #else
-   #define FCHAR char *
+#define FCHAR char *
 #endif
 
 #ifdef F77_INT
-   #define FINT const F77_INT *
-   #define FINT2 F77_INT *
+#define FINT const F77_INT *
+#define FINT2 F77_INT *
 #else
-   #define FINT const int *
-   #define FINT2 int *
+#define FINT const int *
+#define FINT2 int *
 #endif
 
 #define COPY_CONST_PTR(a,b) memcpy(&a, &b, sizeof(void*))
@@ -57,7 +57,7 @@
 extern "C" {
 #endif
 
-   extern void FC_GLOBAL(xerbla,XERBLA)(FCHAR, void *, flexiblas_fortran_charlen_t);
+    extern void FC_GLOBAL(xerbla,XERBLA)(FCHAR, void *, flexiblas_fortran_charlen_t);
 
 
 #ifdef __cplusplus

@@ -1,21 +1,21 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 
 
@@ -50,50 +50,50 @@
 
 double wtime(void)
 {
-	struct timeval tv;
-	gettimeofday (&tv, NULL);
-	return tv.tv_sec + tv.tv_usec / 1e6;
+    struct timeval tv;
+    gettimeofday (&tv, NULL);
+    return tv.tv_sec + tv.tv_usec / 1e6;
 }
 
 
 int main (int argc, char **argv) {
-	Int n, i, j;
-	double **A, **B, **C;
-	double ts,te;
-	double alpha=1, beta=1;
+    Int n, i, j;
+    double **A, **B, **C;
+    double ts,te;
+    double alpha=1, beta=1;
     int nthread = omp_get_max_threads();
-	if ( argc != 2) {
-		printf("Usage: %s dim\n", argv[0]);
-		exit(1);
-	}
-	n = atoi(argv[1]);
+    if ( argc != 2) {
+        printf("Usage: %s dim\n", argv[0]);
+        exit(1);
+    }
+    n = atoi(argv[1]);
     printf("Number of threads = %d\n", nthread);
     A = (double**) malloc(sizeof(double*) * (nthread));
     B = (double**) malloc(sizeof(double*) * (nthread));
     C = (double**) malloc(sizeof(double*) * (nthread));
 
     for (j = 0; j < nthread; j++) {
-    	A[j] = malloc(sizeof(double) * n *n );
-    	B[j] = malloc(sizeof(double) * n *n );
-    	C[j] = malloc(sizeof(double) * n *n );
-    	for ( i = 0; i < n * n; i++){
-	    	A[j][i]=i+1;
-    		B[j][i]=i+0.5;
-	    }
+        A[j] = malloc(sizeof(double) * n *n );
+        B[j] = malloc(sizeof(double) * n *n );
+        C[j] = malloc(sizeof(double) * n *n );
+        for ( i = 0; i < n * n; i++){
+            A[j][i]=i+1;
+            B[j][i]=i+0.5;
+        }
     }
 
 
-	ts = wtime();
-    #pragma omp parallel private(i)
+    ts = wtime();
+#pragma omp parallel private(i)
     {
         int id = omp_get_thread_num();
-    	for (i=0; i < 400; i++){
-	    	FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A[id], &n, B[id],&n, &beta, C[id], &n, 1, 1);
-    	}
+        for (i=0; i < 400; i++){
+            FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A[id], &n, B[id],&n, &beta, C[id], &n, 1, 1);
+        }
     }
 
-	te = wtime();
-	printf("time: %lg\n", (te-ts)/10.0);
+    te = wtime();
+    printf("time: %lg\n", (te-ts)/10.0);
 
     for (i = 0; i < nthread; i++) {
         free(A[i]);
@@ -105,5 +105,5 @@ int main (int argc, char **argv) {
     free(B);
     free(C);
 
-	return 0;
+    return 0;
 }

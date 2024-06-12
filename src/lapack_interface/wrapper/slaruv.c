@@ -1,21 +1,21 @@
-//    SPDX-License-Identifier: LGPL-3.0-or-later
+//  SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,23 +36,23 @@ void FC_GLOBAL(slaruv,SLARUV)(blasint* iseed, blasint* n, float* x)
 void FC_GLOBAL(slaruv,SLARUV)(blasint* iseed, blasint* n, float* x)
 #endif
 {
-	void (*fn) (void* iseed, void* n, void* x);
-	void (*fn_hook) (void* iseed, void* n, void* x);
+    void (*fn) (void* iseed, void* n, void* x);
+    void (*fn_hook) (void* iseed, void* n, void* x);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	*(void **) & fn = current_backend->lapack.slaruv.f77_blas_function; 
-	*(void **) & fn_hook = __flexiblas_hooks->slaruv.f77_hook_function[0]; 
-	if ( fn_hook == NULL ) { 
-		fn((void*) iseed, (void*) n, (void*) x); 
-		return;
-	} else {
-		hook_pos_slaruv = 0;
-		fn_hook((void*) iseed, (void*) n, (void*) x);
-		return;
-	}
+    *(void **) & fn = current_backend->lapack.slaruv.f77_blas_function;
+    *(void **) & fn_hook = __flexiblas_hooks->slaruv.f77_hook_function[0];
+    if ( fn_hook == NULL ) {
+        fn((void*) iseed, (void*) n, (void*) x);
+        return;
+    } else {
+        hook_pos_slaruv = 0;
+        fn_hook((void*) iseed, (void*) n, (void*) x);
+        return;
+    }
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void slaruv_(blasint* iseed, blasint* n, float* x) __attribute__((alias(MTS(FC_GLOBAL(slaruv,SLARUV)))));
@@ -72,13 +72,13 @@ void slaruv(blasint* iseed, blasint* n, float* x){ FC_GLOBAL(slaruv,SLARUV)((voi
 
 void flexiblas_real_slaruv_(void* iseed, void* n, void* x)
 {
-	void (*fn) (void* iseed, void* n, void* x);
+    void (*fn) (void* iseed, void* n, void* x);
 
-	*(void **) & fn = current_backend->lapack.slaruv.f77_blas_function; 
+    *(void **) & fn = current_backend->lapack.slaruv.f77_blas_function;
 
-		fn((void*) iseed, (void*) n, (void*) x); 
+    fn((void*) iseed, (void*) n, (void*) x);
 
-	return;
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_real_slaruv(void* iseed, void* n, void* x) __attribute__((alias("flexiblas_real_slaruv_")));
@@ -94,10 +94,10 @@ void flexiblas_real_slaruv(void* iseed, void* n, void* x){flexiblas_real_slaruv_
 
 void flexiblas_chain_slaruv_(void* iseed, void* n, void* x)
 {
-	void (*fn) (void* iseed, void* n, void* x);
-	void (*fn_hook) (void* iseed, void* n, void* x);
+    void (*fn) (void* iseed, void* n, void* x);
+    void (*fn_hook) (void* iseed, void* n, void* x);
 
-	*(void **) &fn      = current_backend->lapack.slaruv.f77_blas_function; 
+    *(void **) &fn      = current_backend->lapack.slaruv.f77_blas_function;
 
     hook_pos_slaruv ++;
     if( hook_pos_slaruv < __flexiblas_hooks->slaruv.nhook) {
@@ -105,9 +105,9 @@ void flexiblas_chain_slaruv_(void* iseed, void* n, void* x)
         fn_hook((void*) iseed, (void*) n, (void*) x);
     } else {
         hook_pos_slaruv = 0;
-		fn((void*) iseed, (void*) n, (void*) x); 
-	}
-	return;
+        fn((void*) iseed, (void*) n, (void*) x);
+    }
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_chain_slaruv(void* iseed, void* n, void* x) __attribute__((alias("flexiblas_chain_slaruv_")));

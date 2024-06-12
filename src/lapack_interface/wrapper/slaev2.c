@@ -1,21 +1,21 @@
-//    SPDX-License-Identifier: LGPL-3.0-or-later
+//  SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,23 +36,23 @@ void FC_GLOBAL(slaev2,SLAEV2)(float* a, float* b, float* c, float* rt1, float* r
 void FC_GLOBAL(slaev2,SLAEV2)(float* a, float* b, float* c, float* rt1, float* rt2, float* cs1, float* sn1)
 #endif
 {
-	void (*fn) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
-	void (*fn_hook) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
+    void (*fn) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
+    void (*fn_hook) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	*(void **) & fn = current_backend->lapack.slaev2.f77_blas_function; 
-	*(void **) & fn_hook = __flexiblas_hooks->slaev2.f77_hook_function[0]; 
-	if ( fn_hook == NULL ) { 
-		fn((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1); 
-		return;
-	} else {
-		hook_pos_slaev2 = 0;
-		fn_hook((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1);
-		return;
-	}
+    *(void **) & fn = current_backend->lapack.slaev2.f77_blas_function;
+    *(void **) & fn_hook = __flexiblas_hooks->slaev2.f77_hook_function[0];
+    if ( fn_hook == NULL ) {
+        fn((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1);
+        return;
+    } else {
+        hook_pos_slaev2 = 0;
+        fn_hook((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1);
+        return;
+    }
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void slaev2_(float* a, float* b, float* c, float* rt1, float* rt2, float* cs1, float* sn1) __attribute__((alias(MTS(FC_GLOBAL(slaev2,SLAEV2)))));
@@ -72,13 +72,13 @@ void slaev2(float* a, float* b, float* c, float* rt1, float* rt2, float* cs1, fl
 
 void flexiblas_real_slaev2_(void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1)
 {
-	void (*fn) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
+    void (*fn) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
 
-	*(void **) & fn = current_backend->lapack.slaev2.f77_blas_function; 
+    *(void **) & fn = current_backend->lapack.slaev2.f77_blas_function;
 
-		fn((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1); 
+    fn((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1);
 
-	return;
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_real_slaev2(void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1) __attribute__((alias("flexiblas_real_slaev2_")));
@@ -94,10 +94,10 @@ void flexiblas_real_slaev2(void* a, void* b, void* c, void* rt1, void* rt2, void
 
 void flexiblas_chain_slaev2_(void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1)
 {
-	void (*fn) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
-	void (*fn_hook) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
+    void (*fn) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
+    void (*fn_hook) (void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1);
 
-	*(void **) &fn      = current_backend->lapack.slaev2.f77_blas_function; 
+    *(void **) &fn      = current_backend->lapack.slaev2.f77_blas_function;
 
     hook_pos_slaev2 ++;
     if( hook_pos_slaev2 < __flexiblas_hooks->slaev2.nhook) {
@@ -105,9 +105,9 @@ void flexiblas_chain_slaev2_(void* a, void* b, void* c, void* rt1, void* rt2, vo
         fn_hook((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1);
     } else {
         hook_pos_slaev2 = 0;
-		fn((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1); 
-	}
-	return;
+        fn((void*) a, (void*) b, (void*) c, (void*) rt1, (void*) rt2, (void*) cs1, (void*) sn1);
+    }
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_chain_slaev2(void* a, void* b, void* c, void* rt1, void* rt2, void* cs1, void* sn1) __attribute__((alias("flexiblas_chain_slaev2_")));

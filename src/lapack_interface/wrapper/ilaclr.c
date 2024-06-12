@@ -1,21 +1,21 @@
-//    SPDX-License-Identifier: LGPL-3.0-or-later
+//  SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,24 +36,24 @@ int FC_GLOBAL(ilaclr,ILACLR)(blasint* m, blasint* n, float complex* a, blasint* 
 int FC_GLOBAL(ilaclr,ILACLR)(blasint* m, blasint* n, float complex* a, blasint* lda)
 #endif
 {
-	blasint (*fn) (void* m, void* n, void* a, void* lda);
-	blasint (*fn_hook) (void* m, void* n, void* a, void* lda);
-	blasint ret;
+    blasint (*fn) (void* m, void* n, void* a, void* lda);
+    blasint (*fn_hook) (void* m, void* n, void* a, void* lda);
+    blasint ret;
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	*(void **) & fn = current_backend->lapack.ilaclr.f77_blas_function; 
-	*(void **) & fn_hook = __flexiblas_hooks->ilaclr.f77_hook_function[0]; 
-	if ( fn_hook == NULL ) { 
-		ret = fn((void*) m, (void*) n, (void*) a, (void*) lda); 
-		return ret; 
-	} else {
-		hook_pos_ilaclr = 0;
-		ret=fn_hook((void*) m, (void*) n, (void*) a, (void*) lda);
-		return ret;
-	}
+    *(void **) & fn = current_backend->lapack.ilaclr.f77_blas_function;
+    *(void **) & fn_hook = __flexiblas_hooks->ilaclr.f77_hook_function[0];
+    if ( fn_hook == NULL ) {
+        ret = fn((void*) m, (void*) n, (void*) a, (void*) lda);
+        return ret;
+    } else {
+        hook_pos_ilaclr = 0;
+        ret = fn_hook((void*) m, (void*) n, (void*) a, (void*) lda);
+        return ret;
+    }
 }
 #ifdef FLEXIBLAS_ABI_IBM
 int ilaclr_(blasint* m, blasint* n, float complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(ilaclr,ILACLR)))));
@@ -73,14 +73,14 @@ int ilaclr(blasint* m, blasint* n, float complex* a, blasint* lda){ return FC_GL
 
 blasint flexiblas_real_ilaclr_(void* m, void* n, void* a, void* lda)
 {
-	blasint (*fn) (void* m, void* n, void* a, void* lda);
-	blasint ret;
+    blasint (*fn) (void* m, void* n, void* a, void* lda);
+    blasint ret;
 
-	*(void **) & fn = current_backend->lapack.ilaclr.f77_blas_function; 
+    *(void **) & fn = current_backend->lapack.ilaclr.f77_blas_function;
 
-		ret = fn((void*) m, (void*) n, (void*) a, (void*) lda); 
+    ret = fn((void*) m, (void*) n, (void*) a, (void*) lda);
 
-	return ret ;
+    return ret;
 }
 #ifndef __APPLE__
 blasint flexiblas_real_ilaclr(void* m, void* n, void* a, void* lda) __attribute__((alias("flexiblas_real_ilaclr_")));
@@ -96,11 +96,11 @@ blasint flexiblas_real_ilaclr(void* m, void* n, void* a, void* lda){return flexi
 
 blasint flexiblas_chain_ilaclr_(void* m, void* n, void* a, void* lda)
 {
-	blasint (*fn) (void* m, void* n, void* a, void* lda);
-	blasint (*fn_hook) (void* m, void* n, void* a, void* lda);
-	blasint ret;
+    blasint (*fn) (void* m, void* n, void* a, void* lda);
+    blasint (*fn_hook) (void* m, void* n, void* a, void* lda);
+    blasint ret;
 
-	*(void **) &fn      = current_backend->lapack.ilaclr.f77_blas_function; 
+    *(void **) &fn      = current_backend->lapack.ilaclr.f77_blas_function;
 
     hook_pos_ilaclr ++;
     if( hook_pos_ilaclr < __flexiblas_hooks->ilaclr.nhook) {
@@ -108,9 +108,9 @@ blasint flexiblas_chain_ilaclr_(void* m, void* n, void* a, void* lda)
         ret = fn_hook((void*) m, (void*) n, (void*) a, (void*) lda);
     } else {
         hook_pos_ilaclr = 0;
-		ret = fn((void*) m, (void*) n, (void*) a, (void*) lda); 
-	}
-	return ret ;
+        ret = fn((void*) m, (void*) n, (void*) a, (void*) lda);
+    }
+    return ret;
 }
 #ifndef __APPLE__
 blasint flexiblas_chain_ilaclr(void* m, void* n, void* a, void* lda) __attribute__((alias("flexiblas_chain_ilaclr_")));

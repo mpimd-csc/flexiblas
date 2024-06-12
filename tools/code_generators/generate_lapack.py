@@ -54,7 +54,7 @@ def lapack_generate(version):
     cmake_file = open("../../src/lapack_interface/lapack_"+version2+".cmake","w")
 
     wrap_gnu   = Wrapper(WrapperConfig(int32 = 0, int64 = 0, intel_interface= False))
-    cmake_file.write("SET(LAPACK_SRC \n")
+    cmake_file.write("SET(LAPACK_SRC\n")
 
     try:
         os.mkdir("../../src/lapack_interface/wrapper/")
@@ -78,9 +78,9 @@ def lapack_generate(version):
         wrap_gnu_s.add_functions(fn["name"], func)
         if not os.path.exists("../../src/lapack_interface/wrapper/"+fn["name"]+".c"):
             wrap_gnu_s.write_wrapper_file("../../src/lapack_interface/wrapper/"+fn["name"]+".c", what="flapack", pt = "lapack", loader="LOAD_FLAPACK", skip_loader=True)
-        cmake_file.write("     lapack_interface/wrapper/" + fn["name"]+".c\n")
+        cmake_file.write("    lapack_interface/wrapper/" + fn["name"]+".c\n")
 
-    cmake_file.write(")\n")
+    cmake_file.write("    )\n")
     cmake_file.close()
     wrap_gnu.write_header_file("../../src/lapack_interface/lapack_"+version2+".h", "LAPACK_H")
     wrap_gnu.write_header_file_real("../../src/lapack_interface/flexiblas_real_lapack_"+version2+".h", "FLEXIBLAS_REAL_CALLS_LAPACK_H")

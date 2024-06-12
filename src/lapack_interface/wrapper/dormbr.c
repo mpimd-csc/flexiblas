@@ -1,21 +1,21 @@
-//    SPDX-License-Identifier: LGPL-3.0-or-later
+//  SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,23 +36,23 @@ void FC_GLOBAL(dormbr,DORMBR)(char* vect, char* side, char* trans, blasint* m, b
 void FC_GLOBAL(dormbr,DORMBR)(char* vect, char* side, char* trans, blasint* m, blasint* n, blasint* k, double* a, blasint* lda, double* tau, double* c, blasint* ldc, double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans)
 #endif
 {
-	void (*fn) (void* vect, void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
-	void (*fn_hook) (void* vect, void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void (*fn) (void* vect, void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void (*fn_hook) (void* vect, void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	*(void **) & fn = current_backend->lapack.dormbr.f77_blas_function; 
-	*(void **) & fn_hook = __flexiblas_hooks->dormbr.f77_hook_function[0]; 
-	if ( fn_hook == NULL ) { 
-		fn((void*) vect, (void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_vect, ( flexiblas_fortran_charlen_t ) len_side, ( flexiblas_fortran_charlen_t ) len_trans); 
-		return;
-	} else {
-		hook_pos_dormbr = 0;
-		fn_hook((void*) vect, (void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_vect, ( flexiblas_fortran_charlen_t ) len_side, ( flexiblas_fortran_charlen_t ) len_trans);
-		return;
-	}
+    *(void **) & fn = current_backend->lapack.dormbr.f77_blas_function;
+    *(void **) & fn_hook = __flexiblas_hooks->dormbr.f77_hook_function[0];
+    if ( fn_hook == NULL ) {
+        fn((void*) vect, (void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_vect, ( flexiblas_fortran_charlen_t ) len_side, ( flexiblas_fortran_charlen_t ) len_trans);
+        return;
+    } else {
+        hook_pos_dormbr = 0;
+        fn_hook((void*) vect, (void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_vect, ( flexiblas_fortran_charlen_t ) len_side, ( flexiblas_fortran_charlen_t ) len_trans);
+        return;
+    }
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void dormbr_(char* vect, char* side, char* trans, blasint* m, blasint* n, blasint* k, double* a, blasint* lda, double* tau, double* c, blasint* ldc, double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dormbr,DORMBR)))));
@@ -72,13 +72,13 @@ void dormbr(char* vect, char* side, char* trans, blasint* m, blasint* n, blasint
 
 void flexiblas_real_dormbr_(void* vect, void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans)
 {
-	void (*fn) (void* vect, void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void (*fn) (void* vect, void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-	*(void **) & fn = current_backend->lapack.dormbr.f77_blas_function; 
+    *(void **) & fn = current_backend->lapack.dormbr.f77_blas_function;
 
-		fn((void*) vect, (void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_vect, ( flexiblas_fortran_charlen_t ) len_side, ( flexiblas_fortran_charlen_t ) len_trans); 
+    fn((void*) vect, (void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_vect, ( flexiblas_fortran_charlen_t ) len_side, ( flexiblas_fortran_charlen_t ) len_trans);
 
-	return;
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_real_dormbr(void* vect, void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans) __attribute__((alias("flexiblas_real_dormbr_")));
@@ -94,10 +94,10 @@ void flexiblas_real_dormbr(void* vect, void* side, void* trans, void* m, void* n
 
 void flexiblas_chain_dormbr_(void* vect, void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans)
 {
-	void (*fn) (void* vect, void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
-	void (*fn_hook) (void* vect, void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void (*fn) (void* vect, void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void (*fn_hook) (void* vect, void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-	*(void **) &fn      = current_backend->lapack.dormbr.f77_blas_function; 
+    *(void **) &fn      = current_backend->lapack.dormbr.f77_blas_function;
 
     hook_pos_dormbr ++;
     if( hook_pos_dormbr < __flexiblas_hooks->dormbr.nhook) {
@@ -105,9 +105,9 @@ void flexiblas_chain_dormbr_(void* vect, void* side, void* trans, void* m, void*
         fn_hook((void*) vect, (void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_vect, ( flexiblas_fortran_charlen_t ) len_side, ( flexiblas_fortran_charlen_t ) len_trans);
     } else {
         hook_pos_dormbr = 0;
-		fn((void*) vect, (void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_vect, ( flexiblas_fortran_charlen_t ) len_side, ( flexiblas_fortran_charlen_t ) len_trans); 
-	}
-	return;
+        fn((void*) vect, (void*) side, (void*) trans, (void*) m, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) tau, (void*) c, (void*) ldc, (void*) work, (void*) lwork, (void*) info, ( flexiblas_fortran_charlen_t ) len_vect, ( flexiblas_fortran_charlen_t ) len_side, ( flexiblas_fortran_charlen_t ) len_trans);
+    }
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_chain_dormbr(void* vect, void* side, void* trans, void* m, void* n, void* k, void* a, void* lda, void* tau, void* c, void* ldc, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans) __attribute__((alias("flexiblas_chain_dormbr_")));

@@ -172,8 +172,8 @@ class FortranFunction(object):
         s = ""
         if self._function:
             if is_complex(self._fvars[self._name]["typespec"]):
-                s += "\t\tif(current_backend->info.intel_interface == 0 ) {\n"
-                s += extraspace + "\t\t\tret = fn("
+                s += "if(current_backend->info.intel_interface == 0 ) {\n"
+                s += "    ret = fn("
                 first = True
                 for i in self._args:
                     if not first:
@@ -185,18 +185,19 @@ class FortranFunction(object):
                         s += "(void*) " + i
                 for i in self._character_args:
                     s+= ", ( flexiblas_fortran_charlen_t ) " + i
-                s += "); \n"
-                s += extraspace + "\t\t} else {\n"
-                s += extraspace + "\t\t\tfn_intel( &ret"
+                s += ");\n"
+                s += "} else {\n"
+                s += "    fn_intel( &ret"
                 for i in self._args:
                     s += ", "
                     if self._cvars[i] == "int" and transform_int_name:
                         s += "(void*) _p{name:s}".format(name = i)
                     else:
                         s += "(void*) " + i
-                s += ");\n"+extraspace+"\t\t}\n"
+                s += ");\n"
+                s += "}\n"
             else:
-                s += extraspace + "\t\tret = fn("
+                s += "ret = fn("
                 first = True
                 for i in self._args:
                     if not first:
@@ -208,9 +209,9 @@ class FortranFunction(object):
                         s += "(void*) " + i
                 for i in self._character_args:
                     s+= ", ( flexiblas_fortran_charlen_t ) " + i
-                s += "); \n"
+                s += ");\n"
         else:
-            s += extraspace+ "\t\tfn("
+            s += "fn("
             first = True
             for i in self._args:
                 if not first:
@@ -222,8 +223,12 @@ class FortranFunction(object):
                     s += "(void*) " + i
             for i in self._character_args:
                 s+= ", ( flexiblas_fortran_charlen_t ) " + i
-            s += "); \n"
-        return s
+            s += ");\n"
+        rs = ""
+        for l in s.splitlines():
+            rs += "    " + extraspace + l + "\n"
+
+        return rs
 
     def _callhook(self, transform_int_name = False, extraspace="", intwidth = 0 ):
         s = ""
@@ -377,17 +382,17 @@ class FortranFunction(object):
 {header_intel:s}
 {{\n""".format( header_intel = self.c_header_real (suffix=suffix, intel_interface=True, end=""))
 
-        s += "\t{rettype:s} (*fn) ({args:s});\n".format(rettype = return_type, args = self._callsequence(intwidth, void=True))
+        s += "    {rettype:s} (*fn) ({args:s});\n".format(rettype = return_type, args = self._callsequence(intwidth, void=True))
         if self._function and is_complex(self._fvars[self._name]["typespec"]):
-            s += "\tvoid (*fn_intel) ({rettype:s} *ret, {args:s});\n".format(rettype = return_type, args = self._callsequence(intwidth, void=True))
+            s += "    void (*fn_intel) ({rettype:s} *ret, {args:s});\n".format(rettype = return_type, args = self._callsequence(intwidth, void=True))
         if self._function:
-            s += "\t{returntype:s} ret;\n".format(returntype = return_type)
+            s += "    {returntype:s} ret;\n".format(returntype = return_type)
         s += "\n"
         # Get the function
-        s += "\t*(void **) & fn = current_backend->{part:s}.{funcname:s}.f77_blas_function; \n".format(funcname = self._name.lower(),part=part)
+        s += "    *(void **) & fn = current_backend->{part:s}.{funcname:s}.f77_blas_function;\n".format(funcname = self._name.lower(),part=part)
 
         if self._function and is_complex(self._fvars[self._name]["typespec"]):
-            s+= "\t*(void **) & fn_intel = *(void **) &fn;\n"
+            s+= "    *(void **) & fn_intel = *(void **) &fn;\n"
         s += "\n"
 
 
@@ -401,9 +406,9 @@ class FortranFunction(object):
     *(({returntype:s} *)returnvalue) = ret;
     return;\n""".format(returntype= return_type)
             else:
-                s += "\treturn ret ;\n"
+                s += "    return ret;\n"
         else:
-            s += "\treturn;\n"
+            s += "    return;\n"
         s += "}\n"
 
         # Add alias
@@ -429,20 +434,20 @@ class FortranFunction(object):
 {header_intel:s}
 {{\n""".format( header_intel = self.c_header_chain (suffix=suffix, intel_interface=True, end=""))
 
-        s += "\t{rettype:s} (*fn) ({args:s});\n".format(rettype = return_type, args = self._callsequence(intwidth, void=True))
+        s += "    {rettype:s} (*fn) ({args:s});\n".format(rettype = return_type, args = self._callsequence(intwidth, void=True))
         if self._function and is_complex(self._fvars[self._name]["typespec"]):
-            s += "\tvoid (*fn_intel) ({rettype:s} *ret, {args:s});\n".format(rettype = return_type, args = self._callsequence(intwidth, void=True))
-            s += "\tvoid (*fn_hook) ({rettype:s} *ret, {args:s});\n".format(rettype = return_type, args = self._callsequence(intwidth, void=True))
+            s += "    void (*fn_intel) ({rettype:s} *ret, {args:s});\n".format(rettype = return_type, args = self._callsequence(intwidth, void=True))
+            s += "    void (*fn_hook) ({rettype:s} *ret, {args:s});\n".format(rettype = return_type, args = self._callsequence(intwidth, void=True))
         else:
-            s += "\t{rettype:s} (*fn_hook) ({args:s});\n".format(rettype = return_type, args = self._callsequence(intwidth, void=True))
+            s += "    {rettype:s} (*fn_hook) ({args:s});\n".format(rettype = return_type, args = self._callsequence(intwidth, void=True))
 
         if self._function:
-            s += "\t{returntype:s} ret;\n".format(returntype = return_type)
+            s += "    {returntype:s} ret;\n".format(returntype = return_type)
         s += "\n"
         # Get the function
-        s += "\t*(void **) &fn      = current_backend->{part:s}.{funcname:s}.f77_blas_function; \n".format(funcname = self._name.lower(),part=part)
+        s += "    *(void **) &fn      = current_backend->{part:s}.{funcname:s}.f77_blas_function;\n".format(funcname = self._name.lower(),part=part)
         if self._function and is_complex(self._fvars[self._name]["typespec"]):
-            s+= "\t*(void **) & fn_intel = *(void **) &fn;\n"
+            s+= "    *(void **) & fn_intel = *(void **) &fn;\n"
 
         # Check the hook
         s += """
@@ -455,8 +460,8 @@ class FortranFunction(object):
                                                call_hook = self._callhook())
 
         # Call the function
-        s += self._callfunction(transform_int_name=False, intwidth=intwidth )
-        s += "\t}\n"
+        s += self._callfunction(transform_int_name=False, intwidth=intwidth, extraspace="    " )
+        s += "    }\n"
 
         if self._function:
             if is_complex(self._fvars[self._name]["typespec"]):
@@ -465,9 +470,9 @@ class FortranFunction(object):
     return;
 """.format(returntype= return_type)
             else:
-                s += "\treturn ret ;\n"
+                s += "    return ret;\n"
         else:
-            s += "\treturn;\n"
+            s += "    return;\n"
         s += "}\n"
 
         # Add alias
@@ -500,24 +505,24 @@ static TLS_STORE uint8_t hook_pos_{funcname:s} = 0;
 {{\n""".format( header_intel = self.c_header(intwidth = intwidth, suffix=suffix, intel_interface=True, end=""),
                            header_gnu = self.c_header(intwidth = intwidth, suffix=suffix, intel_interface=False, end=""),
                 funcname = self.funcname())
-        s += "\t{rettype:s} (*fn) ({args:s});\n".format(rettype = return_type, args = self._callsequence(intwidth, void=True))
+        s += "    {rettype:s} (*fn) ({args:s});\n".format(rettype = return_type, args = self._callsequence(intwidth, void=True))
         if self._function and is_complex(self._fvars[self._name]["typespec"]):
-            s += "\tvoid (*fn_intel) ({rettype:s} *ret, {args:s});\n".format(rettype = return_type, args = self._callsequence(intwidth, void=True))
-            s += "\tvoid (*fn_hook) ({rettype:s} *ret, {args:s});\n".format(rettype = return_type, args = self._callsequence(intwidth, void=True))
+            s += "    void (*fn_intel) ({rettype:s} *ret, {args:s});\n".format(rettype = return_type, args = self._callsequence(intwidth, void=True))
+            s += "    void (*fn_hook) ({rettype:s} *ret, {args:s});\n".format(rettype = return_type, args = self._callsequence(intwidth, void=True))
         else:
-            s += "\t{rettype:s} (*fn_hook) ({args:s});\n".format(rettype = return_type, args = self._callsequence(intwidth, void=True))
+            s += "    {rettype:s} (*fn_hook) ({args:s});\n".format(rettype = return_type, args = self._callsequence(intwidth, void=True))
 
 
         if self._function:
-            s += "\t{returntype:s} ret;\n".format(returntype = return_type)
+            s += "    {returntype:s} ret;\n".format(returntype = return_type)
         if full_interface:
             fmt = ""
             if intwidth == 0:
-                fmt = "\tint32_t _{name:s}32; int64_t _{name:s}64; void* _p{name:s};\n"
+                fmt = "    int32_t _{name:s}32; int64_t _{name:s}64; void* _p{name:s};\n"
             elif intwidth == 32:
-                fmt = "\tint64_t _{name:s}64; void* _p{name:s};\n"
+                fmt = "    int64_t _{name:s}64; void* _p{name:s};\n"
             elif intwidth == 64:
-                fmt = "\tint32_t _{name:s}32; void* _p{name:s};\n"
+                fmt = "    int32_t _{name:s}32; void* _p{name:s};\n"
 
             for i in self._args:
                 if self._cvars[i] == "int":
@@ -528,82 +533,84 @@ static TLS_STORE uint8_t hook_pos_{funcname:s} = 0;
         current_backend->post_init = 0;
     }\n"""
         # s += "\tfn = flexiblas_{funcname:s}.call_fblas; \n".format(funcname = self._name.lower())
-        s += "\t*(void **) & fn = current_backend->{part:s}.{funcname:s}.f77_blas_function; \n".format(funcname = self._name.lower(),part=part)
-        s += "\t*(void **) & fn_hook = __flexiblas_hooks->{funcname:s}.f77_hook_function[0]; \n".format(funcname = self._name.lower(),part=part)
+        s += "    *(void **) & fn = current_backend->{part:s}.{funcname:s}.f77_blas_function;\n".format(funcname = self._name.lower(),part=part)
+        s += "    *(void **) & fn_hook = __flexiblas_hooks->{funcname:s}.f77_hook_function[0];\n".format(funcname = self._name.lower(),part=part)
 
         # s += "\tif ( fn == NULL ) { \n"
         # s += "\t\tfprintf(stderr, PRINT_PREFIX \"{funcname:s}_ not hooked, abort\\n\"); \n".format(funcname=self._name.lower())
         # s += "\t\tabort(); \n"
         # s += "\t}\n"
         if self._function and is_complex(self._fvars[self._name]["typespec"]):
-            s+= "\t*(void **) & fn_intel = *(void **) &fn;\n"
+            s+= "    *(void **) & fn_intel = *(void **) &fn;\n"
 
 
         # Adjust Int sizes
         if full_interface:
-            s += "\tif (current_backend->info.backend_integer_size == sizeof(%s) ) { \n" % (int_type)
-            s += "\t\tif ( __flexiblas_profile ) {\n"
-            s += "\t\t\tts = flexiblas_wtime(); \n"
-            s += "\t" + self._callfunction(transform_int_name = False,extraspace="\t", intwidth = intwidth )
-            s += "\t\t\tcurrent_backend->{part:s}.{name:s}.timings[0] += (flexiblas_wtime() -ts);\n".format(name = self._name.lower(), part = part)
-            s += "\t\t\tcurrent_backend->{part:s}.{name:s}.calls[0]++;\n".format(name = self._name.lower(),part=part)
-            s += "\t\t} else { \n"
-            s += ("\t" + self._callfunction(transform_int_name = False, extraspace ="\t", intwidth = intwidth))
-            s += "\t\t} \n"
+            s += "    if (current_backend->info.backend_integer_size == sizeof(%s) ) {\n" % (int_type)
+            s += "        if ( __flexiblas_profile ) {\n"
+            s += "            ts = flexiblas_wtime();\n"
+            s += "            " + self._callfunction(transform_int_name = False,extraspace="", intwidth = intwidth )
+            s += "            current_backend->{part:s}.{name:s}.timings[0] += (flexiblas_wtime() -ts);\n".format(name = self._name.lower(), part = part)
+            s += "            current_backend->{part:s}.{name:s}.calls[0]++;\n".format(name = self._name.lower(),part=part)
+            s += "        } else {\n"
+            s += ("            " + self._callfunction(transform_int_name = False, extraspace ="\t", intwidth = intwidth))
+            s += "        }\n"
             if self._function:
                 if intel_interface and is_complex(self._fvars[self._name]["typespec"]):
-                    s += "\t\t*returnvalue = ret; \n\t\treturn;\n"
+                    s += "        *returnvalue = ret;\n"
+                    s += "        return;\n"
                 else:
-                    s += "\t\treturn ret;\n"
+                    s += "        return ret;\n"
             else:
-                s += "\t\treturn;\n"
-            s += "\t}\n"
+                s += "        return;\n"
+            s += "    }\n"
 
             # 32 bit ints
             if intwidth != 32:
-                s += "\telse if ( current_backend->info.backend_integer_size == 4) {\n"
-                s += "\t\tif ( sizeof({inttype:s}) > 4 ) {{\n".format(inttype=self._inttype(intwidth))
+                s += "    else if ( current_backend->info.backend_integer_size == 4) {\n"
+                s += "        if ( sizeof({inttype:s}) > 4 ) {{\n".format(inttype=self._inttype(intwidth))
                 for i in self._args:
                     if self._cvars[i] == "int":
-                        s += "\t\t\tif ( *{vname:s} > __INT32_MAX__) {{\n".format(vname =i)
-                        s += "\t\t\t\tfprintf(stderr,\"*** On entry of {funcname:s} the parameter {vname:s} is out of int32_t range (> %d). This might cause trouble. ***\\n\", __INT32_MAX__);\n".format(vname=i, funcname=self.funcname(intwidth))
-                        s += "\t\t\t}\n"
-                s += "\t\t}\n"
+                        s += "            if ( *{vname:s} > __INT32_MAX__) {{\n".format(vname =i)
+                        s += "                fprintf(stderr,\"*** On entry of {funcname:s} the parameter {vname:s} is out of int32_t range (> %d). This might cause trouble. ***\\n\", __INT32_MAX__);\n".format(vname=i, funcname=self.funcname(intwidth))
+                        s += "            }\n"
+                s += "        }\n"
                 for i in self._args:
                     if self._cvars[i] == "int":
-                        s += "\t\t_{name:s}32 = ({intt:s}) *{name:s};\n\t\t_p{name:s} = &_{name:s}32;\n".format(name = i,intt="int32_t")
-                s +="\t}\n"
+                        s += "         _{name:s}32 = ({intt:s}) *{name:s};\n\t\t_p{name:s} = &_{name:s}32;\n".format(name = i,intt="int32_t")
+                s +="     }\n"
             if intwidth != 64:
-                s += "\telse if (current_backend->info.backend_integer_size == 8) {\n"
+                s += "    else if (current_backend->info.backend_integer_size == 8) {\n"
                 for i in self._args:
                     if self._cvars[i] == "int":
-                        s += "\t\t_{name:s}64 = ({intt:s})*{name:s};\n\t\t_p{name:s} = &_{name:s}64;\n".format(name = i,intt="int64_t")
-                s += "\t}\n"
-            s += "\telse {\n"
-            s += "\t\tfprintf(stderr, PRINT_PREFIX \"{funcname:s} - can not convert integer types\");\n\t\tabort();\n".format(funcname=self.funcname(intwidth))
-            s += "\t}\n\n"
+                        s += "         _{name:s}64 = ({intt:s})*{name:s};\n\t\t_p{name:s} = &_{name:s}64;\n".format(name = i,intt="int64_t")
+                s += "     }\n"
+            s += "     else {\n"
+            s += "         fprintf(stderr, PRINT_PREFIX \"{funcname:s} - can not convert integer types\");\n\t\tabort();\n".format(funcname=self.funcname(intwidth))
+            s += "     }\n\n"
 
             # Call the function
-            s += "\tif ( __flexiblas_profile ) {\n"
-            s += "\t\tts = flexiblas_wtime(); \n"
+            s += "     if ( __flexiblas_profile ) {\n"
+            s += "         ts = flexiblas_wtime();\n"
             s += self._callfunction()
-            s += "\t\tcurrent_backend->{part:s}.{name:s}.timings[0] += (flexiblas_wtime() -ts);\n".format(name = self._name.lower(), part = part)
-            s += "\t\tcurrent_backend->{part:s}.{name:s}.calls[0]++;\n".format(name = self._name.lower(),part=part)
-            s += "\t} else { \n"
+            s += "         current_backend->{part:s}.{name:s}.timings[0] += (flexiblas_wtime() -ts);\n".format(name = self._name.lower(), part = part)
+            s += "         current_backend->{part:s}.{name:s}.calls[0]++;\n".format(name = self._name.lower(),part=part)
+            s += "     } else {\n"
             s += self._callfunction()
-            s += "\t} \n"
+            s += "     }\n"
             if self._function:
                 if intel_interface and is_complex(self._fvars[self._name]["typespec"]):
-                    s += " *returnvalue = ret; \n\treturn;\n"
+                    s += "    *returnvalue = ret;\n"
+                    s += "    return;\n"
                 else:
-                    s += "\treturn ret;\n"
+                    s += "    return ret;\n"
             else:
-                s += "\treturn;\n"
+                s += "     return;\n"
 
         else:
             # Short Interface
-            s += "\tif ( fn_hook == NULL ) { \n";
-            s += "" + self._callfunction(transform_int_name = False, extraspace ="", intwidth = intwidth)
+            s += "    if ( fn_hook == NULL ) {\n";
+            s += self._callfunction(transform_int_name = False, extraspace ="    ", intwidth = intwidth)
             if self._function:
                 if self._function and is_complex(self._fvars[self._name]["typespec"]):
                     s += """
@@ -615,14 +622,14 @@ static TLS_STORE uint8_t hook_pos_{funcname:s} = 0;
 #endif
 """
                 else:
-                    s += "\t\treturn ret; \n"
+                    s += "        return ret;\n"
 
             else:
-                s += "\t\treturn;\n"
-            s+="\t} else {\n";
-            s+="\t\thook_pos_{funcname:s} = 0;\n".format(funcname = self.funcname())
+                s += "        return;\n"
+            s+="    } else {\n";
+            s+="        hook_pos_{funcname:s} = 0;\n".format(funcname = self.funcname())
             if self._function and is_complex(self._fvars[self._name]["typespec"]):
-                s+="\t\tfn_hook(&ret"
+                s+="        fn_hook(&ret"
                 for i in self._args:
                     s += ", "
                     s += "(void*) " + i
@@ -640,7 +647,7 @@ static TLS_STORE uint8_t hook_pos_{funcname:s} = 0;
 """
             elif self._function:
                 f=False;
-                s+="\t\tret=fn_hook("
+                s+="        ret = fn_hook("
                 for i in self._args:
                     if f:
                         s += ", "
@@ -650,10 +657,10 @@ static TLS_STORE uint8_t hook_pos_{funcname:s} = 0;
                     s+= ", ( flexiblas_fortran_charlen_t ) " + i
 
                 s += ");\n"
-                s += "\t\treturn ret;\n";
+                s += "        return ret;\n";
             else:
                 f=False;
-                s+="\t\tfn_hook("
+                s+="        fn_hook("
                 for i in self._args:
                     if f:
                         s += ", "
@@ -662,9 +669,9 @@ static TLS_STORE uint8_t hook_pos_{funcname:s} = 0;
                 for i in self._character_args:
                     s+= ", ( flexiblas_fortran_charlen_t ) " + i
                 s += ");\n"
-                s += "\t\treturn;\n";
+                s += "        return;\n";
 
-            s+="\t}\n";
+            s+="    }\n";
         s += "}\n"
 
 
@@ -744,34 +751,34 @@ class Wrapper(object):
         #         fn.write("#define {:8s} {:8s}\n".format(i.upper(), i+"64_"))
         #     fn.write("#endif\n\n")
 
-        fn.write("#ifndef blasint \n")
+        fn.write("#ifndef blasint\n")
         fn.write("#define blasint int\n")
         for i in self.functions:
-            fn.write("#define {:8s} {:8s}\n".format(i.upper(), i+"_"))
+            fn.write("#define {:8s} {:s}\n".format(i.upper(), i+"_"))
         fn.write("#endif\n")
         fn.write("\n")
 
     def _header_fence_end(self,fn):
         fn.write("\n#ifdef __cplusplus\n}\n#endif\n#endif\n")
     def _gpl_tag(self):
-        s = """//    SPDX-License-Identifier: LGPL-3.0-or-later
+        s = """//  SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 """.format(date =  datetime.now().ctime())
         return s
 
@@ -781,11 +788,11 @@ class Wrapper(object):
         self._blas_defines(fn)
 
         for i,f in self.functions.items():
-            fn.write(f.c_header(intel_interface = self.config.intel) + "\n")
+            fn.write("    " + f.c_header(intel_interface = self.config.intel) + "\n")
             if self.config.int32:
-                fn.write(f.c_header(intwidth = 32, intel_interface = self.config.intel ) + "\n")
+                fn.write("    " + f.c_header(intwidth = 32, intel_interface = self.config.intel ) + "\n")
             if self.config.int64:
-                fn.write(f.c_header(intwidth = 64, intel_interface = self.config.intel) + "\n")
+                fn.write("    " + f.c_header(intwidth = 64, intel_interface = self.config.intel) + "\n")
             fn.write("\n")
         self._header_fence_end(fn)
         fn.close()
@@ -796,10 +803,10 @@ class Wrapper(object):
         self._header_fence_start(fn, headername)
 
         for i,f in self.functions.items():
-            fn.write(f.c_header_real(intel_interface = True) + "\n")
-            fn.write(f.c_header_real(intel_interface = True, suffix = "") + "\n")
-            fn.write(f.c_header_chain(intel_interface = True) + "\n")
-            fn.write(f.c_header_chain(intel_interface = True, suffix = "") + "\n")
+            fn.write("    " + f.c_header_real(intel_interface = True) + "\n")
+            fn.write("    " + f.c_header_real(intel_interface = True, suffix = "") + "\n")
+            fn.write("    " + f.c_header_chain(intel_interface = True) + "\n")
+            fn.write("    " + f.c_header_chain(intel_interface = True, suffix = "") + "\n")
 
 
         self._header_fence_end(fn)
@@ -822,10 +829,10 @@ class Wrapper(object):
         fn.write("#define FLEXIBLAS_LAPACK_MINOR " + str(minor) + "\n")
         fn.write("#define FLEXIBLAS_LAPACK_PATCH " + str(patch) + "\n")
         fn.write("#define FLEXIBLAS_LAPACK_EXTRA \"" + extra + "\"\n\n")
-        fn.write("typedef struct _flexiblas_lapack_backend {\n");
+        fn.write("    typedef struct _flexiblas_lapack_backend {\n");
         for i,f in self.functions.items():
-            fn.write("    " + f.structure_declare()+"\n")
-        fn.write("} flexiblas_lapack_backend_t; \n")
+            fn.write("        " + f.structure_declare()+"\n")
+        fn.write("    } flexiblas_lapack_backend_t;\n")
         self._header_fence_end(fn)
         fn.close()
 
@@ -850,11 +857,11 @@ class Wrapper(object):
 
         if skip_loader == False:
             fn.write("HIDDEN int __flexiblas_load_{what:s} ( flexiblas_backend_t *handle, int *loaded, int *failed )  {{\n".format(what=what))
-            fn.write("\tint _ifailed = *failed;\n")
+            fn.write("    int _ifailed = *failed;\n")
             for i,f in self.functions.items():
-                s ="\t{loaderx:s}(handle,{part:s}.{name:s},{name:s});\n".format(loaderx=loader, name = f.funcname(), part=pt)
+                s ="    {loaderx:s}(handle,{part:s}.{name:s},{name:s});\n".format(loaderx=loader, name = f.funcname(), part=pt)
                 fn.write(s)
-            fn.write("\tif (_ifailed != (*failed))\n\t\treturn 1;\n\telse\n\t\t return 0;\n")
+            fn.write("    if (_ifailed != (*failed))\n        return 1;\n    else\n        return 0;\n")
             fn.write("}\n\n")
         if skip_wrapper == False:
             for i,f in self.functions.items():

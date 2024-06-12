@@ -1,21 +1,21 @@
-//    SPDX-License-Identifier: LGPL-3.0-or-later
+//  SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,23 +36,23 @@ void FC_GLOBAL(sorghr,SORGHR)(blasint* n, blasint* ilo, blasint* ihi, float* a, 
 void FC_GLOBAL(sorghr,SORGHR)(blasint* n, blasint* ilo, blasint* ihi, float* a, blasint* lda, float* tau, float* work, blasint* lwork, blasint* info)
 #endif
 {
-	void (*fn) (void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
-	void (*fn_hook) (void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
+    void (*fn) (void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
+    void (*fn_hook) (void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	*(void **) & fn = current_backend->lapack.sorghr.f77_blas_function; 
-	*(void **) & fn_hook = __flexiblas_hooks->sorghr.f77_hook_function[0]; 
-	if ( fn_hook == NULL ) { 
-		fn((void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
-		return;
-	} else {
-		hook_pos_sorghr = 0;
-		fn_hook((void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info);
-		return;
-	}
+    *(void **) & fn = current_backend->lapack.sorghr.f77_blas_function;
+    *(void **) & fn_hook = __flexiblas_hooks->sorghr.f77_hook_function[0];
+    if ( fn_hook == NULL ) {
+        fn((void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info);
+        return;
+    } else {
+        hook_pos_sorghr = 0;
+        fn_hook((void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info);
+        return;
+    }
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void sorghr_(blasint* n, blasint* ilo, blasint* ihi, float* a, blasint* lda, float* tau, float* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(sorghr,SORGHR)))));
@@ -72,13 +72,13 @@ void sorghr(blasint* n, blasint* ilo, blasint* ihi, float* a, blasint* lda, floa
 
 void flexiblas_real_sorghr_(void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* work, void* lwork, void* info)
 {
-	void (*fn) (void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
+    void (*fn) (void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 
-	*(void **) & fn = current_backend->lapack.sorghr.f77_blas_function; 
+    *(void **) & fn = current_backend->lapack.sorghr.f77_blas_function;
 
-		fn((void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
+    fn((void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info);
 
-	return;
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_real_sorghr(void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_real_sorghr_")));
@@ -94,10 +94,10 @@ void flexiblas_real_sorghr(void* n, void* ilo, void* ihi, void* a, void* lda, vo
 
 void flexiblas_chain_sorghr_(void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* work, void* lwork, void* info)
 {
-	void (*fn) (void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
-	void (*fn_hook) (void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
+    void (*fn) (void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
+    void (*fn_hook) (void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* work, void* lwork, void* info);
 
-	*(void **) &fn      = current_backend->lapack.sorghr.f77_blas_function; 
+    *(void **) &fn      = current_backend->lapack.sorghr.f77_blas_function;
 
     hook_pos_sorghr ++;
     if( hook_pos_sorghr < __flexiblas_hooks->sorghr.nhook) {
@@ -105,9 +105,9 @@ void flexiblas_chain_sorghr_(void* n, void* ilo, void* ihi, void* a, void* lda, 
         fn_hook((void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info);
     } else {
         hook_pos_sorghr = 0;
-		fn((void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info); 
-	}
-	return;
+        fn((void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) tau, (void*) work, (void*) lwork, (void*) info);
+    }
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_chain_sorghr(void* n, void* ilo, void* ihi, void* a, void* lda, void* tau, void* work, void* lwork, void* info) __attribute__((alias("flexiblas_chain_sorghr_")));

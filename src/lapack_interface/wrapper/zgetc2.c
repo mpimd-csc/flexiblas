@@ -1,21 +1,21 @@
-//    SPDX-License-Identifier: LGPL-3.0-or-later
+//  SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,23 +36,23 @@ void FC_GLOBAL(zgetc2,ZGETC2)(blasint* n, double complex* a, blasint* lda, blasi
 void FC_GLOBAL(zgetc2,ZGETC2)(blasint* n, double complex* a, blasint* lda, blasint* ipiv, blasint* jpiv, blasint* info)
 #endif
 {
-	void (*fn) (void* n, void* a, void* lda, void* ipiv, void* jpiv, void* info);
-	void (*fn_hook) (void* n, void* a, void* lda, void* ipiv, void* jpiv, void* info);
+    void (*fn) (void* n, void* a, void* lda, void* ipiv, void* jpiv, void* info);
+    void (*fn_hook) (void* n, void* a, void* lda, void* ipiv, void* jpiv, void* info);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	*(void **) & fn = current_backend->lapack.zgetc2.f77_blas_function; 
-	*(void **) & fn_hook = __flexiblas_hooks->zgetc2.f77_hook_function[0]; 
-	if ( fn_hook == NULL ) { 
-		fn((void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) jpiv, (void*) info); 
-		return;
-	} else {
-		hook_pos_zgetc2 = 0;
-		fn_hook((void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) jpiv, (void*) info);
-		return;
-	}
+    *(void **) & fn = current_backend->lapack.zgetc2.f77_blas_function;
+    *(void **) & fn_hook = __flexiblas_hooks->zgetc2.f77_hook_function[0];
+    if ( fn_hook == NULL ) {
+        fn((void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) jpiv, (void*) info);
+        return;
+    } else {
+        hook_pos_zgetc2 = 0;
+        fn_hook((void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) jpiv, (void*) info);
+        return;
+    }
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void zgetc2_(blasint* n, double complex* a, blasint* lda, blasint* ipiv, blasint* jpiv, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zgetc2,ZGETC2)))));
@@ -72,13 +72,13 @@ void zgetc2(blasint* n, double complex* a, blasint* lda, blasint* ipiv, blasint*
 
 void flexiblas_real_zgetc2_(void* n, void* a, void* lda, void* ipiv, void* jpiv, void* info)
 {
-	void (*fn) (void* n, void* a, void* lda, void* ipiv, void* jpiv, void* info);
+    void (*fn) (void* n, void* a, void* lda, void* ipiv, void* jpiv, void* info);
 
-	*(void **) & fn = current_backend->lapack.zgetc2.f77_blas_function; 
+    *(void **) & fn = current_backend->lapack.zgetc2.f77_blas_function;
 
-		fn((void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) jpiv, (void*) info); 
+    fn((void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) jpiv, (void*) info);
 
-	return;
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_real_zgetc2(void* n, void* a, void* lda, void* ipiv, void* jpiv, void* info) __attribute__((alias("flexiblas_real_zgetc2_")));
@@ -94,10 +94,10 @@ void flexiblas_real_zgetc2(void* n, void* a, void* lda, void* ipiv, void* jpiv, 
 
 void flexiblas_chain_zgetc2_(void* n, void* a, void* lda, void* ipiv, void* jpiv, void* info)
 {
-	void (*fn) (void* n, void* a, void* lda, void* ipiv, void* jpiv, void* info);
-	void (*fn_hook) (void* n, void* a, void* lda, void* ipiv, void* jpiv, void* info);
+    void (*fn) (void* n, void* a, void* lda, void* ipiv, void* jpiv, void* info);
+    void (*fn_hook) (void* n, void* a, void* lda, void* ipiv, void* jpiv, void* info);
 
-	*(void **) &fn      = current_backend->lapack.zgetc2.f77_blas_function; 
+    *(void **) &fn      = current_backend->lapack.zgetc2.f77_blas_function;
 
     hook_pos_zgetc2 ++;
     if( hook_pos_zgetc2 < __flexiblas_hooks->zgetc2.nhook) {
@@ -105,9 +105,9 @@ void flexiblas_chain_zgetc2_(void* n, void* a, void* lda, void* ipiv, void* jpiv
         fn_hook((void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) jpiv, (void*) info);
     } else {
         hook_pos_zgetc2 = 0;
-		fn((void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) jpiv, (void*) info); 
-	}
-	return;
+        fn((void*) n, (void*) a, (void*) lda, (void*) ipiv, (void*) jpiv, (void*) info);
+    }
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_chain_zgetc2(void* n, void* a, void* lda, void* ipiv, void* jpiv, void* info) __attribute__((alias("flexiblas_chain_zgetc2_")));

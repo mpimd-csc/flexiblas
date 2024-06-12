@@ -1,21 +1,21 @@
-//    SPDX-License-Identifier: LGPL-3.0-or-later
+//  SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,23 +36,23 @@ void FC_GLOBAL(slarrc,SLARRC)(char* jobt, blasint* n, float* vl, float* vu, floa
 void FC_GLOBAL(slarrc,SLARRC)(char* jobt, blasint* n, float* vl, float* vu, float* d, float* e, float* pivmin, blasint* eigcnt, blasint* lcnt, blasint* rcnt, blasint* info, flexiblas_fortran_charlen_t len_jobt)
 #endif
 {
-	void (*fn) (void* jobt, void* n, void* vl, void* vu, void* d, void* e, void* pivmin, void* eigcnt, void* lcnt, void* rcnt, void* info, flexiblas_fortran_charlen_t len_jobt);
-	void (*fn_hook) (void* jobt, void* n, void* vl, void* vu, void* d, void* e, void* pivmin, void* eigcnt, void* lcnt, void* rcnt, void* info, flexiblas_fortran_charlen_t len_jobt);
+    void (*fn) (void* jobt, void* n, void* vl, void* vu, void* d, void* e, void* pivmin, void* eigcnt, void* lcnt, void* rcnt, void* info, flexiblas_fortran_charlen_t len_jobt);
+    void (*fn_hook) (void* jobt, void* n, void* vl, void* vu, void* d, void* e, void* pivmin, void* eigcnt, void* lcnt, void* rcnt, void* info, flexiblas_fortran_charlen_t len_jobt);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	*(void **) & fn = current_backend->lapack.slarrc.f77_blas_function; 
-	*(void **) & fn_hook = __flexiblas_hooks->slarrc.f77_hook_function[0]; 
-	if ( fn_hook == NULL ) { 
-		fn((void*) jobt, (void*) n, (void*) vl, (void*) vu, (void*) d, (void*) e, (void*) pivmin, (void*) eigcnt, (void*) lcnt, (void*) rcnt, (void*) info, ( flexiblas_fortran_charlen_t ) len_jobt); 
-		return;
-	} else {
-		hook_pos_slarrc = 0;
-		fn_hook((void*) jobt, (void*) n, (void*) vl, (void*) vu, (void*) d, (void*) e, (void*) pivmin, (void*) eigcnt, (void*) lcnt, (void*) rcnt, (void*) info, ( flexiblas_fortran_charlen_t ) len_jobt);
-		return;
-	}
+    *(void **) & fn = current_backend->lapack.slarrc.f77_blas_function;
+    *(void **) & fn_hook = __flexiblas_hooks->slarrc.f77_hook_function[0];
+    if ( fn_hook == NULL ) {
+        fn((void*) jobt, (void*) n, (void*) vl, (void*) vu, (void*) d, (void*) e, (void*) pivmin, (void*) eigcnt, (void*) lcnt, (void*) rcnt, (void*) info, ( flexiblas_fortran_charlen_t ) len_jobt);
+        return;
+    } else {
+        hook_pos_slarrc = 0;
+        fn_hook((void*) jobt, (void*) n, (void*) vl, (void*) vu, (void*) d, (void*) e, (void*) pivmin, (void*) eigcnt, (void*) lcnt, (void*) rcnt, (void*) info, ( flexiblas_fortran_charlen_t ) len_jobt);
+        return;
+    }
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void slarrc_(char* jobt, blasint* n, float* vl, float* vu, float* d, float* e, float* pivmin, blasint* eigcnt, blasint* lcnt, blasint* rcnt, blasint* info, flexiblas_fortran_charlen_t len_jobt) __attribute__((alias(MTS(FC_GLOBAL(slarrc,SLARRC)))));
@@ -72,13 +72,13 @@ void slarrc(char* jobt, blasint* n, float* vl, float* vu, float* d, float* e, fl
 
 void flexiblas_real_slarrc_(void* jobt, void* n, void* vl, void* vu, void* d, void* e, void* pivmin, void* eigcnt, void* lcnt, void* rcnt, void* info, flexiblas_fortran_charlen_t len_jobt)
 {
-	void (*fn) (void* jobt, void* n, void* vl, void* vu, void* d, void* e, void* pivmin, void* eigcnt, void* lcnt, void* rcnt, void* info, flexiblas_fortran_charlen_t len_jobt);
+    void (*fn) (void* jobt, void* n, void* vl, void* vu, void* d, void* e, void* pivmin, void* eigcnt, void* lcnt, void* rcnt, void* info, flexiblas_fortran_charlen_t len_jobt);
 
-	*(void **) & fn = current_backend->lapack.slarrc.f77_blas_function; 
+    *(void **) & fn = current_backend->lapack.slarrc.f77_blas_function;
 
-		fn((void*) jobt, (void*) n, (void*) vl, (void*) vu, (void*) d, (void*) e, (void*) pivmin, (void*) eigcnt, (void*) lcnt, (void*) rcnt, (void*) info, ( flexiblas_fortran_charlen_t ) len_jobt); 
+    fn((void*) jobt, (void*) n, (void*) vl, (void*) vu, (void*) d, (void*) e, (void*) pivmin, (void*) eigcnt, (void*) lcnt, (void*) rcnt, (void*) info, ( flexiblas_fortran_charlen_t ) len_jobt);
 
-	return;
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_real_slarrc(void* jobt, void* n, void* vl, void* vu, void* d, void* e, void* pivmin, void* eigcnt, void* lcnt, void* rcnt, void* info, flexiblas_fortran_charlen_t len_jobt) __attribute__((alias("flexiblas_real_slarrc_")));
@@ -94,10 +94,10 @@ void flexiblas_real_slarrc(void* jobt, void* n, void* vl, void* vu, void* d, voi
 
 void flexiblas_chain_slarrc_(void* jobt, void* n, void* vl, void* vu, void* d, void* e, void* pivmin, void* eigcnt, void* lcnt, void* rcnt, void* info, flexiblas_fortran_charlen_t len_jobt)
 {
-	void (*fn) (void* jobt, void* n, void* vl, void* vu, void* d, void* e, void* pivmin, void* eigcnt, void* lcnt, void* rcnt, void* info, flexiblas_fortran_charlen_t len_jobt);
-	void (*fn_hook) (void* jobt, void* n, void* vl, void* vu, void* d, void* e, void* pivmin, void* eigcnt, void* lcnt, void* rcnt, void* info, flexiblas_fortran_charlen_t len_jobt);
+    void (*fn) (void* jobt, void* n, void* vl, void* vu, void* d, void* e, void* pivmin, void* eigcnt, void* lcnt, void* rcnt, void* info, flexiblas_fortran_charlen_t len_jobt);
+    void (*fn_hook) (void* jobt, void* n, void* vl, void* vu, void* d, void* e, void* pivmin, void* eigcnt, void* lcnt, void* rcnt, void* info, flexiblas_fortran_charlen_t len_jobt);
 
-	*(void **) &fn      = current_backend->lapack.slarrc.f77_blas_function; 
+    *(void **) &fn      = current_backend->lapack.slarrc.f77_blas_function;
 
     hook_pos_slarrc ++;
     if( hook_pos_slarrc < __flexiblas_hooks->slarrc.nhook) {
@@ -105,9 +105,9 @@ void flexiblas_chain_slarrc_(void* jobt, void* n, void* vl, void* vu, void* d, v
         fn_hook((void*) jobt, (void*) n, (void*) vl, (void*) vu, (void*) d, (void*) e, (void*) pivmin, (void*) eigcnt, (void*) lcnt, (void*) rcnt, (void*) info, ( flexiblas_fortran_charlen_t ) len_jobt);
     } else {
         hook_pos_slarrc = 0;
-		fn((void*) jobt, (void*) n, (void*) vl, (void*) vu, (void*) d, (void*) e, (void*) pivmin, (void*) eigcnt, (void*) lcnt, (void*) rcnt, (void*) info, ( flexiblas_fortran_charlen_t ) len_jobt); 
-	}
-	return;
+        fn((void*) jobt, (void*) n, (void*) vl, (void*) vu, (void*) d, (void*) e, (void*) pivmin, (void*) eigcnt, (void*) lcnt, (void*) rcnt, (void*) info, ( flexiblas_fortran_charlen_t ) len_jobt);
+    }
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_chain_slarrc(void* jobt, void* n, void* vl, void* vu, void* d, void* e, void* pivmin, void* eigcnt, void* lcnt, void* rcnt, void* info, flexiblas_fortran_charlen_t len_jobt) __attribute__((alias("flexiblas_chain_slarrc_")));

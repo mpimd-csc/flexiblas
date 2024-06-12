@@ -1,21 +1,21 @@
-//    SPDX-License-Identifier: LGPL-3.0-or-later
+//  SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,24 +36,24 @@ void FC_GLOBAL(cladiv,CLADIV)( float complex* returnvalue, float complex* x, flo
 float complex FC_GLOBAL(cladiv,CLADIV)(float complex* x, float complex* y)
 #endif
 {
-	float complex (*fn) (void* x, void* y);
-	void (*fn_intel) (float complex *ret, void* x, void* y);
-	void (*fn_hook) (float complex *ret, void* x, void* y);
-	float complex ret;
+    float complex (*fn) (void* x, void* y);
+    void (*fn_intel) (float complex *ret, void* x, void* y);
+    void (*fn_hook) (float complex *ret, void* x, void* y);
+    float complex ret;
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	*(void **) & fn = current_backend->lapack.cladiv.f77_blas_function; 
-	*(void **) & fn_hook = __flexiblas_hooks->cladiv.f77_hook_function[0]; 
-	*(void **) & fn_intel = *(void **) &fn;
-	if ( fn_hook == NULL ) { 
-		if(current_backend->info.intel_interface == 0 ) {
-			ret = fn((void*) x, (void*) y); 
-		} else {
-			fn_intel( &ret, (void*) x, (void*) y);
-		}
+    *(void **) & fn = current_backend->lapack.cladiv.f77_blas_function;
+    *(void **) & fn_hook = __flexiblas_hooks->cladiv.f77_hook_function[0];
+    *(void **) & fn_intel = *(void **) &fn;
+    if ( fn_hook == NULL ) {
+        if(current_backend->info.intel_interface == 0 ) {
+            ret = fn((void*) x, (void*) y);
+        } else {
+            fn_intel( &ret, (void*) x, (void*) y);
+        }
 
 #ifdef FLEXIBLAS_ABI_INTEL
         *returnvalue = ret;
@@ -61,9 +61,9 @@ float complex FC_GLOBAL(cladiv,CLADIV)(float complex* x, float complex* y)
 #else
         return ret;
 #endif
-	} else {
-		hook_pos_cladiv = 0;
-		fn_hook(&ret, (void*) x, (void*) y);
+    } else {
+        hook_pos_cladiv = 0;
+        fn_hook(&ret, (void*) x, (void*) y);
 
 #ifdef FLEXIBLAS_ABI_INTEL
         *returnvalue = ret;
@@ -71,7 +71,7 @@ float complex FC_GLOBAL(cladiv,CLADIV)(float complex* x, float complex* y)
 #else
         return ret;
 #endif
-	}
+    }
 }
 #ifdef FLEXIBLAS_ABI_IBM
 float complex cladiv_(float complex* x, float complex* y) __attribute__((alias(MTS(FC_GLOBAL(cladiv,CLADIV)))));
@@ -91,18 +91,18 @@ float complex cladiv(float complex* x, float complex* y){ return FC_GLOBAL(cladi
 
 void flexiblas_real_cladiv_( float complex*returnvalue, void* x, void* y)
 {
-	float complex (*fn) (void* x, void* y);
-	void (*fn_intel) (float complex *ret, void* x, void* y);
-	float complex ret;
+    float complex (*fn) (void* x, void* y);
+    void (*fn_intel) (float complex *ret, void* x, void* y);
+    float complex ret;
 
-	*(void **) & fn = current_backend->lapack.cladiv.f77_blas_function; 
-	*(void **) & fn_intel = *(void **) &fn;
+    *(void **) & fn = current_backend->lapack.cladiv.f77_blas_function;
+    *(void **) & fn_intel = *(void **) &fn;
 
-		if(current_backend->info.intel_interface == 0 ) {
-			ret = fn((void*) x, (void*) y); 
-		} else {
-			fn_intel( &ret, (void*) x, (void*) y);
-		}
+    if(current_backend->info.intel_interface == 0 ) {
+        ret = fn((void*) x, (void*) y);
+    } else {
+        fn_intel( &ret, (void*) x, (void*) y);
+    }
 
 
     *((float complex *)returnvalue) = ret;
@@ -122,13 +122,13 @@ void flexiblas_real_cladiv( float complex*returnvalue, void* x, void* y){flexibl
 
 void flexiblas_chain_cladiv_( float complex* returnvalue, void* x, void* y)
 {
-	float complex (*fn) (void* x, void* y);
-	void (*fn_intel) (float complex *ret, void* x, void* y);
-	void (*fn_hook) (float complex *ret, void* x, void* y);
-	float complex ret;
+    float complex (*fn) (void* x, void* y);
+    void (*fn_intel) (float complex *ret, void* x, void* y);
+    void (*fn_hook) (float complex *ret, void* x, void* y);
+    float complex ret;
 
-	*(void **) &fn      = current_backend->lapack.cladiv.f77_blas_function; 
-	*(void **) & fn_intel = *(void **) &fn;
+    *(void **) &fn      = current_backend->lapack.cladiv.f77_blas_function;
+    *(void **) & fn_intel = *(void **) &fn;
 
     hook_pos_cladiv ++;
     if( hook_pos_cladiv < __flexiblas_hooks->cladiv.nhook) {
@@ -136,12 +136,12 @@ void flexiblas_chain_cladiv_( float complex* returnvalue, void* x, void* y)
         fn_hook( &ret, (void*) x, (void*) y);
     } else {
         hook_pos_cladiv = 0;
-		if(current_backend->info.intel_interface == 0 ) {
-			ret = fn((void*) x, (void*) y); 
-		} else {
-			fn_intel( &ret, (void*) x, (void*) y);
-		}
-	}
+        if(current_backend->info.intel_interface == 0 ) {
+            ret = fn((void*) x, (void*) y);
+        } else {
+            fn_intel( &ret, (void*) x, (void*) y);
+        }
+    }
 
     *((float complex *)returnvalue) = ret;
     return;

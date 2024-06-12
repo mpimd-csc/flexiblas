@@ -1,21 +1,21 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 
 
@@ -33,13 +33,13 @@
 #include "cscutils/strutils.h"
 
 static char *__struppercase(char *str) {
-	char *ret = str;
-	if ( str == NULL ) return NULL;
-	while (*str != '\0') {
-		*str = toupper(*str);
-		str++;
-	}
-	return ret;
+    char *ret = str;
+    if ( str == NULL ) return NULL;
+    while (*str != '\0') {
+        *str = toupper(*str);
+        str++;
+    }
+    return ret;
 }
 
 
@@ -114,7 +114,7 @@ int flexiblas_mgmt_hook_option_unset(flexiblas_mgmt_t * config, flexiblas_mgmt_l
     len = 6 + strlen(hook);
     iname = malloc(sizeof(char *) * len);
     snprintf(iname, len, "HOOK-%s", hook);
-	iname = csc_struppercase(iname);
+    iname = csc_struppercase(iname);
 
     sec = csc_ini_getsection(ini, iname);
     free(iname);
@@ -140,7 +140,7 @@ int flexiblas_mgmt_hook_option_get_int_loc(flexiblas_mgmt_t * config, flexiblas_
     len = 6 + strlen(hook);
     iname = malloc(sizeof(char *) * len);
     snprintf(iname, len, "HOOK-%s", hook);
-	iname = csc_struppercase(iname);
+    iname = csc_struppercase(iname);
 
     sec = csc_ini_getsection(ini, iname);
     free(iname);
@@ -148,10 +148,10 @@ int flexiblas_mgmt_hook_option_get_int_loc(flexiblas_mgmt_t * config, flexiblas_
         return -1;
     } else {
         if ( (csc_ini_section_getinteger(sec, option, &tmp) != CSC_INI_SUCCESS) ) {
-		    *val = 0;
+            *val = 0;
             return -1;
         } else {
-	        *val = tmp;
+            *val = tmp;
             return 0;
         }
     }
@@ -171,7 +171,7 @@ int flexiblas_mgmt_hook_option_get_string_loc(flexiblas_mgmt_t * config, flexibl
     len = 6 + strlen(hook);
     iname = malloc(sizeof(char *) * len);
     snprintf(iname, len, "HOOK-%s", hook);
-	iname = csc_struppercase(iname);
+    iname = csc_struppercase(iname);
 
     sec = csc_ini_getsection(ini, iname);
     free(iname);
@@ -180,13 +180,13 @@ int flexiblas_mgmt_hook_option_get_string_loc(flexiblas_mgmt_t * config, flexibl
         return -1;
     } else {
         if ( (csc_ini_section_getstring(sec, option, &tmp) != CSC_INI_SUCCESS) ) {
-			strncpy(str, "", FLEXIBLAS_MGMT_MAX_BUFFER_LEN);
+            strncpy(str, "", FLEXIBLAS_MGMT_MAX_BUFFER_LEN);
             str[0] = 0;
             return -1;
         } else {
-			strncpy(str, tmp, FLEXIBLAS_MGMT_MAX_BUFFER_LEN);
+            strncpy(str, tmp, FLEXIBLAS_MGMT_MAX_BUFFER_LEN);
             return 0;
-		}
+        }
     }
     return 0;
 
@@ -206,7 +206,7 @@ int flexiblas_mgmt_hook_option_get_float_loc(flexiblas_mgmt_t * config, flexibla
     len = 6 + strlen(hook);
     iname = malloc(sizeof(char *) * len);
     snprintf(iname, len, "HOOK-%s", hook);
-	iname = csc_struppercase(iname);
+    iname = csc_struppercase(iname);
 
     sec = csc_ini_getsection(ini, iname);
     free(iname);
@@ -215,10 +215,10 @@ int flexiblas_mgmt_hook_option_get_float_loc(flexiblas_mgmt_t * config, flexibla
         return -1;
     } else {
         if ( (csc_ini_section_getfloat(sec, option, &tmp) != CSC_INI_SUCCESS) ) {
-		    *val = 0;
+            *val = 0;
             return -1;
         } else {
-	        *val = tmp;
+            *val = tmp;
             return 0;
         }
     }
@@ -298,7 +298,7 @@ static int check_opt_name(char *name)
 int flexiblas_mgmt_hook_option_set_int(flexiblas_mgmt_t *config, flexiblas_mgmt_location_t loc,
         char *cfg_name, char *optname, int optval) {
     size_t len;
-	char *iname = NULL;
+    char *iname = NULL;
     csc_ini_error_t ret;
     csc_ini_file_t *ini;
 
@@ -324,14 +324,14 @@ int flexiblas_mgmt_hook_option_set_int(flexiblas_mgmt_t *config, flexiblas_mgmt_
     len = 6 + strlen(cfg_name);
     iname = malloc(sizeof(char *) * len);
     snprintf(iname, len, "HOOK-%s", cfg_name);
-	iname = csc_struppercase(iname);
+    iname = csc_struppercase(iname);
 
     ret = csc_ini_setinteger(ini, iname, optname, optval);
-	if ( ret != CSC_INI_SUCCESS ) {
-		printf("Failed to set the %s option entry for %s. Exit.\n", optname, cfg_name);
+    if ( ret != CSC_INI_SUCCESS ) {
+        printf("Failed to set the %s option entry for %s. Exit.\n", optname, cfg_name);
         free(iname);
         return -1;
-	}
+    }
     free(iname);
     return 0;
 }
@@ -339,7 +339,7 @@ int flexiblas_mgmt_hook_option_set_int(flexiblas_mgmt_t *config, flexiblas_mgmt_
 int flexiblas_mgmt_hook_option_set_string(flexiblas_mgmt_t *config, flexiblas_mgmt_location_t loc,
         char *cfg_name, char *optname, char* optval) {
     size_t len;
-	char *iname = NULL;
+    char *iname = NULL;
     csc_ini_error_t ret;
     csc_ini_file_t *ini;
 
@@ -366,14 +366,14 @@ int flexiblas_mgmt_hook_option_set_string(flexiblas_mgmt_t *config, flexiblas_mg
     len = 6 + strlen(cfg_name);
     iname = malloc(sizeof(char *) * len);
     snprintf(iname, len, "HOOK-%s", cfg_name);
-	iname = csc_struppercase(iname);
+    iname = csc_struppercase(iname);
 
     ret = csc_ini_setstring(ini, iname, optname, optval);
-	if ( ret != CSC_INI_SUCCESS ) {
-		printf("Failed to set the %s option entry for %s. Exit.\n", optname, cfg_name);
+    if ( ret != CSC_INI_SUCCESS ) {
+        printf("Failed to set the %s option entry for %s. Exit.\n", optname, cfg_name);
         free(iname);
         return -1;
-	}
+    }
     free(iname);
     return 0;
 }
@@ -381,7 +381,7 @@ int flexiblas_mgmt_hook_option_set_string(flexiblas_mgmt_t *config, flexiblas_mg
 int flexiblas_mgmt_hook_option_set_float(flexiblas_mgmt_t *config, flexiblas_mgmt_location_t loc,
         char *cfg_name, char *optname, double optval) {
     size_t len;
-	char *iname = NULL;
+    char *iname = NULL;
     csc_ini_error_t ret;
     csc_ini_file_t *ini;
 
@@ -408,14 +408,14 @@ int flexiblas_mgmt_hook_option_set_float(flexiblas_mgmt_t *config, flexiblas_mgm
     len = 6 + strlen(cfg_name);
     iname = malloc(sizeof(char *) * len);
     snprintf(iname, len, "HOOK-%s", cfg_name);
-	iname = csc_struppercase(iname);
+    iname = csc_struppercase(iname);
 
     ret = csc_ini_setfloat(ini, iname, optname, optval);
-	if ( ret != CSC_INI_SUCCESS ) {
-		printf("Failed to set the %s option entry for %s. Exit.\n", optname, cfg_name);
+    if ( ret != CSC_INI_SUCCESS ) {
+        printf("Failed to set the %s option entry for %s. Exit.\n", optname, cfg_name);
         free(iname);
         return -1;
-	}
+    }
     free(iname);
     return 0;
 }
@@ -579,7 +579,7 @@ int flexiblas_mgmt_hook_disable(flexiblas_mgmt_t *config, flexiblas_mgmt_locatio
                 }
                 strcat(newstring, hooks[i]);
                 k++;
-             }
+            }
         }
     }
 

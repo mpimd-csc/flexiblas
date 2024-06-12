@@ -113,7 +113,7 @@ ELSEIF(CMAKE_Fortran_COMPILER_ID STREQUAL "Flang")
 ELSEIF(CMAKE_Fortran_COMPILER_ID STREQUAL "Intel" OR CMAKE_Fortran_COMPILER_ID STREQUAL "IntelLLVM")
     # Intel
     IF (WIN32)
-        SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /recursive /heap-arrays 64" CACHE INTERNAL "")
+        SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /recursive /heap-arrays:64" CACHE INTERNAL "")
         SET(CMAKE_Fortran_FLAGS_RELEASE "${CMAKE_Fortran_FLAGS_RELEASE} /O3 /Qunroll" CACHE INTERNAL "")
         SET(CMAKE_Fortran_FLAGS_DEBUG "${CMAKE_Fortran_FLAGS_DEBUG} /warn all /Zi /warn nointerfaces /traceback /debug all" CACHE INTERNAL "")
 

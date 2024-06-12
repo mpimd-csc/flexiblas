@@ -1,21 +1,21 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 
 
@@ -30,7 +30,7 @@
 extern "C" {
 #endif
 
-    #define FLEXIBLAS_MGMT_MAX_BUFFER_LEN 32*1024
+#define FLEXIBLAS_MGMT_MAX_BUFFER_LEN 32*1024
 
     /**
      * @brief Enumeration to identify the different config location.
@@ -46,7 +46,7 @@ extern "C" {
         FLEXIBLAS_GLOBAL_DIR = 4,   /**<  The configuration comes from the global configuration dir and thus is read only. */
         FLEXIBLAS_DEFAULT = 5       /**<  The compiled in default, only used with properties. */
     } flexiblas_mgmt_location_t;
-    #define FLEXIBLAS_MGMT_LOCATION_COUNT 5
+#define FLEXIBLAS_MGMT_LOCATION_COUNT 5
 
     /**
      * @brief Enumeration to define the setable FlexiBLAS properties.
@@ -186,7 +186,7 @@ extern "C" {
      * \endcode
      */
     int flexiblas_mgmt_list_blas(flexiblas_mgmt_t * config, flexiblas_mgmt_location_t loc,
-                                char *blas_name, char * library, char *comment, void **help);
+            char *blas_name, char * library, char *comment, void **help);
 
     /**
      * @brief List the compiled-in default search paths for libraries.
@@ -378,10 +378,10 @@ extern "C" {
      * and copies the result to the specified buffer.
      **/
     int flexiblas_mgmt_get_key(flexiblas_mgmt_t *config, flexiblas_mgmt_location_t loc,
-        char * section, char *key, char *buffer);
+            char * section, char *key, char *buffer);
 
 
-     /**
+    /**
      * @brief Get an the active key from a flexiblas config file.
      * @param[in]   config   FlexiBLAS configuration object.
      * @param[out]   loc      Location of the key which is active.
@@ -538,7 +538,7 @@ extern "C" {
      * \sa flexiblas_mgmt_hook_option_set_float
      */
     int flexiblas_mgmt_hook_option_set_int(flexiblas_mgmt_t *config, flexiblas_mgmt_location_t loc,
-        char *cfg_name, char *optname, int optval);
+            char *cfg_name, char *optname, int optval);
 
     /**
      * @brief Set a option for a hook in the config.
@@ -556,7 +556,7 @@ extern "C" {
      * \sa flexiblas_mgmt_hook_option_set_float
      */
     int flexiblas_mgmt_hook_option_set_string(flexiblas_mgmt_t *config, flexiblas_mgmt_location_t loc,
-        char *cfg_name, char *optname, char* optval);
+            char *cfg_name, char *optname, char* optval);
 
     /**
      * @brief Set a option for a hook in the config.
@@ -575,7 +575,7 @@ extern "C" {
      */
 
     int flexiblas_mgmt_hook_option_set_float(flexiblas_mgmt_t *config, flexiblas_mgmt_location_t loc,
-        char *cfg_name, char *optname, double optval);
+            char *cfg_name, char *optname, double optval);
 
     /**
      * @brief Remove an option setting for a hook in the config.

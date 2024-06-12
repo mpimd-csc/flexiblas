@@ -1,21 +1,21 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 
 
@@ -33,17 +33,17 @@ void cblas_csymm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
         const void  *B, const CBLAS_INT ldb, const void *beta,
         void  *C, const CBLAS_INT ldc)
 {
-        void (*fn)
-            (const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
-             const CBLAS_UPLO Uplo, const CBLAS_INT M, const CBLAS_INT N,
-             const void *alpha, const void  *A, const CBLAS_INT lda,
-             const void  *B, const CBLAS_INT ldb, const void *beta,
-             void  *C, const CBLAS_INT ldc);
+    void (*fn)
+        (const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
+         const CBLAS_UPLO Uplo, const CBLAS_INT M, const CBLAS_INT N,
+         const void *alpha, const void  *A, const CBLAS_INT lda,
+         const void  *B, const CBLAS_INT ldb, const void *beta,
+         void  *C, const CBLAS_INT ldc);
 
-        CBLAS_BACKEND_INIT();
-        CBLAS_HOOK_SELECT(csymm);
+    CBLAS_BACKEND_INIT();
+    CBLAS_HOOK_SELECT(csymm);
 
-        fn(layout,Side,Uplo,M,N,alpha,A,lda,B,ldb,beta,C,ldc);
+    fn(layout,Side,Uplo,M,N,alpha,A,lda,B,ldb,beta,C,ldc);
 
 }
 
@@ -53,16 +53,16 @@ void flexiblas_chain_cblas_csymm(const CBLAS_LAYOUT layout, const CBLAS_SIDE Sid
         const void  *B, const CBLAS_INT ldb, const void *beta,
         void  *C, const CBLAS_INT ldc)
 {
-        void (*fn)
-            (const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
-             const CBLAS_UPLO Uplo, const CBLAS_INT M, const CBLAS_INT N,
-             const void *alpha, const void  *A, const CBLAS_INT lda,
-             const void  *B, const CBLAS_INT ldb, const void *beta,
-             void  *C, const CBLAS_INT ldc);
+    void (*fn)
+        (const CBLAS_LAYOUT layout, const CBLAS_SIDE Side,
+         const CBLAS_UPLO Uplo, const CBLAS_INT M, const CBLAS_INT N,
+         const void *alpha, const void  *A, const CBLAS_INT lda,
+         const void  *B, const CBLAS_INT ldb, const void *beta,
+         void  *C, const CBLAS_INT ldc);
 
-        CBLAS_HOOK_ADVANCE(csymm);
+    CBLAS_HOOK_ADVANCE(csymm);
 
-        fn(layout,Side,Uplo,M,N,alpha,A,lda,B,ldb,beta,C,ldc);
+    fn(layout,Side,Uplo,M,N,alpha,A,lda,B,ldb,beta,C,ldc);
 
 }
 

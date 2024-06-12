@@ -1,24 +1,24 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 #if defined(FLEXIBLAS_CBLAS) && !defined(STANDALONE)
- #define USE_CBLAS
+#define USE_CBLAS
 #endif
 
 
@@ -34,7 +34,7 @@
 #include <inttypes.h>
 
 #ifdef USE_CBLAS
-    #include "cblas.h"
+#include "cblas.h"
 #endif
 
 #define RUNS 20000
@@ -45,9 +45,9 @@
 
 
 #ifdef INTEGER8
-	#define Int long
+#define Int long
 #else
-	#define Int int
+#define Int int
 #endif
 
 #ifndef STANDALONE
@@ -76,9 +76,9 @@ void FC_GLOBAL(dgemv,DGEMV)(const char * TRANSA, Int *m, Int *n, double *alpha, 
 
 double wtime(void)
 {
-	struct timeval tv;
-	gettimeofday (&tv, NULL);
-	return tv.tv_sec + tv.tv_usec / 1e6;
+    struct timeval tv;
+    gettimeofday (&tv, NULL);
+    return tv.tv_sec + tv.tv_usec / 1e6;
 }
 
 /*-----------------------------------------------------------------------------
@@ -87,23 +87,23 @@ double wtime(void)
 void benchmark_dgemv(Int n, Int Runs, double *rtime, double *gflops)
 {
     Int i;
-	double *A, *B, *C;
-	double ts,te;
-	double alpha=1, beta=1;
-	double flops;
-	Int incb = 1, incc = 1;
+    double *A, *B, *C;
+    double ts,te;
+    double alpha=1, beta=1;
+    double flops;
+    Int incb = 1, incc = 1;
 
     A = malloc(sizeof(double) * n *n );
-	B = malloc(sizeof(double) * n );
-	C = malloc(sizeof(double) * n );
+    B = malloc(sizeof(double) * n );
+    C = malloc(sizeof(double) * n );
 
-	for ( i = 0; i < n * n; i++){
-		A[i]=i+1;
-	}
-	for (i = 0; i < n; i++) {
-		B[i]=i*2+1;
-		C[i]=1;
-	}
+    for ( i = 0; i < n * n; i++){
+        A[i]=i+1;
+    }
+    for (i = 0; i < n; i++) {
+        B[i]=i*2+1;
+        C[i]=1;
+    }
 
     /*-----------------------------------------------------------------------------
      *  Warmup
@@ -116,20 +116,20 @@ void benchmark_dgemv(Int n, Int Runs, double *rtime, double *gflops)
      *  Benchmark
      *-----------------------------------------------------------------------------*/
     ts = wtime();
-	for (i=0; i < Runs; i++){
-		FC_GLOBAL(dgemv,DGEMV)("N", &n,&n,&alpha, A, &n, B,&incb, &beta, C, &incc, 1);
-	}
-	te = wtime();
-	flops = 2.0 * n *n;
-	flops /=1000*1000*1000;
-	flops /= (te-ts)/Runs;
+    for (i=0; i < Runs; i++){
+        FC_GLOBAL(dgemv,DGEMV)("N", &n,&n,&alpha, A, &n, B,&incb, &beta, C, &incc, 1);
+    }
+    te = wtime();
+    flops = 2.0 * n *n;
+    flops /=1000*1000*1000;
+    flops /= (te-ts)/Runs;
 
     *gflops = flops;
     *rtime = (te-ts)/Runs;
 
     free(A);
-	free(B);
-	free(C);
+    free(B);
+    free(C);
 
 }
 
@@ -140,26 +140,26 @@ void benchmark_dgemv(Int n, Int Runs, double *rtime, double *gflops)
 void benchmark_dgemv_latency(Int n, Int Runs, double *rtime, double *gflops)
 {
     Int i;
-	double *A, *B, *C;
-	double ts,te;
-	double alpha=1, beta=1;
-	double flops;
-	Int incb = 1, incc = 1;
+    double *A, *B, *C;
+    double ts,te;
+    double alpha=1, beta=1;
+    double flops;
+    Int incb = 1, incc = 1;
     Int ld =1;
     uint64_t cy_start, cy_end, cy_sum;
     n = 1;
 
     A = malloc(sizeof(double) * n *n );
-	B = malloc(sizeof(double) * n );
-	C = malloc(sizeof(double) * n );
+    B = malloc(sizeof(double) * n );
+    C = malloc(sizeof(double) * n );
 
-	for ( i = 0; i < n * n; i++){
-		A[i]=i+1;
-	}
-	for (i = 0; i < n; i++) {
-		B[i]=i*2+1;
-		C[i]=1;
-	}
+    for ( i = 0; i < n * n; i++){
+        A[i]=i+1;
+    }
+    for (i = 0; i < n; i++) {
+        B[i]=i*2+1;
+        C[i]=1;
+    }
     n = 0;
     /*-----------------------------------------------------------------------------
      *  Warmup
@@ -175,24 +175,24 @@ void benchmark_dgemv_latency(Int n, Int Runs, double *rtime, double *gflops)
     cy_end = 0;
     cy_sum = 0;
     ts = wtime();
-	for (i=0; i < Runs; i++){
+    for (i=0; i < Runs; i++){
         cy_start = csc_cycles();
-		FC_GLOBAL(dgemv,DGEMV)("N", &n,&n,&alpha, A, &ld, B,&incb, &beta, C, &incc, 1);
+        FC_GLOBAL(dgemv,DGEMV)("N", &n,&n,&alpha, A, &ld, B,&incb, &beta, C, &incc, 1);
         cy_end = csc_cycles();
         cy_sum += (cy_end-cy_start);
-	}
-	te = wtime();
+    }
+    te = wtime();
     cy_sum = cy_sum/Runs;
-	flops = 2.0 * n *n;
-	flops /=1000*1000*1000;
-	flops /= (te-ts)/Runs;
+    flops = 2.0 * n *n;
+    flops /=1000*1000*1000;
+    flops /= (te-ts)/Runs;
 
     *gflops = flops;
     *rtime = (double) cy_sum;
 
     free(A);
-	free(B);
-	free(C);
+    free(B);
+    free(C);
 
 }
 
@@ -203,41 +203,41 @@ void benchmark_dgemv_latency(Int n, Int Runs, double *rtime, double *gflops)
 void benchmark_dgemm(Int n, Int Runs, double *rtime, double *gflops)
 {
     Int i;
-	double *A, *B, *C;
-	double ts,te;
-	double alpha=1, beta=1;
-	double flops;
+    double *A, *B, *C;
+    double ts,te;
+    double alpha=1, beta=1;
+    double flops;
 
     A = malloc(sizeof(double) * n *n );
-	B = malloc(sizeof(double) * n *n );
-	C = malloc(sizeof(double) * n *n );
+    B = malloc(sizeof(double) * n *n );
+    C = malloc(sizeof(double) * n *n );
 
-	for ( i = 0; i < n * n; i++){
-		A[i]=i+1;
-		B[i]=i+0.5;
-	}
+    for ( i = 0; i < n * n; i++){
+        A[i]=i+1;
+        B[i]=i+0.5;
+    }
 
-	/*-----------------------------------------------------------------------------
-	 *  Warmup
-	 *-----------------------------------------------------------------------------*/
-	FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &n, B,&n, &beta, C, &n, 1, 1);
-	FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &n, B,&n, &beta, C, &n, 1, 1);
-	FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &n, B,&n, &beta, C, &n, 1, 1);
+    /*-----------------------------------------------------------------------------
+     *  Warmup
+     *-----------------------------------------------------------------------------*/
+    FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &n, B,&n, &beta, C, &n, 1, 1);
+    FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &n, B,&n, &beta, C, &n, 1, 1);
+    FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &n, B,&n, &beta, C, &n, 1, 1);
 
-	ts = wtime();
-	for (i=0; i < Runs; i++){
-		FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &n, B,&n, &beta, C, &n, 1, 1);
-	}
-	te = wtime();
-	double h = (double) n / 1000.0;
-	flops = 2.0 * h *h *h;
-	flops /= ((te-ts)/Runs);
+    ts = wtime();
+    for (i=0; i < Runs; i++){
+        FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &n, B,&n, &beta, C, &n, 1, 1);
+    }
+    te = wtime();
+    double h = (double) n / 1000.0;
+    flops = 2.0 * h *h *h;
+    flops /= ((te-ts)/Runs);
     *gflops = flops;
     *rtime = ((te-ts)/Runs);
 
     free(A);
-	free(B);
-	free(C);
+    free(B);
+    free(C);
 
 
 }
@@ -248,50 +248,50 @@ void benchmark_dgemm(Int n, Int Runs, double *rtime, double *gflops)
 void benchmark_dgemm_latency(Int n, Int Runs, double *rtime, double *gflops)
 {
     Int i;
-	double *A, *B, *C;
-	double ts,te;
-	double alpha=1, beta=1;
-	double flops;
+    double *A, *B, *C;
+    double ts,te;
+    double alpha=1, beta=1;
+    double flops;
     Int ld = 1;
     uint64_t cy_start, cy_end, cy_sum;
 
     n = 1;
     A = malloc(sizeof(double) * n *n );
-	B = malloc(sizeof(double) * n *n );
-	C = malloc(sizeof(double) * n *n );
+    B = malloc(sizeof(double) * n *n );
+    C = malloc(sizeof(double) * n *n );
 
-	for ( i = 0; i < n * n; i++){
-		A[i]=i+1;
-		B[i]=i+0.5;
-	}
+    for ( i = 0; i < n * n; i++){
+        A[i]=i+1;
+        B[i]=i+0.5;
+    }
 
     n = 0;
-	/*-----------------------------------------------------------------------------
-	 *  Warmup
-	 *-----------------------------------------------------------------------------*/
-	FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &ld, B,&ld, &beta, C, &ld, 1, 1);
-	FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &ld, B,&ld, &beta, C, &ld, 1, 1);
-	FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &ld, B,&ld, &beta, C, &ld, 1, 1);
+    /*-----------------------------------------------------------------------------
+     *  Warmup
+     *-----------------------------------------------------------------------------*/
+    FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &ld, B,&ld, &beta, C, &ld, 1, 1);
+    FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &ld, B,&ld, &beta, C, &ld, 1, 1);
+    FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &ld, B,&ld, &beta, C, &ld, 1, 1);
 
     cy_sum = 0 ;
-	ts = wtime();
-	for (i=0; i < Runs; i++){
+    ts = wtime();
+    for (i=0; i < Runs; i++){
         cy_start = csc_cycles();
         FC_GLOBAL(dgemm,DGEMM)("N","N", &n,&n,&n,&alpha, A, &ld, B,&ld, &beta, C, &ld, 1, 1);
         cy_end = csc_cycles();
         cy_sum += (cy_end-cy_start);
-	}
-	te = wtime();
+    }
+    te = wtime();
     cy_sum /= Runs;
-	double h = (double) n / 1000.0;
-	flops = 2.0 * h *h *h;
-	flops /= ((te-ts)/Runs);
+    double h = (double) n / 1000.0;
+    flops = 2.0 * h *h *h;
+    flops /= ((te-ts)/Runs);
     *gflops = flops;
     *rtime = cy_sum;
 
     free(A);
-	free(B);
-	free(C);
+    free(B);
+    free(C);
 
 
 }
@@ -303,34 +303,34 @@ void benchmark_dgemm_latency(Int n, Int Runs, double *rtime, double *gflops)
  *-----------------------------------------------------------------------------*/
 void benchmark_daxpy(Int n, Int Runs, double *rtime, double *gflops)
 {
-	double *A, *B;
-	double ts,te;
-	double alpha=1;
-	double flops;
-	Int incx = 1, incy = 1;
+    double *A, *B;
+    double ts,te;
+    double alpha=1;
+    double flops;
+    Int incx = 1, incy = 1;
     Int i;
 
     A = malloc(sizeof(double) * n );
-	B = malloc(sizeof(double) * n );
+    B = malloc(sizeof(double) * n );
 
     for ( i = 0; i < n ; i++){
-		A[i]=i+1;
-		B[i]=i+0.5;
-	}
+        A[i]=i+1;
+        B[i]=i+0.5;
+    }
     /* Warm up */
     FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);
-	FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);
-	FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);
+    FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);
+    FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);
 
     /*  Benchmark */
-	ts = wtime();
-	for (i=0; i < Runs; i++){
-		FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);
-	}
-	te = wtime();
-	flops = 2.0 * n;
-	flops /=1000.0*1000.0*1000.0;
-	flops /= (te-ts)/Runs;
+    ts = wtime();
+    for (i=0; i < Runs; i++){
+        FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);
+    }
+    te = wtime();
+    flops = 2.0 * n;
+    flops /=1000.0*1000.0*1000.0;
+    flops /= (te-ts)/Runs;
     *rtime = (te-ts)/Runs;
     *gflops = flops;
     free(A);
@@ -342,42 +342,42 @@ void benchmark_daxpy(Int n, Int Runs, double *rtime, double *gflops)
  *-----------------------------------------------------------------------------*/
 void benchmark_daxpy_latency(Int n, Int Runs, double *rtime, double *gflops)
 {
-	double *A, *B;
-	double ts,te;
-	double alpha=1;
-	double flops;
-	Int incx = 1, incy = 1;
+    double *A, *B;
+    double ts,te;
+    double alpha=1;
+    double flops;
+    Int incx = 1, incy = 1;
     Int i;
     uint64_t cy_start, cy_end, cy_sum;
 
     A = malloc(sizeof(double) * n );
-	B = malloc(sizeof(double) * n );
+    B = malloc(sizeof(double) * n );
 
     for ( i = 0; i < n ; i++){
-		A[i]=i+1;
-		B[i]=i+0.5;
-	}
+        A[i]=i+1;
+        B[i]=i+0.5;
+    }
     n = 0;
     /* Warm up */
     FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);
-	FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);
-	FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);
+    FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);
+    FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);
 
     /*  Benchmark */
     cy_sum = 0;
-	ts = wtime();
-	for (i=0; i < Runs; i++){
+    ts = wtime();
+    for (i=0; i < Runs; i++){
         cy_start = csc_cycles();
-		FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);
+        FC_GLOBAL(daxpy,DAXPY)(&n,&alpha, A, &incx, B, &incy);
         cy_end = csc_cycles();
         cy_sum += (cy_end-cy_start);
 
-	}
-	te = wtime();
+    }
+    te = wtime();
     cy_sum /= Runs;
-	flops = 2.0 * n;
-	flops /=1000.0*1000.0*1000.0;
-	flops /= (te-ts)/Runs;
+    flops = 2.0 * n;
+    flops /=1000.0*1000.0*1000.0;
+    flops /= (te-ts)/Runs;
     *rtime = cy_sum;
     *gflops = flops;
     free(A);
@@ -441,15 +441,15 @@ int main (int argc, char **argv) {
         int option_index = 0;
 
         /* Argument parameters:
-            no_argument: " "
-            required_argument: ":"
-            optional_argument: "::" */
+no_argument: " "
+required_argument: ":"
+optional_argument: "::" */
 #ifndef STANDALONE
         choice = getopt_long( argc, argv, "vhs:o:r:d:b:",
-                    long_options, &option_index);
+                long_options, &option_index);
 #else
-       choice = getopt_long( argc, argv, "hr:d:b:",
-                    long_options, &option_index);
+        choice = getopt_long( argc, argv, "hr:d:b:",
+                long_options, &option_index);
 
 #endif
 
@@ -681,6 +681,6 @@ int main (int argc, char **argv) {
 #endif
     if (skip_str) free(skip_str);
     if (only_str) free(only_str);
-	return 0;
+    return 0;
 }
 

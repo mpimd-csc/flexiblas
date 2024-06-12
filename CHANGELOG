@@ -1,3 +1,10 @@
+next
+----
+- Fix cblas scnrm2 typo (See GH #54)
+- Consistent indentation (See GH #55)
+- Fix some typos (See GH #56)
+
+
 3.4.4 (May 24, 2024)
 --------------------
 - Symbols from precompiled libaries (NETLIB BLAS and LAPACK) are not properly

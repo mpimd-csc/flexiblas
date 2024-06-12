@@ -1,21 +1,21 @@
-//    SPDX-License-Identifier: LGPL-3.0-or-later
+//  SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,24 +36,24 @@ int FC_GLOBAL(ieeeck,IEEECK)(blasint* ispec, float* zero, float* one)
 int FC_GLOBAL(ieeeck,IEEECK)(blasint* ispec, float* zero, float* one)
 #endif
 {
-	blasint (*fn) (void* ispec, void* zero, void* one);
-	blasint (*fn_hook) (void* ispec, void* zero, void* one);
-	blasint ret;
+    blasint (*fn) (void* ispec, void* zero, void* one);
+    blasint (*fn_hook) (void* ispec, void* zero, void* one);
+    blasint ret;
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	*(void **) & fn = current_backend->lapack.ieeeck.f77_blas_function; 
-	*(void **) & fn_hook = __flexiblas_hooks->ieeeck.f77_hook_function[0]; 
-	if ( fn_hook == NULL ) { 
-		ret = fn((void*) ispec, (void*) zero, (void*) one); 
-		return ret; 
-	} else {
-		hook_pos_ieeeck = 0;
-		ret=fn_hook((void*) ispec, (void*) zero, (void*) one);
-		return ret;
-	}
+    *(void **) & fn = current_backend->lapack.ieeeck.f77_blas_function;
+    *(void **) & fn_hook = __flexiblas_hooks->ieeeck.f77_hook_function[0];
+    if ( fn_hook == NULL ) {
+        ret = fn((void*) ispec, (void*) zero, (void*) one);
+        return ret;
+    } else {
+        hook_pos_ieeeck = 0;
+        ret = fn_hook((void*) ispec, (void*) zero, (void*) one);
+        return ret;
+    }
 }
 #ifdef FLEXIBLAS_ABI_IBM
 int ieeeck_(blasint* ispec, float* zero, float* one) __attribute__((alias(MTS(FC_GLOBAL(ieeeck,IEEECK)))));
@@ -73,14 +73,14 @@ int ieeeck(blasint* ispec, float* zero, float* one){ return FC_GLOBAL(ieeeck,IEE
 
 blasint flexiblas_real_ieeeck_(void* ispec, void* zero, void* one)
 {
-	blasint (*fn) (void* ispec, void* zero, void* one);
-	blasint ret;
+    blasint (*fn) (void* ispec, void* zero, void* one);
+    blasint ret;
 
-	*(void **) & fn = current_backend->lapack.ieeeck.f77_blas_function; 
+    *(void **) & fn = current_backend->lapack.ieeeck.f77_blas_function;
 
-		ret = fn((void*) ispec, (void*) zero, (void*) one); 
+    ret = fn((void*) ispec, (void*) zero, (void*) one);
 
-	return ret ;
+    return ret;
 }
 #ifndef __APPLE__
 blasint flexiblas_real_ieeeck(void* ispec, void* zero, void* one) __attribute__((alias("flexiblas_real_ieeeck_")));
@@ -96,11 +96,11 @@ blasint flexiblas_real_ieeeck(void* ispec, void* zero, void* one){return flexibl
 
 blasint flexiblas_chain_ieeeck_(void* ispec, void* zero, void* one)
 {
-	blasint (*fn) (void* ispec, void* zero, void* one);
-	blasint (*fn_hook) (void* ispec, void* zero, void* one);
-	blasint ret;
+    blasint (*fn) (void* ispec, void* zero, void* one);
+    blasint (*fn_hook) (void* ispec, void* zero, void* one);
+    blasint ret;
 
-	*(void **) &fn      = current_backend->lapack.ieeeck.f77_blas_function; 
+    *(void **) &fn      = current_backend->lapack.ieeeck.f77_blas_function;
 
     hook_pos_ieeeck ++;
     if( hook_pos_ieeeck < __flexiblas_hooks->ieeeck.nhook) {
@@ -108,9 +108,9 @@ blasint flexiblas_chain_ieeeck_(void* ispec, void* zero, void* one)
         ret = fn_hook((void*) ispec, (void*) zero, (void*) one);
     } else {
         hook_pos_ieeeck = 0;
-		ret = fn((void*) ispec, (void*) zero, (void*) one); 
-	}
-	return ret ;
+        ret = fn((void*) ispec, (void*) zero, (void*) one);
+    }
+    return ret;
 }
 #ifndef __APPLE__
 blasint flexiblas_chain_ieeeck(void* ispec, void* zero, void* one) __attribute__((alias("flexiblas_chain_ieeeck_")));

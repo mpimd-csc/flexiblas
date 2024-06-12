@@ -1,21 +1,21 @@
-//    SPDX-License-Identifier: LGPL-3.0-or-later
+//  SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,23 +36,23 @@ void FC_GLOBAL(dlacn2,DLACN2)(blasint* n, double* v, double* x, blasint* isgn, d
 void FC_GLOBAL(dlacn2,DLACN2)(blasint* n, double* v, double* x, blasint* isgn, double* est, blasint* kase, blasint* isave)
 #endif
 {
-	void (*fn) (void* n, void* v, void* x, void* isgn, void* est, void* kase, void* isave);
-	void (*fn_hook) (void* n, void* v, void* x, void* isgn, void* est, void* kase, void* isave);
+    void (*fn) (void* n, void* v, void* x, void* isgn, void* est, void* kase, void* isave);
+    void (*fn_hook) (void* n, void* v, void* x, void* isgn, void* est, void* kase, void* isave);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	*(void **) & fn = current_backend->lapack.dlacn2.f77_blas_function; 
-	*(void **) & fn_hook = __flexiblas_hooks->dlacn2.f77_hook_function[0]; 
-	if ( fn_hook == NULL ) { 
-		fn((void*) n, (void*) v, (void*) x, (void*) isgn, (void*) est, (void*) kase, (void*) isave); 
-		return;
-	} else {
-		hook_pos_dlacn2 = 0;
-		fn_hook((void*) n, (void*) v, (void*) x, (void*) isgn, (void*) est, (void*) kase, (void*) isave);
-		return;
-	}
+    *(void **) & fn = current_backend->lapack.dlacn2.f77_blas_function;
+    *(void **) & fn_hook = __flexiblas_hooks->dlacn2.f77_hook_function[0];
+    if ( fn_hook == NULL ) {
+        fn((void*) n, (void*) v, (void*) x, (void*) isgn, (void*) est, (void*) kase, (void*) isave);
+        return;
+    } else {
+        hook_pos_dlacn2 = 0;
+        fn_hook((void*) n, (void*) v, (void*) x, (void*) isgn, (void*) est, (void*) kase, (void*) isave);
+        return;
+    }
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void dlacn2_(blasint* n, double* v, double* x, blasint* isgn, double* est, blasint* kase, blasint* isave) __attribute__((alias(MTS(FC_GLOBAL(dlacn2,DLACN2)))));
@@ -72,13 +72,13 @@ void dlacn2(blasint* n, double* v, double* x, blasint* isgn, double* est, blasin
 
 void flexiblas_real_dlacn2_(void* n, void* v, void* x, void* isgn, void* est, void* kase, void* isave)
 {
-	void (*fn) (void* n, void* v, void* x, void* isgn, void* est, void* kase, void* isave);
+    void (*fn) (void* n, void* v, void* x, void* isgn, void* est, void* kase, void* isave);
 
-	*(void **) & fn = current_backend->lapack.dlacn2.f77_blas_function; 
+    *(void **) & fn = current_backend->lapack.dlacn2.f77_blas_function;
 
-		fn((void*) n, (void*) v, (void*) x, (void*) isgn, (void*) est, (void*) kase, (void*) isave); 
+    fn((void*) n, (void*) v, (void*) x, (void*) isgn, (void*) est, (void*) kase, (void*) isave);
 
-	return;
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_real_dlacn2(void* n, void* v, void* x, void* isgn, void* est, void* kase, void* isave) __attribute__((alias("flexiblas_real_dlacn2_")));
@@ -94,10 +94,10 @@ void flexiblas_real_dlacn2(void* n, void* v, void* x, void* isgn, void* est, voi
 
 void flexiblas_chain_dlacn2_(void* n, void* v, void* x, void* isgn, void* est, void* kase, void* isave)
 {
-	void (*fn) (void* n, void* v, void* x, void* isgn, void* est, void* kase, void* isave);
-	void (*fn_hook) (void* n, void* v, void* x, void* isgn, void* est, void* kase, void* isave);
+    void (*fn) (void* n, void* v, void* x, void* isgn, void* est, void* kase, void* isave);
+    void (*fn_hook) (void* n, void* v, void* x, void* isgn, void* est, void* kase, void* isave);
 
-	*(void **) &fn      = current_backend->lapack.dlacn2.f77_blas_function; 
+    *(void **) &fn      = current_backend->lapack.dlacn2.f77_blas_function;
 
     hook_pos_dlacn2 ++;
     if( hook_pos_dlacn2 < __flexiblas_hooks->dlacn2.nhook) {
@@ -105,9 +105,9 @@ void flexiblas_chain_dlacn2_(void* n, void* v, void* x, void* isgn, void* est, v
         fn_hook((void*) n, (void*) v, (void*) x, (void*) isgn, (void*) est, (void*) kase, (void*) isave);
     } else {
         hook_pos_dlacn2 = 0;
-		fn((void*) n, (void*) v, (void*) x, (void*) isgn, (void*) est, (void*) kase, (void*) isave); 
-	}
-	return;
+        fn((void*) n, (void*) v, (void*) x, (void*) isgn, (void*) est, (void*) kase, (void*) isave);
+    }
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_chain_dlacn2(void* n, void* v, void* x, void* isgn, void* est, void* kase, void* isave) __attribute__((alias("flexiblas_chain_dlacn2_")));

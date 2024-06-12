@@ -56,7 +56,7 @@ SUBROUTINE ZAXPBY(N,ZA,ZX,INCX,ZB,ZY,INCY)
         !        code for both increments equal to 1
         !
         DO I = 1,N
-            ZY(I) = ZB * ZY(I) + ZA*ZX(I)
+        ZY(I) = ZB * ZY(I) + ZA*ZX(I)
         END DO
     ELSE
         !
@@ -68,9 +68,9 @@ SUBROUTINE ZAXPBY(N,ZA,ZX,INCX,ZB,ZY,INCY)
         IF (INCX.LT.0) IX = (-N+1)*INCX + 1
         IF (INCY.LT.0) IY = (-N+1)*INCY + 1
         DO I = 1,N
-            ZY(IY) = ZB * ZY(IY) + ZA*ZX(IX)
-            IX = IX + INCX
-            IY = IY + INCY
+        ZY(IY) = ZB * ZY(IY) + ZA*ZX(IX)
+        IX = IX + INCX
+        IY = IY + INCY
         END DO
     END IF
     !

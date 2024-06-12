@@ -1,21 +1,21 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 
 #include "cblas.h"
@@ -34,11 +34,11 @@ void cblas_zgbmv(const CBLAS_LAYOUT layout,
 
 {
     void (*fn)  (const CBLAS_LAYOUT layout,
-        const CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N,
-        const CBLAS_INT KL, const CBLAS_INT KU,
-        const void *alpha, const void  *A, const CBLAS_INT lda,
-        const void  *X, const CBLAS_INT incX, const void *beta,
-        void  *Y, const CBLAS_INT incY);
+            const CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N,
+            const CBLAS_INT KL, const CBLAS_INT KU,
+            const void *alpha, const void  *A, const CBLAS_INT lda,
+            const void  *X, const CBLAS_INT incX, const void *beta,
+            void  *Y, const CBLAS_INT incY);
 
 
     CBLAS_BACKEND_INIT();
@@ -60,11 +60,11 @@ void flexiblas_chain_cblas_zgbmv(const CBLAS_LAYOUT layout,
 
 {
     void (*fn)  (const CBLAS_LAYOUT layout,
-        const CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N,
-        const CBLAS_INT KL, const CBLAS_INT KU,
-        const void *alpha, const void  *A, const CBLAS_INT lda,
-        const void  *X, const CBLAS_INT incX, const void *beta,
-        void  *Y, const CBLAS_INT incY);
+            const CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N,
+            const CBLAS_INT KL, const CBLAS_INT KU,
+            const void *alpha, const void  *A, const CBLAS_INT lda,
+            const void  *X, const CBLAS_INT incX, const void *beta,
+            void  *Y, const CBLAS_INT incY);
 
     CBLAS_HOOK_ADVANCE(zgbmv);
 

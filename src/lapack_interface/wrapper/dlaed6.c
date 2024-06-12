@@ -1,21 +1,21 @@
-//    SPDX-License-Identifier: LGPL-3.0-or-later
+//  SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,23 +36,23 @@ void FC_GLOBAL(dlaed6,DLAED6)(blasint* kniter, blasint* orgati, double* rho, dou
 void FC_GLOBAL(dlaed6,DLAED6)(blasint* kniter, blasint* orgati, double* rho, double* d, double* z, double* finit, double* tau, blasint* info)
 #endif
 {
-	void (*fn) (void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info);
-	void (*fn_hook) (void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info);
+    void (*fn) (void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info);
+    void (*fn_hook) (void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	*(void **) & fn = current_backend->lapack.dlaed6.f77_blas_function; 
-	*(void **) & fn_hook = __flexiblas_hooks->dlaed6.f77_hook_function[0]; 
-	if ( fn_hook == NULL ) { 
-		fn((void*) kniter, (void*) orgati, (void*) rho, (void*) d, (void*) z, (void*) finit, (void*) tau, (void*) info); 
-		return;
-	} else {
-		hook_pos_dlaed6 = 0;
-		fn_hook((void*) kniter, (void*) orgati, (void*) rho, (void*) d, (void*) z, (void*) finit, (void*) tau, (void*) info);
-		return;
-	}
+    *(void **) & fn = current_backend->lapack.dlaed6.f77_blas_function;
+    *(void **) & fn_hook = __flexiblas_hooks->dlaed6.f77_hook_function[0];
+    if ( fn_hook == NULL ) {
+        fn((void*) kniter, (void*) orgati, (void*) rho, (void*) d, (void*) z, (void*) finit, (void*) tau, (void*) info);
+        return;
+    } else {
+        hook_pos_dlaed6 = 0;
+        fn_hook((void*) kniter, (void*) orgati, (void*) rho, (void*) d, (void*) z, (void*) finit, (void*) tau, (void*) info);
+        return;
+    }
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void dlaed6_(blasint* kniter, blasint* orgati, double* rho, double* d, double* z, double* finit, double* tau, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlaed6,DLAED6)))));
@@ -72,13 +72,13 @@ void dlaed6(blasint* kniter, blasint* orgati, double* rho, double* d, double* z,
 
 void flexiblas_real_dlaed6_(void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info)
 {
-	void (*fn) (void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info);
+    void (*fn) (void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info);
 
-	*(void **) & fn = current_backend->lapack.dlaed6.f77_blas_function; 
+    *(void **) & fn = current_backend->lapack.dlaed6.f77_blas_function;
 
-		fn((void*) kniter, (void*) orgati, (void*) rho, (void*) d, (void*) z, (void*) finit, (void*) tau, (void*) info); 
+    fn((void*) kniter, (void*) orgati, (void*) rho, (void*) d, (void*) z, (void*) finit, (void*) tau, (void*) info);
 
-	return;
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_real_dlaed6(void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info) __attribute__((alias("flexiblas_real_dlaed6_")));
@@ -94,10 +94,10 @@ void flexiblas_real_dlaed6(void* kniter, void* orgati, void* rho, void* d, void*
 
 void flexiblas_chain_dlaed6_(void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info)
 {
-	void (*fn) (void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info);
-	void (*fn_hook) (void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info);
+    void (*fn) (void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info);
+    void (*fn_hook) (void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info);
 
-	*(void **) &fn      = current_backend->lapack.dlaed6.f77_blas_function; 
+    *(void **) &fn      = current_backend->lapack.dlaed6.f77_blas_function;
 
     hook_pos_dlaed6 ++;
     if( hook_pos_dlaed6 < __flexiblas_hooks->dlaed6.nhook) {
@@ -105,9 +105,9 @@ void flexiblas_chain_dlaed6_(void* kniter, void* orgati, void* rho, void* d, voi
         fn_hook((void*) kniter, (void*) orgati, (void*) rho, (void*) d, (void*) z, (void*) finit, (void*) tau, (void*) info);
     } else {
         hook_pos_dlaed6 = 0;
-		fn((void*) kniter, (void*) orgati, (void*) rho, (void*) d, (void*) z, (void*) finit, (void*) tau, (void*) info); 
-	}
-	return;
+        fn((void*) kniter, (void*) orgati, (void*) rho, (void*) d, (void*) z, (void*) finit, (void*) tau, (void*) info);
+    }
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_chain_dlaed6(void* kniter, void* orgati, void* rho, void* d, void* z, void* finit, void* tau, void* info) __attribute__((alias("flexiblas_chain_dlaed6_")));

@@ -1,21 +1,21 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 
 
@@ -45,7 +45,7 @@ void flexiblas_set_num_threads(int num)
             (unsigned long) current_backend->set_num_threads_function[0],
             (unsigned long) current_backend->set_num_threads_function[1]);
     if ( current_backend->set_num_threads_function[0] == NULL
-         && current_backend->set_num_threads_function[1] != NULL ) {
+            && current_backend->set_num_threads_function[1] != NULL ) {
         Int nx = num;
         flexiblas_set_num_threads_(&nx);
         return;
@@ -85,7 +85,7 @@ int flexiblas_get_num_threads(void)
             (unsigned long) current_backend->get_num_threads_function[0],
             (unsigned long) current_backend->get_num_threads_function[1]);
     if ( current_backend->get_num_threads_function[0] == NULL
-         && current_backend->get_num_threads_function[1] != NULL ) {
+            && current_backend->get_num_threads_function[1] != NULL ) {
         return flexiblas_get_num_threads_();
     }
     fn = current_backend->get_num_threads_function[0];
@@ -125,7 +125,7 @@ void flexiblas_set_num_threads_(Int* num)
             (unsigned long) current_backend->set_num_threads_function[1]);
 
     if ( current_backend->set_num_threads_function[1] == NULL
-         && current_backend->set_num_threads_function[0] != NULL ) {
+            && current_backend->set_num_threads_function[0] != NULL ) {
         flexiblas_set_num_threads(*num);
         return;
     }
@@ -161,7 +161,7 @@ Int flexiblas_get_num_threads_(void)
             (unsigned long) current_backend->get_num_threads_function[1]);
 
     if ( current_backend->get_num_threads_function[1] == NULL
-         && current_backend->get_num_threads_function[0] != NULL ) {
+            && current_backend->get_num_threads_function[0] != NULL ) {
         return flexiblas_get_num_threads();
     }
     fn = current_backend->get_num_threads_function[1];
@@ -210,7 +210,7 @@ void __flexiblas_load_set_num_threads(flexiblas_backend_t * backend)
         if ( i != 1 ) {
             snprintf(fn2_name, 130, "%s_", fn_name);
         }
-    	ptr  = dlsym(backend->library_handle, fn_name);
+        ptr  = dlsym(backend->library_handle, fn_name);
         ptr2  = dlsym(backend->library_handle, fn2_name);
 
         if (ptr != NULL || ptr2 != NULL)
@@ -258,7 +258,7 @@ void __flexiblas_load_get_num_threads(flexiblas_backend_t * backend)
         if ( i != 1 )
             snprintf(fn2_name, 130, "%s_", fn_name);
 
-       	ptr  = dlsym(backend->library_handle, fn_name);
+        ptr  = dlsym(backend->library_handle, fn_name);
         ptr2  = dlsym(backend->library_handle, fn2_name);
 
         if (ptr != NULL || ptr2 != NULL)

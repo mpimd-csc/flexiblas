@@ -1,21 +1,21 @@
-//    SPDX-License-Identifier: LGPL-3.0-or-later
+//  SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,23 +36,23 @@ void FC_GLOBAL(zlaqp2rk,ZLAQP2RK)(blasint* m, blasint* n, blasint* nrhs, blasint
 void FC_GLOBAL(zlaqp2rk,ZLAQP2RK)(blasint* m, blasint* n, blasint* nrhs, blasint* ioffset, blasint* kmax, double* abstol, double* reltol, blasint* kp1, double* maxc2nrm, double complex* a, blasint* lda, blasint* k, double* maxc2nrmk, double* relmaxc2nrmk, blasint* jpiv, double complex* tau, double* vn1, double* vn2, double complex* work, blasint* info)
 #endif
 {
-	void (*fn) (void* m, void* n, void* nrhs, void* ioffset, void* kmax, void* abstol, void* reltol, void* kp1, void* maxc2nrm, void* a, void* lda, void* k, void* maxc2nrmk, void* relmaxc2nrmk, void* jpiv, void* tau, void* vn1, void* vn2, void* work, void* info);
-	void (*fn_hook) (void* m, void* n, void* nrhs, void* ioffset, void* kmax, void* abstol, void* reltol, void* kp1, void* maxc2nrm, void* a, void* lda, void* k, void* maxc2nrmk, void* relmaxc2nrmk, void* jpiv, void* tau, void* vn1, void* vn2, void* work, void* info);
+    void (*fn) (void* m, void* n, void* nrhs, void* ioffset, void* kmax, void* abstol, void* reltol, void* kp1, void* maxc2nrm, void* a, void* lda, void* k, void* maxc2nrmk, void* relmaxc2nrmk, void* jpiv, void* tau, void* vn1, void* vn2, void* work, void* info);
+    void (*fn_hook) (void* m, void* n, void* nrhs, void* ioffset, void* kmax, void* abstol, void* reltol, void* kp1, void* maxc2nrm, void* a, void* lda, void* k, void* maxc2nrmk, void* relmaxc2nrmk, void* jpiv, void* tau, void* vn1, void* vn2, void* work, void* info);
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
         current_backend->post_init = 0;
     }
-	*(void **) & fn = current_backend->lapack.zlaqp2rk.f77_blas_function; 
-	*(void **) & fn_hook = __flexiblas_hooks->zlaqp2rk.f77_hook_function[0]; 
-	if ( fn_hook == NULL ) { 
-		fn((void*) m, (void*) n, (void*) nrhs, (void*) ioffset, (void*) kmax, (void*) abstol, (void*) reltol, (void*) kp1, (void*) maxc2nrm, (void*) a, (void*) lda, (void*) k, (void*) maxc2nrmk, (void*) relmaxc2nrmk, (void*) jpiv, (void*) tau, (void*) vn1, (void*) vn2, (void*) work, (void*) info); 
-		return;
-	} else {
-		hook_pos_zlaqp2rk = 0;
-		fn_hook((void*) m, (void*) n, (void*) nrhs, (void*) ioffset, (void*) kmax, (void*) abstol, (void*) reltol, (void*) kp1, (void*) maxc2nrm, (void*) a, (void*) lda, (void*) k, (void*) maxc2nrmk, (void*) relmaxc2nrmk, (void*) jpiv, (void*) tau, (void*) vn1, (void*) vn2, (void*) work, (void*) info);
-		return;
-	}
+    *(void **) & fn = current_backend->lapack.zlaqp2rk.f77_blas_function;
+    *(void **) & fn_hook = __flexiblas_hooks->zlaqp2rk.f77_hook_function[0];
+    if ( fn_hook == NULL ) {
+        fn((void*) m, (void*) n, (void*) nrhs, (void*) ioffset, (void*) kmax, (void*) abstol, (void*) reltol, (void*) kp1, (void*) maxc2nrm, (void*) a, (void*) lda, (void*) k, (void*) maxc2nrmk, (void*) relmaxc2nrmk, (void*) jpiv, (void*) tau, (void*) vn1, (void*) vn2, (void*) work, (void*) info);
+        return;
+    } else {
+        hook_pos_zlaqp2rk = 0;
+        fn_hook((void*) m, (void*) n, (void*) nrhs, (void*) ioffset, (void*) kmax, (void*) abstol, (void*) reltol, (void*) kp1, (void*) maxc2nrm, (void*) a, (void*) lda, (void*) k, (void*) maxc2nrmk, (void*) relmaxc2nrmk, (void*) jpiv, (void*) tau, (void*) vn1, (void*) vn2, (void*) work, (void*) info);
+        return;
+    }
 }
 #ifdef FLEXIBLAS_ABI_IBM
 void zlaqp2rk_(blasint* m, blasint* n, blasint* nrhs, blasint* ioffset, blasint* kmax, double* abstol, double* reltol, blasint* kp1, double* maxc2nrm, double complex* a, blasint* lda, blasint* k, double* maxc2nrmk, double* relmaxc2nrmk, blasint* jpiv, double complex* tau, double* vn1, double* vn2, double complex* work, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(zlaqp2rk,ZLAQP2RK)))));
@@ -72,13 +72,13 @@ void zlaqp2rk(blasint* m, blasint* n, blasint* nrhs, blasint* ioffset, blasint* 
 
 void flexiblas_real_zlaqp2rk_(void* m, void* n, void* nrhs, void* ioffset, void* kmax, void* abstol, void* reltol, void* kp1, void* maxc2nrm, void* a, void* lda, void* k, void* maxc2nrmk, void* relmaxc2nrmk, void* jpiv, void* tau, void* vn1, void* vn2, void* work, void* info)
 {
-	void (*fn) (void* m, void* n, void* nrhs, void* ioffset, void* kmax, void* abstol, void* reltol, void* kp1, void* maxc2nrm, void* a, void* lda, void* k, void* maxc2nrmk, void* relmaxc2nrmk, void* jpiv, void* tau, void* vn1, void* vn2, void* work, void* info);
+    void (*fn) (void* m, void* n, void* nrhs, void* ioffset, void* kmax, void* abstol, void* reltol, void* kp1, void* maxc2nrm, void* a, void* lda, void* k, void* maxc2nrmk, void* relmaxc2nrmk, void* jpiv, void* tau, void* vn1, void* vn2, void* work, void* info);
 
-	*(void **) & fn = current_backend->lapack.zlaqp2rk.f77_blas_function; 
+    *(void **) & fn = current_backend->lapack.zlaqp2rk.f77_blas_function;
 
-		fn((void*) m, (void*) n, (void*) nrhs, (void*) ioffset, (void*) kmax, (void*) abstol, (void*) reltol, (void*) kp1, (void*) maxc2nrm, (void*) a, (void*) lda, (void*) k, (void*) maxc2nrmk, (void*) relmaxc2nrmk, (void*) jpiv, (void*) tau, (void*) vn1, (void*) vn2, (void*) work, (void*) info); 
+    fn((void*) m, (void*) n, (void*) nrhs, (void*) ioffset, (void*) kmax, (void*) abstol, (void*) reltol, (void*) kp1, (void*) maxc2nrm, (void*) a, (void*) lda, (void*) k, (void*) maxc2nrmk, (void*) relmaxc2nrmk, (void*) jpiv, (void*) tau, (void*) vn1, (void*) vn2, (void*) work, (void*) info);
 
-	return;
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_real_zlaqp2rk(void* m, void* n, void* nrhs, void* ioffset, void* kmax, void* abstol, void* reltol, void* kp1, void* maxc2nrm, void* a, void* lda, void* k, void* maxc2nrmk, void* relmaxc2nrmk, void* jpiv, void* tau, void* vn1, void* vn2, void* work, void* info) __attribute__((alias("flexiblas_real_zlaqp2rk_")));
@@ -94,10 +94,10 @@ void flexiblas_real_zlaqp2rk(void* m, void* n, void* nrhs, void* ioffset, void* 
 
 void flexiblas_chain_zlaqp2rk_(void* m, void* n, void* nrhs, void* ioffset, void* kmax, void* abstol, void* reltol, void* kp1, void* maxc2nrm, void* a, void* lda, void* k, void* maxc2nrmk, void* relmaxc2nrmk, void* jpiv, void* tau, void* vn1, void* vn2, void* work, void* info)
 {
-	void (*fn) (void* m, void* n, void* nrhs, void* ioffset, void* kmax, void* abstol, void* reltol, void* kp1, void* maxc2nrm, void* a, void* lda, void* k, void* maxc2nrmk, void* relmaxc2nrmk, void* jpiv, void* tau, void* vn1, void* vn2, void* work, void* info);
-	void (*fn_hook) (void* m, void* n, void* nrhs, void* ioffset, void* kmax, void* abstol, void* reltol, void* kp1, void* maxc2nrm, void* a, void* lda, void* k, void* maxc2nrmk, void* relmaxc2nrmk, void* jpiv, void* tau, void* vn1, void* vn2, void* work, void* info);
+    void (*fn) (void* m, void* n, void* nrhs, void* ioffset, void* kmax, void* abstol, void* reltol, void* kp1, void* maxc2nrm, void* a, void* lda, void* k, void* maxc2nrmk, void* relmaxc2nrmk, void* jpiv, void* tau, void* vn1, void* vn2, void* work, void* info);
+    void (*fn_hook) (void* m, void* n, void* nrhs, void* ioffset, void* kmax, void* abstol, void* reltol, void* kp1, void* maxc2nrm, void* a, void* lda, void* k, void* maxc2nrmk, void* relmaxc2nrmk, void* jpiv, void* tau, void* vn1, void* vn2, void* work, void* info);
 
-	*(void **) &fn      = current_backend->lapack.zlaqp2rk.f77_blas_function; 
+    *(void **) &fn      = current_backend->lapack.zlaqp2rk.f77_blas_function;
 
     hook_pos_zlaqp2rk ++;
     if( hook_pos_zlaqp2rk < __flexiblas_hooks->zlaqp2rk.nhook) {
@@ -105,9 +105,9 @@ void flexiblas_chain_zlaqp2rk_(void* m, void* n, void* nrhs, void* ioffset, void
         fn_hook((void*) m, (void*) n, (void*) nrhs, (void*) ioffset, (void*) kmax, (void*) abstol, (void*) reltol, (void*) kp1, (void*) maxc2nrm, (void*) a, (void*) lda, (void*) k, (void*) maxc2nrmk, (void*) relmaxc2nrmk, (void*) jpiv, (void*) tau, (void*) vn1, (void*) vn2, (void*) work, (void*) info);
     } else {
         hook_pos_zlaqp2rk = 0;
-		fn((void*) m, (void*) n, (void*) nrhs, (void*) ioffset, (void*) kmax, (void*) abstol, (void*) reltol, (void*) kp1, (void*) maxc2nrm, (void*) a, (void*) lda, (void*) k, (void*) maxc2nrmk, (void*) relmaxc2nrmk, (void*) jpiv, (void*) tau, (void*) vn1, (void*) vn2, (void*) work, (void*) info); 
-	}
-	return;
+        fn((void*) m, (void*) n, (void*) nrhs, (void*) ioffset, (void*) kmax, (void*) abstol, (void*) reltol, (void*) kp1, (void*) maxc2nrm, (void*) a, (void*) lda, (void*) k, (void*) maxc2nrmk, (void*) relmaxc2nrmk, (void*) jpiv, (void*) tau, (void*) vn1, (void*) vn2, (void*) work, (void*) info);
+    }
+    return;
 }
 #ifndef __APPLE__
 void flexiblas_chain_zlaqp2rk(void* m, void* n, void* nrhs, void* ioffset, void* kmax, void* abstol, void* reltol, void* kp1, void* maxc2nrm, void* a, void* lda, void* k, void* maxc2nrmk, void* relmaxc2nrmk, void* jpiv, void* tau, void* vn1, void* vn2, void* work, void* info) __attribute__((alias("flexiblas_chain_zlaqp2rk_")));

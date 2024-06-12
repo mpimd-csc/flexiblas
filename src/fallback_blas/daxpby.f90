@@ -59,16 +59,16 @@ SUBROUTINE DAXPBY(N,DA,DX,INCX,DB,DY,INCY)
         M = MOD(N,4)
         IF (M.NE.0) THEN
             DO I = 1,M
-                DY(I) = DB*DY(I) + DA*DX(I)
+            DY(I) = DB*DY(I) + DA*DX(I)
             END DO
         END IF
         IF (N.LT.4) RETURN
         MP1 = M + 1
         DO I = MP1,N,4
-            DY(I)   = DB*DY(I) + DA*DX(I)
-            DY(I+1) = DB*DY(I+1) + DA*DX(I+1)
-            DY(I+2) = DB*DY(I+2) + DA*DX(I+2)
-            DY(I+3) = DB*DY(I+3) + DA*DX(I+3)
+        DY(I)   = DB*DY(I) + DA*DX(I)
+        DY(I+1) = DB*DY(I+1) + DA*DX(I+1)
+        DY(I+2) = DB*DY(I+2) + DA*DX(I+2)
+        DY(I+3) = DB*DY(I+3) + DA*DX(I+3)
         END DO
     ELSE
         !
@@ -80,9 +80,9 @@ SUBROUTINE DAXPBY(N,DA,DX,INCX,DB,DY,INCY)
         IF (INCX.LT.0) IX = (-N+1)*INCX + 1
         IF (INCY.LT.0) IY = (-N+1)*INCY + 1
         DO I = 1,N
-            DY(IY) = DB*DY(IY) + DA*DX(IX)
-            IX = IX + INCX
-            IY = IY + INCY
+        DY(IY) = DB*DY(IY) + DA*DX(IX)
+        IX = IX + INCX
+        IY = IY + INCY
         END DO
     END IF
     RETURN

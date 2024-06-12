@@ -56,7 +56,7 @@ SUBROUTINE CAXPBY(N,CA,CX,INCX,CB,CY,INCY)
         !        code for both increments equal to 1
         !
         DO I = 1,N
-            CY(I) = CB*CY(I) + CA*CX(I)
+        CY(I) = CB*CY(I) + CA*CX(I)
         END DO
     ELSE
         !
@@ -68,9 +68,9 @@ SUBROUTINE CAXPBY(N,CA,CX,INCX,CB,CY,INCY)
         IF (INCX.LT.0) IX = (-N+IONE)*INCX + IONE
         IF (INCY.LT.0) IY = (-N+IONE)*INCY + IONE
         DO I = 1,N
-            CY(IY) = CB*CY(IY) + CA*CX(IX)
-            IX = IX + INCX
-            IY = IY + INCY
+        CY(IY) = CB*CY(IY) + CA*CX(IX)
+        IX = IX + INCX
+        IY = IY + INCY
         END DO
     END IF
     !

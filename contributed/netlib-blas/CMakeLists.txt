@@ -196,7 +196,7 @@ endif()
 
 # Disable Warings for BLAS
 if ( CMAKE_Fortran_COMPILER_ID STREQUAL "GNU" )
-	SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Wno-conversion -Wno-maybe-uninitialized")
+	SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffloat-store -Wno-conversion -Wno-maybe-uninitialized")
 endif()
 
 INCLUDE_DIRECTORIES(${PROJECT_BINARY_DIR}/include)

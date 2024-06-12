@@ -55,11 +55,11 @@ ENDIF()
 # build type
 #
 IF( NOT CMAKE_BUILD_TYPE )
-	SET( CMAKE_BUILD_TYPE "Release" )
+    SET( CMAKE_BUILD_TYPE "Release" )
 ENDIF( NOT CMAKE_BUILD_TYPE )
 
 IF ( CMAKE_BUILD_TYPE STREQUAL "Debug" )
-	SET ( DEBUG "ON" )
+    SET ( DEBUG "ON" )
 ENDIF ( CMAKE_BUILD_TYPE STREQUAL "Debug" )
 
 #
@@ -68,7 +68,7 @@ ENDIF ( CMAKE_BUILD_TYPE STREQUAL "Debug" )
 INCLUDE(GNUInstallDirs)
 
 IF(DEFINED SYSCONFDIR)
- SET(CMAKE_INSTALL_FULL_SYSCONFDIR ${SYSCONFDIR})
+    SET(CMAKE_INSTALL_FULL_SYSCONFDIR ${SYSCONFDIR})
 ENDIF()
 
 MESSAGE(STATUS "SYSCONFDIR: ${CMAKE_INSTALL_FULL_SYSCONFDIR}")
@@ -89,8 +89,8 @@ INCLUDE(FortranCompilerSettings)
 
 # Check C Compiler Version
 IF ( CMAKE_C_COMPILER_ID STREQUAL "GNU" AND CMAKE_C_COMPILER_VERSION VERSION_LESS "5.0.0" )
-	MESSAGE_COLOR(STATUS COLOR_BOLD_RED "Your gcc is older than version 5.0.0. LAPACK will be loaded using DEEPBIND")
-	ADD_DEFINITIONS(-DLAPACK_DEEP_BIND)
+    MESSAGE_COLOR(STATUS COLOR_BOLD_RED "Your gcc is older than version 5.0.0. LAPACK will be loaded using DEEPBIND")
+    ADD_DEFINITIONS(-DLAPACK_DEEP_BIND)
 ENDIF()
 
 IF ( (CMAKE_C_COMPILER_ID STREQUAL "Intel" AND CMAKE_Fortran_COMPILER_ID STREQUAL "IntelLLVM")
@@ -177,22 +177,22 @@ IF ( ${CMAKE_C_COMPILER_ID} STREQUAL "GNU")
 ENDIF()
 
 IF (DEBUG STREQUAL ON)
-	SET( CMAKE_BUILD_TYPE "Debug" )
-	SET ( DEBUG TRUE)
-	SET( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DDEBUG")
+    SET( CMAKE_BUILD_TYPE "Debug" )
+    SET ( DEBUG TRUE)
+    SET( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DDEBUG")
 ENDIF (DEBUG STREQUAL ON )
 
 IF (LINK_OPENMP)
     FIND_PACKAGE(OpenMP REQUIRED)
-	if(NOT TARGET OpenMP::OpenMP_C)
-		find_package(Threads REQUIRED)
-		add_library(OpenMP::OpenMP_C IMPORTED INTERFACE)
-		set_property(TARGET OpenMP::OpenMP_C
-			PROPERTY INTERFACE_COMPILE_OPTIONS ${OpenMP_C_FLAGS})
-		# Only works if the same flag is passed to the linker; use CMake 3.9+ otherwise (Intel, AppleClang)
-		set_property(TARGET OpenMP::OpenMP_C
-			PROPERTY INTERFACE_LINK_LIBRARIES ${OpenMP_C_FLAGS} Threads::Threads)
-	endif()
+    if(NOT TARGET OpenMP::OpenMP_C)
+        find_package(Threads REQUIRED)
+        add_library(OpenMP::OpenMP_C IMPORTED INTERFACE)
+        set_property(TARGET OpenMP::OpenMP_C
+            PROPERTY INTERFACE_COMPILE_OPTIONS ${OpenMP_C_FLAGS})
+        # Only works if the same flag is passed to the linker; use CMake 3.9+ otherwise (Intel, AppleClang)
+        set_property(TARGET OpenMP::OpenMP_C
+            PROPERTY INTERFACE_LINK_LIBRARIES ${OpenMP_C_FLAGS} Threads::Threads)
+    endif()
 ENDIF()
 
 
@@ -201,44 +201,44 @@ ENDIF()
 
 IF (NOT DEFINED ABI)
     IF ( ${CMAKE_Fortran_COMPILER_ID} STREQUAL "Intel" OR ${CMAKE_Fortran_COMPILER_ID} STREQUAL "IntelLLVM")
-		SET(ABI "Intel" CACHE STRING "ABI of the Fortran Interface")
-	ELSEIF ( ${CMAKE_Fortran_COMPILER_ID} STREQUAL "PGI" )
-		SET(ABI "Intel" CACHE STRING "ABI of the Fortran Interface")
-	ELSEIF ( ${CMAKE_Fortran_COMPILER_ID} STREQUAL "XL" )
-		SET(ABI "XL" CACHE STREQUAL "ABI of the Fortran Interface")
-	ELSE()
-		SET(USE_INTERFACE_INTEL FALSE)
-		SET(ABI "GNU" CACHE STRING "ABI of the Fortran Interface")
-	ENDIF()
+        SET(ABI "Intel" CACHE STRING "ABI of the Fortran Interface")
+    ELSEIF ( ${CMAKE_Fortran_COMPILER_ID} STREQUAL "PGI" )
+        SET(ABI "Intel" CACHE STRING "ABI of the Fortran Interface")
+    ELSEIF ( ${CMAKE_Fortran_COMPILER_ID} STREQUAL "XL" )
+        SET(ABI "XL" CACHE STREQUAL "ABI of the Fortran Interface")
+    ELSE()
+        SET(USE_INTERFACE_INTEL FALSE)
+        SET(ABI "GNU" CACHE STRING "ABI of the Fortran Interface")
+    ENDIF()
 ELSE()
-	IF (NOT ( ABI STREQUAL "GNU" OR ABI STREQUAL "Intel" OR ABI STREQUAL "XL"))
-		MESSAGE(FATAL_ERROR "ABI must be GNU or Intel")
-	ENDIF()
+    IF (NOT ( ABI STREQUAL "GNU" OR ABI STREQUAL "Intel" OR ABI STREQUAL "XL"))
+        MESSAGE(FATAL_ERROR "ABI must be GNU or Intel")
+    ENDIF()
 ENDIF()
 
 IF ( ABI STREQUAL "Intel")
-	SET(FLEXIBLAS_ABI_INTEL TRUE)
-	SET(USE_INTERFACE_INTEL TRUE)
+    SET(FLEXIBLAS_ABI_INTEL TRUE)
+    SET(USE_INTERFACE_INTEL TRUE)
 ELSEIF ( ABI STREQUAL "XL" )
-	SET(FLEXIBLAS_ABI_IBM TRUE)
+    SET(FLEXIBLAS_ABI_IBM TRUE)
 ELSE ()
-	SET (FLEXIBLAS_ABI_GNU TRUE)
-	SET(USE_INTERFACE_INTEL FALSE)
+    SET (FLEXIBLAS_ABI_GNU TRUE)
+    SET(USE_INTERFACE_INTEL FALSE)
 ENDIF()
 
 # Name Mangling
 include(FortranCInterface)
 FortranCInterface_HEADER(${PROJECT_BINARY_DIR}/include/flexiblas_fortran_mangle.h
-	                 MACRO_NAMESPACE "FC_"
-			 SYMBOL_NAMESPACE "FC_")
+    MACRO_NAMESPACE "FC_"
+    SYMBOL_NAMESPACE "FC_")
 FortranCInterface_VERIFY()
 
 include(CheckThreadLocal)
 
 IF (DEFINED FALLBACK)
-	SET (FALLBACK_NAME "${FALLBACK}")
+    SET (FALLBACK_NAME "${FALLBACK}")
 ELSE()
-	SET (FALLBACK_NAME FALSE)
+    SET (FALLBACK_NAME FALSE)
 ENDIF()
 
 SET ( INCLUDE_DIR ${INCLUDE_DIR} ${CMAKE_BINARY_DIR}/include ${CMAKE_SOURCE_DIR}/include ${CMAKE_BINARY_DIR} )
@@ -248,19 +248,19 @@ SET ( INCLUDE_DIR ${INCLUDE_DIR} ${CMAKE_BINARY_DIR}/include ${CMAKE_SOURCE_DIR}
 
 LIST(REMOVE_DUPLICATES INCLUDE_DIR)
 IF (APPLE)
-	SET ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_FILE_OFFSET_BITS=64 ")
-	SET ( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -rdynamic -Wl,-export_dynamic")
+    SET ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_FILE_OFFSET_BITS=64 ")
+    SET ( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -rdynamic -Wl,-export_dynamic")
 ELSE()
-	IF (WIN32)
-		SET ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_FILE_OFFSET_BITS=64 -Wall")
-	ELSE ()
-		SET ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_FILE_OFFSET_BITS=64")
-		IF  ( CMAKE_Fortran_COMPILER_ID STREQUAL "Intel" OR CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+    IF (WIN32)
+        SET ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_FILE_OFFSET_BITS=64 -Wall")
+    ELSE ()
+        SET ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_FILE_OFFSET_BITS=64")
+        IF  ( CMAKE_Fortran_COMPILER_ID STREQUAL "Intel" OR CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
             set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -rdynamic -Wl,--export-dynamic")
-		ENDIF()
-		# SET ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_FILE_OFFSET_BITS=64 ")
+        ENDIF()
+        # SET ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_FILE_OFFSET_BITS=64 ")
 
-	ENDIF()
+    ENDIF()
 ENDIF()
 SET ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_FILE_OFFSET_BITS=64 ")
 
@@ -272,40 +272,40 @@ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 #
 INCLUDE (CheckIncludeFiles)
 IF (WIN32)
-	MESSAGE(STATUS "Building Windows Version" )
-	IF (MINGW)
-		MESSAGE(STATUS "Using MingW Compiler")
-	ENDIF()
-	SET(DL_LIB "")
+    MESSAGE(STATUS "Building Windows Version" )
+    IF (MINGW)
+        MESSAGE(STATUS "Using MingW Compiler")
+    ENDIF()
+    SET(DL_LIB "")
 ELSE()
-	# CHECK_INCLUDE_FILES (stdatomic.h HAVE_STDATOMIC_H)
-	CHECK_INCLUDE_FILES (dlfcn.h	 HAVE_DLFCN_H)
-	CHECK_INCLUDE_FILES (sys/sysmacro.h HAVE_SYSMACRO_H)
-	CHECK_INCLUDE_FILES (sys/stat.h     HAVE_SYS_STAT_H)
-	INCLUDE (CheckSymbolExists)
-	CHECK_SYMBOL_EXISTS(RTLD_GLOBAL   "dlfcn.h" HAVE_RTLD_GLOBAL)
-	CHECK_SYMBOL_EXISTS(RTLD_DEEPBIND "dlfcn.h" HAVE_RTLD_DEEPBIND)
-	CHECK_SYMBOL_EXISTS(RTLD_NOW	  "dlfcn.h" HAVE_RTLD_NOW)
+    # CHECK_INCLUDE_FILES (stdatomic.h HAVE_STDATOMIC_H)
+    CHECK_INCLUDE_FILES (dlfcn.h	 HAVE_DLFCN_H)
+    CHECK_INCLUDE_FILES (sys/sysmacro.h HAVE_SYSMACRO_H)
+    CHECK_INCLUDE_FILES (sys/stat.h     HAVE_SYS_STAT_H)
+    INCLUDE (CheckSymbolExists)
+    CHECK_SYMBOL_EXISTS(RTLD_GLOBAL   "dlfcn.h" HAVE_RTLD_GLOBAL)
+    CHECK_SYMBOL_EXISTS(RTLD_DEEPBIND "dlfcn.h" HAVE_RTLD_DEEPBIND)
+    CHECK_SYMBOL_EXISTS(RTLD_NOW	  "dlfcn.h" HAVE_RTLD_NOW)
     CHECK_SYMBOL_EXISTS(RTLD_NODELETE "dlfcn.h" HAVE_RTLD_NODELETE)
 
-	INCLUDE (CheckFunctionExists)
-	CHECK_FUNCTION_EXISTS(dlopen DLOPEN_C)
-	SET(__CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES})
-	SET(CMAKE_REQUIRED_LIBRARIES dl)
-	CHECK_FUNCTION_EXISTS(dlopen DLOPEN_DL)
-	SET(CMAKE_REQUIRED_LIBRARIES ${__CMAKE_REQUIRED_LIBRARIES})
+    INCLUDE (CheckFunctionExists)
+    CHECK_FUNCTION_EXISTS(dlopen DLOPEN_C)
+    SET(__CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES})
+    SET(CMAKE_REQUIRED_LIBRARIES dl)
+    CHECK_FUNCTION_EXISTS(dlopen DLOPEN_DL)
+    SET(CMAKE_REQUIRED_LIBRARIES ${__CMAKE_REQUIRED_LIBRARIES})
 
-	IF (DLOPEN_DL)
-	 SET(LIBS ${LIBS} dl)
-	 SET(DL_LIB dl)
-	ENDIF()
-	IF (NOT ( DLOPEN_DL OR DLOPEN_C ) )
-	 MESSAGE(ERROR "No dlopen function found")
-	ENDIF()
+    IF (DLOPEN_DL)
+        SET(LIBS ${LIBS} dl)
+        SET(DL_LIB dl)
+    ENDIF()
+    IF (NOT ( DLOPEN_DL OR DLOPEN_C ) )
+        MESSAGE(ERROR "No dlopen function found")
+    ENDIF()
 
-	IF ( NOT HAVE_DLFCN_H )
-		MESSAGE(FATAL_ERROR "dlfcn.h not found, aborting")
-	ENDIF()
+    IF ( NOT HAVE_DLFCN_H )
+        MESSAGE(FATAL_ERROR "dlfcn.h not found, aborting")
+    ENDIF()
 
     IF ( NOT HAVE_RTLD_NODELETE )
         MESSAGE(WARNING "RTLD_NODELETE not found in your C library. Consider setting -DLINK_OPENMP=ON")
@@ -329,44 +329,44 @@ SET(LIBS ${LIBS})
 SET(INCLUDE_DIR ${INCLUDE_DIR} "${PROJECT_SOURCE_DIR}/libcscutils/include" "${PROJECT_BINARY_DIR}/libcscutils/include")
 
 IF (CBLAS STREQUAL ON)
-	ADD_DEFINITIONS(-DFLEXIBLAS_CBLAS)
+    ADD_DEFINITIONS(-DFLEXIBLAS_CBLAS)
 ENDIF()
 
 
 ### Setup Integer8 option
 IF ( INTEGER8 STREQUAL ON )
-	ADD_DEFINITIONS(-DINTEGER8)
-	SET(FLEXIBLAS_INTEGER8 TRUE)
-	SET(FLEXIBLAS_INCLUDE_PREFIX "flexiblas64")
-	SET(FLEXIBLAS_LIBRARY_DIR "flexiblas64")
-	SET(FLEXIBLAS_PKG_CONFIG "flexiblas64.pc")
+    ADD_DEFINITIONS(-DINTEGER8)
+    SET(FLEXIBLAS_INTEGER8 TRUE)
+    SET(FLEXIBLAS_INCLUDE_PREFIX "flexiblas64")
+    SET(FLEXIBLAS_LIBRARY_DIR "flexiblas64")
+    SET(FLEXIBLAS_PKG_CONFIG "flexiblas64.pc")
     SET(FLEXIBLAS_API_PKG_CONFIG "flexiblas64_api.pc")
     SET(FLEXIBLAS_LIBRARY_NAME "flexiblas64")
     set(flexiblasname flexiblas64)
-	SET (FLEXIBLASRC flexiblas64rc)
-	SET (FLEXIBLAS_RC "flexiblas64rc")
+    SET (FLEXIBLASRC flexiblas64rc)
+    SET (FLEXIBLAS_RC "flexiblas64rc")
     SET (FLEXIBLAS_RC_DIR "flexiblas64rc.d")
     SET (FLEXIBLAS_PREFIX "flexiblas64")
 
     IF ( ${CMAKE_C_COMPILER_ID} STREQUAL "GNU")
-		MESSAGE(STATUS "Setting GNU Compiler Flags")
-		SET(I8_FLAGS "-fdefault-integer-8 ")
-	ELSEIF (${CMAKE_C_COMPILER_ID} STREQUAL "Intel" )
-		SET ( I8_FLAGS "-i8 ")
-	ELSEIF (${CMAKE_C_COMPILER_ID} STREQUAL "PGI" )
-		SET ( I8_FLAGS "-i8 ")
-	ENDIF()
-	SET (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${I8_FLAGS}")
+        MESSAGE(STATUS "Setting GNU Compiler Flags")
+        SET(I8_FLAGS "-fdefault-integer-8 ")
+    ELSEIF (${CMAKE_C_COMPILER_ID} STREQUAL "Intel" )
+        SET ( I8_FLAGS "-i8 ")
+    ELSEIF (${CMAKE_C_COMPILER_ID} STREQUAL "PGI" )
+        SET ( I8_FLAGS "-i8 ")
+    ENDIF()
+    SET (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${I8_FLAGS}")
     SET (FLEXIBLAS_FC_I8FLAG "${I8_FLAGS}")
 ELSE()
-	SET(FLEXIBLAS_INTEGER8 FALSE)
-	SET(FLEXIBLAS_INCLUDE_PREFIX "flexiblas")
-	SET(FLEXIBLAS_PKG_CONFIG "flexiblas.pc")
+    SET(FLEXIBLAS_INTEGER8 FALSE)
+    SET(FLEXIBLAS_INCLUDE_PREFIX "flexiblas")
+    SET(FLEXIBLAS_PKG_CONFIG "flexiblas.pc")
     SET(FLEXIBLAS_API_PKG_CONFIG "flexiblas_api.pc")
-	SET(FLEXIBLAS_LIBRARY_DIR "flexiblas")
+    SET(FLEXIBLAS_LIBRARY_DIR "flexiblas")
     SET(FLEXIBLAS_LIBRARY_NAME "flexiblas")
     set(flexiblasname flexiblas)
-	SET (FLEXIBLASRC flexiblasrc)
+    SET (FLEXIBLASRC flexiblasrc)
     SET (FLEXIBLAS_RC "flexiblasrc")
     SET (FLEXIBLAS_RC_DIR "flexiblasrc.d")
     SET (FLEXIBLAS_PREFIX "flexiblas")
@@ -374,7 +374,7 @@ ENDIF (INTEGER8 STREQUAL ON)
 FILE(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/${FLEXIBLAS_RC_DIR}")
 
 IF (DEV STREQUAL ON)
-	SET ( FLEXIBLAS_DEFAULT_LIB_PATH "${CMAKE_BINARY_DIR}/lib:${CMAKE_BINARY_DIR}/contributed/netlib-blas:${CMAKE_BINARY_DIR}/contributed/:${CMAKE_BINARY_DIR}/src:")
+    SET ( FLEXIBLAS_DEFAULT_LIB_PATH "${CMAKE_BINARY_DIR}/lib:${CMAKE_BINARY_DIR}/contributed/netlib-blas:${CMAKE_BINARY_DIR}/contributed/:${CMAKE_BINARY_DIR}/src:")
     SET ( CMAKE_INSTALL_FULL_SYSCONFDIR "${CMAKE_BINARY_DIR}")
 ELSE()
     SET ( FLEXIBLAS_DEFAULT_LIB_PATH "${CMAKE_INSTALL_FULL_LIBDIR}/${flexiblasname}/")
@@ -385,15 +385,15 @@ ENDIF()
 # Check for Serveral Functions
 CHECK_FEATURE_NEEDED(strdup string.h HAVE_STRDUP STRDUP_FEATURE)
 IF( HAVE_STRDUP )
-	ADD_DEFINITIONS("${STRDUP_FEATURE}")
+    ADD_DEFINITIONS("${STRDUP_FEATURE}")
 ELSE ()
-	MESSAGE(FATAL_ERROR "strdup not found")
+    MESSAGE(FATAL_ERROR "strdup not found")
 ENDIF()
 CHECK_FEATURE_NEEDED(realpath stdlib.h HAVE_REALPATH REALPATH_FEATURE)
 IF( HAVE_REALPATH  )
-	ADD_DEFINITIONS("${REALPATH_FEATURE}")
+    ADD_DEFINITIONS("${REALPATH_FEATURE}")
 ELSE ()
-	MESSAGE(FATAL_ERROR "realpath not found")
+    MESSAGE(FATAL_ERROR "realpath not found")
 ENDIF()
 
 ### Add Source
@@ -410,43 +410,43 @@ CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/config.h.in ${CMAKE_BINARY_DIR}/include/flexi
 add_subdirectory(src)
 
 IF(EXAMPLES STREQUAL "ON")
-add_subdirectory(examples)
+    add_subdirectory(examples)
 ENDIF()
 IF(EXISTS tools/lapack_checks)
-add_subdirectory(tools/lapack_checks)
+    add_subdirectory(tools/lapack_checks)
 ENDIF()
 
 ### Install
 INSTALL(FILES   ${CMAKE_CURRENT_BINARY_DIR}/${FLEXIBLASRC} DESTINATION ${CMAKE_INSTALL_FULL_SYSCONFDIR} PERMISSIONS OWNER_WRITE  OWNER_READ  GROUP_READ WORLD_READ )
 INSTALL(FILES   ${CMAKE_SOURCE_DIR}/include/blas_gnu.h
-		${CMAKE_SOURCE_DIR}/include/blas_intel.h
-		${CMAKE_BINARY_DIR}/include/flexiblas_config.h
-        ${CMAKE_BINARY_DIR}/include/flexiblas_api.h
-		${CMAKE_BINARY_DIR}/include/flexiblas_fortran_mangle.h
-		DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/${FLEXIBLAS_INCLUDE_PREFIX}/)
+    ${CMAKE_SOURCE_DIR}/include/blas_intel.h
+    ${CMAKE_BINARY_DIR}/include/flexiblas_config.h
+    ${CMAKE_BINARY_DIR}/include/flexiblas_api.h
+    ${CMAKE_BINARY_DIR}/include/flexiblas_fortran_mangle.h
+    DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/${FLEXIBLAS_INCLUDE_PREFIX}/)
 IF(LAPACK STREQUAL ON)
-	INSTALL(FILES   ${CMAKE_BINARY_DIR}/include/lapack.h
-		${CMAKE_BINARY_DIR}/include/flexiblas_real_lapack.h
-		DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/${FLEXIBLAS_INCLUDE_PREFIX}/)
+    INSTALL(FILES   ${CMAKE_BINARY_DIR}/include/lapack.h
+        ${CMAKE_BINARY_DIR}/include/flexiblas_real_lapack.h
+        DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/${FLEXIBLAS_INCLUDE_PREFIX}/)
 
 ENDIF()
 INSTALL(FILES   ${CMAKE_SOURCE_DIR}/src/flexiblas_backend.h
-		${CMAKE_SOURCE_DIR}/src/flexiblas_real_calls.h
-        ${CMAKE_SOURCE_DIR}/src/flexiblas_real_cblas_calls.h
-		${CMAKE_SOURCE_DIR}/src/flexiblas_dummy_fortran.h
-		${CMAKE_SOURCE_DIR}/src/flexiblas_dummy_cblas.h
-		${CMAKE_SOURCE_DIR}/src/flexiblas_mgmt.h
-        ${CMAKE_SOURCE_DIR}/src/flexiblas_fortran_char_len.h
-		DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/${FLEXIBLAS_INCLUDE_PREFIX}/)
+    ${CMAKE_SOURCE_DIR}/src/flexiblas_real_calls.h
+    ${CMAKE_SOURCE_DIR}/src/flexiblas_real_cblas_calls.h
+    ${CMAKE_SOURCE_DIR}/src/flexiblas_dummy_fortran.h
+    ${CMAKE_SOURCE_DIR}/src/flexiblas_dummy_cblas.h
+    ${CMAKE_SOURCE_DIR}/src/flexiblas_mgmt.h
+    ${CMAKE_SOURCE_DIR}/src/flexiblas_fortran_char_len.h
+    DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/${FLEXIBLAS_INCLUDE_PREFIX}/)
 
 IF(CBLAS STREQUAL ON)
-	INSTALL(FILES	${CMAKE_SOURCE_DIR}/include/cblas.h DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/${FLEXIBLAS_INCLUDE_PREFIX}/)
+    INSTALL(FILES	${CMAKE_SOURCE_DIR}/include/cblas.h DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/${FLEXIBLAS_INCLUDE_PREFIX}/)
 ENDIF()
 
 CONFIGURE_FILE(
-  "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
-  IMMEDIATE @ONLY)
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+    IMMEDIATE @ONLY)
 ADD_CUSTOM_TARGET(uninstall "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
 
 ### Setup PKG_CONFIG
@@ -487,7 +487,7 @@ MESSAGE(STATUS "Install path: ${CMAKE_INSTALL_PREFIX}")
 MESSAGE(STATUS "Extra BLAS search path: ${FLEXIBLAS_DEFAULT_LIB_PATH}")
 MESSAGE(STATUS "LAPACK Support: ${LAPACK}")
 IF(LAPACK)
-MESSAGE(STATUS "LAPACK_API_VERSION: ${LAPACK_API_VERSION}")
+    MESSAGE(STATUS "LAPACK_API_VERSION: ${LAPACK_API_VERSION}")
 ENDIF()
 MESSAGE(STATUS "ABI: ${ABI}")
 MESSAGE(STATUS "Interface to Extra BLAS Libraries:")
@@ -505,7 +505,7 @@ MESSAGE(STATUS " CMAKE_Fortran_FLAGS_RELEASE = ${CMAKE_Fortran_FLAGS_RELEASE}")
 MESSAGE(STATUS " CMAKE_Fortran_FLAGS_DEBUG   = ${CMAKE_Fortran_FLAGS_DEBUG}")
 MESSAGE(STATUS "------------------------------------------------")
 IF ( DEV STREQUAL ON )
-	MESSAGE (WARNING "- This is an development build and can not be install. Please set add -DDEV=OFF to cmake. -")
+    MESSAGE (WARNING "- This is an development build and can not be install. Please set add -DDEV=OFF to cmake. -")
 ENDIF()
 
 

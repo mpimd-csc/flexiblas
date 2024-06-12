@@ -1,21 +1,21 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 
 
@@ -41,23 +41,23 @@ extern "C" {
     extern int __profile_verbose;
 
     // Helper for debug printing
-    #define	DPRINTF( level, ... )	do { if ( __profile_verbose >= (level)) {flexiblas_print_info( "flexiblas", __VA_ARGS__); } } while(0) // ... represents the "text" and optionally the "args"
-    #define	DPRINTFP( level, prefix, ... )	do { if ( __profile_verbose >= (level)) {flexiblas_print_info( prefix, __VA_ARGS__); } } while(0) // ... represents the "text" and optionally the "args"
+#define	DPRINTF( level, ... )	do { if ( __profile_verbose >= (level)) {flexiblas_print_info( "flexiblas", __VA_ARGS__); } } while(0) // ... represents the "text" and optionally the "args"
+#define	DPRINTFP( level, prefix, ... )	do { if ( __profile_verbose >= (level)) {flexiblas_print_info( prefix, __VA_ARGS__); } } while(0) // ... represents the "text" and optionally the "args"
 
-    #define	DPRINTF_WARN( level, ... )	do { if ( __profile_verbose >= (level)) {flexiblas_print_warning( "flexiblas", __VA_ARGS__); } } while(0) // ... represents the "text" and optionally the "args"
-    #define	DPRINTFP_WARN( level, prefix, ... )	do { if ( __profile_verbose >= (level)) {flexiblas_print_warning( prefix, __VA_ARGS__); } } while(0) // ... represents the "text" and optionally the "args"
+#define	DPRINTF_WARN( level, ... )	do { if ( __profile_verbose >= (level)) {flexiblas_print_warning( "flexiblas", __VA_ARGS__); } } while(0) // ... represents the "text" and optionally the "args"
+#define	DPRINTFP_WARN( level, prefix, ... )	do { if ( __profile_verbose >= (level)) {flexiblas_print_warning( prefix, __VA_ARGS__); } } while(0) // ... represents the "text" and optionally the "args"
 
 #ifdef DEBUG
-    #define	DPRINTF_ERROR( level, ... )	    do { if ( __profile_verbose >= (level)) {flexiblas_print_error("flexiblas", __FILE__,__LINE__, __VA_ARGS__); } } while(0) // ... represents the "text" and optionally the "args"
-    #define	DPRINTFP_ERROR( level, prefix, ... )	do { if ( __profile_verbose >= (level)) {flexiblas_print_error(prefix, __FILE__,__LINE__, __VA_ARGS__); } } while(0) // ... represents the "text" and optionally the "args"
+#define	DPRINTF_ERROR( level, ... )	    do { if ( __profile_verbose >= (level)) {flexiblas_print_error("flexiblas", __FILE__,__LINE__, __VA_ARGS__); } } while(0) // ... represents the "text" and optionally the "args"
+#define	DPRINTFP_ERROR( level, prefix, ... )	do { if ( __profile_verbose >= (level)) {flexiblas_print_error(prefix, __FILE__,__LINE__, __VA_ARGS__); } } while(0) // ... represents the "text" and optionally the "args"
 #else
-    #define	DPRINTF_ERROR( level, ... )	    do { if ( __profile_verbose >= (level)) {flexiblas_print_error("flexiblas", NULL,0, __VA_ARGS__); } } while(0) // ... represents the "text" and optionally the "args"
-    #define	DPRINTFP_ERROR( level, prefix, ... )	do { if ( __profile_verbose >= (level)) {flexiblas_print_error(prefix, NULL,0, __VA_ARGS__); } } while(0) // ... represents the "text" and optionally the "args"
+#define	DPRINTF_ERROR( level, ... )	    do { if ( __profile_verbose >= (level)) {flexiblas_print_error("flexiblas", NULL,0, __VA_ARGS__); } } while(0) // ... represents the "text" and optionally the "args"
+#define	DPRINTFP_ERROR( level, prefix, ... )	do { if ( __profile_verbose >= (level)) {flexiblas_print_error(prefix, NULL,0, __VA_ARGS__); } } while(0) // ... represents the "text" and optionally the "args"
 
 #endif
 
 
-    #define ADD_BLAS_ENTRY(name) do { csc_table_new_row(tab); \
+#define ADD_BLAS_ENTRY(name) do { csc_table_new_row(tab); \
     csc_table_set_entry(tab, col_name,  #name); \
     csc_table_set_entry(tab, col_calls, data->name.calls[0]); \
     csc_table_set_entry(tab, col_time,  data->name.timings[0]); } while( 0 );

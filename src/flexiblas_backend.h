@@ -1,21 +1,21 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software: you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the Free
-    Software Foundation, either version 3 of the License, or (at your option)
-    any later version.
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-    more details.
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+   You should have received a copy of the GNU General Public License along
+   with this program. If not, see <https://www.gnu.org/licenses/>.
+   */
 
 
 
@@ -49,40 +49,40 @@ extern "C" {
 #endif
 #endif
 
-typedef struct _flexiblas_info_t {
-	int flexiblas_integer_size;
-	int backend_integer_size;
-	int intel_interface;
-	int post_init;
-} flexiblas_info_t;
+    typedef struct _flexiblas_info_t {
+        int flexiblas_integer_size;
+        int backend_integer_size;
+        int intel_interface;
+        int post_init;
+    } flexiblas_info_t;
 
-typedef struct _flexiblas_hook_register_t {
-    char * name;
-    char * cfg_name;
-    char * desc;
-    char * authors;
-} flexiblas_hook_register_t;
+    typedef struct _flexiblas_hook_register_t {
+        char * name;
+        char * cfg_name;
+        char * desc;
+        char * authors;
+    } flexiblas_hook_register_t;
 
-typedef enum {
-    FLEXIBLAS_OPTIONS_INT = 0,
-    FLEXIBLAS_OPTIONS_STRING = 1,
-    FLEXIBLAS_OPTIONS_FLOAT = 2
-} flexiblas_option_type_t;
+    typedef enum {
+        FLEXIBLAS_OPTIONS_INT = 0,
+        FLEXIBLAS_OPTIONS_STRING = 1,
+        FLEXIBLAS_OPTIONS_FLOAT = 2
+    } flexiblas_option_type_t;
 
-typedef struct _flexiblas_option_t {
-    char *name;
-    char *desc;
-    flexiblas_option_type_t type;
-    char *def;
-} flexiblas_option_t;
+    typedef struct _flexiblas_option_t {
+        char *name;
+        char *desc;
+        flexiblas_option_type_t type;
+        char *def;
+    } flexiblas_option_t;
 
-/* Routines from FlexiBLAS public API */
-extern int flexiblas_verbosity(void);
-extern flexiblas_mgmt_t * flexiblas_mgmt(void);
-extern void flexiblas_print_error(const char *prefix, const char *path, const int line, const char *fmt, ... );
-extern void flexiblas_print_warning(const char *prefix, const char *fmt, ... );
-extern void flexiblas_print_info(const char *prefix, const char *fmt, ... );
-extern double flexiblas_wtime(void);
+    /* Routines from FlexiBLAS public API */
+    extern int flexiblas_verbosity(void);
+    extern flexiblas_mgmt_t * flexiblas_mgmt(void);
+    extern void flexiblas_print_error(const char *prefix, const char *path, const int line, const char *fmt, ... );
+    extern void flexiblas_print_warning(const char *prefix, const char *fmt, ... );
+    extern void flexiblas_print_info(const char *prefix, const char *fmt, ... );
+    extern double flexiblas_wtime(void);
 
 
 #define FLEXIBLAS_INIT_FUNCTION_NAME "__flexiblas_initialize"
