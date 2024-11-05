@@ -40,7 +40,7 @@ build-cmake:
 
 cmake-version-test:
     stage: build
-    image: docker-registry.csc.mpi-magdeburg.mpg.de:5000/software/libcscutils/cmake-focal:${CMAKE_VERSION}
+    image: gitlab.mpi-magdeburg.mpg.de/software/libcscutils/cmake-focal:${CMAKE_VERSION}
     script:
         - |
           bash ./misc/ci/test-cmake.sh
