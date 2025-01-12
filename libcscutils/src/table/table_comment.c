@@ -151,7 +151,13 @@ void csc_table_comment_sysinfo(csc_table_t * t)
 }
 
 // https://man7.org/linux/man-pages/man7/environ.7.html
-extern char **environ;
+#ifdef __APPLE__
+    #include <crt_externs.h>
+    #define environ (*_NSGetEnviron())
+#else
+    extern char **environ;
+#endif
+
 void csc_table_comment_openmp_info(csc_table_t *t)
 {
 #ifdef _OPENMP
