@@ -20,6 +20,7 @@
 #ifndef CSC_HARDWARE_H
 #define CSC_HARDWARE_H
 #include "cscutils/cscutils_config.h"
+#include <stdint.h>
 
 #ifdef  __cplusplus
 extern "C" {
@@ -339,6 +340,53 @@ extern "C" {
      * NULL is returned.
      */
     const char *csc_sysinfo_cuda_flags(void);
+
+
+#if defined(__x86_64__) || defined(_M_X64) || defined(__i386) || defined(_M_IX86)
+    enum
+    {
+    	CSC_CPU_VENDOR_INTEL = 0,
+    	CSC_CPU_VENDOR_AMD,
+    	CSC_CPU_VENDOR_UNKNOWN
+    };
+    enum
+    {
+    	CSC_CPU_FEATURE_SSE3     = 0x0001,
+    	CSC_CPU_FEATURE_SSSE3    = 0x0002,
+    	CSC_CPU_FEATURE_SSE41    = 0x0004,
+    	CSC_CPU_FEATURE_SSE42    = 0x0008,
+    	CSC_CPU_FEATURE_AVX      = 0x0010,
+    	CSC_CPU_FEATURE_AVX2     = 0x0020,
+    	CSC_CPU_FEATURE_FMA3     = 0x0040,
+    	CSC_CPU_FEATURE_FMA4     = 0x0080,
+    	CSC_CPU_FEATURE_AVX512F  = 0x0100,
+    	CSC_CPU_FEATURE_AVX512DQ = 0x0200,
+    	CSC_CPU_FEATURE_AVX512PF = 0x0400,
+    	CSC_CPU_FEATURE_AVX512ER = 0x0800,
+    	CSC_CPU_FEATURE_AVX512CD = 0x1000,
+    	CSC_CPU_FEATURE_AVX512BW = 0x2000,
+    	CSC_CPU_FEATURE_AVX512VL = 0x4000,
+        CSC_CPU_FEATURE_AVX512VNNI = 0x8000,
+        CSC_CPU_FEATURE_AVX512BF16 = 0x10000
+    };
+#endif
+
+    // Intel CPUs
+    int csc_sysinfo_cpuid_is_skx( void );
+    int csc_sysinfo_cpuid_is_knl( void );
+    int csc_sysinfo_cpuid_is_haswell( void );
+    int csc_sysinfo_cpuid_is_sandybridge( void );
+    int csc_sysinfo_cpuid_is_penryn( void );
+
+    // AMD
+    int csc_sysinfo_cpuid_is_zen4( void );
+    int csc_sysinfo_cpuid_is_zen3( void );
+    int csc_sysinfo_cpuid_is_zen2( void );
+    int csc_sysinfo_cpuid_is_zen( void );
+    int csc_sysinfo_cpuid_is_excavator( void );
+    int csc_sysinfo_cpuid_is_steamroller( void );
+    int csc_sysinfo_cpuid_is_piledriver( void );
+    int csc_sysinfo_cpuid_is_bulldozer( void );
 
 
     /** @} */

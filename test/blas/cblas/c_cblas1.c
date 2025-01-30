@@ -57,7 +57,7 @@ void F77_cswap( const F77_INT *N, void *X, const F77_INT *incX,
    return;
 }
 
-int F77_icamax(const F77_INT *N, const void *X, const F77_INT *incX)
+F77_INT F77_icamax(const F77_INT *N, const void *X, const F77_INT *incX)
 {
    if (*N < 1 || *incX < 1) return(0);
    return (cblas_icamax(*N, X, *incX)+1);

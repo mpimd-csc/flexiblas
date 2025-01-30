@@ -1,26 +1,29 @@
-//  SPDX-License-Identifier: LGPL-3.0-or-later
+//    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+    Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
-   */
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <complex.h>
+
+#include "flexiblas_config.h"
 
 #include "flexiblas_fortran_mangle.h"
 
@@ -54,14 +57,12 @@ void FC_GLOBAL(clahrd,CLAHRD)(blasint* n, blasint* k, blasint* nb, float complex
         return;
     }
 }
-#ifdef FLEXIBLAS_ABI_IBM
-void clahrd_(blasint* n, blasint* k, blasint* nb, float complex* a, blasint* lda, float complex* tau, float complex* t, blasint* ldt, float complex* y, blasint* ldy) __attribute__((alias(MTS(FC_GLOBAL(clahrd,CLAHRD)))));
-#else
 #ifndef __APPLE__
-void clahrd(blasint* n, blasint* k, blasint* nb, float complex* a, blasint* lda, float complex* tau, float complex* t, blasint* ldt, float complex* y, blasint* ldy) __attribute__((alias(MTS(FC_GLOBAL(clahrd,CLAHRD)))));
+void FC_GLOBAL2(clahrd,CLAHRD)(blasint* n, blasint* k, blasint* nb, float complex* a, blasint* lda, float complex* tau, float complex* t, blasint* ldt, float complex* y, blasint* ldy) __attribute__((alias(MTS(FC_GLOBAL(clahrd,CLAHRD)))));
+void FC_GLOBAL3(clahrd,CLAHRD)(blasint* n, blasint* k, blasint* nb, float complex* a, blasint* lda, float complex* tau, float complex* t, blasint* ldt, float complex* y, blasint* ldy) __attribute__((alias(MTS(FC_GLOBAL(clahrd,CLAHRD)))));
 #else
-void clahrd(blasint* n, blasint* k, blasint* nb, float complex* a, blasint* lda, float complex* tau, float complex* t, blasint* ldt, float complex* y, blasint* ldy){ FC_GLOBAL(clahrd,CLAHRD)((void*) n, (void*) k, (void*) nb, (void*) a, (void*) lda, (void*) tau, (void*) t, (void*) ldt, (void*) y, (void*) ldy); }
-#endif
+void FC_GLOBAL2(clahrd,CLAHRD)(blasint* n, blasint* k, blasint* nb, float complex* a, blasint* lda, float complex* tau, float complex* t, blasint* ldt, float complex* y, blasint* ldy){ FC_GLOBAL(clahrd,CLAHRD)((void*) n, (void*) k, (void*) nb, (void*) a, (void*) lda, (void*) tau, (void*) t, (void*) ldt, (void*) y, (void*) ldy); }
+void FC_GLOBAL3(clahrd,CLAHRD)(blasint* n, blasint* k, blasint* nb, float complex* a, blasint* lda, float complex* tau, float complex* t, blasint* ldt, float complex* y, blasint* ldy){ FC_GLOBAL(clahrd,CLAHRD)((void*) n, (void*) k, (void*) nb, (void*) a, (void*) lda, (void*) tau, (void*) t, (void*) ldt, (void*) y, (void*) ldy); }
 #endif
 
 

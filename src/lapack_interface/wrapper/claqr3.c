@@ -1,26 +1,29 @@
-//  SPDX-License-Identifier: LGPL-3.0-or-later
+//    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+    Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
-   */
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <complex.h>
+
+#include "flexiblas_config.h"
 
 #include "flexiblas_fortran_mangle.h"
 
@@ -31,9 +34,9 @@
 
 static TLS_STORE uint8_t hook_pos_claqr3 = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(claqr3,CLAQR3)(blasint* wantt, blasint* wantz, blasint* n, blasint* ktop, blasint* kbot, blasint* nw, float complex* h, blasint* ldh, blasint* iloz, blasint* ihiz, float complex* z, blasint* ldz, blasint* ns, blasint* nd, float complex* sh, float complex* v, blasint* ldv, blasint* nh, float complex* t, blasint* ldt, blasint* nv, float complex* wv, blasint* ldwv, float complex* work, blasint* lwork)
+void FC_GLOBAL(claqr3,CLAQR3)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ktop, blasint* kbot, blasint* nw, float complex* h, blasint* ldh, blasint* iloz, blasint* ihiz, float complex* z, blasint* ldz, blasint* ns, blasint* nd, float complex* sh, float complex* v, blasint* ldv, blasint* nh, float complex* t, blasint* ldt, blasint* nv, float complex* wv, blasint* ldwv, float complex* work, blasint* lwork)
 #else
-void FC_GLOBAL(claqr3,CLAQR3)(blasint* wantt, blasint* wantz, blasint* n, blasint* ktop, blasint* kbot, blasint* nw, float complex* h, blasint* ldh, blasint* iloz, blasint* ihiz, float complex* z, blasint* ldz, blasint* ns, blasint* nd, float complex* sh, float complex* v, blasint* ldv, blasint* nh, float complex* t, blasint* ldt, blasint* nv, float complex* wv, blasint* ldwv, float complex* work, blasint* lwork)
+void FC_GLOBAL(claqr3,CLAQR3)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ktop, blasint* kbot, blasint* nw, float complex* h, blasint* ldh, blasint* iloz, blasint* ihiz, float complex* z, blasint* ldz, blasint* ns, blasint* nd, float complex* sh, float complex* v, blasint* ldv, blasint* nh, float complex* t, blasint* ldt, blasint* nv, float complex* wv, blasint* ldwv, float complex* work, blasint* lwork)
 #endif
 {
     void (*fn) (void* wantt, void* wantz, void* n, void* ktop, void* kbot, void* nw, void* h, void* ldh, void* iloz, void* ihiz, void* z, void* ldz, void* ns, void* nd, void* sh, void* v, void* ldv, void* nh, void* t, void* ldt, void* nv, void* wv, void* ldwv, void* work, void* lwork);
@@ -54,14 +57,12 @@ void FC_GLOBAL(claqr3,CLAQR3)(blasint* wantt, blasint* wantz, blasint* n, blasin
         return;
     }
 }
-#ifdef FLEXIBLAS_ABI_IBM
-void claqr3_(blasint* wantt, blasint* wantz, blasint* n, blasint* ktop, blasint* kbot, blasint* nw, float complex* h, blasint* ldh, blasint* iloz, blasint* ihiz, float complex* z, blasint* ldz, blasint* ns, blasint* nd, float complex* sh, float complex* v, blasint* ldv, blasint* nh, float complex* t, blasint* ldt, blasint* nv, float complex* wv, blasint* ldwv, float complex* work, blasint* lwork) __attribute__((alias(MTS(FC_GLOBAL(claqr3,CLAQR3)))));
-#else
 #ifndef __APPLE__
-void claqr3(blasint* wantt, blasint* wantz, blasint* n, blasint* ktop, blasint* kbot, blasint* nw, float complex* h, blasint* ldh, blasint* iloz, blasint* ihiz, float complex* z, blasint* ldz, blasint* ns, blasint* nd, float complex* sh, float complex* v, blasint* ldv, blasint* nh, float complex* t, blasint* ldt, blasint* nv, float complex* wv, blasint* ldwv, float complex* work, blasint* lwork) __attribute__((alias(MTS(FC_GLOBAL(claqr3,CLAQR3)))));
+void FC_GLOBAL2(claqr3,CLAQR3)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ktop, blasint* kbot, blasint* nw, float complex* h, blasint* ldh, blasint* iloz, blasint* ihiz, float complex* z, blasint* ldz, blasint* ns, blasint* nd, float complex* sh, float complex* v, blasint* ldv, blasint* nh, float complex* t, blasint* ldt, blasint* nv, float complex* wv, blasint* ldwv, float complex* work, blasint* lwork) __attribute__((alias(MTS(FC_GLOBAL(claqr3,CLAQR3)))));
+void FC_GLOBAL3(claqr3,CLAQR3)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ktop, blasint* kbot, blasint* nw, float complex* h, blasint* ldh, blasint* iloz, blasint* ihiz, float complex* z, blasint* ldz, blasint* ns, blasint* nd, float complex* sh, float complex* v, blasint* ldv, blasint* nh, float complex* t, blasint* ldt, blasint* nv, float complex* wv, blasint* ldwv, float complex* work, blasint* lwork) __attribute__((alias(MTS(FC_GLOBAL(claqr3,CLAQR3)))));
 #else
-void claqr3(blasint* wantt, blasint* wantz, blasint* n, blasint* ktop, blasint* kbot, blasint* nw, float complex* h, blasint* ldh, blasint* iloz, blasint* ihiz, float complex* z, blasint* ldz, blasint* ns, blasint* nd, float complex* sh, float complex* v, blasint* ldv, blasint* nh, float complex* t, blasint* ldt, blasint* nv, float complex* wv, blasint* ldwv, float complex* work, blasint* lwork){ FC_GLOBAL(claqr3,CLAQR3)((void*) wantt, (void*) wantz, (void*) n, (void*) ktop, (void*) kbot, (void*) nw, (void*) h, (void*) ldh, (void*) iloz, (void*) ihiz, (void*) z, (void*) ldz, (void*) ns, (void*) nd, (void*) sh, (void*) v, (void*) ldv, (void*) nh, (void*) t, (void*) ldt, (void*) nv, (void*) wv, (void*) ldwv, (void*) work, (void*) lwork); }
-#endif
+void FC_GLOBAL2(claqr3,CLAQR3)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ktop, blasint* kbot, blasint* nw, float complex* h, blasint* ldh, blasint* iloz, blasint* ihiz, float complex* z, blasint* ldz, blasint* ns, blasint* nd, float complex* sh, float complex* v, blasint* ldv, blasint* nh, float complex* t, blasint* ldt, blasint* nv, float complex* wv, blasint* ldwv, float complex* work, blasint* lwork){ FC_GLOBAL(claqr3,CLAQR3)((void*) wantt, (void*) wantz, (void*) n, (void*) ktop, (void*) kbot, (void*) nw, (void*) h, (void*) ldh, (void*) iloz, (void*) ihiz, (void*) z, (void*) ldz, (void*) ns, (void*) nd, (void*) sh, (void*) v, (void*) ldv, (void*) nh, (void*) t, (void*) ldt, (void*) nv, (void*) wv, (void*) ldwv, (void*) work, (void*) lwork); }
+void FC_GLOBAL3(claqr3,CLAQR3)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ktop, blasint* kbot, blasint* nw, float complex* h, blasint* ldh, blasint* iloz, blasint* ihiz, float complex* z, blasint* ldz, blasint* ns, blasint* nd, float complex* sh, float complex* v, blasint* ldv, blasint* nh, float complex* t, blasint* ldt, blasint* nv, float complex* wv, blasint* ldwv, float complex* work, blasint* lwork){ FC_GLOBAL(claqr3,CLAQR3)((void*) wantt, (void*) wantz, (void*) n, (void*) ktop, (void*) kbot, (void*) nw, (void*) h, (void*) ldh, (void*) iloz, (void*) ihiz, (void*) z, (void*) ldz, (void*) ns, (void*) nd, (void*) sh, (void*) v, (void*) ldv, (void*) nh, (void*) t, (void*) ldt, (void*) nv, (void*) wv, (void*) ldwv, (void*) work, (void*) lwork); }
 #endif
 
 

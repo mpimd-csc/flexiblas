@@ -1,26 +1,29 @@
-//  SPDX-License-Identifier: LGPL-3.0-or-later
+//    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+    Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
-   */
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <complex.h>
+
+#include "flexiblas_config.h"
 
 #include "flexiblas_fortran_mangle.h"
 
@@ -31,14 +34,14 @@
 
 static TLS_STORE uint8_t hook_pos_dlaisnan = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-int FC_GLOBAL(dlaisnan,DLAISNAN)(double* din1, double* din2)
+blaslogical FC_GLOBAL(dlaisnan,DLAISNAN)(double* din1, double* din2)
 #else
-int FC_GLOBAL(dlaisnan,DLAISNAN)(double* din1, double* din2)
+blaslogical FC_GLOBAL(dlaisnan,DLAISNAN)(double* din1, double* din2)
 #endif
 {
-    blasint (*fn) (void* din1, void* din2);
-    blasint (*fn_hook) (void* din1, void* din2);
-    blasint ret;
+    blaslogical (*fn) (void* din1, void* din2);
+    blaslogical (*fn_hook) (void* din1, void* din2);
+    blaslogical ret;
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -55,14 +58,12 @@ int FC_GLOBAL(dlaisnan,DLAISNAN)(double* din1, double* din2)
         return ret;
     }
 }
-#ifdef FLEXIBLAS_ABI_IBM
-int dlaisnan_(double* din1, double* din2) __attribute__((alias(MTS(FC_GLOBAL(dlaisnan,DLAISNAN)))));
-#else
 #ifndef __APPLE__
-int dlaisnan(double* din1, double* din2) __attribute__((alias(MTS(FC_GLOBAL(dlaisnan,DLAISNAN)))));
+blaslogical FC_GLOBAL2(dlaisnan,DLAISNAN)(double* din1, double* din2) __attribute__((alias(MTS(FC_GLOBAL(dlaisnan,DLAISNAN)))));
+blaslogical FC_GLOBAL3(dlaisnan,DLAISNAN)(double* din1, double* din2) __attribute__((alias(MTS(FC_GLOBAL(dlaisnan,DLAISNAN)))));
 #else
-int dlaisnan(double* din1, double* din2){ return FC_GLOBAL(dlaisnan,DLAISNAN)((void*) din1, (void*) din2); }
-#endif
+blaslogical FC_GLOBAL2(dlaisnan,DLAISNAN)(double* din1, double* din2){ return FC_GLOBAL(dlaisnan,DLAISNAN)((void*) din1, (void*) din2); }
+blaslogical FC_GLOBAL3(dlaisnan,DLAISNAN)(double* din1, double* din2){ return FC_GLOBAL(dlaisnan,DLAISNAN)((void*) din1, (void*) din2); }
 #endif
 
 
@@ -71,10 +72,10 @@ int dlaisnan(double* din1, double* din2){ return FC_GLOBAL(dlaisnan,DLAISNAN)((v
 /* Real Implementation for Hooks */
 
 
-blasint flexiblas_real_dlaisnan_(void* din1, void* din2)
+blaslogical flexiblas_real_dlaisnan_(void* din1, void* din2)
 {
-    blasint (*fn) (void* din1, void* din2);
-    blasint ret;
+    blaslogical (*fn) (void* din1, void* din2);
+    blaslogical ret;
 
     *(void **) & fn = current_backend->lapack.dlaisnan.f77_blas_function;
 
@@ -83,9 +84,9 @@ blasint flexiblas_real_dlaisnan_(void* din1, void* din2)
     return ret;
 }
 #ifndef __APPLE__
-blasint flexiblas_real_dlaisnan(void* din1, void* din2) __attribute__((alias("flexiblas_real_dlaisnan_")));
+blaslogical flexiblas_real_dlaisnan(void* din1, void* din2) __attribute__((alias("flexiblas_real_dlaisnan_")));
 #else
-blasint flexiblas_real_dlaisnan(void* din1, void* din2){return flexiblas_real_dlaisnan_((void*) din1, (void*) din2);}
+blaslogical flexiblas_real_dlaisnan(void* din1, void* din2){return flexiblas_real_dlaisnan_((void*) din1, (void*) din2);}
 #endif
 
 
@@ -94,11 +95,11 @@ blasint flexiblas_real_dlaisnan(void* din1, void* din2){return flexiblas_real_dl
 /* Chainloader for Hooks */
 
 
-blasint flexiblas_chain_dlaisnan_(void* din1, void* din2)
+blaslogical flexiblas_chain_dlaisnan_(void* din1, void* din2)
 {
-    blasint (*fn) (void* din1, void* din2);
-    blasint (*fn_hook) (void* din1, void* din2);
-    blasint ret;
+    blaslogical (*fn) (void* din1, void* din2);
+    blaslogical (*fn_hook) (void* din1, void* din2);
+    blaslogical ret;
 
     *(void **) &fn      = current_backend->lapack.dlaisnan.f77_blas_function;
 
@@ -113,9 +114,9 @@ blasint flexiblas_chain_dlaisnan_(void* din1, void* din2)
     return ret;
 }
 #ifndef __APPLE__
-blasint flexiblas_chain_dlaisnan(void* din1, void* din2) __attribute__((alias("flexiblas_chain_dlaisnan_")));
+blaslogical flexiblas_chain_dlaisnan(void* din1, void* din2) __attribute__((alias("flexiblas_chain_dlaisnan_")));
 #else
-blasint flexiblas_chain_dlaisnan(void* din1, void* din2){return flexiblas_chain_dlaisnan_((void*) din1, (void*) din2);}
+blaslogical flexiblas_chain_dlaisnan(void* din1, void* din2){return flexiblas_chain_dlaisnan_((void*) din1, (void*) din2);}
 #endif
 
 

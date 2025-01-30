@@ -1,13 +1,13 @@
 FlexiBLAS - A BLAS and LAPACK wrapper library with runtime exchangeable backends
 ================================================================================
 
-**Version 3.4.4** - DOI: 10.5281/zenodo.11260086
+**Version 3.4.5** - DOI: 10.5281/zenodo.14764701
 
 **Project Website:** https://www.mpi-magdeburg.mpg.de/projects/flexiblas
 
 **Git Repository:** https://gitlab.mpi-magdeburg.mpg.de/software/flexiblas-release
 
-Copyright 2013-2024 by *Martin Köhler* (0000-0003-2338-9904)
+Copyright 2013-2025 by *Martin Köhler* (0000-0003-2338-9904)
                    and *Jens Saak* (0000-0001-5567-9637)
 
 ## Documentation
@@ -212,6 +212,7 @@ The following compilers are tested:
 * Intel icx/ifx oneAPI >= 2022
 * LLVM CLANG/FLANG >= 18
 * AMD AOCC 4.2.0
+* NVHPC on x86_64 (On ARM64 some issues exists.)
 
 Other compilers might work, but not tested.
 

@@ -1,7 +1,7 @@
 Issues using FlexiBLAS
 ======================
 
-Last Update: Jun 16, 2020
+Last Update: Oct 10, 2024
 
 Table of Contents
 -----------------
@@ -14,6 +14,9 @@ Table of Contents
 6. CBLAS Interface of BLIS
 7. Building with pre-built BLAS and LAPACK on MacOSX
 8. gcc >= 10.0 and LAPACK 3.7/3.8
+9. LTO Type mismatch with gcc
+10. NVHPC
+
 
 1. Profiling Numpy/Scipy with linked against FlexiBLAS
 ------------------------------------------------------
@@ -109,5 +112,32 @@ Beginning with gcc/gfortran 10.1.0 this flags needs to be set via
 cmake ........ -DCMAKE_Fortran_FLAGS="-fallow-argument-mismatch"
 ```
 while configuring FlexiBLAS. Alternatively, the tests can be disabled.
+
+9. LTO Type mismatch with gcc
+-----------------------------
+Some newer versions of gcc (at least version 13.x and 14.x) produce wrong LTO
+warnings. They accidently assume Fortran's hidden string length argument to be a
+`long int` instead of a `size_t` aka `flexiblas_fortran_charlen_t`. This results
+in a warning like:
+```
+    type ‘long int’ should match type ‘flexiblas_fortran_charlen_t’
+```
+while linking the LAPACK fallback library. This error can safely be ignored
+and is already subject to a GCC bug:
+
+    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=102079
+
+10. NVHPC
+---------
+The up to at least version 24.7 of the NVHPC compiler on Aarch64, the `-z now`
+flag is added to all linker calls. This avoids many parts of the hook framework
+to work and even disturbs some backend detection. The problem is known to
+Nvidia, see https://forums.developer.nvidia.com/t/nvc-adds-z-now-to-linking-causes-error-in-plugin-based-codes-on-arm64-gh200/307243
+
+Furthermore, the NVHPC compiler suite leads to severval errors in the testing
+suite, which also appear if one compiles the reference LAPACK with the NVHPC
+compilers. Even simple routines like `dznrm2` are affected by error introduced
+by the NVHPC compiler.
+
 
 

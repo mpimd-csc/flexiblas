@@ -217,6 +217,14 @@ SET ( CBLAS_SRC
     cblas_interface/cblas_cgeadd.c
     cblas_interface/cblas_zgeadd.c
     cblas_interface/cblas_sgeadd.c
+    cblas_interface/cblas_dgemmt.c
+    cblas_interface/cblas_cgemmt.c
+    cblas_interface/cblas_zgemmt.c
+    cblas_interface/cblas_sgemmt.c
+    cblas_interface/cblas_dgemmtr.c
+    cblas_interface/cblas_cgemmtr.c
+    cblas_interface/cblas_zgemmtr.c
+    cblas_interface/cblas_sgemmtr.c
 
 
     )
@@ -384,6 +392,66 @@ INCLUDE(CheckFortranFunctionExists)
 INCLUDE(CheckFunctionExists)
 
 # SET(BLA_STATIC TRUE)
+
+MACRO(BuildNVPL)
+    SET(BACKEND_CODE backends/nvpl/backend.c )
+    FIND_PACKAGE(nvpl COMPONENTS blas lapack QUIET)
+
+    IF (nvpl_FOUND )
+        IF (FLEXIBLAS_INTEGER8)
+            SET(LP "ilp64")
+        ELSE()
+            SET(LP "lp64")
+        ENDIF()
+        #
+        # Create the wrapper
+        #
+        MESSAGE(STATUS "NVPL_THREADING TYPES: ${nvpl_blas_THREADING_TYPES}")
+
+        FOREACH(THR "seq" "omp")
+            MESSAGE(STATUS "Build NVPL Backend for ${THR} / ${LP}")
+            ADD_LIBRARY(flexiblas_nvpl_${LP}_${THR} SHARED ${BACKEND_CODE})
+            TARGET_LINK_LIBRARIES(flexiblas_nvpl_${LP}_${THR} PUBLIC nvpl::blas_${LP}_${THR}  nvpl::lapack_${LP}_${THR})
+            IF (FLEXIBLAS_INTEGER8 OR BLAS_INTERFACE64)
+                SET(EXTRA_FLAGS "-DBACKEND_INTEGER8")
+            ELSE ()
+                SET(EXTRA_FLAGS "")
+            ENDIF()
+            IF(CBLAS STREQUAL ON)
+                MESSAGE(STATUS "Add CBLAS in dummy library")
+                SET(EXTRA_FLAGS "${EXTRA_FLAGS} -DCBLAS_INTERFACE")
+            ENDIF()
+            SET_TARGET_PROPERTIES(flexiblas_nvpl_${LP}_${THR} PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS}")
+
+            if(THR_TYPE STREQUAL omp)
+                target_link_libraries(${name} PRIVATE OpenMP::OpenMP_C)
+            endif()
+
+            INSTALL(TARGETS flexiblas_nvpl_${LP}_${THR} LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR})
+
+            SET(VENDOR "NVPL_${THR}")
+            LIST(APPEND EXTRA_BLAS "NVPL_${THR}")
+            SET(${VENDOR}_BLAS_LIBRARIES "nvpl::blas_${LP}_${THR};nvpl::lapack_${LP}_${THR}" PARENT_SCOPE)
+            IF (NOT EXTRA_FLAGS)
+                SET(${VENDOR}_BLAS_EXTRA_FLAGS "")
+            ELSE()
+                SET(${VENDOR}_BLAS_EXTRA_FLAGS "${EXTRA_FLAGS}" PARENT_SCOPE)
+            ENDIF()
+
+            UNSET(LIBNAME CACHE)
+            SET(LIBNAME "${CMAKE_SHARED_LIBRARY_PREFIX}flexiblas_nvpl_${LP}_${THR}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+            FILE(WRITE "${CMAKE_BINARY_DIR}/${FLEXIBLAS_RC_DIR}/${VENDOR}.conf" "[${VENDOR}]\nlibrary = ${LIBNAME}\n\n")
+            INSTALL(FILES "${CMAKE_BINARY_DIR}/${FLEXIBLAS_RC_DIR}/${VENDOR}.conf" DESTINATION "${CMAKE_INSTALL_FULL_SYSCONFDIR}/${FLEXIBLAS_RC_DIR}")
+            # Check for default setting
+            STRING (TOLOWER  "${FLEXIBLAS_DEFAULT}" FDB_LOW)
+            IF ( FDB_LOW STREQUAL ivendor)
+                SET(DEFAULT_FOUND TRUE)
+            ENDIF()
+        ENDFOREACH()
+
+    ENDIF()
+ENDMACRO()
+
 MACRO(BuildBackendBlas VENDOR BACKEND_CODE)
     MESSAGE(STATUS "Build additional BLAS interface: ${VENDOR}")
     MESSAGE(STATUS "-- Libs: ${${VENDOR}_LIBRARY}")
@@ -401,6 +469,7 @@ MACRO(BuildBackendBlas VENDOR BACKEND_CODE)
     UNSET(MKL_OMATCOPY CACHE)
     UNSET(CBLAS_DAXPY CACHE)
     UNSET(_MKL_VERSION CACHE)
+    UNSET(_BUILD CACHE)
     Check_Function_Exists(flexiblas_exit ISFLEXIBLAS)
     Check_Fortran_Function_Exists(DAXPY  DAXPY)
     Check_Function_Exists(cblas_daxpy  CBLAS_DAXPY)
@@ -413,66 +482,71 @@ MACRO(BuildBackendBlas VENDOR BACKEND_CODE)
 
     SET(CMAKE_REQUIRED_LIBRARIES ${__CMAKE_REQUIRED_LIBRARIES})
 
+    SET(_BUILD 1)
     IF(NOT DAXPY)
-        MESSAGE(FATAL_ERROR "${VENDOR} library does not contain a BLAS implementation or does not link.")
+        MESSAGE(WARNING "${VENDOR} library does not contain a BLAS implementation or does not link. If TBB is involved please check if the C++ ABI is compatible TBB")
+        SET(_BUILD 0)
     ENDIF()
 
     IF(ISFLEXIBLAS)
-        MESSAGE(FATAL_ERROR "${VENDOR} (${${VENDOR}_LIBRARY}) contains FlexiBLAS. Disable the use with -D${VENDOR}=OFF")
+        MESSAGE(WARNING "${VENDOR} (${${VENDOR}_LIBRARY}) contains FlexiBLAS. Disable the use with -D${VENDOR}=OFF")
+        SET(_BUILD 0)
     ENDIF()
 
-    UNSET(EXTRA_FLAGS CACHE)
-    string(TOLOWER ${VENDOR} ivendor)
+    IF (_BUILD)
+        UNSET(EXTRA_FLAGS CACHE)
+        string(TOLOWER ${VENDOR} ivendor)
 
 
-    #
-    # Create the wrapper
-    #
-    ADD_LIBRARY(flexiblas_${ivendor} SHARED ${BACKEND_CODE})
-    IF (FLEXIBLAS_INTEGER8 OR BLAS_INTERFACE64)
-        SET(EXTRA_FLAGS "-DBACKEND_INTEGER8")
-    ELSE ()
-        SET(EXTRA_FLAGS "")
-    ENDIF()
-    IF (ZDOTC_MKL)
-        MESSAGE(STATUS "${VENDOR} uses Intel ZDOTC")
-        SET(EXTRA_FLAGS "${EXTRA_FLAGS} -DZDOTC_MKL")
-    ENDIF (ZDOTC_MKL)
+        #
+        # Create the wrapper
+        #
+        ADD_LIBRARY(flexiblas_${ivendor} SHARED ${BACKEND_CODE})
+        IF (FLEXIBLAS_INTEGER8 OR BLAS_INTERFACE64)
+            SET(EXTRA_FLAGS "-DBACKEND_INTEGER8")
+        ELSE ()
+            SET(EXTRA_FLAGS "")
+        ENDIF()
+        IF (ZDOTC_MKL)
+            MESSAGE(STATUS "${VENDOR} uses Intel ZDOTC")
+            SET(EXTRA_FLAGS "${EXTRA_FLAGS} -DZDOTC_MKL")
+        ENDIF (ZDOTC_MKL)
 
-    IF(CBLAS_DAXPY AND CBLAS STREQUAL ON)
-        MESSAGE(STATUS "Add CBLAS in dummy library")
-        SET(EXTRA_FLAGS "${EXTRA_FLAGS} -DCBLAS_INTERFACE")
-    ENDIF()
+        IF(CBLAS_DAXPY AND CBLAS STREQUAL ON)
+            MESSAGE(STATUS "Add CBLAS in dummy library")
+            SET(EXTRA_FLAGS "${EXTRA_FLAGS} -DCBLAS_INTERFACE")
+        ENDIF()
 
-    SET_TARGET_PROPERTIES(flexiblas_${ivendor} PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS}")
-    IF ( ${VENDOR}_LINKER_FLAGS)
-        SET_TARGET_PROPERTIES(flexiblas_${ivendor} PROPERTIES LINK_FLAGS "${${VENDOR}_LINKER_FLAGS}")
-        SET(${VENDOR}_BLAS_LINKER_FLAGS "${${VENDOR}_LINKER_FLAGS}" PARENT_SCOPE)
-    ENDIF()
+        SET_TARGET_PROPERTIES(flexiblas_${ivendor} PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS}")
+        IF ( ${VENDOR}_LINKER_FLAGS)
+            SET_TARGET_PROPERTIES(flexiblas_${ivendor} PROPERTIES LINK_FLAGS "${${VENDOR}_LINKER_FLAGS}")
+            SET(${VENDOR}_BLAS_LINKER_FLAGS "${${VENDOR}_LINKER_FLAGS}" PARENT_SCOPE)
+        ENDIF()
 
-    IF (CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
-        SET(BLAS_LIBRARIES ${BLAS_LIBRARIES} gfortran)
-    ENDIF()
+        IF (CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+            SET(BLAS_LIBRARIES ${BLAS_LIBRARIES} gfortran)
+        ENDIF()
 
-    TARGET_LINK_LIBRARIES(flexiblas_${ivendor} ${${VENDOR}_LIBRARY})
-    INSTALL(TARGETS flexiblas_${ivendor} LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR})
+        TARGET_LINK_LIBRARIES(flexiblas_${ivendor} ${${VENDOR}_LIBRARY})
+        INSTALL(TARGETS flexiblas_${ivendor} LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR})
 
-    LIST(APPEND EXTRA_BLAS "${VENDOR}")
-    SET(${VENDOR}_BLAS_LIBRARIES "${${VENDOR}_LIBRARY}" PARENT_SCOPE)
-    IF (NOT EXTRA_FLAGS)
-        SET(${VENDOR}_BLAS_EXTRA_FLAGS "")
-    ELSE()
-        SET(${VENDOR}_BLAS_EXTRA_FLAGS "${EXTRA_FLAGS}" PARENT_SCOPE)
-    ENDIF()
+        LIST(APPEND EXTRA_BLAS "${VENDOR}")
+        SET(${VENDOR}_BLAS_LIBRARIES "${${VENDOR}_LIBRARY}" PARENT_SCOPE)
+        IF (NOT EXTRA_FLAGS)
+            SET(${VENDOR}_BLAS_EXTRA_FLAGS "")
+        ELSE()
+            SET(${VENDOR}_BLAS_EXTRA_FLAGS "${EXTRA_FLAGS}" PARENT_SCOPE)
+        ENDIF()
 
-    UNSET(LIBNAME CACHE)
-    SET(LIBNAME "${CMAKE_SHARED_LIBRARY_PREFIX}flexiblas_${ivendor}${CMAKE_SHARED_LIBRARY_SUFFIX} ")
-    FILE(WRITE "${CMAKE_BINARY_DIR}/${FLEXIBLAS_RC_DIR}/${VENDOR}.conf" "[${VENDOR}]\nlibrary = ${LIBNAME}\n\n")
-    INSTALL(FILES "${CMAKE_BINARY_DIR}/${FLEXIBLAS_RC_DIR}/${VENDOR}.conf" DESTINATION "${CMAKE_INSTALL_FULL_SYSCONFDIR}/${FLEXIBLAS_RC_DIR}")
-    # Check for default setting
-    STRING (TOLOWER  "${FLEXIBLAS_DEFAULT}" FDB_LOW)
-    IF ( FDB_LOW STREQUAL ivendor)
-        SET(DEFAULT_FOUND TRUE)
+        UNSET(LIBNAME CACHE)
+        SET(LIBNAME "${CMAKE_SHARED_LIBRARY_PREFIX}flexiblas_${ivendor}${CMAKE_SHARED_LIBRARY_SUFFIX} ")
+        FILE(WRITE "${CMAKE_BINARY_DIR}/${FLEXIBLAS_RC_DIR}/${VENDOR}.conf" "[${VENDOR}]\nlibrary = ${LIBNAME}\n\n")
+        INSTALL(FILES "${CMAKE_BINARY_DIR}/${FLEXIBLAS_RC_DIR}/${VENDOR}.conf" DESTINATION "${CMAKE_INSTALL_FULL_SYSCONFDIR}/${FLEXIBLAS_RC_DIR}")
+        # Check for default setting
+        STRING (TOLOWER  "${FLEXIBLAS_DEFAULT}" FDB_LOW)
+        IF ( FDB_LOW STREQUAL ivendor)
+            SET(DEFAULT_FOUND TRUE)
+        ENDIF()
     ENDIF()
 ENDMACRO()
 
@@ -636,6 +710,8 @@ IF( BLAS_AUTO_DETECT STREQUAL ON)
         BuildFindPackage(MklOpenMP backends/intel_mkl/backend.c)
         BuildFindPackage(MklTBB backends/intel_mkl/backend.c)
 
+        BuildNVPL()
+
 
 
     ELSE()
@@ -651,6 +727,7 @@ IF( BLAS_AUTO_DETECT STREQUAL ON)
         BuildFindPackage(MklOpenMP64 backends/intel_mkl/backend.c)
         BuildFindPackage(MklTBB64 backends/intel_mkl/backend.c)
 
+        BuildNVPL()
 
 
 

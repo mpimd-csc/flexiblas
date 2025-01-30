@@ -95,17 +95,14 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \date April 2012
-*
 *> \ingroup double_blas_testing
 *
 *  =====================================================================
       PROGRAM DBLAT2
 *
-*  -- Reference BLAS test routine (version 3.7.0) --
+*  -- Reference BLAS test routine --
 *  -- Reference BLAS is a software package provided by Univ. of Tennessee,    --
 *  -- Univ. of California Berkeley, Univ. of Colorado Denver and NAG Ltd..--
-*     April 2012
 *
 *  =====================================================================
 *
@@ -424,7 +421,7 @@
  9981 FORMAT( /' ******* FATAL ERROR - TESTS ABANDONED *******' )
  9980 FORMAT( ' ERROR-EXITS WILL NOT BE TESTED' )
 *
-*     End of DBLAT2.
+*     End of DBLAT2
 *
       END
       SUBROUTINE DCHK1( SNAME, EPS, THRESH, NOUT, NTRA, TRACE, REWI,
@@ -793,7 +790,7 @@
  9993 FORMAT( ' ******* FATAL ERROR - ERROR-EXIT TAKEN ON VALID CALL *',
      $      '******' )
 *
-*     End of DCHK1.
+*     End of DCHK1
 *
       END
       SUBROUTINE DCHK2( SNAME, EPS, THRESH, NOUT, NTRA, TRACE, REWI,
@@ -1136,7 +1133,7 @@
  9992 FORMAT( ' ******* FATAL ERROR - ERROR-EXIT TAKEN ON VALID CALL *',
      $      '******' )
 *
-*     End of DCHK2.
+*     End of DCHK2
 *
       END
       SUBROUTINE DCHK3( SNAME, EPS, THRESH, NOUT, NTRA, TRACE, REWI,
@@ -1493,7 +1490,7 @@
  9992 FORMAT( ' ******* FATAL ERROR - ERROR-EXIT TAKEN ON VALID CALL *',
      $      '******' )
 *
-*     End of DCHK3.
+*     End of DCHK3
 *
       END
       SUBROUTINE DCHK4( SNAME, EPS, THRESH, NOUT, NTRA, TRACE, REWI,
@@ -1754,7 +1751,7 @@
  9993 FORMAT( ' ******* FATAL ERROR - ERROR-EXIT TAKEN ON VALID CALL *',
      $      '******' )
 *
-*     End of DCHK4.
+*     End of DCHK4
 *
       END
       SUBROUTINE DCHK5( SNAME, EPS, THRESH, NOUT, NTRA, TRACE, REWI,
@@ -2032,7 +2029,7 @@
  9992 FORMAT( ' ******* FATAL ERROR - ERROR-EXIT TAKEN ON VALID CALL *',
      $      '******' )
 *
-*     End of DCHK5.
+*     End of DCHK5
 *
       END
       SUBROUTINE DCHK6( SNAME, EPS, THRESH, NOUT, NTRA, TRACE, REWI,
@@ -2347,7 +2344,7 @@
  9992 FORMAT( ' ******* FATAL ERROR - ERROR-EXIT TAKEN ON VALID CALL *',
      $      '******' )
 *
-*     End of DCHK6.
+*     End of DCHK6
 *
       END
       SUBROUTINE DCHKE( ISNUM, SRNAMT, NOUT )
@@ -2673,7 +2670,7 @@
  9998 FORMAT( ' ******* ', A6, ' FAILED THE TESTS OF ERROR-EXITS *****',
      $      '**' )
 *
-*     End of DCHKE.
+*     End of DCHKE
 *
       END
       SUBROUTINE DMAKE( TYPE, UPLO, DIAG, M, N, A, NMAX, AA, LDA, KL,
@@ -2849,7 +2846,7 @@
       END IF
       RETURN
 *
-*     End of DMAKE.
+*     End of DMAKE
 *
       END
       SUBROUTINE DMVCH( TRANS, M, N, ALPHA, A, NMAX, X, INCX, BETA, Y,
@@ -2966,7 +2963,7 @@
      $      'TED RESULT' )
  9998 FORMAT( 1X, I7, 2G18.6 )
 *
-*     End of DMVCH.
+*     End of DMVCH
 *
       END
       LOGICAL FUNCTION LDE( RI, RJ, LR )
@@ -2996,7 +2993,7 @@
       LDE = .FALSE.
    30 RETURN
 *
-*     End of LDE.
+*     End of LDE
 *
       END
       LOGICAL FUNCTION LDERES( TYPE, UPLO, M, N, AA, AS, LDA )
@@ -3055,7 +3052,7 @@
       LDERES = .FALSE.
    80 RETURN
 *
-*     End of LDERES.
+*     End of LDERES
 *
       END
       DOUBLE PRECISION FUNCTION DBEG( RESET )
@@ -3101,7 +3098,7 @@
       DBEG = DBLE( I - 500 )/1001.0D0
       RETURN
 *
-*     End of DBEG.
+*     End of DBEG
 *
       END
       DOUBLE PRECISION FUNCTION DDIFF( X, Y )
@@ -3117,7 +3114,7 @@
       DDIFF = X - Y
       RETURN
 *
-*     End of DDIFF.
+*     End of DDIFF
 *
       END
       SUBROUTINE CHKXER( SRNAMT, INFOT, NOUT, LERR, OK )
@@ -3145,7 +3142,7 @@
  9999 FORMAT( ' ***** ILLEGAL VALUE OF PARAMETER NUMBER ', I2, ' NOT D',
      $      'ETECTED BY ', A6, ' *****' )
 *
-*     End of CHKXER.
+*     End of CHKXER
 *
       END
       SUBROUTINE DREGR1( TRANS, M, N, LY, KL, KU, ALPHA, A, LDA, X,
@@ -3234,4 +3231,3 @@
 *     End of XERBLA
 *
       END
-

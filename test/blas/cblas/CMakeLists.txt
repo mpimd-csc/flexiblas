@@ -34,6 +34,7 @@ macro(add_cblas_test output input target)
   endif()
 endmacro()
 
+add_definitions(-DBLAS_FORTRAN_STRLEN_END)
 
 # Object files for single real precision
 set(STESTL1O c_sblas1.c)

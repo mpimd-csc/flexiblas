@@ -17,6 +17,11 @@ SET(COMMON_SRC
     table/table.f90
     table/ops.c
 
+    ds/ds.c
+    ds/hashtable.c
+    ds/slist.c
+    ds/map.c
+
     sysinfo/getpid.c
     sysinfo/meminfo.c
     sysinfo/cpucount.c
@@ -29,6 +34,7 @@ SET(COMMON_SRC
     sysinfo/fortran_api.f90
     sysinfo/cmake.c
     sysinfo/compilerflags.c
+    sysinfo/cpu_features.c
     )
 
 IF( LUA_ENABLE)
@@ -90,15 +96,6 @@ IF(IMAGE_ENABLE)
         image/bmp.c)
 ENDIF()
 
-IF( DS_ENABLE )
-    SET(DS_SRC
-        ds/ds.c
-        ds/hashtable.c
-        ds/slist.c
-        ds/map.c
-        )
-ENDIF()
-
 IF(TRACE_ENABLE)
     SET(TRACE_SRC
         eventtracer/reset.c
@@ -117,10 +114,12 @@ INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include)
 
 IF ( LUA_ENABLE )
     ADD_LIBRARY(cscutils_lua_src OBJECT ${LUA_SRC} common/error_message.c)
-    IF (CMAKE_Fortran_COMPILER_ID STREQUAL "IntelLLVM")
-        SET_TARGET_PROPERTIES(cscutils_lua_src PROPERTIES C_STANDARD 11 C_VISIBILITY_PRESET hidden)
-    ELSE()
-        SET_TARGET_PROPERTIES(cscutils_lua_src PROPERTIES C_STANDARD 11 C_VISIBILITY_PRESET hidden Fortran_VISIBILITY_PRESET hidden)
+    IF (NOT STANDALONE)
+        IF (CMAKE_Fortran_COMPILER_ID STREQUAL "IntelLLVM")
+            SET_TARGET_PROPERTIES(cscutils_lua_src PROPERTIES C_STANDARD 11 C_VISIBILITY_PRESET hidden)
+        ELSE()
+            SET_TARGET_PROPERTIES(cscutils_lua_src PROPERTIES C_STANDARD 11 C_VISIBILITY_PRESET hidden Fortran_VISIBILITY_PRESET hidden)
+        ENDIF()
     ENDIF()
 
     TARGET_INCLUDE_DIRECTORIES(cscutils_lua_src PUBLIC
@@ -149,10 +148,12 @@ FOREACH ( L ${elg})
 ENDFOREACH()
 
 
-IF (CMAKE_Fortran_COMPILER_ID STREQUAL "IntelLLVM")
-SET_TARGET_PROPERTIES(cscutils_src PROPERTIES C_STANDARD 11 C_VISIBILITY_PRESET hidden )
-ELSE()
-SET_TARGET_PROPERTIES(cscutils_src PROPERTIES C_STANDARD 11 C_VISIBILITY_PRESET hidden Fortran_VISIBILITY_PRESET hidden)
+IF(NOT STANDALONE)
+    IF (CMAKE_Fortran_COMPILER_ID STREQUAL "IntelLLVM")
+        SET_TARGET_PROPERTIES(cscutils_src PROPERTIES C_STANDARD 11 C_VISIBILITY_PRESET hidden )
+    ELSE()
+        SET_TARGET_PROPERTIES(cscutils_src PROPERTIES C_STANDARD 11 C_VISIBILITY_PRESET hidden Fortran_VISIBILITY_PRESET hidden)
+    ENDIF()
 ENDIF()
 
 

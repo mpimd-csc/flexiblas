@@ -1,22 +1,24 @@
 # -*- coding: utf-8 -*-
-#
-# SPDX-License-Identifier: LGPL-3.0-or-later
+#   SPDX-License-Identifier: LGPL-3.0-or-later
 #
 # This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
 # Copyright (C) 2013-2024 Martin Koehler
 #
-# This program is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the Free
-# Software Foundation, either version 3 of the License, or (at your option)
-# any later version.
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 3 of the License, or (at your option) any later version.
 #
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-# more details.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
-# You should have received a copy of the GNU General Public License along
-# with this program. If not, see <https://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+
 
 
 
@@ -33,7 +35,7 @@ def dt_translator(fortran_type):
             "complex16": "double complex",
             "double complex": "double complex",
             "character": "char",
-            "logical": "int"
+            "logical": "blaslogical"
             }
     if fortran_type["typespec"] == "complex":
         if "kindselector" in  fortran_type:
@@ -97,16 +99,24 @@ class FortranFunction(object):
             self._returntype = dt_translator(self._fvars[self._name])
 
 
-    def funcname(self, intwidth = 0):
-        if intwidth == 64 :
-            s = self._name.lower() + "64"
-        elif intwidth == 32:
-            s = self._name.lower() + "32"
+    def funcname(self, intwidth = 0, upper_case = False):
+        if upper_case:
+            if intwidth == 64 :
+                s = self._name.upper() + "64"
+            elif intwidth == 32:
+                s = self._name.upper() + "32"
+            else:
+                s = self._name.upper()
         else:
-            s = self._name.lower()
+            if intwidth == 64 :
+                s = self._name.lower() + "64"
+            elif intwidth == 32:
+                s = self._name.lower() + "32"
+            else:
+                s = self._name.lower()
         return s
 
-    def funcnamex(self, intwidth = 0):
+    def funcnamex(self, intwidth = 0, number=""):
         if intwidth == 64 :
             s = self._name.lower() + "64"
         elif intwidth == 32:
@@ -114,10 +124,11 @@ class FortranFunction(object):
         else:
             s = self._name.lower()
         if "_" in self._name:
-            s = "FC_GLOBAL_("+s+","+s.upper()+")"
+            s = "FC_GLOBAL"+number+"_("+s+","+s.upper()+")"
         else:
-            s = "FC_GLOBAL("+s+","+s.upper()+")"
+            s = "FC_GLOBAL"+number+"("+s+","+s.upper()+")"
         return s
+
 
     def typename(self):
         return "call_" + self._name.lower()
@@ -296,24 +307,27 @@ class FortranFunction(object):
     def c_header(self, intwidth = 0, suffix="_", end = ";", intel_interface= False):
         if intel_interface:
             if self._function and is_complex(self._fvars[self._name]["typespec"]):
-                s = "void " + self.funcnamex(intwidth)+"( " + self._returntype + "* returnvalue, "
+                s = "void " + self.funcname(intwidth)+suffix+"( " + self._returntype + "* returnvalue, "
             else:
-                s = self._returntype + " " + self.funcnamex(intwidth) + "("
+                s = self._returntype + " " + self.funcname(intwidth) + suffix + "("
         else:
-            s = self._returntype + " " + self.funcnamex(intwidth) + "("
+            s = self._returntype + " " + self.funcname(intwidth)+suffix + "("
 
         s += self._callsequence(intwidth = intwidth)
         s += ")"+end
         return s
 
-    def c_headerx(self, intwidth = 0, suffix="_", end = ";", intel_interface= False):
+    def c_headerx(self, intwidth = 0, suffix="_", end = ";", intel_interface= False, number = ""):
+        rt = self._returntype
+        if rt == "int":
+            rt = "blasint"
         if intel_interface:
             if self._function and is_complex(self._fvars[self._name]["typespec"]):
-                s = "void " + self.funcname(intwidth)+suffix+"( " + self._returntype + "* returnvalue, "
+                s = "void " + self.funcnamex(intwidth, number)+"( " + self._returntype + "* returnvalue, "
             else:
-                s = self._returntype + " " + self.funcname(intwidth) +suffix + "("
+                s = rt + " " + self.funcnamex(intwidth, number) + "("
         else:
-            s = self._returntype + " " + self.funcname(intwidth) +suffix+ "("
+            s = rt + " " + self.funcnamex(intwidth, number) + "("
 
         s += self._callsequence(intwidth = intwidth)
         s += ")"+end
@@ -502,8 +516,8 @@ static TLS_STORE uint8_t hook_pos_{funcname:s} = 0;
 #else
 {header_gnu:s}
 #endif
-{{\n""".format( header_intel = self.c_header(intwidth = intwidth, suffix=suffix, intel_interface=True, end=""),
-                           header_gnu = self.c_header(intwidth = intwidth, suffix=suffix, intel_interface=False, end=""),
+{{\n""".format( header_intel = self.c_headerx(intwidth = intwidth, suffix=suffix, intel_interface=True, end=""),
+                           header_gnu = self.c_headerx(intwidth = intwidth, suffix=suffix, intel_interface=False, end=""),
                 funcname = self.funcname())
         s += "    {rettype:s} (*fn) ({args:s});\n".format(rettype = return_type, args = self._callsequence(intwidth, void=True))
         if self._function and is_complex(self._fvars[self._name]["typespec"]):
@@ -677,24 +691,50 @@ static TLS_STORE uint8_t hook_pos_{funcname:s} = 0;
 
         # Add alias
         if ( suffix == "_"):
-            s += "#ifdef FLEXIBLAS_ABI_IBM\n"
-            s += self.c_headerx(intwidth = intwidth, suffix="_", intel_interface=intel_interface, end="")
-            s += " __attribute__((alias(MTS({name:s}))));\n".format(name=self.funcnamex(intwidth=intwidth))
-            s += "#else\n"
             s += "#ifndef __APPLE__\n"
-            s += self.c_headerx(intwidth = intwidth, suffix="", intel_interface=intel_interface, end="")
+            s += self.c_headerx(intwidth = intwidth, suffix="", intel_interface=intel_interface, end="", number = "2")
+            s += " __attribute__((alias(MTS({name:s}))));\n".format(name=self.funcnamex(intwidth=intwidth))
+            s += self.c_headerx(intwidth = intwidth, suffix="", intel_interface=intel_interface, end="", number = "3")
             s += " __attribute__((alias(MTS({name:s}))));\n".format(name=self.funcnamex(intwidth=intwidth))
             s += "#else\n"
-            s += self.c_headerx(intwidth = intwidth, suffix="", intel_interface=intel_interface, end="")
+            s += self.c_headerx(intwidth = intwidth, suffix="", intel_interface=intel_interface, end="", number = "2")
             if self._function:
                 if intel_interface and is_complex(self._fvars[self._name]["typespec"]):
-                    s += "{ "+ self.funcnamex(intwidth = intwidth) + "( (void*) returnvalue, "+self._callsequence(intwidth = intwidth, void=True, call=True, typecast = True)+"); }\n"
+                    s += "{ "+ self.funcnamex(intwidth = intwidth) + "( (void*) returnvalue, "+self._callsequence(intwidth = intwidth, void=True, typecast = True)+"); }\n"
                 else:
-                    s += "{ return "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, void=True, call = True, typecast = True)+"); }\n"
+                    s += "{ return "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, void=True, typecast = True)+"); }\n"
             else:
-                s += "{ "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, void=True, call=True, typecast = True)+"); }\n"
+                s += "{ "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, void=True, typecast = True)+"); }\n"
+            s += self.c_headerx(intwidth = intwidth, suffix="", intel_interface=intel_interface, end="", number = "3")
+            if self._function:
+                if intel_interface and is_complex(self._fvars[self._name]["typespec"]):
+                    s += "{ "+ self.funcnamex(intwidth = intwidth) + "( (void*) returnvalue, "+self._callsequence(intwidth = intwidth, void=True, typecast = True)+"); }\n"
+                else:
+                    s += "{ return "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, void=True, typecast = True)+"); }\n"
+            else:
+                s += "{ "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, void=True, typecast = True)+"); }\n"
             s += "#endif\n"
-            s += "#endif\n"
+
+#        if ( suffix == "_"):
+#
+#            s += "#ifdef FLEXIBLAS_ABI_IBM\n"
+#            s += self.c_headerx(intwidth = intwidth, suffix="_", intel_interface=intel_interface, end="")
+#            s += " __attribute__((alias(MTS({name:s}))));\n".format(name=self.funcnamex(intwidth=intwidth))
+#            s += "#else\n"
+#            s += "#ifndef __APPLE__\n"
+#            s += self.c_headerx(intwidth = intwidth, suffix="", intel_interface=intel_interface, end="")
+#            s += " __attribute__((alias(MTS({name:s}))));\n".format(name=self.funcnamex(intwidth=intwidth))
+#            s += "#else\n"
+#            s += self.c_headerx(intwidth = intwidth, suffix="", intel_interface=intel_interface, end="")
+#            if self._function:
+#                if intel_interface and is_complex(self._fvars[self._name]["typespec"]):
+#                    s += "{ "+ self.funcnamex(intwidth = intwidth) + "( (void*) returnvalue, "+self._callsequence(intwidth = intwidth, void=True, call=True, typecast = True)+"); }\n"
+#                else:
+#                    s += "{ return "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, void=True, call = True, typecast = True)+"); }\n"
+#            else:
+#                s += "{ "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, void=True, call=True, typecast = True)+"); }\n"
+#            s += "#endif\n"
+#            s += "#endif\n"
         s +="\n"
 
         return s
@@ -729,8 +769,9 @@ class Wrapper(object):
         fn.write("#ifndef " + headername + "\n")
         fn.write("#define " + headername + "\n")
         fn.write("\n#include <stdint.h>\n")
+        fn.write("\n#include \"flexiblas_config.h\"\n")
         fn.write("\n#include \"flexiblas_fortran_mangle.h\"\n")
-
+        fn.write("\n#include \"flexiblas_fortran_char_len.h\"\n")
         fn.write("#include <complex.h>\n\n")
         fn.write("#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n")
 
@@ -761,24 +802,25 @@ class Wrapper(object):
     def _header_fence_end(self,fn):
         fn.write("\n#ifdef __cplusplus\n}\n#endif\n#endif\n")
     def _gpl_tag(self):
-        s = """//  SPDX-License-Identifier: LGPL-3.0-or-later
+        s = """//    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+    Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
-   */
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
 """.format(date =  datetime.now().ctime())
         return s
 
@@ -788,7 +830,7 @@ class Wrapper(object):
         self._blas_defines(fn)
 
         for i,f in self.functions.items():
-            fn.write("    " + f.c_header(intel_interface = self.config.intel) + "\n")
+            fn.write("    " + f.c_headerx(intel_interface = self.config.intel) + "\n")
             if self.config.int32:
                 fn.write("    " + f.c_header(intwidth = 32, intel_interface = self.config.intel ) + "\n")
             if self.config.int64:
@@ -843,6 +885,7 @@ class Wrapper(object):
         fn.write("#include <stdlib.h>\n")
         fn.write("#include <stdint.h>\n")
         fn.write("#include <complex.h>\n\n")
+        fn.write("#include \"flexiblas_config.h\"\n\n")
         fn.write("#include \"flexiblas_fortran_mangle.h\"\n\n")
         fn.write("#include \"flexiblas.h\"\n\n")
         fn.write("#include \"flexiblas_fortran_char_len.h\"\n\n")

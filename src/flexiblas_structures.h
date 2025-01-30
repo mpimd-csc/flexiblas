@@ -1,22 +1,22 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+   Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
+   You should have received a copy of the GNU Lesser General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
    */
-
 
 
 
@@ -166,6 +166,8 @@ extern "C" {
         struct flexiblas_blasfn cdotu;
         struct flexiblas_blasfn cgbmv;
         struct flexiblas_blasfn cgemm;
+        struct flexiblas_blasfn cgemmt;
+        struct flexiblas_blasfn cgemmtr;
         struct flexiblas_blasfn cgemv;
         struct flexiblas_blasfn cgerc;
         struct flexiblas_blasfn cgeru;
@@ -201,6 +203,8 @@ extern "C" {
         struct flexiblas_blasfn ddot;
         struct flexiblas_blasfn dgbmv;
         struct flexiblas_blasfn dgemm;
+        struct flexiblas_blasfn dgemmt;
+        struct flexiblas_blasfn dgemmtr;
         struct flexiblas_blasfn dgemv;
         struct flexiblas_blasfn dger;
         struct flexiblas_blasfn dnrm2;
@@ -244,6 +248,8 @@ extern "C" {
         struct flexiblas_blasfn sdsdot;
         struct flexiblas_blasfn sgbmv;
         struct flexiblas_blasfn sgemm;
+        struct flexiblas_blasfn sgemmt;
+        struct flexiblas_blasfn sgemmtr;
         struct flexiblas_blasfn sgemv;
         struct flexiblas_blasfn sger;
         struct flexiblas_blasfn snrm2;
@@ -279,6 +285,8 @@ extern "C" {
         struct flexiblas_blasfn zdscal;
         struct flexiblas_blasfn zgbmv;
         struct flexiblas_blasfn zgemm;
+        struct flexiblas_blasfn zgemmt;
+        struct flexiblas_blasfn zgemmtr;
         struct flexiblas_blasfn zgemv;
         struct flexiblas_blasfn zgerc;
         struct flexiblas_blasfn zgeru;
@@ -344,6 +352,8 @@ extern "C" {
         struct flexiblas_hook_fn cdotu;
         struct flexiblas_hook_fn cgbmv;
         struct flexiblas_hook_fn cgemm;
+        struct flexiblas_hook_fn cgemmt;
+        struct flexiblas_hook_fn cgemmtr;
         struct flexiblas_hook_fn cgemv;
         struct flexiblas_hook_fn cgerc;
         struct flexiblas_hook_fn cgeru;
@@ -379,6 +389,8 @@ extern "C" {
         struct flexiblas_hook_fn ddot;
         struct flexiblas_hook_fn dgbmv;
         struct flexiblas_hook_fn dgemm;
+        struct flexiblas_hook_fn dgemmt;
+        struct flexiblas_hook_fn dgemmtr;
         struct flexiblas_hook_fn dgemv;
         struct flexiblas_hook_fn dger;
         struct flexiblas_hook_fn dnrm2;
@@ -422,6 +434,8 @@ extern "C" {
         struct flexiblas_hook_fn sdsdot;
         struct flexiblas_hook_fn sgbmv;
         struct flexiblas_hook_fn sgemm;
+        struct flexiblas_hook_fn sgemmt;
+        struct flexiblas_hook_fn sgemmtr;
         struct flexiblas_hook_fn sgemv;
         struct flexiblas_hook_fn sger;
         struct flexiblas_hook_fn snrm2;
@@ -457,6 +471,8 @@ extern "C" {
         struct flexiblas_hook_fn zdscal;
         struct flexiblas_hook_fn zgbmv;
         struct flexiblas_hook_fn zgemm;
+        struct flexiblas_hook_fn zgemmt;
+        struct flexiblas_hook_fn zgemmtr;
         struct flexiblas_hook_fn zgemv;
         struct flexiblas_hook_fn zgerc;
         struct flexiblas_hook_fn zgeru;

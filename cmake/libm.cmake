@@ -1,0 +1,17 @@
+include(CheckFunctionExists)
+
+if(NOT COS_FUNCTION_EXISTS AND NOT NEED_LINKING_AGAINST_LIBM)
+  CHECK_FUNCTION_EXISTS(cos COS_FUNCTION_EXISTS)
+  if(NOT COS_FUNCTION_EXISTS)
+      MESSAGE(STATUS "Check if cos needs libm")
+      unset(COS_FUNCTION_EXISTS CACHE)
+      list(APPEND CMAKE_REQUIRED_LIBRARIES m)
+      CHECK_FUNCTION_EXISTS(cos COS_FUNCTION_EXISTS)
+      if(COS_FUNCTION_EXISTS)
+          set(NEED_LINKING_AGAINST_LIBM True CACHE BOOL "" FORCE)
+      else()
+          message(FATAL_ERROR "Failed making the cos() or libm does not work properly.")
+      endif()
+  endif()
+endif()
+

@@ -1,26 +1,29 @@
-//  SPDX-License-Identifier: LGPL-3.0-or-later
+//    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+    Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
-   */
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <complex.h>
+
+#include "flexiblas_config.h"
 
 #include "flexiblas_fortran_mangle.h"
 
@@ -54,14 +57,12 @@ void FC_GLOBAL(slaqz0,SLAQZ0)(char* wants, char* wantq, char* wantz, blasint* n,
         return;
     }
 }
-#ifdef FLEXIBLAS_ABI_IBM
-void slaqz0_(char* wants, char* wantq, char* wantz, blasint* n, blasint* ilo, blasint* ihi, float* a, blasint* lda, float* b, blasint* ldb, float* alphar, float* alphai, float* beta, float* q, blasint* ldq, float* z, blasint* ldz, float* work, blasint* lwork, blasint* rec, blasint* info, flexiblas_fortran_charlen_t len_wants, flexiblas_fortran_charlen_t len_wantq, flexiblas_fortran_charlen_t len_wantz) __attribute__((alias(MTS(FC_GLOBAL(slaqz0,SLAQZ0)))));
-#else
 #ifndef __APPLE__
-void slaqz0(char* wants, char* wantq, char* wantz, blasint* n, blasint* ilo, blasint* ihi, float* a, blasint* lda, float* b, blasint* ldb, float* alphar, float* alphai, float* beta, float* q, blasint* ldq, float* z, blasint* ldz, float* work, blasint* lwork, blasint* rec, blasint* info, flexiblas_fortran_charlen_t len_wants, flexiblas_fortran_charlen_t len_wantq, flexiblas_fortran_charlen_t len_wantz) __attribute__((alias(MTS(FC_GLOBAL(slaqz0,SLAQZ0)))));
+void FC_GLOBAL2(slaqz0,SLAQZ0)(char* wants, char* wantq, char* wantz, blasint* n, blasint* ilo, blasint* ihi, float* a, blasint* lda, float* b, blasint* ldb, float* alphar, float* alphai, float* beta, float* q, blasint* ldq, float* z, blasint* ldz, float* work, blasint* lwork, blasint* rec, blasint* info, flexiblas_fortran_charlen_t len_wants, flexiblas_fortran_charlen_t len_wantq, flexiblas_fortran_charlen_t len_wantz) __attribute__((alias(MTS(FC_GLOBAL(slaqz0,SLAQZ0)))));
+void FC_GLOBAL3(slaqz0,SLAQZ0)(char* wants, char* wantq, char* wantz, blasint* n, blasint* ilo, blasint* ihi, float* a, blasint* lda, float* b, blasint* ldb, float* alphar, float* alphai, float* beta, float* q, blasint* ldq, float* z, blasint* ldz, float* work, blasint* lwork, blasint* rec, blasint* info, flexiblas_fortran_charlen_t len_wants, flexiblas_fortran_charlen_t len_wantq, flexiblas_fortran_charlen_t len_wantz) __attribute__((alias(MTS(FC_GLOBAL(slaqz0,SLAQZ0)))));
 #else
-void slaqz0(char* wants, char* wantq, char* wantz, blasint* n, blasint* ilo, blasint* ihi, float* a, blasint* lda, float* b, blasint* ldb, float* alphar, float* alphai, float* beta, float* q, blasint* ldq, float* z, blasint* ldz, float* work, blasint* lwork, blasint* rec, blasint* info, flexiblas_fortran_charlen_t len_wants, flexiblas_fortran_charlen_t len_wantq, flexiblas_fortran_charlen_t len_wantz){ FC_GLOBAL(slaqz0,SLAQZ0)((void*) wants, (void*) wantq, (void*) wantz, (void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) alphar, (void*) alphai, (void*) beta, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) rec, (void*) info, (flexiblas_fortran_charlen_t) len_wants, (flexiblas_fortran_charlen_t) len_wantq, (flexiblas_fortran_charlen_t) len_wantz); }
-#endif
+void FC_GLOBAL2(slaqz0,SLAQZ0)(char* wants, char* wantq, char* wantz, blasint* n, blasint* ilo, blasint* ihi, float* a, blasint* lda, float* b, blasint* ldb, float* alphar, float* alphai, float* beta, float* q, blasint* ldq, float* z, blasint* ldz, float* work, blasint* lwork, blasint* rec, blasint* info, flexiblas_fortran_charlen_t len_wants, flexiblas_fortran_charlen_t len_wantq, flexiblas_fortran_charlen_t len_wantz){ FC_GLOBAL(slaqz0,SLAQZ0)((void*) wants, (void*) wantq, (void*) wantz, (void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) alphar, (void*) alphai, (void*) beta, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) rec, (void*) info, (flexiblas_fortran_charlen_t) len_wants, (flexiblas_fortran_charlen_t) len_wantq, (flexiblas_fortran_charlen_t) len_wantz); }
+void FC_GLOBAL3(slaqz0,SLAQZ0)(char* wants, char* wantq, char* wantz, blasint* n, blasint* ilo, blasint* ihi, float* a, blasint* lda, float* b, blasint* ldb, float* alphar, float* alphai, float* beta, float* q, blasint* ldq, float* z, blasint* ldz, float* work, blasint* lwork, blasint* rec, blasint* info, flexiblas_fortran_charlen_t len_wants, flexiblas_fortran_charlen_t len_wantq, flexiblas_fortran_charlen_t len_wantz){ FC_GLOBAL(slaqz0,SLAQZ0)((void*) wants, (void*) wantq, (void*) wantz, (void*) n, (void*) ilo, (void*) ihi, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) alphar, (void*) alphai, (void*) beta, (void*) q, (void*) ldq, (void*) z, (void*) ldz, (void*) work, (void*) lwork, (void*) rec, (void*) info, (flexiblas_fortran_charlen_t) len_wants, (flexiblas_fortran_charlen_t) len_wantq, (flexiblas_fortran_charlen_t) len_wantz); }
 #endif
 
 

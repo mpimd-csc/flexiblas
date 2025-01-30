@@ -1,22 +1,22 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+   Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
+   You should have received a copy of the GNU Lesser General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
    */
-
 
 
 
@@ -73,6 +73,27 @@ extern "C" {
             const int K, const void *alpha, const void  *A,
             const int lda, const void  *B, const int ldb,
             const void *beta, void  *C, const int ldc);
+    void flexiblas_real_cblas_cgemmt(const CBLAS_LAYOUT layout, const CBLAS_UPLO uplo, const CBLAS_TRANSPOSE TransA,
+            const CBLAS_TRANSPOSE TransB, const int N,
+            const int K, const void *alpha, const void  *A,
+            const int lda, const void  *B, const int ldb,
+            const void *beta, void  *C, const int ldc);
+    void flexiblas_chain_cblas_cgemmt(const CBLAS_LAYOUT layout, const CBLAS_UPLO uplo, const CBLAS_TRANSPOSE TransA,
+            const CBLAS_TRANSPOSE TransB, const int N,
+            const int K, const void *alpha, const void  *A,
+            const int lda, const void  *B, const int ldb,
+            const void *beta, void  *C, const int ldc);
+    void flexiblas_real_cblas_cgemmtr(const CBLAS_LAYOUT layout, const CBLAS_UPLO uplo, const CBLAS_TRANSPOSE TransA,
+            const CBLAS_TRANSPOSE TransB, const int N,
+            const int K, const void *alpha, const void  *A,
+            const int lda, const void  *B, const int ldb,
+            const void *beta, void  *C, const int ldc);
+    void flexiblas_chain_cblas_cgemmtr(const CBLAS_LAYOUT layout, const CBLAS_UPLO uplo, const CBLAS_TRANSPOSE TransA,
+            const CBLAS_TRANSPOSE TransB, const int N,
+            const int K, const void *alpha, const void  *A,
+            const int lda, const void  *B, const int ldb,
+            const void *beta, void  *C, const int ldc);
+
     void flexiblas_real_cblas_cgemv(const CBLAS_LAYOUT layout,
             const CBLAS_TRANSPOSE TransA, const int M, const int N,
             const void *alpha, const void  *A, const int lda,
@@ -322,6 +343,27 @@ extern "C" {
             const int K, const void *alpha, const void  *A,
             const int lda, const void  *B, const int ldb,
             const void *beta, void  *C, const int ldc);
+    void flexiblas_real_cblas_zgemmt(const CBLAS_LAYOUT layout, const CBLAS_UPLO uplo, const CBLAS_TRANSPOSE TransA,
+            const CBLAS_TRANSPOSE TransB, const int N,
+            const int K, const void *alpha, const void  *A,
+            const int lda, const void  *B, const int ldb,
+            const void *beta, void  *C, const int ldc);
+    void flexiblas_chain_cblas_zgemmt(const CBLAS_LAYOUT layout, const CBLAS_UPLO uplo, const CBLAS_TRANSPOSE TransA,
+            const CBLAS_TRANSPOSE TransB, const int N,
+            const int K, const void *alpha, const void  *A,
+            const int lda, const void  *B, const int ldb,
+            const void *beta, void  *C, const int ldc);
+    void flexiblas_real_cblas_zgemmtr(const CBLAS_LAYOUT layout, const CBLAS_UPLO uplo, const CBLAS_TRANSPOSE TransA,
+            const CBLAS_TRANSPOSE TransB, const int N,
+            const int K, const void *alpha, const void  *A,
+            const int lda, const void  *B, const int ldb,
+            const void *beta, void  *C, const int ldc);
+    void flexiblas_chain_cblas_zgemmtr(const CBLAS_LAYOUT layout, const CBLAS_UPLO uplo, const CBLAS_TRANSPOSE TransA,
+            const CBLAS_TRANSPOSE TransB, const int N,
+            const int K, const void *alpha, const void  *A,
+            const int lda, const void  *B, const int ldb,
+            const void *beta, void  *C, const int ldc);
+
     void flexiblas_real_cblas_zgemv(const CBLAS_LAYOUT layout,
             const CBLAS_TRANSPOSE TransA, const int M, const int N,
             const void *alpha, const void  *A, const int lda,
@@ -571,6 +613,27 @@ extern "C" {
             const int K, const double alpha, const double  *A,
             const int lda, const double  *B, const int ldb,
             const double beta, double  *C, const int ldc);
+    void flexiblas_chain_cblas_dgemmt(const CBLAS_LAYOUT layout, const CBLAS_UPLO uplo,  const CBLAS_TRANSPOSE TransA,
+            const CBLAS_TRANSPOSE TransB, const int N,
+            const int K, const double alpha, const double  *A,
+            const int lda, const double  *B, const int ldb,
+            const double beta, double  *C, const int ldc);
+    void flexiblas_real_cblas_dgemmt(const CBLAS_LAYOUT layout, const CBLAS_UPLO uplo, const CBLAS_TRANSPOSE TransA,
+            const CBLAS_TRANSPOSE TransB, const int N,
+            const int K, const double alpha, const double  *A,
+            const int lda, const double  *B, const int ldb,
+            const double beta, double  *C, const int ldc);
+    void flexiblas_chain_cblas_dgemmtr(const CBLAS_LAYOUT layout, const CBLAS_UPLO uplo,  const CBLAS_TRANSPOSE TransA,
+            const CBLAS_TRANSPOSE TransB, const int N,
+            const int K, const double alpha, const double  *A,
+            const int lda, const double  *B, const int ldb,
+            const double beta, double  *C, const int ldc);
+    void flexiblas_real_cblas_dgemmtr(const CBLAS_LAYOUT layout, const CBLAS_UPLO uplo, const CBLAS_TRANSPOSE TransA,
+            const CBLAS_TRANSPOSE TransB, const int N,
+            const int K, const double alpha, const double  *A,
+            const int lda, const double  *B, const int ldb,
+            const double beta, double  *C, const int ldc);
+
     void flexiblas_chain_cblas_dgemv(const CBLAS_LAYOUT layout,
             const CBLAS_TRANSPOSE TransA, const int M, const int N,
             const double alpha, const double  *A, const int lda,
@@ -801,6 +864,27 @@ extern "C" {
             const int K, const float alpha, const float  *A,
             const int lda, const float  *B, const int ldb,
             const float beta, float  *C, const int ldc);
+    void flexiblas_chain_cblas_sgemmt(const CBLAS_LAYOUT layout, const CBLAS_UPLO uplo, const CBLAS_TRANSPOSE TransA,
+            const CBLAS_TRANSPOSE TransB, const int N,
+            const int K, const float alpha, const float  *A,
+            const int lda, const float  *B, const int ldb,
+            const float beta, float  *C, const int ldc);
+    void flexiblas_real_cblas_sgemmt(const CBLAS_LAYOUT layout, const CBLAS_UPLO uplo, const CBLAS_TRANSPOSE TransA,
+            const CBLAS_TRANSPOSE TransB, const int N,
+            const int K, const float alpha, const float  *A,
+            const int lda, const float  *B, const int ldb,
+            const float beta, float  *C, const int ldc);
+    void flexiblas_chain_cblas_sgemmtr(const CBLAS_LAYOUT layout, const CBLAS_UPLO uplo, const CBLAS_TRANSPOSE TransA,
+            const CBLAS_TRANSPOSE TransB, const int N,
+            const int K, const float alpha, const float  *A,
+            const int lda, const float  *B, const int ldb,
+            const float beta, float  *C, const int ldc);
+    void flexiblas_real_cblas_sgemmtr(const CBLAS_LAYOUT layout, const CBLAS_UPLO uplo, const CBLAS_TRANSPOSE TransA,
+            const CBLAS_TRANSPOSE TransB, const int N,
+            const int K, const float alpha, const float  *A,
+            const int lda, const float  *B, const int ldb,
+            const float beta, float  *C, const int ldc);
+
     void flexiblas_chain_cblas_sgemv(const CBLAS_LAYOUT layout,
             const CBLAS_TRANSPOSE TransA, const int M, const int N,
             const float alpha, const float  *A, const int lda,

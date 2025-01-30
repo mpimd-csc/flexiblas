@@ -1,21 +1,23 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+   Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
+   You should have received a copy of the GNU Lesser General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
    */
+
 
 #ifndef FLEXIBLAS_REAL_CALLS_H
 #define FLEXIBLAS_REAL_CALLS_H
@@ -55,6 +57,14 @@ extern "C" {
     void flexiblas_real_cgemm(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
     void flexiblas_chain_cgemm_(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
     void flexiblas_chain_cgemm(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_real_cgemmt_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_real_cgemmt(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_chain_cgemmt_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_chain_cgemmt(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_real_cgemmtr_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_real_cgemmtr(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_chain_cgemmtr_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_chain_cgemmtr(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
     void flexiblas_real_cgemv_(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy, flexiblas_fortran_charlen_t len_trans);
     void flexiblas_real_cgemv(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy, flexiblas_fortran_charlen_t len_trans);
     void flexiblas_chain_cgemv_(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy, flexiblas_fortran_charlen_t len_trans);
@@ -195,6 +205,14 @@ extern "C" {
     void flexiblas_real_dgemm(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
     void flexiblas_chain_dgemm_(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
     void flexiblas_chain_dgemm(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_real_dgemmt_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_real_dgemmt(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_chain_dgemmt_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_chain_dgemmt(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_real_dgemmtr_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_real_dgemmtr(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_chain_dgemmtr_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_chain_dgemmtr(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
     void flexiblas_real_dgemv_(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy, flexiblas_fortran_charlen_t len_trans);
     void flexiblas_real_dgemv(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy, flexiblas_fortran_charlen_t len_trans);
     void flexiblas_chain_dgemv_(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy, flexiblas_fortran_charlen_t len_trans);
@@ -367,6 +385,14 @@ extern "C" {
     void flexiblas_real_sgemm(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
     void flexiblas_chain_sgemm_(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
     void flexiblas_chain_sgemm(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_real_sgemmt_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_real_sgemmt(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_chain_sgemmt_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_chain_sgemmt(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_real_sgemmtr_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_real_sgemmtr(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_chain_sgemmtr_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_chain_sgemmtr(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
     void flexiblas_real_sgemv_(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy, flexiblas_fortran_charlen_t len_trans);
     void flexiblas_real_sgemv(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy, flexiblas_fortran_charlen_t len_trans);
     void flexiblas_chain_sgemv_(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy, flexiblas_fortran_charlen_t len_trans);
@@ -507,6 +533,14 @@ extern "C" {
     void flexiblas_real_zgemm(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
     void flexiblas_chain_zgemm_(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
     void flexiblas_chain_zgemm(void* transa, void* transb, void* m, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_real_zgemmt_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_real_zgemmt(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_chain_zgemmt_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_chain_zgemmt(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_real_zgemmtr_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_real_zgemmtr(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_chain_zgemmtr_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void flexiblas_chain_zgemmtr(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
     void flexiblas_real_zgemv_(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy, flexiblas_fortran_charlen_t len_trans);
     void flexiblas_real_zgemv(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy, flexiblas_fortran_charlen_t len_trans);
     void flexiblas_chain_zgemv_(void* trans, void* m, void* n, void* alpha, void* a, void* lda, void* x, void* incx, void* beta, void* y, void* incy, flexiblas_fortran_charlen_t len_trans);

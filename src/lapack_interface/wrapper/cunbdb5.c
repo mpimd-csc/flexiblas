@@ -1,26 +1,29 @@
-//  SPDX-License-Identifier: LGPL-3.0-or-later
+//    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+    Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
-   */
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <complex.h>
+
+#include "flexiblas_config.h"
 
 #include "flexiblas_fortran_mangle.h"
 
@@ -54,14 +57,12 @@ void FC_GLOBAL(cunbdb5,CUNBDB5)(blasint* m1, blasint* m2, blasint* n, float comp
         return;
     }
 }
-#ifdef FLEXIBLAS_ABI_IBM
-void cunbdb5_(blasint* m1, blasint* m2, blasint* n, float complex* x1, blasint* incx1, float complex* x2, blasint* incx2, float complex* q1, blasint* ldq1, float complex* q2, blasint* ldq2, float complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cunbdb5,CUNBDB5)))));
-#else
 #ifndef __APPLE__
-void cunbdb5(blasint* m1, blasint* m2, blasint* n, float complex* x1, blasint* incx1, float complex* x2, blasint* incx2, float complex* q1, blasint* ldq1, float complex* q2, blasint* ldq2, float complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cunbdb5,CUNBDB5)))));
+void FC_GLOBAL2(cunbdb5,CUNBDB5)(blasint* m1, blasint* m2, blasint* n, float complex* x1, blasint* incx1, float complex* x2, blasint* incx2, float complex* q1, blasint* ldq1, float complex* q2, blasint* ldq2, float complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cunbdb5,CUNBDB5)))));
+void FC_GLOBAL3(cunbdb5,CUNBDB5)(blasint* m1, blasint* m2, blasint* n, float complex* x1, blasint* incx1, float complex* x2, blasint* incx2, float complex* q1, blasint* ldq1, float complex* q2, blasint* ldq2, float complex* work, blasint* lwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(cunbdb5,CUNBDB5)))));
 #else
-void cunbdb5(blasint* m1, blasint* m2, blasint* n, float complex* x1, blasint* incx1, float complex* x2, blasint* incx2, float complex* q1, blasint* ldq1, float complex* q2, blasint* ldq2, float complex* work, blasint* lwork, blasint* info){ FC_GLOBAL(cunbdb5,CUNBDB5)((void*) m1, (void*) m2, (void*) n, (void*) x1, (void*) incx1, (void*) x2, (void*) incx2, (void*) q1, (void*) ldq1, (void*) q2, (void*) ldq2, (void*) work, (void*) lwork, (void*) info); }
-#endif
+void FC_GLOBAL2(cunbdb5,CUNBDB5)(blasint* m1, blasint* m2, blasint* n, float complex* x1, blasint* incx1, float complex* x2, blasint* incx2, float complex* q1, blasint* ldq1, float complex* q2, blasint* ldq2, float complex* work, blasint* lwork, blasint* info){ FC_GLOBAL(cunbdb5,CUNBDB5)((void*) m1, (void*) m2, (void*) n, (void*) x1, (void*) incx1, (void*) x2, (void*) incx2, (void*) q1, (void*) ldq1, (void*) q2, (void*) ldq2, (void*) work, (void*) lwork, (void*) info); }
+void FC_GLOBAL3(cunbdb5,CUNBDB5)(blasint* m1, blasint* m2, blasint* n, float complex* x1, blasint* incx1, float complex* x2, blasint* incx2, float complex* q1, blasint* ldq1, float complex* q2, blasint* ldq2, float complex* work, blasint* lwork, blasint* info){ FC_GLOBAL(cunbdb5,CUNBDB5)((void*) m1, (void*) m2, (void*) n, (void*) x1, (void*) incx1, (void*) x2, (void*) incx2, (void*) q1, (void*) ldq1, (void*) q2, (void*) ldq2, (void*) work, (void*) lwork, (void*) info); }
 #endif
 
 

@@ -1,26 +1,29 @@
-//  SPDX-License-Identifier: LGPL-3.0-or-later
+//    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+    Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
-   */
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <complex.h>
+
+#include "flexiblas_config.h"
 
 #include "flexiblas_fortran_mangle.h"
 
@@ -54,14 +57,12 @@ void FC_GLOBAL(dlarrb,DLARRB)(blasint* n, double* d, double* lld, blasint* ifirs
         return;
     }
 }
-#ifdef FLEXIBLAS_ABI_IBM
-void dlarrb_(blasint* n, double* d, double* lld, blasint* ifirst, blasint* ilast, double* rtol1, double* rtol2, blasint* offset, double* w, double* wgap, double* werr, double* work, blasint* iwork, double* pivmin, double* spdiam, blasint* twist, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlarrb,DLARRB)))));
-#else
 #ifndef __APPLE__
-void dlarrb(blasint* n, double* d, double* lld, blasint* ifirst, blasint* ilast, double* rtol1, double* rtol2, blasint* offset, double* w, double* wgap, double* werr, double* work, blasint* iwork, double* pivmin, double* spdiam, blasint* twist, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlarrb,DLARRB)))));
+void FC_GLOBAL2(dlarrb,DLARRB)(blasint* n, double* d, double* lld, blasint* ifirst, blasint* ilast, double* rtol1, double* rtol2, blasint* offset, double* w, double* wgap, double* werr, double* work, blasint* iwork, double* pivmin, double* spdiam, blasint* twist, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlarrb,DLARRB)))));
+void FC_GLOBAL3(dlarrb,DLARRB)(blasint* n, double* d, double* lld, blasint* ifirst, blasint* ilast, double* rtol1, double* rtol2, blasint* offset, double* w, double* wgap, double* werr, double* work, blasint* iwork, double* pivmin, double* spdiam, blasint* twist, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlarrb,DLARRB)))));
 #else
-void dlarrb(blasint* n, double* d, double* lld, blasint* ifirst, blasint* ilast, double* rtol1, double* rtol2, blasint* offset, double* w, double* wgap, double* werr, double* work, blasint* iwork, double* pivmin, double* spdiam, blasint* twist, blasint* info){ FC_GLOBAL(dlarrb,DLARRB)((void*) n, (void*) d, (void*) lld, (void*) ifirst, (void*) ilast, (void*) rtol1, (void*) rtol2, (void*) offset, (void*) w, (void*) wgap, (void*) werr, (void*) work, (void*) iwork, (void*) pivmin, (void*) spdiam, (void*) twist, (void*) info); }
-#endif
+void FC_GLOBAL2(dlarrb,DLARRB)(blasint* n, double* d, double* lld, blasint* ifirst, blasint* ilast, double* rtol1, double* rtol2, blasint* offset, double* w, double* wgap, double* werr, double* work, blasint* iwork, double* pivmin, double* spdiam, blasint* twist, blasint* info){ FC_GLOBAL(dlarrb,DLARRB)((void*) n, (void*) d, (void*) lld, (void*) ifirst, (void*) ilast, (void*) rtol1, (void*) rtol2, (void*) offset, (void*) w, (void*) wgap, (void*) werr, (void*) work, (void*) iwork, (void*) pivmin, (void*) spdiam, (void*) twist, (void*) info); }
+void FC_GLOBAL3(dlarrb,DLARRB)(blasint* n, double* d, double* lld, blasint* ifirst, blasint* ilast, double* rtol1, double* rtol2, blasint* offset, double* w, double* wgap, double* werr, double* work, blasint* iwork, double* pivmin, double* spdiam, blasint* twist, blasint* info){ FC_GLOBAL(dlarrb,DLARRB)((void*) n, (void*) d, (void*) lld, (void*) ifirst, (void*) ilast, (void*) rtol1, (void*) rtol2, (void*) offset, (void*) w, (void*) wgap, (void*) werr, (void*) work, (void*) iwork, (void*) pivmin, (void*) spdiam, (void*) twist, (void*) info); }
 #endif
 
 

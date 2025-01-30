@@ -1,26 +1,29 @@
-//  SPDX-License-Identifier: LGPL-3.0-or-later
+//    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+    Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
-   */
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <complex.h>
+
+#include "flexiblas_config.h"
 
 #include "flexiblas_fortran_mangle.h"
 
@@ -54,14 +57,12 @@ void FC_GLOBAL(zggsvp,ZGGSVP)(char* jobu, char* jobv, char* jobq, blasint* m, bl
         return;
     }
 }
-#ifdef FLEXIBLAS_ABI_IBM
-void zggsvp_(char* jobu, char* jobv, char* jobq, blasint* m, blasint* p, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* tola, double* tolb, blasint* k, blasint* l, double complex* u, blasint* ldu, double complex* v, blasint* ldv, double complex* q, blasint* ldq, blasint* iwork, double* rwork, double complex* tau, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_jobu, flexiblas_fortran_charlen_t len_jobv, flexiblas_fortran_charlen_t len_jobq) __attribute__((alias(MTS(FC_GLOBAL(zggsvp,ZGGSVP)))));
-#else
 #ifndef __APPLE__
-void zggsvp(char* jobu, char* jobv, char* jobq, blasint* m, blasint* p, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* tola, double* tolb, blasint* k, blasint* l, double complex* u, blasint* ldu, double complex* v, blasint* ldv, double complex* q, blasint* ldq, blasint* iwork, double* rwork, double complex* tau, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_jobu, flexiblas_fortran_charlen_t len_jobv, flexiblas_fortran_charlen_t len_jobq) __attribute__((alias(MTS(FC_GLOBAL(zggsvp,ZGGSVP)))));
+void FC_GLOBAL2(zggsvp,ZGGSVP)(char* jobu, char* jobv, char* jobq, blasint* m, blasint* p, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* tola, double* tolb, blasint* k, blasint* l, double complex* u, blasint* ldu, double complex* v, blasint* ldv, double complex* q, blasint* ldq, blasint* iwork, double* rwork, double complex* tau, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_jobu, flexiblas_fortran_charlen_t len_jobv, flexiblas_fortran_charlen_t len_jobq) __attribute__((alias(MTS(FC_GLOBAL(zggsvp,ZGGSVP)))));
+void FC_GLOBAL3(zggsvp,ZGGSVP)(char* jobu, char* jobv, char* jobq, blasint* m, blasint* p, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* tola, double* tolb, blasint* k, blasint* l, double complex* u, blasint* ldu, double complex* v, blasint* ldv, double complex* q, blasint* ldq, blasint* iwork, double* rwork, double complex* tau, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_jobu, flexiblas_fortran_charlen_t len_jobv, flexiblas_fortran_charlen_t len_jobq) __attribute__((alias(MTS(FC_GLOBAL(zggsvp,ZGGSVP)))));
 #else
-void zggsvp(char* jobu, char* jobv, char* jobq, blasint* m, blasint* p, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* tola, double* tolb, blasint* k, blasint* l, double complex* u, blasint* ldu, double complex* v, blasint* ldv, double complex* q, blasint* ldq, blasint* iwork, double* rwork, double complex* tau, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_jobu, flexiblas_fortran_charlen_t len_jobv, flexiblas_fortran_charlen_t len_jobq){ FC_GLOBAL(zggsvp,ZGGSVP)((void*) jobu, (void*) jobv, (void*) jobq, (void*) m, (void*) p, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) tola, (void*) tolb, (void*) k, (void*) l, (void*) u, (void*) ldu, (void*) v, (void*) ldv, (void*) q, (void*) ldq, (void*) iwork, (void*) rwork, (void*) tau, (void*) work, (void*) info, (flexiblas_fortran_charlen_t) len_jobu, (flexiblas_fortran_charlen_t) len_jobv, (flexiblas_fortran_charlen_t) len_jobq); }
-#endif
+void FC_GLOBAL2(zggsvp,ZGGSVP)(char* jobu, char* jobv, char* jobq, blasint* m, blasint* p, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* tola, double* tolb, blasint* k, blasint* l, double complex* u, blasint* ldu, double complex* v, blasint* ldv, double complex* q, blasint* ldq, blasint* iwork, double* rwork, double complex* tau, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_jobu, flexiblas_fortran_charlen_t len_jobv, flexiblas_fortran_charlen_t len_jobq){ FC_GLOBAL(zggsvp,ZGGSVP)((void*) jobu, (void*) jobv, (void*) jobq, (void*) m, (void*) p, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) tola, (void*) tolb, (void*) k, (void*) l, (void*) u, (void*) ldu, (void*) v, (void*) ldv, (void*) q, (void*) ldq, (void*) iwork, (void*) rwork, (void*) tau, (void*) work, (void*) info, (flexiblas_fortran_charlen_t) len_jobu, (flexiblas_fortran_charlen_t) len_jobv, (flexiblas_fortran_charlen_t) len_jobq); }
+void FC_GLOBAL3(zggsvp,ZGGSVP)(char* jobu, char* jobv, char* jobq, blasint* m, blasint* p, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* tola, double* tolb, blasint* k, blasint* l, double complex* u, blasint* ldu, double complex* v, blasint* ldv, double complex* q, blasint* ldq, blasint* iwork, double* rwork, double complex* tau, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_jobu, flexiblas_fortran_charlen_t len_jobv, flexiblas_fortran_charlen_t len_jobq){ FC_GLOBAL(zggsvp,ZGGSVP)((void*) jobu, (void*) jobv, (void*) jobq, (void*) m, (void*) p, (void*) n, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) tola, (void*) tolb, (void*) k, (void*) l, (void*) u, (void*) ldu, (void*) v, (void*) ldv, (void*) q, (void*) ldq, (void*) iwork, (void*) rwork, (void*) tau, (void*) work, (void*) info, (flexiblas_fortran_charlen_t) len_jobu, (flexiblas_fortran_charlen_t) len_jobv, (flexiblas_fortran_charlen_t) len_jobq); }
 #endif
 
 

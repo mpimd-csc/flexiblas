@@ -68,24 +68,37 @@ CONTAINS
 
         INTEGER :: I, J, INCREMENT
         DOUBLE PRECISION :: TEMP
+        LOGICAL :: SWAPPED
 
-        INCREMENT = SIZE(A) / 2
-        DO WHILE (INCREMENT > 0)
-            DO I = INCREMENT+1, SIZE(A)
-                J = I
-                TEMP = A(I)
-                DO WHILE (J >= INCREMENT+1 .AND. A(J-INCREMENT) > TEMP)
-                    A(J) = A(J-INCREMENT)
-                    J = J - INCREMENT
-                END DO
-                A(J) = TEMP
+        DO J = N-1, 1, -1
+            SWAPPED = .FALSE.
+            DO I = 1, J
+                IF (A(I) > A(I+1)) THEN
+                    TEMP = A(I)
+                    A(I) = A(I+1)
+                    A(I+1) = TEMP
+                    SWAPPED = .TRUE.
+                END IF
             END DO
-            IF (INCREMENT == 2) THEN
-                INCREMENT = 1
-            ELSE
-                INCREMENT = INCREMENT * 5 / 11
-            END IF
+            IF (.NOT. SWAPPED) EXIT
         END DO
+        ! INCREMENT = N / 2
+        ! DO WHILE (INCREMENT > 0)
+        !     DO I = INCREMENT+1, N
+        !         J = I
+        !         TEMP = A(I)
+        !         DO WHILE (J >= INCREMENT+1 .AND.  A(J-INCREMENT) > TEMP)
+        !             A(J) = A(J-INCREMENT)
+        !             J = J - INCREMENT
+        !         END DO
+        !         A(J) = TEMP
+        !     END DO
+        !     IF (INCREMENT == 2) THEN
+        !         INCREMENT = 1
+        !     ELSE
+        !         INCREMENT = INCREMENT * 5 / 11
+        !     END IF
+        ! END DO
 
     END SUBROUTINE SORTD
 
@@ -160,7 +173,7 @@ CONTAINS
         OUTPUT%IQR = IQR
 
         ! Lower Whisker
-        LW = OUTPUT%MEDIAN - IQRFACT*OUTPUT%IQR
+        LW = OUTPUT%LOWERQUART - IQRFACT*OUTPUT%IQR
         K = 1
         DO WHILE  ( K.LE.N .AND. LW .GT. A(K))
             K = K +1
@@ -170,7 +183,7 @@ CONTAINS
         OUTPUT%LOWERWHISKER = LW
 
         ! Upper Whisker
-        UW = OUTPUT%MEDIAN + IQRFACT*OUTPUT%IQR
+        UW = OUTPUT%UPPERQUART+ IQRFACT*OUTPUT%IQR
         K = 1
 
         DO WHILE  ( K.LE.N .AND. UW .GT. A(K))

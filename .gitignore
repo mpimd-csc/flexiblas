@@ -6,6 +6,7 @@
 *.o
 *.oct
 *.pyc
+*.rej
 *.swp
 *.tar.gz
 *octave-workspace*

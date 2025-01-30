@@ -1,26 +1,29 @@
-//  SPDX-License-Identifier: LGPL-3.0-or-later
+//    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+    Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
-   */
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <complex.h>
+
+#include "flexiblas_config.h"
 
 #include "flexiblas_fortran_mangle.h"
 
@@ -31,9 +34,9 @@
 
 static TLS_STORE uint8_t hook_pos_icmax1 = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-int FC_GLOBAL(icmax1,ICMAX1)(blasint* n, float complex* cx, blasint* incx)
+blasint FC_GLOBAL(icmax1,ICMAX1)(blasint* n, float complex* cx, blasint* incx)
 #else
-int FC_GLOBAL(icmax1,ICMAX1)(blasint* n, float complex* cx, blasint* incx)
+blasint FC_GLOBAL(icmax1,ICMAX1)(blasint* n, float complex* cx, blasint* incx)
 #endif
 {
     blasint (*fn) (void* n, void* cx, void* incx);
@@ -55,14 +58,12 @@ int FC_GLOBAL(icmax1,ICMAX1)(blasint* n, float complex* cx, blasint* incx)
         return ret;
     }
 }
-#ifdef FLEXIBLAS_ABI_IBM
-int icmax1_(blasint* n, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(icmax1,ICMAX1)))));
-#else
 #ifndef __APPLE__
-int icmax1(blasint* n, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(icmax1,ICMAX1)))));
+blasint FC_GLOBAL2(icmax1,ICMAX1)(blasint* n, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(icmax1,ICMAX1)))));
+blasint FC_GLOBAL3(icmax1,ICMAX1)(blasint* n, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(icmax1,ICMAX1)))));
 #else
-int icmax1(blasint* n, float complex* cx, blasint* incx){ return FC_GLOBAL(icmax1,ICMAX1)((void*) n, (void*) cx, (void*) incx); }
-#endif
+blasint FC_GLOBAL2(icmax1,ICMAX1)(blasint* n, float complex* cx, blasint* incx){ return FC_GLOBAL(icmax1,ICMAX1)((void*) n, (void*) cx, (void*) incx); }
+blasint FC_GLOBAL3(icmax1,ICMAX1)(blasint* n, float complex* cx, blasint* incx){ return FC_GLOBAL(icmax1,ICMAX1)((void*) n, (void*) cx, (void*) incx); }
 #endif
 
 

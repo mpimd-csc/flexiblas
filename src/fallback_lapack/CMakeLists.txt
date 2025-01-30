@@ -73,14 +73,22 @@ if( (CMAKE_Fortran_COMPILER_ID STREQUAL "VisualAge" ) OR  # CMake 2.6
     endif()
 endif()
 
+
+if (NEED_LINKING_AGAINST_LIBM)
+    SET(LIBM m)
+else()
+    SET(LIBM)
+endif()
+
 if ( SYS_LAPACK_LIBRARY )
     message(STATUS "Use system provided LAPACK for fallback generation. SYS_LAPACK_LIBRARY = ${SYS_LAPACK_LIBRARY}")
     add_library(flexiblas_lapack_import STATIC IMPORTED)
     set_property(TARGET flexiblas_lapack_import PROPERTY IMPORTED_LOCATION ${SYS_LAPACK_LIBRARY})
     add_library(flexiblas_fallback_lapack SHARED ${SRC})
-    target_link_libraries(flexiblas_fallback_lapack PUBLIC flexiblas_lapack_import)
+    target_link_libraries(flexiblas_fallback_lapack PUBLIC flexiblas_lapack_import PRIVATE ${LIBM})
 else()
     add_library(flexiblas_fallback_lapack SHARED ${SRC} $<TARGET_OBJECTS:flexiblas_fallback_lapack_objs>)
+    target_link_libraries(flexiblas_fallback_lapack PRIVATE ${LIBM})
 endif()
 
 if (APPLE)

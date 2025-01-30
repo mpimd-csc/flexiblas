@@ -13,7 +13,11 @@
 
 void F77_dgemm(F77_INT *layout, char *transpa, char *transpb, F77_INT *m, F77_INT *n,
               F77_INT *k, double *alpha, double *a, F77_INT *lda, double *b, F77_INT *ldb,
-              double *beta, double *c, F77_INT *ldc ) {
+              double *beta, double *c, F77_INT *ldc
+#ifdef BLAS_FORTRAN_STRLEN_END
+  , FORTRAN_STRLEN transpa_len, FORTRAN_STRLEN transpb_len
+#endif
+) {
 
   double *A, *B, *C;
   F77_INT i,j,LDA, LDB, LDC;
@@ -73,9 +77,92 @@ void F77_dgemm(F77_INT *layout, char *transpa, char *transpb, F77_INT *m, F77_IN
      cblas_dgemm( UNDEFINED, transa, transb, *m, *n, *k, *alpha, a, *lda,
                   b, *ldb, *beta, c, *ldc );
 }
+
+void F77_dgemmtr(F77_INT *layout, char *uplop, char *transpa, char *transpb, F77_INT *n,
+     F77_INT *k, double *alpha, double *a, F77_INT *lda,
+     double *b, F77_INT *ldb, double *beta,
+     double *c, F77_INT *ldc, FORTRAN_STRLEN len_1, FORTRAN_STRLEN len_2, FORTRAN_STRLEN len_3 ) {
+
+  double *A, *B, *C;
+  F77_INT i,j,LDA, LDB, LDC;
+  CBLAS_TRANSPOSE transa, transb;
+  CBLAS_UPLO uplo;
+
+  get_transpose_type(transpa, &transa);
+  get_transpose_type(transpb, &transb);
+  get_uplo_type(uplop, &uplo);
+
+  if (*layout == TEST_ROW_MJR) {
+     if (transa == CblasNoTrans) {
+        LDA = *k+1;
+        A=(double*)malloc((*n)*LDA*sizeof(double));
+        for( i=0; i<*n; i++ )
+           for( j=0; j<*k; j++ ) {
+              A[i*LDA+j]=a[j*(*lda)+i];
+           }
+     }
+     else {
+        LDA = *n+1;
+        A=(double* )malloc(LDA*(*k)*sizeof(double));
+        for( i=0; i<*k; i++ )
+           for( j=0; j<*n; j++ ) {
+              A[i*LDA+j]=a[j*(*lda)+i];
+           }
+     }
+
+     if (transb == CblasNoTrans) {
+        LDB = *n+1;
+        B=(double* )malloc((*k)*LDB*sizeof(double) );
+        for( i=0; i<*k; i++ )
+           for( j=0; j<*n; j++ ) {
+              B[i*LDB+j]=b[j*(*ldb)+i];
+           }
+     }
+     else {
+        LDB = *k+1;
+        B=(double* )malloc(LDB*(*n)*sizeof(double));
+        for( i=0; i<*n; i++ )
+           for( j=0; j<*k; j++ ) {
+              B[i*LDB+j]=b[j*(*ldb)+i];
+           }
+     }
+
+     LDC = *n+1;
+     C=(double* )malloc((*n)*LDC*sizeof(double));
+     for( j=0; j<*n; j++ )
+        for( i=0; i<*n; i++ ) {
+           C[i*LDC+j]=c[j*(*ldc)+i];
+        }
+     cblas_dgemmtr( CblasRowMajor, uplo, transa, transb, *n, *k, *alpha, A, LDA,
+                  B, LDB, *beta, C, LDC );
+     for( j=0; j<*n; j++ )
+        for( i=0; i<*n; i++ ) {
+           c[j*(*ldc)+i]=C[i*LDC+j];
+        }
+     free(A);
+     free(B);
+     free(C);
+  }
+  else if (*layout == TEST_COL_MJR){
+     cblas_dgemmtr( CblasColMajor, uplo, transa, transb, *n, *k, *alpha, a, *lda,
+                  b, *ldb, *beta, c, *ldc );
+  }
+  else
+     cblas_dgemmtr( UNDEFINED, uplo, transa, transb, *n, *k, *alpha, a, *lda,
+                  b, *ldb, *beta, c, *ldc );
+}
+
+
+
+
+
 void F77_dsymm(F77_INT *layout, char *rtlf, char *uplow, F77_INT *m, F77_INT *n,
               double *alpha, double *a, F77_INT *lda, double *b, F77_INT *ldb,
-              double *beta, double *c, F77_INT *ldc ) {
+              double *beta, double *c, F77_INT *ldc
+#ifdef BLAS_FORTRAN_STRLEN_END
+  , FORTRAN_STRLEN rtlf_len, FORTRAN_STRLEN uplow_len
+#endif
+) {
 
   double *A, *B, *C;
   F77_INT i,j,LDA, LDB, LDC;
@@ -129,7 +216,11 @@ void F77_dsymm(F77_INT *layout, char *rtlf, char *uplow, F77_INT *m, F77_INT *n,
 
 void F77_dsyrk(F77_INT *layout, char *uplow, char *transp, F77_INT *n, F77_INT *k,
               double *alpha, double *a, F77_INT *lda,
-              double *beta, double *c, F77_INT *ldc ) {
+              double *beta, double *c, F77_INT *ldc
+#ifdef BLAS_FORTRAN_STRLEN_END
+  , FORTRAN_STRLEN uplow_len, FORTRAN_STRLEN transp_len
+#endif
+) {
 
   F77_INT i,j,LDA,LDC;
   double *A, *C;
@@ -177,7 +268,11 @@ void F77_dsyrk(F77_INT *layout, char *uplow, char *transp, F77_INT *n, F77_INT *
 
 void F77_dsyr2k(F77_INT *layout, char *uplow, char *transp, F77_INT *n, F77_INT *k,
                double *alpha, double *a, F77_INT *lda, double *b, F77_INT *ldb,
-               double *beta, double *c, F77_INT *ldc ) {
+               double *beta, double *c, F77_INT *ldc
+#ifdef BLAS_FORTRAN_STRLEN_END
+  , FORTRAN_STRLEN uplow_len, FORTRAN_STRLEN transp_len
+#endif
+) {
   F77_INT i,j,LDA,LDB,LDC;
   double *A, *B, *C;
   CBLAS_UPLO uplo;
@@ -232,7 +327,11 @@ void F77_dsyr2k(F77_INT *layout, char *uplow, char *transp, F77_INT *n, F77_INT 
 }
 void F77_dtrmm(F77_INT *layout, char *rtlf, char *uplow, char *transp, char *diagn,
               F77_INT *m, F77_INT *n, double *alpha, double *a, F77_INT *lda, double *b,
-              F77_INT *ldb) {
+              F77_INT *ldb
+#ifdef BLAS_FORTRAN_STRLEN_END
+  , FORTRAN_STRLEN rtlf_len, FORTRAN_STRLEN uplow_len, FORTRAN_STRLEN transp_len, FORTRAN_STRLEN diag_len
+#endif
+) {
   F77_INT i,j,LDA,LDB;
   double *A, *B;
   CBLAS_SIDE side;
@@ -283,7 +382,11 @@ void F77_dtrmm(F77_INT *layout, char *rtlf, char *uplow, char *transp, char *dia
 
 void F77_dtrsm(F77_INT *layout, char *rtlf, char *uplow, char *transp, char *diagn,
               F77_INT *m, F77_INT *n, double *alpha, double *a, F77_INT *lda, double *b,
-              F77_INT *ldb) {
+              F77_INT *ldb
+#ifdef BLAS_FORTRAN_STRLEN_END
+  , FORTRAN_STRLEN rtlf_len, FORTRAN_STRLEN uplow_len, FORTRAN_STRLEN transp_len, FORTRAN_STRLEN diagn_len
+#endif
+) {
   F77_INT i,j,LDA,LDB;
   double *A, *B;
   CBLAS_SIDE side;

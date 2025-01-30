@@ -1,21 +1,24 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+   Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
+   You should have received a copy of the GNU Lesser General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
    */
+
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,6 +38,7 @@ HIDDEN int __flexiblas_load_fblas ( flexiblas_backend_t *handle, int *loaded, in
     LOAD_FBLAS(handle,blas.cdotu,cdotu);
     LOAD_FBLAS(handle,blas.cgbmv,cgbmv);
     LOAD_FBLAS(handle,blas.cgemm,cgemm);
+    LOAD_FBLAS2(handle,blas.cgemmtr,blas.cgemmt,cgemmtr,cgemmt);
     LOAD_FBLAS(handle,blas.cgemv,cgemv);
     LOAD_FBLAS(handle,blas.cgerc,cgerc);
     LOAD_FBLAS(handle,blas.cgeru,cgeru);
@@ -70,6 +74,7 @@ HIDDEN int __flexiblas_load_fblas ( flexiblas_backend_t *handle, int *loaded, in
     LOAD_FBLAS(handle,blas.ddot,ddot);
     LOAD_FBLAS(handle,blas.dgbmv,dgbmv);
     LOAD_FBLAS(handle,blas.dgemm,dgemm);
+    LOAD_FBLAS2(handle,blas.dgemmtr,blas.dgemmt,dgemmtr,dgemmt);
     LOAD_FBLAS(handle,blas.dgemv,dgemv);
     LOAD_FBLAS(handle,blas.dger,dger);
     LOAD_FBLAS(handle,blas.dnrm2,dnrm2);
@@ -113,6 +118,7 @@ HIDDEN int __flexiblas_load_fblas ( flexiblas_backend_t *handle, int *loaded, in
     LOAD_FBLAS(handle,blas.sdsdot,sdsdot);
     LOAD_FBLAS(handle,blas.sgbmv,sgbmv);
     LOAD_FBLAS(handle,blas.sgemm,sgemm);
+    LOAD_FBLAS2(handle,blas.sgemmtr,blas.sgemmt,sgemmtr,sgemmt);
     LOAD_FBLAS(handle,blas.sgemv,sgemv);
     LOAD_FBLAS(handle,blas.sger,sger);
     LOAD_FBLAS(handle,blas.snrm2,snrm2);
@@ -148,6 +154,7 @@ HIDDEN int __flexiblas_load_fblas ( flexiblas_backend_t *handle, int *loaded, in
     LOAD_FBLAS(handle,blas.zdscal,zdscal);
     LOAD_FBLAS(handle,blas.zgbmv,zgbmv);
     LOAD_FBLAS(handle,blas.zgemm,zgemm);
+    LOAD_FBLAS2(handle,blas.zgemmtr,blas.zgemmt,zgemmtr,zgemmt);
     LOAD_FBLAS(handle,blas.zgemv,zgemv);
     LOAD_FBLAS(handle,blas.zgerc,zgerc);
     LOAD_FBLAS(handle,blas.zgeru,zgeru);
@@ -218,12 +225,15 @@ void FC_GLOBAL(caxpy,CAXPY)(blasint* n, float complex* ca, float complex* cx, bl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void caxpy_(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(caxpy,CAXPY)))));
+void FC_GLOBAL2(caxpy,CAXPY)(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(caxpy,CAXPY)))));
+void FC_GLOBAL3(caxpy,CAXPY)(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(caxpy,CAXPY)))));
 #else
 #ifndef __APPLE__
-void caxpy(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(caxpy,CAXPY)))));
+void FC_GLOBAL2(caxpy,CAXPY)(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(caxpy,CAXPY)))));
+void FC_GLOBAL3(caxpy,CAXPY)(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(caxpy,CAXPY)))));
 #else
-void caxpy(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cy, blasint* incy){ FC_GLOBAL(caxpy,CAXPY)((void*) n, (void*) ca, (void*) cx, (void*) incx, (void*) cy, (void*) incy); }
+void FC_GLOBAL2(caxpy,CAXPY)(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cy, blasint* incy){ FC_GLOBAL(caxpy,CAXPY)((void*) n, (void*) ca, (void*) cx, (void*) incx, (void*) cy, (void*) incy); }
+void FC_GLOBAL3(caxpy,CAXPY)(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cy, blasint* incy){ FC_GLOBAL(caxpy,CAXPY)((void*) n, (void*) ca, (void*) cx, (void*) incx, (void*) cy, (void*) incy); }
 #endif
 #endif
 
@@ -290,12 +300,15 @@ void FC_GLOBAL(ccopy,CCOPY)(blasint* n, float complex* cx, blasint* incx, float 
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void ccopy_(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(ccopy,CCOPY)))));
+void FC_GLOBAL2(ccopy,CCOPY)(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(ccopy,CCOPY)))));
+void FC_GLOBAL3(ccopy,CCOPY)(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(ccopy,CCOPY)))));
 #else
 #ifndef __APPLE__
-void ccopy(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(ccopy,CCOPY)))));
+void FC_GLOBAL2(ccopy,CCOPY)(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(ccopy,CCOPY)))));
+void FC_GLOBAL3(ccopy,CCOPY)(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(ccopy,CCOPY)))));
 #else
-void ccopy(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy){ FC_GLOBAL(ccopy,CCOPY)((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy); }
+void FC_GLOBAL2(ccopy,CCOPY)(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy){ FC_GLOBAL(ccopy,CCOPY)((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy); }
+void FC_GLOBAL3(ccopy,CCOPY)(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy){ FC_GLOBAL(ccopy,CCOPY)((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy); }
 #endif
 #endif
 
@@ -376,12 +389,15 @@ void FC_GLOBAL(cdotc,CDOTC)( float complex* returnvalue, blasint* n, float compl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void cdotc_( float complex* returnvalue, blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cdotc,CDOTC)))));
+void FC_GLOBAL2(cdotc,CDOTC)( float complex* returnvalue, blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cdotc,CDOTC)))));
+void FC_GLOBAL3(cdotc,CDOTC)( float complex* returnvalue, blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cdotc,CDOTC)))));
 #else
 #ifndef __APPLE__
-void cdotc( float complex* returnvalue, blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cdotc,CDOTC)))));
+void FC_GLOBAL2(cdotc,CDOTC)( float complex* returnvalue, blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cdotc,CDOTC)))));
+void FC_GLOBAL3(cdotc,CDOTC)( float complex* returnvalue, blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cdotc,CDOTC)))));
 #else
-void cdotc( float complex* returnvalue, blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy){ FC_GLOBAL(cdotc,CDOTC)( (void*) returnvalue, (void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy); }
+void FC_GLOBAL2(cdotc,CDOTC)( float complex* returnvalue, blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy){ FC_GLOBAL(cdotc,CDOTC)( (void*) returnvalue, (void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy); }
+void FC_GLOBAL3(cdotc,CDOTC)( float complex* returnvalue, blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy){ FC_GLOBAL(cdotc,CDOTC)( (void*) returnvalue, (void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy); }
 #endif
 #endif
 
@@ -478,12 +494,15 @@ void FC_GLOBAL(cdotu,CDOTU)( float complex* returnvalue, blasint* n, float compl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void cdotu_( float complex* returnvalue, blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cdotu,CDOTU)))));
+void FC_GLOBAL2(cdotu,CDOTU)( float complex* returnvalue, blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cdotu,CDOTU)))));
+void FC_GLOBAL3(cdotu,CDOTU)( float complex* returnvalue, blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cdotu,CDOTU)))));
 #else
 #ifndef __APPLE__
-void cdotu( float complex* returnvalue, blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cdotu,CDOTU)))));
+void FC_GLOBAL2(cdotu,CDOTU)( float complex* returnvalue, blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cdotu,CDOTU)))));
+void FC_GLOBAL3(cdotu,CDOTU)( float complex* returnvalue, blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cdotu,CDOTU)))));
 #else
-void cdotu( float complex* returnvalue, blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy){ FC_GLOBAL(cdotu,CDOTU)( (void*) returnvalue, (void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy); }
+void FC_GLOBAL2(cdotu,CDOTU)( float complex* returnvalue, blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy){ FC_GLOBAL(cdotu,CDOTU)( (void*) returnvalue, (void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy); }
+void FC_GLOBAL3(cdotu,CDOTU)( float complex* returnvalue, blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy){ FC_GLOBAL(cdotu,CDOTU)( (void*) returnvalue, (void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy); }
 #endif
 #endif
 
@@ -566,12 +585,15 @@ void FC_GLOBAL(cgbmv,CGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, bl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void cgbmv_(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cgbmv,CGBMV)))));
+void FC_GLOBAL2(cgbmv,CGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cgbmv,CGBMV)))));
+void FC_GLOBAL3(cgbmv,CGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cgbmv,CGBMV)))));
 #else
 #ifndef __APPLE__
-void cgbmv(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cgbmv,CGBMV)))));
+void FC_GLOBAL2(cgbmv,CGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cgbmv,CGBMV)))));
+void FC_GLOBAL3(cgbmv,CGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cgbmv,CGBMV)))));
 #else
-void cgbmv(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(cgbmv,CGBMV)((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(cgbmv,CGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(cgbmv,CGBMV)((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(cgbmv,CGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(cgbmv,CGBMV)((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -638,12 +660,15 @@ void FC_GLOBAL(cgemm,CGEMM)(char* transa, char* transb, blasint* m, blasint* n, 
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void cgemm_(char* transa, char* transb, blasint* m, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(cgemm,CGEMM)))));
+void FC_GLOBAL2(cgemm,CGEMM)(char* transa, char* transb, blasint* m, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(cgemm,CGEMM)))));
+void FC_GLOBAL3(cgemm,CGEMM)(char* transa, char* transb, blasint* m, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(cgemm,CGEMM)))));
 #else
 #ifndef __APPLE__
-void cgemm(char* transa, char* transb, blasint* m, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(cgemm,CGEMM)))));
+void FC_GLOBAL2(cgemm,CGEMM)(char* transa, char* transb, blasint* m, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(cgemm,CGEMM)))));
+void FC_GLOBAL3(cgemm,CGEMM)(char* transa, char* transb, blasint* m, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(cgemm,CGEMM)))));
 #else
-void cgemm(char* transa, char* transb, blasint* m, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(cgemm,CGEMM)((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
+void FC_GLOBAL2(cgemm,CGEMM)(char* transa, char* transb, blasint* m, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(cgemm,CGEMM)((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
+void FC_GLOBAL3(cgemm,CGEMM)(char* transa, char* transb, blasint* m, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(cgemm,CGEMM)((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
 #endif
 #endif
 
@@ -689,6 +714,156 @@ void flexiblas_chain_cgemm(void* transa, void* transb, void* m, void* n, void* k
 #endif
 
 
+static TLS_STORE uint8_t hook_pos_cgemmt = 0;
+
+void FC_GLOBAL(cgemmt,CGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb)
+{
+    void (*fn) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void (*fn_hook) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+    *(void **) &fn = current_backend->blas.cgemmt.f77_blas_function;
+    *(void **) &fn_hook = __flexiblas_hooks->cgemmt.f77_hook_function[0];
+    hook_pos_cgemmt = 0;
+    if ( fn_hook != NULL) {
+        fn_hook((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+    } else {
+        fn((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+    }
+    return;
+}
+#ifdef FLEXIBLAS_ABI_IBM
+void FC_GLOBAL2(cgemmt,CGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(cgemmt,CGEMMT)))));
+void FC_GLOBAL3(cgemmt,CGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(cgemmt,CGEMMT)))));
+#else
+#ifndef __APPLE__
+void FC_GLOBAL2(cgemmt,CGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(cgemmt,CGEMMT)))));
+void FC_GLOBAL3(cgemmt,CGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(cgemmt,CGEMMT)))));
+#else
+void FC_GLOBAL2(cgemmt,CGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(cgemmt,CGEMMT)((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
+void FC_GLOBAL3(cgemmt,CGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(cgemmt,CGEMMT)((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
+#endif
+#endif
+
+
+
+void flexiblas_real_cgemmt_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb)
+{
+    void (*fn) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+
+    *(void **) &fn = current_backend->blas.cgemmt.f77_blas_function;
+    fn((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+
+    return;
+}
+#ifndef __APPLE__
+void flexiblas_real_cgemmt(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias("flexiblas_real_cgemmt_")));
+#else
+void flexiblas_real_cgemmt(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){flexiblas_real_cgemmt_((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb);}
+#endif
+
+
+void flexiblas_chain_cgemmt_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb)
+{
+    void (*fn) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+
+
+
+    hook_pos_cgemmt++;
+    if ( hook_pos_cgemmt < __flexiblas_hooks->cgemmt.nhook ) {
+        *(void **) &fn = __flexiblas_hooks->cgemmt.f77_hook_function[hook_pos_cgemmt];
+    } else {
+        hook_pos_cgemmt = 0;
+        *(void **) &fn = current_backend->blas.cgemmt.f77_blas_function;
+    }
+    fn((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+
+    return;
+}
+#ifndef __APPLE__
+void flexiblas_chain_cgemmt(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias("flexiblas_chain_cgemmt_")));
+#else
+void flexiblas_chain_cgemmt(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){flexiblas_chain_cgemmt_((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb);}
+#endif
+
+
+static TLS_STORE uint8_t hook_pos_cgemmtr = 0;
+
+void FC_GLOBAL(cgemmtr,CGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb)
+{
+    void (*fn) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void (*fn_hook) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+    *(void **) &fn = current_backend->blas.cgemmtr.f77_blas_function;
+    *(void **) &fn_hook = __flexiblas_hooks->cgemmtr.f77_hook_function[0];
+    hook_pos_cgemmtr = 0;
+    if ( fn_hook != NULL) {
+        fn_hook((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+    } else {
+        fn((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+    }
+    return;
+}
+#ifdef FLEXIBLAS_ABI_IBM
+void FC_GLOBAL2(cgemmtr,CGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(cgemmtr,CGEMMTR)))));
+void FC_GLOBAL3(cgemmtr,CGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(cgemmtr,CGEMMTR)))));
+#else
+#ifndef __APPLE__
+void FC_GLOBAL2(cgemmtr,CGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(cgemmtr,CGEMMTR)))));
+void FC_GLOBAL3(cgemmtr,CGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(cgemmtr,CGEMMTR)))));
+#else
+void FC_GLOBAL2(cgemmtr,CGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(cgemmtr,CGEMMTR)((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
+void FC_GLOBAL3(cgemmtr,CGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(cgemmtr,CGEMMTR)((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
+#endif
+#endif
+
+
+
+void flexiblas_real_cgemmtr_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb)
+{
+    void (*fn) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+
+    *(void **) &fn = current_backend->blas.cgemmtr.f77_blas_function;
+    fn((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+
+    return;
+}
+#ifndef __APPLE__
+void flexiblas_real_cgemmtr(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias("flexiblas_real_cgemmtr_")));
+#else
+void flexiblas_real_cgemmtr(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){flexiblas_real_cgemmtr_((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb);}
+#endif
+
+
+void flexiblas_chain_cgemmtr_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb)
+{
+    void (*fn) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+
+
+
+    hook_pos_cgemmtr++;
+    if ( hook_pos_cgemmtr < __flexiblas_hooks->cgemmtr.nhook ) {
+        *(void **) &fn = __flexiblas_hooks->cgemmtr.f77_hook_function[hook_pos_cgemmtr];
+    } else {
+        hook_pos_cgemmtr = 0;
+        *(void **) &fn = current_backend->blas.cgemmtr.f77_blas_function;
+    }
+    fn((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+
+    return;
+}
+#ifndef __APPLE__
+void flexiblas_chain_cgemmtr(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias("flexiblas_chain_cgemmtr_")));
+#else
+void flexiblas_chain_cgemmtr(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){flexiblas_chain_cgemmtr_((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb);}
+#endif
+
+
 static TLS_STORE uint8_t hook_pos_cgemv = 0;
 
 void FC_GLOBAL(cgemv,CGEMV)(char* trans, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans)
@@ -710,12 +885,15 @@ void FC_GLOBAL(cgemv,CGEMV)(char* trans, blasint* m, blasint* n, float complex* 
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void cgemv_(char* trans, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cgemv,CGEMV)))));
+void FC_GLOBAL2(cgemv,CGEMV)(char* trans, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cgemv,CGEMV)))));
+void FC_GLOBAL3(cgemv,CGEMV)(char* trans, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cgemv,CGEMV)))));
 #else
 #ifndef __APPLE__
-void cgemv(char* trans, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cgemv,CGEMV)))));
+void FC_GLOBAL2(cgemv,CGEMV)(char* trans, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cgemv,CGEMV)))));
+void FC_GLOBAL3(cgemv,CGEMV)(char* trans, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cgemv,CGEMV)))));
 #else
-void cgemv(char* trans, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(cgemv,CGEMV)((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(cgemv,CGEMV)(char* trans, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(cgemv,CGEMV)((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(cgemv,CGEMV)(char* trans, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(cgemv,CGEMV)((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -782,12 +960,15 @@ void FC_GLOBAL(cgerc,CGERC)(blasint* m, blasint* n, float complex* alpha, float 
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void cgerc_(blasint* m, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(cgerc,CGERC)))));
+void FC_GLOBAL2(cgerc,CGERC)(blasint* m, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(cgerc,CGERC)))));
+void FC_GLOBAL3(cgerc,CGERC)(blasint* m, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(cgerc,CGERC)))));
 #else
 #ifndef __APPLE__
-void cgerc(blasint* m, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(cgerc,CGERC)))));
+void FC_GLOBAL2(cgerc,CGERC)(blasint* m, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(cgerc,CGERC)))));
+void FC_GLOBAL3(cgerc,CGERC)(blasint* m, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(cgerc,CGERC)))));
 #else
-void cgerc(blasint* m, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda){ FC_GLOBAL(cgerc,CGERC)((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
+void FC_GLOBAL2(cgerc,CGERC)(blasint* m, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda){ FC_GLOBAL(cgerc,CGERC)((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
+void FC_GLOBAL3(cgerc,CGERC)(blasint* m, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda){ FC_GLOBAL(cgerc,CGERC)((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
 #endif
 #endif
 
@@ -854,12 +1035,15 @@ void FC_GLOBAL(cgeru,CGERU)(blasint* m, blasint* n, float complex* alpha, float 
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void cgeru_(blasint* m, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(cgeru,CGERU)))));
+void FC_GLOBAL2(cgeru,CGERU)(blasint* m, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(cgeru,CGERU)))));
+void FC_GLOBAL3(cgeru,CGERU)(blasint* m, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(cgeru,CGERU)))));
 #else
 #ifndef __APPLE__
-void cgeru(blasint* m, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(cgeru,CGERU)))));
+void FC_GLOBAL2(cgeru,CGERU)(blasint* m, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(cgeru,CGERU)))));
+void FC_GLOBAL3(cgeru,CGERU)(blasint* m, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(cgeru,CGERU)))));
 #else
-void cgeru(blasint* m, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda){ FC_GLOBAL(cgeru,CGERU)((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
+void FC_GLOBAL2(cgeru,CGERU)(blasint* m, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda){ FC_GLOBAL(cgeru,CGERU)((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
+void FC_GLOBAL3(cgeru,CGERU)(blasint* m, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda){ FC_GLOBAL(cgeru,CGERU)((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
 #endif
 #endif
 
@@ -926,12 +1110,15 @@ void FC_GLOBAL(chbmv,CHBMV)(char* uplo, blasint* n, blasint* k, float complex* a
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void chbmv_(char* uplo, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chbmv,CHBMV)))));
+void FC_GLOBAL2(chbmv,CHBMV)(char* uplo, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chbmv,CHBMV)))));
+void FC_GLOBAL3(chbmv,CHBMV)(char* uplo, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chbmv,CHBMV)))));
 #else
 #ifndef __APPLE__
-void chbmv(char* uplo, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chbmv,CHBMV)))));
+void FC_GLOBAL2(chbmv,CHBMV)(char* uplo, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chbmv,CHBMV)))));
+void FC_GLOBAL3(chbmv,CHBMV)(char* uplo, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chbmv,CHBMV)))));
 #else
-void chbmv(char* uplo, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(chbmv,CHBMV)((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(chbmv,CHBMV)(char* uplo, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(chbmv,CHBMV)((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(chbmv,CHBMV)(char* uplo, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(chbmv,CHBMV)((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -998,12 +1185,15 @@ void FC_GLOBAL(chemm,CHEMM)(char* side, char* uplo, blasint* m, blasint* n, floa
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void chemm_(char* side, char* uplo, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chemm,CHEMM)))));
+void FC_GLOBAL2(chemm,CHEMM)(char* side, char* uplo, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chemm,CHEMM)))));
+void FC_GLOBAL3(chemm,CHEMM)(char* side, char* uplo, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chemm,CHEMM)))));
 #else
 #ifndef __APPLE__
-void chemm(char* side, char* uplo, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chemm,CHEMM)))));
+void FC_GLOBAL2(chemm,CHEMM)(char* side, char* uplo, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chemm,CHEMM)))));
+void FC_GLOBAL3(chemm,CHEMM)(char* side, char* uplo, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chemm,CHEMM)))));
 #else
-void chemm(char* side, char* uplo, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(chemm,CHEMM)((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(chemm,CHEMM)(char* side, char* uplo, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(chemm,CHEMM)((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(chemm,CHEMM)(char* side, char* uplo, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(chemm,CHEMM)((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -1070,12 +1260,15 @@ void FC_GLOBAL(chemv,CHEMV)(char* uplo, blasint* n, float complex* alpha, float 
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void chemv_(char* uplo, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chemv,CHEMV)))));
+void FC_GLOBAL2(chemv,CHEMV)(char* uplo, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chemv,CHEMV)))));
+void FC_GLOBAL3(chemv,CHEMV)(char* uplo, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chemv,CHEMV)))));
 #else
 #ifndef __APPLE__
-void chemv(char* uplo, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chemv,CHEMV)))));
+void FC_GLOBAL2(chemv,CHEMV)(char* uplo, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chemv,CHEMV)))));
+void FC_GLOBAL3(chemv,CHEMV)(char* uplo, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chemv,CHEMV)))));
 #else
-void chemv(char* uplo, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(chemv,CHEMV)((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(chemv,CHEMV)(char* uplo, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(chemv,CHEMV)((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(chemv,CHEMV)(char* uplo, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(chemv,CHEMV)((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -1142,12 +1335,15 @@ void FC_GLOBAL(cher,CHER)(char* uplo, blasint* n, float* alpha, float complex* x
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void cher_(char* uplo, blasint* n, float* alpha, float complex* x, blasint* incx, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(cher,CHER)))));
+void FC_GLOBAL2(cher,CHER)(char* uplo, blasint* n, float* alpha, float complex* x, blasint* incx, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(cher,CHER)))));
+void FC_GLOBAL3(cher,CHER)(char* uplo, blasint* n, float* alpha, float complex* x, blasint* incx, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(cher,CHER)))));
 #else
 #ifndef __APPLE__
-void cher(char* uplo, blasint* n, float* alpha, float complex* x, blasint* incx, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(cher,CHER)))));
+void FC_GLOBAL2(cher,CHER)(char* uplo, blasint* n, float* alpha, float complex* x, blasint* incx, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(cher,CHER)))));
+void FC_GLOBAL3(cher,CHER)(char* uplo, blasint* n, float* alpha, float complex* x, blasint* incx, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(cher,CHER)))));
 #else
-void cher(char* uplo, blasint* n, float* alpha, float complex* x, blasint* incx, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(cher,CHER)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(cher,CHER)(char* uplo, blasint* n, float* alpha, float complex* x, blasint* incx, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(cher,CHER)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(cher,CHER)(char* uplo, blasint* n, float* alpha, float complex* x, blasint* incx, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(cher,CHER)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -1214,12 +1410,15 @@ void FC_GLOBAL(cher2,CHER2)(char* uplo, blasint* n, float complex* alpha, float 
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void cher2_(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(cher2,CHER2)))));
+void FC_GLOBAL2(cher2,CHER2)(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(cher2,CHER2)))));
+void FC_GLOBAL3(cher2,CHER2)(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(cher2,CHER2)))));
 #else
 #ifndef __APPLE__
-void cher2(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(cher2,CHER2)))));
+void FC_GLOBAL2(cher2,CHER2)(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(cher2,CHER2)))));
+void FC_GLOBAL3(cher2,CHER2)(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(cher2,CHER2)))));
 #else
-void cher2(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(cher2,CHER2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(cher2,CHER2)(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(cher2,CHER2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(cher2,CHER2)(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(cher2,CHER2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -1286,12 +1485,15 @@ void FC_GLOBAL(cher2k,CHER2K)(char* uplo, char* trans, blasint* n, blasint* k, f
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void cher2k_(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cher2k,CHER2K)))));
+void FC_GLOBAL2(cher2k,CHER2K)(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cher2k,CHER2K)))));
+void FC_GLOBAL3(cher2k,CHER2K)(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cher2k,CHER2K)))));
 #else
 #ifndef __APPLE__
-void cher2k(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cher2k,CHER2K)))));
+void FC_GLOBAL2(cher2k,CHER2K)(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cher2k,CHER2K)))));
+void FC_GLOBAL3(cher2k,CHER2K)(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cher2k,CHER2K)))));
 #else
-void cher2k(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(cher2k,CHER2K)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(cher2k,CHER2K)(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(cher2k,CHER2K)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(cher2k,CHER2K)(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(cher2k,CHER2K)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -1358,12 +1560,15 @@ void FC_GLOBAL(cherk,CHERK)(char* uplo, char* trans, blasint* n, blasint* k, flo
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void cherk_(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float complex* a, blasint* lda, float* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cherk,CHERK)))));
+void FC_GLOBAL2(cherk,CHERK)(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float complex* a, blasint* lda, float* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cherk,CHERK)))));
+void FC_GLOBAL3(cherk,CHERK)(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float complex* a, blasint* lda, float* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cherk,CHERK)))));
 #else
 #ifndef __APPLE__
-void cherk(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float complex* a, blasint* lda, float* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cherk,CHERK)))));
+void FC_GLOBAL2(cherk,CHERK)(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float complex* a, blasint* lda, float* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cherk,CHERK)))));
+void FC_GLOBAL3(cherk,CHERK)(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float complex* a, blasint* lda, float* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cherk,CHERK)))));
 #else
-void cherk(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float complex* a, blasint* lda, float* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(cherk,CHERK)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(cherk,CHERK)(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float complex* a, blasint* lda, float* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(cherk,CHERK)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(cherk,CHERK)(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float complex* a, blasint* lda, float* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(cherk,CHERK)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -1430,12 +1635,15 @@ void FC_GLOBAL(chpmv,CHPMV)(char* uplo, blasint* n, float complex* alpha, float 
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void chpmv_(char* uplo, blasint* n, float complex* alpha, float complex* ap, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chpmv,CHPMV)))));
+void FC_GLOBAL2(chpmv,CHPMV)(char* uplo, blasint* n, float complex* alpha, float complex* ap, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chpmv,CHPMV)))));
+void FC_GLOBAL3(chpmv,CHPMV)(char* uplo, blasint* n, float complex* alpha, float complex* ap, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chpmv,CHPMV)))));
 #else
 #ifndef __APPLE__
-void chpmv(char* uplo, blasint* n, float complex* alpha, float complex* ap, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chpmv,CHPMV)))));
+void FC_GLOBAL2(chpmv,CHPMV)(char* uplo, blasint* n, float complex* alpha, float complex* ap, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chpmv,CHPMV)))));
+void FC_GLOBAL3(chpmv,CHPMV)(char* uplo, blasint* n, float complex* alpha, float complex* ap, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chpmv,CHPMV)))));
 #else
-void chpmv(char* uplo, blasint* n, float complex* alpha, float complex* ap, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(chpmv,CHPMV)((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(chpmv,CHPMV)(char* uplo, blasint* n, float complex* alpha, float complex* ap, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(chpmv,CHPMV)((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(chpmv,CHPMV)(char* uplo, blasint* n, float complex* alpha, float complex* ap, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(chpmv,CHPMV)((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -1502,12 +1710,15 @@ void FC_GLOBAL(chpr,CHPR)(char* uplo, blasint* n, float* alpha, float complex* x
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void chpr_(char* uplo, blasint* n, float* alpha, float complex* x, blasint* incx, float complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chpr,CHPR)))));
+void FC_GLOBAL2(chpr,CHPR)(char* uplo, blasint* n, float* alpha, float complex* x, blasint* incx, float complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chpr,CHPR)))));
+void FC_GLOBAL3(chpr,CHPR)(char* uplo, blasint* n, float* alpha, float complex* x, blasint* incx, float complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chpr,CHPR)))));
 #else
 #ifndef __APPLE__
-void chpr(char* uplo, blasint* n, float* alpha, float complex* x, blasint* incx, float complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chpr,CHPR)))));
+void FC_GLOBAL2(chpr,CHPR)(char* uplo, blasint* n, float* alpha, float complex* x, blasint* incx, float complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chpr,CHPR)))));
+void FC_GLOBAL3(chpr,CHPR)(char* uplo, blasint* n, float* alpha, float complex* x, blasint* incx, float complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chpr,CHPR)))));
 #else
-void chpr(char* uplo, blasint* n, float* alpha, float complex* x, blasint* incx, float complex* ap, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(chpr,CHPR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(chpr,CHPR)(char* uplo, blasint* n, float* alpha, float complex* x, blasint* incx, float complex* ap, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(chpr,CHPR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(chpr,CHPR)(char* uplo, blasint* n, float* alpha, float complex* x, blasint* incx, float complex* ap, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(chpr,CHPR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -1574,12 +1785,15 @@ void FC_GLOBAL(chpr2,CHPR2)(char* uplo, blasint* n, float complex* alpha, float 
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void chpr2_(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chpr2,CHPR2)))));
+void FC_GLOBAL2(chpr2,CHPR2)(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chpr2,CHPR2)))));
+void FC_GLOBAL3(chpr2,CHPR2)(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chpr2,CHPR2)))));
 #else
 #ifndef __APPLE__
-void chpr2(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chpr2,CHPR2)))));
+void FC_GLOBAL2(chpr2,CHPR2)(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chpr2,CHPR2)))));
+void FC_GLOBAL3(chpr2,CHPR2)(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(chpr2,CHPR2)))));
 #else
-void chpr2(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* ap, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(chpr2,CHPR2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(chpr2,CHPR2)(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* ap, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(chpr2,CHPR2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(chpr2,CHPR2)(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* y, blasint* incy, float complex* ap, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(chpr2,CHPR2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -1646,12 +1860,15 @@ void FC_GLOBAL(crotg,CROTG)(float complex* ca, float complex* cb, float* c, floa
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void crotg_(float complex* ca, float complex* cb, float* c, float complex* s) __attribute__((alias(MTS(FC_GLOBAL(crotg,CROTG)))));
+void FC_GLOBAL2(crotg,CROTG)(float complex* ca, float complex* cb, float* c, float complex* s) __attribute__((alias(MTS(FC_GLOBAL(crotg,CROTG)))));
+void FC_GLOBAL3(crotg,CROTG)(float complex* ca, float complex* cb, float* c, float complex* s) __attribute__((alias(MTS(FC_GLOBAL(crotg,CROTG)))));
 #else
 #ifndef __APPLE__
-void crotg(float complex* ca, float complex* cb, float* c, float complex* s) __attribute__((alias(MTS(FC_GLOBAL(crotg,CROTG)))));
+void FC_GLOBAL2(crotg,CROTG)(float complex* ca, float complex* cb, float* c, float complex* s) __attribute__((alias(MTS(FC_GLOBAL(crotg,CROTG)))));
+void FC_GLOBAL3(crotg,CROTG)(float complex* ca, float complex* cb, float* c, float complex* s) __attribute__((alias(MTS(FC_GLOBAL(crotg,CROTG)))));
 #else
-void crotg(float complex* ca, float complex* cb, float* c, float complex* s){ FC_GLOBAL(crotg,CROTG)((void*) ca, (void*) cb, (void*) c, (void*) s); }
+void FC_GLOBAL2(crotg,CROTG)(float complex* ca, float complex* cb, float* c, float complex* s){ FC_GLOBAL(crotg,CROTG)((void*) ca, (void*) cb, (void*) c, (void*) s); }
+void FC_GLOBAL3(crotg,CROTG)(float complex* ca, float complex* cb, float* c, float complex* s){ FC_GLOBAL(crotg,CROTG)((void*) ca, (void*) cb, (void*) c, (void*) s); }
 #endif
 #endif
 
@@ -1718,12 +1935,15 @@ void FC_GLOBAL(cscal,CSCAL)(blasint* n, float complex* ca, float complex* cx, bl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void cscal_(blasint* n, float complex* ca, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(cscal,CSCAL)))));
+void FC_GLOBAL2(cscal,CSCAL)(blasint* n, float complex* ca, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(cscal,CSCAL)))));
+void FC_GLOBAL3(cscal,CSCAL)(blasint* n, float complex* ca, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(cscal,CSCAL)))));
 #else
 #ifndef __APPLE__
-void cscal(blasint* n, float complex* ca, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(cscal,CSCAL)))));
+void FC_GLOBAL2(cscal,CSCAL)(blasint* n, float complex* ca, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(cscal,CSCAL)))));
+void FC_GLOBAL3(cscal,CSCAL)(blasint* n, float complex* ca, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(cscal,CSCAL)))));
 #else
-void cscal(blasint* n, float complex* ca, float complex* cx, blasint* incx){ FC_GLOBAL(cscal,CSCAL)((void*) n, (void*) ca, (void*) cx, (void*) incx); }
+void FC_GLOBAL2(cscal,CSCAL)(blasint* n, float complex* ca, float complex* cx, blasint* incx){ FC_GLOBAL(cscal,CSCAL)((void*) n, (void*) ca, (void*) cx, (void*) incx); }
+void FC_GLOBAL3(cscal,CSCAL)(blasint* n, float complex* ca, float complex* cx, blasint* incx){ FC_GLOBAL(cscal,CSCAL)((void*) n, (void*) ca, (void*) cx, (void*) incx); }
 #endif
 #endif
 
@@ -1790,12 +2010,15 @@ void FC_GLOBAL(csrot,CSROT)(blasint* n, float complex* cx, blasint* incx, float 
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void csrot_(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy, float* c, float* s) __attribute__((alias(MTS(FC_GLOBAL(csrot,CSROT)))));
+void FC_GLOBAL2(csrot,CSROT)(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy, float* c, float* s) __attribute__((alias(MTS(FC_GLOBAL(csrot,CSROT)))));
+void FC_GLOBAL3(csrot,CSROT)(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy, float* c, float* s) __attribute__((alias(MTS(FC_GLOBAL(csrot,CSROT)))));
 #else
 #ifndef __APPLE__
-void csrot(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy, float* c, float* s) __attribute__((alias(MTS(FC_GLOBAL(csrot,CSROT)))));
+void FC_GLOBAL2(csrot,CSROT)(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy, float* c, float* s) __attribute__((alias(MTS(FC_GLOBAL(csrot,CSROT)))));
+void FC_GLOBAL3(csrot,CSROT)(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy, float* c, float* s) __attribute__((alias(MTS(FC_GLOBAL(csrot,CSROT)))));
 #else
-void csrot(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy, float* c, float* s){ FC_GLOBAL(csrot,CSROT)((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s); }
+void FC_GLOBAL2(csrot,CSROT)(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy, float* c, float* s){ FC_GLOBAL(csrot,CSROT)((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s); }
+void FC_GLOBAL3(csrot,CSROT)(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy, float* c, float* s){ FC_GLOBAL(csrot,CSROT)((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s); }
 #endif
 #endif
 
@@ -1862,12 +2085,15 @@ void FC_GLOBAL(csscal,CSSCAL)(blasint* n, float* sa, float complex* cx, blasint*
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void csscal_(blasint* n, float* sa, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(csscal,CSSCAL)))));
+void FC_GLOBAL2(csscal,CSSCAL)(blasint* n, float* sa, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(csscal,CSSCAL)))));
+void FC_GLOBAL3(csscal,CSSCAL)(blasint* n, float* sa, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(csscal,CSSCAL)))));
 #else
 #ifndef __APPLE__
-void csscal(blasint* n, float* sa, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(csscal,CSSCAL)))));
+void FC_GLOBAL2(csscal,CSSCAL)(blasint* n, float* sa, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(csscal,CSSCAL)))));
+void FC_GLOBAL3(csscal,CSSCAL)(blasint* n, float* sa, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(csscal,CSSCAL)))));
 #else
-void csscal(blasint* n, float* sa, float complex* cx, blasint* incx){ FC_GLOBAL(csscal,CSSCAL)((void*) n, (void*) sa, (void*) cx, (void*) incx); }
+void FC_GLOBAL2(csscal,CSSCAL)(blasint* n, float* sa, float complex* cx, blasint* incx){ FC_GLOBAL(csscal,CSSCAL)((void*) n, (void*) sa, (void*) cx, (void*) incx); }
+void FC_GLOBAL3(csscal,CSSCAL)(blasint* n, float* sa, float complex* cx, blasint* incx){ FC_GLOBAL(csscal,CSSCAL)((void*) n, (void*) sa, (void*) cx, (void*) incx); }
 #endif
 #endif
 
@@ -1934,12 +2160,15 @@ void FC_GLOBAL(cswap,CSWAP)(blasint* n, float complex* cx, blasint* incx, float 
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void cswap_(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cswap,CSWAP)))));
+void FC_GLOBAL2(cswap,CSWAP)(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cswap,CSWAP)))));
+void FC_GLOBAL3(cswap,CSWAP)(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cswap,CSWAP)))));
 #else
 #ifndef __APPLE__
-void cswap(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cswap,CSWAP)))));
+void FC_GLOBAL2(cswap,CSWAP)(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cswap,CSWAP)))));
+void FC_GLOBAL3(cswap,CSWAP)(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(cswap,CSWAP)))));
 #else
-void cswap(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy){ FC_GLOBAL(cswap,CSWAP)((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy); }
+void FC_GLOBAL2(cswap,CSWAP)(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy){ FC_GLOBAL(cswap,CSWAP)((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy); }
+void FC_GLOBAL3(cswap,CSWAP)(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy){ FC_GLOBAL(cswap,CSWAP)((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy); }
 #endif
 #endif
 
@@ -2006,12 +2235,15 @@ void FC_GLOBAL(csymm,CSYMM)(char* side, char* uplo, blasint* m, blasint* n, floa
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void csymm_(char* side, char* uplo, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(csymm,CSYMM)))));
+void FC_GLOBAL2(csymm,CSYMM)(char* side, char* uplo, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(csymm,CSYMM)))));
+void FC_GLOBAL3(csymm,CSYMM)(char* side, char* uplo, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(csymm,CSYMM)))));
 #else
 #ifndef __APPLE__
-void csymm(char* side, char* uplo, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(csymm,CSYMM)))));
+void FC_GLOBAL2(csymm,CSYMM)(char* side, char* uplo, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(csymm,CSYMM)))));
+void FC_GLOBAL3(csymm,CSYMM)(char* side, char* uplo, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(csymm,CSYMM)))));
 #else
-void csymm(char* side, char* uplo, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(csymm,CSYMM)((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(csymm,CSYMM)(char* side, char* uplo, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(csymm,CSYMM)((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(csymm,CSYMM)(char* side, char* uplo, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(csymm,CSYMM)((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -2078,12 +2310,15 @@ void FC_GLOBAL(csyr2k,CSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, f
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void csyr2k_(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(csyr2k,CSYR2K)))));
+void FC_GLOBAL2(csyr2k,CSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(csyr2k,CSYR2K)))));
+void FC_GLOBAL3(csyr2k,CSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(csyr2k,CSYR2K)))));
 #else
 #ifndef __APPLE__
-void csyr2k(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(csyr2k,CSYR2K)))));
+void FC_GLOBAL2(csyr2k,CSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(csyr2k,CSYR2K)))));
+void FC_GLOBAL3(csyr2k,CSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(csyr2k,CSYR2K)))));
 #else
-void csyr2k(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(csyr2k,CSYR2K)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(csyr2k,CSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(csyr2k,CSYR2K)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(csyr2k,CSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(csyr2k,CSYR2K)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -2150,12 +2385,15 @@ void FC_GLOBAL(csyrk,CSYRK)(char* uplo, char* trans, blasint* n, blasint* k, flo
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void csyrk_(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(csyrk,CSYRK)))));
+void FC_GLOBAL2(csyrk,CSYRK)(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(csyrk,CSYRK)))));
+void FC_GLOBAL3(csyrk,CSYRK)(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(csyrk,CSYRK)))));
 #else
 #ifndef __APPLE__
-void csyrk(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(csyrk,CSYRK)))));
+void FC_GLOBAL2(csyrk,CSYRK)(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(csyrk,CSYRK)))));
+void FC_GLOBAL3(csyrk,CSYRK)(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(csyrk,CSYRK)))));
 #else
-void csyrk(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(csyrk,CSYRK)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(csyrk,CSYRK)(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(csyrk,CSYRK)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(csyrk,CSYRK)(char* uplo, char* trans, blasint* n, blasint* k, float complex* alpha, float complex* a, blasint* lda, float complex* beta, float complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(csyrk,CSYRK)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -2222,12 +2460,15 @@ void FC_GLOBAL(ctbmv,CTBMV)(char* uplo, char* trans, char* diag, blasint* n, bla
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void ctbmv_(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctbmv,CTBMV)))));
+void FC_GLOBAL2(ctbmv,CTBMV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctbmv,CTBMV)))));
+void FC_GLOBAL3(ctbmv,CTBMV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctbmv,CTBMV)))));
 #else
 #ifndef __APPLE__
-void ctbmv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctbmv,CTBMV)))));
+void FC_GLOBAL2(ctbmv,CTBMV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctbmv,CTBMV)))));
+void FC_GLOBAL3(ctbmv,CTBMV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctbmv,CTBMV)))));
 #else
-void ctbmv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ctbmv,CTBMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(ctbmv,CTBMV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ctbmv,CTBMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(ctbmv,CTBMV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ctbmv,CTBMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -2294,12 +2535,15 @@ void FC_GLOBAL(ctbsv,CTBSV)(char* uplo, char* trans, char* diag, blasint* n, bla
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void ctbsv_(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctbsv,CTBSV)))));
+void FC_GLOBAL2(ctbsv,CTBSV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctbsv,CTBSV)))));
+void FC_GLOBAL3(ctbsv,CTBSV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctbsv,CTBSV)))));
 #else
 #ifndef __APPLE__
-void ctbsv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctbsv,CTBSV)))));
+void FC_GLOBAL2(ctbsv,CTBSV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctbsv,CTBSV)))));
+void FC_GLOBAL3(ctbsv,CTBSV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctbsv,CTBSV)))));
 #else
-void ctbsv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ctbsv,CTBSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(ctbsv,CTBSV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ctbsv,CTBSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(ctbsv,CTBSV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ctbsv,CTBSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -2366,12 +2610,15 @@ void FC_GLOBAL(ctpmv,CTPMV)(char* uplo, char* trans, char* diag, blasint* n, flo
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void ctpmv_(char* uplo, char* trans, char* diag, blasint* n, float complex* ap, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctpmv,CTPMV)))));
+void FC_GLOBAL2(ctpmv,CTPMV)(char* uplo, char* trans, char* diag, blasint* n, float complex* ap, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctpmv,CTPMV)))));
+void FC_GLOBAL3(ctpmv,CTPMV)(char* uplo, char* trans, char* diag, blasint* n, float complex* ap, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctpmv,CTPMV)))));
 #else
 #ifndef __APPLE__
-void ctpmv(char* uplo, char* trans, char* diag, blasint* n, float complex* ap, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctpmv,CTPMV)))));
+void FC_GLOBAL2(ctpmv,CTPMV)(char* uplo, char* trans, char* diag, blasint* n, float complex* ap, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctpmv,CTPMV)))));
+void FC_GLOBAL3(ctpmv,CTPMV)(char* uplo, char* trans, char* diag, blasint* n, float complex* ap, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctpmv,CTPMV)))));
 #else
-void ctpmv(char* uplo, char* trans, char* diag, blasint* n, float complex* ap, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ctpmv,CTPMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(ctpmv,CTPMV)(char* uplo, char* trans, char* diag, blasint* n, float complex* ap, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ctpmv,CTPMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(ctpmv,CTPMV)(char* uplo, char* trans, char* diag, blasint* n, float complex* ap, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ctpmv,CTPMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -2438,12 +2685,15 @@ void FC_GLOBAL(ctpsv,CTPSV)(char* uplo, char* trans, char* diag, blasint* n, flo
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void ctpsv_(char* uplo, char* trans, char* diag, blasint* n, float complex* ap, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctpsv,CTPSV)))));
+void FC_GLOBAL2(ctpsv,CTPSV)(char* uplo, char* trans, char* diag, blasint* n, float complex* ap, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctpsv,CTPSV)))));
+void FC_GLOBAL3(ctpsv,CTPSV)(char* uplo, char* trans, char* diag, blasint* n, float complex* ap, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctpsv,CTPSV)))));
 #else
 #ifndef __APPLE__
-void ctpsv(char* uplo, char* trans, char* diag, blasint* n, float complex* ap, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctpsv,CTPSV)))));
+void FC_GLOBAL2(ctpsv,CTPSV)(char* uplo, char* trans, char* diag, blasint* n, float complex* ap, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctpsv,CTPSV)))));
+void FC_GLOBAL3(ctpsv,CTPSV)(char* uplo, char* trans, char* diag, blasint* n, float complex* ap, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctpsv,CTPSV)))));
 #else
-void ctpsv(char* uplo, char* trans, char* diag, blasint* n, float complex* ap, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ctpsv,CTPSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(ctpsv,CTPSV)(char* uplo, char* trans, char* diag, blasint* n, float complex* ap, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ctpsv,CTPSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(ctpsv,CTPSV)(char* uplo, char* trans, char* diag, blasint* n, float complex* ap, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ctpsv,CTPSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -2510,12 +2760,15 @@ void FC_GLOBAL(ctrmm,CTRMM)(char* side, char* uplo, char* transa, char* diag, bl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void ctrmm_(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctrmm,CTRMM)))));
+void FC_GLOBAL2(ctrmm,CTRMM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctrmm,CTRMM)))));
+void FC_GLOBAL3(ctrmm,CTRMM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctrmm,CTRMM)))));
 #else
 #ifndef __APPLE__
-void ctrmm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctrmm,CTRMM)))));
+void FC_GLOBAL2(ctrmm,CTRMM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctrmm,CTRMM)))));
+void FC_GLOBAL3(ctrmm,CTRMM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctrmm,CTRMM)))));
 #else
-void ctrmm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ctrmm,CTRMM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(ctrmm,CTRMM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ctrmm,CTRMM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(ctrmm,CTRMM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ctrmm,CTRMM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -2582,12 +2835,15 @@ void FC_GLOBAL(ctrmv,CTRMV)(char* uplo, char* trans, char* diag, blasint* n, flo
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void ctrmv_(char* uplo, char* trans, char* diag, blasint* n, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctrmv,CTRMV)))));
+void FC_GLOBAL2(ctrmv,CTRMV)(char* uplo, char* trans, char* diag, blasint* n, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctrmv,CTRMV)))));
+void FC_GLOBAL3(ctrmv,CTRMV)(char* uplo, char* trans, char* diag, blasint* n, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctrmv,CTRMV)))));
 #else
 #ifndef __APPLE__
-void ctrmv(char* uplo, char* trans, char* diag, blasint* n, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctrmv,CTRMV)))));
+void FC_GLOBAL2(ctrmv,CTRMV)(char* uplo, char* trans, char* diag, blasint* n, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctrmv,CTRMV)))));
+void FC_GLOBAL3(ctrmv,CTRMV)(char* uplo, char* trans, char* diag, blasint* n, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctrmv,CTRMV)))));
 #else
-void ctrmv(char* uplo, char* trans, char* diag, blasint* n, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ctrmv,CTRMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(ctrmv,CTRMV)(char* uplo, char* trans, char* diag, blasint* n, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ctrmv,CTRMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(ctrmv,CTRMV)(char* uplo, char* trans, char* diag, blasint* n, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ctrmv,CTRMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -2654,12 +2910,15 @@ void FC_GLOBAL(ctrsm,CTRSM)(char* side, char* uplo, char* transa, char* diag, bl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void ctrsm_(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctrsm,CTRSM)))));
+void FC_GLOBAL2(ctrsm,CTRSM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctrsm,CTRSM)))));
+void FC_GLOBAL3(ctrsm,CTRSM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctrsm,CTRSM)))));
 #else
 #ifndef __APPLE__
-void ctrsm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctrsm,CTRSM)))));
+void FC_GLOBAL2(ctrsm,CTRSM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctrsm,CTRSM)))));
+void FC_GLOBAL3(ctrsm,CTRSM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctrsm,CTRSM)))));
 #else
-void ctrsm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ctrsm,CTRSM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(ctrsm,CTRSM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ctrsm,CTRSM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(ctrsm,CTRSM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ctrsm,CTRSM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -2726,12 +2985,15 @@ void FC_GLOBAL(ctrsv,CTRSV)(char* uplo, char* trans, char* diag, blasint* n, flo
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void ctrsv_(char* uplo, char* trans, char* diag, blasint* n, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctrsv,CTRSV)))));
+void FC_GLOBAL2(ctrsv,CTRSV)(char* uplo, char* trans, char* diag, blasint* n, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctrsv,CTRSV)))));
+void FC_GLOBAL3(ctrsv,CTRSV)(char* uplo, char* trans, char* diag, blasint* n, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctrsv,CTRSV)))));
 #else
 #ifndef __APPLE__
-void ctrsv(char* uplo, char* trans, char* diag, blasint* n, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctrsv,CTRSV)))));
+void FC_GLOBAL2(ctrsv,CTRSV)(char* uplo, char* trans, char* diag, blasint* n, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctrsv,CTRSV)))));
+void FC_GLOBAL3(ctrsv,CTRSV)(char* uplo, char* trans, char* diag, blasint* n, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ctrsv,CTRSV)))));
 #else
-void ctrsv(char* uplo, char* trans, char* diag, blasint* n, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ctrsv,CTRSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(ctrsv,CTRSV)(char* uplo, char* trans, char* diag, blasint* n, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ctrsv,CTRSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(ctrsv,CTRSV)(char* uplo, char* trans, char* diag, blasint* n, float complex* a, blasint* lda, float complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ctrsv,CTRSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -2799,12 +3061,15 @@ double FC_GLOBAL(dasum,DASUM)(blasint* n, double* dx, blasint* incx)
     return ret;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-double dasum_(blasint* n, double* dx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dasum,DASUM)))));
+double FC_GLOBAL2(dasum,DASUM)(blasint* n, double* dx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dasum,DASUM)))));
+double FC_GLOBAL3(dasum,DASUM)(blasint* n, double* dx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dasum,DASUM)))));
 #else
 #ifndef __APPLE__
-double dasum(blasint* n, double* dx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dasum,DASUM)))));
+double FC_GLOBAL2(dasum,DASUM)(blasint* n, double* dx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dasum,DASUM)))));
+double FC_GLOBAL3(dasum,DASUM)(blasint* n, double* dx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dasum,DASUM)))));
 #else
-double dasum(blasint* n, double* dx, blasint* incx){ return FC_GLOBAL(dasum,DASUM)((void*) n, (void*) dx, (void*) incx); }
+double FC_GLOBAL2(dasum,DASUM)(blasint* n, double* dx, blasint* incx){ return FC_GLOBAL(dasum,DASUM)((void*) n, (void*) dx, (void*) incx); }
+double FC_GLOBAL3(dasum,DASUM)(blasint* n, double* dx, blasint* incx){ return FC_GLOBAL(dasum,DASUM)((void*) n, (void*) dx, (void*) incx); }
 #endif
 #endif
 
@@ -2873,12 +3138,15 @@ void FC_GLOBAL(daxpy,DAXPY)(blasint* n, double* da, double* dx, blasint* incx, d
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void daxpy_(blasint* n, double* da, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(daxpy,DAXPY)))));
+void FC_GLOBAL2(daxpy,DAXPY)(blasint* n, double* da, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(daxpy,DAXPY)))));
+void FC_GLOBAL3(daxpy,DAXPY)(blasint* n, double* da, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(daxpy,DAXPY)))));
 #else
 #ifndef __APPLE__
-void daxpy(blasint* n, double* da, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(daxpy,DAXPY)))));
+void FC_GLOBAL2(daxpy,DAXPY)(blasint* n, double* da, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(daxpy,DAXPY)))));
+void FC_GLOBAL3(daxpy,DAXPY)(blasint* n, double* da, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(daxpy,DAXPY)))));
 #else
-void daxpy(blasint* n, double* da, double* dx, blasint* incx, double* dy, blasint* incy){ FC_GLOBAL(daxpy,DAXPY)((void*) n, (void*) da, (void*) dx, (void*) incx, (void*) dy, (void*) incy); }
+void FC_GLOBAL2(daxpy,DAXPY)(blasint* n, double* da, double* dx, blasint* incx, double* dy, blasint* incy){ FC_GLOBAL(daxpy,DAXPY)((void*) n, (void*) da, (void*) dx, (void*) incx, (void*) dy, (void*) incy); }
+void FC_GLOBAL3(daxpy,DAXPY)(blasint* n, double* da, double* dx, blasint* incx, double* dy, blasint* incy){ FC_GLOBAL(daxpy,DAXPY)((void*) n, (void*) da, (void*) dx, (void*) incx, (void*) dy, (void*) incy); }
 #endif
 #endif
 
@@ -2945,12 +3213,15 @@ void FC_GLOBAL(dcopy,DCOPY)(blasint* n, double* dx, blasint* incx, double* dy, b
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dcopy_(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dcopy,DCOPY)))));
+void FC_GLOBAL2(dcopy,DCOPY)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dcopy,DCOPY)))));
+void FC_GLOBAL3(dcopy,DCOPY)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dcopy,DCOPY)))));
 #else
 #ifndef __APPLE__
-void dcopy(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dcopy,DCOPY)))));
+void FC_GLOBAL2(dcopy,DCOPY)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dcopy,DCOPY)))));
+void FC_GLOBAL3(dcopy,DCOPY)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dcopy,DCOPY)))));
 #else
-void dcopy(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy){ FC_GLOBAL(dcopy,DCOPY)((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy); }
+void FC_GLOBAL2(dcopy,DCOPY)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy){ FC_GLOBAL(dcopy,DCOPY)((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy); }
+void FC_GLOBAL3(dcopy,DCOPY)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy){ FC_GLOBAL(dcopy,DCOPY)((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy); }
 #endif
 #endif
 
@@ -3018,12 +3289,15 @@ double FC_GLOBAL(ddot,DDOT)(blasint* n, double* dx, blasint* incx, double* dy, b
     return ret;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-double ddot_(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(ddot,DDOT)))));
+double FC_GLOBAL2(ddot,DDOT)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(ddot,DDOT)))));
+double FC_GLOBAL3(ddot,DDOT)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(ddot,DDOT)))));
 #else
 #ifndef __APPLE__
-double ddot(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(ddot,DDOT)))));
+double FC_GLOBAL2(ddot,DDOT)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(ddot,DDOT)))));
+double FC_GLOBAL3(ddot,DDOT)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(ddot,DDOT)))));
 #else
-double ddot(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy){ return FC_GLOBAL(ddot,DDOT)((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy); }
+double FC_GLOBAL2(ddot,DDOT)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy){ return FC_GLOBAL(ddot,DDOT)((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy); }
+double FC_GLOBAL3(ddot,DDOT)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy){ return FC_GLOBAL(ddot,DDOT)((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy); }
 #endif
 #endif
 
@@ -3092,12 +3366,15 @@ void FC_GLOBAL(dgbmv,DGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, bl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dgbmv_(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dgbmv,DGBMV)))));
+void FC_GLOBAL2(dgbmv,DGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dgbmv,DGBMV)))));
+void FC_GLOBAL3(dgbmv,DGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dgbmv,DGBMV)))));
 #else
 #ifndef __APPLE__
-void dgbmv(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dgbmv,DGBMV)))));
+void FC_GLOBAL2(dgbmv,DGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dgbmv,DGBMV)))));
+void FC_GLOBAL3(dgbmv,DGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dgbmv,DGBMV)))));
 #else
-void dgbmv(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(dgbmv,DGBMV)((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(dgbmv,DGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(dgbmv,DGBMV)((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(dgbmv,DGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(dgbmv,DGBMV)((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -3164,12 +3441,15 @@ void FC_GLOBAL(dgemm,DGEMM)(char* transa, char* transb, blasint* m, blasint* n, 
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dgemm_(char* transa, char* transb, blasint* m, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(dgemm,DGEMM)))));
+void FC_GLOBAL2(dgemm,DGEMM)(char* transa, char* transb, blasint* m, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(dgemm,DGEMM)))));
+void FC_GLOBAL3(dgemm,DGEMM)(char* transa, char* transb, blasint* m, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(dgemm,DGEMM)))));
 #else
 #ifndef __APPLE__
-void dgemm(char* transa, char* transb, blasint* m, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(dgemm,DGEMM)))));
+void FC_GLOBAL2(dgemm,DGEMM)(char* transa, char* transb, blasint* m, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(dgemm,DGEMM)))));
+void FC_GLOBAL3(dgemm,DGEMM)(char* transa, char* transb, blasint* m, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(dgemm,DGEMM)))));
 #else
-void dgemm(char* transa, char* transb, blasint* m, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(dgemm,DGEMM)((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
+void FC_GLOBAL2(dgemm,DGEMM)(char* transa, char* transb, blasint* m, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(dgemm,DGEMM)((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
+void FC_GLOBAL3(dgemm,DGEMM)(char* transa, char* transb, blasint* m, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(dgemm,DGEMM)((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
 #endif
 #endif
 
@@ -3215,6 +3495,156 @@ void flexiblas_chain_dgemm(void* transa, void* transb, void* m, void* n, void* k
 #endif
 
 
+static TLS_STORE uint8_t hook_pos_dgemmt = 0;
+
+void FC_GLOBAL(dgemmt,DGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb)
+{
+    void (*fn) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void (*fn_hook) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+    *(void **) &fn = current_backend->blas.dgemmt.f77_blas_function;
+    *(void **) &fn_hook = __flexiblas_hooks->dgemmt.f77_hook_function[0];
+    hook_pos_dgemmt = 0;
+    if ( fn_hook != NULL) {
+        fn_hook((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+    } else {
+        fn((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+    }
+    return;
+}
+#ifdef FLEXIBLAS_ABI_IBM
+void FC_GLOBAL2(dgemmt,DGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(dgemmt,DGEMMT)))));
+void FC_GLOBAL3(dgemmt,DGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(dgemmt,DGEMMT)))));
+#else
+#ifndef __APPLE__
+void FC_GLOBAL2(dgemmt,DGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(dgemmt,DGEMMT)))));
+void FC_GLOBAL3(dgemmt,DGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(dgemmt,DGEMMT)))));
+#else
+void FC_GLOBAL2(dgemmt,DGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(dgemmt,DGEMMT)((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
+void FC_GLOBAL3(dgemmt,DGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(dgemmt,DGEMMT)((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
+#endif
+#endif
+
+
+
+void flexiblas_real_dgemmt_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb)
+{
+    void (*fn) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+
+    *(void **) &fn = current_backend->blas.dgemmt.f77_blas_function;
+    fn((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+
+    return;
+}
+#ifndef __APPLE__
+void flexiblas_real_dgemmt(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias("flexiblas_real_dgemmt_")));
+#else
+void flexiblas_real_dgemmt(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){flexiblas_real_dgemmt_((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb);}
+#endif
+
+
+void flexiblas_chain_dgemmt_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb)
+{
+    void (*fn) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+
+
+
+    hook_pos_dgemmt++;
+    if ( hook_pos_dgemmt < __flexiblas_hooks->dgemmt.nhook ) {
+        *(void **) &fn = __flexiblas_hooks->dgemmt.f77_hook_function[hook_pos_dgemmt];
+    } else {
+        hook_pos_dgemmt = 0;
+        *(void **) &fn = current_backend->blas.dgemmt.f77_blas_function;
+    }
+    fn((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+
+    return;
+}
+#ifndef __APPLE__
+void flexiblas_chain_dgemmt(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias("flexiblas_chain_dgemmt_")));
+#else
+void flexiblas_chain_dgemmt(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){flexiblas_chain_dgemmt_((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb);}
+#endif
+
+
+static TLS_STORE uint8_t hook_pos_dgemmtr = 0;
+
+void FC_GLOBAL(dgemmtr,DGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb)
+{
+    void (*fn) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void (*fn_hook) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+    *(void **) &fn = current_backend->blas.dgemmtr.f77_blas_function;
+    *(void **) &fn_hook = __flexiblas_hooks->dgemmtr.f77_hook_function[0];
+    hook_pos_dgemmtr = 0;
+    if ( fn_hook != NULL) {
+        fn_hook((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+    } else {
+        fn((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+    }
+    return;
+}
+#ifdef FLEXIBLAS_ABI_IBM
+void FC_GLOBAL2(dgemmtr,DGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(dgemmtr,DGEMMTR)))));
+void FC_GLOBAL3(dgemmtr,DGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(dgemmtr,DGEMMTR)))));
+#else
+#ifndef __APPLE__
+void FC_GLOBAL2(dgemmtr,DGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(dgemmtr,DGEMMTR)))));
+void FC_GLOBAL3(dgemmtr,DGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(dgemmtr,DGEMMTR)))));
+#else
+void FC_GLOBAL2(dgemmtr,DGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(dgemmtr,DGEMMTR)((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
+void FC_GLOBAL3(dgemmtr,DGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(dgemmtr,DGEMMTR)((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
+#endif
+#endif
+
+
+
+void flexiblas_real_dgemmtr_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb)
+{
+    void (*fn) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+
+    *(void **) &fn = current_backend->blas.dgemmtr.f77_blas_function;
+    fn((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+
+    return;
+}
+#ifndef __APPLE__
+void flexiblas_real_dgemmtr(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias("flexiblas_real_dgemmtr_")));
+#else
+void flexiblas_real_dgemmtr(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){flexiblas_real_dgemmtr_((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb);}
+#endif
+
+
+void flexiblas_chain_dgemmtr_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb)
+{
+    void (*fn) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+
+
+
+    hook_pos_dgemmtr++;
+    if ( hook_pos_dgemmtr < __flexiblas_hooks->dgemmtr.nhook ) {
+        *(void **) &fn = __flexiblas_hooks->dgemmtr.f77_hook_function[hook_pos_dgemmtr];
+    } else {
+        hook_pos_dgemmtr = 0;
+        *(void **) &fn = current_backend->blas.dgemmtr.f77_blas_function;
+    }
+    fn((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+
+    return;
+}
+#ifndef __APPLE__
+void flexiblas_chain_dgemmtr(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias("flexiblas_chain_dgemmtr_")));
+#else
+void flexiblas_chain_dgemmtr(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){flexiblas_chain_dgemmtr_((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb);}
+#endif
+
+
 static TLS_STORE uint8_t hook_pos_dgemv = 0;
 
 void FC_GLOBAL(dgemv,DGEMV)(char* trans, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_trans)
@@ -3236,12 +3666,15 @@ void FC_GLOBAL(dgemv,DGEMV)(char* trans, blasint* m, blasint* n, double* alpha, 
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dgemv_(char* trans, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dgemv,DGEMV)))));
+void FC_GLOBAL2(dgemv,DGEMV)(char* trans, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dgemv,DGEMV)))));
+void FC_GLOBAL3(dgemv,DGEMV)(char* trans, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dgemv,DGEMV)))));
 #else
 #ifndef __APPLE__
-void dgemv(char* trans, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dgemv,DGEMV)))));
+void FC_GLOBAL2(dgemv,DGEMV)(char* trans, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dgemv,DGEMV)))));
+void FC_GLOBAL3(dgemv,DGEMV)(char* trans, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dgemv,DGEMV)))));
 #else
-void dgemv(char* trans, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(dgemv,DGEMV)((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(dgemv,DGEMV)(char* trans, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(dgemv,DGEMV)((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(dgemv,DGEMV)(char* trans, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(dgemv,DGEMV)((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -3308,12 +3741,15 @@ void FC_GLOBAL(dger,DGER)(blasint* m, blasint* n, double* alpha, double* x, blas
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dger_(blasint* m, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(dger,DGER)))));
+void FC_GLOBAL2(dger,DGER)(blasint* m, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(dger,DGER)))));
+void FC_GLOBAL3(dger,DGER)(blasint* m, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(dger,DGER)))));
 #else
 #ifndef __APPLE__
-void dger(blasint* m, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(dger,DGER)))));
+void FC_GLOBAL2(dger,DGER)(blasint* m, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(dger,DGER)))));
+void FC_GLOBAL3(dger,DGER)(blasint* m, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(dger,DGER)))));
 #else
-void dger(blasint* m, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* a, blasint* lda){ FC_GLOBAL(dger,DGER)((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
+void FC_GLOBAL2(dger,DGER)(blasint* m, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* a, blasint* lda){ FC_GLOBAL(dger,DGER)((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
+void FC_GLOBAL3(dger,DGER)(blasint* m, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* a, blasint* lda){ FC_GLOBAL(dger,DGER)((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
 #endif
 #endif
 
@@ -3381,12 +3817,15 @@ double FC_GLOBAL(dnrm2,DNRM2)(blasint* n, double* x, blasint* incx)
     return ret;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-double dnrm2_(blasint* n, double* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dnrm2,DNRM2)))));
+double FC_GLOBAL2(dnrm2,DNRM2)(blasint* n, double* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dnrm2,DNRM2)))));
+double FC_GLOBAL3(dnrm2,DNRM2)(blasint* n, double* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dnrm2,DNRM2)))));
 #else
 #ifndef __APPLE__
-double dnrm2(blasint* n, double* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dnrm2,DNRM2)))));
+double FC_GLOBAL2(dnrm2,DNRM2)(blasint* n, double* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dnrm2,DNRM2)))));
+double FC_GLOBAL3(dnrm2,DNRM2)(blasint* n, double* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dnrm2,DNRM2)))));
 #else
-double dnrm2(blasint* n, double* x, blasint* incx){ return FC_GLOBAL(dnrm2,DNRM2)((void*) n, (void*) x, (void*) incx); }
+double FC_GLOBAL2(dnrm2,DNRM2)(blasint* n, double* x, blasint* incx){ return FC_GLOBAL(dnrm2,DNRM2)((void*) n, (void*) x, (void*) incx); }
+double FC_GLOBAL3(dnrm2,DNRM2)(blasint* n, double* x, blasint* incx){ return FC_GLOBAL(dnrm2,DNRM2)((void*) n, (void*) x, (void*) incx); }
 #endif
 #endif
 
@@ -3455,12 +3894,15 @@ void FC_GLOBAL(drot,DROT)(blasint* n, double* dx, blasint* incx, double* dy, bla
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void drot_(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy, double* c, double* s) __attribute__((alias(MTS(FC_GLOBAL(drot,DROT)))));
+void FC_GLOBAL2(drot,DROT)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy, double* c, double* s) __attribute__((alias(MTS(FC_GLOBAL(drot,DROT)))));
+void FC_GLOBAL3(drot,DROT)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy, double* c, double* s) __attribute__((alias(MTS(FC_GLOBAL(drot,DROT)))));
 #else
 #ifndef __APPLE__
-void drot(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy, double* c, double* s) __attribute__((alias(MTS(FC_GLOBAL(drot,DROT)))));
+void FC_GLOBAL2(drot,DROT)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy, double* c, double* s) __attribute__((alias(MTS(FC_GLOBAL(drot,DROT)))));
+void FC_GLOBAL3(drot,DROT)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy, double* c, double* s) __attribute__((alias(MTS(FC_GLOBAL(drot,DROT)))));
 #else
-void drot(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy, double* c, double* s){ FC_GLOBAL(drot,DROT)((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy, (void*) c, (void*) s); }
+void FC_GLOBAL2(drot,DROT)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy, double* c, double* s){ FC_GLOBAL(drot,DROT)((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy, (void*) c, (void*) s); }
+void FC_GLOBAL3(drot,DROT)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy, double* c, double* s){ FC_GLOBAL(drot,DROT)((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy, (void*) c, (void*) s); }
 #endif
 #endif
 
@@ -3527,12 +3969,15 @@ void FC_GLOBAL(drotg,DROTG)(double* da, double* db, double* c, double* s)
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void drotg_(double* da, double* db, double* c, double* s) __attribute__((alias(MTS(FC_GLOBAL(drotg,DROTG)))));
+void FC_GLOBAL2(drotg,DROTG)(double* da, double* db, double* c, double* s) __attribute__((alias(MTS(FC_GLOBAL(drotg,DROTG)))));
+void FC_GLOBAL3(drotg,DROTG)(double* da, double* db, double* c, double* s) __attribute__((alias(MTS(FC_GLOBAL(drotg,DROTG)))));
 #else
 #ifndef __APPLE__
-void drotg(double* da, double* db, double* c, double* s) __attribute__((alias(MTS(FC_GLOBAL(drotg,DROTG)))));
+void FC_GLOBAL2(drotg,DROTG)(double* da, double* db, double* c, double* s) __attribute__((alias(MTS(FC_GLOBAL(drotg,DROTG)))));
+void FC_GLOBAL3(drotg,DROTG)(double* da, double* db, double* c, double* s) __attribute__((alias(MTS(FC_GLOBAL(drotg,DROTG)))));
 #else
-void drotg(double* da, double* db, double* c, double* s){ FC_GLOBAL(drotg,DROTG)((void*) da, (void*) db, (void*) c, (void*) s); }
+void FC_GLOBAL2(drotg,DROTG)(double* da, double* db, double* c, double* s){ FC_GLOBAL(drotg,DROTG)((void*) da, (void*) db, (void*) c, (void*) s); }
+void FC_GLOBAL3(drotg,DROTG)(double* da, double* db, double* c, double* s){ FC_GLOBAL(drotg,DROTG)((void*) da, (void*) db, (void*) c, (void*) s); }
 #endif
 #endif
 
@@ -3599,12 +4044,15 @@ void FC_GLOBAL(drotm,DROTM)(blasint* n, double* dx, blasint* incx, double* dy, b
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void drotm_(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy, double* dparam) __attribute__((alias(MTS(FC_GLOBAL(drotm,DROTM)))));
+void FC_GLOBAL2(drotm,DROTM)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy, double* dparam) __attribute__((alias(MTS(FC_GLOBAL(drotm,DROTM)))));
+void FC_GLOBAL3(drotm,DROTM)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy, double* dparam) __attribute__((alias(MTS(FC_GLOBAL(drotm,DROTM)))));
 #else
 #ifndef __APPLE__
-void drotm(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy, double* dparam) __attribute__((alias(MTS(FC_GLOBAL(drotm,DROTM)))));
+void FC_GLOBAL2(drotm,DROTM)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy, double* dparam) __attribute__((alias(MTS(FC_GLOBAL(drotm,DROTM)))));
+void FC_GLOBAL3(drotm,DROTM)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy, double* dparam) __attribute__((alias(MTS(FC_GLOBAL(drotm,DROTM)))));
 #else
-void drotm(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy, double* dparam){ FC_GLOBAL(drotm,DROTM)((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy, (void*) dparam); }
+void FC_GLOBAL2(drotm,DROTM)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy, double* dparam){ FC_GLOBAL(drotm,DROTM)((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy, (void*) dparam); }
+void FC_GLOBAL3(drotm,DROTM)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy, double* dparam){ FC_GLOBAL(drotm,DROTM)((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy, (void*) dparam); }
 #endif
 #endif
 
@@ -3671,12 +4119,15 @@ void FC_GLOBAL(drotmg,DROTMG)(double* dd1, double* dd2, double* dx1, double* dy1
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void drotmg_(double* dd1, double* dd2, double* dx1, double* dy1, double* dparam) __attribute__((alias(MTS(FC_GLOBAL(drotmg,DROTMG)))));
+void FC_GLOBAL2(drotmg,DROTMG)(double* dd1, double* dd2, double* dx1, double* dy1, double* dparam) __attribute__((alias(MTS(FC_GLOBAL(drotmg,DROTMG)))));
+void FC_GLOBAL3(drotmg,DROTMG)(double* dd1, double* dd2, double* dx1, double* dy1, double* dparam) __attribute__((alias(MTS(FC_GLOBAL(drotmg,DROTMG)))));
 #else
 #ifndef __APPLE__
-void drotmg(double* dd1, double* dd2, double* dx1, double* dy1, double* dparam) __attribute__((alias(MTS(FC_GLOBAL(drotmg,DROTMG)))));
+void FC_GLOBAL2(drotmg,DROTMG)(double* dd1, double* dd2, double* dx1, double* dy1, double* dparam) __attribute__((alias(MTS(FC_GLOBAL(drotmg,DROTMG)))));
+void FC_GLOBAL3(drotmg,DROTMG)(double* dd1, double* dd2, double* dx1, double* dy1, double* dparam) __attribute__((alias(MTS(FC_GLOBAL(drotmg,DROTMG)))));
 #else
-void drotmg(double* dd1, double* dd2, double* dx1, double* dy1, double* dparam){ FC_GLOBAL(drotmg,DROTMG)((void*) dd1, (void*) dd2, (void*) dx1, (void*) dy1, (void*) dparam); }
+void FC_GLOBAL2(drotmg,DROTMG)(double* dd1, double* dd2, double* dx1, double* dy1, double* dparam){ FC_GLOBAL(drotmg,DROTMG)((void*) dd1, (void*) dd2, (void*) dx1, (void*) dy1, (void*) dparam); }
+void FC_GLOBAL3(drotmg,DROTMG)(double* dd1, double* dd2, double* dx1, double* dy1, double* dparam){ FC_GLOBAL(drotmg,DROTMG)((void*) dd1, (void*) dd2, (void*) dx1, (void*) dy1, (void*) dparam); }
 #endif
 #endif
 
@@ -3743,12 +4194,15 @@ void FC_GLOBAL(dsbmv,DSBMV)(char* uplo, blasint* n, blasint* k, double* alpha, d
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dsbmv_(char* uplo, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsbmv,DSBMV)))));
+void FC_GLOBAL2(dsbmv,DSBMV)(char* uplo, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsbmv,DSBMV)))));
+void FC_GLOBAL3(dsbmv,DSBMV)(char* uplo, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsbmv,DSBMV)))));
 #else
 #ifndef __APPLE__
-void dsbmv(char* uplo, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsbmv,DSBMV)))));
+void FC_GLOBAL2(dsbmv,DSBMV)(char* uplo, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsbmv,DSBMV)))));
+void FC_GLOBAL3(dsbmv,DSBMV)(char* uplo, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsbmv,DSBMV)))));
 #else
-void dsbmv(char* uplo, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dsbmv,DSBMV)((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(dsbmv,DSBMV)(char* uplo, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dsbmv,DSBMV)((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(dsbmv,DSBMV)(char* uplo, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dsbmv,DSBMV)((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -3815,12 +4269,15 @@ void FC_GLOBAL(dscal,DSCAL)(blasint* n, double* da, double* dx, blasint* incx)
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dscal_(blasint* n, double* da, double* dx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dscal,DSCAL)))));
+void FC_GLOBAL2(dscal,DSCAL)(blasint* n, double* da, double* dx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dscal,DSCAL)))));
+void FC_GLOBAL3(dscal,DSCAL)(blasint* n, double* da, double* dx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dscal,DSCAL)))));
 #else
 #ifndef __APPLE__
-void dscal(blasint* n, double* da, double* dx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dscal,DSCAL)))));
+void FC_GLOBAL2(dscal,DSCAL)(blasint* n, double* da, double* dx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dscal,DSCAL)))));
+void FC_GLOBAL3(dscal,DSCAL)(blasint* n, double* da, double* dx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dscal,DSCAL)))));
 #else
-void dscal(blasint* n, double* da, double* dx, blasint* incx){ FC_GLOBAL(dscal,DSCAL)((void*) n, (void*) da, (void*) dx, (void*) incx); }
+void FC_GLOBAL2(dscal,DSCAL)(blasint* n, double* da, double* dx, blasint* incx){ FC_GLOBAL(dscal,DSCAL)((void*) n, (void*) da, (void*) dx, (void*) incx); }
+void FC_GLOBAL3(dscal,DSCAL)(blasint* n, double* da, double* dx, blasint* incx){ FC_GLOBAL(dscal,DSCAL)((void*) n, (void*) da, (void*) dx, (void*) incx); }
 #endif
 #endif
 
@@ -3888,12 +4345,15 @@ double FC_GLOBAL(dsdot,DSDOT)(blasint* n, float* sx, blasint* incx, float* sy, b
     return ret;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-double dsdot_(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dsdot,DSDOT)))));
+double FC_GLOBAL2(dsdot,DSDOT)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dsdot,DSDOT)))));
+double FC_GLOBAL3(dsdot,DSDOT)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dsdot,DSDOT)))));
 #else
 #ifndef __APPLE__
-double dsdot(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dsdot,DSDOT)))));
+double FC_GLOBAL2(dsdot,DSDOT)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dsdot,DSDOT)))));
+double FC_GLOBAL3(dsdot,DSDOT)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dsdot,DSDOT)))));
 #else
-double dsdot(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy){ return FC_GLOBAL(dsdot,DSDOT)((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy); }
+double FC_GLOBAL2(dsdot,DSDOT)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy){ return FC_GLOBAL(dsdot,DSDOT)((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy); }
+double FC_GLOBAL3(dsdot,DSDOT)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy){ return FC_GLOBAL(dsdot,DSDOT)((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy); }
 #endif
 #endif
 
@@ -3962,12 +4422,15 @@ void FC_GLOBAL(dspmv,DSPMV)(char* uplo, blasint* n, double* alpha, double* ap, d
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dspmv_(char* uplo, blasint* n, double* alpha, double* ap, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dspmv,DSPMV)))));
+void FC_GLOBAL2(dspmv,DSPMV)(char* uplo, blasint* n, double* alpha, double* ap, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dspmv,DSPMV)))));
+void FC_GLOBAL3(dspmv,DSPMV)(char* uplo, blasint* n, double* alpha, double* ap, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dspmv,DSPMV)))));
 #else
 #ifndef __APPLE__
-void dspmv(char* uplo, blasint* n, double* alpha, double* ap, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dspmv,DSPMV)))));
+void FC_GLOBAL2(dspmv,DSPMV)(char* uplo, blasint* n, double* alpha, double* ap, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dspmv,DSPMV)))));
+void FC_GLOBAL3(dspmv,DSPMV)(char* uplo, blasint* n, double* alpha, double* ap, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dspmv,DSPMV)))));
 #else
-void dspmv(char* uplo, blasint* n, double* alpha, double* ap, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dspmv,DSPMV)((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(dspmv,DSPMV)(char* uplo, blasint* n, double* alpha, double* ap, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dspmv,DSPMV)((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(dspmv,DSPMV)(char* uplo, blasint* n, double* alpha, double* ap, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dspmv,DSPMV)((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -4034,12 +4497,15 @@ void FC_GLOBAL(dspr,DSPR)(char* uplo, blasint* n, double* alpha, double* x, blas
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dspr_(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dspr,DSPR)))));
+void FC_GLOBAL2(dspr,DSPR)(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dspr,DSPR)))));
+void FC_GLOBAL3(dspr,DSPR)(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dspr,DSPR)))));
 #else
 #ifndef __APPLE__
-void dspr(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dspr,DSPR)))));
+void FC_GLOBAL2(dspr,DSPR)(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dspr,DSPR)))));
+void FC_GLOBAL3(dspr,DSPR)(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dspr,DSPR)))));
 #else
-void dspr(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* ap, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dspr,DSPR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(dspr,DSPR)(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* ap, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dspr,DSPR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(dspr,DSPR)(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* ap, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dspr,DSPR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -4106,12 +4572,15 @@ void FC_GLOBAL(dspr2,DSPR2)(char* uplo, blasint* n, double* alpha, double* x, bl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dspr2_(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dspr2,DSPR2)))));
+void FC_GLOBAL2(dspr2,DSPR2)(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dspr2,DSPR2)))));
+void FC_GLOBAL3(dspr2,DSPR2)(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dspr2,DSPR2)))));
 #else
 #ifndef __APPLE__
-void dspr2(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dspr2,DSPR2)))));
+void FC_GLOBAL2(dspr2,DSPR2)(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dspr2,DSPR2)))));
+void FC_GLOBAL3(dspr2,DSPR2)(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dspr2,DSPR2)))));
 #else
-void dspr2(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* ap, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dspr2,DSPR2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(dspr2,DSPR2)(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* ap, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dspr2,DSPR2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(dspr2,DSPR2)(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* ap, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dspr2,DSPR2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -4178,12 +4647,15 @@ void FC_GLOBAL(dswap,DSWAP)(blasint* n, double* dx, blasint* incx, double* dy, b
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dswap_(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dswap,DSWAP)))));
+void FC_GLOBAL2(dswap,DSWAP)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dswap,DSWAP)))));
+void FC_GLOBAL3(dswap,DSWAP)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dswap,DSWAP)))));
 #else
 #ifndef __APPLE__
-void dswap(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dswap,DSWAP)))));
+void FC_GLOBAL2(dswap,DSWAP)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dswap,DSWAP)))));
+void FC_GLOBAL3(dswap,DSWAP)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(dswap,DSWAP)))));
 #else
-void dswap(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy){ FC_GLOBAL(dswap,DSWAP)((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy); }
+void FC_GLOBAL2(dswap,DSWAP)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy){ FC_GLOBAL(dswap,DSWAP)((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy); }
+void FC_GLOBAL3(dswap,DSWAP)(blasint* n, double* dx, blasint* incx, double* dy, blasint* incy){ FC_GLOBAL(dswap,DSWAP)((void*) n, (void*) dx, (void*) incx, (void*) dy, (void*) incy); }
 #endif
 #endif
 
@@ -4250,12 +4722,15 @@ void FC_GLOBAL(dsymm,DSYMM)(char* side, char* uplo, blasint* m, blasint* n, doub
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dsymm_(char* side, char* uplo, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsymm,DSYMM)))));
+void FC_GLOBAL2(dsymm,DSYMM)(char* side, char* uplo, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsymm,DSYMM)))));
+void FC_GLOBAL3(dsymm,DSYMM)(char* side, char* uplo, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsymm,DSYMM)))));
 #else
 #ifndef __APPLE__
-void dsymm(char* side, char* uplo, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsymm,DSYMM)))));
+void FC_GLOBAL2(dsymm,DSYMM)(char* side, char* uplo, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsymm,DSYMM)))));
+void FC_GLOBAL3(dsymm,DSYMM)(char* side, char* uplo, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsymm,DSYMM)))));
 #else
-void dsymm(char* side, char* uplo, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dsymm,DSYMM)((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(dsymm,DSYMM)(char* side, char* uplo, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dsymm,DSYMM)((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(dsymm,DSYMM)(char* side, char* uplo, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dsymm,DSYMM)((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -4322,12 +4797,15 @@ void FC_GLOBAL(dsymv,DSYMV)(char* uplo, blasint* n, double* alpha, double* a, bl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dsymv_(char* uplo, blasint* n, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsymv,DSYMV)))));
+void FC_GLOBAL2(dsymv,DSYMV)(char* uplo, blasint* n, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsymv,DSYMV)))));
+void FC_GLOBAL3(dsymv,DSYMV)(char* uplo, blasint* n, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsymv,DSYMV)))));
 #else
 #ifndef __APPLE__
-void dsymv(char* uplo, blasint* n, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsymv,DSYMV)))));
+void FC_GLOBAL2(dsymv,DSYMV)(char* uplo, blasint* n, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsymv,DSYMV)))));
+void FC_GLOBAL3(dsymv,DSYMV)(char* uplo, blasint* n, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsymv,DSYMV)))));
 #else
-void dsymv(char* uplo, blasint* n, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dsymv,DSYMV)((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(dsymv,DSYMV)(char* uplo, blasint* n, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dsymv,DSYMV)((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(dsymv,DSYMV)(char* uplo, blasint* n, double* alpha, double* a, blasint* lda, double* x, blasint* incx, double* beta, double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dsymv,DSYMV)((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -4394,12 +4872,15 @@ void FC_GLOBAL(dsyr,DSYR)(char* uplo, blasint* n, double* alpha, double* x, blas
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dsyr_(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsyr,DSYR)))));
+void FC_GLOBAL2(dsyr,DSYR)(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsyr,DSYR)))));
+void FC_GLOBAL3(dsyr,DSYR)(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsyr,DSYR)))));
 #else
 #ifndef __APPLE__
-void dsyr(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsyr,DSYR)))));
+void FC_GLOBAL2(dsyr,DSYR)(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsyr,DSYR)))));
+void FC_GLOBAL3(dsyr,DSYR)(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsyr,DSYR)))));
 #else
-void dsyr(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dsyr,DSYR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(dsyr,DSYR)(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dsyr,DSYR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(dsyr,DSYR)(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dsyr,DSYR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -4466,12 +4947,15 @@ void FC_GLOBAL(dsyr2,DSYR2)(char* uplo, blasint* n, double* alpha, double* x, bl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dsyr2_(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsyr2,DSYR2)))));
+void FC_GLOBAL2(dsyr2,DSYR2)(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsyr2,DSYR2)))));
+void FC_GLOBAL3(dsyr2,DSYR2)(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsyr2,DSYR2)))));
 #else
 #ifndef __APPLE__
-void dsyr2(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsyr2,DSYR2)))));
+void FC_GLOBAL2(dsyr2,DSYR2)(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsyr2,DSYR2)))));
+void FC_GLOBAL3(dsyr2,DSYR2)(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(dsyr2,DSYR2)))));
 #else
-void dsyr2(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dsyr2,DSYR2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(dsyr2,DSYR2)(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dsyr2,DSYR2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(dsyr2,DSYR2)(char* uplo, blasint* n, double* alpha, double* x, blasint* incx, double* y, blasint* incy, double* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(dsyr2,DSYR2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -4538,12 +5022,15 @@ void FC_GLOBAL(dsyr2k,DSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, d
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dsyr2k_(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dsyr2k,DSYR2K)))));
+void FC_GLOBAL2(dsyr2k,DSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dsyr2k,DSYR2K)))));
+void FC_GLOBAL3(dsyr2k,DSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dsyr2k,DSYR2K)))));
 #else
 #ifndef __APPLE__
-void dsyr2k(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dsyr2k,DSYR2K)))));
+void FC_GLOBAL2(dsyr2k,DSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dsyr2k,DSYR2K)))));
+void FC_GLOBAL3(dsyr2k,DSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dsyr2k,DSYR2K)))));
 #else
-void dsyr2k(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(dsyr2k,DSYR2K)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(dsyr2k,DSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(dsyr2k,DSYR2K)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(dsyr2k,DSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(dsyr2k,DSYR2K)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -4610,12 +5097,15 @@ void FC_GLOBAL(dsyrk,DSYRK)(char* uplo, char* trans, blasint* n, blasint* k, dou
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dsyrk_(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dsyrk,DSYRK)))));
+void FC_GLOBAL2(dsyrk,DSYRK)(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dsyrk,DSYRK)))));
+void FC_GLOBAL3(dsyrk,DSYRK)(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dsyrk,DSYRK)))));
 #else
 #ifndef __APPLE__
-void dsyrk(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dsyrk,DSYRK)))));
+void FC_GLOBAL2(dsyrk,DSYRK)(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dsyrk,DSYRK)))));
+void FC_GLOBAL3(dsyrk,DSYRK)(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dsyrk,DSYRK)))));
 #else
-void dsyrk(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(dsyrk,DSYRK)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(dsyrk,DSYRK)(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(dsyrk,DSYRK)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(dsyrk,DSYRK)(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double* a, blasint* lda, double* beta, double* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(dsyrk,DSYRK)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -4682,12 +5172,15 @@ void FC_GLOBAL(dtbmv,DTBMV)(char* uplo, char* trans, char* diag, blasint* n, bla
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dtbmv_(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtbmv,DTBMV)))));
+void FC_GLOBAL2(dtbmv,DTBMV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtbmv,DTBMV)))));
+void FC_GLOBAL3(dtbmv,DTBMV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtbmv,DTBMV)))));
 #else
 #ifndef __APPLE__
-void dtbmv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtbmv,DTBMV)))));
+void FC_GLOBAL2(dtbmv,DTBMV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtbmv,DTBMV)))));
+void FC_GLOBAL3(dtbmv,DTBMV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtbmv,DTBMV)))));
 #else
-void dtbmv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(dtbmv,DTBMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(dtbmv,DTBMV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(dtbmv,DTBMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(dtbmv,DTBMV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(dtbmv,DTBMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -4754,12 +5247,15 @@ void FC_GLOBAL(dtbsv,DTBSV)(char* uplo, char* trans, char* diag, blasint* n, bla
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dtbsv_(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtbsv,DTBSV)))));
+void FC_GLOBAL2(dtbsv,DTBSV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtbsv,DTBSV)))));
+void FC_GLOBAL3(dtbsv,DTBSV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtbsv,DTBSV)))));
 #else
 #ifndef __APPLE__
-void dtbsv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtbsv,DTBSV)))));
+void FC_GLOBAL2(dtbsv,DTBSV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtbsv,DTBSV)))));
+void FC_GLOBAL3(dtbsv,DTBSV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtbsv,DTBSV)))));
 #else
-void dtbsv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(dtbsv,DTBSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(dtbsv,DTBSV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(dtbsv,DTBSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(dtbsv,DTBSV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(dtbsv,DTBSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -4826,12 +5322,15 @@ void FC_GLOBAL(dtpmv,DTPMV)(char* uplo, char* trans, char* diag, blasint* n, dou
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dtpmv_(char* uplo, char* trans, char* diag, blasint* n, double* ap, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtpmv,DTPMV)))));
+void FC_GLOBAL2(dtpmv,DTPMV)(char* uplo, char* trans, char* diag, blasint* n, double* ap, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtpmv,DTPMV)))));
+void FC_GLOBAL3(dtpmv,DTPMV)(char* uplo, char* trans, char* diag, blasint* n, double* ap, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtpmv,DTPMV)))));
 #else
 #ifndef __APPLE__
-void dtpmv(char* uplo, char* trans, char* diag, blasint* n, double* ap, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtpmv,DTPMV)))));
+void FC_GLOBAL2(dtpmv,DTPMV)(char* uplo, char* trans, char* diag, blasint* n, double* ap, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtpmv,DTPMV)))));
+void FC_GLOBAL3(dtpmv,DTPMV)(char* uplo, char* trans, char* diag, blasint* n, double* ap, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtpmv,DTPMV)))));
 #else
-void dtpmv(char* uplo, char* trans, char* diag, blasint* n, double* ap, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(dtpmv,DTPMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(dtpmv,DTPMV)(char* uplo, char* trans, char* diag, blasint* n, double* ap, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(dtpmv,DTPMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(dtpmv,DTPMV)(char* uplo, char* trans, char* diag, blasint* n, double* ap, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(dtpmv,DTPMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -4898,12 +5397,15 @@ void FC_GLOBAL(dtpsv,DTPSV)(char* uplo, char* trans, char* diag, blasint* n, dou
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dtpsv_(char* uplo, char* trans, char* diag, blasint* n, double* ap, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtpsv,DTPSV)))));
+void FC_GLOBAL2(dtpsv,DTPSV)(char* uplo, char* trans, char* diag, blasint* n, double* ap, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtpsv,DTPSV)))));
+void FC_GLOBAL3(dtpsv,DTPSV)(char* uplo, char* trans, char* diag, blasint* n, double* ap, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtpsv,DTPSV)))));
 #else
 #ifndef __APPLE__
-void dtpsv(char* uplo, char* trans, char* diag, blasint* n, double* ap, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtpsv,DTPSV)))));
+void FC_GLOBAL2(dtpsv,DTPSV)(char* uplo, char* trans, char* diag, blasint* n, double* ap, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtpsv,DTPSV)))));
+void FC_GLOBAL3(dtpsv,DTPSV)(char* uplo, char* trans, char* diag, blasint* n, double* ap, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtpsv,DTPSV)))));
 #else
-void dtpsv(char* uplo, char* trans, char* diag, blasint* n, double* ap, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(dtpsv,DTPSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(dtpsv,DTPSV)(char* uplo, char* trans, char* diag, blasint* n, double* ap, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(dtpsv,DTPSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(dtpsv,DTPSV)(char* uplo, char* trans, char* diag, blasint* n, double* ap, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(dtpsv,DTPSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -4970,12 +5472,15 @@ void FC_GLOBAL(dtrmm,DTRMM)(char* side, char* uplo, char* transa, char* diag, bl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dtrmm_(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtrmm,DTRMM)))));
+void FC_GLOBAL2(dtrmm,DTRMM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtrmm,DTRMM)))));
+void FC_GLOBAL3(dtrmm,DTRMM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtrmm,DTRMM)))));
 #else
 #ifndef __APPLE__
-void dtrmm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtrmm,DTRMM)))));
+void FC_GLOBAL2(dtrmm,DTRMM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtrmm,DTRMM)))));
+void FC_GLOBAL3(dtrmm,DTRMM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtrmm,DTRMM)))));
 #else
-void dtrmm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(dtrmm,DTRMM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(dtrmm,DTRMM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(dtrmm,DTRMM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(dtrmm,DTRMM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(dtrmm,DTRMM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -5042,12 +5547,15 @@ void FC_GLOBAL(dtrmv,DTRMV)(char* uplo, char* trans, char* diag, blasint* n, dou
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dtrmv_(char* uplo, char* trans, char* diag, blasint* n, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtrmv,DTRMV)))));
+void FC_GLOBAL2(dtrmv,DTRMV)(char* uplo, char* trans, char* diag, blasint* n, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtrmv,DTRMV)))));
+void FC_GLOBAL3(dtrmv,DTRMV)(char* uplo, char* trans, char* diag, blasint* n, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtrmv,DTRMV)))));
 #else
 #ifndef __APPLE__
-void dtrmv(char* uplo, char* trans, char* diag, blasint* n, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtrmv,DTRMV)))));
+void FC_GLOBAL2(dtrmv,DTRMV)(char* uplo, char* trans, char* diag, blasint* n, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtrmv,DTRMV)))));
+void FC_GLOBAL3(dtrmv,DTRMV)(char* uplo, char* trans, char* diag, blasint* n, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtrmv,DTRMV)))));
 #else
-void dtrmv(char* uplo, char* trans, char* diag, blasint* n, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(dtrmv,DTRMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(dtrmv,DTRMV)(char* uplo, char* trans, char* diag, blasint* n, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(dtrmv,DTRMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(dtrmv,DTRMV)(char* uplo, char* trans, char* diag, blasint* n, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(dtrmv,DTRMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -5114,12 +5622,15 @@ void FC_GLOBAL(dtrsm,DTRSM)(char* side, char* uplo, char* transa, char* diag, bl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dtrsm_(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtrsm,DTRSM)))));
+void FC_GLOBAL2(dtrsm,DTRSM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtrsm,DTRSM)))));
+void FC_GLOBAL3(dtrsm,DTRSM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtrsm,DTRSM)))));
 #else
 #ifndef __APPLE__
-void dtrsm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtrsm,DTRSM)))));
+void FC_GLOBAL2(dtrsm,DTRSM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtrsm,DTRSM)))));
+void FC_GLOBAL3(dtrsm,DTRSM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtrsm,DTRSM)))));
 #else
-void dtrsm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(dtrsm,DTRSM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(dtrsm,DTRSM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(dtrsm,DTRSM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(dtrsm,DTRSM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(dtrsm,DTRSM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -5186,12 +5697,15 @@ void FC_GLOBAL(dtrsv,DTRSV)(char* uplo, char* trans, char* diag, blasint* n, dou
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dtrsv_(char* uplo, char* trans, char* diag, blasint* n, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtrsv,DTRSV)))));
+void FC_GLOBAL2(dtrsv,DTRSV)(char* uplo, char* trans, char* diag, blasint* n, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtrsv,DTRSV)))));
+void FC_GLOBAL3(dtrsv,DTRSV)(char* uplo, char* trans, char* diag, blasint* n, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtrsv,DTRSV)))));
 #else
 #ifndef __APPLE__
-void dtrsv(char* uplo, char* trans, char* diag, blasint* n, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtrsv,DTRSV)))));
+void FC_GLOBAL2(dtrsv,DTRSV)(char* uplo, char* trans, char* diag, blasint* n, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtrsv,DTRSV)))));
+void FC_GLOBAL3(dtrsv,DTRSV)(char* uplo, char* trans, char* diag, blasint* n, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(dtrsv,DTRSV)))));
 #else
-void dtrsv(char* uplo, char* trans, char* diag, blasint* n, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(dtrsv,DTRSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(dtrsv,DTRSV)(char* uplo, char* trans, char* diag, blasint* n, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(dtrsv,DTRSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(dtrsv,DTRSV)(char* uplo, char* trans, char* diag, blasint* n, double* a, blasint* lda, double* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(dtrsv,DTRSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -5259,12 +5773,15 @@ double FC_GLOBAL(dzasum,DZASUM)(blasint* n, double complex* zx, blasint* incx)
     return ret;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-double dzasum_(blasint* n, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dzasum,DZASUM)))));
+double FC_GLOBAL2(dzasum,DZASUM)(blasint* n, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dzasum,DZASUM)))));
+double FC_GLOBAL3(dzasum,DZASUM)(blasint* n, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dzasum,DZASUM)))));
 #else
 #ifndef __APPLE__
-double dzasum(blasint* n, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dzasum,DZASUM)))));
+double FC_GLOBAL2(dzasum,DZASUM)(blasint* n, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dzasum,DZASUM)))));
+double FC_GLOBAL3(dzasum,DZASUM)(blasint* n, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dzasum,DZASUM)))));
 #else
-double dzasum(blasint* n, double complex* zx, blasint* incx){ return FC_GLOBAL(dzasum,DZASUM)((void*) n, (void*) zx, (void*) incx); }
+double FC_GLOBAL2(dzasum,DZASUM)(blasint* n, double complex* zx, blasint* incx){ return FC_GLOBAL(dzasum,DZASUM)((void*) n, (void*) zx, (void*) incx); }
+double FC_GLOBAL3(dzasum,DZASUM)(blasint* n, double complex* zx, blasint* incx){ return FC_GLOBAL(dzasum,DZASUM)((void*) n, (void*) zx, (void*) incx); }
 #endif
 #endif
 
@@ -5334,12 +5851,15 @@ double FC_GLOBAL(dznrm2,DZNRM2)(blasint* n, double complex* x, blasint* incx)
     return ret;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-double dznrm2_(blasint* n, double complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dznrm2,DZNRM2)))));
+double FC_GLOBAL2(dznrm2,DZNRM2)(blasint* n, double complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dznrm2,DZNRM2)))));
+double FC_GLOBAL3(dznrm2,DZNRM2)(blasint* n, double complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dznrm2,DZNRM2)))));
 #else
 #ifndef __APPLE__
-double dznrm2(blasint* n, double complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dznrm2,DZNRM2)))));
+double FC_GLOBAL2(dznrm2,DZNRM2)(blasint* n, double complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dznrm2,DZNRM2)))));
+double FC_GLOBAL3(dznrm2,DZNRM2)(blasint* n, double complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(dznrm2,DZNRM2)))));
 #else
-double dznrm2(blasint* n, double complex* x, blasint* incx){ return FC_GLOBAL(dznrm2,DZNRM2)((void*) n, (void*) x, (void*) incx); }
+double FC_GLOBAL2(dznrm2,DZNRM2)(blasint* n, double complex* x, blasint* incx){ return FC_GLOBAL(dznrm2,DZNRM2)((void*) n, (void*) x, (void*) incx); }
+double FC_GLOBAL3(dznrm2,DZNRM2)(blasint* n, double complex* x, blasint* incx){ return FC_GLOBAL(dznrm2,DZNRM2)((void*) n, (void*) x, (void*) incx); }
 #endif
 #endif
 
@@ -5389,7 +5909,7 @@ double flexiblas_chain_dznrm2(void* n, void* x, void* incx){return flexiblas_cha
 
 static TLS_STORE uint8_t hook_pos_icamax = 0;
 
-int FC_GLOBAL(icamax,ICAMAX)(blasint* n, float complex* cx, blasint* incx)
+blasint FC_GLOBAL(icamax,ICAMAX)(blasint* n, float complex* cx, blasint* incx)
 {
     blasint (*fn) (void* n, void* cx, void* incx);
     blasint (*fn_hook) (void* n, void* cx, void* incx);
@@ -5409,12 +5929,15 @@ int FC_GLOBAL(icamax,ICAMAX)(blasint* n, float complex* cx, blasint* incx)
     return ret;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-int icamax_(blasint* n, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(icamax,ICAMAX)))));
+blasint FC_GLOBAL2(icamax,ICAMAX)(blasint* n, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(icamax,ICAMAX)))));
+blasint FC_GLOBAL3(icamax,ICAMAX)(blasint* n, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(icamax,ICAMAX)))));
 #else
 #ifndef __APPLE__
-int icamax(blasint* n, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(icamax,ICAMAX)))));
+blasint FC_GLOBAL2(icamax,ICAMAX)(blasint* n, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(icamax,ICAMAX)))));
+blasint FC_GLOBAL3(icamax,ICAMAX)(blasint* n, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(icamax,ICAMAX)))));
 #else
-int icamax(blasint* n, float complex* cx, blasint* incx){ return FC_GLOBAL(icamax,ICAMAX)((void*) n, (void*) cx, (void*) incx); }
+blasint FC_GLOBAL2(icamax,ICAMAX)(blasint* n, float complex* cx, blasint* incx){ return FC_GLOBAL(icamax,ICAMAX)((void*) n, (void*) cx, (void*) incx); }
+blasint FC_GLOBAL3(icamax,ICAMAX)(blasint* n, float complex* cx, blasint* incx){ return FC_GLOBAL(icamax,ICAMAX)((void*) n, (void*) cx, (void*) incx); }
 #endif
 #endif
 
@@ -5464,7 +5987,7 @@ blasint flexiblas_chain_icamax(void* n, void* cx, void* incx){return flexiblas_c
 
 static TLS_STORE uint8_t hook_pos_idamax = 0;
 
-int FC_GLOBAL(idamax,IDAMAX)(blasint* n, double* dx, blasint* incx)
+blasint FC_GLOBAL(idamax,IDAMAX)(blasint* n, double* dx, blasint* incx)
 {
     blasint (*fn) (void* n, void* dx, void* incx);
     blasint (*fn_hook) (void* n, void* dx, void* incx);
@@ -5484,12 +6007,15 @@ int FC_GLOBAL(idamax,IDAMAX)(blasint* n, double* dx, blasint* incx)
     return ret;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-int idamax_(blasint* n, double* dx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(idamax,IDAMAX)))));
+blasint FC_GLOBAL2(idamax,IDAMAX)(blasint* n, double* dx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(idamax,IDAMAX)))));
+blasint FC_GLOBAL3(idamax,IDAMAX)(blasint* n, double* dx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(idamax,IDAMAX)))));
 #else
 #ifndef __APPLE__
-int idamax(blasint* n, double* dx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(idamax,IDAMAX)))));
+blasint FC_GLOBAL2(idamax,IDAMAX)(blasint* n, double* dx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(idamax,IDAMAX)))));
+blasint FC_GLOBAL3(idamax,IDAMAX)(blasint* n, double* dx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(idamax,IDAMAX)))));
 #else
-int idamax(blasint* n, double* dx, blasint* incx){ return FC_GLOBAL(idamax,IDAMAX)((void*) n, (void*) dx, (void*) incx); }
+blasint FC_GLOBAL2(idamax,IDAMAX)(blasint* n, double* dx, blasint* incx){ return FC_GLOBAL(idamax,IDAMAX)((void*) n, (void*) dx, (void*) incx); }
+blasint FC_GLOBAL3(idamax,IDAMAX)(blasint* n, double* dx, blasint* incx){ return FC_GLOBAL(idamax,IDAMAX)((void*) n, (void*) dx, (void*) incx); }
 #endif
 #endif
 
@@ -5539,7 +6065,7 @@ blasint flexiblas_chain_idamax(void* n, void* dx, void* incx){return flexiblas_c
 
 static TLS_STORE uint8_t hook_pos_isamax = 0;
 
-int FC_GLOBAL(isamax,ISAMAX)(blasint* n, float* sx, blasint* incx)
+blasint FC_GLOBAL(isamax,ISAMAX)(blasint* n, float* sx, blasint* incx)
 {
     blasint (*fn) (void* n, void* sx, void* incx);
     blasint (*fn_hook) (void* n, void* sx, void* incx);
@@ -5559,12 +6085,15 @@ int FC_GLOBAL(isamax,ISAMAX)(blasint* n, float* sx, blasint* incx)
     return ret;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-int isamax_(blasint* n, float* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(isamax,ISAMAX)))));
+blasint FC_GLOBAL2(isamax,ISAMAX)(blasint* n, float* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(isamax,ISAMAX)))));
+blasint FC_GLOBAL3(isamax,ISAMAX)(blasint* n, float* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(isamax,ISAMAX)))));
 #else
 #ifndef __APPLE__
-int isamax(blasint* n, float* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(isamax,ISAMAX)))));
+blasint FC_GLOBAL2(isamax,ISAMAX)(blasint* n, float* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(isamax,ISAMAX)))));
+blasint FC_GLOBAL3(isamax,ISAMAX)(blasint* n, float* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(isamax,ISAMAX)))));
 #else
-int isamax(blasint* n, float* sx, blasint* incx){ return FC_GLOBAL(isamax,ISAMAX)((void*) n, (void*) sx, (void*) incx); }
+blasint FC_GLOBAL2(isamax,ISAMAX)(blasint* n, float* sx, blasint* incx){ return FC_GLOBAL(isamax,ISAMAX)((void*) n, (void*) sx, (void*) incx); }
+blasint FC_GLOBAL3(isamax,ISAMAX)(blasint* n, float* sx, blasint* incx){ return FC_GLOBAL(isamax,ISAMAX)((void*) n, (void*) sx, (void*) incx); }
 #endif
 #endif
 
@@ -5614,7 +6143,7 @@ blasint flexiblas_chain_isamax(void* n, void* sx, void* incx){return flexiblas_c
 
 static TLS_STORE uint8_t hook_pos_izamax = 0;
 
-int FC_GLOBAL(izamax,IZAMAX)(blasint* n, double complex* zx, blasint* incx)
+blasint FC_GLOBAL(izamax,IZAMAX)(blasint* n, double complex* zx, blasint* incx)
 {
     blasint (*fn) (void* n, void* zx, void* incx);
     blasint (*fn_hook) (void* n, void* zx, void* incx);
@@ -5634,12 +6163,15 @@ int FC_GLOBAL(izamax,IZAMAX)(blasint* n, double complex* zx, blasint* incx)
     return ret;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-int izamax_(blasint* n, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(izamax,IZAMAX)))));
+blasint FC_GLOBAL2(izamax,IZAMAX)(blasint* n, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(izamax,IZAMAX)))));
+blasint FC_GLOBAL3(izamax,IZAMAX)(blasint* n, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(izamax,IZAMAX)))));
 #else
 #ifndef __APPLE__
-int izamax(blasint* n, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(izamax,IZAMAX)))));
+blasint FC_GLOBAL2(izamax,IZAMAX)(blasint* n, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(izamax,IZAMAX)))));
+blasint FC_GLOBAL3(izamax,IZAMAX)(blasint* n, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(izamax,IZAMAX)))));
 #else
-int izamax(blasint* n, double complex* zx, blasint* incx){ return FC_GLOBAL(izamax,IZAMAX)((void*) n, (void*) zx, (void*) incx); }
+blasint FC_GLOBAL2(izamax,IZAMAX)(blasint* n, double complex* zx, blasint* incx){ return FC_GLOBAL(izamax,IZAMAX)((void*) n, (void*) zx, (void*) incx); }
+blasint FC_GLOBAL3(izamax,IZAMAX)(blasint* n, double complex* zx, blasint* incx){ return FC_GLOBAL(izamax,IZAMAX)((void*) n, (void*) zx, (void*) incx); }
 #endif
 #endif
 
@@ -5709,12 +6241,15 @@ float FC_GLOBAL(sasum,SASUM)(blasint* n, float* sx, blasint* incx)
     return ret;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-float sasum_(blasint* n, float* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(sasum,SASUM)))));
+float FC_GLOBAL2(sasum,SASUM)(blasint* n, float* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(sasum,SASUM)))));
+float FC_GLOBAL3(sasum,SASUM)(blasint* n, float* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(sasum,SASUM)))));
 #else
 #ifndef __APPLE__
-float sasum(blasint* n, float* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(sasum,SASUM)))));
+float FC_GLOBAL2(sasum,SASUM)(blasint* n, float* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(sasum,SASUM)))));
+float FC_GLOBAL3(sasum,SASUM)(blasint* n, float* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(sasum,SASUM)))));
 #else
-float sasum(blasint* n, float* sx, blasint* incx){ return FC_GLOBAL(sasum,SASUM)((void*) n, (void*) sx, (void*) incx); }
+float FC_GLOBAL2(sasum,SASUM)(blasint* n, float* sx, blasint* incx){ return FC_GLOBAL(sasum,SASUM)((void*) n, (void*) sx, (void*) incx); }
+float FC_GLOBAL3(sasum,SASUM)(blasint* n, float* sx, blasint* incx){ return FC_GLOBAL(sasum,SASUM)((void*) n, (void*) sx, (void*) incx); }
 #endif
 #endif
 
@@ -5783,12 +6318,15 @@ void FC_GLOBAL(saxpy,SAXPY)(blasint* n, float* sa, float* sx, blasint* incx, flo
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void saxpy_(blasint* n, float* sa, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(saxpy,SAXPY)))));
+void FC_GLOBAL2(saxpy,SAXPY)(blasint* n, float* sa, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(saxpy,SAXPY)))));
+void FC_GLOBAL3(saxpy,SAXPY)(blasint* n, float* sa, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(saxpy,SAXPY)))));
 #else
 #ifndef __APPLE__
-void saxpy(blasint* n, float* sa, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(saxpy,SAXPY)))));
+void FC_GLOBAL2(saxpy,SAXPY)(blasint* n, float* sa, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(saxpy,SAXPY)))));
+void FC_GLOBAL3(saxpy,SAXPY)(blasint* n, float* sa, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(saxpy,SAXPY)))));
 #else
-void saxpy(blasint* n, float* sa, float* sx, blasint* incx, float* sy, blasint* incy){ FC_GLOBAL(saxpy,SAXPY)((void*) n, (void*) sa, (void*) sx, (void*) incx, (void*) sy, (void*) incy); }
+void FC_GLOBAL2(saxpy,SAXPY)(blasint* n, float* sa, float* sx, blasint* incx, float* sy, blasint* incy){ FC_GLOBAL(saxpy,SAXPY)((void*) n, (void*) sa, (void*) sx, (void*) incx, (void*) sy, (void*) incy); }
+void FC_GLOBAL3(saxpy,SAXPY)(blasint* n, float* sa, float* sx, blasint* incx, float* sy, blasint* incy){ FC_GLOBAL(saxpy,SAXPY)((void*) n, (void*) sa, (void*) sx, (void*) incx, (void*) sy, (void*) incy); }
 #endif
 #endif
 
@@ -5856,12 +6394,15 @@ float FC_GLOBAL(scasum,SCASUM)(blasint* n, float complex* cx, blasint* incx)
     return ret;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-float scasum_(blasint* n, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(scasum,SCASUM)))));
+float FC_GLOBAL2(scasum,SCASUM)(blasint* n, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(scasum,SCASUM)))));
+float FC_GLOBAL3(scasum,SCASUM)(blasint* n, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(scasum,SCASUM)))));
 #else
 #ifndef __APPLE__
-float scasum(blasint* n, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(scasum,SCASUM)))));
+float FC_GLOBAL2(scasum,SCASUM)(blasint* n, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(scasum,SCASUM)))));
+float FC_GLOBAL3(scasum,SCASUM)(blasint* n, float complex* cx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(scasum,SCASUM)))));
 #else
-float scasum(blasint* n, float complex* cx, blasint* incx){ return FC_GLOBAL(scasum,SCASUM)((void*) n, (void*) cx, (void*) incx); }
+float FC_GLOBAL2(scasum,SCASUM)(blasint* n, float complex* cx, blasint* incx){ return FC_GLOBAL(scasum,SCASUM)((void*) n, (void*) cx, (void*) incx); }
+float FC_GLOBAL3(scasum,SCASUM)(blasint* n, float complex* cx, blasint* incx){ return FC_GLOBAL(scasum,SCASUM)((void*) n, (void*) cx, (void*) incx); }
 #endif
 #endif
 
@@ -5931,12 +6472,15 @@ float FC_GLOBAL(scnrm2,SCNRM2)(blasint* n, float complex* x, blasint* incx)
     return ret;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-float scnrm2_(blasint* n, float complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(scnrm2,SCNRM2)))));
+float FC_GLOBAL2(scnrm2,SCNRM2)(blasint* n, float complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(scnrm2,SCNRM2)))));
+float FC_GLOBAL3(scnrm2,SCNRM2)(blasint* n, float complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(scnrm2,SCNRM2)))));
 #else
 #ifndef __APPLE__
-float scnrm2(blasint* n, float complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(scnrm2,SCNRM2)))));
+float FC_GLOBAL2(scnrm2,SCNRM2)(blasint* n, float complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(scnrm2,SCNRM2)))));
+float FC_GLOBAL3(scnrm2,SCNRM2)(blasint* n, float complex* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(scnrm2,SCNRM2)))));
 #else
-float scnrm2(blasint* n, float complex* x, blasint* incx){ return FC_GLOBAL(scnrm2,SCNRM2)((void*) n, (void*) x, (void*) incx); }
+float FC_GLOBAL2(scnrm2,SCNRM2)(blasint* n, float complex* x, blasint* incx){ return FC_GLOBAL(scnrm2,SCNRM2)((void*) n, (void*) x, (void*) incx); }
+float FC_GLOBAL3(scnrm2,SCNRM2)(blasint* n, float complex* x, blasint* incx){ return FC_GLOBAL(scnrm2,SCNRM2)((void*) n, (void*) x, (void*) incx); }
 #endif
 #endif
 
@@ -6005,12 +6549,15 @@ void FC_GLOBAL(scopy,SCOPY)(blasint* n, float* sx, blasint* incx, float* sy, bla
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void scopy_(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(scopy,SCOPY)))));
+void FC_GLOBAL2(scopy,SCOPY)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(scopy,SCOPY)))));
+void FC_GLOBAL3(scopy,SCOPY)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(scopy,SCOPY)))));
 #else
 #ifndef __APPLE__
-void scopy(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(scopy,SCOPY)))));
+void FC_GLOBAL2(scopy,SCOPY)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(scopy,SCOPY)))));
+void FC_GLOBAL3(scopy,SCOPY)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(scopy,SCOPY)))));
 #else
-void scopy(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy){ FC_GLOBAL(scopy,SCOPY)((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy); }
+void FC_GLOBAL2(scopy,SCOPY)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy){ FC_GLOBAL(scopy,SCOPY)((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy); }
+void FC_GLOBAL3(scopy,SCOPY)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy){ FC_GLOBAL(scopy,SCOPY)((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy); }
 #endif
 #endif
 
@@ -6078,12 +6625,15 @@ float FC_GLOBAL(sdot,SDOT)(blasint* n, float* sx, blasint* incx, float* sy, blas
     return ret;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-float sdot_(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sdot,SDOT)))));
+float FC_GLOBAL2(sdot,SDOT)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sdot,SDOT)))));
+float FC_GLOBAL3(sdot,SDOT)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sdot,SDOT)))));
 #else
 #ifndef __APPLE__
-float sdot(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sdot,SDOT)))));
+float FC_GLOBAL2(sdot,SDOT)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sdot,SDOT)))));
+float FC_GLOBAL3(sdot,SDOT)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sdot,SDOT)))));
 #else
-float sdot(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy){ return FC_GLOBAL(sdot,SDOT)((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy); }
+float FC_GLOBAL2(sdot,SDOT)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy){ return FC_GLOBAL(sdot,SDOT)((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy); }
+float FC_GLOBAL3(sdot,SDOT)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy){ return FC_GLOBAL(sdot,SDOT)((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy); }
 #endif
 #endif
 
@@ -6153,12 +6703,15 @@ float FC_GLOBAL(sdsdot,SDSDOT)(blasint* n, float* sb, float* sx, blasint* incx, 
     return ret;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-float sdsdot_(blasint* n, float* sb, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sdsdot,SDSDOT)))));
+float FC_GLOBAL2(sdsdot,SDSDOT)(blasint* n, float* sb, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sdsdot,SDSDOT)))));
+float FC_GLOBAL3(sdsdot,SDSDOT)(blasint* n, float* sb, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sdsdot,SDSDOT)))));
 #else
 #ifndef __APPLE__
-float sdsdot(blasint* n, float* sb, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sdsdot,SDSDOT)))));
+float FC_GLOBAL2(sdsdot,SDSDOT)(blasint* n, float* sb, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sdsdot,SDSDOT)))));
+float FC_GLOBAL3(sdsdot,SDSDOT)(blasint* n, float* sb, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sdsdot,SDSDOT)))));
 #else
-float sdsdot(blasint* n, float* sb, float* sx, blasint* incx, float* sy, blasint* incy){ return FC_GLOBAL(sdsdot,SDSDOT)((void*) n, (void*) sb, (void*) sx, (void*) incx, (void*) sy, (void*) incy); }
+float FC_GLOBAL2(sdsdot,SDSDOT)(blasint* n, float* sb, float* sx, blasint* incx, float* sy, blasint* incy){ return FC_GLOBAL(sdsdot,SDSDOT)((void*) n, (void*) sb, (void*) sx, (void*) incx, (void*) sy, (void*) incy); }
+float FC_GLOBAL3(sdsdot,SDSDOT)(blasint* n, float* sb, float* sx, blasint* incx, float* sy, blasint* incy){ return FC_GLOBAL(sdsdot,SDSDOT)((void*) n, (void*) sb, (void*) sx, (void*) incx, (void*) sy, (void*) incy); }
 #endif
 #endif
 
@@ -6227,12 +6780,15 @@ void FC_GLOBAL(sgbmv,SGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, bl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void sgbmv_(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(sgbmv,SGBMV)))));
+void FC_GLOBAL2(sgbmv,SGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(sgbmv,SGBMV)))));
+void FC_GLOBAL3(sgbmv,SGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(sgbmv,SGBMV)))));
 #else
 #ifndef __APPLE__
-void sgbmv(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(sgbmv,SGBMV)))));
+void FC_GLOBAL2(sgbmv,SGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(sgbmv,SGBMV)))));
+void FC_GLOBAL3(sgbmv,SGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(sgbmv,SGBMV)))));
 #else
-void sgbmv(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(sgbmv,SGBMV)((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(sgbmv,SGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(sgbmv,SGBMV)((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(sgbmv,SGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(sgbmv,SGBMV)((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -6299,12 +6855,15 @@ void FC_GLOBAL(sgemm,SGEMM)(char* transa, char* transb, blasint* m, blasint* n, 
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void sgemm_(char* transa, char* transb, blasint* m, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(sgemm,SGEMM)))));
+void FC_GLOBAL2(sgemm,SGEMM)(char* transa, char* transb, blasint* m, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(sgemm,SGEMM)))));
+void FC_GLOBAL3(sgemm,SGEMM)(char* transa, char* transb, blasint* m, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(sgemm,SGEMM)))));
 #else
 #ifndef __APPLE__
-void sgemm(char* transa, char* transb, blasint* m, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(sgemm,SGEMM)))));
+void FC_GLOBAL2(sgemm,SGEMM)(char* transa, char* transb, blasint* m, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(sgemm,SGEMM)))));
+void FC_GLOBAL3(sgemm,SGEMM)(char* transa, char* transb, blasint* m, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(sgemm,SGEMM)))));
 #else
-void sgemm(char* transa, char* transb, blasint* m, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(sgemm,SGEMM)((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
+void FC_GLOBAL2(sgemm,SGEMM)(char* transa, char* transb, blasint* m, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(sgemm,SGEMM)((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
+void FC_GLOBAL3(sgemm,SGEMM)(char* transa, char* transb, blasint* m, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(sgemm,SGEMM)((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
 #endif
 #endif
 
@@ -6350,6 +6909,156 @@ void flexiblas_chain_sgemm(void* transa, void* transb, void* m, void* n, void* k
 #endif
 
 
+static TLS_STORE uint8_t hook_pos_sgemmt = 0;
+
+void FC_GLOBAL(sgemmt,SGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb)
+{
+    void (*fn) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void (*fn_hook) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+    *(void **) &fn = current_backend->blas.sgemmt.f77_blas_function;
+    *(void **) &fn_hook = __flexiblas_hooks->sgemmt.f77_hook_function[0];
+    hook_pos_sgemmt = 0;
+    if ( fn_hook != NULL) {
+        fn_hook((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+    } else {
+        fn((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+    }
+    return;
+}
+#ifdef FLEXIBLAS_ABI_IBM
+void FC_GLOBAL2(sgemmt,SGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(sgemmt,SGEMMT)))));
+void FC_GLOBAL3(sgemmt,SGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(sgemmt,SGEMMT)))));
+#else
+#ifndef __APPLE__
+void FC_GLOBAL2(sgemmt,SGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(sgemmt,SGEMMT)))));
+void FC_GLOBAL3(sgemmt,SGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(sgemmt,SGEMMT)))));
+#else
+void FC_GLOBAL2(sgemmt,SGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(sgemmt,SGEMMT)((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
+void FC_GLOBAL3(sgemmt,SGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(sgemmt,SGEMMT)((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
+#endif
+#endif
+
+
+
+void flexiblas_real_sgemmt_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb)
+{
+    void (*fn) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+
+    *(void **) &fn = current_backend->blas.sgemmt.f77_blas_function;
+    fn((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+
+    return;
+}
+#ifndef __APPLE__
+void flexiblas_real_sgemmt(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias("flexiblas_real_sgemmt_")));
+#else
+void flexiblas_real_sgemmt(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){flexiblas_real_sgemmt_((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb);}
+#endif
+
+
+void flexiblas_chain_sgemmt_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb)
+{
+    void (*fn) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+
+
+
+    hook_pos_sgemmt++;
+    if ( hook_pos_sgemmt < __flexiblas_hooks->sgemmt.nhook ) {
+        *(void **) &fn = __flexiblas_hooks->sgemmt.f77_hook_function[hook_pos_sgemmt];
+    } else {
+        hook_pos_sgemmt = 0;
+        *(void **) &fn = current_backend->blas.sgemmt.f77_blas_function;
+    }
+    fn((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+
+    return;
+}
+#ifndef __APPLE__
+void flexiblas_chain_sgemmt(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias("flexiblas_chain_sgemmt_")));
+#else
+void flexiblas_chain_sgemmt(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){flexiblas_chain_sgemmt_((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb);}
+#endif
+
+
+static TLS_STORE uint8_t hook_pos_sgemmtr = 0;
+
+void FC_GLOBAL(sgemmtr,SGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb)
+{
+    void (*fn) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void (*fn_hook) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+    *(void **) &fn = current_backend->blas.sgemmtr.f77_blas_function;
+    *(void **) &fn_hook = __flexiblas_hooks->sgemmtr.f77_hook_function[0];
+    hook_pos_sgemmtr = 0;
+    if ( fn_hook != NULL) {
+        fn_hook((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+    } else {
+        fn((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+    }
+    return;
+}
+#ifdef FLEXIBLAS_ABI_IBM
+void FC_GLOBAL2(sgemmtr,SGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(sgemmtr,SGEMMTR)))));
+void FC_GLOBAL3(sgemmtr,SGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(sgemmtr,SGEMMTR)))));
+#else
+#ifndef __APPLE__
+void FC_GLOBAL2(sgemmtr,SGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(sgemmtr,SGEMMTR)))));
+void FC_GLOBAL3(sgemmtr,SGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(sgemmtr,SGEMMTR)))));
+#else
+void FC_GLOBAL2(sgemmtr,SGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(sgemmtr,SGEMMTR)((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
+void FC_GLOBAL3(sgemmtr,SGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(sgemmtr,SGEMMTR)((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
+#endif
+#endif
+
+
+
+void flexiblas_real_sgemmtr_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb)
+{
+    void (*fn) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+
+    *(void **) &fn = current_backend->blas.sgemmtr.f77_blas_function;
+    fn((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+
+    return;
+}
+#ifndef __APPLE__
+void flexiblas_real_sgemmtr(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias("flexiblas_real_sgemmtr_")));
+#else
+void flexiblas_real_sgemmtr(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){flexiblas_real_sgemmtr_((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb);}
+#endif
+
+
+void flexiblas_chain_sgemmtr_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb)
+{
+    void (*fn) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+
+
+
+    hook_pos_sgemmtr++;
+    if ( hook_pos_sgemmtr < __flexiblas_hooks->sgemmtr.nhook ) {
+        *(void **) &fn = __flexiblas_hooks->sgemmtr.f77_hook_function[hook_pos_sgemmtr];
+    } else {
+        hook_pos_sgemmtr = 0;
+        *(void **) &fn = current_backend->blas.sgemmtr.f77_blas_function;
+    }
+    fn((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+
+    return;
+}
+#ifndef __APPLE__
+void flexiblas_chain_sgemmtr(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias("flexiblas_chain_sgemmtr_")));
+#else
+void flexiblas_chain_sgemmtr(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){flexiblas_chain_sgemmtr_((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb);}
+#endif
+
+
 static TLS_STORE uint8_t hook_pos_sgemv = 0;
 
 void FC_GLOBAL(sgemv,SGEMV)(char* trans, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_trans)
@@ -6371,12 +7080,15 @@ void FC_GLOBAL(sgemv,SGEMV)(char* trans, blasint* m, blasint* n, float* alpha, f
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void sgemv_(char* trans, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(sgemv,SGEMV)))));
+void FC_GLOBAL2(sgemv,SGEMV)(char* trans, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(sgemv,SGEMV)))));
+void FC_GLOBAL3(sgemv,SGEMV)(char* trans, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(sgemv,SGEMV)))));
 #else
 #ifndef __APPLE__
-void sgemv(char* trans, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(sgemv,SGEMV)))));
+void FC_GLOBAL2(sgemv,SGEMV)(char* trans, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(sgemv,SGEMV)))));
+void FC_GLOBAL3(sgemv,SGEMV)(char* trans, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(sgemv,SGEMV)))));
 #else
-void sgemv(char* trans, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(sgemv,SGEMV)((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(sgemv,SGEMV)(char* trans, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(sgemv,SGEMV)((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(sgemv,SGEMV)(char* trans, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(sgemv,SGEMV)((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -6443,12 +7155,15 @@ void FC_GLOBAL(sger,SGER)(blasint* m, blasint* n, float* alpha, float* x, blasin
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void sger_(blasint* m, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(sger,SGER)))));
+void FC_GLOBAL2(sger,SGER)(blasint* m, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(sger,SGER)))));
+void FC_GLOBAL3(sger,SGER)(blasint* m, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(sger,SGER)))));
 #else
 #ifndef __APPLE__
-void sger(blasint* m, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(sger,SGER)))));
+void FC_GLOBAL2(sger,SGER)(blasint* m, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(sger,SGER)))));
+void FC_GLOBAL3(sger,SGER)(blasint* m, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(sger,SGER)))));
 #else
-void sger(blasint* m, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* a, blasint* lda){ FC_GLOBAL(sger,SGER)((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
+void FC_GLOBAL2(sger,SGER)(blasint* m, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* a, blasint* lda){ FC_GLOBAL(sger,SGER)((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
+void FC_GLOBAL3(sger,SGER)(blasint* m, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* a, blasint* lda){ FC_GLOBAL(sger,SGER)((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
 #endif
 #endif
 
@@ -6516,12 +7231,15 @@ float FC_GLOBAL(snrm2,SNRM2)(blasint* n, float* x, blasint* incx)
     return ret;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-float snrm2_(blasint* n, float* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(snrm2,SNRM2)))));
+float FC_GLOBAL2(snrm2,SNRM2)(blasint* n, float* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(snrm2,SNRM2)))));
+float FC_GLOBAL3(snrm2,SNRM2)(blasint* n, float* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(snrm2,SNRM2)))));
 #else
 #ifndef __APPLE__
-float snrm2(blasint* n, float* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(snrm2,SNRM2)))));
+float FC_GLOBAL2(snrm2,SNRM2)(blasint* n, float* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(snrm2,SNRM2)))));
+float FC_GLOBAL3(snrm2,SNRM2)(blasint* n, float* x, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(snrm2,SNRM2)))));
 #else
-float snrm2(blasint* n, float* x, blasint* incx){ return FC_GLOBAL(snrm2,SNRM2)((void*) n, (void*) x, (void*) incx); }
+float FC_GLOBAL2(snrm2,SNRM2)(blasint* n, float* x, blasint* incx){ return FC_GLOBAL(snrm2,SNRM2)((void*) n, (void*) x, (void*) incx); }
+float FC_GLOBAL3(snrm2,SNRM2)(blasint* n, float* x, blasint* incx){ return FC_GLOBAL(snrm2,SNRM2)((void*) n, (void*) x, (void*) incx); }
 #endif
 #endif
 
@@ -6590,12 +7308,15 @@ void FC_GLOBAL(srot,SROT)(blasint* n, float* sx, blasint* incx, float* sy, blasi
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void srot_(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy, float* c, float* s) __attribute__((alias(MTS(FC_GLOBAL(srot,SROT)))));
+void FC_GLOBAL2(srot,SROT)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy, float* c, float* s) __attribute__((alias(MTS(FC_GLOBAL(srot,SROT)))));
+void FC_GLOBAL3(srot,SROT)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy, float* c, float* s) __attribute__((alias(MTS(FC_GLOBAL(srot,SROT)))));
 #else
 #ifndef __APPLE__
-void srot(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy, float* c, float* s) __attribute__((alias(MTS(FC_GLOBAL(srot,SROT)))));
+void FC_GLOBAL2(srot,SROT)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy, float* c, float* s) __attribute__((alias(MTS(FC_GLOBAL(srot,SROT)))));
+void FC_GLOBAL3(srot,SROT)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy, float* c, float* s) __attribute__((alias(MTS(FC_GLOBAL(srot,SROT)))));
 #else
-void srot(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy, float* c, float* s){ FC_GLOBAL(srot,SROT)((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy, (void*) c, (void*) s); }
+void FC_GLOBAL2(srot,SROT)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy, float* c, float* s){ FC_GLOBAL(srot,SROT)((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy, (void*) c, (void*) s); }
+void FC_GLOBAL3(srot,SROT)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy, float* c, float* s){ FC_GLOBAL(srot,SROT)((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy, (void*) c, (void*) s); }
 #endif
 #endif
 
@@ -6662,12 +7383,15 @@ void FC_GLOBAL(srotg,SROTG)(float* sa, float* sb, float* c, float* s)
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void srotg_(float* sa, float* sb, float* c, float* s) __attribute__((alias(MTS(FC_GLOBAL(srotg,SROTG)))));
+void FC_GLOBAL2(srotg,SROTG)(float* sa, float* sb, float* c, float* s) __attribute__((alias(MTS(FC_GLOBAL(srotg,SROTG)))));
+void FC_GLOBAL3(srotg,SROTG)(float* sa, float* sb, float* c, float* s) __attribute__((alias(MTS(FC_GLOBAL(srotg,SROTG)))));
 #else
 #ifndef __APPLE__
-void srotg(float* sa, float* sb, float* c, float* s) __attribute__((alias(MTS(FC_GLOBAL(srotg,SROTG)))));
+void FC_GLOBAL2(srotg,SROTG)(float* sa, float* sb, float* c, float* s) __attribute__((alias(MTS(FC_GLOBAL(srotg,SROTG)))));
+void FC_GLOBAL3(srotg,SROTG)(float* sa, float* sb, float* c, float* s) __attribute__((alias(MTS(FC_GLOBAL(srotg,SROTG)))));
 #else
-void srotg(float* sa, float* sb, float* c, float* s){ FC_GLOBAL(srotg,SROTG)((void*) sa, (void*) sb, (void*) c, (void*) s); }
+void FC_GLOBAL2(srotg,SROTG)(float* sa, float* sb, float* c, float* s){ FC_GLOBAL(srotg,SROTG)((void*) sa, (void*) sb, (void*) c, (void*) s); }
+void FC_GLOBAL3(srotg,SROTG)(float* sa, float* sb, float* c, float* s){ FC_GLOBAL(srotg,SROTG)((void*) sa, (void*) sb, (void*) c, (void*) s); }
 #endif
 #endif
 
@@ -6734,12 +7458,15 @@ void FC_GLOBAL(srotm,SROTM)(blasint* n, float* sx, blasint* incx, float* sy, bla
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void srotm_(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy, float* sparam) __attribute__((alias(MTS(FC_GLOBAL(srotm,SROTM)))));
+void FC_GLOBAL2(srotm,SROTM)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy, float* sparam) __attribute__((alias(MTS(FC_GLOBAL(srotm,SROTM)))));
+void FC_GLOBAL3(srotm,SROTM)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy, float* sparam) __attribute__((alias(MTS(FC_GLOBAL(srotm,SROTM)))));
 #else
 #ifndef __APPLE__
-void srotm(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy, float* sparam) __attribute__((alias(MTS(FC_GLOBAL(srotm,SROTM)))));
+void FC_GLOBAL2(srotm,SROTM)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy, float* sparam) __attribute__((alias(MTS(FC_GLOBAL(srotm,SROTM)))));
+void FC_GLOBAL3(srotm,SROTM)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy, float* sparam) __attribute__((alias(MTS(FC_GLOBAL(srotm,SROTM)))));
 #else
-void srotm(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy, float* sparam){ FC_GLOBAL(srotm,SROTM)((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy, (void*) sparam); }
+void FC_GLOBAL2(srotm,SROTM)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy, float* sparam){ FC_GLOBAL(srotm,SROTM)((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy, (void*) sparam); }
+void FC_GLOBAL3(srotm,SROTM)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy, float* sparam){ FC_GLOBAL(srotm,SROTM)((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy, (void*) sparam); }
 #endif
 #endif
 
@@ -6806,12 +7533,15 @@ void FC_GLOBAL(srotmg,SROTMG)(float* sd1, float* sd2, float* sx1, float* sy1, fl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void srotmg_(float* sd1, float* sd2, float* sx1, float* sy1, float* sparam) __attribute__((alias(MTS(FC_GLOBAL(srotmg,SROTMG)))));
+void FC_GLOBAL2(srotmg,SROTMG)(float* sd1, float* sd2, float* sx1, float* sy1, float* sparam) __attribute__((alias(MTS(FC_GLOBAL(srotmg,SROTMG)))));
+void FC_GLOBAL3(srotmg,SROTMG)(float* sd1, float* sd2, float* sx1, float* sy1, float* sparam) __attribute__((alias(MTS(FC_GLOBAL(srotmg,SROTMG)))));
 #else
 #ifndef __APPLE__
-void srotmg(float* sd1, float* sd2, float* sx1, float* sy1, float* sparam) __attribute__((alias(MTS(FC_GLOBAL(srotmg,SROTMG)))));
+void FC_GLOBAL2(srotmg,SROTMG)(float* sd1, float* sd2, float* sx1, float* sy1, float* sparam) __attribute__((alias(MTS(FC_GLOBAL(srotmg,SROTMG)))));
+void FC_GLOBAL3(srotmg,SROTMG)(float* sd1, float* sd2, float* sx1, float* sy1, float* sparam) __attribute__((alias(MTS(FC_GLOBAL(srotmg,SROTMG)))));
 #else
-void srotmg(float* sd1, float* sd2, float* sx1, float* sy1, float* sparam){ FC_GLOBAL(srotmg,SROTMG)((void*) sd1, (void*) sd2, (void*) sx1, (void*) sy1, (void*) sparam); }
+void FC_GLOBAL2(srotmg,SROTMG)(float* sd1, float* sd2, float* sx1, float* sy1, float* sparam){ FC_GLOBAL(srotmg,SROTMG)((void*) sd1, (void*) sd2, (void*) sx1, (void*) sy1, (void*) sparam); }
+void FC_GLOBAL3(srotmg,SROTMG)(float* sd1, float* sd2, float* sx1, float* sy1, float* sparam){ FC_GLOBAL(srotmg,SROTMG)((void*) sd1, (void*) sd2, (void*) sx1, (void*) sy1, (void*) sparam); }
 #endif
 #endif
 
@@ -6878,12 +7608,15 @@ void FC_GLOBAL(ssbmv,SSBMV)(char* uplo, blasint* n, blasint* k, float* alpha, fl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void ssbmv_(char* uplo, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssbmv,SSBMV)))));
+void FC_GLOBAL2(ssbmv,SSBMV)(char* uplo, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssbmv,SSBMV)))));
+void FC_GLOBAL3(ssbmv,SSBMV)(char* uplo, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssbmv,SSBMV)))));
 #else
 #ifndef __APPLE__
-void ssbmv(char* uplo, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssbmv,SSBMV)))));
+void FC_GLOBAL2(ssbmv,SSBMV)(char* uplo, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssbmv,SSBMV)))));
+void FC_GLOBAL3(ssbmv,SSBMV)(char* uplo, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssbmv,SSBMV)))));
 #else
-void ssbmv(char* uplo, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(ssbmv,SSBMV)((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(ssbmv,SSBMV)(char* uplo, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(ssbmv,SSBMV)((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(ssbmv,SSBMV)(char* uplo, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(ssbmv,SSBMV)((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -6950,12 +7683,15 @@ void FC_GLOBAL(sscal,SSCAL)(blasint* n, float* sa, float* sx, blasint* incx)
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void sscal_(blasint* n, float* sa, float* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(sscal,SSCAL)))));
+void FC_GLOBAL2(sscal,SSCAL)(blasint* n, float* sa, float* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(sscal,SSCAL)))));
+void FC_GLOBAL3(sscal,SSCAL)(blasint* n, float* sa, float* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(sscal,SSCAL)))));
 #else
 #ifndef __APPLE__
-void sscal(blasint* n, float* sa, float* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(sscal,SSCAL)))));
+void FC_GLOBAL2(sscal,SSCAL)(blasint* n, float* sa, float* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(sscal,SSCAL)))));
+void FC_GLOBAL3(sscal,SSCAL)(blasint* n, float* sa, float* sx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(sscal,SSCAL)))));
 #else
-void sscal(blasint* n, float* sa, float* sx, blasint* incx){ FC_GLOBAL(sscal,SSCAL)((void*) n, (void*) sa, (void*) sx, (void*) incx); }
+void FC_GLOBAL2(sscal,SSCAL)(blasint* n, float* sa, float* sx, blasint* incx){ FC_GLOBAL(sscal,SSCAL)((void*) n, (void*) sa, (void*) sx, (void*) incx); }
+void FC_GLOBAL3(sscal,SSCAL)(blasint* n, float* sa, float* sx, blasint* incx){ FC_GLOBAL(sscal,SSCAL)((void*) n, (void*) sa, (void*) sx, (void*) incx); }
 #endif
 #endif
 
@@ -7022,12 +7758,15 @@ void FC_GLOBAL(sspmv,SSPMV)(char* uplo, blasint* n, float* alpha, float* ap, flo
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void sspmv_(char* uplo, blasint* n, float* alpha, float* ap, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(sspmv,SSPMV)))));
+void FC_GLOBAL2(sspmv,SSPMV)(char* uplo, blasint* n, float* alpha, float* ap, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(sspmv,SSPMV)))));
+void FC_GLOBAL3(sspmv,SSPMV)(char* uplo, blasint* n, float* alpha, float* ap, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(sspmv,SSPMV)))));
 #else
 #ifndef __APPLE__
-void sspmv(char* uplo, blasint* n, float* alpha, float* ap, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(sspmv,SSPMV)))));
+void FC_GLOBAL2(sspmv,SSPMV)(char* uplo, blasint* n, float* alpha, float* ap, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(sspmv,SSPMV)))));
+void FC_GLOBAL3(sspmv,SSPMV)(char* uplo, blasint* n, float* alpha, float* ap, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(sspmv,SSPMV)))));
 #else
-void sspmv(char* uplo, blasint* n, float* alpha, float* ap, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(sspmv,SSPMV)((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(sspmv,SSPMV)(char* uplo, blasint* n, float* alpha, float* ap, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(sspmv,SSPMV)((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(sspmv,SSPMV)(char* uplo, blasint* n, float* alpha, float* ap, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(sspmv,SSPMV)((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -7094,12 +7833,15 @@ void FC_GLOBAL(sspr,SSPR)(char* uplo, blasint* n, float* alpha, float* x, blasin
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void sspr_(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(sspr,SSPR)))));
+void FC_GLOBAL2(sspr,SSPR)(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(sspr,SSPR)))));
+void FC_GLOBAL3(sspr,SSPR)(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(sspr,SSPR)))));
 #else
 #ifndef __APPLE__
-void sspr(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(sspr,SSPR)))));
+void FC_GLOBAL2(sspr,SSPR)(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(sspr,SSPR)))));
+void FC_GLOBAL3(sspr,SSPR)(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(sspr,SSPR)))));
 #else
-void sspr(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* ap, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(sspr,SSPR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(sspr,SSPR)(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* ap, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(sspr,SSPR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(sspr,SSPR)(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* ap, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(sspr,SSPR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -7166,12 +7908,15 @@ void FC_GLOBAL(sspr2,SSPR2)(char* uplo, blasint* n, float* alpha, float* x, blas
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void sspr2_(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(sspr2,SSPR2)))));
+void FC_GLOBAL2(sspr2,SSPR2)(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(sspr2,SSPR2)))));
+void FC_GLOBAL3(sspr2,SSPR2)(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(sspr2,SSPR2)))));
 #else
 #ifndef __APPLE__
-void sspr2(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(sspr2,SSPR2)))));
+void FC_GLOBAL2(sspr2,SSPR2)(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(sspr2,SSPR2)))));
+void FC_GLOBAL3(sspr2,SSPR2)(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(sspr2,SSPR2)))));
 #else
-void sspr2(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* ap, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(sspr2,SSPR2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(sspr2,SSPR2)(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* ap, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(sspr2,SSPR2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(sspr2,SSPR2)(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* ap, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(sspr2,SSPR2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -7238,12 +7983,15 @@ void FC_GLOBAL(sswap,SSWAP)(blasint* n, float* sx, blasint* incx, float* sy, bla
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void sswap_(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sswap,SSWAP)))));
+void FC_GLOBAL2(sswap,SSWAP)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sswap,SSWAP)))));
+void FC_GLOBAL3(sswap,SSWAP)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sswap,SSWAP)))));
 #else
 #ifndef __APPLE__
-void sswap(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sswap,SSWAP)))));
+void FC_GLOBAL2(sswap,SSWAP)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sswap,SSWAP)))));
+void FC_GLOBAL3(sswap,SSWAP)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(sswap,SSWAP)))));
 #else
-void sswap(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy){ FC_GLOBAL(sswap,SSWAP)((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy); }
+void FC_GLOBAL2(sswap,SSWAP)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy){ FC_GLOBAL(sswap,SSWAP)((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy); }
+void FC_GLOBAL3(sswap,SSWAP)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy){ FC_GLOBAL(sswap,SSWAP)((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy); }
 #endif
 #endif
 
@@ -7310,12 +8058,15 @@ void FC_GLOBAL(ssymm,SSYMM)(char* side, char* uplo, blasint* m, blasint* n, floa
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void ssymm_(char* side, char* uplo, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssymm,SSYMM)))));
+void FC_GLOBAL2(ssymm,SSYMM)(char* side, char* uplo, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssymm,SSYMM)))));
+void FC_GLOBAL3(ssymm,SSYMM)(char* side, char* uplo, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssymm,SSYMM)))));
 #else
 #ifndef __APPLE__
-void ssymm(char* side, char* uplo, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssymm,SSYMM)))));
+void FC_GLOBAL2(ssymm,SSYMM)(char* side, char* uplo, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssymm,SSYMM)))));
+void FC_GLOBAL3(ssymm,SSYMM)(char* side, char* uplo, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssymm,SSYMM)))));
 #else
-void ssymm(char* side, char* uplo, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(ssymm,SSYMM)((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(ssymm,SSYMM)(char* side, char* uplo, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(ssymm,SSYMM)((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(ssymm,SSYMM)(char* side, char* uplo, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(ssymm,SSYMM)((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -7382,12 +8133,15 @@ void FC_GLOBAL(ssymv,SSYMV)(char* uplo, blasint* n, float* alpha, float* a, blas
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void ssymv_(char* uplo, blasint* n, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssymv,SSYMV)))));
+void FC_GLOBAL2(ssymv,SSYMV)(char* uplo, blasint* n, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssymv,SSYMV)))));
+void FC_GLOBAL3(ssymv,SSYMV)(char* uplo, blasint* n, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssymv,SSYMV)))));
 #else
 #ifndef __APPLE__
-void ssymv(char* uplo, blasint* n, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssymv,SSYMV)))));
+void FC_GLOBAL2(ssymv,SSYMV)(char* uplo, blasint* n, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssymv,SSYMV)))));
+void FC_GLOBAL3(ssymv,SSYMV)(char* uplo, blasint* n, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssymv,SSYMV)))));
 #else
-void ssymv(char* uplo, blasint* n, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(ssymv,SSYMV)((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(ssymv,SSYMV)(char* uplo, blasint* n, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(ssymv,SSYMV)((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(ssymv,SSYMV)(char* uplo, blasint* n, float* alpha, float* a, blasint* lda, float* x, blasint* incx, float* beta, float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(ssymv,SSYMV)((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -7454,12 +8208,15 @@ void FC_GLOBAL(ssyr,SSYR)(char* uplo, blasint* n, float* alpha, float* x, blasin
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void ssyr_(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssyr,SSYR)))));
+void FC_GLOBAL2(ssyr,SSYR)(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssyr,SSYR)))));
+void FC_GLOBAL3(ssyr,SSYR)(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssyr,SSYR)))));
 #else
 #ifndef __APPLE__
-void ssyr(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssyr,SSYR)))));
+void FC_GLOBAL2(ssyr,SSYR)(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssyr,SSYR)))));
+void FC_GLOBAL3(ssyr,SSYR)(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssyr,SSYR)))));
 #else
-void ssyr(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(ssyr,SSYR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(ssyr,SSYR)(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(ssyr,SSYR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(ssyr,SSYR)(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(ssyr,SSYR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -7526,12 +8283,15 @@ void FC_GLOBAL(ssyr2,SSYR2)(char* uplo, blasint* n, float* alpha, float* x, blas
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void ssyr2_(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssyr2,SSYR2)))));
+void FC_GLOBAL2(ssyr2,SSYR2)(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssyr2,SSYR2)))));
+void FC_GLOBAL3(ssyr2,SSYR2)(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssyr2,SSYR2)))));
 #else
 #ifndef __APPLE__
-void ssyr2(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssyr2,SSYR2)))));
+void FC_GLOBAL2(ssyr2,SSYR2)(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssyr2,SSYR2)))));
+void FC_GLOBAL3(ssyr2,SSYR2)(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(ssyr2,SSYR2)))));
 #else
-void ssyr2(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(ssyr2,SSYR2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(ssyr2,SSYR2)(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(ssyr2,SSYR2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(ssyr2,SSYR2)(char* uplo, blasint* n, float* alpha, float* x, blasint* incx, float* y, blasint* incy, float* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(ssyr2,SSYR2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -7598,12 +8358,15 @@ void FC_GLOBAL(ssyr2k,SSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, f
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void ssyr2k_(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(ssyr2k,SSYR2K)))));
+void FC_GLOBAL2(ssyr2k,SSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(ssyr2k,SSYR2K)))));
+void FC_GLOBAL3(ssyr2k,SSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(ssyr2k,SSYR2K)))));
 #else
 #ifndef __APPLE__
-void ssyr2k(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(ssyr2k,SSYR2K)))));
+void FC_GLOBAL2(ssyr2k,SSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(ssyr2k,SSYR2K)))));
+void FC_GLOBAL3(ssyr2k,SSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(ssyr2k,SSYR2K)))));
 #else
-void ssyr2k(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(ssyr2k,SSYR2K)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(ssyr2k,SSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(ssyr2k,SSYR2K)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(ssyr2k,SSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(ssyr2k,SSYR2K)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -7670,12 +8433,15 @@ void FC_GLOBAL(ssyrk,SSYRK)(char* uplo, char* trans, blasint* n, blasint* k, flo
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void ssyrk_(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(ssyrk,SSYRK)))));
+void FC_GLOBAL2(ssyrk,SSYRK)(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(ssyrk,SSYRK)))));
+void FC_GLOBAL3(ssyrk,SSYRK)(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(ssyrk,SSYRK)))));
 #else
 #ifndef __APPLE__
-void ssyrk(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(ssyrk,SSYRK)))));
+void FC_GLOBAL2(ssyrk,SSYRK)(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(ssyrk,SSYRK)))));
+void FC_GLOBAL3(ssyrk,SSYRK)(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(ssyrk,SSYRK)))));
 #else
-void ssyrk(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(ssyrk,SSYRK)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(ssyrk,SSYRK)(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(ssyrk,SSYRK)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(ssyrk,SSYRK)(char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float* a, blasint* lda, float* beta, float* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(ssyrk,SSYRK)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -7742,12 +8508,15 @@ void FC_GLOBAL(stbmv,STBMV)(char* uplo, char* trans, char* diag, blasint* n, bla
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void stbmv_(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(stbmv,STBMV)))));
+void FC_GLOBAL2(stbmv,STBMV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(stbmv,STBMV)))));
+void FC_GLOBAL3(stbmv,STBMV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(stbmv,STBMV)))));
 #else
 #ifndef __APPLE__
-void stbmv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(stbmv,STBMV)))));
+void FC_GLOBAL2(stbmv,STBMV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(stbmv,STBMV)))));
+void FC_GLOBAL3(stbmv,STBMV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(stbmv,STBMV)))));
 #else
-void stbmv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(stbmv,STBMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(stbmv,STBMV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(stbmv,STBMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(stbmv,STBMV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(stbmv,STBMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -7814,12 +8583,15 @@ void FC_GLOBAL(stbsv,STBSV)(char* uplo, char* trans, char* diag, blasint* n, bla
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void stbsv_(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(stbsv,STBSV)))));
+void FC_GLOBAL2(stbsv,STBSV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(stbsv,STBSV)))));
+void FC_GLOBAL3(stbsv,STBSV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(stbsv,STBSV)))));
 #else
 #ifndef __APPLE__
-void stbsv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(stbsv,STBSV)))));
+void FC_GLOBAL2(stbsv,STBSV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(stbsv,STBSV)))));
+void FC_GLOBAL3(stbsv,STBSV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(stbsv,STBSV)))));
 #else
-void stbsv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(stbsv,STBSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(stbsv,STBSV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(stbsv,STBSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(stbsv,STBSV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(stbsv,STBSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -7886,12 +8658,15 @@ void FC_GLOBAL(stpmv,STPMV)(char* uplo, char* trans, char* diag, blasint* n, flo
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void stpmv_(char* uplo, char* trans, char* diag, blasint* n, float* ap, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(stpmv,STPMV)))));
+void FC_GLOBAL2(stpmv,STPMV)(char* uplo, char* trans, char* diag, blasint* n, float* ap, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(stpmv,STPMV)))));
+void FC_GLOBAL3(stpmv,STPMV)(char* uplo, char* trans, char* diag, blasint* n, float* ap, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(stpmv,STPMV)))));
 #else
 #ifndef __APPLE__
-void stpmv(char* uplo, char* trans, char* diag, blasint* n, float* ap, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(stpmv,STPMV)))));
+void FC_GLOBAL2(stpmv,STPMV)(char* uplo, char* trans, char* diag, blasint* n, float* ap, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(stpmv,STPMV)))));
+void FC_GLOBAL3(stpmv,STPMV)(char* uplo, char* trans, char* diag, blasint* n, float* ap, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(stpmv,STPMV)))));
 #else
-void stpmv(char* uplo, char* trans, char* diag, blasint* n, float* ap, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(stpmv,STPMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(stpmv,STPMV)(char* uplo, char* trans, char* diag, blasint* n, float* ap, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(stpmv,STPMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(stpmv,STPMV)(char* uplo, char* trans, char* diag, blasint* n, float* ap, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(stpmv,STPMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -7958,12 +8733,15 @@ void FC_GLOBAL(stpsv,STPSV)(char* uplo, char* trans, char* diag, blasint* n, flo
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void stpsv_(char* uplo, char* trans, char* diag, blasint* n, float* ap, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(stpsv,STPSV)))));
+void FC_GLOBAL2(stpsv,STPSV)(char* uplo, char* trans, char* diag, blasint* n, float* ap, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(stpsv,STPSV)))));
+void FC_GLOBAL3(stpsv,STPSV)(char* uplo, char* trans, char* diag, blasint* n, float* ap, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(stpsv,STPSV)))));
 #else
 #ifndef __APPLE__
-void stpsv(char* uplo, char* trans, char* diag, blasint* n, float* ap, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(stpsv,STPSV)))));
+void FC_GLOBAL2(stpsv,STPSV)(char* uplo, char* trans, char* diag, blasint* n, float* ap, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(stpsv,STPSV)))));
+void FC_GLOBAL3(stpsv,STPSV)(char* uplo, char* trans, char* diag, blasint* n, float* ap, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(stpsv,STPSV)))));
 #else
-void stpsv(char* uplo, char* trans, char* diag, blasint* n, float* ap, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(stpsv,STPSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(stpsv,STPSV)(char* uplo, char* trans, char* diag, blasint* n, float* ap, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(stpsv,STPSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(stpsv,STPSV)(char* uplo, char* trans, char* diag, blasint* n, float* ap, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(stpsv,STPSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -8030,12 +8808,15 @@ void FC_GLOBAL(strmm,STRMM)(char* side, char* uplo, char* transa, char* diag, bl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void strmm_(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strmm,STRMM)))));
+void FC_GLOBAL2(strmm,STRMM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strmm,STRMM)))));
+void FC_GLOBAL3(strmm,STRMM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strmm,STRMM)))));
 #else
 #ifndef __APPLE__
-void strmm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strmm,STRMM)))));
+void FC_GLOBAL2(strmm,STRMM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strmm,STRMM)))));
+void FC_GLOBAL3(strmm,STRMM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strmm,STRMM)))));
 #else
-void strmm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(strmm,STRMM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(strmm,STRMM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(strmm,STRMM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(strmm,STRMM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(strmm,STRMM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -8102,12 +8883,15 @@ void FC_GLOBAL(strmv,STRMV)(char* uplo, char* trans, char* diag, blasint* n, flo
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void strmv_(char* uplo, char* trans, char* diag, blasint* n, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strmv,STRMV)))));
+void FC_GLOBAL2(strmv,STRMV)(char* uplo, char* trans, char* diag, blasint* n, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strmv,STRMV)))));
+void FC_GLOBAL3(strmv,STRMV)(char* uplo, char* trans, char* diag, blasint* n, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strmv,STRMV)))));
 #else
 #ifndef __APPLE__
-void strmv(char* uplo, char* trans, char* diag, blasint* n, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strmv,STRMV)))));
+void FC_GLOBAL2(strmv,STRMV)(char* uplo, char* trans, char* diag, blasint* n, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strmv,STRMV)))));
+void FC_GLOBAL3(strmv,STRMV)(char* uplo, char* trans, char* diag, blasint* n, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strmv,STRMV)))));
 #else
-void strmv(char* uplo, char* trans, char* diag, blasint* n, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(strmv,STRMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(strmv,STRMV)(char* uplo, char* trans, char* diag, blasint* n, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(strmv,STRMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(strmv,STRMV)(char* uplo, char* trans, char* diag, blasint* n, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(strmv,STRMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -8174,12 +8958,15 @@ void FC_GLOBAL(strsm,STRSM)(char* side, char* uplo, char* transa, char* diag, bl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void strsm_(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strsm,STRSM)))));
+void FC_GLOBAL2(strsm,STRSM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strsm,STRSM)))));
+void FC_GLOBAL3(strsm,STRSM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strsm,STRSM)))));
 #else
 #ifndef __APPLE__
-void strsm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strsm,STRSM)))));
+void FC_GLOBAL2(strsm,STRSM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strsm,STRSM)))));
+void FC_GLOBAL3(strsm,STRSM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strsm,STRSM)))));
 #else
-void strsm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(strsm,STRSM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(strsm,STRSM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(strsm,STRSM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(strsm,STRSM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(strsm,STRSM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -8246,12 +9033,15 @@ void FC_GLOBAL(strsv,STRSV)(char* uplo, char* trans, char* diag, blasint* n, flo
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void strsv_(char* uplo, char* trans, char* diag, blasint* n, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strsv,STRSV)))));
+void FC_GLOBAL2(strsv,STRSV)(char* uplo, char* trans, char* diag, blasint* n, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strsv,STRSV)))));
+void FC_GLOBAL3(strsv,STRSV)(char* uplo, char* trans, char* diag, blasint* n, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strsv,STRSV)))));
 #else
 #ifndef __APPLE__
-void strsv(char* uplo, char* trans, char* diag, blasint* n, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strsv,STRSV)))));
+void FC_GLOBAL2(strsv,STRSV)(char* uplo, char* trans, char* diag, blasint* n, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strsv,STRSV)))));
+void FC_GLOBAL3(strsv,STRSV)(char* uplo, char* trans, char* diag, blasint* n, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(strsv,STRSV)))));
 #else
-void strsv(char* uplo, char* trans, char* diag, blasint* n, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(strsv,STRSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(strsv,STRSV)(char* uplo, char* trans, char* diag, blasint* n, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(strsv,STRSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(strsv,STRSV)(char* uplo, char* trans, char* diag, blasint* n, float* a, blasint* lda, float* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(strsv,STRSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -8318,12 +9108,15 @@ void FC_GLOBAL(zaxpy,ZAXPY)(blasint* n, double complex* za, double complex* zx, 
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zaxpy_(blasint* n, double complex* za, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zaxpy,ZAXPY)))));
+void FC_GLOBAL2(zaxpy,ZAXPY)(blasint* n, double complex* za, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zaxpy,ZAXPY)))));
+void FC_GLOBAL3(zaxpy,ZAXPY)(blasint* n, double complex* za, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zaxpy,ZAXPY)))));
 #else
 #ifndef __APPLE__
-void zaxpy(blasint* n, double complex* za, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zaxpy,ZAXPY)))));
+void FC_GLOBAL2(zaxpy,ZAXPY)(blasint* n, double complex* za, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zaxpy,ZAXPY)))));
+void FC_GLOBAL3(zaxpy,ZAXPY)(blasint* n, double complex* za, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zaxpy,ZAXPY)))));
 #else
-void zaxpy(blasint* n, double complex* za, double complex* zx, blasint* incx, double complex* zy, blasint* incy){ FC_GLOBAL(zaxpy,ZAXPY)((void*) n, (void*) za, (void*) zx, (void*) incx, (void*) zy, (void*) incy); }
+void FC_GLOBAL2(zaxpy,ZAXPY)(blasint* n, double complex* za, double complex* zx, blasint* incx, double complex* zy, blasint* incy){ FC_GLOBAL(zaxpy,ZAXPY)((void*) n, (void*) za, (void*) zx, (void*) incx, (void*) zy, (void*) incy); }
+void FC_GLOBAL3(zaxpy,ZAXPY)(blasint* n, double complex* za, double complex* zx, blasint* incx, double complex* zy, blasint* incy){ FC_GLOBAL(zaxpy,ZAXPY)((void*) n, (void*) za, (void*) zx, (void*) incx, (void*) zy, (void*) incy); }
 #endif
 #endif
 
@@ -8390,12 +9183,15 @@ void FC_GLOBAL(zcopy,ZCOPY)(blasint* n, double complex* zx, blasint* incx, doubl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zcopy_(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zcopy,ZCOPY)))));
+void FC_GLOBAL2(zcopy,ZCOPY)(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zcopy,ZCOPY)))));
+void FC_GLOBAL3(zcopy,ZCOPY)(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zcopy,ZCOPY)))));
 #else
 #ifndef __APPLE__
-void zcopy(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zcopy,ZCOPY)))));
+void FC_GLOBAL2(zcopy,ZCOPY)(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zcopy,ZCOPY)))));
+void FC_GLOBAL3(zcopy,ZCOPY)(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zcopy,ZCOPY)))));
 #else
-void zcopy(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy){ FC_GLOBAL(zcopy,ZCOPY)((void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy); }
+void FC_GLOBAL2(zcopy,ZCOPY)(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy){ FC_GLOBAL(zcopy,ZCOPY)((void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy); }
+void FC_GLOBAL3(zcopy,ZCOPY)(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy){ FC_GLOBAL(zcopy,ZCOPY)((void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy); }
 #endif
 #endif
 
@@ -8476,12 +9272,15 @@ void FC_GLOBAL(zdotc,ZDOTC)( double complex* returnvalue, blasint* n, double com
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zdotc_( double complex* returnvalue, blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zdotc,ZDOTC)))));
+void FC_GLOBAL2(zdotc,ZDOTC)( double complex* returnvalue, blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zdotc,ZDOTC)))));
+void FC_GLOBAL3(zdotc,ZDOTC)( double complex* returnvalue, blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zdotc,ZDOTC)))));
 #else
 #ifndef __APPLE__
-void zdotc( double complex* returnvalue, blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zdotc,ZDOTC)))));
+void FC_GLOBAL2(zdotc,ZDOTC)( double complex* returnvalue, blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zdotc,ZDOTC)))));
+void FC_GLOBAL3(zdotc,ZDOTC)( double complex* returnvalue, blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zdotc,ZDOTC)))));
 #else
-void zdotc( double complex* returnvalue, blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy){ FC_GLOBAL(zdotc,ZDOTC)( (void*) returnvalue, (void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy); }
+void FC_GLOBAL2(zdotc,ZDOTC)( double complex* returnvalue, blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy){ FC_GLOBAL(zdotc,ZDOTC)( (void*) returnvalue, (void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy); }
+void FC_GLOBAL3(zdotc,ZDOTC)( double complex* returnvalue, blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy){ FC_GLOBAL(zdotc,ZDOTC)( (void*) returnvalue, (void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy); }
 #endif
 #endif
 
@@ -8578,12 +9377,15 @@ void FC_GLOBAL(zdotu,ZDOTU)( double complex* returnvalue, blasint* n, double com
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zdotu_( double complex* returnvalue, blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zdotu,ZDOTU)))));
+void FC_GLOBAL2(zdotu,ZDOTU)( double complex* returnvalue, blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zdotu,ZDOTU)))));
+void FC_GLOBAL3(zdotu,ZDOTU)( double complex* returnvalue, blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zdotu,ZDOTU)))));
 #else
 #ifndef __APPLE__
-void zdotu( double complex* returnvalue, blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zdotu,ZDOTU)))));
+void FC_GLOBAL2(zdotu,ZDOTU)( double complex* returnvalue, blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zdotu,ZDOTU)))));
+void FC_GLOBAL3(zdotu,ZDOTU)( double complex* returnvalue, blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zdotu,ZDOTU)))));
 #else
-void zdotu( double complex* returnvalue, blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy){ FC_GLOBAL(zdotu,ZDOTU)( (void*) returnvalue, (void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy); }
+void FC_GLOBAL2(zdotu,ZDOTU)( double complex* returnvalue, blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy){ FC_GLOBAL(zdotu,ZDOTU)( (void*) returnvalue, (void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy); }
+void FC_GLOBAL3(zdotu,ZDOTU)( double complex* returnvalue, blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy){ FC_GLOBAL(zdotu,ZDOTU)( (void*) returnvalue, (void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy); }
 #endif
 #endif
 
@@ -8666,12 +9468,15 @@ void FC_GLOBAL(zdrot,ZDROT)(blasint* n, double complex* cx, blasint* incx, doubl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zdrot_(blasint* n, double complex* cx, blasint* incx, double complex* cy, blasint* incy, double* c, double* s) __attribute__((alias(MTS(FC_GLOBAL(zdrot,ZDROT)))));
+void FC_GLOBAL2(zdrot,ZDROT)(blasint* n, double complex* cx, blasint* incx, double complex* cy, blasint* incy, double* c, double* s) __attribute__((alias(MTS(FC_GLOBAL(zdrot,ZDROT)))));
+void FC_GLOBAL3(zdrot,ZDROT)(blasint* n, double complex* cx, blasint* incx, double complex* cy, blasint* incy, double* c, double* s) __attribute__((alias(MTS(FC_GLOBAL(zdrot,ZDROT)))));
 #else
 #ifndef __APPLE__
-void zdrot(blasint* n, double complex* cx, blasint* incx, double complex* cy, blasint* incy, double* c, double* s) __attribute__((alias(MTS(FC_GLOBAL(zdrot,ZDROT)))));
+void FC_GLOBAL2(zdrot,ZDROT)(blasint* n, double complex* cx, blasint* incx, double complex* cy, blasint* incy, double* c, double* s) __attribute__((alias(MTS(FC_GLOBAL(zdrot,ZDROT)))));
+void FC_GLOBAL3(zdrot,ZDROT)(blasint* n, double complex* cx, blasint* incx, double complex* cy, blasint* incy, double* c, double* s) __attribute__((alias(MTS(FC_GLOBAL(zdrot,ZDROT)))));
 #else
-void zdrot(blasint* n, double complex* cx, blasint* incx, double complex* cy, blasint* incy, double* c, double* s){ FC_GLOBAL(zdrot,ZDROT)((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s); }
+void FC_GLOBAL2(zdrot,ZDROT)(blasint* n, double complex* cx, blasint* incx, double complex* cy, blasint* incy, double* c, double* s){ FC_GLOBAL(zdrot,ZDROT)((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s); }
+void FC_GLOBAL3(zdrot,ZDROT)(blasint* n, double complex* cx, blasint* incx, double complex* cy, blasint* incy, double* c, double* s){ FC_GLOBAL(zdrot,ZDROT)((void*) n, (void*) cx, (void*) incx, (void*) cy, (void*) incy, (void*) c, (void*) s); }
 #endif
 #endif
 
@@ -8738,12 +9543,15 @@ void FC_GLOBAL(zdscal,ZDSCAL)(blasint* n, double* da, double complex* zx, blasin
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zdscal_(blasint* n, double* da, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(zdscal,ZDSCAL)))));
+void FC_GLOBAL2(zdscal,ZDSCAL)(blasint* n, double* da, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(zdscal,ZDSCAL)))));
+void FC_GLOBAL3(zdscal,ZDSCAL)(blasint* n, double* da, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(zdscal,ZDSCAL)))));
 #else
 #ifndef __APPLE__
-void zdscal(blasint* n, double* da, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(zdscal,ZDSCAL)))));
+void FC_GLOBAL2(zdscal,ZDSCAL)(blasint* n, double* da, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(zdscal,ZDSCAL)))));
+void FC_GLOBAL3(zdscal,ZDSCAL)(blasint* n, double* da, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(zdscal,ZDSCAL)))));
 #else
-void zdscal(blasint* n, double* da, double complex* zx, blasint* incx){ FC_GLOBAL(zdscal,ZDSCAL)((void*) n, (void*) da, (void*) zx, (void*) incx); }
+void FC_GLOBAL2(zdscal,ZDSCAL)(blasint* n, double* da, double complex* zx, blasint* incx){ FC_GLOBAL(zdscal,ZDSCAL)((void*) n, (void*) da, (void*) zx, (void*) incx); }
+void FC_GLOBAL3(zdscal,ZDSCAL)(blasint* n, double* da, double complex* zx, blasint* incx){ FC_GLOBAL(zdscal,ZDSCAL)((void*) n, (void*) da, (void*) zx, (void*) incx); }
 #endif
 #endif
 
@@ -8810,12 +9618,15 @@ void FC_GLOBAL(zgbmv,ZGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, bl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zgbmv_(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zgbmv,ZGBMV)))));
+void FC_GLOBAL2(zgbmv,ZGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zgbmv,ZGBMV)))));
+void FC_GLOBAL3(zgbmv,ZGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zgbmv,ZGBMV)))));
 #else
 #ifndef __APPLE__
-void zgbmv(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zgbmv,ZGBMV)))));
+void FC_GLOBAL2(zgbmv,ZGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zgbmv,ZGBMV)))));
+void FC_GLOBAL3(zgbmv,ZGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zgbmv,ZGBMV)))));
 #else
-void zgbmv(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(zgbmv,ZGBMV)((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(zgbmv,ZGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(zgbmv,ZGBMV)((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(zgbmv,ZGBMV)(char* trans, blasint* m, blasint* n, blasint* kl, blasint* ku, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(zgbmv,ZGBMV)((void*) trans, (void*) m, (void*) n, (void*) kl, (void*) ku, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -8882,12 +9693,15 @@ void FC_GLOBAL(zgemm,ZGEMM)(char* transa, char* transb, blasint* m, blasint* n, 
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zgemm_(char* transa, char* transb, blasint* m, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(zgemm,ZGEMM)))));
+void FC_GLOBAL2(zgemm,ZGEMM)(char* transa, char* transb, blasint* m, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(zgemm,ZGEMM)))));
+void FC_GLOBAL3(zgemm,ZGEMM)(char* transa, char* transb, blasint* m, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(zgemm,ZGEMM)))));
 #else
 #ifndef __APPLE__
-void zgemm(char* transa, char* transb, blasint* m, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(zgemm,ZGEMM)))));
+void FC_GLOBAL2(zgemm,ZGEMM)(char* transa, char* transb, blasint* m, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(zgemm,ZGEMM)))));
+void FC_GLOBAL3(zgemm,ZGEMM)(char* transa, char* transb, blasint* m, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(zgemm,ZGEMM)))));
 #else
-void zgemm(char* transa, char* transb, blasint* m, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(zgemm,ZGEMM)((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
+void FC_GLOBAL2(zgemm,ZGEMM)(char* transa, char* transb, blasint* m, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(zgemm,ZGEMM)((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
+void FC_GLOBAL3(zgemm,ZGEMM)(char* transa, char* transb, blasint* m, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(zgemm,ZGEMM)((void*) transa, (void*) transb, (void*) m, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
 #endif
 #endif
 
@@ -8933,6 +9747,156 @@ void flexiblas_chain_zgemm(void* transa, void* transb, void* m, void* n, void* k
 #endif
 
 
+static TLS_STORE uint8_t hook_pos_zgemmt = 0;
+
+void FC_GLOBAL(zgemmt,ZGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb)
+{
+    void (*fn) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void (*fn_hook) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+    *(void **) &fn = current_backend->blas.zgemmt.f77_blas_function;
+    *(void **) &fn_hook = __flexiblas_hooks->zgemmt.f77_hook_function[0];
+    hook_pos_zgemmt = 0;
+    if ( fn_hook != NULL) {
+        fn_hook((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+    } else {
+        fn((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+    }
+    return;
+}
+#ifdef FLEXIBLAS_ABI_IBM
+void FC_GLOBAL2(zgemmt,ZGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(zgemmt,ZGEMMT)))));
+void FC_GLOBAL3(zgemmt,ZGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(zgemmt,ZGEMMT)))));
+#else
+#ifndef __APPLE__
+void FC_GLOBAL2(zgemmt,ZGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(zgemmt,ZGEMMT)))));
+void FC_GLOBAL3(zgemmt,ZGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(zgemmt,ZGEMMT)))));
+#else
+void FC_GLOBAL2(zgemmt,ZGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(zgemmt,ZGEMMT)((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
+void FC_GLOBAL3(zgemmt,ZGEMMT)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(zgemmt,ZGEMMT)((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
+#endif
+#endif
+
+
+
+void flexiblas_real_zgemmt_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb)
+{
+    void (*fn) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+
+    *(void **) &fn = current_backend->blas.zgemmt.f77_blas_function;
+    fn((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+
+    return;
+}
+#ifndef __APPLE__
+void flexiblas_real_zgemmt(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias("flexiblas_real_zgemmt_")));
+#else
+void flexiblas_real_zgemmt(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){flexiblas_real_zgemmt_((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb);}
+#endif
+
+
+void flexiblas_chain_zgemmt_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb)
+{
+    void (*fn) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+
+
+
+    hook_pos_zgemmt++;
+    if ( hook_pos_zgemmt < __flexiblas_hooks->zgemmt.nhook ) {
+        *(void **) &fn = __flexiblas_hooks->zgemmt.f77_hook_function[hook_pos_zgemmt];
+    } else {
+        hook_pos_zgemmt = 0;
+        *(void **) &fn = current_backend->blas.zgemmt.f77_blas_function;
+    }
+    fn((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+
+    return;
+}
+#ifndef __APPLE__
+void flexiblas_chain_zgemmt(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias("flexiblas_chain_zgemmt_")));
+#else
+void flexiblas_chain_zgemmt(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){flexiblas_chain_zgemmt_((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb);}
+#endif
+
+
+static TLS_STORE uint8_t hook_pos_zgemmtr = 0;
+
+void FC_GLOBAL(zgemmtr,ZGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb)
+{
+    void (*fn) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    void (*fn_hook) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+    if ( current_backend->post_init != 0 ) {
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }
+    *(void **) &fn = current_backend->blas.zgemmtr.f77_blas_function;
+    *(void **) &fn_hook = __flexiblas_hooks->zgemmtr.f77_hook_function[0];
+    hook_pos_zgemmtr = 0;
+    if ( fn_hook != NULL) {
+        fn_hook((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+    } else {
+        fn((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+    }
+    return;
+}
+#ifdef FLEXIBLAS_ABI_IBM
+void FC_GLOBAL2(zgemmtr,ZGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(zgemmtr,ZGEMMTR)))));
+void FC_GLOBAL3(zgemmtr,ZGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(zgemmtr,ZGEMMTR)))));
+#else
+#ifndef __APPLE__
+void FC_GLOBAL2(zgemmtr,ZGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(zgemmtr,ZGEMMTR)))));
+void FC_GLOBAL3(zgemmtr,ZGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias(MTS(FC_GLOBAL(zgemmtr,ZGEMMTR)))));
+#else
+void FC_GLOBAL2(zgemmtr,ZGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(zgemmtr,ZGEMMTR)((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
+void FC_GLOBAL3(zgemmtr,ZGEMMTR)(char* uplo, char* transa, char* transb, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){ FC_GLOBAL(zgemmtr,ZGEMMTR)((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb); }
+#endif
+#endif
+
+
+
+void flexiblas_real_zgemmtr_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb)
+{
+    void (*fn) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+
+    *(void **) &fn = current_backend->blas.zgemmtr.f77_blas_function;
+    fn((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+
+    return;
+}
+#ifndef __APPLE__
+void flexiblas_real_zgemmtr(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias("flexiblas_real_zgemmtr_")));
+#else
+void flexiblas_real_zgemmtr(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){flexiblas_real_zgemmtr_((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb);}
+#endif
+
+
+void flexiblas_chain_zgemmtr_(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb)
+{
+    void (*fn) (void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb);
+
+
+
+    hook_pos_zgemmtr++;
+    if ( hook_pos_zgemmtr < __flexiblas_hooks->zgemmtr.nhook ) {
+        *(void **) &fn = __flexiblas_hooks->zgemmtr.f77_hook_function[hook_pos_zgemmtr];
+    } else {
+        hook_pos_zgemmtr = 0;
+        *(void **) &fn = current_backend->blas.zgemmtr.f77_blas_function;
+    }
+    fn((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, ( flexiblas_fortran_charlen_t ) len_uplo, ( flexiblas_fortran_charlen_t ) len_transa, ( flexiblas_fortran_charlen_t ) len_transb);
+
+    return;
+}
+#ifndef __APPLE__
+void flexiblas_chain_zgemmtr(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb) __attribute__((alias("flexiblas_chain_zgemmtr_")));
+#else
+void flexiblas_chain_zgemmtr(void* uplo, void* transa, void* transb, void* n, void* k, void* alpha, void* a, void* lda, void* b, void* ldb, void* beta, void* c, void* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_transb){flexiblas_chain_zgemmtr_((void*) uplo, (void*) transa, (void*) transb, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_transb);}
+#endif
+
+
 static TLS_STORE uint8_t hook_pos_zgemv = 0;
 
 void FC_GLOBAL(zgemv,ZGEMV)(char* trans, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans)
@@ -8954,12 +9918,15 @@ void FC_GLOBAL(zgemv,ZGEMV)(char* trans, blasint* m, blasint* n, double complex*
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zgemv_(char* trans, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zgemv,ZGEMV)))));
+void FC_GLOBAL2(zgemv,ZGEMV)(char* trans, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zgemv,ZGEMV)))));
+void FC_GLOBAL3(zgemv,ZGEMV)(char* trans, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zgemv,ZGEMV)))));
 #else
 #ifndef __APPLE__
-void zgemv(char* trans, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zgemv,ZGEMV)))));
+void FC_GLOBAL2(zgemv,ZGEMV)(char* trans, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zgemv,ZGEMV)))));
+void FC_GLOBAL3(zgemv,ZGEMV)(char* trans, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zgemv,ZGEMV)))));
 #else
-void zgemv(char* trans, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(zgemv,ZGEMV)((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(zgemv,ZGEMV)(char* trans, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(zgemv,ZGEMV)((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(zgemv,ZGEMV)(char* trans, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(zgemv,ZGEMV)((void*) trans, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -9026,12 +9993,15 @@ void FC_GLOBAL(zgerc,ZGERC)(blasint* m, blasint* n, double complex* alpha, doubl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zgerc_(blasint* m, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(zgerc,ZGERC)))));
+void FC_GLOBAL2(zgerc,ZGERC)(blasint* m, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(zgerc,ZGERC)))));
+void FC_GLOBAL3(zgerc,ZGERC)(blasint* m, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(zgerc,ZGERC)))));
 #else
 #ifndef __APPLE__
-void zgerc(blasint* m, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(zgerc,ZGERC)))));
+void FC_GLOBAL2(zgerc,ZGERC)(blasint* m, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(zgerc,ZGERC)))));
+void FC_GLOBAL3(zgerc,ZGERC)(blasint* m, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(zgerc,ZGERC)))));
 #else
-void zgerc(blasint* m, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda){ FC_GLOBAL(zgerc,ZGERC)((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
+void FC_GLOBAL2(zgerc,ZGERC)(blasint* m, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda){ FC_GLOBAL(zgerc,ZGERC)((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
+void FC_GLOBAL3(zgerc,ZGERC)(blasint* m, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda){ FC_GLOBAL(zgerc,ZGERC)((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
 #endif
 #endif
 
@@ -9098,12 +10068,15 @@ void FC_GLOBAL(zgeru,ZGERU)(blasint* m, blasint* n, double complex* alpha, doubl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zgeru_(blasint* m, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(zgeru,ZGERU)))));
+void FC_GLOBAL2(zgeru,ZGERU)(blasint* m, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(zgeru,ZGERU)))));
+void FC_GLOBAL3(zgeru,ZGERU)(blasint* m, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(zgeru,ZGERU)))));
 #else
 #ifndef __APPLE__
-void zgeru(blasint* m, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(zgeru,ZGERU)))));
+void FC_GLOBAL2(zgeru,ZGERU)(blasint* m, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(zgeru,ZGERU)))));
+void FC_GLOBAL3(zgeru,ZGERU)(blasint* m, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda) __attribute__((alias(MTS(FC_GLOBAL(zgeru,ZGERU)))));
 #else
-void zgeru(blasint* m, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda){ FC_GLOBAL(zgeru,ZGERU)((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
+void FC_GLOBAL2(zgeru,ZGERU)(blasint* m, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda){ FC_GLOBAL(zgeru,ZGERU)((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
+void FC_GLOBAL3(zgeru,ZGERU)(blasint* m, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda){ FC_GLOBAL(zgeru,ZGERU)((void*) m, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda); }
 #endif
 #endif
 
@@ -9170,12 +10143,15 @@ void FC_GLOBAL(zhbmv,ZHBMV)(char* uplo, blasint* n, blasint* k, double complex* 
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zhbmv_(char* uplo, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhbmv,ZHBMV)))));
+void FC_GLOBAL2(zhbmv,ZHBMV)(char* uplo, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhbmv,ZHBMV)))));
+void FC_GLOBAL3(zhbmv,ZHBMV)(char* uplo, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhbmv,ZHBMV)))));
 #else
 #ifndef __APPLE__
-void zhbmv(char* uplo, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhbmv,ZHBMV)))));
+void FC_GLOBAL2(zhbmv,ZHBMV)(char* uplo, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhbmv,ZHBMV)))));
+void FC_GLOBAL3(zhbmv,ZHBMV)(char* uplo, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhbmv,ZHBMV)))));
 #else
-void zhbmv(char* uplo, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zhbmv,ZHBMV)((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(zhbmv,ZHBMV)(char* uplo, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zhbmv,ZHBMV)((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(zhbmv,ZHBMV)(char* uplo, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zhbmv,ZHBMV)((void*) uplo, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -9242,12 +10218,15 @@ void FC_GLOBAL(zhemm,ZHEMM)(char* side, char* uplo, blasint* m, blasint* n, doub
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zhemm_(char* side, char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhemm,ZHEMM)))));
+void FC_GLOBAL2(zhemm,ZHEMM)(char* side, char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhemm,ZHEMM)))));
+void FC_GLOBAL3(zhemm,ZHEMM)(char* side, char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhemm,ZHEMM)))));
 #else
 #ifndef __APPLE__
-void zhemm(char* side, char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhemm,ZHEMM)))));
+void FC_GLOBAL2(zhemm,ZHEMM)(char* side, char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhemm,ZHEMM)))));
+void FC_GLOBAL3(zhemm,ZHEMM)(char* side, char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhemm,ZHEMM)))));
 #else
-void zhemm(char* side, char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zhemm,ZHEMM)((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(zhemm,ZHEMM)(char* side, char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zhemm,ZHEMM)((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(zhemm,ZHEMM)(char* side, char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zhemm,ZHEMM)((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -9314,12 +10293,15 @@ void FC_GLOBAL(zhemv,ZHEMV)(char* uplo, blasint* n, double complex* alpha, doubl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zhemv_(char* uplo, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhemv,ZHEMV)))));
+void FC_GLOBAL2(zhemv,ZHEMV)(char* uplo, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhemv,ZHEMV)))));
+void FC_GLOBAL3(zhemv,ZHEMV)(char* uplo, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhemv,ZHEMV)))));
 #else
 #ifndef __APPLE__
-void zhemv(char* uplo, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhemv,ZHEMV)))));
+void FC_GLOBAL2(zhemv,ZHEMV)(char* uplo, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhemv,ZHEMV)))));
+void FC_GLOBAL3(zhemv,ZHEMV)(char* uplo, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhemv,ZHEMV)))));
 #else
-void zhemv(char* uplo, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zhemv,ZHEMV)((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(zhemv,ZHEMV)(char* uplo, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zhemv,ZHEMV)((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(zhemv,ZHEMV)(char* uplo, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zhemv,ZHEMV)((void*) uplo, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -9386,12 +10368,15 @@ void FC_GLOBAL(zher,ZHER)(char* uplo, blasint* n, double* alpha, double complex*
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zher_(char* uplo, blasint* n, double* alpha, double complex* x, blasint* incx, double complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zher,ZHER)))));
+void FC_GLOBAL2(zher,ZHER)(char* uplo, blasint* n, double* alpha, double complex* x, blasint* incx, double complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zher,ZHER)))));
+void FC_GLOBAL3(zher,ZHER)(char* uplo, blasint* n, double* alpha, double complex* x, blasint* incx, double complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zher,ZHER)))));
 #else
 #ifndef __APPLE__
-void zher(char* uplo, blasint* n, double* alpha, double complex* x, blasint* incx, double complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zher,ZHER)))));
+void FC_GLOBAL2(zher,ZHER)(char* uplo, blasint* n, double* alpha, double complex* x, blasint* incx, double complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zher,ZHER)))));
+void FC_GLOBAL3(zher,ZHER)(char* uplo, blasint* n, double* alpha, double complex* x, blasint* incx, double complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zher,ZHER)))));
 #else
-void zher(char* uplo, blasint* n, double* alpha, double complex* x, blasint* incx, double complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zher,ZHER)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(zher,ZHER)(char* uplo, blasint* n, double* alpha, double complex* x, blasint* incx, double complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zher,ZHER)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(zher,ZHER)(char* uplo, blasint* n, double* alpha, double complex* x, blasint* incx, double complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zher,ZHER)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -9458,12 +10443,15 @@ void FC_GLOBAL(zher2,ZHER2)(char* uplo, blasint* n, double complex* alpha, doubl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zher2_(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zher2,ZHER2)))));
+void FC_GLOBAL2(zher2,ZHER2)(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zher2,ZHER2)))));
+void FC_GLOBAL3(zher2,ZHER2)(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zher2,ZHER2)))));
 #else
 #ifndef __APPLE__
-void zher2(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zher2,ZHER2)))));
+void FC_GLOBAL2(zher2,ZHER2)(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zher2,ZHER2)))));
+void FC_GLOBAL3(zher2,ZHER2)(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zher2,ZHER2)))));
 #else
-void zher2(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zher2,ZHER2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(zher2,ZHER2)(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zher2,ZHER2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(zher2,ZHER2)(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zher2,ZHER2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) a, (void*) lda, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -9530,12 +10518,15 @@ void FC_GLOBAL(zher2k,ZHER2K)(char* uplo, char* trans, blasint* n, blasint* k, d
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zher2k_(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zher2k,ZHER2K)))));
+void FC_GLOBAL2(zher2k,ZHER2K)(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zher2k,ZHER2K)))));
+void FC_GLOBAL3(zher2k,ZHER2K)(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zher2k,ZHER2K)))));
 #else
 #ifndef __APPLE__
-void zher2k(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zher2k,ZHER2K)))));
+void FC_GLOBAL2(zher2k,ZHER2K)(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zher2k,ZHER2K)))));
+void FC_GLOBAL3(zher2k,ZHER2K)(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zher2k,ZHER2K)))));
 #else
-void zher2k(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(zher2k,ZHER2K)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(zher2k,ZHER2K)(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(zher2k,ZHER2K)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(zher2k,ZHER2K)(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(zher2k,ZHER2K)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -9602,12 +10593,15 @@ void FC_GLOBAL(zherk,ZHERK)(char* uplo, char* trans, blasint* n, blasint* k, dou
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zherk_(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double complex* a, blasint* lda, double* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zherk,ZHERK)))));
+void FC_GLOBAL2(zherk,ZHERK)(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double complex* a, blasint* lda, double* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zherk,ZHERK)))));
+void FC_GLOBAL3(zherk,ZHERK)(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double complex* a, blasint* lda, double* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zherk,ZHERK)))));
 #else
 #ifndef __APPLE__
-void zherk(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double complex* a, blasint* lda, double* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zherk,ZHERK)))));
+void FC_GLOBAL2(zherk,ZHERK)(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double complex* a, blasint* lda, double* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zherk,ZHERK)))));
+void FC_GLOBAL3(zherk,ZHERK)(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double complex* a, blasint* lda, double* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zherk,ZHERK)))));
 #else
-void zherk(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double complex* a, blasint* lda, double* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(zherk,ZHERK)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(zherk,ZHERK)(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double complex* a, blasint* lda, double* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(zherk,ZHERK)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(zherk,ZHERK)(char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double complex* a, blasint* lda, double* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(zherk,ZHERK)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -9674,12 +10668,15 @@ void FC_GLOBAL(zhpmv,ZHPMV)(char* uplo, blasint* n, double complex* alpha, doubl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zhpmv_(char* uplo, blasint* n, double complex* alpha, double complex* ap, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhpmv,ZHPMV)))));
+void FC_GLOBAL2(zhpmv,ZHPMV)(char* uplo, blasint* n, double complex* alpha, double complex* ap, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhpmv,ZHPMV)))));
+void FC_GLOBAL3(zhpmv,ZHPMV)(char* uplo, blasint* n, double complex* alpha, double complex* ap, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhpmv,ZHPMV)))));
 #else
 #ifndef __APPLE__
-void zhpmv(char* uplo, blasint* n, double complex* alpha, double complex* ap, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhpmv,ZHPMV)))));
+void FC_GLOBAL2(zhpmv,ZHPMV)(char* uplo, blasint* n, double complex* alpha, double complex* ap, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhpmv,ZHPMV)))));
+void FC_GLOBAL3(zhpmv,ZHPMV)(char* uplo, blasint* n, double complex* alpha, double complex* ap, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhpmv,ZHPMV)))));
 #else
-void zhpmv(char* uplo, blasint* n, double complex* alpha, double complex* ap, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zhpmv,ZHPMV)((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(zhpmv,ZHPMV)(char* uplo, blasint* n, double complex* alpha, double complex* ap, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zhpmv,ZHPMV)((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(zhpmv,ZHPMV)(char* uplo, blasint* n, double complex* alpha, double complex* ap, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zhpmv,ZHPMV)((void*) uplo, (void*) n, (void*) alpha, (void*) ap, (void*) x, (void*) incx, (void*) beta, (void*) y, (void*) incy, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -9746,12 +10743,15 @@ void FC_GLOBAL(zhpr,ZHPR)(char* uplo, blasint* n, double* alpha, double complex*
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zhpr_(char* uplo, blasint* n, double* alpha, double complex* x, blasint* incx, double complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhpr,ZHPR)))));
+void FC_GLOBAL2(zhpr,ZHPR)(char* uplo, blasint* n, double* alpha, double complex* x, blasint* incx, double complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhpr,ZHPR)))));
+void FC_GLOBAL3(zhpr,ZHPR)(char* uplo, blasint* n, double* alpha, double complex* x, blasint* incx, double complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhpr,ZHPR)))));
 #else
 #ifndef __APPLE__
-void zhpr(char* uplo, blasint* n, double* alpha, double complex* x, blasint* incx, double complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhpr,ZHPR)))));
+void FC_GLOBAL2(zhpr,ZHPR)(char* uplo, blasint* n, double* alpha, double complex* x, blasint* incx, double complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhpr,ZHPR)))));
+void FC_GLOBAL3(zhpr,ZHPR)(char* uplo, blasint* n, double* alpha, double complex* x, blasint* incx, double complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhpr,ZHPR)))));
 #else
-void zhpr(char* uplo, blasint* n, double* alpha, double complex* x, blasint* incx, double complex* ap, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zhpr,ZHPR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(zhpr,ZHPR)(char* uplo, blasint* n, double* alpha, double complex* x, blasint* incx, double complex* ap, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zhpr,ZHPR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(zhpr,ZHPR)(char* uplo, blasint* n, double* alpha, double complex* x, blasint* incx, double complex* ap, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zhpr,ZHPR)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -9818,12 +10818,15 @@ void FC_GLOBAL(zhpr2,ZHPR2)(char* uplo, blasint* n, double complex* alpha, doubl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zhpr2_(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhpr2,ZHPR2)))));
+void FC_GLOBAL2(zhpr2,ZHPR2)(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhpr2,ZHPR2)))));
+void FC_GLOBAL3(zhpr2,ZHPR2)(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhpr2,ZHPR2)))));
 #else
 #ifndef __APPLE__
-void zhpr2(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhpr2,ZHPR2)))));
+void FC_GLOBAL2(zhpr2,ZHPR2)(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhpr2,ZHPR2)))));
+void FC_GLOBAL3(zhpr2,ZHPR2)(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* ap, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zhpr2,ZHPR2)))));
 #else
-void zhpr2(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* ap, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zhpr2,ZHPR2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(zhpr2,ZHPR2)(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* ap, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zhpr2,ZHPR2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(zhpr2,ZHPR2)(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* y, blasint* incy, double complex* ap, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zhpr2,ZHPR2)((void*) uplo, (void*) n, (void*) alpha, (void*) x, (void*) incx, (void*) y, (void*) incy, (void*) ap, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -9890,12 +10893,15 @@ void FC_GLOBAL(zrotg,ZROTG)(double complex* ca, double complex* cb, double* c, d
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zrotg_(double complex* ca, double complex* cb, double* c, double complex* s) __attribute__((alias(MTS(FC_GLOBAL(zrotg,ZROTG)))));
+void FC_GLOBAL2(zrotg,ZROTG)(double complex* ca, double complex* cb, double* c, double complex* s) __attribute__((alias(MTS(FC_GLOBAL(zrotg,ZROTG)))));
+void FC_GLOBAL3(zrotg,ZROTG)(double complex* ca, double complex* cb, double* c, double complex* s) __attribute__((alias(MTS(FC_GLOBAL(zrotg,ZROTG)))));
 #else
 #ifndef __APPLE__
-void zrotg(double complex* ca, double complex* cb, double* c, double complex* s) __attribute__((alias(MTS(FC_GLOBAL(zrotg,ZROTG)))));
+void FC_GLOBAL2(zrotg,ZROTG)(double complex* ca, double complex* cb, double* c, double complex* s) __attribute__((alias(MTS(FC_GLOBAL(zrotg,ZROTG)))));
+void FC_GLOBAL3(zrotg,ZROTG)(double complex* ca, double complex* cb, double* c, double complex* s) __attribute__((alias(MTS(FC_GLOBAL(zrotg,ZROTG)))));
 #else
-void zrotg(double complex* ca, double complex* cb, double* c, double complex* s){ FC_GLOBAL(zrotg,ZROTG)((void*) ca, (void*) cb, (void*) c, (void*) s); }
+void FC_GLOBAL2(zrotg,ZROTG)(double complex* ca, double complex* cb, double* c, double complex* s){ FC_GLOBAL(zrotg,ZROTG)((void*) ca, (void*) cb, (void*) c, (void*) s); }
+void FC_GLOBAL3(zrotg,ZROTG)(double complex* ca, double complex* cb, double* c, double complex* s){ FC_GLOBAL(zrotg,ZROTG)((void*) ca, (void*) cb, (void*) c, (void*) s); }
 #endif
 #endif
 
@@ -9962,12 +10968,15 @@ void FC_GLOBAL(zscal,ZSCAL)(blasint* n, double complex* za, double complex* zx, 
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zscal_(blasint* n, double complex* za, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(zscal,ZSCAL)))));
+void FC_GLOBAL2(zscal,ZSCAL)(blasint* n, double complex* za, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(zscal,ZSCAL)))));
+void FC_GLOBAL3(zscal,ZSCAL)(blasint* n, double complex* za, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(zscal,ZSCAL)))));
 #else
 #ifndef __APPLE__
-void zscal(blasint* n, double complex* za, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(zscal,ZSCAL)))));
+void FC_GLOBAL2(zscal,ZSCAL)(blasint* n, double complex* za, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(zscal,ZSCAL)))));
+void FC_GLOBAL3(zscal,ZSCAL)(blasint* n, double complex* za, double complex* zx, blasint* incx) __attribute__((alias(MTS(FC_GLOBAL(zscal,ZSCAL)))));
 #else
-void zscal(blasint* n, double complex* za, double complex* zx, blasint* incx){ FC_GLOBAL(zscal,ZSCAL)((void*) n, (void*) za, (void*) zx, (void*) incx); }
+void FC_GLOBAL2(zscal,ZSCAL)(blasint* n, double complex* za, double complex* zx, blasint* incx){ FC_GLOBAL(zscal,ZSCAL)((void*) n, (void*) za, (void*) zx, (void*) incx); }
+void FC_GLOBAL3(zscal,ZSCAL)(blasint* n, double complex* za, double complex* zx, blasint* incx){ FC_GLOBAL(zscal,ZSCAL)((void*) n, (void*) za, (void*) zx, (void*) incx); }
 #endif
 #endif
 
@@ -10034,12 +11043,15 @@ void FC_GLOBAL(zswap,ZSWAP)(blasint* n, double complex* zx, blasint* incx, doubl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zswap_(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zswap,ZSWAP)))));
+void FC_GLOBAL2(zswap,ZSWAP)(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zswap,ZSWAP)))));
+void FC_GLOBAL3(zswap,ZSWAP)(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zswap,ZSWAP)))));
 #else
 #ifndef __APPLE__
-void zswap(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zswap,ZSWAP)))));
+void FC_GLOBAL2(zswap,ZSWAP)(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zswap,ZSWAP)))));
+void FC_GLOBAL3(zswap,ZSWAP)(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zswap,ZSWAP)))));
 #else
-void zswap(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy){ FC_GLOBAL(zswap,ZSWAP)((void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy); }
+void FC_GLOBAL2(zswap,ZSWAP)(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy){ FC_GLOBAL(zswap,ZSWAP)((void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy); }
+void FC_GLOBAL3(zswap,ZSWAP)(blasint* n, double complex* zx, blasint* incx, double complex* zy, blasint* incy){ FC_GLOBAL(zswap,ZSWAP)((void*) n, (void*) zx, (void*) incx, (void*) zy, (void*) incy); }
 #endif
 #endif
 
@@ -10106,12 +11118,15 @@ void FC_GLOBAL(zsymm,ZSYMM)(char* side, char* uplo, blasint* m, blasint* n, doub
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zsymm_(char* side, char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zsymm,ZSYMM)))));
+void FC_GLOBAL2(zsymm,ZSYMM)(char* side, char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zsymm,ZSYMM)))));
+void FC_GLOBAL3(zsymm,ZSYMM)(char* side, char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zsymm,ZSYMM)))));
 #else
 #ifndef __APPLE__
-void zsymm(char* side, char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zsymm,ZSYMM)))));
+void FC_GLOBAL2(zsymm,ZSYMM)(char* side, char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zsymm,ZSYMM)))));
+void FC_GLOBAL3(zsymm,ZSYMM)(char* side, char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo) __attribute__((alias(MTS(FC_GLOBAL(zsymm,ZSYMM)))));
 #else
-void zsymm(char* side, char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zsymm,ZSYMM)((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL2(zsymm,ZSYMM)(char* side, char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zsymm,ZSYMM)((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo); }
+void FC_GLOBAL3(zsymm,ZSYMM)(char* side, char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo){ FC_GLOBAL(zsymm,ZSYMM)((void*) side, (void*) uplo, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo); }
 #endif
 #endif
 
@@ -10178,12 +11193,15 @@ void FC_GLOBAL(zsyr2k,ZSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, d
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zsyr2k_(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zsyr2k,ZSYR2K)))));
+void FC_GLOBAL2(zsyr2k,ZSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zsyr2k,ZSYR2K)))));
+void FC_GLOBAL3(zsyr2k,ZSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zsyr2k,ZSYR2K)))));
 #else
 #ifndef __APPLE__
-void zsyr2k(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zsyr2k,ZSYR2K)))));
+void FC_GLOBAL2(zsyr2k,ZSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zsyr2k,ZSYR2K)))));
+void FC_GLOBAL3(zsyr2k,ZSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zsyr2k,ZSYR2K)))));
 #else
-void zsyr2k(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(zsyr2k,ZSYR2K)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(zsyr2k,ZSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(zsyr2k,ZSYR2K)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(zsyr2k,ZSYR2K)(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(zsyr2k,ZSYR2K)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -10250,12 +11268,15 @@ void FC_GLOBAL(zsyrk,ZSYRK)(char* uplo, char* trans, blasint* n, blasint* k, dou
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zsyrk_(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zsyrk,ZSYRK)))));
+void FC_GLOBAL2(zsyrk,ZSYRK)(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zsyrk,ZSYRK)))));
+void FC_GLOBAL3(zsyrk,ZSYRK)(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zsyrk,ZSYRK)))));
 #else
 #ifndef __APPLE__
-void zsyrk(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zsyrk,ZSYRK)))));
+void FC_GLOBAL2(zsyrk,ZSYRK)(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zsyrk,ZSYRK)))));
+void FC_GLOBAL3(zsyrk,ZSYRK)(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zsyrk,ZSYRK)))));
 #else
-void zsyrk(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(zsyrk,ZSYRK)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(zsyrk,ZSYRK)(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(zsyrk,ZSYRK)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(zsyrk,ZSYRK)(char* uplo, char* trans, blasint* n, blasint* k, double complex* alpha, double complex* a, blasint* lda, double complex* beta, double complex* c, blasint* ldc, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(zsyrk,ZSYRK)((void*) uplo, (void*) trans, (void*) n, (void*) k, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) c, (void*) ldc, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -10322,12 +11343,15 @@ void FC_GLOBAL(ztbmv,ZTBMV)(char* uplo, char* trans, char* diag, blasint* n, bla
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void ztbmv_(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztbmv,ZTBMV)))));
+void FC_GLOBAL2(ztbmv,ZTBMV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztbmv,ZTBMV)))));
+void FC_GLOBAL3(ztbmv,ZTBMV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztbmv,ZTBMV)))));
 #else
 #ifndef __APPLE__
-void ztbmv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztbmv,ZTBMV)))));
+void FC_GLOBAL2(ztbmv,ZTBMV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztbmv,ZTBMV)))));
+void FC_GLOBAL3(ztbmv,ZTBMV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztbmv,ZTBMV)))));
 #else
-void ztbmv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ztbmv,ZTBMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(ztbmv,ZTBMV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ztbmv,ZTBMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(ztbmv,ZTBMV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ztbmv,ZTBMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -10394,12 +11418,15 @@ void FC_GLOBAL(ztbsv,ZTBSV)(char* uplo, char* trans, char* diag, blasint* n, bla
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void ztbsv_(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztbsv,ZTBSV)))));
+void FC_GLOBAL2(ztbsv,ZTBSV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztbsv,ZTBSV)))));
+void FC_GLOBAL3(ztbsv,ZTBSV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztbsv,ZTBSV)))));
 #else
 #ifndef __APPLE__
-void ztbsv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztbsv,ZTBSV)))));
+void FC_GLOBAL2(ztbsv,ZTBSV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztbsv,ZTBSV)))));
+void FC_GLOBAL3(ztbsv,ZTBSV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztbsv,ZTBSV)))));
 #else
-void ztbsv(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ztbsv,ZTBSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(ztbsv,ZTBSV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ztbsv,ZTBSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(ztbsv,ZTBSV)(char* uplo, char* trans, char* diag, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ztbsv,ZTBSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) k, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -10466,12 +11493,15 @@ void FC_GLOBAL(ztpmv,ZTPMV)(char* uplo, char* trans, char* diag, blasint* n, dou
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void ztpmv_(char* uplo, char* trans, char* diag, blasint* n, double complex* ap, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztpmv,ZTPMV)))));
+void FC_GLOBAL2(ztpmv,ZTPMV)(char* uplo, char* trans, char* diag, blasint* n, double complex* ap, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztpmv,ZTPMV)))));
+void FC_GLOBAL3(ztpmv,ZTPMV)(char* uplo, char* trans, char* diag, blasint* n, double complex* ap, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztpmv,ZTPMV)))));
 #else
 #ifndef __APPLE__
-void ztpmv(char* uplo, char* trans, char* diag, blasint* n, double complex* ap, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztpmv,ZTPMV)))));
+void FC_GLOBAL2(ztpmv,ZTPMV)(char* uplo, char* trans, char* diag, blasint* n, double complex* ap, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztpmv,ZTPMV)))));
+void FC_GLOBAL3(ztpmv,ZTPMV)(char* uplo, char* trans, char* diag, blasint* n, double complex* ap, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztpmv,ZTPMV)))));
 #else
-void ztpmv(char* uplo, char* trans, char* diag, blasint* n, double complex* ap, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ztpmv,ZTPMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(ztpmv,ZTPMV)(char* uplo, char* trans, char* diag, blasint* n, double complex* ap, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ztpmv,ZTPMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(ztpmv,ZTPMV)(char* uplo, char* trans, char* diag, blasint* n, double complex* ap, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ztpmv,ZTPMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -10538,12 +11568,15 @@ void FC_GLOBAL(ztpsv,ZTPSV)(char* uplo, char* trans, char* diag, blasint* n, dou
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void ztpsv_(char* uplo, char* trans, char* diag, blasint* n, double complex* ap, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztpsv,ZTPSV)))));
+void FC_GLOBAL2(ztpsv,ZTPSV)(char* uplo, char* trans, char* diag, blasint* n, double complex* ap, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztpsv,ZTPSV)))));
+void FC_GLOBAL3(ztpsv,ZTPSV)(char* uplo, char* trans, char* diag, blasint* n, double complex* ap, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztpsv,ZTPSV)))));
 #else
 #ifndef __APPLE__
-void ztpsv(char* uplo, char* trans, char* diag, blasint* n, double complex* ap, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztpsv,ZTPSV)))));
+void FC_GLOBAL2(ztpsv,ZTPSV)(char* uplo, char* trans, char* diag, blasint* n, double complex* ap, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztpsv,ZTPSV)))));
+void FC_GLOBAL3(ztpsv,ZTPSV)(char* uplo, char* trans, char* diag, blasint* n, double complex* ap, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztpsv,ZTPSV)))));
 #else
-void ztpsv(char* uplo, char* trans, char* diag, blasint* n, double complex* ap, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ztpsv,ZTPSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(ztpsv,ZTPSV)(char* uplo, char* trans, char* diag, blasint* n, double complex* ap, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ztpsv,ZTPSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(ztpsv,ZTPSV)(char* uplo, char* trans, char* diag, blasint* n, double complex* ap, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ztpsv,ZTPSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) ap, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -10610,12 +11643,15 @@ void FC_GLOBAL(ztrmm,ZTRMM)(char* side, char* uplo, char* transa, char* diag, bl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void ztrmm_(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztrmm,ZTRMM)))));
+void FC_GLOBAL2(ztrmm,ZTRMM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztrmm,ZTRMM)))));
+void FC_GLOBAL3(ztrmm,ZTRMM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztrmm,ZTRMM)))));
 #else
 #ifndef __APPLE__
-void ztrmm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztrmm,ZTRMM)))));
+void FC_GLOBAL2(ztrmm,ZTRMM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztrmm,ZTRMM)))));
+void FC_GLOBAL3(ztrmm,ZTRMM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztrmm,ZTRMM)))));
 #else
-void ztrmm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ztrmm,ZTRMM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(ztrmm,ZTRMM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ztrmm,ZTRMM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(ztrmm,ZTRMM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ztrmm,ZTRMM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -10682,12 +11718,15 @@ void FC_GLOBAL(ztrmv,ZTRMV)(char* uplo, char* trans, char* diag, blasint* n, dou
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void ztrmv_(char* uplo, char* trans, char* diag, blasint* n, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztrmv,ZTRMV)))));
+void FC_GLOBAL2(ztrmv,ZTRMV)(char* uplo, char* trans, char* diag, blasint* n, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztrmv,ZTRMV)))));
+void FC_GLOBAL3(ztrmv,ZTRMV)(char* uplo, char* trans, char* diag, blasint* n, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztrmv,ZTRMV)))));
 #else
 #ifndef __APPLE__
-void ztrmv(char* uplo, char* trans, char* diag, blasint* n, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztrmv,ZTRMV)))));
+void FC_GLOBAL2(ztrmv,ZTRMV)(char* uplo, char* trans, char* diag, blasint* n, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztrmv,ZTRMV)))));
+void FC_GLOBAL3(ztrmv,ZTRMV)(char* uplo, char* trans, char* diag, blasint* n, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztrmv,ZTRMV)))));
 #else
-void ztrmv(char* uplo, char* trans, char* diag, blasint* n, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ztrmv,ZTRMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(ztrmv,ZTRMV)(char* uplo, char* trans, char* diag, blasint* n, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ztrmv,ZTRMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(ztrmv,ZTRMV)(char* uplo, char* trans, char* diag, blasint* n, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ztrmv,ZTRMV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -10754,12 +11793,15 @@ void FC_GLOBAL(ztrsm,ZTRSM)(char* side, char* uplo, char* transa, char* diag, bl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void ztrsm_(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztrsm,ZTRSM)))));
+void FC_GLOBAL2(ztrsm,ZTRSM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztrsm,ZTRSM)))));
+void FC_GLOBAL3(ztrsm,ZTRSM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztrsm,ZTRSM)))));
 #else
 #ifndef __APPLE__
-void ztrsm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztrsm,ZTRSM)))));
+void FC_GLOBAL2(ztrsm,ZTRSM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztrsm,ZTRSM)))));
+void FC_GLOBAL3(ztrsm,ZTRSM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztrsm,ZTRSM)))));
 #else
-void ztrsm(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ztrsm,ZTRSM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(ztrsm,ZTRSM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ztrsm,ZTRSM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(ztrsm,ZTRSM)(char* side, char* uplo, char* transa, char* diag, blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_transa, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ztrsm,ZTRSM)((void*) side, (void*) uplo, (void*) transa, (void*) diag, (void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_side, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_transa, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -10826,12 +11868,15 @@ void FC_GLOBAL(ztrsv,ZTRSV)(char* uplo, char* trans, char* diag, blasint* n, dou
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void ztrsv_(char* uplo, char* trans, char* diag, blasint* n, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztrsv,ZTRSV)))));
+void FC_GLOBAL2(ztrsv,ZTRSV)(char* uplo, char* trans, char* diag, blasint* n, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztrsv,ZTRSV)))));
+void FC_GLOBAL3(ztrsv,ZTRSV)(char* uplo, char* trans, char* diag, blasint* n, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztrsv,ZTRSV)))));
 #else
 #ifndef __APPLE__
-void ztrsv(char* uplo, char* trans, char* diag, blasint* n, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztrsv,ZTRSV)))));
+void FC_GLOBAL2(ztrsv,ZTRSV)(char* uplo, char* trans, char* diag, blasint* n, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztrsv,ZTRSV)))));
+void FC_GLOBAL3(ztrsv,ZTRSV)(char* uplo, char* trans, char* diag, blasint* n, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag) __attribute__((alias(MTS(FC_GLOBAL(ztrsv,ZTRSV)))));
 #else
-void ztrsv(char* uplo, char* trans, char* diag, blasint* n, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ztrsv,ZTRSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL2(ztrsv,ZTRSV)(char* uplo, char* trans, char* diag, blasint* n, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ztrsv,ZTRSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
+void FC_GLOBAL3(ztrsv,ZTRSV)(char* uplo, char* trans, char* diag, blasint* n, double complex* a, blasint* lda, double complex* x, blasint* incx, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag){ FC_GLOBAL(ztrsv,ZTRSV)((void*) uplo, (void*) trans, (void*) diag, (void*) n, (void*) a, (void*) lda, (void*) x, (void*) incx, (flexiblas_fortran_charlen_t) len_uplo, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_diag); }
 #endif
 #endif
 
@@ -10898,12 +11943,15 @@ void FC_GLOBAL(caxpby,CAXPBY)(blasint* n, float complex* ca, float complex* cx, 
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void caxpby_(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cb, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(caxpby,CAXPBY)))));
+void FC_GLOBAL2(caxpby,CAXPBY)(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cb, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(caxpby,CAXPBY)))));
+void FC_GLOBAL3(caxpby,CAXPBY)(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cb, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(caxpby,CAXPBY)))));
 #else
 #ifndef __APPLE__
-void caxpby(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cb, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(caxpby,CAXPBY)))));
+void FC_GLOBAL2(caxpby,CAXPBY)(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cb, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(caxpby,CAXPBY)))));
+void FC_GLOBAL3(caxpby,CAXPBY)(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cb, float complex* cy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(caxpby,CAXPBY)))));
 #else
-void caxpby(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cb, float complex* cy, blasint* incy){ FC_GLOBAL(caxpby,CAXPBY)((void*) n, (void*) ca, (void*) cx, (void*) incx, (void*) cb, (void*) cy, (void*) incy); }
+void FC_GLOBAL2(caxpby,CAXPBY)(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cb, float complex* cy, blasint* incy){ FC_GLOBAL(caxpby,CAXPBY)((void*) n, (void*) ca, (void*) cx, (void*) incx, (void*) cb, (void*) cy, (void*) incy); }
+void FC_GLOBAL3(caxpby,CAXPBY)(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cb, float complex* cy, blasint* incy){ FC_GLOBAL(caxpby,CAXPBY)((void*) n, (void*) ca, (void*) cx, (void*) incx, (void*) cb, (void*) cy, (void*) incy); }
 #endif
 #endif
 
@@ -10970,12 +12018,15 @@ void FC_GLOBAL(daxpby,DAXPBY)(blasint* n, double* da, double* dx, blasint* incx,
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void daxpby_(blasint* n, double* da, double* dx, blasint* incx, double* db, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(daxpby,DAXPBY)))));
+void FC_GLOBAL2(daxpby,DAXPBY)(blasint* n, double* da, double* dx, blasint* incx, double* db, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(daxpby,DAXPBY)))));
+void FC_GLOBAL3(daxpby,DAXPBY)(blasint* n, double* da, double* dx, blasint* incx, double* db, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(daxpby,DAXPBY)))));
 #else
 #ifndef __APPLE__
-void daxpby(blasint* n, double* da, double* dx, blasint* incx, double* db, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(daxpby,DAXPBY)))));
+void FC_GLOBAL2(daxpby,DAXPBY)(blasint* n, double* da, double* dx, blasint* incx, double* db, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(daxpby,DAXPBY)))));
+void FC_GLOBAL3(daxpby,DAXPBY)(blasint* n, double* da, double* dx, blasint* incx, double* db, double* dy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(daxpby,DAXPBY)))));
 #else
-void daxpby(blasint* n, double* da, double* dx, blasint* incx, double* db, double* dy, blasint* incy){ FC_GLOBAL(daxpby,DAXPBY)((void*) n, (void*) da, (void*) dx, (void*) incx, (void*) db, (void*) dy, (void*) incy); }
+void FC_GLOBAL2(daxpby,DAXPBY)(blasint* n, double* da, double* dx, blasint* incx, double* db, double* dy, blasint* incy){ FC_GLOBAL(daxpby,DAXPBY)((void*) n, (void*) da, (void*) dx, (void*) incx, (void*) db, (void*) dy, (void*) incy); }
+void FC_GLOBAL3(daxpby,DAXPBY)(blasint* n, double* da, double* dx, blasint* incx, double* db, double* dy, blasint* incy){ FC_GLOBAL(daxpby,DAXPBY)((void*) n, (void*) da, (void*) dx, (void*) incx, (void*) db, (void*) dy, (void*) incy); }
 #endif
 #endif
 
@@ -11042,12 +12093,15 @@ void FC_GLOBAL(zaxpby,ZAXPBY)(blasint* n, double complex* za, double complex* zx
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zaxpby_(blasint* n, double complex* za, double complex* zx, blasint* incx, double complex* zb, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zaxpby,ZAXPBY)))));
+void FC_GLOBAL2(zaxpby,ZAXPBY)(blasint* n, double complex* za, double complex* zx, blasint* incx, double complex* zb, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zaxpby,ZAXPBY)))));
+void FC_GLOBAL3(zaxpby,ZAXPBY)(blasint* n, double complex* za, double complex* zx, blasint* incx, double complex* zb, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zaxpby,ZAXPBY)))));
 #else
 #ifndef __APPLE__
-void zaxpby(blasint* n, double complex* za, double complex* zx, blasint* incx, double complex* zb, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zaxpby,ZAXPBY)))));
+void FC_GLOBAL2(zaxpby,ZAXPBY)(blasint* n, double complex* za, double complex* zx, blasint* incx, double complex* zb, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zaxpby,ZAXPBY)))));
+void FC_GLOBAL3(zaxpby,ZAXPBY)(blasint* n, double complex* za, double complex* zx, blasint* incx, double complex* zb, double complex* zy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(zaxpby,ZAXPBY)))));
 #else
-void zaxpby(blasint* n, double complex* za, double complex* zx, blasint* incx, double complex* zb, double complex* zy, blasint* incy){ FC_GLOBAL(zaxpby,ZAXPBY)((void*) n, (void*) za, (void*) zx, (void*) incx, (void*) zb, (void*) zy, (void*) incy); }
+void FC_GLOBAL2(zaxpby,ZAXPBY)(blasint* n, double complex* za, double complex* zx, blasint* incx, double complex* zb, double complex* zy, blasint* incy){ FC_GLOBAL(zaxpby,ZAXPBY)((void*) n, (void*) za, (void*) zx, (void*) incx, (void*) zb, (void*) zy, (void*) incy); }
+void FC_GLOBAL3(zaxpby,ZAXPBY)(blasint* n, double complex* za, double complex* zx, blasint* incx, double complex* zb, double complex* zy, blasint* incy){ FC_GLOBAL(zaxpby,ZAXPBY)((void*) n, (void*) za, (void*) zx, (void*) incx, (void*) zb, (void*) zy, (void*) incy); }
 #endif
 #endif
 
@@ -11114,12 +12168,15 @@ void FC_GLOBAL(saxpby,SAXPBY)(blasint* n, float* sa, float* sx, blasint* incx, f
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void saxpby_(blasint* n, float* sa, float* sx, blasint* incx, float* sb, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(saxpby,SAXPBY)))));
+void FC_GLOBAL2(saxpby,SAXPBY)(blasint* n, float* sa, float* sx, blasint* incx, float* sb, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(saxpby,SAXPBY)))));
+void FC_GLOBAL3(saxpby,SAXPBY)(blasint* n, float* sa, float* sx, blasint* incx, float* sb, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(saxpby,SAXPBY)))));
 #else
 #ifndef __APPLE__
-void saxpby(blasint* n, float* sa, float* sx, blasint* incx, float* sb, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(saxpby,SAXPBY)))));
+void FC_GLOBAL2(saxpby,SAXPBY)(blasint* n, float* sa, float* sx, blasint* incx, float* sb, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(saxpby,SAXPBY)))));
+void FC_GLOBAL3(saxpby,SAXPBY)(blasint* n, float* sa, float* sx, blasint* incx, float* sb, float* sy, blasint* incy) __attribute__((alias(MTS(FC_GLOBAL(saxpby,SAXPBY)))));
 #else
-void saxpby(blasint* n, float* sa, float* sx, blasint* incx, float* sb, float* sy, blasint* incy){ FC_GLOBAL(saxpby,SAXPBY)((void*) n, (void*) sa, (void*) sx, (void*) incx, (void*) sb, (void*) sy, (void*) incy); }
+void FC_GLOBAL2(saxpby,SAXPBY)(blasint* n, float* sa, float* sx, blasint* incx, float* sb, float* sy, blasint* incy){ FC_GLOBAL(saxpby,SAXPBY)((void*) n, (void*) sa, (void*) sx, (void*) incx, (void*) sb, (void*) sy, (void*) incy); }
+void FC_GLOBAL3(saxpby,SAXPBY)(blasint* n, float* sa, float* sx, blasint* incx, float* sb, float* sy, blasint* incy){ FC_GLOBAL(saxpby,SAXPBY)((void*) n, (void*) sa, (void*) sx, (void*) incx, (void*) sb, (void*) sy, (void*) incy); }
 #endif
 #endif
 
@@ -11186,12 +12243,15 @@ void FC_GLOBAL(comatcopy,COMATCOPY)(char* order, char* trans, blasint* rows, bla
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void comatcopy_(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(comatcopy,COMATCOPY)))));
+void FC_GLOBAL2(comatcopy,COMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(comatcopy,COMATCOPY)))));
+void FC_GLOBAL3(comatcopy,COMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(comatcopy,COMATCOPY)))));
 #else
 #ifndef __APPLE__
-void comatcopy(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(comatcopy,COMATCOPY)))));
+void FC_GLOBAL2(comatcopy,COMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(comatcopy,COMATCOPY)))));
+void FC_GLOBAL3(comatcopy,COMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(comatcopy,COMATCOPY)))));
 #else
-void comatcopy(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(comatcopy,COMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_order, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(comatcopy,COMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(comatcopy,COMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_order, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(comatcopy,COMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(comatcopy,COMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_order, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -11258,12 +12318,15 @@ void FC_GLOBAL(zomatcopy,ZOMATCOPY)(char* order, char* trans, blasint* rows, bla
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zomatcopy_(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zomatcopy,ZOMATCOPY)))));
+void FC_GLOBAL2(zomatcopy,ZOMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zomatcopy,ZOMATCOPY)))));
+void FC_GLOBAL3(zomatcopy,ZOMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zomatcopy,ZOMATCOPY)))));
 #else
 #ifndef __APPLE__
-void zomatcopy(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zomatcopy,ZOMATCOPY)))));
+void FC_GLOBAL2(zomatcopy,ZOMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zomatcopy,ZOMATCOPY)))));
+void FC_GLOBAL3(zomatcopy,ZOMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zomatcopy,ZOMATCOPY)))));
 #else
-void zomatcopy(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(zomatcopy,ZOMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_order, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(zomatcopy,ZOMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(zomatcopy,ZOMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_order, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(zomatcopy,ZOMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(zomatcopy,ZOMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_order, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -11330,12 +12393,15 @@ void FC_GLOBAL(domatcopy,DOMATCOPY)(char* order, char* trans, blasint* rows, bla
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void domatcopy_(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(domatcopy,DOMATCOPY)))));
+void FC_GLOBAL2(domatcopy,DOMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(domatcopy,DOMATCOPY)))));
+void FC_GLOBAL3(domatcopy,DOMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(domatcopy,DOMATCOPY)))));
 #else
 #ifndef __APPLE__
-void domatcopy(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(domatcopy,DOMATCOPY)))));
+void FC_GLOBAL2(domatcopy,DOMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(domatcopy,DOMATCOPY)))));
+void FC_GLOBAL3(domatcopy,DOMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(domatcopy,DOMATCOPY)))));
 #else
-void domatcopy(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(domatcopy,DOMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_order, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(domatcopy,DOMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(domatcopy,DOMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_order, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(domatcopy,DOMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(domatcopy,DOMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_order, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -11402,12 +12468,15 @@ void FC_GLOBAL(somatcopy,SOMATCOPY)(char* order, char* trans, blasint* rows, bla
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void somatcopy_(char* order, char* trans, blasint* rows, blasint* cols, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(somatcopy,SOMATCOPY)))));
+void FC_GLOBAL2(somatcopy,SOMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(somatcopy,SOMATCOPY)))));
+void FC_GLOBAL3(somatcopy,SOMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(somatcopy,SOMATCOPY)))));
 #else
 #ifndef __APPLE__
-void somatcopy(char* order, char* trans, blasint* rows, blasint* cols, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(somatcopy,SOMATCOPY)))));
+void FC_GLOBAL2(somatcopy,SOMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(somatcopy,SOMATCOPY)))));
+void FC_GLOBAL3(somatcopy,SOMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(somatcopy,SOMATCOPY)))));
 #else
-void somatcopy(char* order, char* trans, blasint* rows, blasint* cols, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(somatcopy,SOMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_order, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(somatcopy,SOMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(somatcopy,SOMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_order, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(somatcopy,SOMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(somatcopy,SOMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) b, (void*) ldb, (flexiblas_fortran_charlen_t) len_order, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -11474,12 +12543,15 @@ void FC_GLOBAL(cimatcopy,CIMATCOPY)(char* order, char* trans, blasint* rows, bla
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void cimatcopy_(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cimatcopy,CIMATCOPY)))));
+void FC_GLOBAL2(cimatcopy,CIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cimatcopy,CIMATCOPY)))));
+void FC_GLOBAL3(cimatcopy,CIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cimatcopy,CIMATCOPY)))));
 #else
 #ifndef __APPLE__
-void cimatcopy(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cimatcopy,CIMATCOPY)))));
+void FC_GLOBAL2(cimatcopy,CIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cimatcopy,CIMATCOPY)))));
+void FC_GLOBAL3(cimatcopy,CIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(cimatcopy,CIMATCOPY)))));
 #else
-void cimatcopy(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(cimatcopy,CIMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb, (flexiblas_fortran_charlen_t) len_order, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(cimatcopy,CIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(cimatcopy,CIMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb, (flexiblas_fortran_charlen_t) len_order, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(cimatcopy,CIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(cimatcopy,CIMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb, (flexiblas_fortran_charlen_t) len_order, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -11546,12 +12618,15 @@ void FC_GLOBAL(zimatcopy,ZIMATCOPY)(char* order, char* trans, blasint* rows, bla
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zimatcopy_(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zimatcopy,ZIMATCOPY)))));
+void FC_GLOBAL2(zimatcopy,ZIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zimatcopy,ZIMATCOPY)))));
+void FC_GLOBAL3(zimatcopy,ZIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zimatcopy,ZIMATCOPY)))));
 #else
 #ifndef __APPLE__
-void zimatcopy(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zimatcopy,ZIMATCOPY)))));
+void FC_GLOBAL2(zimatcopy,ZIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zimatcopy,ZIMATCOPY)))));
+void FC_GLOBAL3(zimatcopy,ZIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(zimatcopy,ZIMATCOPY)))));
 #else
-void zimatcopy(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(zimatcopy,ZIMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb, (flexiblas_fortran_charlen_t) len_order, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(zimatcopy,ZIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(zimatcopy,ZIMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb, (flexiblas_fortran_charlen_t) len_order, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(zimatcopy,ZIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(zimatcopy,ZIMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb, (flexiblas_fortran_charlen_t) len_order, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -11618,12 +12693,15 @@ void FC_GLOBAL(dimatcopy,DIMATCOPY)(char* order, char* trans, blasint* rows, bla
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dimatcopy_(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dimatcopy,DIMATCOPY)))));
+void FC_GLOBAL2(dimatcopy,DIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dimatcopy,DIMATCOPY)))));
+void FC_GLOBAL3(dimatcopy,DIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dimatcopy,DIMATCOPY)))));
 #else
 #ifndef __APPLE__
-void dimatcopy(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dimatcopy,DIMATCOPY)))));
+void FC_GLOBAL2(dimatcopy,DIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dimatcopy,DIMATCOPY)))));
+void FC_GLOBAL3(dimatcopy,DIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(dimatcopy,DIMATCOPY)))));
 #else
-void dimatcopy(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(dimatcopy,DIMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb, (flexiblas_fortran_charlen_t) len_order, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(dimatcopy,DIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(dimatcopy,DIMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb, (flexiblas_fortran_charlen_t) len_order, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(dimatcopy,DIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(dimatcopy,DIMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb, (flexiblas_fortran_charlen_t) len_order, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -11690,12 +12768,15 @@ void FC_GLOBAL(simatcopy,SIMATCOPY)(char* order, char* trans, blasint* rows, bla
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void simatcopy_(char* order, char* trans, blasint* rows, blasint* cols, float* alpha, float* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(simatcopy,SIMATCOPY)))));
+void FC_GLOBAL2(simatcopy,SIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float* alpha, float* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(simatcopy,SIMATCOPY)))));
+void FC_GLOBAL3(simatcopy,SIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float* alpha, float* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(simatcopy,SIMATCOPY)))));
 #else
 #ifndef __APPLE__
-void simatcopy(char* order, char* trans, blasint* rows, blasint* cols, float* alpha, float* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(simatcopy,SIMATCOPY)))));
+void FC_GLOBAL2(simatcopy,SIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float* alpha, float* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(simatcopy,SIMATCOPY)))));
+void FC_GLOBAL3(simatcopy,SIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float* alpha, float* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans) __attribute__((alias(MTS(FC_GLOBAL(simatcopy,SIMATCOPY)))));
 #else
-void simatcopy(char* order, char* trans, blasint* rows, blasint* cols, float* alpha, float* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(simatcopy,SIMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb, (flexiblas_fortran_charlen_t) len_order, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL2(simatcopy,SIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float* alpha, float* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(simatcopy,SIMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb, (flexiblas_fortran_charlen_t) len_order, (flexiblas_fortran_charlen_t) len_trans); }
+void FC_GLOBAL3(simatcopy,SIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float* alpha, float* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans){ FC_GLOBAL(simatcopy,SIMATCOPY)((void*) order, (void*) trans, (void*) rows, (void*) cols, (void*) alpha, (void*) a, (void*) lda, (void*) ldb, (flexiblas_fortran_charlen_t) len_order, (flexiblas_fortran_charlen_t) len_trans); }
 #endif
 #endif
 
@@ -11762,12 +12843,15 @@ void FC_GLOBAL(sgeadd,SGEADD)(blasint* m, blasint* n, float* alpha, float* a, bl
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void sgeadd_(blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* beta, float* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(sgeadd,SGEADD)))));
+void FC_GLOBAL2(sgeadd,SGEADD)(blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* beta, float* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(sgeadd,SGEADD)))));
+void FC_GLOBAL3(sgeadd,SGEADD)(blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* beta, float* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(sgeadd,SGEADD)))));
 #else
 #ifndef __APPLE__
-void sgeadd(blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* beta, float* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(sgeadd,SGEADD)))));
+void FC_GLOBAL2(sgeadd,SGEADD)(blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* beta, float* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(sgeadd,SGEADD)))));
+void FC_GLOBAL3(sgeadd,SGEADD)(blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* beta, float* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(sgeadd,SGEADD)))));
 #else
-void sgeadd(blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* beta, float* b, blasint* ldb){ FC_GLOBAL(sgeadd,SGEADD)((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb); }
+void FC_GLOBAL2(sgeadd,SGEADD)(blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* beta, float* b, blasint* ldb){ FC_GLOBAL(sgeadd,SGEADD)((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb); }
+void FC_GLOBAL3(sgeadd,SGEADD)(blasint* m, blasint* n, float* alpha, float* a, blasint* lda, float* beta, float* b, blasint* ldb){ FC_GLOBAL(sgeadd,SGEADD)((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb); }
 #endif
 #endif
 
@@ -11834,12 +12918,15 @@ void FC_GLOBAL(dgeadd,DGEADD)(blasint* m, blasint* n, double* alpha, double* a, 
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void dgeadd_(blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* beta, double* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(dgeadd,DGEADD)))));
+void FC_GLOBAL2(dgeadd,DGEADD)(blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* beta, double* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(dgeadd,DGEADD)))));
+void FC_GLOBAL3(dgeadd,DGEADD)(blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* beta, double* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(dgeadd,DGEADD)))));
 #else
 #ifndef __APPLE__
-void dgeadd(blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* beta, double* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(dgeadd,DGEADD)))));
+void FC_GLOBAL2(dgeadd,DGEADD)(blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* beta, double* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(dgeadd,DGEADD)))));
+void FC_GLOBAL3(dgeadd,DGEADD)(blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* beta, double* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(dgeadd,DGEADD)))));
 #else
-void dgeadd(blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* beta, double* b, blasint* ldb){ FC_GLOBAL(dgeadd,DGEADD)((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb); }
+void FC_GLOBAL2(dgeadd,DGEADD)(blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* beta, double* b, blasint* ldb){ FC_GLOBAL(dgeadd,DGEADD)((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb); }
+void FC_GLOBAL3(dgeadd,DGEADD)(blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* beta, double* b, blasint* ldb){ FC_GLOBAL(dgeadd,DGEADD)((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb); }
 #endif
 #endif
 
@@ -11906,12 +12993,15 @@ void FC_GLOBAL(cgeadd,CGEADD)(blasint* m, blasint* n, float complex* alpha, floa
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void cgeadd_(blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* beta, float complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(cgeadd,CGEADD)))));
+void FC_GLOBAL2(cgeadd,CGEADD)(blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* beta, float complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(cgeadd,CGEADD)))));
+void FC_GLOBAL3(cgeadd,CGEADD)(blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* beta, float complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(cgeadd,CGEADD)))));
 #else
 #ifndef __APPLE__
-void cgeadd(blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* beta, float complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(cgeadd,CGEADD)))));
+void FC_GLOBAL2(cgeadd,CGEADD)(blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* beta, float complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(cgeadd,CGEADD)))));
+void FC_GLOBAL3(cgeadd,CGEADD)(blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* beta, float complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(cgeadd,CGEADD)))));
 #else
-void cgeadd(blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* beta, float complex* b, blasint* ldb){ FC_GLOBAL(cgeadd,CGEADD)((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb); }
+void FC_GLOBAL2(cgeadd,CGEADD)(blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* beta, float complex* b, blasint* ldb){ FC_GLOBAL(cgeadd,CGEADD)((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb); }
+void FC_GLOBAL3(cgeadd,CGEADD)(blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* beta, float complex* b, blasint* ldb){ FC_GLOBAL(cgeadd,CGEADD)((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb); }
 #endif
 #endif
 
@@ -11978,12 +13068,15 @@ void FC_GLOBAL(zgeadd,ZGEADD)(blasint* m, blasint* n, double complex* alpha, dou
     return;
 }
 #ifdef FLEXIBLAS_ABI_IBM
-void zgeadd_(blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* beta, double complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(zgeadd,ZGEADD)))));
+void FC_GLOBAL2(zgeadd,ZGEADD)(blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* beta, double complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(zgeadd,ZGEADD)))));
+void FC_GLOBAL3(zgeadd,ZGEADD)(blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* beta, double complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(zgeadd,ZGEADD)))));
 #else
 #ifndef __APPLE__
-void zgeadd(blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* beta, double complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(zgeadd,ZGEADD)))));
+void FC_GLOBAL2(zgeadd,ZGEADD)(blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* beta, double complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(zgeadd,ZGEADD)))));
+void FC_GLOBAL3(zgeadd,ZGEADD)(blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* beta, double complex* b, blasint* ldb) __attribute__((alias(MTS(FC_GLOBAL(zgeadd,ZGEADD)))));
 #else
-void zgeadd(blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* beta, double complex* b, blasint* ldb){ FC_GLOBAL(zgeadd,ZGEADD)((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb); }
+void FC_GLOBAL2(zgeadd,ZGEADD)(blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* beta, double complex* b, blasint* ldb){ FC_GLOBAL(zgeadd,ZGEADD)((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb); }
+void FC_GLOBAL3(zgeadd,ZGEADD)(blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* beta, double complex* b, blasint* ldb){ FC_GLOBAL(zgeadd,ZGEADD)((void*) m, (void*) n, (void*) alpha, (void*) a, (void*) lda, (void*) beta, (void*) b, (void*) ldb); }
 #endif
 #endif
 

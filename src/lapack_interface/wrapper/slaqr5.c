@@ -1,26 +1,29 @@
-//  SPDX-License-Identifier: LGPL-3.0-or-later
+//    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+    Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
-   */
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <complex.h>
+
+#include "flexiblas_config.h"
 
 #include "flexiblas_fortran_mangle.h"
 
@@ -31,9 +34,9 @@
 
 static TLS_STORE uint8_t hook_pos_slaqr5 = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-void FC_GLOBAL(slaqr5,SLAQR5)(blasint* wantt, blasint* wantz, blasint* kacc22, blasint* n, blasint* ktop, blasint* kbot, blasint* nshfts, float* sr, float* si, float* h, blasint* ldh, blasint* iloz, blasint* ihiz, float* z, blasint* ldz, float* v, blasint* ldv, float* u, blasint* ldu, blasint* nv, float* wv, blasint* ldwv, blasint* nh, float* wh, blasint* ldwh)
+void FC_GLOBAL(slaqr5,SLAQR5)(blaslogical* wantt, blaslogical* wantz, blasint* kacc22, blasint* n, blasint* ktop, blasint* kbot, blasint* nshfts, float* sr, float* si, float* h, blasint* ldh, blasint* iloz, blasint* ihiz, float* z, blasint* ldz, float* v, blasint* ldv, float* u, blasint* ldu, blasint* nv, float* wv, blasint* ldwv, blasint* nh, float* wh, blasint* ldwh)
 #else
-void FC_GLOBAL(slaqr5,SLAQR5)(blasint* wantt, blasint* wantz, blasint* kacc22, blasint* n, blasint* ktop, blasint* kbot, blasint* nshfts, float* sr, float* si, float* h, blasint* ldh, blasint* iloz, blasint* ihiz, float* z, blasint* ldz, float* v, blasint* ldv, float* u, blasint* ldu, blasint* nv, float* wv, blasint* ldwv, blasint* nh, float* wh, blasint* ldwh)
+void FC_GLOBAL(slaqr5,SLAQR5)(blaslogical* wantt, blaslogical* wantz, blasint* kacc22, blasint* n, blasint* ktop, blasint* kbot, blasint* nshfts, float* sr, float* si, float* h, blasint* ldh, blasint* iloz, blasint* ihiz, float* z, blasint* ldz, float* v, blasint* ldv, float* u, blasint* ldu, blasint* nv, float* wv, blasint* ldwv, blasint* nh, float* wh, blasint* ldwh)
 #endif
 {
     void (*fn) (void* wantt, void* wantz, void* kacc22, void* n, void* ktop, void* kbot, void* nshfts, void* sr, void* si, void* h, void* ldh, void* iloz, void* ihiz, void* z, void* ldz, void* v, void* ldv, void* u, void* ldu, void* nv, void* wv, void* ldwv, void* nh, void* wh, void* ldwh);
@@ -54,14 +57,12 @@ void FC_GLOBAL(slaqr5,SLAQR5)(blasint* wantt, blasint* wantz, blasint* kacc22, b
         return;
     }
 }
-#ifdef FLEXIBLAS_ABI_IBM
-void slaqr5_(blasint* wantt, blasint* wantz, blasint* kacc22, blasint* n, blasint* ktop, blasint* kbot, blasint* nshfts, float* sr, float* si, float* h, blasint* ldh, blasint* iloz, blasint* ihiz, float* z, blasint* ldz, float* v, blasint* ldv, float* u, blasint* ldu, blasint* nv, float* wv, blasint* ldwv, blasint* nh, float* wh, blasint* ldwh) __attribute__((alias(MTS(FC_GLOBAL(slaqr5,SLAQR5)))));
-#else
 #ifndef __APPLE__
-void slaqr5(blasint* wantt, blasint* wantz, blasint* kacc22, blasint* n, blasint* ktop, blasint* kbot, blasint* nshfts, float* sr, float* si, float* h, blasint* ldh, blasint* iloz, blasint* ihiz, float* z, blasint* ldz, float* v, blasint* ldv, float* u, blasint* ldu, blasint* nv, float* wv, blasint* ldwv, blasint* nh, float* wh, blasint* ldwh) __attribute__((alias(MTS(FC_GLOBAL(slaqr5,SLAQR5)))));
+void FC_GLOBAL2(slaqr5,SLAQR5)(blaslogical* wantt, blaslogical* wantz, blasint* kacc22, blasint* n, blasint* ktop, blasint* kbot, blasint* nshfts, float* sr, float* si, float* h, blasint* ldh, blasint* iloz, blasint* ihiz, float* z, blasint* ldz, float* v, blasint* ldv, float* u, blasint* ldu, blasint* nv, float* wv, blasint* ldwv, blasint* nh, float* wh, blasint* ldwh) __attribute__((alias(MTS(FC_GLOBAL(slaqr5,SLAQR5)))));
+void FC_GLOBAL3(slaqr5,SLAQR5)(blaslogical* wantt, blaslogical* wantz, blasint* kacc22, blasint* n, blasint* ktop, blasint* kbot, blasint* nshfts, float* sr, float* si, float* h, blasint* ldh, blasint* iloz, blasint* ihiz, float* z, blasint* ldz, float* v, blasint* ldv, float* u, blasint* ldu, blasint* nv, float* wv, blasint* ldwv, blasint* nh, float* wh, blasint* ldwh) __attribute__((alias(MTS(FC_GLOBAL(slaqr5,SLAQR5)))));
 #else
-void slaqr5(blasint* wantt, blasint* wantz, blasint* kacc22, blasint* n, blasint* ktop, blasint* kbot, blasint* nshfts, float* sr, float* si, float* h, blasint* ldh, blasint* iloz, blasint* ihiz, float* z, blasint* ldz, float* v, blasint* ldv, float* u, blasint* ldu, blasint* nv, float* wv, blasint* ldwv, blasint* nh, float* wh, blasint* ldwh){ FC_GLOBAL(slaqr5,SLAQR5)((void*) wantt, (void*) wantz, (void*) kacc22, (void*) n, (void*) ktop, (void*) kbot, (void*) nshfts, (void*) sr, (void*) si, (void*) h, (void*) ldh, (void*) iloz, (void*) ihiz, (void*) z, (void*) ldz, (void*) v, (void*) ldv, (void*) u, (void*) ldu, (void*) nv, (void*) wv, (void*) ldwv, (void*) nh, (void*) wh, (void*) ldwh); }
-#endif
+void FC_GLOBAL2(slaqr5,SLAQR5)(blaslogical* wantt, blaslogical* wantz, blasint* kacc22, blasint* n, blasint* ktop, blasint* kbot, blasint* nshfts, float* sr, float* si, float* h, blasint* ldh, blasint* iloz, blasint* ihiz, float* z, blasint* ldz, float* v, blasint* ldv, float* u, blasint* ldu, blasint* nv, float* wv, blasint* ldwv, blasint* nh, float* wh, blasint* ldwh){ FC_GLOBAL(slaqr5,SLAQR5)((void*) wantt, (void*) wantz, (void*) kacc22, (void*) n, (void*) ktop, (void*) kbot, (void*) nshfts, (void*) sr, (void*) si, (void*) h, (void*) ldh, (void*) iloz, (void*) ihiz, (void*) z, (void*) ldz, (void*) v, (void*) ldv, (void*) u, (void*) ldu, (void*) nv, (void*) wv, (void*) ldwv, (void*) nh, (void*) wh, (void*) ldwh); }
+void FC_GLOBAL3(slaqr5,SLAQR5)(blaslogical* wantt, blaslogical* wantz, blasint* kacc22, blasint* n, blasint* ktop, blasint* kbot, blasint* nshfts, float* sr, float* si, float* h, blasint* ldh, blasint* iloz, blasint* ihiz, float* z, blasint* ldz, float* v, blasint* ldv, float* u, blasint* ldu, blasint* nv, float* wv, blasint* ldwv, blasint* nh, float* wh, blasint* ldwh){ FC_GLOBAL(slaqr5,SLAQR5)((void*) wantt, (void*) wantz, (void*) kacc22, (void*) n, (void*) ktop, (void*) kbot, (void*) nshfts, (void*) sr, (void*) si, (void*) h, (void*) ldh, (void*) iloz, (void*) ihiz, (void*) z, (void*) ldz, (void*) v, (void*) ldv, (void*) u, (void*) ldu, (void*) nv, (void*) wv, (void*) ldwv, (void*) nh, (void*) wh, (void*) ldwh); }
 #endif
 
 

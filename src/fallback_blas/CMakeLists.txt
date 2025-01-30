@@ -1,24 +1,8 @@
-
+INCLUDE(CheckFortranFunctionExists)
 
 SET (SRC
-    caxpby.f90
-    cgeadd.f90
-    cimatcopy.c
-    comatcopy.c
-    daxpby.f90
-    dgeadd.f90
-    dimatcopy.c
-    domatcopy.c
     info.c
     dummy.c
-    saxpby.f90
-    sgeadd.f90
-    simatcopy.c
-    somatcopy.c
-    zaxpby.f90
-    zgeadd.f90
-    zimatcopy.c
-    zomatcopy.c
     )
 
 if( (CMAKE_Fortran_COMPILER_ID STREQUAL "VisualAge" ) OR  # CMake 2.6
@@ -34,14 +18,51 @@ if( (CMAKE_Fortran_COMPILER_ID STREQUAL "VisualAge" ) OR  # CMake 2.6
     endif()
 endif()
 
-if ( SYS_BLAS_LIBRARY )
+if (SYS_BLAS_LIBRARY)
     message(STATUS "Use system provided NETLIB BLAS for fallback generation. SYS_BLAS_LIBRARY = ${SYS_BLAS_LIBRARY}")
     add_library(flexiblas_netlib_import STATIC IMPORTED)
     set_property(TARGET flexiblas_netlib_import PROPERTY IMPORTED_LOCATION ${SYS_BLAS_LIBRARY})
-    add_library(flexiblas_netlib SHARED ${SRC})
-    target_link_libraries(flexiblas_netlib PUBLIC flexiblas_netlib_import)
+
+    SET(_CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES})
+    SET(CMAKE_REQUIRED_LIBRARIES flexiblas_netlib_import)
+
+    MACRO(add_blas_function check)
+        CHECK_FORTRAN_FUNCTION_EXISTS(${check} ${check}_EXISTS)
+        if(NOT ${check}_EXISTS)
+            SET(SRC ${SRC} ${ARGN})
+        endif()
+    ENDMACRO()
+
+    add_blas_function(dgemmtr   dgemmtr.f sgemmtr.f cgemmtr.f zgemmtr.f)
+    add_blas_function(daxpby    daxpby.f90 saxpby.f90 caxpby.f90 zaxpby.f90)
+    add_blas_function(dgeadd    dgeadd.f90 sgeadd.f90 cgeadd.f90 zgeadd.f90)
+    add_blas_function(domatcopy domatcopy.c somatcopy.c comatcopy.c zomatcopy.c )
+    add_blas_function(dimatcopy dimatcopy.c simatcopy.c cimatcopy.c zimatcopy.c )
+
+    MESSAGE(STATUS "BLAS sources to add: ${SRC}")
 else()
-    add_library(flexiblas_netlib SHARED ${SRC} $<TARGET_OBJECTS:flexiblas_netlib_objs>)
+    SET(SRC ${SRC} dgemmtr.f sgemmtr.f cgemmtr.f zgemmtr.f)
+    SET(SRC ${SRC} daxpby.f90 saxpby.f90 caxpby.f90 zaxpby.f90)
+    SET(SRC ${SRC} dgeadd.f90 sgeadd.f90 cgeadd.f90 zgeadd.f90)
+    SET(SRC ${SRC} domatcopy.c somatcopy.c comatcopy.c zomatcopy.c )
+    SET(SRC ${SRC} dimatcopy.c simatcopy.c cimatcopy.c zimatcopy.c )
+endif()
+
+SET(CMAKE_REQUIRED_LIBRARIES ${_CMAKE_REQUIRED_LIBRARIES})
+
+if (NEED_LINKING_AGAINST_LIBM)
+    SET(LIBM m)
+else()
+    SET(LIBM)
+endif()
+
+
+if ( SYS_BLAS_LIBRARY )
+    add_library(flexiblas_netlib SHARED ${SRC})
+    target_link_libraries(flexiblas_netlib PUBLIC flexiblas_netlib_import PRIVATE ${LIBM})
+else()
+    add_library(flexiblas_netlib SHARED ${SRC} $<TARGET_OBJECTS:flexiblas_netlib_objs> )
+    target_link_libraries(flexiblas_netlib PRIVATE ${LIBM})
 endif()
 
 

@@ -1,22 +1,22 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+   Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
+   You should have received a copy of the GNU Lesser General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
    */
-
 
 
 
@@ -171,6 +171,31 @@ HIDDEN int __flexiblas_file_exist(const char *path);
             *loaded = *loaded +1;  \
         } \
     } else { *loaded = *loaded +1; }\
+} while(0);
+
+#define LOAD_FBLAS2(handle,part1,part2,name1,name2) do { \
+    int _h1 = 0, _h2 = 0;\
+    if ( __flexiblas_load_fortran_function((handle)->library_handle, &(handle -> part1),  #name1 ) > 0 ) { \
+        if (__flexiblas_load_fortran_function(__flexiblas_blas_fallback, &(handle -> part1),  #name1 ) > 0 ) _h1 = 1; \
+    } \
+    if ( __flexiblas_load_fortran_function((handle)->library_handle, &(handle -> part2),  #name2 ) > 0 ) { \
+        if (__flexiblas_load_fortran_function(__flexiblas_blas_fallback, &(handle -> part2),  #name2 ) > 0 ) _h2 = 1; \
+    } \
+    if ( _h1 == 0  && _h2 == 0 ) {\
+        *loaded = *loaded +1;  \
+        if ( __flexiblas_verbose > 1 ) flexiblas_print_info("flexiblas", "Load %s and %s as separate functions.\n", #name1, #name2); \
+    } else if (_h1 == 0 && _h2 == 1 ) {\
+        *loaded = *loaded +1;  \
+        memcpy(&(handle -> part2), &(handle -> part1), sizeof(struct flexiblas_blasfn)); \
+        if ( __flexiblas_verbose > 1 ) flexiblas_print_info("flexiblas", "Load %s for both (%s, %s).\n", #name1, #name1, #name2); \
+    } else if ( _h1 == 1 && _h2 == 0) {\
+        memcpy(&(handle -> part1), &(handle -> part2), sizeof(struct flexiblas_blasfn)); \
+        *loaded = *loaded +1;  \
+        if ( __flexiblas_verbose > 1 ) flexiblas_print_info("flexiblas", "Load %s for both (%s, %s).\n", #name2, #name1, #name2); \
+    } else {\
+        *failed = *failed + 1; \
+        flexiblas_print_error("flexiblas",__FILE__, __LINE__, "Can not load " #name1 " or " #name2 "\n");\
+    } \
 } while(0);
 
 #define LOAD_FLAPACK(handle,part,name) do { \

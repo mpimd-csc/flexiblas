@@ -1,31 +1,33 @@
-##
-## SPDX-License-Identifier: LGPL-3.0-or-later
+##   SPDX-License-Identifier: LGPL-3.0-or-later
 ##
 ## This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
 ## Copyright (C) 2013-2024 Martin Koehler
 ##
-## This program is free software: you can redistribute it and/or modify it
-## under the terms of the GNU General Public License as published by the Free
-## Software Foundation, either version 3 of the License, or (at your option)
-## any later version.
+## This program is free software; you can redistribute it and/or
+## modify it under the terms of the GNU Lesser General Public
+## License as published by the Free Software Foundation; either
+## version 3 of the License, or (at your option) any later version.
 ##
-## This program is distributed in the hope that it will be useful, but WITHOUT
-## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-## FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-## more details.
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+## Lesser General Public License for more details.
 ##
-## You should have received a copy of the GNU General Public License along
-## with this program. If not, see <https://www.gnu.org/licenses/>.
+## You should have received a copy of the GNU Lesser General Public License
+## along with this program; if not, write to the Free Software Foundation,
+## Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+##
 
 
-## -*- texinfo -*- 
+
+## -*- texinfo -*-
 ## @deftypefn {[@var{peak}, @var{name}] =} flexiblas_gemm_benchmark (@var{n}, @var{runs}, @var{threads}, @var{ignore_list})
 ## The flexiblas_gemm_benchmark function benchmarks all available BLAS
 ## backends (except of NETLIB and __FALLBACK__) using the matrix-matrix product.
 ## It ## returns the name of the backend and the corresponding peakperformance
 ## in GFlops.
 ## The @var{ignore_list} parameter is a cell array used to override the default
-## ignore list. 
+## ignore list.
 ## @end deftypefn
 
 ## Author: Martin Koehler <koehlerm@mpi-magdeburg.mpg.de>
@@ -59,7 +61,7 @@ for i = 1:nbackends
      s1 = deblank(backend_names(i,:));
      s2 = ignore_list{j};
      eq =strcmp(s1, s2);
-     if ( eq > 0 ) 
+     if ( eq > 0 )
          skip = true;
      end
  end
@@ -76,12 +78,12 @@ for i = 1:nbackends
 end
 nbackends = jj -1;
 
-%% Benchmark 
+%% Benchmark
 for i = 1:nbackends
   flexiblas_switch(backends(i));
   flexiblas_set_num_threads(threads);
-  
-  % Warmup 
+
+  % Warmup
   x = rand(100)*rand(100);
   clear x;
 
@@ -91,13 +93,13 @@ for i = 1:nbackends
   end
   timings(i) = toc/runs;
   performance(i) = (2*(n/1000.0)^3)/timings(i);
-end 
+end
 
 fprintf('\nFinal Results\n');
 fprintf('Time \t GFlops \n');
 for i = 1:nbackends
   fprintf('%10g\t %10g \t%s\n', timings(i), performance(i),backend_names2(i,:));
-end 
+end
 [peak, idx] = max(performance);
 name = backend_names(idx,:);
 

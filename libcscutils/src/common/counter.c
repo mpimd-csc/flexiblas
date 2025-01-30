@@ -29,10 +29,12 @@
 
 double csc_wtime(void)
 {
-    struct timeval tv;
+    /** struct timeval tv; */
+    struct timespec ts;
     double ret;
-    gettimeofday (&tv, NULL);
-    ret = tv.tv_sec + tv.tv_usec / 1e6;
+    /** gettimeofday (&tv, NULL); */
+    clock_gettime(CLOCK_REALTIME, &ts);
+    ret = ts.tv_sec + ts.tv_nsec / 1e9;
     return ret;
 }
 

@@ -1,23 +1,22 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+   Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
+   You should have received a copy of the GNU Lesser General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
    */
-
-
 
 
 #include <stdlib.h>
@@ -46,6 +45,7 @@ void flexiblas_internal_xerbla(char *SNAME, Int *Info, flexiblas_fortran_charlen
 #pragma weak xerbla
 void xerbla_(char *, Int *, flexiblas_fortran_charlen_t) __attribute__ (( alias ("flexiblas_internal_xerbla")));
 void xerbla(char *, Int *, flexiblas_fortran_charlen_t) __attribute__ (( alias ("flexiblas_internal_xerbla")));
+void XERBLA(char *, Int *, flexiblas_fortran_charlen_t) __attribute__ (( alias ("flexiblas_internal_xerbla")));
 #else
 void xerbla_(char *SNAME, Int *Info, flexiblas_fortran_charlen_t) {
     flexiblas_internal_xerbla(SNAME, Info, len);
@@ -53,19 +53,28 @@ void xerbla_(char *SNAME, Int *Info, flexiblas_fortran_charlen_t) {
 void xerbla(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len) {
     flexiblas_internal_xerbla(SNAME, Info, len);
 }
+void XERBLA(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len) {
+    flexiblas_internal_xerbla(SNAME, Info, len);
+}
 #endif
 
 #else
-#ifdef __ELF__
+#if defined(__ELF__) || ((defined (__PGI) || defined(__NVCOMPILER)) && (defined(__linux__)  || defined(__unix__)))
 void xerbla_(char *, Int *, flexiblas_fortran_charlen_t) __attribute__ ((weak, alias ("flexiblas_internal_xerbla")));
 void xerbla (char *, Int *, flexiblas_fortran_charlen_t) __attribute__ ((weak, alias ("flexiblas_internal_xerbla")));
+void XERBLA (char *, Int *, flexiblas_fortran_charlen_t) __attribute__ ((weak, alias ("flexiblas_internal_xerbla")));
+
 #else
 #pragma weak xerbla_
 #pragma weak xerbla
+#pragma weak XERBLA
 void xerbla_(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len) {
     flexiblas_internal_xerbla(SNAME, Info, len);
 }
 void xerbla(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len) {
+    flexiblas_internal_xerbla(SNAME, Info, len);
+}
+void XERBLA(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len) {
     flexiblas_internal_xerbla(SNAME, Info, len);
 }
 #endif

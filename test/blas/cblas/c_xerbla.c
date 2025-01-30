@@ -5,19 +5,20 @@
 #include "cblas.h"
 #include "cblas_test.h"
 
-void cblas_xerbla(int info, const char *rout, const char *form, ...)
+void cblas_xerbla(CBLAS_INT info, const char *rout, const char *form, ...)
 {
    extern F77_INT cblas_lerr, cblas_info, cblas_ok;
    extern F77_INT link_xerbla;
-   extern F77_INT RowMajorStrg;
+   extern int RowMajorStrg;
    extern char *cblas_rout;
 
-   /* Initially, c__3chke will call this routine with
+   /* Initially, c__3chke may call this routine with
     * global variable link_xerbla=1, and F77_xerbla will set link_xerbla=0.
     * This is done to fool the linker into loading these subroutines first
     * instead of ones in the CBLAS or the legacy BLAS library.
     */
    if (link_xerbla) return;
+
    if (cblas_rout != NULL && strcmp(cblas_rout, rout) != 0){
       printf("***** XERBLA WAS CALLED WITH SRNAME = <%s> INSTEAD OF <%s> *******\n", rout, cblas_rout);
       cblas_ok = FALSE;
@@ -32,13 +33,18 @@ void cblas_xerbla(int info, const char *rout, const char *form, ...)
        * for A and B, lda is in position 11 instead of 9, and ldb is in
        * position 9 instead of 11.
        */
-      if (strstr(rout,"gemm") != 0)
+      if (strstr(rout,"gemm") != 0 && strstr(rout, "gemmtr") == 0)
       {
          if      (info == 5 ) info =  4;
          else if (info == 4 ) info =  5;
          else if (info == 11) info =  9;
          else if (info == 9 ) info = 11;
+      } else if (strstr(rout, "gemmtr") != 0)
+      {
+         if (info == 11) info =  9;
+         else if (info == 9 ) info = 11;
       }
+
       else if (strstr(rout,"symm") != 0 || strstr(rout,"hemm") != 0)
       {
          if      (info == 5 ) info =  4;
@@ -77,44 +83,49 @@ void cblas_xerbla(int info, const char *rout, const char *form, ...)
    }
 
    if (info != cblas_info){
-      printf("***** XERBLA WAS CALLED WITH INFO = %d INSTEAD OF %d in %s *******\n",(int) info, (int) cblas_info, rout);
+      printf("***** XERBLA WAS CALLED WITH INFO = %d INSTEAD OF %d in %s *******\n",info, (int) cblas_info, rout);
       cblas_lerr = PASSED;
       cblas_ok = FALSE;
    } else cblas_lerr = FAILED;
 }
 
 #ifdef F77_Char
-void FC_GLOBAL(xerbla,XERBLA)(F77_Char F77_srname, void *vinfo)
+void F77_xerbla(F77_Char F77_srname, void *vinfo
 #else
-void FC_GLOBAL(xerbla,XERBLA)(char *srname, void *vinfo)
+void F77_xerbla(char *srname, void *vinfo
 #endif
+#ifdef BLAS_FORTRAN_STRLEN_END
+, FORTRAN_STRLEN srname_len
+#endif
+)
 {
 #ifdef F77_Char
    char *srname;
 #endif
 
-   char rout[] = {'c','b','l','a','s','_','\0','\0','\0','\0','\0','\0','\0'};
+   char rout[] = {'c','b','l','a','s','_','\0','\0','\0','\0','\0','\0','\0', '\0'};
 
-#ifdef F77_INT
+#ifdef F77_Integer
+   F77_Integer *info=vinfo;
+   F77_Integer i;
+   extern F77_Integer link_xerbla;
+#else
    F77_INT *info=vinfo;
    F77_INT i;
    extern F77_INT link_xerbla;
-#else
-   int *info=vinfo;
-   int i;
-   extern int link_xerbla;
 #endif
 #ifdef F77_Char
    srname = F2C_STR(F77_srname, XerblaStrLen);
 #endif
+
    /* See the comment in cblas_xerbla() above */
    if (link_xerbla)
    {
       link_xerbla = 0;
       return;
    }
-   for(i=0;  i  < 6; i++) rout[i+6] = tolower(srname[i]);
-   for(i=11; i >= 9; i--) if (rout[i] == ' ') rout[i] = '\0';
+   for(i=0;  i  < 7; i++) rout[i+6] = tolower(srname[i]);
+   for(i=12; i >= 9; i--) if (rout[i] == ' ') rout[i] = '\0';
 
    /* We increment *info by 1 since the CBLAS interface adds one more
     * argument to all level 2 and 3 routines.

@@ -1,26 +1,29 @@
-//  SPDX-License-Identifier: LGPL-3.0-or-later
+//    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+    Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
-   */
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <complex.h>
+
+#include "flexiblas_config.h"
 
 #include "flexiblas_fortran_mangle.h"
 
@@ -54,14 +57,12 @@ void FC_GLOBAL(dorbdb,DORBDB)(char* trans, char* signs, blasint* m, blasint* p, 
         return;
     }
 }
-#ifdef FLEXIBLAS_ABI_IBM
-void dorbdb_(char* trans, char* signs, blasint* m, blasint* p, blasint* q, double* x11, blasint* ldx11, double* x12, blasint* ldx12, double* x21, blasint* ldx21, double* x22, blasint* ldx22, double* theta, double* phi, double* taup1, double* taup2, double* tauq1, double* tauq2, double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_signs) __attribute__((alias(MTS(FC_GLOBAL(dorbdb,DORBDB)))));
-#else
 #ifndef __APPLE__
-void dorbdb(char* trans, char* signs, blasint* m, blasint* p, blasint* q, double* x11, blasint* ldx11, double* x12, blasint* ldx12, double* x21, blasint* ldx21, double* x22, blasint* ldx22, double* theta, double* phi, double* taup1, double* taup2, double* tauq1, double* tauq2, double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_signs) __attribute__((alias(MTS(FC_GLOBAL(dorbdb,DORBDB)))));
+void FC_GLOBAL2(dorbdb,DORBDB)(char* trans, char* signs, blasint* m, blasint* p, blasint* q, double* x11, blasint* ldx11, double* x12, blasint* ldx12, double* x21, blasint* ldx21, double* x22, blasint* ldx22, double* theta, double* phi, double* taup1, double* taup2, double* tauq1, double* tauq2, double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_signs) __attribute__((alias(MTS(FC_GLOBAL(dorbdb,DORBDB)))));
+void FC_GLOBAL3(dorbdb,DORBDB)(char* trans, char* signs, blasint* m, blasint* p, blasint* q, double* x11, blasint* ldx11, double* x12, blasint* ldx12, double* x21, blasint* ldx21, double* x22, blasint* ldx22, double* theta, double* phi, double* taup1, double* taup2, double* tauq1, double* tauq2, double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_signs) __attribute__((alias(MTS(FC_GLOBAL(dorbdb,DORBDB)))));
 #else
-void dorbdb(char* trans, char* signs, blasint* m, blasint* p, blasint* q, double* x11, blasint* ldx11, double* x12, blasint* ldx12, double* x21, blasint* ldx21, double* x22, blasint* ldx22, double* theta, double* phi, double* taup1, double* taup2, double* tauq1, double* tauq2, double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_signs){ FC_GLOBAL(dorbdb,DORBDB)((void*) trans, (void*) signs, (void*) m, (void*) p, (void*) q, (void*) x11, (void*) ldx11, (void*) x12, (void*) ldx12, (void*) x21, (void*) ldx21, (void*) x22, (void*) ldx22, (void*) theta, (void*) phi, (void*) taup1, (void*) taup2, (void*) tauq1, (void*) tauq2, (void*) work, (void*) lwork, (void*) info, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_signs); }
-#endif
+void FC_GLOBAL2(dorbdb,DORBDB)(char* trans, char* signs, blasint* m, blasint* p, blasint* q, double* x11, blasint* ldx11, double* x12, blasint* ldx12, double* x21, blasint* ldx21, double* x22, blasint* ldx22, double* theta, double* phi, double* taup1, double* taup2, double* tauq1, double* tauq2, double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_signs){ FC_GLOBAL(dorbdb,DORBDB)((void*) trans, (void*) signs, (void*) m, (void*) p, (void*) q, (void*) x11, (void*) ldx11, (void*) x12, (void*) ldx12, (void*) x21, (void*) ldx21, (void*) x22, (void*) ldx22, (void*) theta, (void*) phi, (void*) taup1, (void*) taup2, (void*) tauq1, (void*) tauq2, (void*) work, (void*) lwork, (void*) info, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_signs); }
+void FC_GLOBAL3(dorbdb,DORBDB)(char* trans, char* signs, blasint* m, blasint* p, blasint* q, double* x11, blasint* ldx11, double* x12, blasint* ldx12, double* x21, blasint* ldx21, double* x22, blasint* ldx22, double* theta, double* phi, double* taup1, double* taup2, double* tauq1, double* tauq2, double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_signs){ FC_GLOBAL(dorbdb,DORBDB)((void*) trans, (void*) signs, (void*) m, (void*) p, (void*) q, (void*) x11, (void*) ldx11, (void*) x12, (void*) ldx12, (void*) x21, (void*) ldx21, (void*) x22, (void*) ldx22, (void*) theta, (void*) phi, (void*) taup1, (void*) taup2, (void*) tauq1, (void*) tauq2, (void*) work, (void*) lwork, (void*) info, (flexiblas_fortran_charlen_t) len_trans, (flexiblas_fortran_charlen_t) len_signs); }
 #endif
 
 

@@ -1,26 +1,29 @@
-//  SPDX-License-Identifier: LGPL-3.0-or-later
+//    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+    Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
-   */
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <complex.h>
+
+#include "flexiblas_config.h"
 
 #include "flexiblas_fortran_mangle.h"
 
@@ -54,14 +57,12 @@ void FC_GLOBAL(clarrv,CLARRV)(blasint* n, float* vl, float* vu, float* d, float*
         return;
     }
 }
-#ifdef FLEXIBLAS_ABI_IBM
-void clarrv_(blasint* n, float* vl, float* vu, float* d, float* l, float* pivmin, blasint* isplit, blasint* m, blasint* dol, blasint* dou, float* minrgp, float* rtol1, float* rtol2, float* w, float* werr, float* wgap, blasint* iblock, blasint* indexw, float* gers, float complex* z, blasint* ldz, blasint* isuppz, float* work, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(clarrv,CLARRV)))));
-#else
 #ifndef __APPLE__
-void clarrv(blasint* n, float* vl, float* vu, float* d, float* l, float* pivmin, blasint* isplit, blasint* m, blasint* dol, blasint* dou, float* minrgp, float* rtol1, float* rtol2, float* w, float* werr, float* wgap, blasint* iblock, blasint* indexw, float* gers, float complex* z, blasint* ldz, blasint* isuppz, float* work, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(clarrv,CLARRV)))));
+void FC_GLOBAL2(clarrv,CLARRV)(blasint* n, float* vl, float* vu, float* d, float* l, float* pivmin, blasint* isplit, blasint* m, blasint* dol, blasint* dou, float* minrgp, float* rtol1, float* rtol2, float* w, float* werr, float* wgap, blasint* iblock, blasint* indexw, float* gers, float complex* z, blasint* ldz, blasint* isuppz, float* work, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(clarrv,CLARRV)))));
+void FC_GLOBAL3(clarrv,CLARRV)(blasint* n, float* vl, float* vu, float* d, float* l, float* pivmin, blasint* isplit, blasint* m, blasint* dol, blasint* dou, float* minrgp, float* rtol1, float* rtol2, float* w, float* werr, float* wgap, blasint* iblock, blasint* indexw, float* gers, float complex* z, blasint* ldz, blasint* isuppz, float* work, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(clarrv,CLARRV)))));
 #else
-void clarrv(blasint* n, float* vl, float* vu, float* d, float* l, float* pivmin, blasint* isplit, blasint* m, blasint* dol, blasint* dou, float* minrgp, float* rtol1, float* rtol2, float* w, float* werr, float* wgap, blasint* iblock, blasint* indexw, float* gers, float complex* z, blasint* ldz, blasint* isuppz, float* work, blasint* iwork, blasint* info){ FC_GLOBAL(clarrv,CLARRV)((void*) n, (void*) vl, (void*) vu, (void*) d, (void*) l, (void*) pivmin, (void*) isplit, (void*) m, (void*) dol, (void*) dou, (void*) minrgp, (void*) rtol1, (void*) rtol2, (void*) w, (void*) werr, (void*) wgap, (void*) iblock, (void*) indexw, (void*) gers, (void*) z, (void*) ldz, (void*) isuppz, (void*) work, (void*) iwork, (void*) info); }
-#endif
+void FC_GLOBAL2(clarrv,CLARRV)(blasint* n, float* vl, float* vu, float* d, float* l, float* pivmin, blasint* isplit, blasint* m, blasint* dol, blasint* dou, float* minrgp, float* rtol1, float* rtol2, float* w, float* werr, float* wgap, blasint* iblock, blasint* indexw, float* gers, float complex* z, blasint* ldz, blasint* isuppz, float* work, blasint* iwork, blasint* info){ FC_GLOBAL(clarrv,CLARRV)((void*) n, (void*) vl, (void*) vu, (void*) d, (void*) l, (void*) pivmin, (void*) isplit, (void*) m, (void*) dol, (void*) dou, (void*) minrgp, (void*) rtol1, (void*) rtol2, (void*) w, (void*) werr, (void*) wgap, (void*) iblock, (void*) indexw, (void*) gers, (void*) z, (void*) ldz, (void*) isuppz, (void*) work, (void*) iwork, (void*) info); }
+void FC_GLOBAL3(clarrv,CLARRV)(blasint* n, float* vl, float* vu, float* d, float* l, float* pivmin, blasint* isplit, blasint* m, blasint* dol, blasint* dou, float* minrgp, float* rtol1, float* rtol2, float* w, float* werr, float* wgap, blasint* iblock, blasint* indexw, float* gers, float complex* z, blasint* ldz, blasint* isuppz, float* work, blasint* iwork, blasint* info){ FC_GLOBAL(clarrv,CLARRV)((void*) n, (void*) vl, (void*) vu, (void*) d, (void*) l, (void*) pivmin, (void*) isplit, (void*) m, (void*) dol, (void*) dou, (void*) minrgp, (void*) rtol1, (void*) rtol2, (void*) w, (void*) werr, (void*) wgap, (void*) iblock, (void*) indexw, (void*) gers, (void*) z, (void*) ldz, (void*) isuppz, (void*) work, (void*) iwork, (void*) info); }
 #endif
 
 

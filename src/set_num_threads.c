@@ -1,27 +1,22 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+   Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
+   You should have received a copy of the GNU Lesser General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
    */
-
-
-
-
-
-
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -41,7 +36,7 @@
 void flexiblas_set_num_threads(int num)
 {
     flexiblas_set_num_threads_function_t fn;
-    DPRINTF(2, "Set number of threads: %d  C-fn: %lx F77-fn: %lx\n", num,
+    DPRINTF(2, "C-Interface: Set number of threads: %d  C-fn: %lx F77-fn: %lx\n", num,
             (unsigned long) current_backend->set_num_threads_function[0],
             (unsigned long) current_backend->set_num_threads_function[1]);
     if ( current_backend->set_num_threads_function[0] == NULL
@@ -50,6 +45,7 @@ void flexiblas_set_num_threads(int num)
         flexiblas_set_num_threads_(&nx);
         return;
     }
+    printf("BLAS\n");
     fn = current_backend->set_num_threads_function[0];
     if ( fn == NULL) return;
     fn (num);
@@ -61,11 +57,16 @@ void openblas_set_num_threads(int num) __attribute__((weak,alias("flexiblas_set_
 void mkl_set_num_threads(int num) __attribute__((weak,alias("flexiblas_set_num_threads")));
 void acmlsetnumthreads(int num) __attribute__((weak,alias("flexiblas_set_num_threads")));
 void blas_set_num_threads(int num) __attribute__((weak,alias("flexiblas_set_num_threads")));
+void nvpl_blas_set_num_threads(int num) __attribute__((weak,alias("flexiblas_set_num_threads")));
+void nvpl_lapack_set_num_threads(int num) __attribute__((weak,alias("flexiblas_set_num_threads")));
+
 #else
 void openblas_set_num_threads(int num) { flexiblas_set_num_threads(num); }
 void mkl_set_num_threads(int num) { flexiblas_set_num_threads(num); }
 void acmlsetnumthreads(int num) { flexiblas_set_num_threads(num); }
 void blas_set_num_threads(int num)  { flexiblas_set_num_threads(num); }
+void nvpl_blas_set_num_threads(int num)  { flexiblas_set_num_threads(num); }
+void nvpl_lapack_set_num_threads(int num)  { flexiblas_set_num_threads(num); }
 
 #endif
 /* BLIS Interface */
@@ -98,11 +99,18 @@ int  openblas_get_num_threads(void) __attribute__((weak,alias("flexiblas_get_num
 int  mkl_get_num_threads(void) __attribute__((weak,alias("flexiblas_get_num_threads")));
 int  acmlgetnumthreads(void) __attribute__((weak,alias("flexiblas_get_num_threads")));
 int  blas_get_num_threads(void) __attribute__((weak,alias("flexiblas_get_num_threads")));
+int  nvpl_blas_get_max_threads(void) __attribute__((weak,alias("flexiblas_get_num_threads")));
+int  nvpl_lapack_get_max_threads(void) __attribute__((weak,alias("flexiblas_get_num_threads")));
+
+
 #else
 int  openblas_get_num_threads(void) { return flexiblas_get_num_threads(); }
 int  mkl_get_num_threads(void)	{ return flexiblas_get_num_threads(); }
 int  acmlgetnumthreads(void) 	{ return flexiblas_get_num_threads(); }
 int  blas_get_num_threads(void) 	{ return flexiblas_get_num_threads(); }
+int  nvpl_blas_get_max_threads(void) 	{ return flexiblas_get_num_threads(); }
+int  nvpl_lapack_get_max_threads(void) 	{ return flexiblas_get_num_threads(); }
+
 #endif
 
 /*  BLIS Interface  */
@@ -120,7 +128,7 @@ void flexiblas_set_num_threads_(Int* num)
     Int num_threads;
     flexiblas_set_num_threads_function_t fn;
     void (*fn2) (Int *);
-    DPRINTF(2, "Set number of threads: %d  C-fn: %lx F77-fn: %lx\n", *num,
+    DPRINTF(2, "Fortran Interface - Set number of threads: %d  C-fn: %lx F77-fn: %lx\n", *num,
             (unsigned long) current_backend->set_num_threads_function[0],
             (unsigned long) current_backend->set_num_threads_function[1]);
 
@@ -149,6 +157,19 @@ void acmlsetnumthreads_(Int *num)        { flexiblas_set_num_threads_(num); }
 void blas_set_num_threads_(Int *num)     { flexiblas_set_num_threads_(num); }
 
 #endif
+
+void nvpl_blas_set_num_threads_(int32_t* num)
+{
+    Int n = *num;
+    flexiblas_set_num_threads_(&n);
+}
+
+void nvpl_lapack_set_num_threads_(int32_t* num)
+{
+    Int n = *num;
+    flexiblas_set_num_threads_(&n);
+}
+
 
 /*-----------------------------------------------------------------------------
  *  Get number of threads from fortran
@@ -182,6 +203,8 @@ Int  blas_get_num_threads_(void)     { return flexiblas_get_num_threads_(); }
 
 #endif
 
+int32_t  nvpl_blas_get_max_threads_(void) 	{ return (int32_t) flexiblas_get_num_threads_(); }
+int32_t  nvpl_lapack_get_max_threads_(void) 	{ return (int32_t) flexiblas_get_num_threads_(); }
 
 /*-----------------------------------------------------------------------------
  *  Search for the set number of threads function
@@ -194,7 +217,7 @@ void __flexiblas_load_set_num_threads(flexiblas_backend_t * backend)
     char fn2_name[130];
     int i = 0;
 
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < 6; i++) {
         if (i == 0 )
             strncpy(fn_name, "hook_set_num_threads",127);
         else if ( i == 1) {
@@ -206,6 +229,9 @@ void __flexiblas_load_set_num_threads(flexiblas_backend_t * backend)
             strncpy(fn_name, "acmlsetnumthreads",127);
         else if ( i == 4 )
             strncpy(fn_name, "bli_thread_set_num_threads", 127);
+        else if ( i == 5 )
+            strncpy(fn_name, "flexiblas_backend_set_num_threads", 127);
+
         fn_name[127] = '\0';
         if ( i != 1 ) {
             snprintf(fn2_name, 130, "%s_", fn_name);
@@ -241,7 +267,7 @@ void __flexiblas_load_get_num_threads(flexiblas_backend_t * backend)
     char fn2_name[130];
     int i = 0;
 
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < 6; i++) {
         if (i == 0 )
             strncpy(fn_name, "hook_get_num_threads",127);
         else if ( i == 1) {
@@ -253,6 +279,8 @@ void __flexiblas_load_get_num_threads(flexiblas_backend_t * backend)
             strncpy(fn_name, "acmlgetnumthreads",127);
         else if ( i == 4 )
             strncpy(fn_name, "bli_thread_get_num_threads",127);
+        else if ( i == 5 )
+            strncpy(fn_name, "flexiblas_backend_ge_num_threads", 127);
 
         fn_name[127] = '\0';
         if ( i != 1 )

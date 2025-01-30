@@ -1,10 +1,11 @@
-cmake_minimum_required(VERSION 3.9.0)
+cmake_minimum_required(VERSION 3.10.0)
 INCLUDE(libcscutils/CMakeModules/CheckPolicy.cmake)
 CheckPolicy(CMP0048 NEW)
+CheckPolicy(CMP0054 NEW)
+CheckPolicy(CMP0069 NEW)
+CheckPolicy(CMP0075 NEW)
 
-PROJECT(FlexiBLAS LANGUAGES C Fortran VERSION 3.4.4)
-cmake_policy(SET CMP0054 NEW)
-cmake_policy(SET CMP0069 NEW)
+PROJECT(FlexiBLAS LANGUAGES C Fortran VERSION 3.4.5)
 
 
 #
@@ -105,7 +106,6 @@ INCLUDE(ccache)
 
 
 #SET(BUILD_SHARED_LIBS ON)
-SET(LIBS m)
 INCLUDE(CheckCCompilerFlag)
 INCLUDE(CheckFortranCompilerFlag)
 
@@ -195,7 +195,10 @@ IF (LINK_OPENMP)
     endif()
 ENDIF()
 
-
+INCLUDE(cmake/libm.cmake)
+IF (NEED_LINKING_AGAINST_LIBM)
+    SET(LIBS ${LIBS} m)
+ENDIF()
 
 
 
@@ -203,6 +206,10 @@ IF (NOT DEFINED ABI)
     IF ( ${CMAKE_Fortran_COMPILER_ID} STREQUAL "Intel" OR ${CMAKE_Fortran_COMPILER_ID} STREQUAL "IntelLLVM")
         SET(ABI "Intel" CACHE STRING "ABI of the Fortran Interface")
     ELSEIF ( ${CMAKE_Fortran_COMPILER_ID} STREQUAL "PGI" )
+        SET(ABI "Intel" CACHE STRING "ABI of the Fortran Interface")
+    ELSEIF ( ${CMAKE_Fortran_COMPILER_ID} STREQUAL "NVHPC" AND CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64" )
+        SET(ABI "GNU" CACHE STRING "ABI of the Fortran Interface")
+    ELSEIF ( ${CMAKE_Fortran_COMPILER_ID} STREQUAL "NVHPC" AND CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64" )
         SET(ABI "Intel" CACHE STRING "ABI of the Fortran Interface")
     ELSEIF ( ${CMAKE_Fortran_COMPILER_ID} STREQUAL "XL" )
         SET(ABI "XL" CACHE STREQUAL "ABI of the Fortran Interface")
@@ -228,10 +235,33 @@ ENDIF()
 
 # Name Mangling
 include(FortranCInterface)
-FortranCInterface_HEADER(${PROJECT_BINARY_DIR}/include/flexiblas_fortran_mangle.h
+FortranCInterface_HEADER(${PROJECT_BINARY_DIR}/fc.h
     MACRO_NAMESPACE "FC_"
     SYMBOL_NAMESPACE "FC_")
 FortranCInterface_VERIFY()
+
+MESSAGE(STATUS "Fortran - C - Interface -- FortranCInterface_GLOBAL_SUFFIX = ${FortranCInterface_GLOBAL_SUFFIX}")
+MESSAGE(STATUS "Fortran - C - Interface -- FortranCInterface_GLOBAL_CASE = ${FortranCInterface_GLOBAL_CASE}")
+
+IF ( FortranCInterface_GLOBAL_SUFFIX STREQUAL "_" AND FortranCInterface_GLOBAL_CASE STREQUAL "LOWER")
+    SET(FLEXIBLAS_MANGLE_DEFAULT 1)
+    SET(FLEXIBLAS_MANGLE_WINDOWS 0)
+    SET(FLEXIBLAS_MANGLE_UPPPERCASE 0)
+    MESSAGE(STATUS "Use default Fortran name mangling.")
+ELSEIF(FortranCInterface_GLOBAL_SUFFIX STREQUAL "" AND FortranCInterface_GLOBAL_CASE STREQUAL "LOWER")
+    SET(FLEXIBLAS_MANGLE_DEFAULT 0)
+    SET(FLEXIBLAS_MANGLE_WINDOWS 1)
+    SET(FLEXIBLAS_MANGLE_UPPPERCASE 0)
+    MESSAGE(STATUS "Use Windows-like Fortran name mangling.")
+ELSEIF(FortranCInterface_GLOBAL_SUFFIX STREQUAL "" AND FortranCInterface_GLOBAL_CASE STREQUAL "UPPER")
+    SET(FLEXIBLAS_MANGLE_DEFAULT 0)
+    SET(FLEXIBLAS_MANGLE_WINDOWS 0)
+    SET(FLEXIBLAS_MANGLE_UPPPERCASE 1)
+    MESSAGE(STATUS "Use upper-case Fortran name mangling.")
+ENDIF()
+
+
+
 
 include(CheckThreadLocal)
 
@@ -329,7 +359,9 @@ SET(LIBS ${LIBS})
 SET(INCLUDE_DIR ${INCLUDE_DIR} "${PROJECT_SOURCE_DIR}/libcscutils/include" "${PROJECT_BINARY_DIR}/libcscutils/include")
 
 IF (CBLAS STREQUAL ON)
-    ADD_DEFINITIONS(-DFLEXIBLAS_CBLAS)
+    SET(FLEXIBLAS_CBLAS TRUE)
+ELSE()
+    SET(FLEXIBLAS_CBLAS FALSE)
 ENDIF()
 
 
@@ -422,7 +454,6 @@ INSTALL(FILES   ${CMAKE_SOURCE_DIR}/include/blas_gnu.h
     ${CMAKE_SOURCE_DIR}/include/blas_intel.h
     ${CMAKE_BINARY_DIR}/include/flexiblas_config.h
     ${CMAKE_BINARY_DIR}/include/flexiblas_api.h
-    ${CMAKE_BINARY_DIR}/include/flexiblas_fortran_mangle.h
     DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/${FLEXIBLAS_INCLUDE_PREFIX}/)
 IF(LAPACK STREQUAL ON)
     INSTALL(FILES   ${CMAKE_BINARY_DIR}/include/lapack.h
@@ -431,6 +462,7 @@ IF(LAPACK STREQUAL ON)
 
 ENDIF()
 INSTALL(FILES   ${CMAKE_SOURCE_DIR}/src/flexiblas_backend.h
+    ${CMAKE_SOURCE_DIR}/src/flexiblas_fortran_mangle.h
     ${CMAKE_SOURCE_DIR}/src/flexiblas_real_calls.h
     ${CMAKE_SOURCE_DIR}/src/flexiblas_real_cblas_calls.h
     ${CMAKE_SOURCE_DIR}/src/flexiblas_dummy_fortran.h

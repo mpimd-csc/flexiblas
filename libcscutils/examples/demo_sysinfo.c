@@ -1,19 +1,24 @@
+//    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, see <http://www.gnu.org/licenses/>.
- *
- * Copyright (C) Martin Koehler, 2015
- */
+    This file is part of libcscutils, a set of helper function.
+    Copyright (C) 2013-2024 Martin Koehler
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3 of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
+
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -74,5 +79,20 @@ int main(int argc, char **argv)
     char *comp = csc_sysinfo_ccompiler();
     printf("Compiler: %s\n", comp);
     free(comp);
+
+    printf("CPU is SkylakeX:       %d\n", csc_sysinfo_cpuid_is_skx());
+    printf("CPU is KnightsLanding: %d\n", csc_sysinfo_cpuid_is_knl());
+    printf("CPU is Haswell:        %d\n", csc_sysinfo_cpuid_is_haswell());
+    printf("CPU is SandyBrigde:    %d\n", csc_sysinfo_cpuid_is_sandybridge());
+    printf("CPU is Penryn:         %d\n", csc_sysinfo_cpuid_is_penryn());
+    printf("CPU is ZEN4:           %d\n", csc_sysinfo_cpuid_is_zen4());
+    printf("CPU is ZEN3:           %d\n", csc_sysinfo_cpuid_is_zen3());
+    printf("CPU is ZEN2:           %d\n", csc_sysinfo_cpuid_is_zen2());
+    printf("CPU is ZEN:            %d\n", csc_sysinfo_cpuid_is_zen());
+    printf("CPU is EXCAVATOR:      %d\n", csc_sysinfo_cpuid_is_excavator());
+    printf("CPU is STEAMROLLER:    %d\n", csc_sysinfo_cpuid_is_steamroller());
+    printf("CPU is PILEDRIVER:     %d\n", csc_sysinfo_cpuid_is_piledriver());
+    printf("CPU is BULLDOZER:      %d\n", csc_sysinfo_cpuid_is_bulldozer());
+
     return 0;
 }

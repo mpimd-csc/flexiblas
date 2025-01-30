@@ -1,26 +1,29 @@
-//  SPDX-License-Identifier: LGPL-3.0-or-later
+//    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+    Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
-   */
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <complex.h>
+
+#include "flexiblas_config.h"
 
 #include "flexiblas_fortran_mangle.h"
 
@@ -54,14 +57,12 @@ void FC_GLOBAL(zlaqps,ZLAQPS)(blasint* m, blasint* n, blasint* offset, blasint* 
         return;
     }
 }
-#ifdef FLEXIBLAS_ABI_IBM
-void zlaqps_(blasint* m, blasint* n, blasint* offset, blasint* nb, blasint* kb, double complex* a, blasint* lda, blasint* jpvt, double complex* tau, double* vn1, double* vn2, double complex* auxv, double complex* f, blasint* ldf) __attribute__((alias(MTS(FC_GLOBAL(zlaqps,ZLAQPS)))));
-#else
 #ifndef __APPLE__
-void zlaqps(blasint* m, blasint* n, blasint* offset, blasint* nb, blasint* kb, double complex* a, blasint* lda, blasint* jpvt, double complex* tau, double* vn1, double* vn2, double complex* auxv, double complex* f, blasint* ldf) __attribute__((alias(MTS(FC_GLOBAL(zlaqps,ZLAQPS)))));
+void FC_GLOBAL2(zlaqps,ZLAQPS)(blasint* m, blasint* n, blasint* offset, blasint* nb, blasint* kb, double complex* a, blasint* lda, blasint* jpvt, double complex* tau, double* vn1, double* vn2, double complex* auxv, double complex* f, blasint* ldf) __attribute__((alias(MTS(FC_GLOBAL(zlaqps,ZLAQPS)))));
+void FC_GLOBAL3(zlaqps,ZLAQPS)(blasint* m, blasint* n, blasint* offset, blasint* nb, blasint* kb, double complex* a, blasint* lda, blasint* jpvt, double complex* tau, double* vn1, double* vn2, double complex* auxv, double complex* f, blasint* ldf) __attribute__((alias(MTS(FC_GLOBAL(zlaqps,ZLAQPS)))));
 #else
-void zlaqps(blasint* m, blasint* n, blasint* offset, blasint* nb, blasint* kb, double complex* a, blasint* lda, blasint* jpvt, double complex* tau, double* vn1, double* vn2, double complex* auxv, double complex* f, blasint* ldf){ FC_GLOBAL(zlaqps,ZLAQPS)((void*) m, (void*) n, (void*) offset, (void*) nb, (void*) kb, (void*) a, (void*) lda, (void*) jpvt, (void*) tau, (void*) vn1, (void*) vn2, (void*) auxv, (void*) f, (void*) ldf); }
-#endif
+void FC_GLOBAL2(zlaqps,ZLAQPS)(blasint* m, blasint* n, blasint* offset, blasint* nb, blasint* kb, double complex* a, blasint* lda, blasint* jpvt, double complex* tau, double* vn1, double* vn2, double complex* auxv, double complex* f, blasint* ldf){ FC_GLOBAL(zlaqps,ZLAQPS)((void*) m, (void*) n, (void*) offset, (void*) nb, (void*) kb, (void*) a, (void*) lda, (void*) jpvt, (void*) tau, (void*) vn1, (void*) vn2, (void*) auxv, (void*) f, (void*) ldf); }
+void FC_GLOBAL3(zlaqps,ZLAQPS)(blasint* m, blasint* n, blasint* offset, blasint* nb, blasint* kb, double complex* a, blasint* lda, blasint* jpvt, double complex* tau, double* vn1, double* vn2, double complex* auxv, double complex* f, blasint* ldf){ FC_GLOBAL(zlaqps,ZLAQPS)((void*) m, (void*) n, (void*) offset, (void*) nb, (void*) kb, (void*) a, (void*) lda, (void*) jpvt, (void*) tau, (void*) vn1, (void*) vn2, (void*) auxv, (void*) f, (void*) ldf); }
 #endif
 
 

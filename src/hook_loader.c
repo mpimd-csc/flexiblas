@@ -1,23 +1,22 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+   Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
+   You should have received a copy of the GNU Lesser General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
    */
-
-
 
 
 
@@ -227,7 +226,7 @@ HIDDEN int __flexiblas_load_blas_hooks(flexiblas_hook_t *hooks, void *hook_handl
     LOAD_HOOK(hooks, hook_handle,ztrsm,ztrsm);
     LOAD_HOOK(hooks, hook_handle,ztrsv,ztrsv);
 
-    /* ExtBLAS exte, posnsion */
+    /* ExtBLAS extension */
     LOAD_HOOK(hooks, hook_handle,caxpby,caxpby);
     LOAD_HOOK(hooks, hook_handle,comatcopy,comatcopy);
     LOAD_HOOK(hooks, hook_handle,cimatcopy,cimatcopy);
@@ -247,6 +246,18 @@ HIDDEN int __flexiblas_load_blas_hooks(flexiblas_hook_t *hooks, void *hook_handl
     LOAD_HOOK(hooks, hook_handle,zomatcopy,zomatcopy);
     LOAD_HOOK(hooks, hook_handle,zimatcopy,zimatcopy);
     LOAD_HOOK(hooks, hook_handle,zgeadd,zgeadd);
+
+    LOAD_HOOK(hooks, hook_handle,dgemmt,dgemmt);
+    LOAD_HOOK(hooks, hook_handle,sgemmt,sgemmt);
+    LOAD_HOOK(hooks, hook_handle,cgemmt,cgemmt);
+    LOAD_HOOK(hooks, hook_handle,zgemmt,zgemmt);
+
+    LOAD_HOOK(hooks, hook_handle,dgemmtr,dgemmtr);
+    LOAD_HOOK(hooks, hook_handle,sgemmtr,sgemmtr);
+    LOAD_HOOK(hooks, hook_handle,cgemmtr,cgemmtr);
+    LOAD_HOOK(hooks, hook_handle,zgemmtr,zgemmtr);
+
+
 
 #ifdef FLEXIBLAS_LAPACK
     LOAD_HOOK(hooks,hook_handle,second,second);
@@ -2148,6 +2159,81 @@ HIDDEN int __flexiblas_load_blas_hooks(flexiblas_hook_t *hooks, void *hook_handl
     LOAD_HOOK(hooks,hook_handle,zunmtr,zunmtr);
     LOAD_HOOK(hooks,hook_handle,zupgtr,zupgtr);
     LOAD_HOOK(hooks,hook_handle,zupmtr,zupmtr);
+
+    /* LAPACK 3.10 */
+    LOAD_HOOK(hooks,hook_handle,claqz0,claqz0);
+    LOAD_HOOK(hooks,hook_handle,claqz1,claqz1);
+    LOAD_HOOK(hooks,hook_handle,claqz2,claqz2);
+    LOAD_HOOK(hooks,hook_handle,claqz3,claqz3);
+    LOAD_HOOK(hooks,hook_handle,zlaqz0,zlaqz0);
+    LOAD_HOOK(hooks,hook_handle,zlaqz1,zlaqz1);
+    LOAD_HOOK(hooks,hook_handle,zlaqz2,zlaqz2);
+    LOAD_HOOK(hooks,hook_handle,zlaqz3,zlaqz3);
+    LOAD_HOOK(hooks,hook_handle,dlaqz0,dlaqz0);
+    LOAD_HOOK(hooks,hook_handle,dlaqz1,dlaqz1);
+    LOAD_HOOK(hooks,hook_handle,dlaqz2,dlaqz2);
+    LOAD_HOOK(hooks,hook_handle,dlaqz3,dlaqz3);
+    LOAD_HOOK(hooks,hook_handle,dlaqz4,dlaqz4);
+    LOAD_HOOK(hooks,hook_handle,slaqz0,slaqz0);
+    LOAD_HOOK(hooks,hook_handle,slaqz1,slaqz1);
+    LOAD_HOOK(hooks,hook_handle,slaqz2,slaqz2);
+    LOAD_HOOK(hooks,hook_handle,slaqz3,slaqz3);
+    LOAD_HOOK(hooks,hook_handle,slaqz4,slaqz4);
+
+    /* LAPACK 3.10.1 */
+    LOAD_HOOK(hooks,hook_handle,droundup_lwork,droundup_lwork);
+    LOAD_HOOK(hooks,hook_handle,sroundup_lwork,sroundup_lwork);
+
+    /* LAPACK 3.11.0 */
+    LOAD_HOOK(hooks,hook_handle,cgelst,cgelst);
+    LOAD_HOOK(hooks,hook_handle,dgelst,dgelst);
+    LOAD_HOOK(hooks,hook_handle,sgelst,sgelst);
+    LOAD_HOOK(hooks,hook_handle,zgelst,zgelst);
+    LOAD_HOOK(hooks,hook_handle,ctrsyl3,ctrsyl3);
+    LOAD_HOOK(hooks,hook_handle,dtrsyl3,dtrsyl3);
+    LOAD_HOOK(hooks,hook_handle,strsyl3,strsyl3);
+    LOAD_HOOK(hooks,hook_handle,ztrsyl3,ztrsyl3);
+    LOAD_HOOK(hooks,hook_handle,clatrs3,clatrs3);
+    LOAD_HOOK(hooks,hook_handle,dlatrs3,dlatrs3);
+    LOAD_HOOK(hooks,hook_handle,slatrs3,slatrs3);
+    LOAD_HOOK(hooks,hook_handle,zlatrs3,zlatrs3);
+    LOAD_HOOK(hooks,hook_handle,dlarmm,dlarmm);
+    LOAD_HOOK(hooks,hook_handle,slarmm,slarmm);
+    LOAD_HOOK(hooks,hook_handle,clarmm,clarmm);
+    LOAD_HOOK(hooks,hook_handle,zlarmm,zlarmm);
+
+    /* LAPACK 3.12.0 */
+    LOAD_HOOK(hooks,hook_handle,cgedmd,cgedmd);
+    LOAD_HOOK(hooks,hook_handle,cgedmdq,cgedmdq);
+    LOAD_HOOK(hooks,hook_handle,cgelqs,cgelqs);
+    LOAD_HOOK(hooks,hook_handle,cgeqp3rk,cgeqp3rk);
+    LOAD_HOOK(hooks,hook_handle,cgeqrs,cgeqrs);
+    LOAD_HOOK(hooks,hook_handle,claqp2rk,claqp2rk);
+    LOAD_HOOK(hooks,hook_handle,claqp3rk,claqp3rk);
+    LOAD_HOOK(hooks,hook_handle,crscl,crscl);
+    LOAD_HOOK(hooks,hook_handle,dgedmd,dgedmd);
+    LOAD_HOOK(hooks,hook_handle,dgedmdq,dgedmdq);
+    LOAD_HOOK(hooks,hook_handle,dgelqs,dgelqs);
+    LOAD_HOOK(hooks,hook_handle,dgeqp3rk,dgeqp3rk);
+    LOAD_HOOK(hooks,hook_handle,dgeqrs,dgeqrs);
+    LOAD_HOOK(hooks,hook_handle,dlaqp2rk,dlaqp2rk);
+    LOAD_HOOK(hooks,hook_handle,dlaqp3rk,dlaqp3rk);
+    LOAD_HOOK(hooks,hook_handle,sgedmd,sgedmd);
+    LOAD_HOOK(hooks,hook_handle,sgedmdq,sgedmdq);
+    LOAD_HOOK(hooks,hook_handle,sgelqs,sgelqs);
+    LOAD_HOOK(hooks,hook_handle,sgeqp3rk,sgeqp3rk);
+    LOAD_HOOK(hooks,hook_handle,sgeqrs,sgeqrs);
+    LOAD_HOOK(hooks,hook_handle,slaqp2rk,slaqp2rk);
+    LOAD_HOOK(hooks,hook_handle,slaqp3rk,slaqp3rk);
+    LOAD_HOOK(hooks,hook_handle,zgedmd,zgedmd);
+    LOAD_HOOK(hooks,hook_handle,zgedmdq,zgedmdq);
+    LOAD_HOOK(hooks,hook_handle,zgelqs,zgelqs);
+    LOAD_HOOK(hooks,hook_handle,zgeqp3rk,zgeqp3rk);
+    LOAD_HOOK(hooks,hook_handle,zgeqrs,zgeqrs);
+    LOAD_HOOK(hooks,hook_handle,zlaqp2rk,zlaqp2rk);
+    LOAD_HOOK(hooks,hook_handle,zlaqp3rk,zlaqp3rk);
+    LOAD_HOOK(hooks,hook_handle,zrscl,zrscl);
+
 #endif
 
     return 0;

@@ -1,9 +1,16 @@
-next
-----
+3.4.5 (January 30, 2025)
+------------------------
 - Fix cblas scnrm2 typo (See GH #54)
 - Consistent indentation (See GH #55)
 - Fix some typos (See GH #56)
-
+- Support for NVPL BLAS
+- Fix bug in xAXPBY with ALPHA = BETA = 0.0
+- Add different symbols nameing schemens in parallel
+- Add support for xGEMMT/xGEMMTR
+- Fix all disclaimers to match the SPDX identifier
+- Fix building the auxillary library on Apple MacOS X (GH#61)
+- Fix underlinkage with GCC 15 and glibc, (GH #62)
+- Fix: detect wrong MKL/TBB without crashing the build process.
 
 3.4.4 (May 24, 2024)
 --------------------

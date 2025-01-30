@@ -1,3 +1,23 @@
+//    SPDX-License-Identifier: LGPL-3.0-or-later
+/*
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2025 Martin Koehler
+
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 3 of the License, or (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+   */
+
 #ifndef CBLAS_64_H
 #define CBLAS_64_H
 #include <stddef.h>
@@ -423,6 +443,17 @@ extern "C" {            /* Assume C declarations for C++ */
             const int64_t K, const float alpha, const float *A,
             const int64_t lda, const float *B, const int64_t ldb,
             const float beta, float *C, const int64_t ldc);
+    void cblas_sgemmt_64(CBLAS_LAYOUT layout, CBLAS_UPLO uplo,  CBLAS_TRANSPOSE TransA,
+            CBLAS_TRANSPOSE TransB, const int64_t N,
+            const int64_t K, const float alpha, const float *A,
+            const int64_t lda, const float *B, const int64_t ldb,
+            const float beta, float *C, const int64_t ldc);
+    void cblas_sgemmtr_64(CBLAS_LAYOUT layout,  CBLAS_UPLO uplo, CBLAS_TRANSPOSE TransA,
+            CBLAS_TRANSPOSE TransB, const int64_t N,
+            const int64_t K, const float alpha, const float *A,
+            const int64_t lda, const float *B, const int64_t ldb,
+            const float beta, float *C, const int64_t ldc);
+
     void cblas_ssymm_64(CBLAS_LAYOUT layout, CBLAS_SIDE Side,
             CBLAS_UPLO Uplo, const int64_t M, const int64_t N,
             const float alpha, const float *A, const int64_t lda,
@@ -450,6 +481,16 @@ extern "C" {            /* Assume C declarations for C++ */
 
     void cblas_dgemm_64(CBLAS_LAYOUT layout, CBLAS_TRANSPOSE TransA,
             CBLAS_TRANSPOSE TransB, const int64_t M, const int64_t N,
+            const int64_t K, const double alpha, const double *A,
+            const int64_t lda, const double *B, const int64_t ldb,
+            const double beta, double *C, const int64_t ldc);
+    void cblas_dgemmt_64(CBLAS_LAYOUT layout,  CBLAS_UPLO uplo, CBLAS_TRANSPOSE TransA,
+            CBLAS_TRANSPOSE TransB, const int64_t N,
+            const int64_t K, const double alpha, const double *A,
+            const int64_t lda, const double *B, const int64_t ldb,
+            const double beta, double *C, const int64_t ldc);
+    void cblas_dgemmtr_64(CBLAS_LAYOUT layout,  CBLAS_UPLO uplo, CBLAS_TRANSPOSE TransA,
+            CBLAS_TRANSPOSE TransB, const int64_t N,
             const int64_t K, const double alpha, const double *A,
             const int64_t lda, const double *B, const int64_t ldb,
             const double beta, double *C, const int64_t ldc);
@@ -483,6 +524,16 @@ extern "C" {            /* Assume C declarations for C++ */
             const int64_t K, const void *alpha, const void *A,
             const int64_t lda, const void *B, const int64_t ldb,
             const void *beta, void *C, const int64_t ldc);
+    void cblas_cgemmt_64(CBLAS_LAYOUT layout, CBLAS_UPLO uplo,  CBLAS_TRANSPOSE TransA,
+            CBLAS_TRANSPOSE TransB, const int64_t N,
+            const int64_t K, const void *alpha, const void *A,
+            const int64_t lda, const void *B, const int64_t ldb,
+            const void *beta, void *C, const int64_t ldc);
+    void cblas_cgemmtr_64(CBLAS_LAYOUT layout,  CBLAS_UPLO uplo, CBLAS_TRANSPOSE TransA,
+            CBLAS_TRANSPOSE TransB, const int64_t N,
+            const int64_t K, const void *alpha, const void *A,
+            const int64_t lda, const void *B, const int64_t ldb,
+            const void *beta, void *C, const int64_t ldc);
     void cblas_csymm_64(CBLAS_LAYOUT layout, CBLAS_SIDE Side,
             CBLAS_UPLO Uplo, const int64_t M, const int64_t N,
             const void *alpha, const void *A, const int64_t lda,
@@ -510,6 +561,16 @@ extern "C" {            /* Assume C declarations for C++ */
 
     void cblas_zgemm_64(CBLAS_LAYOUT layout, CBLAS_TRANSPOSE TransA,
             CBLAS_TRANSPOSE TransB, const int64_t M, const int64_t N,
+            const int64_t K, const void *alpha, const void *A,
+            const int64_t lda, const void *B, const int64_t ldb,
+            const void *beta, void *C, const int64_t ldc);
+    void cblas_zgemmt_64(CBLAS_LAYOUT layout,  CBLAS_UPLO uplo, CBLAS_TRANSPOSE TransA,
+            CBLAS_TRANSPOSE TransB, const int64_t N,
+            const int64_t K, const void *alpha, const void *A,
+            const int64_t lda, const void *B, const int64_t ldb,
+            const void *beta, void *C, const int64_t ldc);
+    void cblas_zgemmtr_64(CBLAS_LAYOUT layout,  CBLAS_UPLO uplo, CBLAS_TRANSPOSE TransA,
+            CBLAS_TRANSPOSE TransB, const int64_t N,
             const int64_t K, const void *alpha, const void *A,
             const int64_t lda, const void *B, const int64_t ldb,
             const void *beta, void *C, const int64_t ldc);

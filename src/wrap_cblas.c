@@ -1,23 +1,22 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+   Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
+   You should have received a copy of the GNU Lesser General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
    */
-
-
 
 
 #include <stdlib.h>
@@ -139,8 +138,8 @@ HIDDEN int __flexiblas_load_cblas(flexiblas_backend_t *backend)
      *-----------------------------------------------------------------------------*/
     LOAD_CBLAS(backend,blas.caxpy,caxpy);
     LOAD_CBLAS(backend,blas.ccopy,ccopy);
-    LOAD_CBLAS(backend,blas.cdotc,cdotc_sub);
-    LOAD_CBLAS(backend,blas.cdotu,cdotu_sub);
+    LOAD_CBLAS(backend,blas.cdotc_sub,cdotc_sub);
+    LOAD_CBLAS(backend,blas.cdotu_sub,cdotu_sub);
     LOAD_CBLAS(backend,blas.cgbmv,cgbmv);
     LOAD_CBLAS(backend,blas.cgemm,cgemm);
     LOAD_CBLAS(backend,blas.cgemv,cgemv);
@@ -181,8 +180,8 @@ HIDDEN int __flexiblas_load_cblas(flexiblas_backend_t *backend)
      *-----------------------------------------------------------------------------*/
     LOAD_CBLAS(backend,blas.zaxpy,zaxpy);
     LOAD_CBLAS(backend,blas.zcopy,zcopy);
-    LOAD_CBLAS(backend,blas.zdotc,zdotc_sub);
-    LOAD_CBLAS(backend,blas.zdotu,zdotu_sub);
+    LOAD_CBLAS(backend,blas.zdotc_sub,zdotc_sub);
+    LOAD_CBLAS(backend,blas.zdotu_sub,zdotu_sub);
     LOAD_CBLAS(backend,blas.zdrot,zdrot);
     LOAD_CBLAS(backend,blas.zdscal,zdscal);
     LOAD_CBLAS(backend,blas.zgbmv,zgbmv);

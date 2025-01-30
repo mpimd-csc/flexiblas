@@ -1,26 +1,29 @@
-//  SPDX-License-Identifier: LGPL-3.0-or-later
+//    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+    Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
-   */
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <complex.h>
+
+#include "flexiblas_config.h"
 
 #include "flexiblas_fortran_mangle.h"
 
@@ -31,14 +34,14 @@
 
 static TLS_STORE uint8_t hook_pos_sisnan = 0;
 #ifdef FLEXIBLAS_ABI_INTEL
-int FC_GLOBAL(sisnan,SISNAN)(float* sin)
+blaslogical FC_GLOBAL(sisnan,SISNAN)(float* sin)
 #else
-int FC_GLOBAL(sisnan,SISNAN)(float* sin)
+blaslogical FC_GLOBAL(sisnan,SISNAN)(float* sin)
 #endif
 {
-    blasint (*fn) (void* sin);
-    blasint (*fn_hook) (void* sin);
-    blasint ret;
+    blaslogical (*fn) (void* sin);
+    blaslogical (*fn_hook) (void* sin);
+    blaslogical ret;
 
     if ( current_backend->post_init != 0 ) {
         __flexiblas_backend_init(current_backend);
@@ -55,14 +58,12 @@ int FC_GLOBAL(sisnan,SISNAN)(float* sin)
         return ret;
     }
 }
-#ifdef FLEXIBLAS_ABI_IBM
-int sisnan_(float* sin) __attribute__((alias(MTS(FC_GLOBAL(sisnan,SISNAN)))));
-#else
 #ifndef __APPLE__
-int sisnan(float* sin) __attribute__((alias(MTS(FC_GLOBAL(sisnan,SISNAN)))));
+blaslogical FC_GLOBAL2(sisnan,SISNAN)(float* sin) __attribute__((alias(MTS(FC_GLOBAL(sisnan,SISNAN)))));
+blaslogical FC_GLOBAL3(sisnan,SISNAN)(float* sin) __attribute__((alias(MTS(FC_GLOBAL(sisnan,SISNAN)))));
 #else
-int sisnan(float* sin){ return FC_GLOBAL(sisnan,SISNAN)((void*) sin); }
-#endif
+blaslogical FC_GLOBAL2(sisnan,SISNAN)(float* sin){ return FC_GLOBAL(sisnan,SISNAN)((void*) sin); }
+blaslogical FC_GLOBAL3(sisnan,SISNAN)(float* sin){ return FC_GLOBAL(sisnan,SISNAN)((void*) sin); }
 #endif
 
 
@@ -71,10 +72,10 @@ int sisnan(float* sin){ return FC_GLOBAL(sisnan,SISNAN)((void*) sin); }
 /* Real Implementation for Hooks */
 
 
-blasint flexiblas_real_sisnan_(void* sin)
+blaslogical flexiblas_real_sisnan_(void* sin)
 {
-    blasint (*fn) (void* sin);
-    blasint ret;
+    blaslogical (*fn) (void* sin);
+    blaslogical ret;
 
     *(void **) & fn = current_backend->lapack.sisnan.f77_blas_function;
 
@@ -83,9 +84,9 @@ blasint flexiblas_real_sisnan_(void* sin)
     return ret;
 }
 #ifndef __APPLE__
-blasint flexiblas_real_sisnan(void* sin) __attribute__((alias("flexiblas_real_sisnan_")));
+blaslogical flexiblas_real_sisnan(void* sin) __attribute__((alias("flexiblas_real_sisnan_")));
 #else
-blasint flexiblas_real_sisnan(void* sin){return flexiblas_real_sisnan_((void*) sin);}
+blaslogical flexiblas_real_sisnan(void* sin){return flexiblas_real_sisnan_((void*) sin);}
 #endif
 
 
@@ -94,11 +95,11 @@ blasint flexiblas_real_sisnan(void* sin){return flexiblas_real_sisnan_((void*) s
 /* Chainloader for Hooks */
 
 
-blasint flexiblas_chain_sisnan_(void* sin)
+blaslogical flexiblas_chain_sisnan_(void* sin)
 {
-    blasint (*fn) (void* sin);
-    blasint (*fn_hook) (void* sin);
-    blasint ret;
+    blaslogical (*fn) (void* sin);
+    blaslogical (*fn_hook) (void* sin);
+    blaslogical ret;
 
     *(void **) &fn      = current_backend->lapack.sisnan.f77_blas_function;
 
@@ -113,9 +114,9 @@ blasint flexiblas_chain_sisnan_(void* sin)
     return ret;
 }
 #ifndef __APPLE__
-blasint flexiblas_chain_sisnan(void* sin) __attribute__((alias("flexiblas_chain_sisnan_")));
+blaslogical flexiblas_chain_sisnan(void* sin) __attribute__((alias("flexiblas_chain_sisnan_")));
 #else
-blasint flexiblas_chain_sisnan(void* sin){return flexiblas_chain_sisnan_((void*) sin);}
+blaslogical flexiblas_chain_sisnan(void* sin){return flexiblas_chain_sisnan_((void*) sin);}
 #endif
 
 

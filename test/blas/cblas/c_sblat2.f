@@ -345,13 +345,13 @@
             CALL SCHK3( SNAMES( ISNUM ), EPS, THRESH, NOUT, NTRA, TRACE,
      $                  REWI, FATAL, NIDIM, IDIM, NKB, KB, NINC, INC,
      $                  NMAX, INCMAX, A, AA, AS, Y, YY, YS, YT, G, Z,
-     $			0 )
+     $          0 )
             END IF
             IF (RORDER) THEN
             CALL SCHK3( SNAMES( ISNUM ), EPS, THRESH, NOUT, NTRA, TRACE,
      $                  REWI, FATAL, NIDIM, IDIM, NKB, KB, NINC, INC,
      $                  NMAX, INCMAX, A, AA, AS, Y, YY, YS, YT, G, Z,
-     $			1 )
+     $          1 )
             END IF
             GO TO 200
 *           Test SGER, 12.
@@ -1004,7 +1004,7 @@
      $                           REWIND NTRA
                               CALL CSSBMV( IORDER, UPLO, N, K, ALPHA,
      $                                    AA, LDA, XX, INCX, BETA, YY,
-     $					  INCY )
+     $                    INCY )
                            ELSE IF( PACKED )THEN
                               IF( TRACE )
      $                           WRITE( NTRA, FMT = 9995 )NC, SNAME,
@@ -1191,7 +1191,7 @@
 *     .. Scalar Arguments ..
       REAL               EPS, THRESH
       INTEGER            INCMAX, NIDIM, NINC, NKB, NMAX, NOUT, NTRA,
-     $			 IORDER
+     $           IORDER
       LOGICAL            FATAL, REWI, TRACE
       CHARACTER*12       SNAME
 *     .. Array Arguments ..
@@ -1216,7 +1216,7 @@
       EXTERNAL           LSE, LSERES
 *     .. External Subroutines ..
       EXTERNAL           SMAKE, SMVCH, CSTBMV, CSTBSV, CSTPMV,
-     $			 CSTPSV, CSTRMV,  CSTRSV
+     $           CSTPSV, CSTRMV,  CSTRSV
 *     .. Intrinsic Functions ..
       INTRINSIC          ABS, MAX
 *     .. Scalars in Common ..
@@ -1579,7 +1579,7 @@
 *     .. Scalar Arguments ..
       REAL               EPS, THRESH
       INTEGER            INCMAX, NALF, NIDIM, NINC, NMAX, NOUT, NTRA,
-     $			 IORDER
+     $           IORDER
       LOGICAL            FATAL, REWI, TRACE
       CHARACTER*12       SNAME
 *     .. Array Arguments ..
@@ -1851,7 +1851,7 @@
 *     .. Scalar Arguments ..
       REAL               EPS, THRESH
       INTEGER            INCMAX, NALF, NIDIM, NINC, NMAX, NOUT, NTRA,
-     $			 IORDER
+     $           IORDER
       LOGICAL            FATAL, REWI, TRACE
       CHARACTER*12       SNAME
 *     .. Array Arguments ..
@@ -1973,7 +1973,7 @@
                      IF( REWI )
      $                  REWIND NTRA
                      CALL CSSYR( IORDER, UPLO, N, ALPHA, XX, INCX,
-     $				  AA, LDA )
+     $                AA, LDA )
                   ELSE IF( PACKED )THEN
                      IF( TRACE )
      $                  WRITE( NTRA, FMT = 9994 )NC, SNAME, CUPLO, N,
@@ -2147,7 +2147,7 @@
 *     .. Scalar Arguments ..
       REAL               EPS, THRESH
       INTEGER            INCMAX, NALF, NIDIM, NINC, NMAX, NOUT, NTRA,
-     $			 IORDER
+     $           IORDER
       LOGICAL            FATAL, REWI, TRACE
       CHARACTER*12       SNAME
 *     .. Array Arguments ..

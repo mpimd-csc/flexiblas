@@ -1,26 +1,29 @@
-//  SPDX-License-Identifier: LGPL-3.0-or-later
+//    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+    Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
-   */
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <complex.h>
+
+#include "flexiblas_config.h"
 
 #include "flexiblas_fortran_mangle.h"
 
@@ -54,14 +57,12 @@ void FC_GLOBAL(sstebz,SSTEBZ)(char* range, char* order, blasint* n, float* vl, f
         return;
     }
 }
-#ifdef FLEXIBLAS_ABI_IBM
-void sstebz_(char* range, char* order, blasint* n, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, float* d, float* e, blasint* m, blasint* nsplit, float* w, blasint* iblock, blasint* isplit, float* work, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_order) __attribute__((alias(MTS(FC_GLOBAL(sstebz,SSTEBZ)))));
-#else
 #ifndef __APPLE__
-void sstebz(char* range, char* order, blasint* n, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, float* d, float* e, blasint* m, blasint* nsplit, float* w, blasint* iblock, blasint* isplit, float* work, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_order) __attribute__((alias(MTS(FC_GLOBAL(sstebz,SSTEBZ)))));
+void FC_GLOBAL2(sstebz,SSTEBZ)(char* range, char* order, blasint* n, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, float* d, float* e, blasint* m, blasint* nsplit, float* w, blasint* iblock, blasint* isplit, float* work, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_order) __attribute__((alias(MTS(FC_GLOBAL(sstebz,SSTEBZ)))));
+void FC_GLOBAL3(sstebz,SSTEBZ)(char* range, char* order, blasint* n, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, float* d, float* e, blasint* m, blasint* nsplit, float* w, blasint* iblock, blasint* isplit, float* work, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_order) __attribute__((alias(MTS(FC_GLOBAL(sstebz,SSTEBZ)))));
 #else
-void sstebz(char* range, char* order, blasint* n, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, float* d, float* e, blasint* m, blasint* nsplit, float* w, blasint* iblock, blasint* isplit, float* work, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_order){ FC_GLOBAL(sstebz,SSTEBZ)((void*) range, (void*) order, (void*) n, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) d, (void*) e, (void*) m, (void*) nsplit, (void*) w, (void*) iblock, (void*) isplit, (void*) work, (void*) iwork, (void*) info, (flexiblas_fortran_charlen_t) len_range, (flexiblas_fortran_charlen_t) len_order); }
-#endif
+void FC_GLOBAL2(sstebz,SSTEBZ)(char* range, char* order, blasint* n, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, float* d, float* e, blasint* m, blasint* nsplit, float* w, blasint* iblock, blasint* isplit, float* work, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_order){ FC_GLOBAL(sstebz,SSTEBZ)((void*) range, (void*) order, (void*) n, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) d, (void*) e, (void*) m, (void*) nsplit, (void*) w, (void*) iblock, (void*) isplit, (void*) work, (void*) iwork, (void*) info, (flexiblas_fortran_charlen_t) len_range, (flexiblas_fortran_charlen_t) len_order); }
+void FC_GLOBAL3(sstebz,SSTEBZ)(char* range, char* order, blasint* n, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, float* d, float* e, blasint* m, blasint* nsplit, float* w, blasint* iblock, blasint* isplit, float* work, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_order){ FC_GLOBAL(sstebz,SSTEBZ)((void*) range, (void*) order, (void*) n, (void*) vl, (void*) vu, (void*) il, (void*) iu, (void*) abstol, (void*) d, (void*) e, (void*) m, (void*) nsplit, (void*) w, (void*) iblock, (void*) isplit, (void*) work, (void*) iwork, (void*) info, (flexiblas_fortran_charlen_t) len_range, (flexiblas_fortran_charlen_t) len_order); }
 #endif
 
 

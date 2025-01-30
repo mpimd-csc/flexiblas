@@ -124,7 +124,7 @@ endif()
 # DECOMPOSE_FEATURES
 #
 IF(NOT CSCUTILS_FEATURES)
-    SET(CSCUTILS_FEATURES "inifile;io;threading;hdf5;image;hardware;ds;trace;lua")
+    SET(CSCUTILS_FEATURES "inifile;io;threading;hdf5;image;trace;lua")
 ENDIF()
 
 MESSAGE_COLOR("")
@@ -359,6 +359,9 @@ IF( LUA_ENABLE)
 ENDIF()
 
 CONFIGURE_FILE(config.h.in ${PROJECT_BINARY_DIR}/include/cscutils/cscutils_config.h @ONLY)
+IF (NOT INPROJECT)
+    INSTALL(FILES ${PROJECT_BINARY_DIR}/include/cscutils/cscutils_config.h DESTINATION include/cscutils)
+ENDIF()
 
 # Find additional Libraries
 ADD_SUBDIRECTORY(src)

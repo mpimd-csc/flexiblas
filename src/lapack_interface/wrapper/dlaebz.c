@@ -1,26 +1,29 @@
-//  SPDX-License-Identifier: LGPL-3.0-or-later
+//    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+    Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
-   */
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <complex.h>
+
+#include "flexiblas_config.h"
 
 #include "flexiblas_fortran_mangle.h"
 
@@ -54,14 +57,12 @@ void FC_GLOBAL(dlaebz,DLAEBZ)(blasint* ijob, blasint* nitmax, blasint* n, blasin
         return;
     }
 }
-#ifdef FLEXIBLAS_ABI_IBM
-void dlaebz_(blasint* ijob, blasint* nitmax, blasint* n, blasint* mmax, blasint* minp, blasint* nbmin, double* abstol, double* reltol, double* pivmin, double* d, double* e, double* e2, blasint* nval, double* ab, double* c, blasint* mout, blasint* nab, double* work, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlaebz,DLAEBZ)))));
-#else
 #ifndef __APPLE__
-void dlaebz(blasint* ijob, blasint* nitmax, blasint* n, blasint* mmax, blasint* minp, blasint* nbmin, double* abstol, double* reltol, double* pivmin, double* d, double* e, double* e2, blasint* nval, double* ab, double* c, blasint* mout, blasint* nab, double* work, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlaebz,DLAEBZ)))));
+void FC_GLOBAL2(dlaebz,DLAEBZ)(blasint* ijob, blasint* nitmax, blasint* n, blasint* mmax, blasint* minp, blasint* nbmin, double* abstol, double* reltol, double* pivmin, double* d, double* e, double* e2, blasint* nval, double* ab, double* c, blasint* mout, blasint* nab, double* work, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlaebz,DLAEBZ)))));
+void FC_GLOBAL3(dlaebz,DLAEBZ)(blasint* ijob, blasint* nitmax, blasint* n, blasint* mmax, blasint* minp, blasint* nbmin, double* abstol, double* reltol, double* pivmin, double* d, double* e, double* e2, blasint* nval, double* ab, double* c, blasint* mout, blasint* nab, double* work, blasint* iwork, blasint* info) __attribute__((alias(MTS(FC_GLOBAL(dlaebz,DLAEBZ)))));
 #else
-void dlaebz(blasint* ijob, blasint* nitmax, blasint* n, blasint* mmax, blasint* minp, blasint* nbmin, double* abstol, double* reltol, double* pivmin, double* d, double* e, double* e2, blasint* nval, double* ab, double* c, blasint* mout, blasint* nab, double* work, blasint* iwork, blasint* info){ FC_GLOBAL(dlaebz,DLAEBZ)((void*) ijob, (void*) nitmax, (void*) n, (void*) mmax, (void*) minp, (void*) nbmin, (void*) abstol, (void*) reltol, (void*) pivmin, (void*) d, (void*) e, (void*) e2, (void*) nval, (void*) ab, (void*) c, (void*) mout, (void*) nab, (void*) work, (void*) iwork, (void*) info); }
-#endif
+void FC_GLOBAL2(dlaebz,DLAEBZ)(blasint* ijob, blasint* nitmax, blasint* n, blasint* mmax, blasint* minp, blasint* nbmin, double* abstol, double* reltol, double* pivmin, double* d, double* e, double* e2, blasint* nval, double* ab, double* c, blasint* mout, blasint* nab, double* work, blasint* iwork, blasint* info){ FC_GLOBAL(dlaebz,DLAEBZ)((void*) ijob, (void*) nitmax, (void*) n, (void*) mmax, (void*) minp, (void*) nbmin, (void*) abstol, (void*) reltol, (void*) pivmin, (void*) d, (void*) e, (void*) e2, (void*) nval, (void*) ab, (void*) c, (void*) mout, (void*) nab, (void*) work, (void*) iwork, (void*) info); }
+void FC_GLOBAL3(dlaebz,DLAEBZ)(blasint* ijob, blasint* nitmax, blasint* n, blasint* mmax, blasint* minp, blasint* nbmin, double* abstol, double* reltol, double* pivmin, double* d, double* e, double* e2, blasint* nval, double* ab, double* c, blasint* mout, blasint* nab, double* work, blasint* iwork, blasint* info){ FC_GLOBAL(dlaebz,DLAEBZ)((void*) ijob, (void*) nitmax, (void*) n, (void*) mmax, (void*) minp, (void*) nbmin, (void*) abstol, (void*) reltol, (void*) pivmin, (void*) d, (void*) e, (void*) e2, (void*) nval, (void*) ab, (void*) c, (void*) mout, (void*) nab, (void*) work, (void*) iwork, (void*) info); }
 #endif
 
 

@@ -1,22 +1,22 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+   Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
+   You should have received a copy of the GNU Lesser General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
    */
-
 
 
 
@@ -205,8 +205,10 @@ static void flexiblas_load_info(void *library, flexiblas_backend_t *backend)
     /* Get the complex return type */
     flexiblas_complex_interface_t cpx_interface = __flexiblas_get_complex_interface(library);
     if ( cpx_interface == FLEXIBLAS_COMPLEX_INTEL_INTERFACE) {
+        DPRINTF(1, "--> BLAS uses Intel interface for complex return values.\n");
         backend->info.intel_interface = 1;
     } else if ( cpx_interface == FLEXIBLAS_COMPLEX_GNU_INTERFACE) {
+        DPRINTF(1, "--> BLAS uses GNU interface for complex return values.\n");
         backend->info.intel_interface = 0;
     } else {
         DPRINTF(1,"Could not detect the complex-return-value interface style. Using information from backend, if provided.\n");
@@ -773,6 +775,8 @@ __attribute__((constructor))
         __flexiblas_hooks->initialized  = 0;
 
         dlsym((void *) 0, "flexiblas_verbosity");
+        dlsym((void *) 0, "flexiblas_chain_zlaqr5");
+
 
         int hooks_to_load = 0;
         char ** hook_load_list = NULL;
@@ -854,11 +858,6 @@ __attribute__((constructor))
 
 continue_load:
         return;
-
-
-
-
-
     }
 
 
@@ -879,7 +878,6 @@ __attribute__((destructor))
             dlclose(__flexiblas_hooks->handles[k]);
         }
         free(__flexiblas_hooks);
-        nloaded_backends = 0;
         __flexiblas_free_paths();
         __flexiblas_exit_hook();
 
@@ -900,6 +898,7 @@ __attribute__((destructor))
         }
         free(loaded_backends);
 
+        nloaded_backends = 0;
         dlclose(__flexiblas_blas_fallback);
 #ifdef FLEXIBLAS_LAPACK
         dlclose(__flexiblas_lapack_fallback);

@@ -1,28 +1,33 @@
-//  SPDX-License-Identifier: LGPL-3.0-or-later
+//    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2024 Martin Koehler
+    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+    Copyright (C) 2013-2025 Martin Koehler
 
-   This program is free software: you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the Free
-   Software Foundation, either version 3 of the License, or (at your option)
-   any later version.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful, but WITHOUT
-   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-   more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License along
-   with this program. If not, see <https://www.gnu.org/licenses/>.
-   */
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
 
 #ifndef FLEXIBLAS_REAL_CALLS_LAPACK_H
 #define FLEXIBLAS_REAL_CALLS_LAPACK_H
 
 #include <stdint.h>
 
+#include "flexiblas_config.h"
+
 #include "flexiblas_fortran_mangle.h"
+
+#include "flexiblas_fortran_char_len.h"
 #include <complex.h>
 
 #ifdef __cplusplus
@@ -1997,10 +2002,10 @@ extern "C" {
     void flexiblas_real_dhseqr(void* job, void* compz, void* n, void* ilo, void* ihi, void* h, void* ldh, void* wr, void* wi, void* z, void* ldz, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_compz);
     void flexiblas_chain_dhseqr_(void* job, void* compz, void* n, void* ilo, void* ihi, void* h, void* ldh, void* wr, void* wi, void* z, void* ldz, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_compz);
     void flexiblas_chain_dhseqr(void* job, void* compz, void* n, void* ilo, void* ihi, void* h, void* ldh, void* wr, void* wi, void* z, void* ldz, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_compz);
-    blasint flexiblas_real_disnan_(void* din);
-    blasint flexiblas_real_disnan(void* din);
-    blasint flexiblas_chain_disnan_(void* din);
-    blasint flexiblas_chain_disnan(void* din);
+    blaslogical flexiblas_real_disnan_(void* din);
+    blaslogical flexiblas_real_disnan(void* din);
+    blaslogical flexiblas_chain_disnan_(void* din);
+    blaslogical flexiblas_chain_disnan(void* din);
     void flexiblas_real_dlabad_(void* small, void* large);
     void flexiblas_real_dlabad(void* small, void* large);
     void flexiblas_chain_dlabad_(void* small, void* large);
@@ -2141,10 +2146,10 @@ extern "C" {
     void flexiblas_real_dlaic1(void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c);
     void flexiblas_chain_dlaic1_(void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c);
     void flexiblas_chain_dlaic1(void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c);
-    blasint flexiblas_real_dlaisnan_(void* din1, void* din2);
-    blasint flexiblas_real_dlaisnan(void* din1, void* din2);
-    blasint flexiblas_chain_dlaisnan_(void* din1, void* din2);
-    blasint flexiblas_chain_dlaisnan(void* din1, void* din2);
+    blaslogical flexiblas_real_dlaisnan_(void* din1, void* din2);
+    blaslogical flexiblas_real_dlaisnan(void* din1, void* din2);
+    blaslogical flexiblas_chain_dlaisnan_(void* din1, void* din2);
+    blaslogical flexiblas_chain_dlaisnan(void* din1, void* din2);
     void flexiblas_real_dlaln2_(void* ltrans, void* na, void* nw, void* smin, void* ca, void* a, void* lda, void* d1, void* d2, void* b, void* ldb, void* wr, void* wi, void* x, void* ldx, void* scale, void* xnorm, void* info);
     void flexiblas_real_dlaln2(void* ltrans, void* na, void* nw, void* smin, void* ca, void* a, void* lda, void* d1, void* d2, void* b, void* ldb, void* wr, void* wi, void* x, void* ldx, void* scale, void* xnorm, void* info);
     void flexiblas_chain_dlaln2_(void* ltrans, void* na, void* nw, void* smin, void* ca, void* a, void* lda, void* d1, void* d2, void* b, void* ldb, void* wr, void* wi, void* x, void* ldx, void* scale, void* xnorm, void* info);
@@ -3781,10 +3786,10 @@ extern "C" {
     void flexiblas_real_shseqr(void* job, void* compz, void* n, void* ilo, void* ihi, void* h, void* ldh, void* wr, void* wi, void* z, void* ldz, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_compz);
     void flexiblas_chain_shseqr_(void* job, void* compz, void* n, void* ilo, void* ihi, void* h, void* ldh, void* wr, void* wi, void* z, void* ldz, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_compz);
     void flexiblas_chain_shseqr(void* job, void* compz, void* n, void* ilo, void* ihi, void* h, void* ldh, void* wr, void* wi, void* z, void* ldz, void* work, void* lwork, void* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_compz);
-    blasint flexiblas_real_sisnan_(void* sin);
-    blasint flexiblas_real_sisnan(void* sin);
-    blasint flexiblas_chain_sisnan_(void* sin);
-    blasint flexiblas_chain_sisnan(void* sin);
+    blaslogical flexiblas_real_sisnan_(void* sin);
+    blaslogical flexiblas_real_sisnan(void* sin);
+    blaslogical flexiblas_chain_sisnan_(void* sin);
+    blaslogical flexiblas_chain_sisnan(void* sin);
     void flexiblas_real_slabad_(void* small, void* large);
     void flexiblas_real_slabad(void* small, void* large);
     void flexiblas_chain_slabad_(void* small, void* large);
@@ -3925,10 +3930,10 @@ extern "C" {
     void flexiblas_real_slaic1(void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c);
     void flexiblas_chain_slaic1_(void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c);
     void flexiblas_chain_slaic1(void* job, void* j, void* x, void* sest, void* w, void* gamma, void* sestpr, void* s, void* c);
-    blasint flexiblas_real_slaisnan_(void* sin1, void* sin2);
-    blasint flexiblas_real_slaisnan(void* sin1, void* sin2);
-    blasint flexiblas_chain_slaisnan_(void* sin1, void* sin2);
-    blasint flexiblas_chain_slaisnan(void* sin1, void* sin2);
+    blaslogical flexiblas_real_slaisnan_(void* sin1, void* sin2);
+    blaslogical flexiblas_real_slaisnan(void* sin1, void* sin2);
+    blaslogical flexiblas_chain_slaisnan_(void* sin1, void* sin2);
+    blaslogical flexiblas_chain_slaisnan(void* sin1, void* sin2);
     void flexiblas_real_slaln2_(void* ltrans, void* na, void* nw, void* smin, void* ca, void* a, void* lda, void* d1, void* d2, void* b, void* ldb, void* wr, void* wi, void* x, void* ldx, void* scale, void* xnorm, void* info);
     void flexiblas_real_slaln2(void* ltrans, void* na, void* nw, void* smin, void* ca, void* a, void* lda, void* d1, void* d2, void* b, void* ldb, void* wr, void* wi, void* x, void* ldx, void* scale, void* xnorm, void* info);
     void flexiblas_chain_slaln2_(void* ltrans, void* na, void* nw, void* smin, void* ca, void* a, void* lda, void* d1, void* d2, void* b, void* ldb, void* wr, void* wi, void* x, void* ldx, void* scale, void* xnorm, void* info);

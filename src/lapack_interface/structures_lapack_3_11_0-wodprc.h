@@ -3,7 +3,11 @@
 
 #include <stdint.h>
 
+#include "flexiblas_config.h"
+
 #include "flexiblas_fortran_mangle.h"
+
+#include "flexiblas_fortran_char_len.h"
 #include <complex.h>
 
 #ifdef __cplusplus
