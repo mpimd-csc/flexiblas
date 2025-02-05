@@ -199,6 +199,51 @@ HIDDEN flexiblas_complex_interface_t __flexiblas_get_complex_interface(void *han
 #endif
 }
 
+HIDDEN int __flexiblas_check_float_function(void *handle, int intel_interface)
+{
+    if (handle == NULL) {
+        return 0;
+    }
+    void *sdot_ptr = __flexiblas_lookup_fortran_function(handle, "sdot");
+    if ( sdot_ptr == NULL) {
+        DPRINTF(2, "Could not check for defect of functions with real return value. SDOT not found.\n");
+        return 0;
+    }
+
+    float retval = 0.0;
+    float x[2] = {1.0, 2.0};
+    float y[2] = {3.0, 4.0};
+#ifdef FLEXIBLAS_INTEGER8
+    int64_t n = 2;
+    int64_t one = 1;
+#else
+    int32_t n = 2;
+    int32_t one = 1;
+#endif
+    if (intel_interface) {
+#ifdef FLEXIBLAS_INTEGER8
+        void (*sdot)(float *, int64_t *, float *, int64_t *, float *, int64_t *);
+#else
+        void (*sdot)(float *, int32_t *, float *, int32_t *, float *, int32_t *);
+#endif
+
+        sdot(&retval, &n, x, &one, y, &one);
+    } else {
+#ifdef FLEXIBLAS_INTEGER8
+        float (*sdot)(int64_t *, float *, int64_t *, float *, int64_t *);
+#else
+        float (*sdot)(int32_t *, float *, int32_t *, float *, int32_t *);
+#endif
+
+        retval = sdot(&n, x, &one, y, &one);
+    }
+
+    if (retval == 11.0)
+        return 0;
+    else
+        return 1;
+}
+
 HIDDEN flexiblas_interface_t __flexiblas_get_interface(void *handle)
 {
     if (handle == NULL) {

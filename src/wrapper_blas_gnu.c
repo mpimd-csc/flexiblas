@@ -6601,24 +6601,31 @@ void flexiblas_chain_scopy(void* n, void* sx, void* incx, void* sy, void* incy){
 #endif
 
 
+#define SDOT_INTERN(ret_type) \
+    ret_type (*fn) (void* n, void* sx, void* incx, void* sy, void* incy); \
+    ret_type (*fn_hook) (void* n, void* sx, void* incx, void* sy, void* incy); \
+    if ( current_backend->post_init != 0 ) { \
+        __flexiblas_backend_init(current_backend); \
+        current_backend->post_init = 0; \
+    } \
+    *(void **) &fn = current_backend->blas.sdot.f77_blas_function; \
+    *(void **) &fn_hook = __flexiblas_hooks->sdot.f77_hook_function[0]; \
+    hook_pos_sdot = 0; \
+    if ( fn_hook != NULL) { \
+        ret = fn_hook((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy); \
+    } else { \
+        ret = fn((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy); \
+    }
+
 static TLS_STORE uint8_t hook_pos_sdot = 0;
 
 float FC_GLOBAL(sdot,SDOT)(blasint* n, float* sx, blasint* incx, float* sy, blasint* incy)
 {
-    float (*fn) (void* n, void* sx, void* incx, void* sy, void* incy);
-    float (*fn_hook) (void* n, void* sx, void* incx, void* sy, void* incy);
     float ret;
-    if ( current_backend->post_init != 0 ) {
-        __flexiblas_backend_init(current_backend);
-        current_backend->post_init = 0;
-    }
-    *(void **) &fn = current_backend->blas.sdot.f77_blas_function;
-    *(void **) &fn_hook = __flexiblas_hooks->sdot.f77_hook_function[0];
-    hook_pos_sdot = 0;
-    if ( fn_hook != NULL) {
-        ret = fn_hook((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy);
+    if (current_backend->info.float_function_defect) {
+        SDOT_INTERN(double)
     } else {
-        ret = fn((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy);
+        SDOT_INTERN(float)
     }
     return ret;
 }
@@ -6636,14 +6643,20 @@ float FC_GLOBAL3(sdot,SDOT)(blasint* n, float* sx, blasint* incx, float* sy, bla
 #endif
 
 
+#define REAL_SDOT_INTERN(ret_type) \
+    ret_type (*fn) (void* n, void* sx, void* incx, void* sy, void* incy); \
+    \
+    *(void **) &fn = current_backend->blas.sdot.f77_blas_function; \
+    ret = fn((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy);
 
 float flexiblas_real_sdot_(void* n, void* sx, void* incx, void* sy, void* incy)
 {
-    float (*fn) (void* n, void* sx, void* incx, void* sy, void* incy);
     float ret;
-
-    *(void **) &fn = current_backend->blas.sdot.f77_blas_function;
-    ret = fn((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy);
+    if (current_backend->info.float_function_defect) {
+        REAL_SDOT_INTERN(double)
+    } else {
+        REAL_SDOT_INTERN(float)
+    }
 
     return ret;
 }
@@ -6653,22 +6666,26 @@ float flexiblas_real_sdot(void* n, void* sx, void* incx, void* sy, void* incy) _
 float flexiblas_real_sdot(void* n, void* sx, void* incx, void* sy, void* incy){return flexiblas_real_sdot_((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy);}
 #endif
 
+#define CHAIN_SDOT_INTERN(ret_type) \
+    ret_type (*fn) (void* n, void* sx, void* incx, void* sy, void* incy); \
+    \
+    hook_pos_sdot++; \
+    if ( hook_pos_sdot < __flexiblas_hooks->sdot.nhook ) { \
+        *(void **) &fn = __flexiblas_hooks->sdot.f77_hook_function[hook_pos_sdot]; \
+    } else { \
+        hook_pos_sdot = 0; \
+        *(void **) &fn = current_backend->blas.sdot.f77_blas_function; \
+    } \
+    ret = fn((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy);
 
 float flexiblas_chain_sdot_(void* n, void* sx, void* incx, void* sy, void* incy)
 {
-    float (*fn) (void* n, void* sx, void* incx, void* sy, void* incy);
     float ret;
-
-
-
-    hook_pos_sdot++;
-    if ( hook_pos_sdot < __flexiblas_hooks->sdot.nhook ) {
-        *(void **) &fn = __flexiblas_hooks->sdot.f77_hook_function[hook_pos_sdot];
+    if (current_backend->info.float_function_defect) {
+        CHAIN_SDOT_INTERN(double)
     } else {
-        hook_pos_sdot = 0;
-        *(void **) &fn = current_backend->blas.sdot.f77_blas_function;
+        CHAIN_SDOT_INTERN(float)
     }
-    ret = fn((void*) n, (void*) sx, (void*) incx, (void*) sy, (void*) incy);
 
     return ret;
 }

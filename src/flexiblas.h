@@ -145,6 +145,7 @@ int __flexiblas_load_fortran_function( void * handle , struct flexiblas_blasfn *
 int __flexiblas_load_blas_hooks(flexiblas_hook_t *backend, void *hook_handle);
 void * __flexiblas_lookup_fortran_function(void * handle, const char *name);
 flexiblas_complex_interface_t __flexiblas_get_complex_interface(void *handle);
+int __flexiblas_check_float_function(void *handle, int intel_interface);
 flexiblas_interface_t __flexiblas_get_interface(void *handle);
 
 void __flexiblas_backend_init( flexiblas_backend_t * backend);

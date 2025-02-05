@@ -216,6 +216,9 @@ static void flexiblas_load_info(void *library, flexiblas_backend_t *backend)
 
 #endif
 
+    /* Check if functions return the correct type (real) */
+    backend->info.float_function_defect = __flexiblas_check_float_function(library, backend->info.intel_interface);
+
     /* Get the Integer size of the backend */
     flexiblas_interface_t interface = __flexiblas_get_interface(library);
     if ( interface == FLEXIBLAS_INTERFACE_LP64 )
