@@ -71,6 +71,8 @@ extern "C" {
 	extern void blas_set_num_threads(int num);
 	extern void acmlsetnumthreads(int num);
 	extern void bli_thread_set_num_threads(FLEXIBLAS_API_INT num);
+	extern void armpl_set_num_threads(int num);
+	extern void armpl_omp_set_num_threads(int num);
 
 	/* Get number of threads  */
 	extern int flexiblas_get_num_threads(void);
@@ -79,6 +81,8 @@ extern "C" {
 	extern int blas_get_num_threads(void);
 	extern int acmlgetnumthreads(void);
 	extern FLEXIBLAS_API_INT bli_thread_get_num_threads(void);
+	extern int armpl_get_num_threads(void);
+	extern int armpl_omp_get_num_threads(void);
 
 
 	/* Fortran Callable Routines, not intended to be called from C
@@ -93,14 +97,17 @@ extern "C" {
 	extern FLEXIBLAS_API_INT mkl_get_num_threads_(void);
 	extern FLEXIBLAS_API_INT flexiblas_get_num_threads_(void);
 	extern FLEXIBLAS_API_INT blas_get_num_threads_(void);
+	extern FLEXIBLAS_API_INT armpl_get_num_threads_(void);
+	extern FLEXIBLAS_API_INT armpl_omp_get_num_threads_(void);
 	extern void blas_set_num_threads_(FLEXIBLAS_API_INT* num);
 	extern void openblas_set_num_threads_(FLEXIBLAS_API_INT* num);
 	extern void mkl_set_num_threads_(FLEXIBLAS_API_INT* num);
 	extern void acmlsetnumthreads_(FLEXIBLAS_API_INT* num);
+	extern void armpl_set_num_threads_(FLEXIBLAS_API_INT* num);
+	extern void armpl_omp_set_num_threads_(FLEXIBLAS_API_INT* num);
 
 #ifdef __cplusplus
 };
 #endif
 
 #endif /* end of include guard: FLEXIBLAS_API_H */
-
