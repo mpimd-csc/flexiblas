@@ -58,7 +58,8 @@ void acmlsetnumthreads(int num) __attribute__((weak,alias("flexiblas_set_num_thr
 void blas_set_num_threads(int num) __attribute__((weak,alias("flexiblas_set_num_threads")));
 void nvpl_blas_set_num_threads(int num) __attribute__((weak,alias("flexiblas_set_num_threads")));
 void nvpl_lapack_set_num_threads(int num) __attribute__((weak,alias("flexiblas_set_num_threads")));
-
+void armpl_set_num_threads(int num) __attribute__((weak,alias("flexiblas_set_num_threads")));
+void armpl_omp_set_num_threads(int num) __attribute__((weak,alias("flexiblas_set_num_threads")));
 #else
 void openblas_set_num_threads(int num) { flexiblas_set_num_threads(num); }
 void mkl_set_num_threads(int num) { flexiblas_set_num_threads(num); }
@@ -66,7 +67,8 @@ void acmlsetnumthreads(int num) { flexiblas_set_num_threads(num); }
 void blas_set_num_threads(int num)  { flexiblas_set_num_threads(num); }
 void nvpl_blas_set_num_threads(int num)  { flexiblas_set_num_threads(num); }
 void nvpl_lapack_set_num_threads(int num)  { flexiblas_set_num_threads(num); }
-
+void armpl_set_num_threads(int num) { flexiblas_set_num_threads(num); }
+void armpl_omp_set_num_threads(int num) { flexiblas_set_num_threads(num); }
 #endif
 /* BLIS Interface */
 void bli_thread_set_num_threads(Int num) {
@@ -100,8 +102,8 @@ int  acmlgetnumthreads(void) __attribute__((weak,alias("flexiblas_get_num_thread
 int  blas_get_num_threads(void) __attribute__((weak,alias("flexiblas_get_num_threads")));
 int  nvpl_blas_get_max_threads(void) __attribute__((weak,alias("flexiblas_get_num_threads")));
 int  nvpl_lapack_get_max_threads(void) __attribute__((weak,alias("flexiblas_get_num_threads")));
-
-
+int  armpl_get_num_threads(void) __attribute__((weak,alias("flexiblas_get_num_threads")));
+int  armpl_omp_get_num_threads(void) __attribute__((weak,alias("flexiblas_get_num_threads")));
 #else
 int  openblas_get_num_threads(void) { return flexiblas_get_num_threads(); }
 int  mkl_get_num_threads(void)	{ return flexiblas_get_num_threads(); }
@@ -109,7 +111,8 @@ int  acmlgetnumthreads(void) 	{ return flexiblas_get_num_threads(); }
 int  blas_get_num_threads(void) 	{ return flexiblas_get_num_threads(); }
 int  nvpl_blas_get_max_threads(void) 	{ return flexiblas_get_num_threads(); }
 int  nvpl_lapack_get_max_threads(void) 	{ return flexiblas_get_num_threads(); }
-
+int  armpl_get_num_threads(void) { return flexiblas_get_num_threads(); }
+int  armpl_omp_get_num_threads(void) { return flexiblas_get_num_threads(); }
 #endif
 
 /*  BLIS Interface  */
@@ -149,12 +152,15 @@ void openblas_set_num_threads_(Int *num) __attribute__((weak, alias("flexiblas_s
 void mkl_set_num_threads_(Int *num) __attribute__((weak,alias("flexiblas_set_num_threads_")));
 void acmlsetnumthreads_(Int *num) __attribute__((weak,alias("flexiblas_set_num_threads_")));
 void blas_set_num_threads_(Int *num) __attribute__((weak,alias("flexiblas_set_num_threads_")));
+void armpl_set_num_threads_(Int *num) __attribute__((weak,alias("flexiblas_set_num_threads_")));
+void armpl_omp_set_num_threads_(Int *num) __attribute__((weak,alias("flexiblas_set_num_threads_")));
 #else
 void openblas_set_num_threads_(Int *num) { flexiblas_set_num_threads_(num); }
 void mkl_set_num_threads_(Int *num)      { flexiblas_set_num_threads_(num); }
 void acmlsetnumthreads_(Int *num)        { flexiblas_set_num_threads_(num); }
 void blas_set_num_threads_(Int *num)     { flexiblas_set_num_threads_(num); }
-
+void armpl_set_num_threads_(Int *num)    { flexiblas_set_num_threads_(num); }
+void armpl_omp_set_num_threads_(Int *num) { flexiblas_set_num_threads_(num); }
 #endif
 
 void nvpl_blas_set_num_threads_(int32_t* num)
@@ -194,12 +200,15 @@ Int  openblas_get_num_threads_(void) __attribute__((weak, alias("flexiblas_get_n
 Int  mkl_get_num_threads_(void) __attribute__((weak,alias("flexiblas_get_num_threads_")));
 Int  acmlgetnumthreads_(void) __attribute__((weak,alias("flexiblas_get_num_threads_")));
 Int  blas_get_num_threads_(void) __attribute__((weak,alias("flexiblas_get_num_threads_")));
+Int  armpl_get_num_threads_(void) __attribute__((weak,alias("flexiblas_get_num_threads_")));
+Int  armpl_omp_get_num_threads_(void) __attribute__((weak,alias("flexiblas_get_num_threads_")));
 #else
 Int  openblas_get_num_threads_(void) { return flexiblas_get_num_threads_(); }
 Int  mkl_get_num_threads_(void)      { return flexiblas_get_num_threads_(); }
 Int  acmlgetnumthreads_(void)        { return flexiblas_get_num_threads_(); }
 Int  blas_get_num_threads_(void)     { return flexiblas_get_num_threads_(); }
-
+Int  armpl_get_num_threads_(void)    { return flexiblas_get_num_threads_(); }
+Int  armpl_omp_get_num_threads_(void) { return flexiblas_get_num_threads_(); }
 #endif
 
 int32_t  nvpl_blas_get_max_threads_(void) 	{ return (int32_t) flexiblas_get_num_threads_(); }
@@ -216,7 +225,7 @@ void __flexiblas_load_set_num_threads(flexiblas_backend_t * backend)
     char fn2_name[130];
     int i = 0;
 
-    for (i = 0; i < 6; i++) {
+    for (i = 0; i < 8; i++) {
         if (i == 0 )
             strncpy(fn_name, "hook_set_num_threads",127);
         else if ( i == 1) {
@@ -230,7 +239,11 @@ void __flexiblas_load_set_num_threads(flexiblas_backend_t * backend)
             strncpy(fn_name, "bli_thread_set_num_threads", 127);
         else if ( i == 5 )
             strncpy(fn_name, "flexiblas_backend_set_num_threads", 127);
-
+        else if ( i == 6 ) {
+            strncpy(fn_name, "armpl_omp_set_num_threads", 127);
+        } else if ( i == 7 ) {
+            strncpy(fn_name, "armpl_set_num_threads", 127);
+        }
         fn_name[127] = '\0';
         if ( i != 1 ) {
             snprintf(fn2_name, 130, "%s_", fn_name);
@@ -266,7 +279,7 @@ void __flexiblas_load_get_num_threads(flexiblas_backend_t * backend)
     char fn2_name[130];
     int i = 0;
 
-    for (i = 0; i < 6; i++) {
+    for (i = 0; i < 8; i++) {
         if (i == 0 )
             strncpy(fn_name, "hook_get_num_threads",127);
         else if ( i == 1) {
@@ -280,6 +293,11 @@ void __flexiblas_load_get_num_threads(flexiblas_backend_t * backend)
             strncpy(fn_name, "bli_thread_get_num_threads",127);
         else if ( i == 5 )
             strncpy(fn_name, "flexiblas_backend_ge_num_threads", 127);
+        else if ( i == 6 ) {
+            strncpy(fn_name, "armpl_omp_get_num_threads",127);
+        } else if ( i == 7 ) {
+            strncpy(fn_name, "armpl_get_num_threads",127);
+        }
 
         fn_name[127] = '\0';
         if ( i != 1 )
@@ -303,5 +321,4 @@ void __flexiblas_load_get_num_threads(flexiblas_backend_t * backend)
 
     return;
 }
-
 
