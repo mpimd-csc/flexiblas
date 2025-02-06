@@ -8,7 +8,26 @@
 #include "flexiblas_fortran_mangle.h"
 
 #include "flexiblas_fortran_char_len.h"
+
+/* Complex type (single precision) */
+#ifndef lapack_complex_float
+#ifndef __cplusplus
 #include <complex.h>
+#else
+#include <complex>
+#endif
+#define lapack_complex_float    float _Complex
+#endif
+
+/* Complex type (double precision) */
+#ifndef lapack_complex_double
+#ifndef __cplusplus
+#include <complex.h>
+#else
+#include <complex>
+#endif
+#define lapack_complex_double   double _Complex
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -1533,713 +1552,713 @@ extern "C" {
 #define ZUPMTR   zupmtr_
 #endif
 
-    void FC_GLOBAL(cbbcsd,CBBCSD)(char* jobu1, char* jobu2, char* jobv1t, char* jobv2t, char* trans, blasint* m, blasint* p, blasint* q, float* theta, float* phi, float complex* u1, blasint* ldu1, float complex* u2, blasint* ldu2, float complex* v1t, blasint* ldv1t, float complex* v2t, blasint* ldv2t, float* b11d, float* b11e, float* b12d, float* b12e, float* b21d, float* b21e, float* b22d, float* b22e, float* rwork, blasint* lrwork, blasint* info, flexiblas_fortran_charlen_t len_jobu1, flexiblas_fortran_charlen_t len_jobu2, flexiblas_fortran_charlen_t len_jobv1t, flexiblas_fortran_charlen_t len_jobv2t, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(cbbcsd,CBBCSD)(char* jobu1, char* jobu2, char* jobv1t, char* jobv2t, char* trans, blasint* m, blasint* p, blasint* q, float* theta, float* phi, lapack_complex_float* u1, blasint* ldu1, lapack_complex_float* u2, blasint* ldu2, lapack_complex_float* v1t, blasint* ldv1t, lapack_complex_float* v2t, blasint* ldv2t, float* b11d, float* b11e, float* b12d, float* b12e, float* b21d, float* b21e, float* b22d, float* b22e, float* rwork, blasint* lrwork, blasint* info, flexiblas_fortran_charlen_t len_jobu1, flexiblas_fortran_charlen_t len_jobu2, flexiblas_fortran_charlen_t len_jobv1t, flexiblas_fortran_charlen_t len_jobv2t, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(cbdsqr,CBDSQR)(char* uplo, blasint* n, blasint* ncvt, blasint* nru, blasint* ncc, float* d, float* e, float complex* vt, blasint* ldvt, float complex* u, blasint* ldu, float complex* c, blasint* ldc, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cbdsqr,CBDSQR)(char* uplo, blasint* n, blasint* ncvt, blasint* nru, blasint* ncc, float* d, float* e, lapack_complex_float* vt, blasint* ldvt, lapack_complex_float* u, blasint* ldu, lapack_complex_float* c, blasint* ldc, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cgbbrd,CGBBRD)(char* vect, blasint* m, blasint* n, blasint* ncc, blasint* kl, blasint* ku, float complex* ab, blasint* ldab, float* d, float* e, float complex* q, blasint* ldq, float complex* pt, blasint* ldpt, float complex* c, blasint* ldc, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_vect);
+    void FC_GLOBAL(cgbbrd,CGBBRD)(char* vect, blasint* m, blasint* n, blasint* ncc, blasint* kl, blasint* ku, lapack_complex_float* ab, blasint* ldab, float* d, float* e, lapack_complex_float* q, blasint* ldq, lapack_complex_float* pt, blasint* ldpt, lapack_complex_float* c, blasint* ldc, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_vect);
 
-    void FC_GLOBAL(cgbcon,CGBCON)(char* norm, blasint* n, blasint* kl, blasint* ku, float complex* ab, blasint* ldab, blasint* ipiv, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_norm);
+    void FC_GLOBAL(cgbcon,CGBCON)(char* norm, blasint* n, blasint* kl, blasint* ku, lapack_complex_float* ab, blasint* ldab, blasint* ipiv, float* anorm, float* rcond, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_norm);
 
-    void FC_GLOBAL(cgbequ,CGBEQU)(blasint* m, blasint* n, blasint* kl, blasint* ku, float complex* ab, blasint* ldab, float* r, float* c, float* rowcnd, float* colcnd, float* amax, blasint* info);
+    void FC_GLOBAL(cgbequ,CGBEQU)(blasint* m, blasint* n, blasint* kl, blasint* ku, lapack_complex_float* ab, blasint* ldab, float* r, float* c, float* rowcnd, float* colcnd, float* amax, blasint* info);
 
-    void FC_GLOBAL(cgbequb,CGBEQUB)(blasint* m, blasint* n, blasint* kl, blasint* ku, float complex* ab, blasint* ldab, float* r, float* c, float* rowcnd, float* colcnd, float* amax, blasint* info);
+    void FC_GLOBAL(cgbequb,CGBEQUB)(blasint* m, blasint* n, blasint* kl, blasint* ku, lapack_complex_float* ab, blasint* ldab, float* r, float* c, float* rowcnd, float* colcnd, float* amax, blasint* info);
 
-    void FC_GLOBAL(cgbrfs,CGBRFS)(char* trans, blasint* n, blasint* kl, blasint* ku, blasint* nrhs, float complex* ab, blasint* ldab, float complex* afb, blasint* ldafb, blasint* ipiv, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* ferr, float* berr, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(cgbrfs,CGBRFS)(char* trans, blasint* n, blasint* kl, blasint* ku, blasint* nrhs, lapack_complex_float* ab, blasint* ldab, lapack_complex_float* afb, blasint* ldafb, blasint* ipiv, lapack_complex_float* b, blasint* ldb, lapack_complex_float* x, blasint* ldx, float* ferr, float* berr, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(cgbsv,CGBSV)(blasint* n, blasint* kl, blasint* ku, blasint* nrhs, float complex* ab, blasint* ldab, blasint* ipiv, float complex* b, blasint* ldb, blasint* info);
+    void FC_GLOBAL(cgbsv,CGBSV)(blasint* n, blasint* kl, blasint* ku, blasint* nrhs, lapack_complex_float* ab, blasint* ldab, blasint* ipiv, lapack_complex_float* b, blasint* ldb, blasint* info);
 
-    void FC_GLOBAL(cgbsvx,CGBSVX)(char* fact, char* trans, blasint* n, blasint* kl, blasint* ku, blasint* nrhs, float complex* ab, blasint* ldab, float complex* afb, blasint* ldafb, blasint* ipiv, char* equed, float* r, float* c, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* rcond, float* ferr, float* berr, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(cgbsvx,CGBSVX)(char* fact, char* trans, blasint* n, blasint* kl, blasint* ku, blasint* nrhs, lapack_complex_float* ab, blasint* ldab, lapack_complex_float* afb, blasint* ldafb, blasint* ipiv, char* equed, float* r, float* c, lapack_complex_float* b, blasint* ldb, lapack_complex_float* x, blasint* ldx, float* rcond, float* ferr, float* berr, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(cgbtf2,CGBTF2)(blasint* m, blasint* n, blasint* kl, blasint* ku, float complex* ab, blasint* ldab, blasint* ipiv, blasint* info);
+    void FC_GLOBAL(cgbtf2,CGBTF2)(blasint* m, blasint* n, blasint* kl, blasint* ku, lapack_complex_float* ab, blasint* ldab, blasint* ipiv, blasint* info);
 
-    void FC_GLOBAL(cgbtrf,CGBTRF)(blasint* m, blasint* n, blasint* kl, blasint* ku, float complex* ab, blasint* ldab, blasint* ipiv, blasint* info);
+    void FC_GLOBAL(cgbtrf,CGBTRF)(blasint* m, blasint* n, blasint* kl, blasint* ku, lapack_complex_float* ab, blasint* ldab, blasint* ipiv, blasint* info);
 
-    void FC_GLOBAL(cgbtrs,CGBTRS)(char* trans, blasint* n, blasint* kl, blasint* ku, blasint* nrhs, float complex* ab, blasint* ldab, blasint* ipiv, float complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(cgbtrs,CGBTRS)(char* trans, blasint* n, blasint* kl, blasint* ku, blasint* nrhs, lapack_complex_float* ab, blasint* ldab, blasint* ipiv, lapack_complex_float* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(cgebak,CGEBAK)(char* job, char* side, blasint* n, blasint* ilo, blasint* ihi, float* scale, blasint* m, float complex* v, blasint* ldv, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_side);
+    void FC_GLOBAL(cgebak,CGEBAK)(char* job, char* side, blasint* n, blasint* ilo, blasint* ihi, float* scale, blasint* m, lapack_complex_float* v, blasint* ldv, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_side);
 
-    void FC_GLOBAL(cgebal,CGEBAL)(char* job, blasint* n, float complex* a, blasint* lda, blasint* ilo, blasint* ihi, float* scale, blasint* info, flexiblas_fortran_charlen_t len_job);
+    void FC_GLOBAL(cgebal,CGEBAL)(char* job, blasint* n, lapack_complex_float* a, blasint* lda, blasint* ilo, blasint* ihi, float* scale, blasint* info, flexiblas_fortran_charlen_t len_job);
 
-    void FC_GLOBAL(cgebd2,CGEBD2)(blasint* m, blasint* n, float complex* a, blasint* lda, float* d, float* e, float complex* tauq, float complex* taup, float complex* work, blasint* info);
+    void FC_GLOBAL(cgebd2,CGEBD2)(blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, float* d, float* e, lapack_complex_float* tauq, lapack_complex_float* taup, lapack_complex_float* work, blasint* info);
 
-    void FC_GLOBAL(cgebrd,CGEBRD)(blasint* m, blasint* n, float complex* a, blasint* lda, float* d, float* e, float complex* tauq, float complex* taup, float complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(cgebrd,CGEBRD)(blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, float* d, float* e, lapack_complex_float* tauq, lapack_complex_float* taup, lapack_complex_float* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(cgecon,CGECON)(char* norm, blasint* n, float complex* a, blasint* lda, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_norm);
+    void FC_GLOBAL(cgecon,CGECON)(char* norm, blasint* n, lapack_complex_float* a, blasint* lda, float* anorm, float* rcond, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_norm);
 
-    void FC_GLOBAL(cgeequ,CGEEQU)(blasint* m, blasint* n, float complex* a, blasint* lda, float* r, float* c, float* rowcnd, float* colcnd, float* amax, blasint* info);
+    void FC_GLOBAL(cgeequ,CGEEQU)(blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, float* r, float* c, float* rowcnd, float* colcnd, float* amax, blasint* info);
 
-    void FC_GLOBAL(cgeequb,CGEEQUB)(blasint* m, blasint* n, float complex* a, blasint* lda, float* r, float* c, float* rowcnd, float* colcnd, float* amax, blasint* info);
+    void FC_GLOBAL(cgeequb,CGEEQUB)(blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, float* r, float* c, float* rowcnd, float* colcnd, float* amax, blasint* info);
 
-    void FC_GLOBAL(cgees,CGEES)(char* jobvs, char* sort, blaslogical* selectfunc, blasint* n, float complex* a, blasint* lda, blasint* sdim, float complex* w, float complex* vs, blasint* ldvs, float complex* work, blasint* lwork, float* rwork, blaslogical* bwork, blasint* info, flexiblas_fortran_charlen_t len_jobvs, flexiblas_fortran_charlen_t len_sort);
+    void FC_GLOBAL(cgees,CGEES)(char* jobvs, char* sort, blaslogical* selectfunc, blasint* n, lapack_complex_float* a, blasint* lda, blasint* sdim, lapack_complex_float* w, lapack_complex_float* vs, blasint* ldvs, lapack_complex_float* work, blasint* lwork, float* rwork, blaslogical* bwork, blasint* info, flexiblas_fortran_charlen_t len_jobvs, flexiblas_fortran_charlen_t len_sort);
 
-    void FC_GLOBAL(cgeesx,CGEESX)(char* jobvs, char* sort, blaslogical* selectfunc, char* sense, blasint* n, float complex* a, blasint* lda, blasint* sdim, float complex* w, float complex* vs, blasint* ldvs, float* rconde, float* rcondv, float complex* work, blasint* lwork, float* rwork, blaslogical* bwork, blasint* info, flexiblas_fortran_charlen_t len_jobvs, flexiblas_fortran_charlen_t len_sort, flexiblas_fortran_charlen_t len_sense);
+    void FC_GLOBAL(cgeesx,CGEESX)(char* jobvs, char* sort, blaslogical* selectfunc, char* sense, blasint* n, lapack_complex_float* a, blasint* lda, blasint* sdim, lapack_complex_float* w, lapack_complex_float* vs, blasint* ldvs, float* rconde, float* rcondv, lapack_complex_float* work, blasint* lwork, float* rwork, blaslogical* bwork, blasint* info, flexiblas_fortran_charlen_t len_jobvs, flexiblas_fortran_charlen_t len_sort, flexiblas_fortran_charlen_t len_sense);
 
-    void FC_GLOBAL(cgeev,CGEEV)(char* jobvl, char* jobvr, blasint* n, float complex* a, blasint* lda, float complex* w, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, float complex* work, blasint* lwork, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobvl, flexiblas_fortran_charlen_t len_jobvr);
+    void FC_GLOBAL(cgeev,CGEEV)(char* jobvl, char* jobvr, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* w, lapack_complex_float* vl, blasint* ldvl, lapack_complex_float* vr, blasint* ldvr, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobvl, flexiblas_fortran_charlen_t len_jobvr);
 
-    void FC_GLOBAL(cgeevx,CGEEVX)(char* balanc, char* jobvl, char* jobvr, char* sense, blasint* n, float complex* a, blasint* lda, float complex* w, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, blasint* ilo, blasint* ihi, float* scale, float* abnrm, float* rconde, float* rcondv, float complex* work, blasint* lwork, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_balanc, flexiblas_fortran_charlen_t len_jobvl, flexiblas_fortran_charlen_t len_jobvr, flexiblas_fortran_charlen_t len_sense);
+    void FC_GLOBAL(cgeevx,CGEEVX)(char* balanc, char* jobvl, char* jobvr, char* sense, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* w, lapack_complex_float* vl, blasint* ldvl, lapack_complex_float* vr, blasint* ldvr, blasint* ilo, blasint* ihi, float* scale, float* abnrm, float* rconde, float* rcondv, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_balanc, flexiblas_fortran_charlen_t len_jobvl, flexiblas_fortran_charlen_t len_jobvr, flexiblas_fortran_charlen_t len_sense);
 
-    void FC_GLOBAL(cgegs,CGEGS)(char* jobvsl, char* jobvsr, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* alpha, float complex* beta, float complex* vsl, blasint* ldvsl, float complex* vsr, blasint* ldvsr, float complex* work, blasint* lwork, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobvsl, flexiblas_fortran_charlen_t len_jobvsr);
+    void FC_GLOBAL(cgegs,CGEGS)(char* jobvsl, char* jobvsr, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, lapack_complex_float* alpha, lapack_complex_float* beta, lapack_complex_float* vsl, blasint* ldvsl, lapack_complex_float* vsr, blasint* ldvsr, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobvsl, flexiblas_fortran_charlen_t len_jobvsr);
 
-    void FC_GLOBAL(cgegv,CGEGV)(char* jobvl, char* jobvr, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* alpha, float complex* beta, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, float complex* work, blasint* lwork, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobvl, flexiblas_fortran_charlen_t len_jobvr);
+    void FC_GLOBAL(cgegv,CGEGV)(char* jobvl, char* jobvr, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, lapack_complex_float* alpha, lapack_complex_float* beta, lapack_complex_float* vl, blasint* ldvl, lapack_complex_float* vr, blasint* ldvr, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobvl, flexiblas_fortran_charlen_t len_jobvr);
 
-    void FC_GLOBAL(cgehd2,CGEHD2)(blasint* n, blasint* ilo, blasint* ihi, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* info);
+    void FC_GLOBAL(cgehd2,CGEHD2)(blasint* n, blasint* ilo, blasint* ihi, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* work, blasint* info);
 
-    void FC_GLOBAL(cgehrd,CGEHRD)(blasint* n, blasint* ilo, blasint* ihi, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(cgehrd,CGEHRD)(blasint* n, blasint* ilo, blasint* ihi, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(cgelq2,CGELQ2)(blasint* m, blasint* n, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* info);
+    void FC_GLOBAL(cgelq2,CGELQ2)(blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* work, blasint* info);
 
-    void FC_GLOBAL(cgelqf,CGELQF)(blasint* m, blasint* n, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(cgelqf,CGELQF)(blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(cgels,CGELS)(char* trans, blasint* m, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(cgels,CGELS)(char* trans, blasint* m, blasint* n, blasint* nrhs, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, lapack_complex_float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(cgelsd,CGELSD)(blasint* m, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* s, float* rcond, blasint* rank_bn, float complex* work, blasint* lwork, float* rwork, blasint* iwork, blasint* info);
+    void FC_GLOBAL(cgelsd,CGELSD)(blasint* m, blasint* n, blasint* nrhs, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, float* s, float* rcond, blasint* rank_bn, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* iwork, blasint* info);
 
-    void FC_GLOBAL(cgelss,CGELSS)(blasint* m, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* s, float* rcond, blasint* rank_bn, float complex* work, blasint* lwork, float* rwork, blasint* info);
+    void FC_GLOBAL(cgelss,CGELSS)(blasint* m, blasint* n, blasint* nrhs, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, float* s, float* rcond, blasint* rank_bn, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* info);
 
-    void FC_GLOBAL(cgelsx,CGELSX)(blasint* m, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* b, blasint* ldb, blasint* jpvt, float* rcond, blasint* rank_bn, float complex* work, float* rwork, blasint* info);
+    void FC_GLOBAL(cgelsx,CGELSX)(blasint* m, blasint* n, blasint* nrhs, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, blasint* jpvt, float* rcond, blasint* rank_bn, lapack_complex_float* work, float* rwork, blasint* info);
 
-    void FC_GLOBAL(cgelsy,CGELSY)(blasint* m, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* b, blasint* ldb, blasint* jpvt, float* rcond, blasint* rank_bn, float complex* work, blasint* lwork, float* rwork, blasint* info);
+    void FC_GLOBAL(cgelsy,CGELSY)(blasint* m, blasint* n, blasint* nrhs, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, blasint* jpvt, float* rcond, blasint* rank_bn, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* info);
 
-    void FC_GLOBAL(cgeql2,CGEQL2)(blasint* m, blasint* n, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* info);
+    void FC_GLOBAL(cgeql2,CGEQL2)(blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* work, blasint* info);
 
-    void FC_GLOBAL(cgeqlf,CGEQLF)(blasint* m, blasint* n, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(cgeqlf,CGEQLF)(blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(cgeqp3,CGEQP3)(blasint* m, blasint* n, float complex* a, blasint* lda, blasint* jpvt, float complex* tau, float complex* work, blasint* lwork, float* rwork, blasint* info);
+    void FC_GLOBAL(cgeqp3,CGEQP3)(blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, blasint* jpvt, lapack_complex_float* tau, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* info);
 
-    void FC_GLOBAL(cgeqpf,CGEQPF)(blasint* m, blasint* n, float complex* a, blasint* lda, blasint* jpvt, float complex* tau, float complex* work, float* rwork, blasint* info);
+    void FC_GLOBAL(cgeqpf,CGEQPF)(blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, blasint* jpvt, lapack_complex_float* tau, lapack_complex_float* work, float* rwork, blasint* info);
 
-    void FC_GLOBAL(cgeqr2,CGEQR2)(blasint* m, blasint* n, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* info);
+    void FC_GLOBAL(cgeqr2,CGEQR2)(blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* work, blasint* info);
 
-    void FC_GLOBAL(cgeqr2p,CGEQR2P)(blasint* m, blasint* n, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* info);
+    void FC_GLOBAL(cgeqr2p,CGEQR2P)(blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* work, blasint* info);
 
-    void FC_GLOBAL(cgeqrf,CGEQRF)(blasint* m, blasint* n, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(cgeqrf,CGEQRF)(blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(cgeqrfp,CGEQRFP)(blasint* m, blasint* n, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(cgeqrfp,CGEQRFP)(blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(cgerfs,CGERFS)(char* trans, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* af, blasint* ldaf, blasint* ipiv, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* ferr, float* berr, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(cgerfs,CGERFS)(char* trans, blasint* n, blasint* nrhs, lapack_complex_float* a, blasint* lda, lapack_complex_float* af, blasint* ldaf, blasint* ipiv, lapack_complex_float* b, blasint* ldb, lapack_complex_float* x, blasint* ldx, float* ferr, float* berr, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(cgerq2,CGERQ2)(blasint* m, blasint* n, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* info);
+    void FC_GLOBAL(cgerq2,CGERQ2)(blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* work, blasint* info);
 
-    void FC_GLOBAL(cgerqf,CGERQF)(blasint* m, blasint* n, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(cgerqf,CGERQF)(blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(cgesc2,CGESC2)(blasint* n, float complex* a, blasint* lda, float complex* rhs, blasint* ipiv, blasint* jpiv, float* scale);
+    void FC_GLOBAL(cgesc2,CGESC2)(blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* rhs, blasint* ipiv, blasint* jpiv, float* scale);
 
-    void FC_GLOBAL(cgesdd,CGESDD)(char* jobz, blasint* m, blasint* n, float complex* a, blasint* lda, float* s, float complex* u, blasint* ldu, float complex* vt, blasint* ldvt, float complex* work, blasint* lwork, float* rwork, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_jobz);
+    void FC_GLOBAL(cgesdd,CGESDD)(char* jobz, blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, float* s, lapack_complex_float* u, blasint* ldu, lapack_complex_float* vt, blasint* ldvt, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_jobz);
 
-    void FC_GLOBAL(cgesv,CGESV)(blasint* n, blasint* nrhs, float complex* a, blasint* lda, blasint* ipiv, float complex* b, blasint* ldb, blasint* info);
+    void FC_GLOBAL(cgesv,CGESV)(blasint* n, blasint* nrhs, lapack_complex_float* a, blasint* lda, blasint* ipiv, lapack_complex_float* b, blasint* ldb, blasint* info);
 
-    void FC_GLOBAL(cgesvd,CGESVD)(char* jobu, char* jobvt, blasint* m, blasint* n, float complex* a, blasint* lda, float* s, float complex* u, blasint* ldu, float complex* vt, blasint* ldvt, float complex* work, blasint* lwork, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobu, flexiblas_fortran_charlen_t len_jobvt);
+    void FC_GLOBAL(cgesvd,CGESVD)(char* jobu, char* jobvt, blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, float* s, lapack_complex_float* u, blasint* ldu, lapack_complex_float* vt, blasint* ldvt, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobu, flexiblas_fortran_charlen_t len_jobvt);
 
-    void FC_GLOBAL(cgesvx,CGESVX)(char* fact, char* trans, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* af, blasint* ldaf, blasint* ipiv, char* equed, float* r, float* c, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* rcond, float* ferr, float* berr, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(cgesvx,CGESVX)(char* fact, char* trans, blasint* n, blasint* nrhs, lapack_complex_float* a, blasint* lda, lapack_complex_float* af, blasint* ldaf, blasint* ipiv, char* equed, float* r, float* c, lapack_complex_float* b, blasint* ldb, lapack_complex_float* x, blasint* ldx, float* rcond, float* ferr, float* berr, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(cgetc2,CGETC2)(blasint* n, float complex* a, blasint* lda, blasint* ipiv, blasint* jpiv, blasint* info);
+    void FC_GLOBAL(cgetc2,CGETC2)(blasint* n, lapack_complex_float* a, blasint* lda, blasint* ipiv, blasint* jpiv, blasint* info);
 
-    void FC_GLOBAL(cgetf2,CGETF2)(blasint* m, blasint* n, float complex* a, blasint* lda, blasint* ipiv, blasint* info);
+    void FC_GLOBAL(cgetf2,CGETF2)(blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, blasint* ipiv, blasint* info);
 
-    void FC_GLOBAL(cgetrf,CGETRF)(blasint* m, blasint* n, float complex* a, blasint* lda, blasint* ipiv, blasint* info);
+    void FC_GLOBAL(cgetrf,CGETRF)(blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, blasint* ipiv, blasint* info);
 
-    void FC_GLOBAL(cgetri,CGETRI)(blasint* n, float complex* a, blasint* lda, blasint* ipiv, float complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(cgetri,CGETRI)(blasint* n, lapack_complex_float* a, blasint* lda, blasint* ipiv, lapack_complex_float* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(cgetrs,CGETRS)(char* trans, blasint* n, blasint* nrhs, float complex* a, blasint* lda, blasint* ipiv, float complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(cgetrs,CGETRS)(char* trans, blasint* n, blasint* nrhs, lapack_complex_float* a, blasint* lda, blasint* ipiv, lapack_complex_float* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(cggbak,CGGBAK)(char* job, char* side, blasint* n, blasint* ilo, blasint* ihi, float* lscale, float* rscale, blasint* m, float complex* v, blasint* ldv, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_side);
+    void FC_GLOBAL(cggbak,CGGBAK)(char* job, char* side, blasint* n, blasint* ilo, blasint* ihi, float* lscale, float* rscale, blasint* m, lapack_complex_float* v, blasint* ldv, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_side);
 
-    void FC_GLOBAL(cggbal,CGGBAL)(char* job, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, blasint* ilo, blasint* ihi, float* lscale, float* rscale, float* work, blasint* info, flexiblas_fortran_charlen_t len_job);
+    void FC_GLOBAL(cggbal,CGGBAL)(char* job, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, blasint* ilo, blasint* ihi, float* lscale, float* rscale, float* work, blasint* info, flexiblas_fortran_charlen_t len_job);
 
-    void FC_GLOBAL(cgges,CGGES)(char* jobvsl, char* jobvsr, char* sort, blaslogical* selctg, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, blasint* sdim, float complex* alpha, float complex* beta, float complex* vsl, blasint* ldvsl, float complex* vsr, blasint* ldvsr, float complex* work, blasint* lwork, float* rwork, blaslogical* bwork, blasint* info, flexiblas_fortran_charlen_t len_jobvsl, flexiblas_fortran_charlen_t len_jobvsr, flexiblas_fortran_charlen_t len_sort);
+    void FC_GLOBAL(cgges,CGGES)(char* jobvsl, char* jobvsr, char* sort, blaslogical* selctg, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, blasint* sdim, lapack_complex_float* alpha, lapack_complex_float* beta, lapack_complex_float* vsl, blasint* ldvsl, lapack_complex_float* vsr, blasint* ldvsr, lapack_complex_float* work, blasint* lwork, float* rwork, blaslogical* bwork, blasint* info, flexiblas_fortran_charlen_t len_jobvsl, flexiblas_fortran_charlen_t len_jobvsr, flexiblas_fortran_charlen_t len_sort);
 
-    void FC_GLOBAL(cggesx,CGGESX)(char* jobvsl, char* jobvsr, char* sort, blaslogical* selctg, char* sense, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, blasint* sdim, float complex* alpha, float complex* beta, float complex* vsl, blasint* ldvsl, float complex* vsr, blasint* ldvsr, float* rconde, float* rcondv, float complex* work, blasint* lwork, float* rwork, blasint* iwork, blasint* liwork, blaslogical* bwork, blasint* info, flexiblas_fortran_charlen_t len_jobvsl, flexiblas_fortran_charlen_t len_jobvsr, flexiblas_fortran_charlen_t len_sort, flexiblas_fortran_charlen_t len_sense);
+    void FC_GLOBAL(cggesx,CGGESX)(char* jobvsl, char* jobvsr, char* sort, blaslogical* selctg, char* sense, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, blasint* sdim, lapack_complex_float* alpha, lapack_complex_float* beta, lapack_complex_float* vsl, blasint* ldvsl, lapack_complex_float* vsr, blasint* ldvsr, float* rconde, float* rcondv, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* iwork, blasint* liwork, blaslogical* bwork, blasint* info, flexiblas_fortran_charlen_t len_jobvsl, flexiblas_fortran_charlen_t len_jobvsr, flexiblas_fortran_charlen_t len_sort, flexiblas_fortran_charlen_t len_sense);
 
-    void FC_GLOBAL(cggev,CGGEV)(char* jobvl, char* jobvr, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* alpha, float complex* beta, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, float complex* work, blasint* lwork, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobvl, flexiblas_fortran_charlen_t len_jobvr);
+    void FC_GLOBAL(cggev,CGGEV)(char* jobvl, char* jobvr, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, lapack_complex_float* alpha, lapack_complex_float* beta, lapack_complex_float* vl, blasint* ldvl, lapack_complex_float* vr, blasint* ldvr, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobvl, flexiblas_fortran_charlen_t len_jobvr);
 
-    void FC_GLOBAL(cggevx,CGGEVX)(char* balanc, char* jobvl, char* jobvr, char* sense, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* alpha, float complex* beta, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, blasint* ilo, blasint* ihi, float* lscale, float* rscale, float* abnrm, float* bbnrm, float* rconde, float* rcondv, float complex* work, blasint* lwork, float* rwork, blasint* iwork, blaslogical* bwork, blasint* info, flexiblas_fortran_charlen_t len_balanc, flexiblas_fortran_charlen_t len_jobvl, flexiblas_fortran_charlen_t len_jobvr, flexiblas_fortran_charlen_t len_sense);
+    void FC_GLOBAL(cggevx,CGGEVX)(char* balanc, char* jobvl, char* jobvr, char* sense, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, lapack_complex_float* alpha, lapack_complex_float* beta, lapack_complex_float* vl, blasint* ldvl, lapack_complex_float* vr, blasint* ldvr, blasint* ilo, blasint* ihi, float* lscale, float* rscale, float* abnrm, float* bbnrm, float* rconde, float* rcondv, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* iwork, blaslogical* bwork, blasint* info, flexiblas_fortran_charlen_t len_balanc, flexiblas_fortran_charlen_t len_jobvl, flexiblas_fortran_charlen_t len_jobvr, flexiblas_fortran_charlen_t len_sense);
 
-    void FC_GLOBAL(cggglm,CGGGLM)(blasint* n, blasint* m, blasint* p, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* d, float complex* x, float complex* y, float complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(cggglm,CGGGLM)(blasint* n, blasint* m, blasint* p, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, lapack_complex_float* d, lapack_complex_float* x, lapack_complex_float* y, lapack_complex_float* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(cgghrd,CGGHRD)(char* compq, char* compz, blasint* n, blasint* ilo, blasint* ihi, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* q, blasint* ldq, float complex* z, blasint* ldz, blasint* info, flexiblas_fortran_charlen_t len_compq, flexiblas_fortran_charlen_t len_compz);
+    void FC_GLOBAL(cgghrd,CGGHRD)(char* compq, char* compz, blasint* n, blasint* ilo, blasint* ihi, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, lapack_complex_float* q, blasint* ldq, lapack_complex_float* z, blasint* ldz, blasint* info, flexiblas_fortran_charlen_t len_compq, flexiblas_fortran_charlen_t len_compz);
 
-    void FC_GLOBAL(cgglse,CGGLSE)(blasint* m, blasint* n, blasint* p, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* c, float complex* d, float complex* x, float complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(cgglse,CGGLSE)(blasint* m, blasint* n, blasint* p, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, lapack_complex_float* c, lapack_complex_float* d, lapack_complex_float* x, lapack_complex_float* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(cggqrf,CGGQRF)(blasint* n, blasint* m, blasint* p, float complex* a, blasint* lda, float complex* taua, float complex* b, blasint* ldb, float complex* taub, float complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(cggqrf,CGGQRF)(blasint* n, blasint* m, blasint* p, lapack_complex_float* a, blasint* lda, lapack_complex_float* taua, lapack_complex_float* b, blasint* ldb, lapack_complex_float* taub, lapack_complex_float* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(cggrqf,CGGRQF)(blasint* m, blasint* p, blasint* n, float complex* a, blasint* lda, float complex* taua, float complex* b, blasint* ldb, float complex* taub, float complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(cggrqf,CGGRQF)(blasint* m, blasint* p, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* taua, lapack_complex_float* b, blasint* ldb, lapack_complex_float* taub, lapack_complex_float* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(cggsvd,CGGSVD)(char* jobu, char* jobv, char* jobq, blasint* m, blasint* n, blasint* p, blasint* k, blasint* l, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* alpha, float* beta, float complex* u, blasint* ldu, float complex* v, blasint* ldv, float complex* q, blasint* ldq, float complex* work, float* rwork, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_jobu, flexiblas_fortran_charlen_t len_jobv, flexiblas_fortran_charlen_t len_jobq);
+    void FC_GLOBAL(cggsvd,CGGSVD)(char* jobu, char* jobv, char* jobq, blasint* m, blasint* n, blasint* p, blasint* k, blasint* l, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, float* alpha, float* beta, lapack_complex_float* u, blasint* ldu, lapack_complex_float* v, blasint* ldv, lapack_complex_float* q, blasint* ldq, lapack_complex_float* work, float* rwork, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_jobu, flexiblas_fortran_charlen_t len_jobv, flexiblas_fortran_charlen_t len_jobq);
 
-    void FC_GLOBAL(cggsvp,CGGSVP)(char* jobu, char* jobv, char* jobq, blasint* m, blasint* p, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* tola, float* tolb, blasint* k, blasint* l, float complex* u, blasint* ldu, float complex* v, blasint* ldv, float complex* q, blasint* ldq, blasint* iwork, float* rwork, float complex* tau, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_jobu, flexiblas_fortran_charlen_t len_jobv, flexiblas_fortran_charlen_t len_jobq);
+    void FC_GLOBAL(cggsvp,CGGSVP)(char* jobu, char* jobv, char* jobq, blasint* m, blasint* p, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, float* tola, float* tolb, blasint* k, blasint* l, lapack_complex_float* u, blasint* ldu, lapack_complex_float* v, blasint* ldv, lapack_complex_float* q, blasint* ldq, blasint* iwork, float* rwork, lapack_complex_float* tau, lapack_complex_float* work, blasint* info, flexiblas_fortran_charlen_t len_jobu, flexiblas_fortran_charlen_t len_jobv, flexiblas_fortran_charlen_t len_jobq);
 
-    void FC_GLOBAL(cgtcon,CGTCON)(char* norm, blasint* n, float complex* dl, float complex* d, float complex* du, float complex* du2, blasint* ipiv, float* anorm, float* rcond, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_norm);
+    void FC_GLOBAL(cgtcon,CGTCON)(char* norm, blasint* n, lapack_complex_float* dl, lapack_complex_float* d, lapack_complex_float* du, lapack_complex_float* du2, blasint* ipiv, float* anorm, float* rcond, lapack_complex_float* work, blasint* info, flexiblas_fortran_charlen_t len_norm);
 
-    void FC_GLOBAL(cgtrfs,CGTRFS)(char* trans, blasint* n, blasint* nrhs, float complex* dl, float complex* d, float complex* du, float complex* dlf, float complex* df, float complex* duf, float complex* du2, blasint* ipiv, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* ferr, float* berr, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(cgtrfs,CGTRFS)(char* trans, blasint* n, blasint* nrhs, lapack_complex_float* dl, lapack_complex_float* d, lapack_complex_float* du, lapack_complex_float* dlf, lapack_complex_float* df, lapack_complex_float* duf, lapack_complex_float* du2, blasint* ipiv, lapack_complex_float* b, blasint* ldb, lapack_complex_float* x, blasint* ldx, float* ferr, float* berr, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(cgtsv,CGTSV)(blasint* n, blasint* nrhs, float complex* dl, float complex* d, float complex* du, float complex* b, blasint* ldb, blasint* info);
+    void FC_GLOBAL(cgtsv,CGTSV)(blasint* n, blasint* nrhs, lapack_complex_float* dl, lapack_complex_float* d, lapack_complex_float* du, lapack_complex_float* b, blasint* ldb, blasint* info);
 
-    void FC_GLOBAL(cgtsvx,CGTSVX)(char* fact, char* trans, blasint* n, blasint* nrhs, float complex* dl, float complex* d, float complex* du, float complex* dlf, float complex* df, float complex* duf, float complex* du2, blasint* ipiv, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* rcond, float* ferr, float* berr, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(cgtsvx,CGTSVX)(char* fact, char* trans, blasint* n, blasint* nrhs, lapack_complex_float* dl, lapack_complex_float* d, lapack_complex_float* du, lapack_complex_float* dlf, lapack_complex_float* df, lapack_complex_float* duf, lapack_complex_float* du2, blasint* ipiv, lapack_complex_float* b, blasint* ldb, lapack_complex_float* x, blasint* ldx, float* rcond, float* ferr, float* berr, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(cgttrf,CGTTRF)(blasint* n, float complex* dl, float complex* d, float complex* du, float complex* du2, blasint* ipiv, blasint* info);
+    void FC_GLOBAL(cgttrf,CGTTRF)(blasint* n, lapack_complex_float* dl, lapack_complex_float* d, lapack_complex_float* du, lapack_complex_float* du2, blasint* ipiv, blasint* info);
 
-    void FC_GLOBAL(cgttrs,CGTTRS)(char* trans, blasint* n, blasint* nrhs, float complex* dl, float complex* d, float complex* du, float complex* du2, blasint* ipiv, float complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(cgttrs,CGTTRS)(char* trans, blasint* n, blasint* nrhs, lapack_complex_float* dl, lapack_complex_float* d, lapack_complex_float* du, lapack_complex_float* du2, blasint* ipiv, lapack_complex_float* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(cgtts2,CGTTS2)(blasint* itrans, blasint* n, blasint* nrhs, float complex* dl, float complex* d, float complex* du, float complex* du2, blasint* ipiv, float complex* b, blasint* ldb);
+    void FC_GLOBAL(cgtts2,CGTTS2)(blasint* itrans, blasint* n, blasint* nrhs, lapack_complex_float* dl, lapack_complex_float* d, lapack_complex_float* du, lapack_complex_float* du2, blasint* ipiv, lapack_complex_float* b, blasint* ldb);
 
-    void FC_GLOBAL(chbev,CHBEV)(char* jobz, char* uplo, blasint* n, blasint* kd, float complex* ab, blasint* ldab, float* w, float complex* z, blasint* ldz, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chbev,CHBEV)(char* jobz, char* uplo, blasint* n, blasint* kd, lapack_complex_float* ab, blasint* ldab, float* w, lapack_complex_float* z, blasint* ldz, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chbevd,CHBEVD)(char* jobz, char* uplo, blasint* n, blasint* kd, float complex* ab, blasint* ldab, float* w, float complex* z, blasint* ldz, float complex* work, blasint* lwork, float* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chbevd,CHBEVD)(char* jobz, char* uplo, blasint* n, blasint* kd, lapack_complex_float* ab, blasint* ldab, float* w, lapack_complex_float* z, blasint* ldz, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chbevx,CHBEVX)(char* jobz, char* range, char* uplo, blasint* n, blasint* kd, float complex* ab, blasint* ldab, float complex* q, blasint* ldq, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, blasint* m, float* w, float complex* z, blasint* ldz, float complex* work, float* rwork, blasint* iwork, blasint* ifail, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chbevx,CHBEVX)(char* jobz, char* range, char* uplo, blasint* n, blasint* kd, lapack_complex_float* ab, blasint* ldab, lapack_complex_float* q, blasint* ldq, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, blasint* m, float* w, lapack_complex_float* z, blasint* ldz, lapack_complex_float* work, float* rwork, blasint* iwork, blasint* ifail, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chbgst,CHBGST)(char* vect, char* uplo, blasint* n, blasint* ka, blasint* kb, float complex* ab, blasint* ldab, float complex* bb, blasint* ldbb, float complex* x, blasint* ldx, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chbgst,CHBGST)(char* vect, char* uplo, blasint* n, blasint* ka, blasint* kb, lapack_complex_float* ab, blasint* ldab, lapack_complex_float* bb, blasint* ldbb, lapack_complex_float* x, blasint* ldx, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chbgv,CHBGV)(char* jobz, char* uplo, blasint* n, blasint* ka, blasint* kb, float complex* ab, blasint* ldab, float complex* bb, blasint* ldbb, float* w, float complex* z, blasint* ldz, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chbgv,CHBGV)(char* jobz, char* uplo, blasint* n, blasint* ka, blasint* kb, lapack_complex_float* ab, blasint* ldab, lapack_complex_float* bb, blasint* ldbb, float* w, lapack_complex_float* z, blasint* ldz, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chbgvd,CHBGVD)(char* jobz, char* uplo, blasint* n, blasint* ka, blasint* kb, float complex* ab, blasint* ldab, float complex* bb, blasint* ldbb, float* w, float complex* z, blasint* ldz, float complex* work, blasint* lwork, float* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chbgvd,CHBGVD)(char* jobz, char* uplo, blasint* n, blasint* ka, blasint* kb, lapack_complex_float* ab, blasint* ldab, lapack_complex_float* bb, blasint* ldbb, float* w, lapack_complex_float* z, blasint* ldz, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chbgvx,CHBGVX)(char* jobz, char* range, char* uplo, blasint* n, blasint* ka, blasint* kb, float complex* ab, blasint* ldab, float complex* bb, blasint* ldbb, float complex* q, blasint* ldq, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, blasint* m, float* w, float complex* z, blasint* ldz, float complex* work, float* rwork, blasint* iwork, blasint* ifail, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chbgvx,CHBGVX)(char* jobz, char* range, char* uplo, blasint* n, blasint* ka, blasint* kb, lapack_complex_float* ab, blasint* ldab, lapack_complex_float* bb, blasint* ldbb, lapack_complex_float* q, blasint* ldq, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, blasint* m, float* w, lapack_complex_float* z, blasint* ldz, lapack_complex_float* work, float* rwork, blasint* iwork, blasint* ifail, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chbtrd,CHBTRD)(char* vect, char* uplo, blasint* n, blasint* kd, float complex* ab, blasint* ldab, float* d, float* e, float complex* q, blasint* ldq, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chbtrd,CHBTRD)(char* vect, char* uplo, blasint* n, blasint* kd, lapack_complex_float* ab, blasint* ldab, float* d, float* e, lapack_complex_float* q, blasint* ldq, lapack_complex_float* work, blasint* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(checon,CHECON)(char* uplo, blasint* n, float complex* a, blasint* lda, blasint* ipiv, float* anorm, float* rcond, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(checon,CHECON)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, blasint* ipiv, float* anorm, float* rcond, lapack_complex_float* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cheequb,CHEEQUB)(char* uplo, blasint* n, float complex* a, blasint* lda, float* s, float* scond, float* amax, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cheequb,CHEEQUB)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, float* s, float* scond, float* amax, lapack_complex_float* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cheev,CHEEV)(char* jobz, char* uplo, blasint* n, float complex* a, blasint* lda, float* w, float complex* work, blasint* lwork, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cheev,CHEEV)(char* jobz, char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, float* w, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cheevd,CHEEVD)(char* jobz, char* uplo, blasint* n, float complex* a, blasint* lda, float* w, float complex* work, blasint* lwork, float* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cheevd,CHEEVD)(char* jobz, char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, float* w, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cheevr,CHEEVR)(char* jobz, char* range, char* uplo, blasint* n, float complex* a, blasint* lda, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, blasint* m, float* w, float complex* z, blasint* ldz, blasint* isuppz, float complex* work, blasint* lwork, float* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cheevr,CHEEVR)(char* jobz, char* range, char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, blasint* m, float* w, lapack_complex_float* z, blasint* ldz, blasint* isuppz, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cheevx,CHEEVX)(char* jobz, char* range, char* uplo, blasint* n, float complex* a, blasint* lda, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, blasint* m, float* w, float complex* z, blasint* ldz, float complex* work, blasint* lwork, float* rwork, blasint* iwork, blasint* ifail, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cheevx,CHEEVX)(char* jobz, char* range, char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, blasint* m, float* w, lapack_complex_float* z, blasint* ldz, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* iwork, blasint* ifail, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chegs2,CHEGS2)(blasint* itype, char* uplo, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chegs2,CHEGS2)(blasint* itype, char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chegst,CHEGST)(blasint* itype, char* uplo, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chegst,CHEGST)(blasint* itype, char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chegv,CHEGV)(blasint* itype, char* jobz, char* uplo, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* w, float complex* work, blasint* lwork, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chegv,CHEGV)(blasint* itype, char* jobz, char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, float* w, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chegvd,CHEGVD)(blasint* itype, char* jobz, char* uplo, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* w, float complex* work, blasint* lwork, float* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chegvd,CHEGVD)(blasint* itype, char* jobz, char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, float* w, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chegvx,CHEGVX)(blasint* itype, char* jobz, char* range, char* uplo, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, blasint* m, float* w, float complex* z, blasint* ldz, float complex* work, blasint* lwork, float* rwork, blasint* iwork, blasint* ifail, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chegvx,CHEGVX)(blasint* itype, char* jobz, char* range, char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, blasint* m, float* w, lapack_complex_float* z, blasint* ldz, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* iwork, blasint* ifail, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cherfs,CHERFS)(char* uplo, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* af, blasint* ldaf, blasint* ipiv, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* ferr, float* berr, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cherfs,CHERFS)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* a, blasint* lda, lapack_complex_float* af, blasint* ldaf, blasint* ipiv, lapack_complex_float* b, blasint* ldb, lapack_complex_float* x, blasint* ldx, float* ferr, float* berr, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chesv,CHESV)(char* uplo, blasint* n, blasint* nrhs, float complex* a, blasint* lda, blasint* ipiv, float complex* b, blasint* ldb, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chesv,CHESV)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* a, blasint* lda, blasint* ipiv, lapack_complex_float* b, blasint* ldb, lapack_complex_float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chesvx,CHESVX)(char* fact, char* uplo, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* af, blasint* ldaf, blasint* ipiv, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* rcond, float* ferr, float* berr, float complex* work, blasint* lwork, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chesvx,CHESVX)(char* fact, char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* a, blasint* lda, lapack_complex_float* af, blasint* ldaf, blasint* ipiv, lapack_complex_float* b, blasint* ldb, lapack_complex_float* x, blasint* ldx, float* rcond, float* ferr, float* berr, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cheswapr,CHESWAPR)(char* uplo, blasint* n, float complex* a, blasint* lda, blasint* i1, blasint* i2, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cheswapr,CHESWAPR)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, blasint* i1, blasint* i2, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chetd2,CHETD2)(char* uplo, blasint* n, float complex* a, blasint* lda, float* d, float* e, float complex* tau, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chetd2,CHETD2)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, float* d, float* e, lapack_complex_float* tau, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chetf2,CHETF2)(char* uplo, blasint* n, float complex* a, blasint* lda, blasint* ipiv, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chetf2,CHETF2)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, blasint* ipiv, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chetrd,CHETRD)(char* uplo, blasint* n, float complex* a, blasint* lda, float* d, float* e, float complex* tau, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chetrd,CHETRD)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, float* d, float* e, lapack_complex_float* tau, lapack_complex_float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chetrf,CHETRF)(char* uplo, blasint* n, float complex* a, blasint* lda, blasint* ipiv, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chetrf,CHETRF)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, blasint* ipiv, lapack_complex_float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chetri,CHETRI)(char* uplo, blasint* n, float complex* a, blasint* lda, blasint* ipiv, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chetri,CHETRI)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, blasint* ipiv, lapack_complex_float* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chetri2,CHETRI2)(char* uplo, blasint* n, float complex* a, blasint* lda, blasint* ipiv, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chetri2,CHETRI2)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, blasint* ipiv, lapack_complex_float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chetri2x,CHETRI2X)(char* uplo, blasint* n, float complex* a, blasint* lda, blasint* ipiv, float complex* work, blasint* nb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chetri2x,CHETRI2X)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, blasint* ipiv, lapack_complex_float* work, blasint* nb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chetrs,CHETRS)(char* uplo, blasint* n, blasint* nrhs, float complex* a, blasint* lda, blasint* ipiv, float complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chetrs,CHETRS)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* a, blasint* lda, blasint* ipiv, lapack_complex_float* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chetrs2,CHETRS2)(char* uplo, blasint* n, blasint* nrhs, float complex* a, blasint* lda, blasint* ipiv, float complex* b, blasint* ldb, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chetrs2,CHETRS2)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* a, blasint* lda, blasint* ipiv, lapack_complex_float* b, blasint* ldb, lapack_complex_float* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chfrk,CHFRK)(char* transr, char* uplo, char* trans, blasint* n, blasint* k, float* alpha, float complex* a, blasint* lda, float* beta, float complex* c, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(chfrk,CHFRK)(char* transr, char* uplo, char* trans, blasint* n, blasint* k, float* alpha, lapack_complex_float* a, blasint* lda, float* beta, lapack_complex_float* c, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(chgeqz,CHGEQZ)(char* job, char* compq, char* compz, blasint* n, blasint* ilo, blasint* ihi, float complex* h, blasint* ldh, float complex* t, blasint* ldt, float complex* alpha, float complex* beta, float complex* q, blasint* ldq, float complex* z, blasint* ldz, float complex* work, blasint* lwork, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_compq, flexiblas_fortran_charlen_t len_compz);
+    void FC_GLOBAL(chgeqz,CHGEQZ)(char* job, char* compq, char* compz, blasint* n, blasint* ilo, blasint* ihi, lapack_complex_float* h, blasint* ldh, lapack_complex_float* t, blasint* ldt, lapack_complex_float* alpha, lapack_complex_float* beta, lapack_complex_float* q, blasint* ldq, lapack_complex_float* z, blasint* ldz, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_compq, flexiblas_fortran_charlen_t len_compz);
 
     char FC_GLOBAL_(chla_transtype,CHLA_TRANSTYPE)(blasint* trans);
 
-    void FC_GLOBAL(chpcon,CHPCON)(char* uplo, blasint* n, float complex* ap, blasint* ipiv, float* anorm, float* rcond, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chpcon,CHPCON)(char* uplo, blasint* n, lapack_complex_float* ap, blasint* ipiv, float* anorm, float* rcond, lapack_complex_float* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chpev,CHPEV)(char* jobz, char* uplo, blasint* n, float complex* ap, float* w, float complex* z, blasint* ldz, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chpev,CHPEV)(char* jobz, char* uplo, blasint* n, lapack_complex_float* ap, float* w, lapack_complex_float* z, blasint* ldz, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chpevd,CHPEVD)(char* jobz, char* uplo, blasint* n, float complex* ap, float* w, float complex* z, blasint* ldz, float complex* work, blasint* lwork, float* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chpevd,CHPEVD)(char* jobz, char* uplo, blasint* n, lapack_complex_float* ap, float* w, lapack_complex_float* z, blasint* ldz, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chpevx,CHPEVX)(char* jobz, char* range, char* uplo, blasint* n, float complex* ap, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, blasint* m, float* w, float complex* z, blasint* ldz, float complex* work, float* rwork, blasint* iwork, blasint* ifail, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chpevx,CHPEVX)(char* jobz, char* range, char* uplo, blasint* n, lapack_complex_float* ap, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, blasint* m, float* w, lapack_complex_float* z, blasint* ldz, lapack_complex_float* work, float* rwork, blasint* iwork, blasint* ifail, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chpgst,CHPGST)(blasint* itype, char* uplo, blasint* n, float complex* ap, float complex* bp, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chpgst,CHPGST)(blasint* itype, char* uplo, blasint* n, lapack_complex_float* ap, lapack_complex_float* bp, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chpgv,CHPGV)(blasint* itype, char* jobz, char* uplo, blasint* n, float complex* ap, float complex* bp, float* w, float complex* z, blasint* ldz, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chpgv,CHPGV)(blasint* itype, char* jobz, char* uplo, blasint* n, lapack_complex_float* ap, lapack_complex_float* bp, float* w, lapack_complex_float* z, blasint* ldz, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chpgvd,CHPGVD)(blasint* itype, char* jobz, char* uplo, blasint* n, float complex* ap, float complex* bp, float* w, float complex* z, blasint* ldz, float complex* work, blasint* lwork, float* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chpgvd,CHPGVD)(blasint* itype, char* jobz, char* uplo, blasint* n, lapack_complex_float* ap, lapack_complex_float* bp, float* w, lapack_complex_float* z, blasint* ldz, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chpgvx,CHPGVX)(blasint* itype, char* jobz, char* range, char* uplo, blasint* n, float complex* ap, float complex* bp, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, blasint* m, float* w, float complex* z, blasint* ldz, float complex* work, float* rwork, blasint* iwork, blasint* ifail, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chpgvx,CHPGVX)(blasint* itype, char* jobz, char* range, char* uplo, blasint* n, lapack_complex_float* ap, lapack_complex_float* bp, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, blasint* m, float* w, lapack_complex_float* z, blasint* ldz, lapack_complex_float* work, float* rwork, blasint* iwork, blasint* ifail, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chprfs,CHPRFS)(char* uplo, blasint* n, blasint* nrhs, float complex* ap, float complex* afp, blasint* ipiv, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* ferr, float* berr, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chprfs,CHPRFS)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* ap, lapack_complex_float* afp, blasint* ipiv, lapack_complex_float* b, blasint* ldb, lapack_complex_float* x, blasint* ldx, float* ferr, float* berr, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chpsv,CHPSV)(char* uplo, blasint* n, blasint* nrhs, float complex* ap, blasint* ipiv, float complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chpsv,CHPSV)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* ap, blasint* ipiv, lapack_complex_float* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chpsvx,CHPSVX)(char* fact, char* uplo, blasint* n, blasint* nrhs, float complex* ap, float complex* afp, blasint* ipiv, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* rcond, float* ferr, float* berr, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chpsvx,CHPSVX)(char* fact, char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* ap, lapack_complex_float* afp, blasint* ipiv, lapack_complex_float* b, blasint* ldb, lapack_complex_float* x, blasint* ldx, float* rcond, float* ferr, float* berr, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chptrd,CHPTRD)(char* uplo, blasint* n, float complex* ap, float* d, float* e, float complex* tau, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chptrd,CHPTRD)(char* uplo, blasint* n, lapack_complex_float* ap, float* d, float* e, lapack_complex_float* tau, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chptrf,CHPTRF)(char* uplo, blasint* n, float complex* ap, blasint* ipiv, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chptrf,CHPTRF)(char* uplo, blasint* n, lapack_complex_float* ap, blasint* ipiv, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chptri,CHPTRI)(char* uplo, blasint* n, float complex* ap, blasint* ipiv, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chptri,CHPTRI)(char* uplo, blasint* n, lapack_complex_float* ap, blasint* ipiv, lapack_complex_float* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chptrs,CHPTRS)(char* uplo, blasint* n, blasint* nrhs, float complex* ap, blasint* ipiv, float complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(chptrs,CHPTRS)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* ap, blasint* ipiv, lapack_complex_float* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(chsein,CHSEIN)(char* side, char* eigsrc, char* initv, blaslogical* selectfunc, blasint* n, float complex* h, blasint* ldh, float complex* w, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, blasint* mm, blasint* m, float complex* work, float* rwork, blasint* ifaill, blasint* ifailr, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_eigsrc, flexiblas_fortran_charlen_t len_initv);
+    void FC_GLOBAL(chsein,CHSEIN)(char* side, char* eigsrc, char* initv, blaslogical* selectfunc, blasint* n, lapack_complex_float* h, blasint* ldh, lapack_complex_float* w, lapack_complex_float* vl, blasint* ldvl, lapack_complex_float* vr, blasint* ldvr, blasint* mm, blasint* m, lapack_complex_float* work, float* rwork, blasint* ifaill, blasint* ifailr, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_eigsrc, flexiblas_fortran_charlen_t len_initv);
 
-    void FC_GLOBAL(chseqr,CHSEQR)(char* job, char* compz, blasint* n, blasint* ilo, blasint* ihi, float complex* h, blasint* ldh, float complex* w, float complex* z, blasint* ldz, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_compz);
+    void FC_GLOBAL(chseqr,CHSEQR)(char* job, char* compz, blasint* n, blasint* ilo, blasint* ihi, lapack_complex_float* h, blasint* ldh, lapack_complex_float* w, lapack_complex_float* z, blasint* ldz, lapack_complex_float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_compz);
 
-    void FC_GLOBAL(clabrd,CLABRD)(blasint* m, blasint* n, blasint* nb, float complex* a, blasint* lda, float* d, float* e, float complex* tauq, float complex* taup, float complex* x, blasint* ldx, float complex* y, blasint* ldy);
+    void FC_GLOBAL(clabrd,CLABRD)(blasint* m, blasint* n, blasint* nb, lapack_complex_float* a, blasint* lda, float* d, float* e, lapack_complex_float* tauq, lapack_complex_float* taup, lapack_complex_float* x, blasint* ldx, lapack_complex_float* y, blasint* ldy);
 
-    void FC_GLOBAL(clacgv,CLACGV)(blasint* n, float complex* x, blasint* incx);
+    void FC_GLOBAL(clacgv,CLACGV)(blasint* n, lapack_complex_float* x, blasint* incx);
 
-    void FC_GLOBAL(clacn2,CLACN2)(blasint* n, float complex* v, float complex* x, float* est, blasint* kase, blasint* isave);
+    void FC_GLOBAL(clacn2,CLACN2)(blasint* n, lapack_complex_float* v, lapack_complex_float* x, float* est, blasint* kase, blasint* isave);
 
-    void FC_GLOBAL(clacon,CLACON)(blasint* n, float complex* v, float complex* x, float* est, blasint* kase);
+    void FC_GLOBAL(clacon,CLACON)(blasint* n, lapack_complex_float* v, lapack_complex_float* x, float* est, blasint* kase);
 
-    void FC_GLOBAL(clacp2,CLACP2)(char* uplo, blasint* m, blasint* n, float* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(clacp2,CLACP2)(char* uplo, blasint* m, blasint* n, float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(clacpy,CLACPY)(char* uplo, blasint* m, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(clacpy,CLACPY)(char* uplo, blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(clacrm,CLACRM)(blasint* m, blasint* n, float complex* a, blasint* lda, float* b, blasint* ldb, float complex* c, blasint* ldc, float* rwork);
+    void FC_GLOBAL(clacrm,CLACRM)(blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, float* b, blasint* ldb, lapack_complex_float* c, blasint* ldc, float* rwork);
 
-    void FC_GLOBAL(clacrt,CLACRT)(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy, float complex* c, float complex* s);
+    void FC_GLOBAL(clacrt,CLACRT)(blasint* n, lapack_complex_float* cx, blasint* incx, lapack_complex_float* cy, blasint* incy, lapack_complex_float* c, lapack_complex_float* s);
 
-    float complex FC_GLOBAL(cladiv,CLADIV)(float complex* x, float complex* y);
+    lapack_complex_float FC_GLOBAL(cladiv,CLADIV)(lapack_complex_float* x, lapack_complex_float* y);
 
-    void FC_GLOBAL(claed0,CLAED0)(blasint* qsiz, blasint* n, float* d, float* e, float complex* q, blasint* ldq, float complex* qstore, blasint* ldqs, float* rwork, blasint* iwork, blasint* info);
+    void FC_GLOBAL(claed0,CLAED0)(blasint* qsiz, blasint* n, float* d, float* e, lapack_complex_float* q, blasint* ldq, lapack_complex_float* qstore, blasint* ldqs, float* rwork, blasint* iwork, blasint* info);
 
-    void FC_GLOBAL(claed7,CLAED7)(blasint* n, blasint* cutpnt, blasint* qsiz, blasint* tlvls, blasint* curlvl, blasint* curpbm, float* d, float complex* q, blasint* ldq, float* rho, blasint* indxq, float* qstore, blasint* qptr, blasint* prmptr, blasint* perm, blasint* givptr, blasint* givcol, float* givnum, float complex* work, float* rwork, blasint* iwork, blasint* info);
+    void FC_GLOBAL(claed7,CLAED7)(blasint* n, blasint* cutpnt, blasint* qsiz, blasint* tlvls, blasint* curlvl, blasint* curpbm, float* d, lapack_complex_float* q, blasint* ldq, float* rho, blasint* indxq, float* qstore, blasint* qptr, blasint* prmptr, blasint* perm, blasint* givptr, blasint* givcol, float* givnum, lapack_complex_float* work, float* rwork, blasint* iwork, blasint* info);
 
-    void FC_GLOBAL(claed8,CLAED8)(blasint* k, blasint* n, blasint* qsiz, float complex* q, blasint* ldq, float* d, float* rho, blasint* cutpnt, float* z, float* dlamda, float complex* q2, blasint* ldq2, float* w, blasint* indxp, blasint* indx, blasint* indxq, blasint* perm, blasint* givptr, blasint* givcol, float* givnum, blasint* info);
+    void FC_GLOBAL(claed8,CLAED8)(blasint* k, blasint* n, blasint* qsiz, lapack_complex_float* q, blasint* ldq, float* d, float* rho, blasint* cutpnt, float* z, float* dlamda, lapack_complex_float* q2, blasint* ldq2, float* w, blasint* indxp, blasint* indx, blasint* indxq, blasint* perm, blasint* givptr, blasint* givcol, float* givnum, blasint* info);
 
-    void FC_GLOBAL(claein,CLAEIN)(blaslogical* rightv, blaslogical* noinit, blasint* n, float complex* h, blasint* ldh, float complex* w, float complex* v, float complex* b, blasint* ldb, float* rwork, float* eps3, float* smlnum, blasint* info);
+    void FC_GLOBAL(claein,CLAEIN)(blaslogical* rightv, blaslogical* noinit, blasint* n, lapack_complex_float* h, blasint* ldh, lapack_complex_float* w, lapack_complex_float* v, lapack_complex_float* b, blasint* ldb, float* rwork, float* eps3, float* smlnum, blasint* info);
 
-    void FC_GLOBAL(claesy,CLAESY)(float complex* a, float complex* b, float complex* c, float complex* rt1, float complex* rt2, float complex* evscal, float complex* cs1, float complex* sn1);
+    void FC_GLOBAL(claesy,CLAESY)(lapack_complex_float* a, lapack_complex_float* b, lapack_complex_float* c, lapack_complex_float* rt1, lapack_complex_float* rt2, lapack_complex_float* evscal, lapack_complex_float* cs1, lapack_complex_float* sn1);
 
-    void FC_GLOBAL(claev2,CLAEV2)(float complex* a, float complex* b, float complex* c, float* rt1, float* rt2, float* cs1, float complex* sn1);
+    void FC_GLOBAL(claev2,CLAEV2)(lapack_complex_float* a, lapack_complex_float* b, lapack_complex_float* c, float* rt1, float* rt2, float* cs1, lapack_complex_float* sn1);
 
-    void FC_GLOBAL(clag2z,CLAG2Z)(blasint* m, blasint* n, float complex* sa, blasint* ldsa, double complex* a, blasint* lda, blasint* info);
+    void FC_GLOBAL(clag2z,CLAG2Z)(blasint* m, blasint* n, lapack_complex_float* sa, blasint* ldsa, lapack_complex_double* a, blasint* lda, blasint* info);
 
-    void FC_GLOBAL(clags2,CLAGS2)(blaslogical* upper, float* a1, float complex* a2, float* a3, float* b1, float complex* b2, float* b3, float* csu, float complex* snu, float* csv, float complex* snv, float* csq, float complex* snq);
+    void FC_GLOBAL(clags2,CLAGS2)(blaslogical* upper, float* a1, lapack_complex_float* a2, float* a3, float* b1, lapack_complex_float* b2, float* b3, float* csu, lapack_complex_float* snu, float* csv, lapack_complex_float* snv, float* csq, lapack_complex_float* snq);
 
-    void FC_GLOBAL(clagtm,CLAGTM)(char* trans, blasint* n, blasint* nrhs, float* alpha, float complex* dl, float complex* d, float complex* du, float complex* x, blasint* ldx, float* beta, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(clagtm,CLAGTM)(char* trans, blasint* n, blasint* nrhs, float* alpha, lapack_complex_float* dl, lapack_complex_float* d, lapack_complex_float* du, lapack_complex_float* x, blasint* ldx, float* beta, lapack_complex_float* b, blasint* ldb, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(clahef,CLAHEF)(char* uplo, blasint* n, blasint* nb, blasint* kb, float complex* a, blasint* lda, blasint* ipiv, float complex* w, blasint* ldw, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(clahef,CLAHEF)(char* uplo, blasint* n, blasint* nb, blasint* kb, lapack_complex_float* a, blasint* lda, blasint* ipiv, lapack_complex_float* w, blasint* ldw, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(clahqr,CLAHQR)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ilo, blasint* ihi, float complex* h, blasint* ldh, float complex* w, blasint* iloz, blasint* ihiz, float complex* z, blasint* ldz, blasint* info);
+    void FC_GLOBAL(clahqr,CLAHQR)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ilo, blasint* ihi, lapack_complex_float* h, blasint* ldh, lapack_complex_float* w, blasint* iloz, blasint* ihiz, lapack_complex_float* z, blasint* ldz, blasint* info);
 
-    void FC_GLOBAL(clahr2,CLAHR2)(blasint* n, blasint* k, blasint* nb, float complex* a, blasint* lda, float complex* tau, float complex* t, blasint* ldt, float complex* y, blasint* ldy);
+    void FC_GLOBAL(clahr2,CLAHR2)(blasint* n, blasint* k, blasint* nb, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* t, blasint* ldt, lapack_complex_float* y, blasint* ldy);
 
-    void FC_GLOBAL(clahrd,CLAHRD)(blasint* n, blasint* k, blasint* nb, float complex* a, blasint* lda, float complex* tau, float complex* t, blasint* ldt, float complex* y, blasint* ldy);
+    void FC_GLOBAL(clahrd,CLAHRD)(blasint* n, blasint* k, blasint* nb, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* t, blasint* ldt, lapack_complex_float* y, blasint* ldy);
 
-    void FC_GLOBAL(claic1,CLAIC1)(blasint* job, blasint* j, float complex* x, float* sest, float complex* w, float complex* gamma, float* sestpr, float complex* s, float complex* c);
+    void FC_GLOBAL(claic1,CLAIC1)(blasint* job, blasint* j, lapack_complex_float* x, float* sest, lapack_complex_float* w, lapack_complex_float* gamma, float* sestpr, lapack_complex_float* s, lapack_complex_float* c);
 
-    void FC_GLOBAL(clals0,CLALS0)(blasint* icompq, blasint* nl, blasint* nr, blasint* sqre, blasint* nrhs, float complex* b, blasint* ldb, float complex* bx, blasint* ldbx, blasint* perm, blasint* givptr, blasint* givcol, blasint* ldgcol, float* givnum, blasint* ldgnum, float* poles, float* difl, float* difr, float* z, blasint* k, float* c, float* s, float* rwork, blasint* info);
+    void FC_GLOBAL(clals0,CLALS0)(blasint* icompq, blasint* nl, blasint* nr, blasint* sqre, blasint* nrhs, lapack_complex_float* b, blasint* ldb, lapack_complex_float* bx, blasint* ldbx, blasint* perm, blasint* givptr, blasint* givcol, blasint* ldgcol, float* givnum, blasint* ldgnum, float* poles, float* difl, float* difr, float* z, blasint* k, float* c, float* s, float* rwork, blasint* info);
 
-    void FC_GLOBAL(clalsa,CLALSA)(blasint* icompq, blasint* smlsiz, blasint* n, blasint* nrhs, float complex* b, blasint* ldb, float complex* bx, blasint* ldbx, float* u, blasint* ldu, float* vt, blasint* k, float* difl, float* difr, float* z, float* poles, blasint* givptr, blasint* givcol, blasint* ldgcol, blasint* perm, float* givnum, float* c, float* s, float* rwork, blasint* iwork, blasint* info);
+    void FC_GLOBAL(clalsa,CLALSA)(blasint* icompq, blasint* smlsiz, blasint* n, blasint* nrhs, lapack_complex_float* b, blasint* ldb, lapack_complex_float* bx, blasint* ldbx, float* u, blasint* ldu, float* vt, blasint* k, float* difl, float* difr, float* z, float* poles, blasint* givptr, blasint* givcol, blasint* ldgcol, blasint* perm, float* givnum, float* c, float* s, float* rwork, blasint* iwork, blasint* info);
 
-    void FC_GLOBAL(clalsd,CLALSD)(char* uplo, blasint* smlsiz, blasint* n, blasint* nrhs, float* d, float* e, float complex* b, blasint* ldb, float* rcond, blasint* rank_bn, float complex* work, float* rwork, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(clalsd,CLALSD)(char* uplo, blasint* smlsiz, blasint* n, blasint* nrhs, float* d, float* e, lapack_complex_float* b, blasint* ldb, float* rcond, blasint* rank_bn, lapack_complex_float* work, float* rwork, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    float FC_GLOBAL(clangb,CLANGB)(char* norm, blasint* n, blasint* kl, blasint* ku, float complex* ab, blasint* ldab, float* work, flexiblas_fortran_charlen_t len_norm);
+    float FC_GLOBAL(clangb,CLANGB)(char* norm, blasint* n, blasint* kl, blasint* ku, lapack_complex_float* ab, blasint* ldab, float* work, flexiblas_fortran_charlen_t len_norm);
 
-    float FC_GLOBAL(clange,CLANGE)(char* norm, blasint* m, blasint* n, float complex* a, blasint* lda, float* work, flexiblas_fortran_charlen_t len_norm);
+    float FC_GLOBAL(clange,CLANGE)(char* norm, blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, float* work, flexiblas_fortran_charlen_t len_norm);
 
-    float FC_GLOBAL(clangt,CLANGT)(char* norm, blasint* n, float complex* dl, float complex* d, float complex* du, flexiblas_fortran_charlen_t len_norm);
+    float FC_GLOBAL(clangt,CLANGT)(char* norm, blasint* n, lapack_complex_float* dl, lapack_complex_float* d, lapack_complex_float* du, flexiblas_fortran_charlen_t len_norm);
 
-    float FC_GLOBAL(clanhb,CLANHB)(char* norm, char* uplo, blasint* n, blasint* k, float complex* ab, blasint* ldab, float* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
+    float FC_GLOBAL(clanhb,CLANHB)(char* norm, char* uplo, blasint* n, blasint* k, lapack_complex_float* ab, blasint* ldab, float* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
 
-    float FC_GLOBAL(clanhe,CLANHE)(char* norm, char* uplo, blasint* n, float complex* a, blasint* lda, float* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
+    float FC_GLOBAL(clanhe,CLANHE)(char* norm, char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, float* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
 
-    float FC_GLOBAL(clanhf,CLANHF)(char* norm, char* transr, char* uplo, blasint* n, float complex* a, float* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
+    float FC_GLOBAL(clanhf,CLANHF)(char* norm, char* transr, char* uplo, blasint* n, lapack_complex_float* a, float* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
 
-    float FC_GLOBAL(clanhp,CLANHP)(char* norm, char* uplo, blasint* n, float complex* ap, float* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
+    float FC_GLOBAL(clanhp,CLANHP)(char* norm, char* uplo, blasint* n, lapack_complex_float* ap, float* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
 
-    float FC_GLOBAL(clanhs,CLANHS)(char* norm, blasint* n, float complex* a, blasint* lda, float* work, flexiblas_fortran_charlen_t len_norm);
+    float FC_GLOBAL(clanhs,CLANHS)(char* norm, blasint* n, lapack_complex_float* a, blasint* lda, float* work, flexiblas_fortran_charlen_t len_norm);
 
-    float FC_GLOBAL(clanht,CLANHT)(char* norm, blasint* n, float* d, float complex* e, flexiblas_fortran_charlen_t len_norm);
+    float FC_GLOBAL(clanht,CLANHT)(char* norm, blasint* n, float* d, lapack_complex_float* e, flexiblas_fortran_charlen_t len_norm);
 
-    float FC_GLOBAL(clansb,CLANSB)(char* norm, char* uplo, blasint* n, blasint* k, float complex* ab, blasint* ldab, float* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
+    float FC_GLOBAL(clansb,CLANSB)(char* norm, char* uplo, blasint* n, blasint* k, lapack_complex_float* ab, blasint* ldab, float* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
 
-    float FC_GLOBAL(clansp,CLANSP)(char* norm, char* uplo, blasint* n, float complex* ap, float* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
+    float FC_GLOBAL(clansp,CLANSP)(char* norm, char* uplo, blasint* n, lapack_complex_float* ap, float* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
 
-    float FC_GLOBAL(clansy,CLANSY)(char* norm, char* uplo, blasint* n, float complex* a, blasint* lda, float* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
+    float FC_GLOBAL(clansy,CLANSY)(char* norm, char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, float* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
 
-    float FC_GLOBAL(clantb,CLANTB)(char* norm, char* uplo, char* diag, blasint* n, blasint* k, float complex* ab, blasint* ldab, float* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
+    float FC_GLOBAL(clantb,CLANTB)(char* norm, char* uplo, char* diag, blasint* n, blasint* k, lapack_complex_float* ab, blasint* ldab, float* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
 
-    float FC_GLOBAL(clantp,CLANTP)(char* norm, char* uplo, char* diag, blasint* n, float complex* ap, float* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
+    float FC_GLOBAL(clantp,CLANTP)(char* norm, char* uplo, char* diag, blasint* n, lapack_complex_float* ap, float* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
 
-    float FC_GLOBAL(clantr,CLANTR)(char* norm, char* uplo, char* diag, blasint* m, blasint* n, float complex* a, blasint* lda, float* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
+    float FC_GLOBAL(clantr,CLANTR)(char* norm, char* uplo, char* diag, blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, float* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(clapll,CLAPLL)(blasint* n, float complex* x, blasint* incx, float complex* y, blasint* incy, float* ssmin);
+    void FC_GLOBAL(clapll,CLAPLL)(blasint* n, lapack_complex_float* x, blasint* incx, lapack_complex_float* y, blasint* incy, float* ssmin);
 
-    void FC_GLOBAL(clapmr,CLAPMR)(blaslogical* forwrd, blasint* m, blasint* n, float complex* x, blasint* ldx, blasint* k);
+    void FC_GLOBAL(clapmr,CLAPMR)(blaslogical* forwrd, blasint* m, blasint* n, lapack_complex_float* x, blasint* ldx, blasint* k);
 
-    void FC_GLOBAL(clapmt,CLAPMT)(blaslogical* forwrd, blasint* m, blasint* n, float complex* x, blasint* ldx, blasint* k);
+    void FC_GLOBAL(clapmt,CLAPMT)(blaslogical* forwrd, blasint* m, blasint* n, lapack_complex_float* x, blasint* ldx, blasint* k);
 
-    void FC_GLOBAL(claqgb,CLAQGB)(blasint* m, blasint* n, blasint* kl, blasint* ku, float complex* ab, blasint* ldab, float* r, float* c, float* rowcnd, float* colcnd, float* amax, char* equed, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(claqgb,CLAQGB)(blasint* m, blasint* n, blasint* kl, blasint* ku, lapack_complex_float* ab, blasint* ldab, float* r, float* c, float* rowcnd, float* colcnd, float* amax, char* equed, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(claqge,CLAQGE)(blasint* m, blasint* n, float complex* a, blasint* lda, float* r, float* c, float* rowcnd, float* colcnd, float* amax, char* equed, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(claqge,CLAQGE)(blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, float* r, float* c, float* rowcnd, float* colcnd, float* amax, char* equed, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(claqhb,CLAQHB)(char* uplo, blasint* n, blasint* kd, float complex* ab, blasint* ldab, float* s, float* scond, float* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(claqhb,CLAQHB)(char* uplo, blasint* n, blasint* kd, lapack_complex_float* ab, blasint* ldab, float* s, float* scond, float* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(claqhe,CLAQHE)(char* uplo, blasint* n, float complex* a, blasint* lda, float* s, float* scond, float* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(claqhe,CLAQHE)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, float* s, float* scond, float* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(claqhp,CLAQHP)(char* uplo, blasint* n, float complex* ap, float* s, float* scond, float* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(claqhp,CLAQHP)(char* uplo, blasint* n, lapack_complex_float* ap, float* s, float* scond, float* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(claqp2,CLAQP2)(blasint* m, blasint* n, blasint* offset, float complex* a, blasint* lda, blasint* jpvt, float complex* tau, float* vn1, float* vn2, float complex* work);
+    void FC_GLOBAL(claqp2,CLAQP2)(blasint* m, blasint* n, blasint* offset, lapack_complex_float* a, blasint* lda, blasint* jpvt, lapack_complex_float* tau, float* vn1, float* vn2, lapack_complex_float* work);
 
-    void FC_GLOBAL(claqps,CLAQPS)(blasint* m, blasint* n, blasint* offset, blasint* nb, blasint* kb, float complex* a, blasint* lda, blasint* jpvt, float complex* tau, float* vn1, float* vn2, float complex* auxv, float complex* f, blasint* ldf);
+    void FC_GLOBAL(claqps,CLAQPS)(blasint* m, blasint* n, blasint* offset, blasint* nb, blasint* kb, lapack_complex_float* a, blasint* lda, blasint* jpvt, lapack_complex_float* tau, float* vn1, float* vn2, lapack_complex_float* auxv, lapack_complex_float* f, blasint* ldf);
 
-    void FC_GLOBAL(claqr0,CLAQR0)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ilo, blasint* ihi, float complex* h, blasint* ldh, float complex* w, blasint* iloz, blasint* ihiz, float complex* z, blasint* ldz, float complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(claqr0,CLAQR0)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ilo, blasint* ihi, lapack_complex_float* h, blasint* ldh, lapack_complex_float* w, blasint* iloz, blasint* ihiz, lapack_complex_float* z, blasint* ldz, lapack_complex_float* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(claqr1,CLAQR1)(blasint* n, float complex* h, blasint* ldh, float complex* s1, float complex* s2, float complex* v);
+    void FC_GLOBAL(claqr1,CLAQR1)(blasint* n, lapack_complex_float* h, blasint* ldh, lapack_complex_float* s1, lapack_complex_float* s2, lapack_complex_float* v);
 
-    void FC_GLOBAL(claqr2,CLAQR2)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ktop, blasint* kbot, blasint* nw, float complex* h, blasint* ldh, blasint* iloz, blasint* ihiz, float complex* z, blasint* ldz, blasint* ns, blasint* nd, float complex* sh, float complex* v, blasint* ldv, blasint* nh, float complex* t, blasint* ldt, blasint* nv, float complex* wv, blasint* ldwv, float complex* work, blasint* lwork);
+    void FC_GLOBAL(claqr2,CLAQR2)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ktop, blasint* kbot, blasint* nw, lapack_complex_float* h, blasint* ldh, blasint* iloz, blasint* ihiz, lapack_complex_float* z, blasint* ldz, blasint* ns, blasint* nd, lapack_complex_float* sh, lapack_complex_float* v, blasint* ldv, blasint* nh, lapack_complex_float* t, blasint* ldt, blasint* nv, lapack_complex_float* wv, blasint* ldwv, lapack_complex_float* work, blasint* lwork);
 
-    void FC_GLOBAL(claqr3,CLAQR3)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ktop, blasint* kbot, blasint* nw, float complex* h, blasint* ldh, blasint* iloz, blasint* ihiz, float complex* z, blasint* ldz, blasint* ns, blasint* nd, float complex* sh, float complex* v, blasint* ldv, blasint* nh, float complex* t, blasint* ldt, blasint* nv, float complex* wv, blasint* ldwv, float complex* work, blasint* lwork);
+    void FC_GLOBAL(claqr3,CLAQR3)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ktop, blasint* kbot, blasint* nw, lapack_complex_float* h, blasint* ldh, blasint* iloz, blasint* ihiz, lapack_complex_float* z, blasint* ldz, blasint* ns, blasint* nd, lapack_complex_float* sh, lapack_complex_float* v, blasint* ldv, blasint* nh, lapack_complex_float* t, blasint* ldt, blasint* nv, lapack_complex_float* wv, blasint* ldwv, lapack_complex_float* work, blasint* lwork);
 
-    void FC_GLOBAL(claqr4,CLAQR4)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ilo, blasint* ihi, float complex* h, blasint* ldh, float complex* w, blasint* iloz, blasint* ihiz, float complex* z, blasint* ldz, float complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(claqr4,CLAQR4)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ilo, blasint* ihi, lapack_complex_float* h, blasint* ldh, lapack_complex_float* w, blasint* iloz, blasint* ihiz, lapack_complex_float* z, blasint* ldz, lapack_complex_float* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(claqr5,CLAQR5)(blaslogical* wantt, blaslogical* wantz, blasint* kacc22, blasint* n, blasint* ktop, blasint* kbot, blasint* nshfts, float complex* s, float complex* h, blasint* ldh, blasint* iloz, blasint* ihiz, float complex* z, blasint* ldz, float complex* v, blasint* ldv, float complex* u, blasint* ldu, blasint* nv, float complex* wv, blasint* ldwv, blasint* nh, float complex* wh, blasint* ldwh);
+    void FC_GLOBAL(claqr5,CLAQR5)(blaslogical* wantt, blaslogical* wantz, blasint* kacc22, blasint* n, blasint* ktop, blasint* kbot, blasint* nshfts, lapack_complex_float* s, lapack_complex_float* h, blasint* ldh, blasint* iloz, blasint* ihiz, lapack_complex_float* z, blasint* ldz, lapack_complex_float* v, blasint* ldv, lapack_complex_float* u, blasint* ldu, blasint* nv, lapack_complex_float* wv, blasint* ldwv, blasint* nh, lapack_complex_float* wh, blasint* ldwh);
 
-    void FC_GLOBAL(claqsb,CLAQSB)(char* uplo, blasint* n, blasint* kd, float complex* ab, blasint* ldab, float* s, float* scond, float* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(claqsb,CLAQSB)(char* uplo, blasint* n, blasint* kd, lapack_complex_float* ab, blasint* ldab, float* s, float* scond, float* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(claqsp,CLAQSP)(char* uplo, blasint* n, float complex* ap, float* s, float* scond, float* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(claqsp,CLAQSP)(char* uplo, blasint* n, lapack_complex_float* ap, float* s, float* scond, float* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(claqsy,CLAQSY)(char* uplo, blasint* n, float complex* a, blasint* lda, float* s, float* scond, float* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(claqsy,CLAQSY)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, float* s, float* scond, float* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(clar1v,CLAR1V)(blasint* n, blasint* b1, blasint* bn, float* lambda, float* d, float* l, float* ld, float* lld, float* pivmin, float* gaptol, float complex* z, blaslogical* wantnc, blasint* negcnt, float* ztz, float* mingma, blasint* r, blasint* isuppz, float* nrminv, float* resid, float* rqcorr, float* work);
+    void FC_GLOBAL(clar1v,CLAR1V)(blasint* n, blasint* b1, blasint* bn, float* lambda, float* d, float* l, float* ld, float* lld, float* pivmin, float* gaptol, lapack_complex_float* z, blaslogical* wantnc, blasint* negcnt, float* ztz, float* mingma, blasint* r, blasint* isuppz, float* nrminv, float* resid, float* rqcorr, float* work);
 
-    void FC_GLOBAL(clar2v,CLAR2V)(blasint* n, float complex* x, float complex* y, float complex* z, blasint* incx, float* c, float complex* s, blasint* incc);
+    void FC_GLOBAL(clar2v,CLAR2V)(blasint* n, lapack_complex_float* x, lapack_complex_float* y, lapack_complex_float* z, blasint* incx, float* c, lapack_complex_float* s, blasint* incc);
 
-    void FC_GLOBAL(clarcm,CLARCM)(blasint* m, blasint* n, float* a, blasint* lda, float complex* b, blasint* ldb, float complex* c, blasint* ldc, float* rwork);
+    void FC_GLOBAL(clarcm,CLARCM)(blasint* m, blasint* n, float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, lapack_complex_float* c, blasint* ldc, float* rwork);
 
-    void FC_GLOBAL(clarf,CLARF)(char* side, blasint* m, blasint* n, float complex* v, blasint* incv, float complex* tau, float complex* c, blasint* ldc, float complex* work, flexiblas_fortran_charlen_t len_side);
+    void FC_GLOBAL(clarf,CLARF)(char* side, blasint* m, blasint* n, lapack_complex_float* v, blasint* incv, lapack_complex_float* tau, lapack_complex_float* c, blasint* ldc, lapack_complex_float* work, flexiblas_fortran_charlen_t len_side);
 
-    void FC_GLOBAL(clarfb,CLARFB)(char* side, char* trans, char* direct, char* storev, blasint* m, blasint* n, blasint* k, float complex* v, blasint* ldv, float complex* t, blasint* ldt, float complex* c, blasint* ldc, float complex* work, blasint* ldwork, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_direct, flexiblas_fortran_charlen_t len_storev);
+    void FC_GLOBAL(clarfb,CLARFB)(char* side, char* trans, char* direct, char* storev, blasint* m, blasint* n, blasint* k, lapack_complex_float* v, blasint* ldv, lapack_complex_float* t, blasint* ldt, lapack_complex_float* c, blasint* ldc, lapack_complex_float* work, blasint* ldwork, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_direct, flexiblas_fortran_charlen_t len_storev);
 
-    void FC_GLOBAL(clarfg,CLARFG)(blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* tau);
+    void FC_GLOBAL(clarfg,CLARFG)(blasint* n, lapack_complex_float* alpha, lapack_complex_float* x, blasint* incx, lapack_complex_float* tau);
 
-    void FC_GLOBAL(clarfgp,CLARFGP)(blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* tau);
+    void FC_GLOBAL(clarfgp,CLARFGP)(blasint* n, lapack_complex_float* alpha, lapack_complex_float* x, blasint* incx, lapack_complex_float* tau);
 
-    void FC_GLOBAL(clarft,CLARFT)(char* direct, char* storev, blasint* n, blasint* k, float complex* v, blasint* ldv, float complex* tau, float complex* t, blasint* ldt, flexiblas_fortran_charlen_t len_direct, flexiblas_fortran_charlen_t len_storev);
+    void FC_GLOBAL(clarft,CLARFT)(char* direct, char* storev, blasint* n, blasint* k, lapack_complex_float* v, blasint* ldv, lapack_complex_float* tau, lapack_complex_float* t, blasint* ldt, flexiblas_fortran_charlen_t len_direct, flexiblas_fortran_charlen_t len_storev);
 
-    void FC_GLOBAL(clarfx,CLARFX)(char* side, blasint* m, blasint* n, float complex* v, float complex* tau, float complex* c, blasint* ldc, float complex* work, flexiblas_fortran_charlen_t len_side);
+    void FC_GLOBAL(clarfx,CLARFX)(char* side, blasint* m, blasint* n, lapack_complex_float* v, lapack_complex_float* tau, lapack_complex_float* c, blasint* ldc, lapack_complex_float* work, flexiblas_fortran_charlen_t len_side);
 
-    void FC_GLOBAL(clargv,CLARGV)(blasint* n, float complex* x, blasint* incx, float complex* y, blasint* incy, float* c, blasint* incc);
+    void FC_GLOBAL(clargv,CLARGV)(blasint* n, lapack_complex_float* x, blasint* incx, lapack_complex_float* y, blasint* incy, float* c, blasint* incc);
 
-    void FC_GLOBAL(clarnv,CLARNV)(blasint* idist, blasint* iseed, blasint* n, float complex* x);
+    void FC_GLOBAL(clarnv,CLARNV)(blasint* idist, blasint* iseed, blasint* n, lapack_complex_float* x);
 
-    void FC_GLOBAL(clarrv,CLARRV)(blasint* n, float* vl, float* vu, float* d, float* l, float* pivmin, blasint* isplit, blasint* m, blasint* dol, blasint* dou, float* minrgp, float* rtol1, float* rtol2, float* w, float* werr, float* wgap, blasint* iblock, blasint* indexw, float* gers, float complex* z, blasint* ldz, blasint* isuppz, float* work, blasint* iwork, blasint* info);
+    void FC_GLOBAL(clarrv,CLARRV)(blasint* n, float* vl, float* vu, float* d, float* l, float* pivmin, blasint* isplit, blasint* m, blasint* dol, blasint* dou, float* minrgp, float* rtol1, float* rtol2, float* w, float* werr, float* wgap, blasint* iblock, blasint* indexw, float* gers, lapack_complex_float* z, blasint* ldz, blasint* isuppz, float* work, blasint* iwork, blasint* info);
 
-    void FC_GLOBAL(clartg,CLARTG)(float complex* f, float complex* g, float* cs, float complex* sn, float complex* r);
+    void FC_GLOBAL(clartg,CLARTG)(lapack_complex_float* f, lapack_complex_float* g, float* cs, lapack_complex_float* sn, lapack_complex_float* r);
 
-    void FC_GLOBAL(clartv,CLARTV)(blasint* n, float complex* x, blasint* incx, float complex* y, blasint* incy, float* c, float complex* s, blasint* incc);
+    void FC_GLOBAL(clartv,CLARTV)(blasint* n, lapack_complex_float* x, blasint* incx, lapack_complex_float* y, blasint* incy, float* c, lapack_complex_float* s, blasint* incc);
 
-    void FC_GLOBAL(clarz,CLARZ)(char* side, blasint* m, blasint* n, blasint* l, float complex* v, blasint* incv, float complex* tau, float complex* c, blasint* ldc, float complex* work, flexiblas_fortran_charlen_t len_side);
+    void FC_GLOBAL(clarz,CLARZ)(char* side, blasint* m, blasint* n, blasint* l, lapack_complex_float* v, blasint* incv, lapack_complex_float* tau, lapack_complex_float* c, blasint* ldc, lapack_complex_float* work, flexiblas_fortran_charlen_t len_side);
 
-    void FC_GLOBAL(clarzb,CLARZB)(char* side, char* trans, char* direct, char* storev, blasint* m, blasint* n, blasint* k, blasint* l, float complex* v, blasint* ldv, float complex* t, blasint* ldt, float complex* c, blasint* ldc, float complex* work, blasint* ldwork, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_direct, flexiblas_fortran_charlen_t len_storev);
+    void FC_GLOBAL(clarzb,CLARZB)(char* side, char* trans, char* direct, char* storev, blasint* m, blasint* n, blasint* k, blasint* l, lapack_complex_float* v, blasint* ldv, lapack_complex_float* t, blasint* ldt, lapack_complex_float* c, blasint* ldc, lapack_complex_float* work, blasint* ldwork, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_direct, flexiblas_fortran_charlen_t len_storev);
 
-    void FC_GLOBAL(clarzt,CLARZT)(char* direct, char* storev, blasint* n, blasint* k, float complex* v, blasint* ldv, float complex* tau, float complex* t, blasint* ldt, flexiblas_fortran_charlen_t len_direct, flexiblas_fortran_charlen_t len_storev);
+    void FC_GLOBAL(clarzt,CLARZT)(char* direct, char* storev, blasint* n, blasint* k, lapack_complex_float* v, blasint* ldv, lapack_complex_float* tau, lapack_complex_float* t, blasint* ldt, flexiblas_fortran_charlen_t len_direct, flexiblas_fortran_charlen_t len_storev);
 
-    void FC_GLOBAL(clascl,CLASCL)(char* type_bn, blasint* kl, blasint* ku, float* cfrom, float* cto, blasint* m, blasint* n, float complex* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_type_bn);
+    void FC_GLOBAL(clascl,CLASCL)(char* type_bn, blasint* kl, blasint* ku, float* cfrom, float* cto, blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_type_bn);
 
-    void FC_GLOBAL(claset,CLASET)(char* uplo, blasint* m, blasint* n, float complex* alpha, float complex* beta, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(claset,CLASET)(char* uplo, blasint* m, blasint* n, lapack_complex_float* alpha, lapack_complex_float* beta, lapack_complex_float* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(clasr,CLASR)(char* side, char* pivot, char* direct, blasint* m, blasint* n, float* c, float* s, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_pivot, flexiblas_fortran_charlen_t len_direct);
+    void FC_GLOBAL(clasr,CLASR)(char* side, char* pivot, char* direct, blasint* m, blasint* n, float* c, float* s, lapack_complex_float* a, blasint* lda, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_pivot, flexiblas_fortran_charlen_t len_direct);
 
-    void FC_GLOBAL(classq,CLASSQ)(blasint* n, float complex* x, blasint* incx, float* scale, float* sumsq);
+    void FC_GLOBAL(classq,CLASSQ)(blasint* n, lapack_complex_float* x, blasint* incx, float* scale, float* sumsq);
 
-    void FC_GLOBAL(claswp,CLASWP)(blasint* n, float complex* a, blasint* lda, blasint* k1, blasint* k2, blasint* ipiv, blasint* incx);
+    void FC_GLOBAL(claswp,CLASWP)(blasint* n, lapack_complex_float* a, blasint* lda, blasint* k1, blasint* k2, blasint* ipiv, blasint* incx);
 
-    void FC_GLOBAL(clasyf,CLASYF)(char* uplo, blasint* n, blasint* nb, blasint* kb, float complex* a, blasint* lda, blasint* ipiv, float complex* w, blasint* ldw, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(clasyf,CLASYF)(char* uplo, blasint* n, blasint* nb, blasint* kb, lapack_complex_float* a, blasint* lda, blasint* ipiv, lapack_complex_float* w, blasint* ldw, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(clatbs,CLATBS)(char* uplo, char* trans, char* diag, char* normin, blasint* n, blasint* kd, float complex* ab, blasint* ldab, float complex* x, float* scale, float* cnorm, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin);
+    void FC_GLOBAL(clatbs,CLATBS)(char* uplo, char* trans, char* diag, char* normin, blasint* n, blasint* kd, lapack_complex_float* ab, blasint* ldab, lapack_complex_float* x, float* scale, float* cnorm, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin);
 
-    void FC_GLOBAL(clatdf,CLATDF)(blasint* ijob, blasint* n, float complex* z, blasint* ldz, float complex* rhs, float* rdsum, float* rdscal, blasint* ipiv, blasint* jpiv);
+    void FC_GLOBAL(clatdf,CLATDF)(blasint* ijob, blasint* n, lapack_complex_float* z, blasint* ldz, lapack_complex_float* rhs, float* rdsum, float* rdscal, blasint* ipiv, blasint* jpiv);
 
-    void FC_GLOBAL(clatps,CLATPS)(char* uplo, char* trans, char* diag, char* normin, blasint* n, float complex* ap, float complex* x, float* scale, float* cnorm, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin);
+    void FC_GLOBAL(clatps,CLATPS)(char* uplo, char* trans, char* diag, char* normin, blasint* n, lapack_complex_float* ap, lapack_complex_float* x, float* scale, float* cnorm, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin);
 
-    void FC_GLOBAL(clatrd,CLATRD)(char* uplo, blasint* n, blasint* nb, float complex* a, blasint* lda, float* e, float complex* tau, float complex* w, blasint* ldw, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(clatrd,CLATRD)(char* uplo, blasint* n, blasint* nb, lapack_complex_float* a, blasint* lda, float* e, lapack_complex_float* tau, lapack_complex_float* w, blasint* ldw, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(clatrs,CLATRS)(char* uplo, char* trans, char* diag, char* normin, blasint* n, float complex* a, blasint* lda, float complex* x, float* scale, float* cnorm, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin);
+    void FC_GLOBAL(clatrs,CLATRS)(char* uplo, char* trans, char* diag, char* normin, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* x, float* scale, float* cnorm, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin);
 
-    void FC_GLOBAL(clatrz,CLATRZ)(blasint* m, blasint* n, blasint* l, float complex* a, blasint* lda, float complex* tau, float complex* work);
+    void FC_GLOBAL(clatrz,CLATRZ)(blasint* m, blasint* n, blasint* l, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* work);
 
-    void FC_GLOBAL(clatzm,CLATZM)(char* side, blasint* m, blasint* n, float complex* v, blasint* incv, float complex* tau, float complex* c1, float complex* c2, blasint* ldc, float complex* work, flexiblas_fortran_charlen_t len_side);
+    void FC_GLOBAL(clatzm,CLATZM)(char* side, blasint* m, blasint* n, lapack_complex_float* v, blasint* incv, lapack_complex_float* tau, lapack_complex_float* c1, lapack_complex_float* c2, blasint* ldc, lapack_complex_float* work, flexiblas_fortran_charlen_t len_side);
 
-    void FC_GLOBAL(clauu2,CLAUU2)(char* uplo, blasint* n, float complex* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(clauu2,CLAUU2)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(clauum,CLAUUM)(char* uplo, blasint* n, float complex* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(clauum,CLAUUM)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cpbcon,CPBCON)(char* uplo, blasint* n, blasint* kd, float complex* ab, blasint* ldab, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cpbcon,CPBCON)(char* uplo, blasint* n, blasint* kd, lapack_complex_float* ab, blasint* ldab, float* anorm, float* rcond, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cpbequ,CPBEQU)(char* uplo, blasint* n, blasint* kd, float complex* ab, blasint* ldab, float* s, float* scond, float* amax, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cpbequ,CPBEQU)(char* uplo, blasint* n, blasint* kd, lapack_complex_float* ab, blasint* ldab, float* s, float* scond, float* amax, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cpbrfs,CPBRFS)(char* uplo, blasint* n, blasint* kd, blasint* nrhs, float complex* ab, blasint* ldab, float complex* afb, blasint* ldafb, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* ferr, float* berr, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cpbrfs,CPBRFS)(char* uplo, blasint* n, blasint* kd, blasint* nrhs, lapack_complex_float* ab, blasint* ldab, lapack_complex_float* afb, blasint* ldafb, lapack_complex_float* b, blasint* ldb, lapack_complex_float* x, blasint* ldx, float* ferr, float* berr, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cpbstf,CPBSTF)(char* uplo, blasint* n, blasint* kd, float complex* ab, blasint* ldab, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cpbstf,CPBSTF)(char* uplo, blasint* n, blasint* kd, lapack_complex_float* ab, blasint* ldab, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cpbsv,CPBSV)(char* uplo, blasint* n, blasint* kd, blasint* nrhs, float complex* ab, blasint* ldab, float complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cpbsv,CPBSV)(char* uplo, blasint* n, blasint* kd, blasint* nrhs, lapack_complex_float* ab, blasint* ldab, lapack_complex_float* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cpbsvx,CPBSVX)(char* fact, char* uplo, blasint* n, blasint* kd, blasint* nrhs, float complex* ab, blasint* ldab, float complex* afb, blasint* ldafb, char* equed, float* s, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* rcond, float* ferr, float* berr, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(cpbsvx,CPBSVX)(char* fact, char* uplo, blasint* n, blasint* kd, blasint* nrhs, lapack_complex_float* ab, blasint* ldab, lapack_complex_float* afb, blasint* ldafb, char* equed, float* s, lapack_complex_float* b, blasint* ldb, lapack_complex_float* x, blasint* ldx, float* rcond, float* ferr, float* berr, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(cpbtf2,CPBTF2)(char* uplo, blasint* n, blasint* kd, float complex* ab, blasint* ldab, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cpbtf2,CPBTF2)(char* uplo, blasint* n, blasint* kd, lapack_complex_float* ab, blasint* ldab, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cpbtrf,CPBTRF)(char* uplo, blasint* n, blasint* kd, float complex* ab, blasint* ldab, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cpbtrf,CPBTRF)(char* uplo, blasint* n, blasint* kd, lapack_complex_float* ab, blasint* ldab, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cpbtrs,CPBTRS)(char* uplo, blasint* n, blasint* kd, blasint* nrhs, float complex* ab, blasint* ldab, float complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cpbtrs,CPBTRS)(char* uplo, blasint* n, blasint* kd, blasint* nrhs, lapack_complex_float* ab, blasint* ldab, lapack_complex_float* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cpftrf,CPFTRF)(char* transr, char* uplo, blasint* n, float complex* a, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cpftrf,CPFTRF)(char* transr, char* uplo, blasint* n, lapack_complex_float* a, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cpftri,CPFTRI)(char* transr, char* uplo, blasint* n, float complex* a, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cpftri,CPFTRI)(char* transr, char* uplo, blasint* n, lapack_complex_float* a, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cpftrs,CPFTRS)(char* transr, char* uplo, blasint* n, blasint* nrhs, float complex* a, float complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cpftrs,CPFTRS)(char* transr, char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* a, lapack_complex_float* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cpocon,CPOCON)(char* uplo, blasint* n, float complex* a, blasint* lda, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cpocon,CPOCON)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, float* anorm, float* rcond, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cpoequ,CPOEQU)(blasint* n, float complex* a, blasint* lda, float* s, float* scond, float* amax, blasint* info);
+    void FC_GLOBAL(cpoequ,CPOEQU)(blasint* n, lapack_complex_float* a, blasint* lda, float* s, float* scond, float* amax, blasint* info);
 
-    void FC_GLOBAL(cpoequb,CPOEQUB)(blasint* n, float complex* a, blasint* lda, float* s, float* scond, float* amax, blasint* info);
+    void FC_GLOBAL(cpoequb,CPOEQUB)(blasint* n, lapack_complex_float* a, blasint* lda, float* s, float* scond, float* amax, blasint* info);
 
-    void FC_GLOBAL(cporfs,CPORFS)(char* uplo, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* af, blasint* ldaf, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* ferr, float* berr, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cporfs,CPORFS)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* a, blasint* lda, lapack_complex_float* af, blasint* ldaf, lapack_complex_float* b, blasint* ldb, lapack_complex_float* x, blasint* ldx, float* ferr, float* berr, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cposv,CPOSV)(char* uplo, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cposv,CPOSV)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cposvx,CPOSVX)(char* fact, char* uplo, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* af, blasint* ldaf, char* equed, float* s, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* rcond, float* ferr, float* berr, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(cposvx,CPOSVX)(char* fact, char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* a, blasint* lda, lapack_complex_float* af, blasint* ldaf, char* equed, float* s, lapack_complex_float* b, blasint* ldb, lapack_complex_float* x, blasint* ldx, float* rcond, float* ferr, float* berr, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(cpotf2,CPOTF2)(char* uplo, blasint* n, float complex* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cpotf2,CPOTF2)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cpotrf,CPOTRF)(char* uplo, blasint* n, float complex* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cpotrf,CPOTRF)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cpotri,CPOTRI)(char* uplo, blasint* n, float complex* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cpotri,CPOTRI)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cpotrs,CPOTRS)(char* uplo, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cpotrs,CPOTRS)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cppcon,CPPCON)(char* uplo, blasint* n, float complex* ap, float* anorm, float* rcond, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cppcon,CPPCON)(char* uplo, blasint* n, lapack_complex_float* ap, float* anorm, float* rcond, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cppequ,CPPEQU)(char* uplo, blasint* n, float complex* ap, float* s, float* scond, float* amax, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cppequ,CPPEQU)(char* uplo, blasint* n, lapack_complex_float* ap, float* s, float* scond, float* amax, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cpprfs,CPPRFS)(char* uplo, blasint* n, blasint* nrhs, float complex* ap, float complex* afp, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* ferr, float* berr, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cpprfs,CPPRFS)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* ap, lapack_complex_float* afp, lapack_complex_float* b, blasint* ldb, lapack_complex_float* x, blasint* ldx, float* ferr, float* berr, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cppsv,CPPSV)(char* uplo, blasint* n, blasint* nrhs, float complex* ap, float complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cppsv,CPPSV)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* ap, lapack_complex_float* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cppsvx,CPPSVX)(char* fact, char* uplo, blasint* n, blasint* nrhs, float complex* ap, float complex* afp, char* equed, float* s, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* rcond, float* ferr, float* berr, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(cppsvx,CPPSVX)(char* fact, char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* ap, lapack_complex_float* afp, char* equed, float* s, lapack_complex_float* b, blasint* ldb, lapack_complex_float* x, blasint* ldx, float* rcond, float* ferr, float* berr, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(cpptrf,CPPTRF)(char* uplo, blasint* n, float complex* ap, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cpptrf,CPPTRF)(char* uplo, blasint* n, lapack_complex_float* ap, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cpptri,CPPTRI)(char* uplo, blasint* n, float complex* ap, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cpptri,CPPTRI)(char* uplo, blasint* n, lapack_complex_float* ap, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cpptrs,CPPTRS)(char* uplo, blasint* n, blasint* nrhs, float complex* ap, float complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cpptrs,CPPTRS)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* ap, lapack_complex_float* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cpstf2,CPSTF2)(char* uplo, blasint* n, float complex* a, blasint* lda, blasint* piv, blasint* rank_bn, float* tol, float* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cpstf2,CPSTF2)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, blasint* piv, blasint* rank_bn, float* tol, float* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cpstrf,CPSTRF)(char* uplo, blasint* n, float complex* a, blasint* lda, blasint* piv, blasint* rank_bn, float* tol, float* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cpstrf,CPSTRF)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, blasint* piv, blasint* rank_bn, float* tol, float* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cptcon,CPTCON)(blasint* n, float* d, float complex* e, float* anorm, float* rcond, float* rwork, blasint* info);
+    void FC_GLOBAL(cptcon,CPTCON)(blasint* n, float* d, lapack_complex_float* e, float* anorm, float* rcond, float* rwork, blasint* info);
 
-    void FC_GLOBAL(cpteqr,CPTEQR)(char* compz, blasint* n, float* d, float* e, float complex* z, blasint* ldz, float* work, blasint* info, flexiblas_fortran_charlen_t len_compz);
+    void FC_GLOBAL(cpteqr,CPTEQR)(char* compz, blasint* n, float* d, float* e, lapack_complex_float* z, blasint* ldz, float* work, blasint* info, flexiblas_fortran_charlen_t len_compz);
 
-    void FC_GLOBAL(cptrfs,CPTRFS)(char* uplo, blasint* n, blasint* nrhs, float* d, float complex* e, float* df, float complex* ef, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* ferr, float* berr, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cptrfs,CPTRFS)(char* uplo, blasint* n, blasint* nrhs, float* d, lapack_complex_float* e, float* df, lapack_complex_float* ef, lapack_complex_float* b, blasint* ldb, lapack_complex_float* x, blasint* ldx, float* ferr, float* berr, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cptsv,CPTSV)(blasint* n, blasint* nrhs, float* d, float complex* e, float complex* b, blasint* ldb, blasint* info);
+    void FC_GLOBAL(cptsv,CPTSV)(blasint* n, blasint* nrhs, float* d, lapack_complex_float* e, lapack_complex_float* b, blasint* ldb, blasint* info);
 
-    void FC_GLOBAL(cptsvx,CPTSVX)(char* fact, blasint* n, blasint* nrhs, float* d, float complex* e, float* df, float complex* ef, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* rcond, float* ferr, float* berr, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact);
+    void FC_GLOBAL(cptsvx,CPTSVX)(char* fact, blasint* n, blasint* nrhs, float* d, lapack_complex_float* e, float* df, lapack_complex_float* ef, lapack_complex_float* b, blasint* ldb, lapack_complex_float* x, blasint* ldx, float* rcond, float* ferr, float* berr, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact);
 
-    void FC_GLOBAL(cpttrf,CPTTRF)(blasint* n, float* d, float complex* e, blasint* info);
+    void FC_GLOBAL(cpttrf,CPTTRF)(blasint* n, float* d, lapack_complex_float* e, blasint* info);
 
-    void FC_GLOBAL(cpttrs,CPTTRS)(char* uplo, blasint* n, blasint* nrhs, float* d, float complex* e, float complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cpttrs,CPTTRS)(char* uplo, blasint* n, blasint* nrhs, float* d, lapack_complex_float* e, lapack_complex_float* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cptts2,CPTTS2)(blasint* iuplo, blasint* n, blasint* nrhs, float* d, float complex* e, float complex* b, blasint* ldb);
+    void FC_GLOBAL(cptts2,CPTTS2)(blasint* iuplo, blasint* n, blasint* nrhs, float* d, lapack_complex_float* e, lapack_complex_float* b, blasint* ldb);
 
-    void FC_GLOBAL(crot,CROT)(blasint* n, float complex* cx, blasint* incx, float complex* cy, blasint* incy, float* c, float complex* s);
+    void FC_GLOBAL(crot,CROT)(blasint* n, lapack_complex_float* cx, blasint* incx, lapack_complex_float* cy, blasint* incy, float* c, lapack_complex_float* s);
 
-    void FC_GLOBAL(cspcon,CSPCON)(char* uplo, blasint* n, float complex* ap, blasint* ipiv, float* anorm, float* rcond, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cspcon,CSPCON)(char* uplo, blasint* n, lapack_complex_float* ap, blasint* ipiv, float* anorm, float* rcond, lapack_complex_float* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cspmv,CSPMV)(char* uplo, blasint* n, float complex* alpha, float complex* ap, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cspmv,CSPMV)(char* uplo, blasint* n, lapack_complex_float* alpha, lapack_complex_float* ap, lapack_complex_float* x, blasint* incx, lapack_complex_float* beta, lapack_complex_float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cspr,CSPR)(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* ap, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cspr,CSPR)(char* uplo, blasint* n, lapack_complex_float* alpha, lapack_complex_float* x, blasint* incx, lapack_complex_float* ap, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(csprfs,CSPRFS)(char* uplo, blasint* n, blasint* nrhs, float complex* ap, float complex* afp, blasint* ipiv, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* ferr, float* berr, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(csprfs,CSPRFS)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* ap, lapack_complex_float* afp, blasint* ipiv, lapack_complex_float* b, blasint* ldb, lapack_complex_float* x, blasint* ldx, float* ferr, float* berr, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cspsv,CSPSV)(char* uplo, blasint* n, blasint* nrhs, float complex* ap, blasint* ipiv, float complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cspsv,CSPSV)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* ap, blasint* ipiv, lapack_complex_float* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cspsvx,CSPSVX)(char* fact, char* uplo, blasint* n, blasint* nrhs, float complex* ap, float complex* afp, blasint* ipiv, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* rcond, float* ferr, float* berr, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cspsvx,CSPSVX)(char* fact, char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* ap, lapack_complex_float* afp, blasint* ipiv, lapack_complex_float* b, blasint* ldb, lapack_complex_float* x, blasint* ldx, float* rcond, float* ferr, float* berr, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(csptrf,CSPTRF)(char* uplo, blasint* n, float complex* ap, blasint* ipiv, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(csptrf,CSPTRF)(char* uplo, blasint* n, lapack_complex_float* ap, blasint* ipiv, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(csptri,CSPTRI)(char* uplo, blasint* n, float complex* ap, blasint* ipiv, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(csptri,CSPTRI)(char* uplo, blasint* n, lapack_complex_float* ap, blasint* ipiv, lapack_complex_float* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(csptrs,CSPTRS)(char* uplo, blasint* n, blasint* nrhs, float complex* ap, blasint* ipiv, float complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(csptrs,CSPTRS)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* ap, blasint* ipiv, lapack_complex_float* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(csrscl,CSRSCL)(blasint* n, float* sa, float complex* sx, blasint* incx);
+    void FC_GLOBAL(csrscl,CSRSCL)(blasint* n, float* sa, lapack_complex_float* sx, blasint* incx);
 
-    void FC_GLOBAL(cstedc,CSTEDC)(char* compz, blasint* n, float* d, float* e, float complex* z, blasint* ldz, float complex* work, blasint* lwork, float* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_compz);
+    void FC_GLOBAL(cstedc,CSTEDC)(char* compz, blasint* n, float* d, float* e, lapack_complex_float* z, blasint* ldz, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_compz);
 
-    void FC_GLOBAL(cstegr,CSTEGR)(char* jobz, char* range, blasint* n, float* d, float* e, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, blasint* m, float* w, float complex* z, blasint* ldz, blasint* isuppz, float* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range);
+    void FC_GLOBAL(cstegr,CSTEGR)(char* jobz, char* range, blasint* n, float* d, float* e, float* vl, float* vu, blasint* il, blasint* iu, float* abstol, blasint* m, float* w, lapack_complex_float* z, blasint* ldz, blasint* isuppz, float* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range);
 
-    void FC_GLOBAL(cstein,CSTEIN)(blasint* n, float* d, float* e, blasint* m, float* w, blasint* iblock, blasint* isplit, float complex* z, blasint* ldz, float* work, blasint* iwork, blasint* ifail, blasint* info);
+    void FC_GLOBAL(cstein,CSTEIN)(blasint* n, float* d, float* e, blasint* m, float* w, blasint* iblock, blasint* isplit, lapack_complex_float* z, blasint* ldz, float* work, blasint* iwork, blasint* ifail, blasint* info);
 
-    void FC_GLOBAL(cstemr,CSTEMR)(char* jobz, char* range, blasint* n, float* d, float* e, float* vl, float* vu, blasint* il, blasint* iu, blasint* m, float* w, float complex* z, blasint* ldz, blasint* nzc, blasint* isuppz, blaslogical* tryrac, float* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range);
+    void FC_GLOBAL(cstemr,CSTEMR)(char* jobz, char* range, blasint* n, float* d, float* e, float* vl, float* vu, blasint* il, blasint* iu, blasint* m, float* w, lapack_complex_float* z, blasint* ldz, blasint* nzc, blasint* isuppz, blaslogical* tryrac, float* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range);
 
-    void FC_GLOBAL(csteqr,CSTEQR)(char* compz, blasint* n, float* d, float* e, float complex* z, blasint* ldz, float* work, blasint* info, flexiblas_fortran_charlen_t len_compz);
+    void FC_GLOBAL(csteqr,CSTEQR)(char* compz, blasint* n, float* d, float* e, lapack_complex_float* z, blasint* ldz, float* work, blasint* info, flexiblas_fortran_charlen_t len_compz);
 
-    void FC_GLOBAL(csycon,CSYCON)(char* uplo, blasint* n, float complex* a, blasint* lda, blasint* ipiv, float* anorm, float* rcond, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(csycon,CSYCON)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, blasint* ipiv, float* anorm, float* rcond, lapack_complex_float* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(csyconv,CSYCONV)(char* uplo, char* way, blasint* n, float complex* a, blasint* lda, blasint* ipiv, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_way);
+    void FC_GLOBAL(csyconv,CSYCONV)(char* uplo, char* way, blasint* n, lapack_complex_float* a, blasint* lda, blasint* ipiv, lapack_complex_float* work, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_way);
 
-    void FC_GLOBAL(csyequb,CSYEQUB)(char* uplo, blasint* n, float complex* a, blasint* lda, float* s, float* scond, float* amax, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(csyequb,CSYEQUB)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, float* s, float* scond, float* amax, lapack_complex_float* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(csymv,CSYMV)(char* uplo, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* x, blasint* incx, float complex* beta, float complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(csymv,CSYMV)(char* uplo, blasint* n, lapack_complex_float* alpha, lapack_complex_float* a, blasint* lda, lapack_complex_float* x, blasint* incx, lapack_complex_float* beta, lapack_complex_float* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(csyr,CSYR)(char* uplo, blasint* n, float complex* alpha, float complex* x, blasint* incx, float complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(csyr,CSYR)(char* uplo, blasint* n, lapack_complex_float* alpha, lapack_complex_float* x, blasint* incx, lapack_complex_float* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(csyrfs,CSYRFS)(char* uplo, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* af, blasint* ldaf, blasint* ipiv, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* ferr, float* berr, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(csyrfs,CSYRFS)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* a, blasint* lda, lapack_complex_float* af, blasint* ldaf, blasint* ipiv, lapack_complex_float* b, blasint* ldb, lapack_complex_float* x, blasint* ldx, float* ferr, float* berr, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(csysv,CSYSV)(char* uplo, blasint* n, blasint* nrhs, float complex* a, blasint* lda, blasint* ipiv, float complex* b, blasint* ldb, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(csysv,CSYSV)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* a, blasint* lda, blasint* ipiv, lapack_complex_float* b, blasint* ldb, lapack_complex_float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(csysvx,CSYSVX)(char* fact, char* uplo, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* af, blasint* ldaf, blasint* ipiv, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* rcond, float* ferr, float* berr, float complex* work, blasint* lwork, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(csysvx,CSYSVX)(char* fact, char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* a, blasint* lda, lapack_complex_float* af, blasint* ldaf, blasint* ipiv, lapack_complex_float* b, blasint* ldb, lapack_complex_float* x, blasint* ldx, float* rcond, float* ferr, float* berr, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(csyswapr,CSYSWAPR)(char* uplo, blasint* n, float complex* a, blasint* lda, blasint* i1, blasint* i2, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(csyswapr,CSYSWAPR)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, blasint* i1, blasint* i2, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(csytf2,CSYTF2)(char* uplo, blasint* n, float complex* a, blasint* lda, blasint* ipiv, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(csytf2,CSYTF2)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, blasint* ipiv, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(csytrf,CSYTRF)(char* uplo, blasint* n, float complex* a, blasint* lda, blasint* ipiv, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(csytrf,CSYTRF)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, blasint* ipiv, lapack_complex_float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(csytri,CSYTRI)(char* uplo, blasint* n, float complex* a, blasint* lda, blasint* ipiv, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(csytri,CSYTRI)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, blasint* ipiv, lapack_complex_float* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(csytri2,CSYTRI2)(char* uplo, blasint* n, float complex* a, blasint* lda, blasint* ipiv, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(csytri2,CSYTRI2)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, blasint* ipiv, lapack_complex_float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(csytri2x,CSYTRI2X)(char* uplo, blasint* n, float complex* a, blasint* lda, blasint* ipiv, float complex* work, blasint* nb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(csytri2x,CSYTRI2X)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, blasint* ipiv, lapack_complex_float* work, blasint* nb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(csytrs,CSYTRS)(char* uplo, blasint* n, blasint* nrhs, float complex* a, blasint* lda, blasint* ipiv, float complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(csytrs,CSYTRS)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* a, blasint* lda, blasint* ipiv, lapack_complex_float* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(csytrs2,CSYTRS2)(char* uplo, blasint* n, blasint* nrhs, float complex* a, blasint* lda, blasint* ipiv, float complex* b, blasint* ldb, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(csytrs2,CSYTRS2)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_float* a, blasint* lda, blasint* ipiv, lapack_complex_float* b, blasint* ldb, lapack_complex_float* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(ctbcon,CTBCON)(char* norm, char* uplo, char* diag, blasint* n, blasint* kd, float complex* ab, blasint* ldab, float* rcond, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ctbcon,CTBCON)(char* norm, char* uplo, char* diag, blasint* n, blasint* kd, lapack_complex_float* ab, blasint* ldab, float* rcond, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ctbrfs,CTBRFS)(char* uplo, char* trans, char* diag, blasint* n, blasint* kd, blasint* nrhs, float complex* ab, blasint* ldab, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* ferr, float* berr, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ctbrfs,CTBRFS)(char* uplo, char* trans, char* diag, blasint* n, blasint* kd, blasint* nrhs, lapack_complex_float* ab, blasint* ldab, lapack_complex_float* b, blasint* ldb, lapack_complex_float* x, blasint* ldx, float* ferr, float* berr, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ctbtrs,CTBTRS)(char* uplo, char* trans, char* diag, blasint* n, blasint* kd, blasint* nrhs, float complex* ab, blasint* ldab, float complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ctbtrs,CTBTRS)(char* uplo, char* trans, char* diag, blasint* n, blasint* kd, blasint* nrhs, lapack_complex_float* ab, blasint* ldab, lapack_complex_float* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ctfsm,CTFSM)(char* transr, char* side, char* uplo, char* trans, char* diag, blasint* m, blasint* n, float complex* alpha, float complex* a, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ctfsm,CTFSM)(char* transr, char* side, char* uplo, char* trans, char* diag, blasint* m, blasint* n, lapack_complex_float* alpha, lapack_complex_float* a, lapack_complex_float* b, blasint* ldb, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ctftri,CTFTRI)(char* transr, char* uplo, char* diag, blasint* n, float complex* a, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ctftri,CTFTRI)(char* transr, char* uplo, char* diag, blasint* n, lapack_complex_float* a, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ctfttp,CTFTTP)(char* transr, char* uplo, blasint* n, float complex* arf, float complex* ap, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(ctfttp,CTFTTP)(char* transr, char* uplo, blasint* n, lapack_complex_float* arf, lapack_complex_float* ap, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(ctfttr,CTFTTR)(char* transr, char* uplo, blasint* n, float complex* arf, float complex* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(ctfttr,CTFTTR)(char* transr, char* uplo, blasint* n, lapack_complex_float* arf, lapack_complex_float* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(ctgevc,CTGEVC)(char* side, char* howmny, blaslogical* selectfunc, blasint* n, float complex* s, blasint* lds, float complex* p, blasint* ldp, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, blasint* mm, blasint* m, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_howmny);
+    void FC_GLOBAL(ctgevc,CTGEVC)(char* side, char* howmny, blaslogical* selectfunc, blasint* n, lapack_complex_float* s, blasint* lds, lapack_complex_float* p, blasint* ldp, lapack_complex_float* vl, blasint* ldvl, lapack_complex_float* vr, blasint* ldvr, blasint* mm, blasint* m, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_howmny);
 
-    void FC_GLOBAL(ctgex2,CTGEX2)(blaslogical* wantq, blaslogical* wantz, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* q, blasint* ldq, float complex* z, blasint* ldz, blasint* j1, blasint* info);
+    void FC_GLOBAL(ctgex2,CTGEX2)(blaslogical* wantq, blaslogical* wantz, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, lapack_complex_float* q, blasint* ldq, lapack_complex_float* z, blasint* ldz, blasint* j1, blasint* info);
 
-    void FC_GLOBAL(ctgexc,CTGEXC)(blaslogical* wantq, blaslogical* wantz, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* q, blasint* ldq, float complex* z, blasint* ldz, blasint* ifst, blasint* ilst, blasint* info);
+    void FC_GLOBAL(ctgexc,CTGEXC)(blaslogical* wantq, blaslogical* wantz, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, lapack_complex_float* q, blasint* ldq, lapack_complex_float* z, blasint* ldz, blasint* ifst, blasint* ilst, blasint* info);
 
-    void FC_GLOBAL(ctgsen,CTGSEN)(blasint* ijob, blaslogical* wantq, blaslogical* wantz, blaslogical* selectfunc, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* alpha, float complex* beta, float complex* q, blasint* ldq, float complex* z, blasint* ldz, blasint* m, float* pl, float* pr, float* dif, float complex* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* info);
+    void FC_GLOBAL(ctgsen,CTGSEN)(blasint* ijob, blaslogical* wantq, blaslogical* wantz, blaslogical* selectfunc, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, lapack_complex_float* alpha, lapack_complex_float* beta, lapack_complex_float* q, blasint* ldq, lapack_complex_float* z, blasint* ldz, blasint* m, float* pl, float* pr, float* dif, lapack_complex_float* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* info);
 
-    void FC_GLOBAL(ctgsja,CTGSJA)(char* jobu, char* jobv, char* jobq, blasint* m, blasint* p, blasint* n, blasint* k, blasint* l, float complex* a, blasint* lda, float complex* b, blasint* ldb, float* tola, float* tolb, float* alpha, float* beta, float complex* u, blasint* ldu, float complex* v, blasint* ldv, float complex* q, blasint* ldq, float complex* work, blasint* ncycle, blasint* info, flexiblas_fortran_charlen_t len_jobu, flexiblas_fortran_charlen_t len_jobv, flexiblas_fortran_charlen_t len_jobq);
+    void FC_GLOBAL(ctgsja,CTGSJA)(char* jobu, char* jobv, char* jobq, blasint* m, blasint* p, blasint* n, blasint* k, blasint* l, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, float* tola, float* tolb, float* alpha, float* beta, lapack_complex_float* u, blasint* ldu, lapack_complex_float* v, blasint* ldv, lapack_complex_float* q, blasint* ldq, lapack_complex_float* work, blasint* ncycle, blasint* info, flexiblas_fortran_charlen_t len_jobu, flexiblas_fortran_charlen_t len_jobv, flexiblas_fortran_charlen_t len_jobq);
 
-    void FC_GLOBAL(ctgsna,CTGSNA)(char* job, char* howmny, blaslogical* selectfunc, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, float* s, float* dif, blasint* mm, blasint* m, float complex* work, blasint* lwork, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_howmny);
+    void FC_GLOBAL(ctgsna,CTGSNA)(char* job, char* howmny, blaslogical* selectfunc, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, lapack_complex_float* vl, blasint* ldvl, lapack_complex_float* vr, blasint* ldvr, float* s, float* dif, blasint* mm, blasint* m, lapack_complex_float* work, blasint* lwork, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_howmny);
 
-    void FC_GLOBAL(ctgsy2,CTGSY2)(char* trans, blasint* ijob, blasint* m, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* c, blasint* ldc, float complex* d, blasint* ldd, float complex* e, blasint* lde, float complex* f, blasint* ldf, float* scale, float* rdsum, float* rdscal, blasint* info, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(ctgsy2,CTGSY2)(char* trans, blasint* ijob, blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, lapack_complex_float* c, blasint* ldc, lapack_complex_float* d, blasint* ldd, lapack_complex_float* e, blasint* lde, lapack_complex_float* f, blasint* ldf, float* scale, float* rdsum, float* rdscal, blasint* info, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(ctgsyl,CTGSYL)(char* trans, blasint* ijob, blasint* m, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* c, blasint* ldc, float complex* d, blasint* ldd, float complex* e, blasint* lde, float complex* f, blasint* ldf, float* scale, float* dif, float complex* work, blasint* lwork, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(ctgsyl,CTGSYL)(char* trans, blasint* ijob, blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, lapack_complex_float* c, blasint* ldc, lapack_complex_float* d, blasint* ldd, lapack_complex_float* e, blasint* lde, lapack_complex_float* f, blasint* ldf, float* scale, float* dif, lapack_complex_float* work, blasint* lwork, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(ctpcon,CTPCON)(char* norm, char* uplo, char* diag, blasint* n, float complex* ap, float* rcond, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ctpcon,CTPCON)(char* norm, char* uplo, char* diag, blasint* n, lapack_complex_float* ap, float* rcond, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ctprfs,CTPRFS)(char* uplo, char* trans, char* diag, blasint* n, blasint* nrhs, float complex* ap, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* ferr, float* berr, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ctprfs,CTPRFS)(char* uplo, char* trans, char* diag, blasint* n, blasint* nrhs, lapack_complex_float* ap, lapack_complex_float* b, blasint* ldb, lapack_complex_float* x, blasint* ldx, float* ferr, float* berr, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ctptri,CTPTRI)(char* uplo, char* diag, blasint* n, float complex* ap, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ctptri,CTPTRI)(char* uplo, char* diag, blasint* n, lapack_complex_float* ap, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ctptrs,CTPTRS)(char* uplo, char* trans, char* diag, blasint* n, blasint* nrhs, float complex* ap, float complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ctptrs,CTPTRS)(char* uplo, char* trans, char* diag, blasint* n, blasint* nrhs, lapack_complex_float* ap, lapack_complex_float* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ctpttf,CTPTTF)(char* transr, char* uplo, blasint* n, float complex* ap, float complex* arf, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(ctpttf,CTPTTF)(char* transr, char* uplo, blasint* n, lapack_complex_float* ap, lapack_complex_float* arf, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(ctpttr,CTPTTR)(char* uplo, blasint* n, float complex* ap, float complex* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(ctpttr,CTPTTR)(char* uplo, blasint* n, lapack_complex_float* ap, lapack_complex_float* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(ctrcon,CTRCON)(char* norm, char* uplo, char* diag, blasint* n, float complex* a, blasint* lda, float* rcond, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ctrcon,CTRCON)(char* norm, char* uplo, char* diag, blasint* n, lapack_complex_float* a, blasint* lda, float* rcond, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ctrevc,CTREVC)(char* side, char* howmny, blaslogical* selectfunc, blasint* n, float complex* t, blasint* ldt, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, blasint* mm, blasint* m, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_howmny);
+    void FC_GLOBAL(ctrevc,CTREVC)(char* side, char* howmny, blaslogical* selectfunc, blasint* n, lapack_complex_float* t, blasint* ldt, lapack_complex_float* vl, blasint* ldvl, lapack_complex_float* vr, blasint* ldvr, blasint* mm, blasint* m, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_howmny);
 
-    void FC_GLOBAL(ctrexc,CTREXC)(char* compq, blasint* n, float complex* t, blasint* ldt, float complex* q, blasint* ldq, blasint* ifst, blasint* ilst, blasint* info, flexiblas_fortran_charlen_t len_compq);
+    void FC_GLOBAL(ctrexc,CTREXC)(char* compq, blasint* n, lapack_complex_float* t, blasint* ldt, lapack_complex_float* q, blasint* ldq, blasint* ifst, blasint* ilst, blasint* info, flexiblas_fortran_charlen_t len_compq);
 
-    void FC_GLOBAL(ctrrfs,CTRRFS)(char* uplo, char* trans, char* diag, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* x, blasint* ldx, float* ferr, float* berr, float complex* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ctrrfs,CTRRFS)(char* uplo, char* trans, char* diag, blasint* n, blasint* nrhs, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, lapack_complex_float* x, blasint* ldx, float* ferr, float* berr, lapack_complex_float* work, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ctrsen,CTRSEN)(char* job, char* compq, blaslogical* selectfunc, blasint* n, float complex* t, blasint* ldt, float complex* q, blasint* ldq, float complex* w, blasint* m, float* s, float* sep, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_compq);
+    void FC_GLOBAL(ctrsen,CTRSEN)(char* job, char* compq, blaslogical* selectfunc, blasint* n, lapack_complex_float* t, blasint* ldt, lapack_complex_float* q, blasint* ldq, lapack_complex_float* w, blasint* m, float* s, float* sep, lapack_complex_float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_compq);
 
-    void FC_GLOBAL(ctrsna,CTRSNA)(char* job, char* howmny, blaslogical* selectfunc, blasint* n, float complex* t, blasint* ldt, float complex* vl, blasint* ldvl, float complex* vr, blasint* ldvr, float* s, float* sep, blasint* mm, blasint* m, float complex* work, blasint* ldwork, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_howmny);
+    void FC_GLOBAL(ctrsna,CTRSNA)(char* job, char* howmny, blaslogical* selectfunc, blasint* n, lapack_complex_float* t, blasint* ldt, lapack_complex_float* vl, blasint* ldvl, lapack_complex_float* vr, blasint* ldvr, float* s, float* sep, blasint* mm, blasint* m, lapack_complex_float* work, blasint* ldwork, float* rwork, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_howmny);
 
-    void FC_GLOBAL(ctrsyl,CTRSYL)(char* trana, char* tranb, blasint* isgn, blasint* m, blasint* n, float complex* a, blasint* lda, float complex* b, blasint* ldb, float complex* c, blasint* ldc, float* scale, blasint* info, flexiblas_fortran_charlen_t len_trana, flexiblas_fortran_charlen_t len_tranb);
+    void FC_GLOBAL(ctrsyl,CTRSYL)(char* trana, char* tranb, blasint* isgn, blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, lapack_complex_float* c, blasint* ldc, float* scale, blasint* info, flexiblas_fortran_charlen_t len_trana, flexiblas_fortran_charlen_t len_tranb);
 
-    void FC_GLOBAL(ctrti2,CTRTI2)(char* uplo, char* diag, blasint* n, float complex* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ctrti2,CTRTI2)(char* uplo, char* diag, blasint* n, lapack_complex_float* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ctrtri,CTRTRI)(char* uplo, char* diag, blasint* n, float complex* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ctrtri,CTRTRI)(char* uplo, char* diag, blasint* n, lapack_complex_float* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ctrtrs,CTRTRS)(char* uplo, char* trans, char* diag, blasint* n, blasint* nrhs, float complex* a, blasint* lda, float complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ctrtrs,CTRTRS)(char* uplo, char* trans, char* diag, blasint* n, blasint* nrhs, lapack_complex_float* a, blasint* lda, lapack_complex_float* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ctrttf,CTRTTF)(char* transr, char* uplo, blasint* n, float complex* a, blasint* lda, float complex* arf, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(ctrttf,CTRTTF)(char* transr, char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* arf, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(ctrttp,CTRTTP)(char* uplo, blasint* n, float complex* a, blasint* lda, float complex* ap, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(ctrttp,CTRTTP)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* ap, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(ctzrqf,CTZRQF)(blasint* m, blasint* n, float complex* a, blasint* lda, float complex* tau, blasint* info);
+    void FC_GLOBAL(ctzrqf,CTZRQF)(blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, blasint* info);
 
-    void FC_GLOBAL(ctzrzf,CTZRZF)(blasint* m, blasint* n, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(ctzrzf,CTZRZF)(blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(cunbdb,CUNBDB)(char* trans, char* signs, blasint* m, blasint* p, blasint* q, float complex* x11, blasint* ldx11, float complex* x12, blasint* ldx12, float complex* x21, blasint* ldx21, float complex* x22, blasint* ldx22, float* theta, float* phi, float complex* taup1, float complex* taup2, float complex* tauq1, float complex* tauq2, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_signs);
+    void FC_GLOBAL(cunbdb,CUNBDB)(char* trans, char* signs, blasint* m, blasint* p, blasint* q, lapack_complex_float* x11, blasint* ldx11, lapack_complex_float* x12, blasint* ldx12, lapack_complex_float* x21, blasint* ldx21, lapack_complex_float* x22, blasint* ldx22, float* theta, float* phi, lapack_complex_float* taup1, lapack_complex_float* taup2, lapack_complex_float* tauq1, lapack_complex_float* tauq2, lapack_complex_float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_signs);
 
-    void FC_GLOBAL(cuncsd,CUNCSD)(char* jobu1, char* jobu2, char* jobv1t, char* jobv2t, char* trans, char* signs, blasint* m, blasint* p, blasint* q, float complex* x11, blasint* ldx11, float complex* x12, blasint* ldx12, float complex* x21, blasint* ldx21, float complex* x22, blasint* ldx22, float* theta, float complex* u1, blasint* ldu1, float complex* u2, blasint* ldu2, float complex* v1t, blasint* ldv1t, float complex* v2t, blasint* ldv2t, float complex* work, blasint* lwork, float* rwork, blasint* lrwork, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_jobu1, flexiblas_fortran_charlen_t len_jobu2, flexiblas_fortran_charlen_t len_jobv1t, flexiblas_fortran_charlen_t len_jobv2t, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_signs);
+    void FC_GLOBAL(cuncsd,CUNCSD)(char* jobu1, char* jobu2, char* jobv1t, char* jobv2t, char* trans, char* signs, blasint* m, blasint* p, blasint* q, lapack_complex_float* x11, blasint* ldx11, lapack_complex_float* x12, blasint* ldx12, lapack_complex_float* x21, blasint* ldx21, lapack_complex_float* x22, blasint* ldx22, float* theta, lapack_complex_float* u1, blasint* ldu1, lapack_complex_float* u2, blasint* ldu2, lapack_complex_float* v1t, blasint* ldv1t, lapack_complex_float* v2t, blasint* ldv2t, lapack_complex_float* work, blasint* lwork, float* rwork, blasint* lrwork, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_jobu1, flexiblas_fortran_charlen_t len_jobu2, flexiblas_fortran_charlen_t len_jobv1t, flexiblas_fortran_charlen_t len_jobv2t, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_signs);
 
-    void FC_GLOBAL(cung2l,CUNG2L)(blasint* m, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* info);
+    void FC_GLOBAL(cung2l,CUNG2L)(blasint* m, blasint* n, blasint* k, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* work, blasint* info);
 
-    void FC_GLOBAL(cung2r,CUNG2R)(blasint* m, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* info);
+    void FC_GLOBAL(cung2r,CUNG2R)(blasint* m, blasint* n, blasint* k, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* work, blasint* info);
 
-    void FC_GLOBAL(cungbr,CUNGBR)(char* vect, blasint* m, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_vect);
+    void FC_GLOBAL(cungbr,CUNGBR)(char* vect, blasint* m, blasint* n, blasint* k, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_vect);
 
-    void FC_GLOBAL(cunghr,CUNGHR)(blasint* n, blasint* ilo, blasint* ihi, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(cunghr,CUNGHR)(blasint* n, blasint* ilo, blasint* ihi, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(cungl2,CUNGL2)(blasint* m, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* info);
+    void FC_GLOBAL(cungl2,CUNGL2)(blasint* m, blasint* n, blasint* k, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* work, blasint* info);
 
-    void FC_GLOBAL(cunglq,CUNGLQ)(blasint* m, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(cunglq,CUNGLQ)(blasint* m, blasint* n, blasint* k, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(cungql,CUNGQL)(blasint* m, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(cungql,CUNGQL)(blasint* m, blasint* n, blasint* k, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(cungqr,CUNGQR)(blasint* m, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(cungqr,CUNGQR)(blasint* m, blasint* n, blasint* k, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(cungr2,CUNGR2)(blasint* m, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* info);
+    void FC_GLOBAL(cungr2,CUNGR2)(blasint* m, blasint* n, blasint* k, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* work, blasint* info);
 
-    void FC_GLOBAL(cungrq,CUNGRQ)(blasint* m, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(cungrq,CUNGRQ)(blasint* m, blasint* n, blasint* k, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(cungtr,CUNGTR)(char* uplo, blasint* n, float complex* a, blasint* lda, float complex* tau, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cungtr,CUNGTR)(char* uplo, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cunm2l,CUNM2L)(char* side, char* trans, blasint* m, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* tau, float complex* c, blasint* ldc, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(cunm2l,CUNM2L)(char* side, char* trans, blasint* m, blasint* n, blasint* k, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* c, blasint* ldc, lapack_complex_float* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(cunm2r,CUNM2R)(char* side, char* trans, blasint* m, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* tau, float complex* c, blasint* ldc, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(cunm2r,CUNM2R)(char* side, char* trans, blasint* m, blasint* n, blasint* k, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* c, blasint* ldc, lapack_complex_float* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(cunmbr,CUNMBR)(char* vect, char* side, char* trans, blasint* m, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* tau, float complex* c, blasint* ldc, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(cunmbr,CUNMBR)(char* vect, char* side, char* trans, blasint* m, blasint* n, blasint* k, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* c, blasint* ldc, lapack_complex_float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(cunmhr,CUNMHR)(char* side, char* trans, blasint* m, blasint* n, blasint* ilo, blasint* ihi, float complex* a, blasint* lda, float complex* tau, float complex* c, blasint* ldc, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(cunmhr,CUNMHR)(char* side, char* trans, blasint* m, blasint* n, blasint* ilo, blasint* ihi, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* c, blasint* ldc, lapack_complex_float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(cunml2,CUNML2)(char* side, char* trans, blasint* m, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* tau, float complex* c, blasint* ldc, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(cunml2,CUNML2)(char* side, char* trans, blasint* m, blasint* n, blasint* k, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* c, blasint* ldc, lapack_complex_float* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(cunmlq,CUNMLQ)(char* side, char* trans, blasint* m, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* tau, float complex* c, blasint* ldc, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(cunmlq,CUNMLQ)(char* side, char* trans, blasint* m, blasint* n, blasint* k, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* c, blasint* ldc, lapack_complex_float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(cunmql,CUNMQL)(char* side, char* trans, blasint* m, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* tau, float complex* c, blasint* ldc, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(cunmql,CUNMQL)(char* side, char* trans, blasint* m, blasint* n, blasint* k, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* c, blasint* ldc, lapack_complex_float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(cunmqr,CUNMQR)(char* side, char* trans, blasint* m, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* tau, float complex* c, blasint* ldc, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(cunmqr,CUNMQR)(char* side, char* trans, blasint* m, blasint* n, blasint* k, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* c, blasint* ldc, lapack_complex_float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(cunmr2,CUNMR2)(char* side, char* trans, blasint* m, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* tau, float complex* c, blasint* ldc, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(cunmr2,CUNMR2)(char* side, char* trans, blasint* m, blasint* n, blasint* k, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* c, blasint* ldc, lapack_complex_float* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(cunmr3,CUNMR3)(char* side, char* trans, blasint* m, blasint* n, blasint* k, blasint* l, float complex* a, blasint* lda, float complex* tau, float complex* c, blasint* ldc, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(cunmr3,CUNMR3)(char* side, char* trans, blasint* m, blasint* n, blasint* k, blasint* l, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* c, blasint* ldc, lapack_complex_float* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(cunmrq,CUNMRQ)(char* side, char* trans, blasint* m, blasint* n, blasint* k, float complex* a, blasint* lda, float complex* tau, float complex* c, blasint* ldc, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(cunmrq,CUNMRQ)(char* side, char* trans, blasint* m, blasint* n, blasint* k, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* c, blasint* ldc, lapack_complex_float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(cunmrz,CUNMRZ)(char* side, char* trans, blasint* m, blasint* n, blasint* k, blasint* l, float complex* a, blasint* lda, float complex* tau, float complex* c, blasint* ldc, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(cunmrz,CUNMRZ)(char* side, char* trans, blasint* m, blasint* n, blasint* k, blasint* l, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* c, blasint* ldc, lapack_complex_float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(cunmtr,CUNMTR)(char* side, char* uplo, char* trans, blasint* m, blasint* n, float complex* a, blasint* lda, float complex* tau, float complex* c, blasint* ldc, float complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(cunmtr,CUNMTR)(char* side, char* uplo, char* trans, blasint* m, blasint* n, lapack_complex_float* a, blasint* lda, lapack_complex_float* tau, lapack_complex_float* c, blasint* ldc, lapack_complex_float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(cupgtr,CUPGTR)(char* uplo, blasint* n, float complex* ap, float complex* tau, float complex* q, blasint* ldq, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(cupgtr,CUPGTR)(char* uplo, blasint* n, lapack_complex_float* ap, lapack_complex_float* tau, lapack_complex_float* q, blasint* ldq, lapack_complex_float* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(cupmtr,CUPMTR)(char* side, char* uplo, char* trans, blasint* m, blasint* n, float complex* ap, float complex* tau, float complex* c, blasint* ldc, float complex* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(cupmtr,CUPMTR)(char* side, char* uplo, char* trans, blasint* m, blasint* n, lapack_complex_float* ap, lapack_complex_float* tau, lapack_complex_float* c, blasint* ldc, lapack_complex_float* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans);
 
     void FC_GLOBAL(dbbcsd,DBBCSD)(char* jobu1, char* jobu2, char* jobv1t, char* jobv2t, char* trans, blasint* m, blasint* p, blasint* q, double* theta, double* phi, double* u1, blasint* ldu1, double* u2, blasint* ldu2, double* v1t, blasint* ldv1t, double* v2t, blasint* ldv2t, double* b11d, double* b11e, double* b12d, double* b12e, double* b21d, double* b21e, double* b22d, double* b22e, double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_jobu1, flexiblas_fortran_charlen_t len_jobu2, flexiblas_fortran_charlen_t len_jobv1t, flexiblas_fortran_charlen_t len_jobv2t, flexiblas_fortran_charlen_t len_trans);
 
@@ -3025,15 +3044,15 @@ extern "C" {
 
     void FC_GLOBAL(dtzrzf,DTZRZF)(blasint* m, blasint* n, double* a, blasint* lda, double* tau, double* work, blasint* lwork, blasint* info);
 
-    double FC_GLOBAL(dzsum1,DZSUM1)(blasint* n, double complex* cx, blasint* incx);
+    double FC_GLOBAL(dzsum1,DZSUM1)(blasint* n, lapack_complex_double* cx, blasint* incx);
 
-    blasint FC_GLOBAL(icmax1,ICMAX1)(blasint* n, float complex* cx, blasint* incx);
+    blasint FC_GLOBAL(icmax1,ICMAX1)(blasint* n, lapack_complex_float* cx, blasint* incx);
 
     blasint FC_GLOBAL(ieeeck,IEEECK)(blasint* ispec, float* zero, float* one);
 
-    blasint FC_GLOBAL(ilaclc,ILACLC)(blasint* m, blasint* n, float complex* a, blasint* lda);
+    blasint FC_GLOBAL(ilaclc,ILACLC)(blasint* m, blasint* n, lapack_complex_float* a, blasint* lda);
 
-    blasint FC_GLOBAL(ilaclr,ILACLR)(blasint* m, blasint* n, float complex* a, blasint* lda);
+    blasint FC_GLOBAL(ilaclr,ILACLR)(blasint* m, blasint* n, lapack_complex_float* a, blasint* lda);
 
     blasint FC_GLOBAL(iladiag,ILADIAG)(char* diag, flexiblas_fortran_charlen_t len_diag);
 
@@ -3053,13 +3072,13 @@ extern "C" {
 
     blasint FC_GLOBAL(ilauplo,ILAUPLO)(char* uplo, flexiblas_fortran_charlen_t len_uplo);
 
-    blasint FC_GLOBAL(ilazlc,ILAZLC)(blasint* m, blasint* n, double complex* a, blasint* lda);
+    blasint FC_GLOBAL(ilazlc,ILAZLC)(blasint* m, blasint* n, lapack_complex_double* a, blasint* lda);
 
-    blasint FC_GLOBAL(ilazlr,ILAZLR)(blasint* m, blasint* n, double complex* a, blasint* lda);
+    blasint FC_GLOBAL(ilazlr,ILAZLR)(blasint* m, blasint* n, lapack_complex_double* a, blasint* lda);
 
     blasint FC_GLOBAL(iparmq,IPARMQ)(blasint* ispec, char* name, char* opts, blasint* n, blasint* ilo, blasint* ihi, blasint* lwork, flexiblas_fortran_charlen_t len_name, flexiblas_fortran_charlen_t len_opts);
 
-    blasint FC_GLOBAL(izmax1,IZMAX1)(blasint* n, double complex* cx, blasint* incx);
+    blasint FC_GLOBAL(izmax1,IZMAX1)(blasint* n, lapack_complex_double* cx, blasint* incx);
 
     void FC_GLOBAL(sbbcsd,SBBCSD)(char* jobu1, char* jobu2, char* jobv1t, char* jobv2t, char* trans, blasint* m, blasint* p, blasint* q, float* theta, float* phi, float* u1, blasint* ldu1, float* u2, blasint* ldu2, float* v1t, blasint* ldv1t, float* v2t, blasint* ldv2t, float* b11d, float* b11e, float* b12d, float* b12e, float* b21d, float* b21e, float* b22d, float* b22e, float* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_jobu1, flexiblas_fortran_charlen_t len_jobu2, flexiblas_fortran_charlen_t len_jobv1t, flexiblas_fortran_charlen_t len_jobv2t, flexiblas_fortran_charlen_t len_trans);
 
@@ -3067,7 +3086,7 @@ extern "C" {
 
     void FC_GLOBAL(sbdsqr,SBDSQR)(char* uplo, blasint* n, blasint* ncvt, blasint* nru, blasint* ncc, float* d, float* e, float* vt, blasint* ldvt, float* u, blasint* ldu, float* c, blasint* ldc, float* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    float FC_GLOBAL(scsum1,SCSUM1)(blasint* n, float complex* cx, blasint* incx);
+    float FC_GLOBAL(scsum1,SCSUM1)(blasint* n, lapack_complex_float* cx, blasint* incx);
 
     void FC_GLOBAL(sdisna,SDISNA)(char* job, blasint* m, blasint* n, float* d, float* sep, blasint* info, flexiblas_fortran_charlen_t len_job);
 
@@ -3843,717 +3862,717 @@ extern "C" {
 
     void FC_GLOBAL_(xerbla_array,XERBLA_ARRAY)(char* srname_array, blasint* srname_len, blasint* info, flexiblas_fortran_charlen_t len_srname_array);
 
-    void FC_GLOBAL(zbbcsd,ZBBCSD)(char* jobu1, char* jobu2, char* jobv1t, char* jobv2t, char* trans, blasint* m, blasint* p, blasint* q, double* theta, double* phi, double complex* u1, blasint* ldu1, double complex* u2, blasint* ldu2, double complex* v1t, blasint* ldv1t, double complex* v2t, blasint* ldv2t, double* b11d, double* b11e, double* b12d, double* b12e, double* b21d, double* b21e, double* b22d, double* b22e, double* rwork, blasint* lrwork, blasint* info, flexiblas_fortran_charlen_t len_jobu1, flexiblas_fortran_charlen_t len_jobu2, flexiblas_fortran_charlen_t len_jobv1t, flexiblas_fortran_charlen_t len_jobv2t, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zbbcsd,ZBBCSD)(char* jobu1, char* jobu2, char* jobv1t, char* jobv2t, char* trans, blasint* m, blasint* p, blasint* q, double* theta, double* phi, lapack_complex_double* u1, blasint* ldu1, lapack_complex_double* u2, blasint* ldu2, lapack_complex_double* v1t, blasint* ldv1t, lapack_complex_double* v2t, blasint* ldv2t, double* b11d, double* b11e, double* b12d, double* b12e, double* b21d, double* b21e, double* b22d, double* b22e, double* rwork, blasint* lrwork, blasint* info, flexiblas_fortran_charlen_t len_jobu1, flexiblas_fortran_charlen_t len_jobu2, flexiblas_fortran_charlen_t len_jobv1t, flexiblas_fortran_charlen_t len_jobv2t, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zbdsqr,ZBDSQR)(char* uplo, blasint* n, blasint* ncvt, blasint* nru, blasint* ncc, double* d, double* e, double complex* vt, blasint* ldvt, double complex* u, blasint* ldu, double complex* c, blasint* ldc, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zbdsqr,ZBDSQR)(char* uplo, blasint* n, blasint* ncvt, blasint* nru, blasint* ncc, double* d, double* e, lapack_complex_double* vt, blasint* ldvt, lapack_complex_double* u, blasint* ldu, lapack_complex_double* c, blasint* ldc, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zcgesv,ZCGESV)(blasint* n, blasint* nrhs, double complex* a, blasint* lda, blasint* ipiv, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double complex* work, float complex* swork, double* rwork, blasint* iter, blasint* info);
+    void FC_GLOBAL(zcgesv,ZCGESV)(blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, blasint* ipiv, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, lapack_complex_double* work, lapack_complex_float* swork, double* rwork, blasint* iter, blasint* info);
 
-    void FC_GLOBAL(zcposv,ZCPOSV)(char* uplo, blasint* n, blasint* nrhs, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double complex* work, float complex* swork, double* rwork, blasint* iter, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zcposv,ZCPOSV)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, lapack_complex_double* work, lapack_complex_float* swork, double* rwork, blasint* iter, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zdrscl,ZDRSCL)(blasint* n, double* sa, double complex* sx, blasint* incx);
+    void FC_GLOBAL(zdrscl,ZDRSCL)(blasint* n, double* sa, lapack_complex_double* sx, blasint* incx);
 
-    void FC_GLOBAL(zgbbrd,ZGBBRD)(char* vect, blasint* m, blasint* n, blasint* ncc, blasint* kl, blasint* ku, double complex* ab, blasint* ldab, double* d, double* e, double complex* q, blasint* ldq, double complex* pt, blasint* ldpt, double complex* c, blasint* ldc, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_vect);
+    void FC_GLOBAL(zgbbrd,ZGBBRD)(char* vect, blasint* m, blasint* n, blasint* ncc, blasint* kl, blasint* ku, lapack_complex_double* ab, blasint* ldab, double* d, double* e, lapack_complex_double* q, blasint* ldq, lapack_complex_double* pt, blasint* ldpt, lapack_complex_double* c, blasint* ldc, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_vect);
 
-    void FC_GLOBAL(zgbcon,ZGBCON)(char* norm, blasint* n, blasint* kl, blasint* ku, double complex* ab, blasint* ldab, blasint* ipiv, double* anorm, double* rcond, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_norm);
+    void FC_GLOBAL(zgbcon,ZGBCON)(char* norm, blasint* n, blasint* kl, blasint* ku, lapack_complex_double* ab, blasint* ldab, blasint* ipiv, double* anorm, double* rcond, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_norm);
 
-    void FC_GLOBAL(zgbequ,ZGBEQU)(blasint* m, blasint* n, blasint* kl, blasint* ku, double complex* ab, blasint* ldab, double* r, double* c, double* rowcnd, double* colcnd, double* amax, blasint* info);
+    void FC_GLOBAL(zgbequ,ZGBEQU)(blasint* m, blasint* n, blasint* kl, blasint* ku, lapack_complex_double* ab, blasint* ldab, double* r, double* c, double* rowcnd, double* colcnd, double* amax, blasint* info);
 
-    void FC_GLOBAL(zgbequb,ZGBEQUB)(blasint* m, blasint* n, blasint* kl, blasint* ku, double complex* ab, blasint* ldab, double* r, double* c, double* rowcnd, double* colcnd, double* amax, blasint* info);
+    void FC_GLOBAL(zgbequb,ZGBEQUB)(blasint* m, blasint* n, blasint* kl, blasint* ku, lapack_complex_double* ab, blasint* ldab, double* r, double* c, double* rowcnd, double* colcnd, double* amax, blasint* info);
 
-    void FC_GLOBAL(zgbrfs,ZGBRFS)(char* trans, blasint* n, blasint* kl, blasint* ku, blasint* nrhs, double complex* ab, blasint* ldab, double complex* afb, blasint* ldafb, blasint* ipiv, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* ferr, double* berr, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zgbrfs,ZGBRFS)(char* trans, blasint* n, blasint* kl, blasint* ku, blasint* nrhs, lapack_complex_double* ab, blasint* ldab, lapack_complex_double* afb, blasint* ldafb, blasint* ipiv, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, double* ferr, double* berr, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zgbsv,ZGBSV)(blasint* n, blasint* kl, blasint* ku, blasint* nrhs, double complex* ab, blasint* ldab, blasint* ipiv, double complex* b, blasint* ldb, blasint* info);
+    void FC_GLOBAL(zgbsv,ZGBSV)(blasint* n, blasint* kl, blasint* ku, blasint* nrhs, lapack_complex_double* ab, blasint* ldab, blasint* ipiv, lapack_complex_double* b, blasint* ldb, blasint* info);
 
-    void FC_GLOBAL(zgbsvx,ZGBSVX)(char* fact, char* trans, blasint* n, blasint* kl, blasint* ku, blasint* nrhs, double complex* ab, blasint* ldab, double complex* afb, blasint* ldafb, blasint* ipiv, char* equed, double* r, double* c, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* rcond, double* ferr, double* berr, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(zgbsvx,ZGBSVX)(char* fact, char* trans, blasint* n, blasint* kl, blasint* ku, blasint* nrhs, lapack_complex_double* ab, blasint* ldab, lapack_complex_double* afb, blasint* ldafb, blasint* ipiv, char* equed, double* r, double* c, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, double* rcond, double* ferr, double* berr, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(zgbtf2,ZGBTF2)(blasint* m, blasint* n, blasint* kl, blasint* ku, double complex* ab, blasint* ldab, blasint* ipiv, blasint* info);
+    void FC_GLOBAL(zgbtf2,ZGBTF2)(blasint* m, blasint* n, blasint* kl, blasint* ku, lapack_complex_double* ab, blasint* ldab, blasint* ipiv, blasint* info);
 
-    void FC_GLOBAL(zgbtrf,ZGBTRF)(blasint* m, blasint* n, blasint* kl, blasint* ku, double complex* ab, blasint* ldab, blasint* ipiv, blasint* info);
+    void FC_GLOBAL(zgbtrf,ZGBTRF)(blasint* m, blasint* n, blasint* kl, blasint* ku, lapack_complex_double* ab, blasint* ldab, blasint* ipiv, blasint* info);
 
-    void FC_GLOBAL(zgbtrs,ZGBTRS)(char* trans, blasint* n, blasint* kl, blasint* ku, blasint* nrhs, double complex* ab, blasint* ldab, blasint* ipiv, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zgbtrs,ZGBTRS)(char* trans, blasint* n, blasint* kl, blasint* ku, blasint* nrhs, lapack_complex_double* ab, blasint* ldab, blasint* ipiv, lapack_complex_double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zgebak,ZGEBAK)(char* job, char* side, blasint* n, blasint* ilo, blasint* ihi, double* scale, blasint* m, double complex* v, blasint* ldv, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_side);
+    void FC_GLOBAL(zgebak,ZGEBAK)(char* job, char* side, blasint* n, blasint* ilo, blasint* ihi, double* scale, blasint* m, lapack_complex_double* v, blasint* ldv, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_side);
 
-    void FC_GLOBAL(zgebal,ZGEBAL)(char* job, blasint* n, double complex* a, blasint* lda, blasint* ilo, blasint* ihi, double* scale, blasint* info, flexiblas_fortran_charlen_t len_job);
+    void FC_GLOBAL(zgebal,ZGEBAL)(char* job, blasint* n, lapack_complex_double* a, blasint* lda, blasint* ilo, blasint* ihi, double* scale, blasint* info, flexiblas_fortran_charlen_t len_job);
 
-    void FC_GLOBAL(zgebd2,ZGEBD2)(blasint* m, blasint* n, double complex* a, blasint* lda, double* d, double* e, double complex* tauq, double complex* taup, double complex* work, blasint* info);
+    void FC_GLOBAL(zgebd2,ZGEBD2)(blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, double* d, double* e, lapack_complex_double* tauq, lapack_complex_double* taup, lapack_complex_double* work, blasint* info);
 
-    void FC_GLOBAL(zgebrd,ZGEBRD)(blasint* m, blasint* n, double complex* a, blasint* lda, double* d, double* e, double complex* tauq, double complex* taup, double complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(zgebrd,ZGEBRD)(blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, double* d, double* e, lapack_complex_double* tauq, lapack_complex_double* taup, lapack_complex_double* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(zgecon,ZGECON)(char* norm, blasint* n, double complex* a, blasint* lda, double* anorm, double* rcond, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_norm);
+    void FC_GLOBAL(zgecon,ZGECON)(char* norm, blasint* n, lapack_complex_double* a, blasint* lda, double* anorm, double* rcond, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_norm);
 
-    void FC_GLOBAL(zgeequ,ZGEEQU)(blasint* m, blasint* n, double complex* a, blasint* lda, double* r, double* c, double* rowcnd, double* colcnd, double* amax, blasint* info);
+    void FC_GLOBAL(zgeequ,ZGEEQU)(blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, double* r, double* c, double* rowcnd, double* colcnd, double* amax, blasint* info);
 
-    void FC_GLOBAL(zgeequb,ZGEEQUB)(blasint* m, blasint* n, double complex* a, blasint* lda, double* r, double* c, double* rowcnd, double* colcnd, double* amax, blasint* info);
+    void FC_GLOBAL(zgeequb,ZGEEQUB)(blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, double* r, double* c, double* rowcnd, double* colcnd, double* amax, blasint* info);
 
-    void FC_GLOBAL(zgees,ZGEES)(char* jobvs, char* sort, blaslogical* selectfunc, blasint* n, double complex* a, blasint* lda, blasint* sdim, double complex* w, double complex* vs, blasint* ldvs, double complex* work, blasint* lwork, double* rwork, blaslogical* bwork, blasint* info, flexiblas_fortran_charlen_t len_jobvs, flexiblas_fortran_charlen_t len_sort);
+    void FC_GLOBAL(zgees,ZGEES)(char* jobvs, char* sort, blaslogical* selectfunc, blasint* n, lapack_complex_double* a, blasint* lda, blasint* sdim, lapack_complex_double* w, lapack_complex_double* vs, blasint* ldvs, lapack_complex_double* work, blasint* lwork, double* rwork, blaslogical* bwork, blasint* info, flexiblas_fortran_charlen_t len_jobvs, flexiblas_fortran_charlen_t len_sort);
 
-    void FC_GLOBAL(zgeesx,ZGEESX)(char* jobvs, char* sort, blaslogical* selectfunc, char* sense, blasint* n, double complex* a, blasint* lda, blasint* sdim, double complex* w, double complex* vs, blasint* ldvs, double* rconde, double* rcondv, double complex* work, blasint* lwork, double* rwork, blaslogical* bwork, blasint* info, flexiblas_fortran_charlen_t len_jobvs, flexiblas_fortran_charlen_t len_sort, flexiblas_fortran_charlen_t len_sense);
+    void FC_GLOBAL(zgeesx,ZGEESX)(char* jobvs, char* sort, blaslogical* selectfunc, char* sense, blasint* n, lapack_complex_double* a, blasint* lda, blasint* sdim, lapack_complex_double* w, lapack_complex_double* vs, blasint* ldvs, double* rconde, double* rcondv, lapack_complex_double* work, blasint* lwork, double* rwork, blaslogical* bwork, blasint* info, flexiblas_fortran_charlen_t len_jobvs, flexiblas_fortran_charlen_t len_sort, flexiblas_fortran_charlen_t len_sense);
 
-    void FC_GLOBAL(zgeev,ZGEEV)(char* jobvl, char* jobvr, blasint* n, double complex* a, blasint* lda, double complex* w, double complex* vl, blasint* ldvl, double complex* vr, blasint* ldvr, double complex* work, blasint* lwork, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobvl, flexiblas_fortran_charlen_t len_jobvr);
+    void FC_GLOBAL(zgeev,ZGEEV)(char* jobvl, char* jobvr, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* w, lapack_complex_double* vl, blasint* ldvl, lapack_complex_double* vr, blasint* ldvr, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobvl, flexiblas_fortran_charlen_t len_jobvr);
 
-    void FC_GLOBAL(zgeevx,ZGEEVX)(char* balanc, char* jobvl, char* jobvr, char* sense, blasint* n, double complex* a, blasint* lda, double complex* w, double complex* vl, blasint* ldvl, double complex* vr, blasint* ldvr, blasint* ilo, blasint* ihi, double* scale, double* abnrm, double* rconde, double* rcondv, double complex* work, blasint* lwork, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_balanc, flexiblas_fortran_charlen_t len_jobvl, flexiblas_fortran_charlen_t len_jobvr, flexiblas_fortran_charlen_t len_sense);
+    void FC_GLOBAL(zgeevx,ZGEEVX)(char* balanc, char* jobvl, char* jobvr, char* sense, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* w, lapack_complex_double* vl, blasint* ldvl, lapack_complex_double* vr, blasint* ldvr, blasint* ilo, blasint* ihi, double* scale, double* abnrm, double* rconde, double* rcondv, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_balanc, flexiblas_fortran_charlen_t len_jobvl, flexiblas_fortran_charlen_t len_jobvr, flexiblas_fortran_charlen_t len_sense);
 
-    void FC_GLOBAL(zgegs,ZGEGS)(char* jobvsl, char* jobvsr, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* alpha, double complex* beta, double complex* vsl, blasint* ldvsl, double complex* vsr, blasint* ldvsr, double complex* work, blasint* lwork, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobvsl, flexiblas_fortran_charlen_t len_jobvsr);
+    void FC_GLOBAL(zgegs,ZGEGS)(char* jobvsl, char* jobvsr, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, lapack_complex_double* alpha, lapack_complex_double* beta, lapack_complex_double* vsl, blasint* ldvsl, lapack_complex_double* vsr, blasint* ldvsr, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobvsl, flexiblas_fortran_charlen_t len_jobvsr);
 
-    void FC_GLOBAL(zgegv,ZGEGV)(char* jobvl, char* jobvr, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* alpha, double complex* beta, double complex* vl, blasint* ldvl, double complex* vr, blasint* ldvr, double complex* work, blasint* lwork, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobvl, flexiblas_fortran_charlen_t len_jobvr);
+    void FC_GLOBAL(zgegv,ZGEGV)(char* jobvl, char* jobvr, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, lapack_complex_double* alpha, lapack_complex_double* beta, lapack_complex_double* vl, blasint* ldvl, lapack_complex_double* vr, blasint* ldvr, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobvl, flexiblas_fortran_charlen_t len_jobvr);
 
-    void FC_GLOBAL(zgehd2,ZGEHD2)(blasint* n, blasint* ilo, blasint* ihi, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* info);
+    void FC_GLOBAL(zgehd2,ZGEHD2)(blasint* n, blasint* ilo, blasint* ihi, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* work, blasint* info);
 
-    void FC_GLOBAL(zgehrd,ZGEHRD)(blasint* n, blasint* ilo, blasint* ihi, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(zgehrd,ZGEHRD)(blasint* n, blasint* ilo, blasint* ihi, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(zgelq2,ZGELQ2)(blasint* m, blasint* n, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* info);
+    void FC_GLOBAL(zgelq2,ZGELQ2)(blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* work, blasint* info);
 
-    void FC_GLOBAL(zgelqf,ZGELQF)(blasint* m, blasint* n, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(zgelqf,ZGELQF)(blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(zgels,ZGELS)(char* trans, blasint* m, blasint* n, blasint* nrhs, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zgels,ZGELS)(char* trans, blasint* m, blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, lapack_complex_double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zgelsd,ZGELSD)(blasint* m, blasint* n, blasint* nrhs, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* s, double* rcond, blasint* rank_bn, double complex* work, blasint* lwork, double* rwork, blasint* iwork, blasint* info);
+    void FC_GLOBAL(zgelsd,ZGELSD)(blasint* m, blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, double* s, double* rcond, blasint* rank_bn, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* iwork, blasint* info);
 
-    void FC_GLOBAL(zgelss,ZGELSS)(blasint* m, blasint* n, blasint* nrhs, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* s, double* rcond, blasint* rank_bn, double complex* work, blasint* lwork, double* rwork, blasint* info);
+    void FC_GLOBAL(zgelss,ZGELSS)(blasint* m, blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, double* s, double* rcond, blasint* rank_bn, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* info);
 
-    void FC_GLOBAL(zgelsx,ZGELSX)(blasint* m, blasint* n, blasint* nrhs, double complex* a, blasint* lda, double complex* b, blasint* ldb, blasint* jpvt, double* rcond, blasint* rank_bn, double complex* work, double* rwork, blasint* info);
+    void FC_GLOBAL(zgelsx,ZGELSX)(blasint* m, blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, blasint* jpvt, double* rcond, blasint* rank_bn, lapack_complex_double* work, double* rwork, blasint* info);
 
-    void FC_GLOBAL(zgelsy,ZGELSY)(blasint* m, blasint* n, blasint* nrhs, double complex* a, blasint* lda, double complex* b, blasint* ldb, blasint* jpvt, double* rcond, blasint* rank_bn, double complex* work, blasint* lwork, double* rwork, blasint* info);
+    void FC_GLOBAL(zgelsy,ZGELSY)(blasint* m, blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, blasint* jpvt, double* rcond, blasint* rank_bn, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* info);
 
-    void FC_GLOBAL(zgeql2,ZGEQL2)(blasint* m, blasint* n, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* info);
+    void FC_GLOBAL(zgeql2,ZGEQL2)(blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* work, blasint* info);
 
-    void FC_GLOBAL(zgeqlf,ZGEQLF)(blasint* m, blasint* n, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(zgeqlf,ZGEQLF)(blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(zgeqp3,ZGEQP3)(blasint* m, blasint* n, double complex* a, blasint* lda, blasint* jpvt, double complex* tau, double complex* work, blasint* lwork, double* rwork, blasint* info);
+    void FC_GLOBAL(zgeqp3,ZGEQP3)(blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, blasint* jpvt, lapack_complex_double* tau, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* info);
 
-    void FC_GLOBAL(zgeqpf,ZGEQPF)(blasint* m, blasint* n, double complex* a, blasint* lda, blasint* jpvt, double complex* tau, double complex* work, double* rwork, blasint* info);
+    void FC_GLOBAL(zgeqpf,ZGEQPF)(blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, blasint* jpvt, lapack_complex_double* tau, lapack_complex_double* work, double* rwork, blasint* info);
 
-    void FC_GLOBAL(zgeqr2,ZGEQR2)(blasint* m, blasint* n, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* info);
+    void FC_GLOBAL(zgeqr2,ZGEQR2)(blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* work, blasint* info);
 
-    void FC_GLOBAL(zgeqr2p,ZGEQR2P)(blasint* m, blasint* n, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* info);
+    void FC_GLOBAL(zgeqr2p,ZGEQR2P)(blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* work, blasint* info);
 
-    void FC_GLOBAL(zgeqrf,ZGEQRF)(blasint* m, blasint* n, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(zgeqrf,ZGEQRF)(blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(zgeqrfp,ZGEQRFP)(blasint* m, blasint* n, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(zgeqrfp,ZGEQRFP)(blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(zgerfs,ZGERFS)(char* trans, blasint* n, blasint* nrhs, double complex* a, blasint* lda, double complex* af, blasint* ldaf, blasint* ipiv, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* ferr, double* berr, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zgerfs,ZGERFS)(char* trans, blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, lapack_complex_double* af, blasint* ldaf, blasint* ipiv, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, double* ferr, double* berr, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zgerq2,ZGERQ2)(blasint* m, blasint* n, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* info);
+    void FC_GLOBAL(zgerq2,ZGERQ2)(blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* work, blasint* info);
 
-    void FC_GLOBAL(zgerqf,ZGERQF)(blasint* m, blasint* n, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(zgerqf,ZGERQF)(blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(zgesc2,ZGESC2)(blasint* n, double complex* a, blasint* lda, double complex* rhs, blasint* ipiv, blasint* jpiv, double* scale);
+    void FC_GLOBAL(zgesc2,ZGESC2)(blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* rhs, blasint* ipiv, blasint* jpiv, double* scale);
 
-    void FC_GLOBAL(zgesdd,ZGESDD)(char* jobz, blasint* m, blasint* n, double complex* a, blasint* lda, double* s, double complex* u, blasint* ldu, double complex* vt, blasint* ldvt, double complex* work, blasint* lwork, double* rwork, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_jobz);
+    void FC_GLOBAL(zgesdd,ZGESDD)(char* jobz, blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, double* s, lapack_complex_double* u, blasint* ldu, lapack_complex_double* vt, blasint* ldvt, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_jobz);
 
-    void FC_GLOBAL(zgesv,ZGESV)(blasint* n, blasint* nrhs, double complex* a, blasint* lda, blasint* ipiv, double complex* b, blasint* ldb, blasint* info);
+    void FC_GLOBAL(zgesv,ZGESV)(blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, blasint* ipiv, lapack_complex_double* b, blasint* ldb, blasint* info);
 
-    void FC_GLOBAL(zgesvd,ZGESVD)(char* jobu, char* jobvt, blasint* m, blasint* n, double complex* a, blasint* lda, double* s, double complex* u, blasint* ldu, double complex* vt, blasint* ldvt, double complex* work, blasint* lwork, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobu, flexiblas_fortran_charlen_t len_jobvt);
+    void FC_GLOBAL(zgesvd,ZGESVD)(char* jobu, char* jobvt, blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, double* s, lapack_complex_double* u, blasint* ldu, lapack_complex_double* vt, blasint* ldvt, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobu, flexiblas_fortran_charlen_t len_jobvt);
 
-    void FC_GLOBAL(zgesvx,ZGESVX)(char* fact, char* trans, blasint* n, blasint* nrhs, double complex* a, blasint* lda, double complex* af, blasint* ldaf, blasint* ipiv, char* equed, double* r, double* c, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* rcond, double* ferr, double* berr, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(zgesvx,ZGESVX)(char* fact, char* trans, blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, lapack_complex_double* af, blasint* ldaf, blasint* ipiv, char* equed, double* r, double* c, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, double* rcond, double* ferr, double* berr, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(zgetc2,ZGETC2)(blasint* n, double complex* a, blasint* lda, blasint* ipiv, blasint* jpiv, blasint* info);
+    void FC_GLOBAL(zgetc2,ZGETC2)(blasint* n, lapack_complex_double* a, blasint* lda, blasint* ipiv, blasint* jpiv, blasint* info);
 
-    void FC_GLOBAL(zgetf2,ZGETF2)(blasint* m, blasint* n, double complex* a, blasint* lda, blasint* ipiv, blasint* info);
+    void FC_GLOBAL(zgetf2,ZGETF2)(blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, blasint* ipiv, blasint* info);
 
-    void FC_GLOBAL(zgetrf,ZGETRF)(blasint* m, blasint* n, double complex* a, blasint* lda, blasint* ipiv, blasint* info);
+    void FC_GLOBAL(zgetrf,ZGETRF)(blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, blasint* ipiv, blasint* info);
 
-    void FC_GLOBAL(zgetri,ZGETRI)(blasint* n, double complex* a, blasint* lda, blasint* ipiv, double complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(zgetri,ZGETRI)(blasint* n, lapack_complex_double* a, blasint* lda, blasint* ipiv, lapack_complex_double* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(zgetrs,ZGETRS)(char* trans, blasint* n, blasint* nrhs, double complex* a, blasint* lda, blasint* ipiv, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zgetrs,ZGETRS)(char* trans, blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, blasint* ipiv, lapack_complex_double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zggbak,ZGGBAK)(char* job, char* side, blasint* n, blasint* ilo, blasint* ihi, double* lscale, double* rscale, blasint* m, double complex* v, blasint* ldv, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_side);
+    void FC_GLOBAL(zggbak,ZGGBAK)(char* job, char* side, blasint* n, blasint* ilo, blasint* ihi, double* lscale, double* rscale, blasint* m, lapack_complex_double* v, blasint* ldv, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_side);
 
-    void FC_GLOBAL(zggbal,ZGGBAL)(char* job, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, blasint* ilo, blasint* ihi, double* lscale, double* rscale, double* work, blasint* info, flexiblas_fortran_charlen_t len_job);
+    void FC_GLOBAL(zggbal,ZGGBAL)(char* job, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, blasint* ilo, blasint* ihi, double* lscale, double* rscale, double* work, blasint* info, flexiblas_fortran_charlen_t len_job);
 
-    void FC_GLOBAL(zgges,ZGGES)(char* jobvsl, char* jobvsr, char* sort, blaslogical* selctg, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, blasint* sdim, double complex* alpha, double complex* beta, double complex* vsl, blasint* ldvsl, double complex* vsr, blasint* ldvsr, double complex* work, blasint* lwork, double* rwork, blaslogical* bwork, blasint* info, flexiblas_fortran_charlen_t len_jobvsl, flexiblas_fortran_charlen_t len_jobvsr, flexiblas_fortran_charlen_t len_sort);
+    void FC_GLOBAL(zgges,ZGGES)(char* jobvsl, char* jobvsr, char* sort, blaslogical* selctg, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, blasint* sdim, lapack_complex_double* alpha, lapack_complex_double* beta, lapack_complex_double* vsl, blasint* ldvsl, lapack_complex_double* vsr, blasint* ldvsr, lapack_complex_double* work, blasint* lwork, double* rwork, blaslogical* bwork, blasint* info, flexiblas_fortran_charlen_t len_jobvsl, flexiblas_fortran_charlen_t len_jobvsr, flexiblas_fortran_charlen_t len_sort);
 
-    void FC_GLOBAL(zggesx,ZGGESX)(char* jobvsl, char* jobvsr, char* sort, blaslogical* selctg, char* sense, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, blasint* sdim, double complex* alpha, double complex* beta, double complex* vsl, blasint* ldvsl, double complex* vsr, blasint* ldvsr, double* rconde, double* rcondv, double complex* work, blasint* lwork, double* rwork, blasint* iwork, blasint* liwork, blaslogical* bwork, blasint* info, flexiblas_fortran_charlen_t len_jobvsl, flexiblas_fortran_charlen_t len_jobvsr, flexiblas_fortran_charlen_t len_sort, flexiblas_fortran_charlen_t len_sense);
+    void FC_GLOBAL(zggesx,ZGGESX)(char* jobvsl, char* jobvsr, char* sort, blaslogical* selctg, char* sense, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, blasint* sdim, lapack_complex_double* alpha, lapack_complex_double* beta, lapack_complex_double* vsl, blasint* ldvsl, lapack_complex_double* vsr, blasint* ldvsr, double* rconde, double* rcondv, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* iwork, blasint* liwork, blaslogical* bwork, blasint* info, flexiblas_fortran_charlen_t len_jobvsl, flexiblas_fortran_charlen_t len_jobvsr, flexiblas_fortran_charlen_t len_sort, flexiblas_fortran_charlen_t len_sense);
 
-    void FC_GLOBAL(zggev,ZGGEV)(char* jobvl, char* jobvr, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* alpha, double complex* beta, double complex* vl, blasint* ldvl, double complex* vr, blasint* ldvr, double complex* work, blasint* lwork, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobvl, flexiblas_fortran_charlen_t len_jobvr);
+    void FC_GLOBAL(zggev,ZGGEV)(char* jobvl, char* jobvr, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, lapack_complex_double* alpha, lapack_complex_double* beta, lapack_complex_double* vl, blasint* ldvl, lapack_complex_double* vr, blasint* ldvr, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobvl, flexiblas_fortran_charlen_t len_jobvr);
 
-    void FC_GLOBAL(zggevx,ZGGEVX)(char* balanc, char* jobvl, char* jobvr, char* sense, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* alpha, double complex* beta, double complex* vl, blasint* ldvl, double complex* vr, blasint* ldvr, blasint* ilo, blasint* ihi, double* lscale, double* rscale, double* abnrm, double* bbnrm, double* rconde, double* rcondv, double complex* work, blasint* lwork, double* rwork, blasint* iwork, blaslogical* bwork, blasint* info, flexiblas_fortran_charlen_t len_balanc, flexiblas_fortran_charlen_t len_jobvl, flexiblas_fortran_charlen_t len_jobvr, flexiblas_fortran_charlen_t len_sense);
+    void FC_GLOBAL(zggevx,ZGGEVX)(char* balanc, char* jobvl, char* jobvr, char* sense, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, lapack_complex_double* alpha, lapack_complex_double* beta, lapack_complex_double* vl, blasint* ldvl, lapack_complex_double* vr, blasint* ldvr, blasint* ilo, blasint* ihi, double* lscale, double* rscale, double* abnrm, double* bbnrm, double* rconde, double* rcondv, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* iwork, blaslogical* bwork, blasint* info, flexiblas_fortran_charlen_t len_balanc, flexiblas_fortran_charlen_t len_jobvl, flexiblas_fortran_charlen_t len_jobvr, flexiblas_fortran_charlen_t len_sense);
 
-    void FC_GLOBAL(zggglm,ZGGGLM)(blasint* n, blasint* m, blasint* p, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* d, double complex* x, double complex* y, double complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(zggglm,ZGGGLM)(blasint* n, blasint* m, blasint* p, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, lapack_complex_double* d, lapack_complex_double* x, lapack_complex_double* y, lapack_complex_double* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(zgghrd,ZGGHRD)(char* compq, char* compz, blasint* n, blasint* ilo, blasint* ihi, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* q, blasint* ldq, double complex* z, blasint* ldz, blasint* info, flexiblas_fortran_charlen_t len_compq, flexiblas_fortran_charlen_t len_compz);
+    void FC_GLOBAL(zgghrd,ZGGHRD)(char* compq, char* compz, blasint* n, blasint* ilo, blasint* ihi, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, lapack_complex_double* q, blasint* ldq, lapack_complex_double* z, blasint* ldz, blasint* info, flexiblas_fortran_charlen_t len_compq, flexiblas_fortran_charlen_t len_compz);
 
-    void FC_GLOBAL(zgglse,ZGGLSE)(blasint* m, blasint* n, blasint* p, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* c, double complex* d, double complex* x, double complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(zgglse,ZGGLSE)(blasint* m, blasint* n, blasint* p, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, lapack_complex_double* c, lapack_complex_double* d, lapack_complex_double* x, lapack_complex_double* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(zggqrf,ZGGQRF)(blasint* n, blasint* m, blasint* p, double complex* a, blasint* lda, double complex* taua, double complex* b, blasint* ldb, double complex* taub, double complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(zggqrf,ZGGQRF)(blasint* n, blasint* m, blasint* p, lapack_complex_double* a, blasint* lda, lapack_complex_double* taua, lapack_complex_double* b, blasint* ldb, lapack_complex_double* taub, lapack_complex_double* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(zggrqf,ZGGRQF)(blasint* m, blasint* p, blasint* n, double complex* a, blasint* lda, double complex* taua, double complex* b, blasint* ldb, double complex* taub, double complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(zggrqf,ZGGRQF)(blasint* m, blasint* p, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* taua, lapack_complex_double* b, blasint* ldb, lapack_complex_double* taub, lapack_complex_double* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(zggsvd,ZGGSVD)(char* jobu, char* jobv, char* jobq, blasint* m, blasint* n, blasint* p, blasint* k, blasint* l, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* alpha, double* beta, double complex* u, blasint* ldu, double complex* v, blasint* ldv, double complex* q, blasint* ldq, double complex* work, double* rwork, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_jobu, flexiblas_fortran_charlen_t len_jobv, flexiblas_fortran_charlen_t len_jobq);
+    void FC_GLOBAL(zggsvd,ZGGSVD)(char* jobu, char* jobv, char* jobq, blasint* m, blasint* n, blasint* p, blasint* k, blasint* l, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, double* alpha, double* beta, lapack_complex_double* u, blasint* ldu, lapack_complex_double* v, blasint* ldv, lapack_complex_double* q, blasint* ldq, lapack_complex_double* work, double* rwork, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_jobu, flexiblas_fortran_charlen_t len_jobv, flexiblas_fortran_charlen_t len_jobq);
 
-    void FC_GLOBAL(zggsvp,ZGGSVP)(char* jobu, char* jobv, char* jobq, blasint* m, blasint* p, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* tola, double* tolb, blasint* k, blasint* l, double complex* u, blasint* ldu, double complex* v, blasint* ldv, double complex* q, blasint* ldq, blasint* iwork, double* rwork, double complex* tau, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_jobu, flexiblas_fortran_charlen_t len_jobv, flexiblas_fortran_charlen_t len_jobq);
+    void FC_GLOBAL(zggsvp,ZGGSVP)(char* jobu, char* jobv, char* jobq, blasint* m, blasint* p, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, double* tola, double* tolb, blasint* k, blasint* l, lapack_complex_double* u, blasint* ldu, lapack_complex_double* v, blasint* ldv, lapack_complex_double* q, blasint* ldq, blasint* iwork, double* rwork, lapack_complex_double* tau, lapack_complex_double* work, blasint* info, flexiblas_fortran_charlen_t len_jobu, flexiblas_fortran_charlen_t len_jobv, flexiblas_fortran_charlen_t len_jobq);
 
-    void FC_GLOBAL(zgtcon,ZGTCON)(char* norm, blasint* n, double complex* dl, double complex* d, double complex* du, double complex* du2, blasint* ipiv, double* anorm, double* rcond, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_norm);
+    void FC_GLOBAL(zgtcon,ZGTCON)(char* norm, blasint* n, lapack_complex_double* dl, lapack_complex_double* d, lapack_complex_double* du, lapack_complex_double* du2, blasint* ipiv, double* anorm, double* rcond, lapack_complex_double* work, blasint* info, flexiblas_fortran_charlen_t len_norm);
 
-    void FC_GLOBAL(zgtrfs,ZGTRFS)(char* trans, blasint* n, blasint* nrhs, double complex* dl, double complex* d, double complex* du, double complex* dlf, double complex* df, double complex* duf, double complex* du2, blasint* ipiv, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* ferr, double* berr, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zgtrfs,ZGTRFS)(char* trans, blasint* n, blasint* nrhs, lapack_complex_double* dl, lapack_complex_double* d, lapack_complex_double* du, lapack_complex_double* dlf, lapack_complex_double* df, lapack_complex_double* duf, lapack_complex_double* du2, blasint* ipiv, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, double* ferr, double* berr, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zgtsv,ZGTSV)(blasint* n, blasint* nrhs, double complex* dl, double complex* d, double complex* du, double complex* b, blasint* ldb, blasint* info);
+    void FC_GLOBAL(zgtsv,ZGTSV)(blasint* n, blasint* nrhs, lapack_complex_double* dl, lapack_complex_double* d, lapack_complex_double* du, lapack_complex_double* b, blasint* ldb, blasint* info);
 
-    void FC_GLOBAL(zgtsvx,ZGTSVX)(char* fact, char* trans, blasint* n, blasint* nrhs, double complex* dl, double complex* d, double complex* du, double complex* dlf, double complex* df, double complex* duf, double complex* du2, blasint* ipiv, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* rcond, double* ferr, double* berr, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zgtsvx,ZGTSVX)(char* fact, char* trans, blasint* n, blasint* nrhs, lapack_complex_double* dl, lapack_complex_double* d, lapack_complex_double* du, lapack_complex_double* dlf, lapack_complex_double* df, lapack_complex_double* duf, lapack_complex_double* du2, blasint* ipiv, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, double* rcond, double* ferr, double* berr, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zgttrf,ZGTTRF)(blasint* n, double complex* dl, double complex* d, double complex* du, double complex* du2, blasint* ipiv, blasint* info);
+    void FC_GLOBAL(zgttrf,ZGTTRF)(blasint* n, lapack_complex_double* dl, lapack_complex_double* d, lapack_complex_double* du, lapack_complex_double* du2, blasint* ipiv, blasint* info);
 
-    void FC_GLOBAL(zgttrs,ZGTTRS)(char* trans, blasint* n, blasint* nrhs, double complex* dl, double complex* d, double complex* du, double complex* du2, blasint* ipiv, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zgttrs,ZGTTRS)(char* trans, blasint* n, blasint* nrhs, lapack_complex_double* dl, lapack_complex_double* d, lapack_complex_double* du, lapack_complex_double* du2, blasint* ipiv, lapack_complex_double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zgtts2,ZGTTS2)(blasint* itrans, blasint* n, blasint* nrhs, double complex* dl, double complex* d, double complex* du, double complex* du2, blasint* ipiv, double complex* b, blasint* ldb);
+    void FC_GLOBAL(zgtts2,ZGTTS2)(blasint* itrans, blasint* n, blasint* nrhs, lapack_complex_double* dl, lapack_complex_double* d, lapack_complex_double* du, lapack_complex_double* du2, blasint* ipiv, lapack_complex_double* b, blasint* ldb);
 
-    void FC_GLOBAL(zhbev,ZHBEV)(char* jobz, char* uplo, blasint* n, blasint* kd, double complex* ab, blasint* ldab, double* w, double complex* z, blasint* ldz, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhbev,ZHBEV)(char* jobz, char* uplo, blasint* n, blasint* kd, lapack_complex_double* ab, blasint* ldab, double* w, lapack_complex_double* z, blasint* ldz, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhbevd,ZHBEVD)(char* jobz, char* uplo, blasint* n, blasint* kd, double complex* ab, blasint* ldab, double* w, double complex* z, blasint* ldz, double complex* work, blasint* lwork, double* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhbevd,ZHBEVD)(char* jobz, char* uplo, blasint* n, blasint* kd, lapack_complex_double* ab, blasint* ldab, double* w, lapack_complex_double* z, blasint* ldz, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhbevx,ZHBEVX)(char* jobz, char* range, char* uplo, blasint* n, blasint* kd, double complex* ab, blasint* ldab, double complex* q, blasint* ldq, double* vl, double* vu, blasint* il, blasint* iu, double* abstol, blasint* m, double* w, double complex* z, blasint* ldz, double complex* work, double* rwork, blasint* iwork, blasint* ifail, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhbevx,ZHBEVX)(char* jobz, char* range, char* uplo, blasint* n, blasint* kd, lapack_complex_double* ab, blasint* ldab, lapack_complex_double* q, blasint* ldq, double* vl, double* vu, blasint* il, blasint* iu, double* abstol, blasint* m, double* w, lapack_complex_double* z, blasint* ldz, lapack_complex_double* work, double* rwork, blasint* iwork, blasint* ifail, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhbgst,ZHBGST)(char* vect, char* uplo, blasint* n, blasint* ka, blasint* kb, double complex* ab, blasint* ldab, double complex* bb, blasint* ldbb, double complex* x, blasint* ldx, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhbgst,ZHBGST)(char* vect, char* uplo, blasint* n, blasint* ka, blasint* kb, lapack_complex_double* ab, blasint* ldab, lapack_complex_double* bb, blasint* ldbb, lapack_complex_double* x, blasint* ldx, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhbgv,ZHBGV)(char* jobz, char* uplo, blasint* n, blasint* ka, blasint* kb, double complex* ab, blasint* ldab, double complex* bb, blasint* ldbb, double* w, double complex* z, blasint* ldz, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhbgv,ZHBGV)(char* jobz, char* uplo, blasint* n, blasint* ka, blasint* kb, lapack_complex_double* ab, blasint* ldab, lapack_complex_double* bb, blasint* ldbb, double* w, lapack_complex_double* z, blasint* ldz, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhbgvd,ZHBGVD)(char* jobz, char* uplo, blasint* n, blasint* ka, blasint* kb, double complex* ab, blasint* ldab, double complex* bb, blasint* ldbb, double* w, double complex* z, blasint* ldz, double complex* work, blasint* lwork, double* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhbgvd,ZHBGVD)(char* jobz, char* uplo, blasint* n, blasint* ka, blasint* kb, lapack_complex_double* ab, blasint* ldab, lapack_complex_double* bb, blasint* ldbb, double* w, lapack_complex_double* z, blasint* ldz, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhbgvx,ZHBGVX)(char* jobz, char* range, char* uplo, blasint* n, blasint* ka, blasint* kb, double complex* ab, blasint* ldab, double complex* bb, blasint* ldbb, double complex* q, blasint* ldq, double* vl, double* vu, blasint* il, blasint* iu, double* abstol, blasint* m, double* w, double complex* z, blasint* ldz, double complex* work, double* rwork, blasint* iwork, blasint* ifail, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhbgvx,ZHBGVX)(char* jobz, char* range, char* uplo, blasint* n, blasint* ka, blasint* kb, lapack_complex_double* ab, blasint* ldab, lapack_complex_double* bb, blasint* ldbb, lapack_complex_double* q, blasint* ldq, double* vl, double* vu, blasint* il, blasint* iu, double* abstol, blasint* m, double* w, lapack_complex_double* z, blasint* ldz, lapack_complex_double* work, double* rwork, blasint* iwork, blasint* ifail, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhbtrd,ZHBTRD)(char* vect, char* uplo, blasint* n, blasint* kd, double complex* ab, blasint* ldab, double* d, double* e, double complex* q, blasint* ldq, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhbtrd,ZHBTRD)(char* vect, char* uplo, blasint* n, blasint* kd, lapack_complex_double* ab, blasint* ldab, double* d, double* e, lapack_complex_double* q, blasint* ldq, lapack_complex_double* work, blasint* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhecon,ZHECON)(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* ipiv, double* anorm, double* rcond, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhecon,ZHECON)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, blasint* ipiv, double* anorm, double* rcond, lapack_complex_double* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zheequb,ZHEEQUB)(char* uplo, blasint* n, double complex* a, blasint* lda, double* s, double* scond, double* amax, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zheequb,ZHEEQUB)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, double* s, double* scond, double* amax, lapack_complex_double* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zheev,ZHEEV)(char* jobz, char* uplo, blasint* n, double complex* a, blasint* lda, double* w, double complex* work, blasint* lwork, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zheev,ZHEEV)(char* jobz, char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, double* w, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zheevd,ZHEEVD)(char* jobz, char* uplo, blasint* n, double complex* a, blasint* lda, double* w, double complex* work, blasint* lwork, double* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zheevd,ZHEEVD)(char* jobz, char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, double* w, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zheevr,ZHEEVR)(char* jobz, char* range, char* uplo, blasint* n, double complex* a, blasint* lda, double* vl, double* vu, blasint* il, blasint* iu, double* abstol, blasint* m, double* w, double complex* z, blasint* ldz, blasint* isuppz, double complex* work, blasint* lwork, double* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zheevr,ZHEEVR)(char* jobz, char* range, char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, double* vl, double* vu, blasint* il, blasint* iu, double* abstol, blasint* m, double* w, lapack_complex_double* z, blasint* ldz, blasint* isuppz, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zheevx,ZHEEVX)(char* jobz, char* range, char* uplo, blasint* n, double complex* a, blasint* lda, double* vl, double* vu, blasint* il, blasint* iu, double* abstol, blasint* m, double* w, double complex* z, blasint* ldz, double complex* work, blasint* lwork, double* rwork, blasint* iwork, blasint* ifail, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zheevx,ZHEEVX)(char* jobz, char* range, char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, double* vl, double* vu, blasint* il, blasint* iu, double* abstol, blasint* m, double* w, lapack_complex_double* z, blasint* ldz, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* iwork, blasint* ifail, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhegs2,ZHEGS2)(blasint* itype, char* uplo, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhegs2,ZHEGS2)(blasint* itype, char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhegst,ZHEGST)(blasint* itype, char* uplo, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhegst,ZHEGST)(blasint* itype, char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhegv,ZHEGV)(blasint* itype, char* jobz, char* uplo, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* w, double complex* work, blasint* lwork, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhegv,ZHEGV)(blasint* itype, char* jobz, char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, double* w, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhegvd,ZHEGVD)(blasint* itype, char* jobz, char* uplo, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* w, double complex* work, blasint* lwork, double* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhegvd,ZHEGVD)(blasint* itype, char* jobz, char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, double* w, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhegvx,ZHEGVX)(blasint* itype, char* jobz, char* range, char* uplo, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* vl, double* vu, blasint* il, blasint* iu, double* abstol, blasint* m, double* w, double complex* z, blasint* ldz, double complex* work, blasint* lwork, double* rwork, blasint* iwork, blasint* ifail, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhegvx,ZHEGVX)(blasint* itype, char* jobz, char* range, char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, double* vl, double* vu, blasint* il, blasint* iu, double* abstol, blasint* m, double* w, lapack_complex_double* z, blasint* ldz, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* iwork, blasint* ifail, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zherfs,ZHERFS)(char* uplo, blasint* n, blasint* nrhs, double complex* a, blasint* lda, double complex* af, blasint* ldaf, blasint* ipiv, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* ferr, double* berr, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zherfs,ZHERFS)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, lapack_complex_double* af, blasint* ldaf, blasint* ipiv, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, double* ferr, double* berr, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhesv,ZHESV)(char* uplo, blasint* n, blasint* nrhs, double complex* a, blasint* lda, blasint* ipiv, double complex* b, blasint* ldb, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhesv,ZHESV)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, blasint* ipiv, lapack_complex_double* b, blasint* ldb, lapack_complex_double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhesvx,ZHESVX)(char* fact, char* uplo, blasint* n, blasint* nrhs, double complex* a, blasint* lda, double complex* af, blasint* ldaf, blasint* ipiv, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* rcond, double* ferr, double* berr, double complex* work, blasint* lwork, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhesvx,ZHESVX)(char* fact, char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, lapack_complex_double* af, blasint* ldaf, blasint* ipiv, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, double* rcond, double* ferr, double* berr, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zheswapr,ZHESWAPR)(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* i1, blasint* i2, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zheswapr,ZHESWAPR)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, blasint* i1, blasint* i2, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhetd2,ZHETD2)(char* uplo, blasint* n, double complex* a, blasint* lda, double* d, double* e, double complex* tau, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhetd2,ZHETD2)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, double* d, double* e, lapack_complex_double* tau, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhetf2,ZHETF2)(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* ipiv, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhetf2,ZHETF2)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, blasint* ipiv, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhetrd,ZHETRD)(char* uplo, blasint* n, double complex* a, blasint* lda, double* d, double* e, double complex* tau, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhetrd,ZHETRD)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, double* d, double* e, lapack_complex_double* tau, lapack_complex_double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhetrf,ZHETRF)(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* ipiv, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhetrf,ZHETRF)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, blasint* ipiv, lapack_complex_double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhetri,ZHETRI)(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* ipiv, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhetri,ZHETRI)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, blasint* ipiv, lapack_complex_double* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhetri2,ZHETRI2)(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* ipiv, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhetri2,ZHETRI2)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, blasint* ipiv, lapack_complex_double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhetri2x,ZHETRI2X)(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* ipiv, double complex* work, blasint* nb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhetri2x,ZHETRI2X)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, blasint* ipiv, lapack_complex_double* work, blasint* nb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhetrs,ZHETRS)(char* uplo, blasint* n, blasint* nrhs, double complex* a, blasint* lda, blasint* ipiv, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhetrs,ZHETRS)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, blasint* ipiv, lapack_complex_double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhetrs2,ZHETRS2)(char* uplo, blasint* n, blasint* nrhs, double complex* a, blasint* lda, blasint* ipiv, double complex* b, blasint* ldb, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhetrs2,ZHETRS2)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, blasint* ipiv, lapack_complex_double* b, blasint* ldb, lapack_complex_double* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhfrk,ZHFRK)(char* transr, char* uplo, char* trans, blasint* n, blasint* k, double* alpha, double complex* a, blasint* lda, double* beta, double complex* c, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zhfrk,ZHFRK)(char* transr, char* uplo, char* trans, blasint* n, blasint* k, double* alpha, lapack_complex_double* a, blasint* lda, double* beta, lapack_complex_double* c, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zhgeqz,ZHGEQZ)(char* job, char* compq, char* compz, blasint* n, blasint* ilo, blasint* ihi, double complex* h, blasint* ldh, double complex* t, blasint* ldt, double complex* alpha, double complex* beta, double complex* q, blasint* ldq, double complex* z, blasint* ldz, double complex* work, blasint* lwork, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_compq, flexiblas_fortran_charlen_t len_compz);
+    void FC_GLOBAL(zhgeqz,ZHGEQZ)(char* job, char* compq, char* compz, blasint* n, blasint* ilo, blasint* ihi, lapack_complex_double* h, blasint* ldh, lapack_complex_double* t, blasint* ldt, lapack_complex_double* alpha, lapack_complex_double* beta, lapack_complex_double* q, blasint* ldq, lapack_complex_double* z, blasint* ldz, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_compq, flexiblas_fortran_charlen_t len_compz);
 
-    void FC_GLOBAL(zhpcon,ZHPCON)(char* uplo, blasint* n, double complex* ap, blasint* ipiv, double* anorm, double* rcond, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhpcon,ZHPCON)(char* uplo, blasint* n, lapack_complex_double* ap, blasint* ipiv, double* anorm, double* rcond, lapack_complex_double* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhpev,ZHPEV)(char* jobz, char* uplo, blasint* n, double complex* ap, double* w, double complex* z, blasint* ldz, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhpev,ZHPEV)(char* jobz, char* uplo, blasint* n, lapack_complex_double* ap, double* w, lapack_complex_double* z, blasint* ldz, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhpevd,ZHPEVD)(char* jobz, char* uplo, blasint* n, double complex* ap, double* w, double complex* z, blasint* ldz, double complex* work, blasint* lwork, double* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhpevd,ZHPEVD)(char* jobz, char* uplo, blasint* n, lapack_complex_double* ap, double* w, lapack_complex_double* z, blasint* ldz, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhpevx,ZHPEVX)(char* jobz, char* range, char* uplo, blasint* n, double complex* ap, double* vl, double* vu, blasint* il, blasint* iu, double* abstol, blasint* m, double* w, double complex* z, blasint* ldz, double complex* work, double* rwork, blasint* iwork, blasint* ifail, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhpevx,ZHPEVX)(char* jobz, char* range, char* uplo, blasint* n, lapack_complex_double* ap, double* vl, double* vu, blasint* il, blasint* iu, double* abstol, blasint* m, double* w, lapack_complex_double* z, blasint* ldz, lapack_complex_double* work, double* rwork, blasint* iwork, blasint* ifail, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhpgst,ZHPGST)(blasint* itype, char* uplo, blasint* n, double complex* ap, double complex* bp, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhpgst,ZHPGST)(blasint* itype, char* uplo, blasint* n, lapack_complex_double* ap, lapack_complex_double* bp, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhpgv,ZHPGV)(blasint* itype, char* jobz, char* uplo, blasint* n, double complex* ap, double complex* bp, double* w, double complex* z, blasint* ldz, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhpgv,ZHPGV)(blasint* itype, char* jobz, char* uplo, blasint* n, lapack_complex_double* ap, lapack_complex_double* bp, double* w, lapack_complex_double* z, blasint* ldz, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhpgvd,ZHPGVD)(blasint* itype, char* jobz, char* uplo, blasint* n, double complex* ap, double complex* bp, double* w, double complex* z, blasint* ldz, double complex* work, blasint* lwork, double* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhpgvd,ZHPGVD)(blasint* itype, char* jobz, char* uplo, blasint* n, lapack_complex_double* ap, lapack_complex_double* bp, double* w, lapack_complex_double* z, blasint* ldz, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhpgvx,ZHPGVX)(blasint* itype, char* jobz, char* range, char* uplo, blasint* n, double complex* ap, double complex* bp, double* vl, double* vu, blasint* il, blasint* iu, double* abstol, blasint* m, double* w, double complex* z, blasint* ldz, double complex* work, double* rwork, blasint* iwork, blasint* ifail, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhpgvx,ZHPGVX)(blasint* itype, char* jobz, char* range, char* uplo, blasint* n, lapack_complex_double* ap, lapack_complex_double* bp, double* vl, double* vu, blasint* il, blasint* iu, double* abstol, blasint* m, double* w, lapack_complex_double* z, blasint* ldz, lapack_complex_double* work, double* rwork, blasint* iwork, blasint* ifail, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhprfs,ZHPRFS)(char* uplo, blasint* n, blasint* nrhs, double complex* ap, double complex* afp, blasint* ipiv, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* ferr, double* berr, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhprfs,ZHPRFS)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* ap, lapack_complex_double* afp, blasint* ipiv, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, double* ferr, double* berr, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhpsv,ZHPSV)(char* uplo, blasint* n, blasint* nrhs, double complex* ap, blasint* ipiv, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhpsv,ZHPSV)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* ap, blasint* ipiv, lapack_complex_double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhpsvx,ZHPSVX)(char* fact, char* uplo, blasint* n, blasint* nrhs, double complex* ap, double complex* afp, blasint* ipiv, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* rcond, double* ferr, double* berr, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhpsvx,ZHPSVX)(char* fact, char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* ap, lapack_complex_double* afp, blasint* ipiv, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, double* rcond, double* ferr, double* berr, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhptrd,ZHPTRD)(char* uplo, blasint* n, double complex* ap, double* d, double* e, double complex* tau, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhptrd,ZHPTRD)(char* uplo, blasint* n, lapack_complex_double* ap, double* d, double* e, lapack_complex_double* tau, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhptrf,ZHPTRF)(char* uplo, blasint* n, double complex* ap, blasint* ipiv, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhptrf,ZHPTRF)(char* uplo, blasint* n, lapack_complex_double* ap, blasint* ipiv, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhptri,ZHPTRI)(char* uplo, blasint* n, double complex* ap, blasint* ipiv, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhptri,ZHPTRI)(char* uplo, blasint* n, lapack_complex_double* ap, blasint* ipiv, lapack_complex_double* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhptrs,ZHPTRS)(char* uplo, blasint* n, blasint* nrhs, double complex* ap, blasint* ipiv, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zhptrs,ZHPTRS)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* ap, blasint* ipiv, lapack_complex_double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zhsein,ZHSEIN)(char* side, char* eigsrc, char* initv, blaslogical* selectfunc, blasint* n, double complex* h, blasint* ldh, double complex* w, double complex* vl, blasint* ldvl, double complex* vr, blasint* ldvr, blasint* mm, blasint* m, double complex* work, double* rwork, blasint* ifaill, blasint* ifailr, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_eigsrc, flexiblas_fortran_charlen_t len_initv);
+    void FC_GLOBAL(zhsein,ZHSEIN)(char* side, char* eigsrc, char* initv, blaslogical* selectfunc, blasint* n, lapack_complex_double* h, blasint* ldh, lapack_complex_double* w, lapack_complex_double* vl, blasint* ldvl, lapack_complex_double* vr, blasint* ldvr, blasint* mm, blasint* m, lapack_complex_double* work, double* rwork, blasint* ifaill, blasint* ifailr, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_eigsrc, flexiblas_fortran_charlen_t len_initv);
 
-    void FC_GLOBAL(zhseqr,ZHSEQR)(char* job, char* compz, blasint* n, blasint* ilo, blasint* ihi, double complex* h, blasint* ldh, double complex* w, double complex* z, blasint* ldz, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_compz);
+    void FC_GLOBAL(zhseqr,ZHSEQR)(char* job, char* compz, blasint* n, blasint* ilo, blasint* ihi, lapack_complex_double* h, blasint* ldh, lapack_complex_double* w, lapack_complex_double* z, blasint* ldz, lapack_complex_double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_compz);
 
-    void FC_GLOBAL(zlabrd,ZLABRD)(blasint* m, blasint* n, blasint* nb, double complex* a, blasint* lda, double* d, double* e, double complex* tauq, double complex* taup, double complex* x, blasint* ldx, double complex* y, blasint* ldy);
+    void FC_GLOBAL(zlabrd,ZLABRD)(blasint* m, blasint* n, blasint* nb, lapack_complex_double* a, blasint* lda, double* d, double* e, lapack_complex_double* tauq, lapack_complex_double* taup, lapack_complex_double* x, blasint* ldx, lapack_complex_double* y, blasint* ldy);
 
-    void FC_GLOBAL(zlacgv,ZLACGV)(blasint* n, double complex* x, blasint* incx);
+    void FC_GLOBAL(zlacgv,ZLACGV)(blasint* n, lapack_complex_double* x, blasint* incx);
 
-    void FC_GLOBAL(zlacn2,ZLACN2)(blasint* n, double complex* v, double complex* x, double* est, blasint* kase, blasint* isave);
+    void FC_GLOBAL(zlacn2,ZLACN2)(blasint* n, lapack_complex_double* v, lapack_complex_double* x, double* est, blasint* kase, blasint* isave);
 
-    void FC_GLOBAL(zlacon,ZLACON)(blasint* n, double complex* v, double complex* x, double* est, blasint* kase);
+    void FC_GLOBAL(zlacon,ZLACON)(blasint* n, lapack_complex_double* v, lapack_complex_double* x, double* est, blasint* kase);
 
-    void FC_GLOBAL(zlacp2,ZLACP2)(char* uplo, blasint* m, blasint* n, double* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zlacp2,ZLACP2)(char* uplo, blasint* m, blasint* n, double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zlacpy,ZLACPY)(char* uplo, blasint* m, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zlacpy,ZLACPY)(char* uplo, blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zlacrm,ZLACRM)(blasint* m, blasint* n, double complex* a, blasint* lda, double* b, blasint* ldb, double complex* c, blasint* ldc, double* rwork);
+    void FC_GLOBAL(zlacrm,ZLACRM)(blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, double* b, blasint* ldb, lapack_complex_double* c, blasint* ldc, double* rwork);
 
-    void FC_GLOBAL(zlacrt,ZLACRT)(blasint* n, double complex* cx, blasint* incx, double complex* cy, blasint* incy, double complex* c, double complex* s);
+    void FC_GLOBAL(zlacrt,ZLACRT)(blasint* n, lapack_complex_double* cx, blasint* incx, lapack_complex_double* cy, blasint* incy, lapack_complex_double* c, lapack_complex_double* s);
 
-    double complex FC_GLOBAL(zladiv,ZLADIV)(double complex* x, double complex* y);
+    lapack_complex_double FC_GLOBAL(zladiv,ZLADIV)(lapack_complex_double* x, lapack_complex_double* y);
 
-    void FC_GLOBAL(zlaed0,ZLAED0)(blasint* qsiz, blasint* n, double* d, double* e, double complex* q, blasint* ldq, double complex* qstore, blasint* ldqs, double* rwork, blasint* iwork, blasint* info);
+    void FC_GLOBAL(zlaed0,ZLAED0)(blasint* qsiz, blasint* n, double* d, double* e, lapack_complex_double* q, blasint* ldq, lapack_complex_double* qstore, blasint* ldqs, double* rwork, blasint* iwork, blasint* info);
 
-    void FC_GLOBAL(zlaed7,ZLAED7)(blasint* n, blasint* cutpnt, blasint* qsiz, blasint* tlvls, blasint* curlvl, blasint* curpbm, double* d, double complex* q, blasint* ldq, double* rho, blasint* indxq, double* qstore, blasint* qptr, blasint* prmptr, blasint* perm, blasint* givptr, blasint* givcol, double* givnum, double complex* work, double* rwork, blasint* iwork, blasint* info);
+    void FC_GLOBAL(zlaed7,ZLAED7)(blasint* n, blasint* cutpnt, blasint* qsiz, blasint* tlvls, blasint* curlvl, blasint* curpbm, double* d, lapack_complex_double* q, blasint* ldq, double* rho, blasint* indxq, double* qstore, blasint* qptr, blasint* prmptr, blasint* perm, blasint* givptr, blasint* givcol, double* givnum, lapack_complex_double* work, double* rwork, blasint* iwork, blasint* info);
 
-    void FC_GLOBAL(zlaed8,ZLAED8)(blasint* k, blasint* n, blasint* qsiz, double complex* q, blasint* ldq, double* d, double* rho, blasint* cutpnt, double* z, double* dlamda, double complex* q2, blasint* ldq2, double* w, blasint* indxp, blasint* indx, blasint* indxq, blasint* perm, blasint* givptr, blasint* givcol, double* givnum, blasint* info);
+    void FC_GLOBAL(zlaed8,ZLAED8)(blasint* k, blasint* n, blasint* qsiz, lapack_complex_double* q, blasint* ldq, double* d, double* rho, blasint* cutpnt, double* z, double* dlamda, lapack_complex_double* q2, blasint* ldq2, double* w, blasint* indxp, blasint* indx, blasint* indxq, blasint* perm, blasint* givptr, blasint* givcol, double* givnum, blasint* info);
 
-    void FC_GLOBAL(zlaein,ZLAEIN)(blaslogical* rightv, blaslogical* noinit, blasint* n, double complex* h, blasint* ldh, double complex* w, double complex* v, double complex* b, blasint* ldb, double* rwork, double* eps3, double* smlnum, blasint* info);
+    void FC_GLOBAL(zlaein,ZLAEIN)(blaslogical* rightv, blaslogical* noinit, blasint* n, lapack_complex_double* h, blasint* ldh, lapack_complex_double* w, lapack_complex_double* v, lapack_complex_double* b, blasint* ldb, double* rwork, double* eps3, double* smlnum, blasint* info);
 
-    void FC_GLOBAL(zlaesy,ZLAESY)(double complex* a, double complex* b, double complex* c, double complex* rt1, double complex* rt2, double complex* evscal, double complex* cs1, double complex* sn1);
+    void FC_GLOBAL(zlaesy,ZLAESY)(lapack_complex_double* a, lapack_complex_double* b, lapack_complex_double* c, lapack_complex_double* rt1, lapack_complex_double* rt2, lapack_complex_double* evscal, lapack_complex_double* cs1, lapack_complex_double* sn1);
 
-    void FC_GLOBAL(zlaev2,ZLAEV2)(double complex* a, double complex* b, double complex* c, double* rt1, double* rt2, double* cs1, double complex* sn1);
+    void FC_GLOBAL(zlaev2,ZLAEV2)(lapack_complex_double* a, lapack_complex_double* b, lapack_complex_double* c, double* rt1, double* rt2, double* cs1, lapack_complex_double* sn1);
 
-    void FC_GLOBAL(zlag2c,ZLAG2C)(blasint* m, blasint* n, double complex* a, blasint* lda, float complex* sa, blasint* ldsa, blasint* info);
+    void FC_GLOBAL(zlag2c,ZLAG2C)(blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_float* sa, blasint* ldsa, blasint* info);
 
-    void FC_GLOBAL(zlags2,ZLAGS2)(blaslogical* upper, double* a1, double complex* a2, double* a3, double* b1, double complex* b2, double* b3, double* csu, double complex* snu, double* csv, double complex* snv, double* csq, double complex* snq);
+    void FC_GLOBAL(zlags2,ZLAGS2)(blaslogical* upper, double* a1, lapack_complex_double* a2, double* a3, double* b1, lapack_complex_double* b2, double* b3, double* csu, lapack_complex_double* snu, double* csv, lapack_complex_double* snv, double* csq, lapack_complex_double* snq);
 
-    void FC_GLOBAL(zlagtm,ZLAGTM)(char* trans, blasint* n, blasint* nrhs, double* alpha, double complex* dl, double complex* d, double complex* du, double complex* x, blasint* ldx, double* beta, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zlagtm,ZLAGTM)(char* trans, blasint* n, blasint* nrhs, double* alpha, lapack_complex_double* dl, lapack_complex_double* d, lapack_complex_double* du, lapack_complex_double* x, blasint* ldx, double* beta, lapack_complex_double* b, blasint* ldb, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zlahef,ZLAHEF)(char* uplo, blasint* n, blasint* nb, blasint* kb, double complex* a, blasint* lda, blasint* ipiv, double complex* w, blasint* ldw, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zlahef,ZLAHEF)(char* uplo, blasint* n, blasint* nb, blasint* kb, lapack_complex_double* a, blasint* lda, blasint* ipiv, lapack_complex_double* w, blasint* ldw, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zlahqr,ZLAHQR)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ilo, blasint* ihi, double complex* h, blasint* ldh, double complex* w, blasint* iloz, blasint* ihiz, double complex* z, blasint* ldz, blasint* info);
+    void FC_GLOBAL(zlahqr,ZLAHQR)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ilo, blasint* ihi, lapack_complex_double* h, blasint* ldh, lapack_complex_double* w, blasint* iloz, blasint* ihiz, lapack_complex_double* z, blasint* ldz, blasint* info);
 
-    void FC_GLOBAL(zlahr2,ZLAHR2)(blasint* n, blasint* k, blasint* nb, double complex* a, blasint* lda, double complex* tau, double complex* t, blasint* ldt, double complex* y, blasint* ldy);
+    void FC_GLOBAL(zlahr2,ZLAHR2)(blasint* n, blasint* k, blasint* nb, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* t, blasint* ldt, lapack_complex_double* y, blasint* ldy);
 
-    void FC_GLOBAL(zlahrd,ZLAHRD)(blasint* n, blasint* k, blasint* nb, double complex* a, blasint* lda, double complex* tau, double complex* t, blasint* ldt, double complex* y, blasint* ldy);
+    void FC_GLOBAL(zlahrd,ZLAHRD)(blasint* n, blasint* k, blasint* nb, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* t, blasint* ldt, lapack_complex_double* y, blasint* ldy);
 
-    void FC_GLOBAL(zlaic1,ZLAIC1)(blasint* job, blasint* j, double complex* x, double* sest, double complex* w, double complex* gamma, double* sestpr, double complex* s, double complex* c);
+    void FC_GLOBAL(zlaic1,ZLAIC1)(blasint* job, blasint* j, lapack_complex_double* x, double* sest, lapack_complex_double* w, lapack_complex_double* gamma, double* sestpr, lapack_complex_double* s, lapack_complex_double* c);
 
-    void FC_GLOBAL(zlals0,ZLALS0)(blasint* icompq, blasint* nl, blasint* nr, blasint* sqre, blasint* nrhs, double complex* b, blasint* ldb, double complex* bx, blasint* ldbx, blasint* perm, blasint* givptr, blasint* givcol, blasint* ldgcol, double* givnum, blasint* ldgnum, double* poles, double* difl, double* difr, double* z, blasint* k, double* c, double* s, double* rwork, blasint* info);
+    void FC_GLOBAL(zlals0,ZLALS0)(blasint* icompq, blasint* nl, blasint* nr, blasint* sqre, blasint* nrhs, lapack_complex_double* b, blasint* ldb, lapack_complex_double* bx, blasint* ldbx, blasint* perm, blasint* givptr, blasint* givcol, blasint* ldgcol, double* givnum, blasint* ldgnum, double* poles, double* difl, double* difr, double* z, blasint* k, double* c, double* s, double* rwork, blasint* info);
 
-    void FC_GLOBAL(zlalsa,ZLALSA)(blasint* icompq, blasint* smlsiz, blasint* n, blasint* nrhs, double complex* b, blasint* ldb, double complex* bx, blasint* ldbx, double* u, blasint* ldu, double* vt, blasint* k, double* difl, double* difr, double* z, double* poles, blasint* givptr, blasint* givcol, blasint* ldgcol, blasint* perm, double* givnum, double* c, double* s, double* rwork, blasint* iwork, blasint* info);
+    void FC_GLOBAL(zlalsa,ZLALSA)(blasint* icompq, blasint* smlsiz, blasint* n, blasint* nrhs, lapack_complex_double* b, blasint* ldb, lapack_complex_double* bx, blasint* ldbx, double* u, blasint* ldu, double* vt, blasint* k, double* difl, double* difr, double* z, double* poles, blasint* givptr, blasint* givcol, blasint* ldgcol, blasint* perm, double* givnum, double* c, double* s, double* rwork, blasint* iwork, blasint* info);
 
-    void FC_GLOBAL(zlalsd,ZLALSD)(char* uplo, blasint* smlsiz, blasint* n, blasint* nrhs, double* d, double* e, double complex* b, blasint* ldb, double* rcond, blasint* rank_bn, double complex* work, double* rwork, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zlalsd,ZLALSD)(char* uplo, blasint* smlsiz, blasint* n, blasint* nrhs, double* d, double* e, lapack_complex_double* b, blasint* ldb, double* rcond, blasint* rank_bn, lapack_complex_double* work, double* rwork, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    double FC_GLOBAL(zlangb,ZLANGB)(char* norm, blasint* n, blasint* kl, blasint* ku, double complex* ab, blasint* ldab, double* work, flexiblas_fortran_charlen_t len_norm);
+    double FC_GLOBAL(zlangb,ZLANGB)(char* norm, blasint* n, blasint* kl, blasint* ku, lapack_complex_double* ab, blasint* ldab, double* work, flexiblas_fortran_charlen_t len_norm);
 
-    double FC_GLOBAL(zlange,ZLANGE)(char* norm, blasint* m, blasint* n, double complex* a, blasint* lda, double* work, flexiblas_fortran_charlen_t len_norm);
+    double FC_GLOBAL(zlange,ZLANGE)(char* norm, blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, double* work, flexiblas_fortran_charlen_t len_norm);
 
-    double FC_GLOBAL(zlangt,ZLANGT)(char* norm, blasint* n, double complex* dl, double complex* d, double complex* du, flexiblas_fortran_charlen_t len_norm);
+    double FC_GLOBAL(zlangt,ZLANGT)(char* norm, blasint* n, lapack_complex_double* dl, lapack_complex_double* d, lapack_complex_double* du, flexiblas_fortran_charlen_t len_norm);
 
-    double FC_GLOBAL(zlanhb,ZLANHB)(char* norm, char* uplo, blasint* n, blasint* k, double complex* ab, blasint* ldab, double* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
+    double FC_GLOBAL(zlanhb,ZLANHB)(char* norm, char* uplo, blasint* n, blasint* k, lapack_complex_double* ab, blasint* ldab, double* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
 
-    double FC_GLOBAL(zlanhe,ZLANHE)(char* norm, char* uplo, blasint* n, double complex* a, blasint* lda, double* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
+    double FC_GLOBAL(zlanhe,ZLANHE)(char* norm, char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, double* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
 
-    double FC_GLOBAL(zlanhf,ZLANHF)(char* norm, char* transr, char* uplo, blasint* n, double complex* a, double* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
+    double FC_GLOBAL(zlanhf,ZLANHF)(char* norm, char* transr, char* uplo, blasint* n, lapack_complex_double* a, double* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
 
-    double FC_GLOBAL(zlanhp,ZLANHP)(char* norm, char* uplo, blasint* n, double complex* ap, double* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
+    double FC_GLOBAL(zlanhp,ZLANHP)(char* norm, char* uplo, blasint* n, lapack_complex_double* ap, double* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
 
-    double FC_GLOBAL(zlanhs,ZLANHS)(char* norm, blasint* n, double complex* a, blasint* lda, double* work, flexiblas_fortran_charlen_t len_norm);
+    double FC_GLOBAL(zlanhs,ZLANHS)(char* norm, blasint* n, lapack_complex_double* a, blasint* lda, double* work, flexiblas_fortran_charlen_t len_norm);
 
-    double FC_GLOBAL(zlanht,ZLANHT)(char* norm, blasint* n, double* d, double complex* e, flexiblas_fortran_charlen_t len_norm);
+    double FC_GLOBAL(zlanht,ZLANHT)(char* norm, blasint* n, double* d, lapack_complex_double* e, flexiblas_fortran_charlen_t len_norm);
 
-    double FC_GLOBAL(zlansb,ZLANSB)(char* norm, char* uplo, blasint* n, blasint* k, double complex* ab, blasint* ldab, double* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
+    double FC_GLOBAL(zlansb,ZLANSB)(char* norm, char* uplo, blasint* n, blasint* k, lapack_complex_double* ab, blasint* ldab, double* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
 
-    double FC_GLOBAL(zlansp,ZLANSP)(char* norm, char* uplo, blasint* n, double complex* ap, double* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
+    double FC_GLOBAL(zlansp,ZLANSP)(char* norm, char* uplo, blasint* n, lapack_complex_double* ap, double* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
 
-    double FC_GLOBAL(zlansy,ZLANSY)(char* norm, char* uplo, blasint* n, double complex* a, blasint* lda, double* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
+    double FC_GLOBAL(zlansy,ZLANSY)(char* norm, char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, double* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo);
 
-    double FC_GLOBAL(zlantb,ZLANTB)(char* norm, char* uplo, char* diag, blasint* n, blasint* k, double complex* ab, blasint* ldab, double* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
+    double FC_GLOBAL(zlantb,ZLANTB)(char* norm, char* uplo, char* diag, blasint* n, blasint* k, lapack_complex_double* ab, blasint* ldab, double* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
 
-    double FC_GLOBAL(zlantp,ZLANTP)(char* norm, char* uplo, char* diag, blasint* n, double complex* ap, double* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
+    double FC_GLOBAL(zlantp,ZLANTP)(char* norm, char* uplo, char* diag, blasint* n, lapack_complex_double* ap, double* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
 
-    double FC_GLOBAL(zlantr,ZLANTR)(char* norm, char* uplo, char* diag, blasint* m, blasint* n, double complex* a, blasint* lda, double* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
+    double FC_GLOBAL(zlantr,ZLANTR)(char* norm, char* uplo, char* diag, blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, double* work, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(zlapll,ZLAPLL)(blasint* n, double complex* x, blasint* incx, double complex* y, blasint* incy, double* ssmin);
+    void FC_GLOBAL(zlapll,ZLAPLL)(blasint* n, lapack_complex_double* x, blasint* incx, lapack_complex_double* y, blasint* incy, double* ssmin);
 
-    void FC_GLOBAL(zlapmr,ZLAPMR)(blaslogical* forwrd, blasint* m, blasint* n, double complex* x, blasint* ldx, blasint* k);
+    void FC_GLOBAL(zlapmr,ZLAPMR)(blaslogical* forwrd, blasint* m, blasint* n, lapack_complex_double* x, blasint* ldx, blasint* k);
 
-    void FC_GLOBAL(zlapmt,ZLAPMT)(blaslogical* forwrd, blasint* m, blasint* n, double complex* x, blasint* ldx, blasint* k);
+    void FC_GLOBAL(zlapmt,ZLAPMT)(blaslogical* forwrd, blasint* m, blasint* n, lapack_complex_double* x, blasint* ldx, blasint* k);
 
-    void FC_GLOBAL(zlaqgb,ZLAQGB)(blasint* m, blasint* n, blasint* kl, blasint* ku, double complex* ab, blasint* ldab, double* r, double* c, double* rowcnd, double* colcnd, double* amax, char* equed, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(zlaqgb,ZLAQGB)(blasint* m, blasint* n, blasint* kl, blasint* ku, lapack_complex_double* ab, blasint* ldab, double* r, double* c, double* rowcnd, double* colcnd, double* amax, char* equed, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(zlaqge,ZLAQGE)(blasint* m, blasint* n, double complex* a, blasint* lda, double* r, double* c, double* rowcnd, double* colcnd, double* amax, char* equed, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(zlaqge,ZLAQGE)(blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, double* r, double* c, double* rowcnd, double* colcnd, double* amax, char* equed, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(zlaqhb,ZLAQHB)(char* uplo, blasint* n, blasint* kd, double complex* ab, blasint* ldab, double* s, double* scond, double* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(zlaqhb,ZLAQHB)(char* uplo, blasint* n, blasint* kd, lapack_complex_double* ab, blasint* ldab, double* s, double* scond, double* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(zlaqhe,ZLAQHE)(char* uplo, blasint* n, double complex* a, blasint* lda, double* s, double* scond, double* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(zlaqhe,ZLAQHE)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, double* s, double* scond, double* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(zlaqhp,ZLAQHP)(char* uplo, blasint* n, double complex* ap, double* s, double* scond, double* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(zlaqhp,ZLAQHP)(char* uplo, blasint* n, lapack_complex_double* ap, double* s, double* scond, double* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(zlaqp2,ZLAQP2)(blasint* m, blasint* n, blasint* offset, double complex* a, blasint* lda, blasint* jpvt, double complex* tau, double* vn1, double* vn2, double complex* work);
+    void FC_GLOBAL(zlaqp2,ZLAQP2)(blasint* m, blasint* n, blasint* offset, lapack_complex_double* a, blasint* lda, blasint* jpvt, lapack_complex_double* tau, double* vn1, double* vn2, lapack_complex_double* work);
 
-    void FC_GLOBAL(zlaqps,ZLAQPS)(blasint* m, blasint* n, blasint* offset, blasint* nb, blasint* kb, double complex* a, blasint* lda, blasint* jpvt, double complex* tau, double* vn1, double* vn2, double complex* auxv, double complex* f, blasint* ldf);
+    void FC_GLOBAL(zlaqps,ZLAQPS)(blasint* m, blasint* n, blasint* offset, blasint* nb, blasint* kb, lapack_complex_double* a, blasint* lda, blasint* jpvt, lapack_complex_double* tau, double* vn1, double* vn2, lapack_complex_double* auxv, lapack_complex_double* f, blasint* ldf);
 
-    void FC_GLOBAL(zlaqr0,ZLAQR0)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ilo, blasint* ihi, double complex* h, blasint* ldh, double complex* w, blasint* iloz, blasint* ihiz, double complex* z, blasint* ldz, double complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(zlaqr0,ZLAQR0)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ilo, blasint* ihi, lapack_complex_double* h, blasint* ldh, lapack_complex_double* w, blasint* iloz, blasint* ihiz, lapack_complex_double* z, blasint* ldz, lapack_complex_double* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(zlaqr1,ZLAQR1)(blasint* n, double complex* h, blasint* ldh, double complex* s1, double complex* s2, double complex* v);
+    void FC_GLOBAL(zlaqr1,ZLAQR1)(blasint* n, lapack_complex_double* h, blasint* ldh, lapack_complex_double* s1, lapack_complex_double* s2, lapack_complex_double* v);
 
-    void FC_GLOBAL(zlaqr2,ZLAQR2)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ktop, blasint* kbot, blasint* nw, double complex* h, blasint* ldh, blasint* iloz, blasint* ihiz, double complex* z, blasint* ldz, blasint* ns, blasint* nd, double complex* sh, double complex* v, blasint* ldv, blasint* nh, double complex* t, blasint* ldt, blasint* nv, double complex* wv, blasint* ldwv, double complex* work, blasint* lwork);
+    void FC_GLOBAL(zlaqr2,ZLAQR2)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ktop, blasint* kbot, blasint* nw, lapack_complex_double* h, blasint* ldh, blasint* iloz, blasint* ihiz, lapack_complex_double* z, blasint* ldz, blasint* ns, blasint* nd, lapack_complex_double* sh, lapack_complex_double* v, blasint* ldv, blasint* nh, lapack_complex_double* t, blasint* ldt, blasint* nv, lapack_complex_double* wv, blasint* ldwv, lapack_complex_double* work, blasint* lwork);
 
-    void FC_GLOBAL(zlaqr3,ZLAQR3)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ktop, blasint* kbot, blasint* nw, double complex* h, blasint* ldh, blasint* iloz, blasint* ihiz, double complex* z, blasint* ldz, blasint* ns, blasint* nd, double complex* sh, double complex* v, blasint* ldv, blasint* nh, double complex* t, blasint* ldt, blasint* nv, double complex* wv, blasint* ldwv, double complex* work, blasint* lwork);
+    void FC_GLOBAL(zlaqr3,ZLAQR3)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ktop, blasint* kbot, blasint* nw, lapack_complex_double* h, blasint* ldh, blasint* iloz, blasint* ihiz, lapack_complex_double* z, blasint* ldz, blasint* ns, blasint* nd, lapack_complex_double* sh, lapack_complex_double* v, blasint* ldv, blasint* nh, lapack_complex_double* t, blasint* ldt, blasint* nv, lapack_complex_double* wv, blasint* ldwv, lapack_complex_double* work, blasint* lwork);
 
-    void FC_GLOBAL(zlaqr4,ZLAQR4)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ilo, blasint* ihi, double complex* h, blasint* ldh, double complex* w, blasint* iloz, blasint* ihiz, double complex* z, blasint* ldz, double complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(zlaqr4,ZLAQR4)(blaslogical* wantt, blaslogical* wantz, blasint* n, blasint* ilo, blasint* ihi, lapack_complex_double* h, blasint* ldh, lapack_complex_double* w, blasint* iloz, blasint* ihiz, lapack_complex_double* z, blasint* ldz, lapack_complex_double* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(zlaqr5,ZLAQR5)(blaslogical* wantt, blaslogical* wantz, blasint* kacc22, blasint* n, blasint* ktop, blasint* kbot, blasint* nshfts, double complex* s, double complex* h, blasint* ldh, blasint* iloz, blasint* ihiz, double complex* z, blasint* ldz, double complex* v, blasint* ldv, double complex* u, blasint* ldu, blasint* nv, double complex* wv, blasint* ldwv, blasint* nh, double complex* wh, blasint* ldwh);
+    void FC_GLOBAL(zlaqr5,ZLAQR5)(blaslogical* wantt, blaslogical* wantz, blasint* kacc22, blasint* n, blasint* ktop, blasint* kbot, blasint* nshfts, lapack_complex_double* s, lapack_complex_double* h, blasint* ldh, blasint* iloz, blasint* ihiz, lapack_complex_double* z, blasint* ldz, lapack_complex_double* v, blasint* ldv, lapack_complex_double* u, blasint* ldu, blasint* nv, lapack_complex_double* wv, blasint* ldwv, blasint* nh, lapack_complex_double* wh, blasint* ldwh);
 
-    void FC_GLOBAL(zlaqsb,ZLAQSB)(char* uplo, blasint* n, blasint* kd, double complex* ab, blasint* ldab, double* s, double* scond, double* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(zlaqsb,ZLAQSB)(char* uplo, blasint* n, blasint* kd, lapack_complex_double* ab, blasint* ldab, double* s, double* scond, double* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(zlaqsp,ZLAQSP)(char* uplo, blasint* n, double complex* ap, double* s, double* scond, double* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(zlaqsp,ZLAQSP)(char* uplo, blasint* n, lapack_complex_double* ap, double* s, double* scond, double* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(zlaqsy,ZLAQSY)(char* uplo, blasint* n, double complex* a, blasint* lda, double* s, double* scond, double* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(zlaqsy,ZLAQSY)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, double* s, double* scond, double* amax, char* equed, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(zlar1v,ZLAR1V)(blasint* n, blasint* b1, blasint* bn, double* lambda, double* d, double* l, double* ld, double* lld, double* pivmin, double* gaptol, double complex* z, blaslogical* wantnc, blasint* negcnt, double* ztz, double* mingma, blasint* r, blasint* isuppz, double* nrminv, double* resid, double* rqcorr, double* work);
+    void FC_GLOBAL(zlar1v,ZLAR1V)(blasint* n, blasint* b1, blasint* bn, double* lambda, double* d, double* l, double* ld, double* lld, double* pivmin, double* gaptol, lapack_complex_double* z, blaslogical* wantnc, blasint* negcnt, double* ztz, double* mingma, blasint* r, blasint* isuppz, double* nrminv, double* resid, double* rqcorr, double* work);
 
-    void FC_GLOBAL(zlar2v,ZLAR2V)(blasint* n, double complex* x, double complex* y, double complex* z, blasint* incx, double* c, double complex* s, blasint* incc);
+    void FC_GLOBAL(zlar2v,ZLAR2V)(blasint* n, lapack_complex_double* x, lapack_complex_double* y, lapack_complex_double* z, blasint* incx, double* c, lapack_complex_double* s, blasint* incc);
 
-    void FC_GLOBAL(zlarcm,ZLARCM)(blasint* m, blasint* n, double* a, blasint* lda, double complex* b, blasint* ldb, double complex* c, blasint* ldc, double* rwork);
+    void FC_GLOBAL(zlarcm,ZLARCM)(blasint* m, blasint* n, double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, lapack_complex_double* c, blasint* ldc, double* rwork);
 
-    void FC_GLOBAL(zlarf,ZLARF)(char* side, blasint* m, blasint* n, double complex* v, blasint* incv, double complex* tau, double complex* c, blasint* ldc, double complex* work, flexiblas_fortran_charlen_t len_side);
+    void FC_GLOBAL(zlarf,ZLARF)(char* side, blasint* m, blasint* n, lapack_complex_double* v, blasint* incv, lapack_complex_double* tau, lapack_complex_double* c, blasint* ldc, lapack_complex_double* work, flexiblas_fortran_charlen_t len_side);
 
-    void FC_GLOBAL(zlarfb,ZLARFB)(char* side, char* trans, char* direct, char* storev, blasint* m, blasint* n, blasint* k, double complex* v, blasint* ldv, double complex* t, blasint* ldt, double complex* c, blasint* ldc, double complex* work, blasint* ldwork, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_direct, flexiblas_fortran_charlen_t len_storev);
+    void FC_GLOBAL(zlarfb,ZLARFB)(char* side, char* trans, char* direct, char* storev, blasint* m, blasint* n, blasint* k, lapack_complex_double* v, blasint* ldv, lapack_complex_double* t, blasint* ldt, lapack_complex_double* c, blasint* ldc, lapack_complex_double* work, blasint* ldwork, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_direct, flexiblas_fortran_charlen_t len_storev);
 
-    void FC_GLOBAL(zlarfg,ZLARFG)(blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* tau);
+    void FC_GLOBAL(zlarfg,ZLARFG)(blasint* n, lapack_complex_double* alpha, lapack_complex_double* x, blasint* incx, lapack_complex_double* tau);
 
-    void FC_GLOBAL(zlarfgp,ZLARFGP)(blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* tau);
+    void FC_GLOBAL(zlarfgp,ZLARFGP)(blasint* n, lapack_complex_double* alpha, lapack_complex_double* x, blasint* incx, lapack_complex_double* tau);
 
-    void FC_GLOBAL(zlarft,ZLARFT)(char* direct, char* storev, blasint* n, blasint* k, double complex* v, blasint* ldv, double complex* tau, double complex* t, blasint* ldt, flexiblas_fortran_charlen_t len_direct, flexiblas_fortran_charlen_t len_storev);
+    void FC_GLOBAL(zlarft,ZLARFT)(char* direct, char* storev, blasint* n, blasint* k, lapack_complex_double* v, blasint* ldv, lapack_complex_double* tau, lapack_complex_double* t, blasint* ldt, flexiblas_fortran_charlen_t len_direct, flexiblas_fortran_charlen_t len_storev);
 
-    void FC_GLOBAL(zlarfx,ZLARFX)(char* side, blasint* m, blasint* n, double complex* v, double complex* tau, double complex* c, blasint* ldc, double complex* work, flexiblas_fortran_charlen_t len_side);
+    void FC_GLOBAL(zlarfx,ZLARFX)(char* side, blasint* m, blasint* n, lapack_complex_double* v, lapack_complex_double* tau, lapack_complex_double* c, blasint* ldc, lapack_complex_double* work, flexiblas_fortran_charlen_t len_side);
 
-    void FC_GLOBAL(zlargv,ZLARGV)(blasint* n, double complex* x, blasint* incx, double complex* y, blasint* incy, double* c, blasint* incc);
+    void FC_GLOBAL(zlargv,ZLARGV)(blasint* n, lapack_complex_double* x, blasint* incx, lapack_complex_double* y, blasint* incy, double* c, blasint* incc);
 
-    void FC_GLOBAL(zlarnv,ZLARNV)(blasint* idist, blasint* iseed, blasint* n, double complex* x);
+    void FC_GLOBAL(zlarnv,ZLARNV)(blasint* idist, blasint* iseed, blasint* n, lapack_complex_double* x);
 
-    void FC_GLOBAL(zlarrv,ZLARRV)(blasint* n, double* vl, double* vu, double* d, double* l, double* pivmin, blasint* isplit, blasint* m, blasint* dol, blasint* dou, double* minrgp, double* rtol1, double* rtol2, double* w, double* werr, double* wgap, blasint* iblock, blasint* indexw, double* gers, double complex* z, blasint* ldz, blasint* isuppz, double* work, blasint* iwork, blasint* info);
+    void FC_GLOBAL(zlarrv,ZLARRV)(blasint* n, double* vl, double* vu, double* d, double* l, double* pivmin, blasint* isplit, blasint* m, blasint* dol, blasint* dou, double* minrgp, double* rtol1, double* rtol2, double* w, double* werr, double* wgap, blasint* iblock, blasint* indexw, double* gers, lapack_complex_double* z, blasint* ldz, blasint* isuppz, double* work, blasint* iwork, blasint* info);
 
-    void FC_GLOBAL(zlartg,ZLARTG)(double complex* f, double complex* g, double* cs, double complex* sn, double complex* r);
+    void FC_GLOBAL(zlartg,ZLARTG)(lapack_complex_double* f, lapack_complex_double* g, double* cs, lapack_complex_double* sn, lapack_complex_double* r);
 
-    void FC_GLOBAL(zlartv,ZLARTV)(blasint* n, double complex* x, blasint* incx, double complex* y, blasint* incy, double* c, double complex* s, blasint* incc);
+    void FC_GLOBAL(zlartv,ZLARTV)(blasint* n, lapack_complex_double* x, blasint* incx, lapack_complex_double* y, blasint* incy, double* c, lapack_complex_double* s, blasint* incc);
 
-    void FC_GLOBAL(zlarz,ZLARZ)(char* side, blasint* m, blasint* n, blasint* l, double complex* v, blasint* incv, double complex* tau, double complex* c, blasint* ldc, double complex* work, flexiblas_fortran_charlen_t len_side);
+    void FC_GLOBAL(zlarz,ZLARZ)(char* side, blasint* m, blasint* n, blasint* l, lapack_complex_double* v, blasint* incv, lapack_complex_double* tau, lapack_complex_double* c, blasint* ldc, lapack_complex_double* work, flexiblas_fortran_charlen_t len_side);
 
-    void FC_GLOBAL(zlarzb,ZLARZB)(char* side, char* trans, char* direct, char* storev, blasint* m, blasint* n, blasint* k, blasint* l, double complex* v, blasint* ldv, double complex* t, blasint* ldt, double complex* c, blasint* ldc, double complex* work, blasint* ldwork, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_direct, flexiblas_fortran_charlen_t len_storev);
+    void FC_GLOBAL(zlarzb,ZLARZB)(char* side, char* trans, char* direct, char* storev, blasint* m, blasint* n, blasint* k, blasint* l, lapack_complex_double* v, blasint* ldv, lapack_complex_double* t, blasint* ldt, lapack_complex_double* c, blasint* ldc, lapack_complex_double* work, blasint* ldwork, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_direct, flexiblas_fortran_charlen_t len_storev);
 
-    void FC_GLOBAL(zlarzt,ZLARZT)(char* direct, char* storev, blasint* n, blasint* k, double complex* v, blasint* ldv, double complex* tau, double complex* t, blasint* ldt, flexiblas_fortran_charlen_t len_direct, flexiblas_fortran_charlen_t len_storev);
+    void FC_GLOBAL(zlarzt,ZLARZT)(char* direct, char* storev, blasint* n, blasint* k, lapack_complex_double* v, blasint* ldv, lapack_complex_double* tau, lapack_complex_double* t, blasint* ldt, flexiblas_fortran_charlen_t len_direct, flexiblas_fortran_charlen_t len_storev);
 
-    void FC_GLOBAL(zlascl,ZLASCL)(char* type_bn, blasint* kl, blasint* ku, double* cfrom, double* cto, blasint* m, blasint* n, double complex* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_type_bn);
+    void FC_GLOBAL(zlascl,ZLASCL)(char* type_bn, blasint* kl, blasint* ku, double* cfrom, double* cto, blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_type_bn);
 
-    void FC_GLOBAL(zlaset,ZLASET)(char* uplo, blasint* m, blasint* n, double complex* alpha, double complex* beta, double complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zlaset,ZLASET)(char* uplo, blasint* m, blasint* n, lapack_complex_double* alpha, lapack_complex_double* beta, lapack_complex_double* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zlasr,ZLASR)(char* side, char* pivot, char* direct, blasint* m, blasint* n, double* c, double* s, double complex* a, blasint* lda, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_pivot, flexiblas_fortran_charlen_t len_direct);
+    void FC_GLOBAL(zlasr,ZLASR)(char* side, char* pivot, char* direct, blasint* m, blasint* n, double* c, double* s, lapack_complex_double* a, blasint* lda, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_pivot, flexiblas_fortran_charlen_t len_direct);
 
-    void FC_GLOBAL(zlassq,ZLASSQ)(blasint* n, double complex* x, blasint* incx, double* scale, double* sumsq);
+    void FC_GLOBAL(zlassq,ZLASSQ)(blasint* n, lapack_complex_double* x, blasint* incx, double* scale, double* sumsq);
 
-    void FC_GLOBAL(zlaswp,ZLASWP)(blasint* n, double complex* a, blasint* lda, blasint* k1, blasint* k2, blasint* ipiv, blasint* incx);
+    void FC_GLOBAL(zlaswp,ZLASWP)(blasint* n, lapack_complex_double* a, blasint* lda, blasint* k1, blasint* k2, blasint* ipiv, blasint* incx);
 
-    void FC_GLOBAL(zlasyf,ZLASYF)(char* uplo, blasint* n, blasint* nb, blasint* kb, double complex* a, blasint* lda, blasint* ipiv, double complex* w, blasint* ldw, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zlasyf,ZLASYF)(char* uplo, blasint* n, blasint* nb, blasint* kb, lapack_complex_double* a, blasint* lda, blasint* ipiv, lapack_complex_double* w, blasint* ldw, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zlat2c,ZLAT2C)(char* uplo, blasint* n, double complex* a, blasint* lda, float complex* sa, blasint* ldsa, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zlat2c,ZLAT2C)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_float* sa, blasint* ldsa, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zlatbs,ZLATBS)(char* uplo, char* trans, char* diag, char* normin, blasint* n, blasint* kd, double complex* ab, blasint* ldab, double complex* x, double* scale, double* cnorm, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin);
+    void FC_GLOBAL(zlatbs,ZLATBS)(char* uplo, char* trans, char* diag, char* normin, blasint* n, blasint* kd, lapack_complex_double* ab, blasint* ldab, lapack_complex_double* x, double* scale, double* cnorm, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin);
 
-    void FC_GLOBAL(zlatdf,ZLATDF)(blasint* ijob, blasint* n, double complex* z, blasint* ldz, double complex* rhs, double* rdsum, double* rdscal, blasint* ipiv, blasint* jpiv);
+    void FC_GLOBAL(zlatdf,ZLATDF)(blasint* ijob, blasint* n, lapack_complex_double* z, blasint* ldz, lapack_complex_double* rhs, double* rdsum, double* rdscal, blasint* ipiv, blasint* jpiv);
 
-    void FC_GLOBAL(zlatps,ZLATPS)(char* uplo, char* trans, char* diag, char* normin, blasint* n, double complex* ap, double complex* x, double* scale, double* cnorm, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin);
+    void FC_GLOBAL(zlatps,ZLATPS)(char* uplo, char* trans, char* diag, char* normin, blasint* n, lapack_complex_double* ap, lapack_complex_double* x, double* scale, double* cnorm, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin);
 
-    void FC_GLOBAL(zlatrd,ZLATRD)(char* uplo, blasint* n, blasint* nb, double complex* a, blasint* lda, double* e, double complex* tau, double complex* w, blasint* ldw, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zlatrd,ZLATRD)(char* uplo, blasint* n, blasint* nb, lapack_complex_double* a, blasint* lda, double* e, lapack_complex_double* tau, lapack_complex_double* w, blasint* ldw, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zlatrs,ZLATRS)(char* uplo, char* trans, char* diag, char* normin, blasint* n, double complex* a, blasint* lda, double complex* x, double* scale, double* cnorm, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin);
+    void FC_GLOBAL(zlatrs,ZLATRS)(char* uplo, char* trans, char* diag, char* normin, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* x, double* scale, double* cnorm, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag, flexiblas_fortran_charlen_t len_normin);
 
-    void FC_GLOBAL(zlatrz,ZLATRZ)(blasint* m, blasint* n, blasint* l, double complex* a, blasint* lda, double complex* tau, double complex* work);
+    void FC_GLOBAL(zlatrz,ZLATRZ)(blasint* m, blasint* n, blasint* l, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* work);
 
-    void FC_GLOBAL(zlatzm,ZLATZM)(char* side, blasint* m, blasint* n, double complex* v, blasint* incv, double complex* tau, double complex* c1, double complex* c2, blasint* ldc, double complex* work, flexiblas_fortran_charlen_t len_side);
+    void FC_GLOBAL(zlatzm,ZLATZM)(char* side, blasint* m, blasint* n, lapack_complex_double* v, blasint* incv, lapack_complex_double* tau, lapack_complex_double* c1, lapack_complex_double* c2, blasint* ldc, lapack_complex_double* work, flexiblas_fortran_charlen_t len_side);
 
-    void FC_GLOBAL(zlauu2,ZLAUU2)(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zlauu2,ZLAUU2)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zlauum,ZLAUUM)(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zlauum,ZLAUUM)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zpbcon,ZPBCON)(char* uplo, blasint* n, blasint* kd, double complex* ab, blasint* ldab, double* anorm, double* rcond, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zpbcon,ZPBCON)(char* uplo, blasint* n, blasint* kd, lapack_complex_double* ab, blasint* ldab, double* anorm, double* rcond, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zpbequ,ZPBEQU)(char* uplo, blasint* n, blasint* kd, double complex* ab, blasint* ldab, double* s, double* scond, double* amax, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zpbequ,ZPBEQU)(char* uplo, blasint* n, blasint* kd, lapack_complex_double* ab, blasint* ldab, double* s, double* scond, double* amax, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zpbrfs,ZPBRFS)(char* uplo, blasint* n, blasint* kd, blasint* nrhs, double complex* ab, blasint* ldab, double complex* afb, blasint* ldafb, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* ferr, double* berr, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zpbrfs,ZPBRFS)(char* uplo, blasint* n, blasint* kd, blasint* nrhs, lapack_complex_double* ab, blasint* ldab, lapack_complex_double* afb, blasint* ldafb, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, double* ferr, double* berr, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zpbstf,ZPBSTF)(char* uplo, blasint* n, blasint* kd, double complex* ab, blasint* ldab, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zpbstf,ZPBSTF)(char* uplo, blasint* n, blasint* kd, lapack_complex_double* ab, blasint* ldab, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zpbsv,ZPBSV)(char* uplo, blasint* n, blasint* kd, blasint* nrhs, double complex* ab, blasint* ldab, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zpbsv,ZPBSV)(char* uplo, blasint* n, blasint* kd, blasint* nrhs, lapack_complex_double* ab, blasint* ldab, lapack_complex_double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zpbsvx,ZPBSVX)(char* fact, char* uplo, blasint* n, blasint* kd, blasint* nrhs, double complex* ab, blasint* ldab, double complex* afb, blasint* ldafb, char* equed, double* s, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* rcond, double* ferr, double* berr, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(zpbsvx,ZPBSVX)(char* fact, char* uplo, blasint* n, blasint* kd, blasint* nrhs, lapack_complex_double* ab, blasint* ldab, lapack_complex_double* afb, blasint* ldafb, char* equed, double* s, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, double* rcond, double* ferr, double* berr, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(zpbtf2,ZPBTF2)(char* uplo, blasint* n, blasint* kd, double complex* ab, blasint* ldab, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zpbtf2,ZPBTF2)(char* uplo, blasint* n, blasint* kd, lapack_complex_double* ab, blasint* ldab, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zpbtrf,ZPBTRF)(char* uplo, blasint* n, blasint* kd, double complex* ab, blasint* ldab, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zpbtrf,ZPBTRF)(char* uplo, blasint* n, blasint* kd, lapack_complex_double* ab, blasint* ldab, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zpbtrs,ZPBTRS)(char* uplo, blasint* n, blasint* kd, blasint* nrhs, double complex* ab, blasint* ldab, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zpbtrs,ZPBTRS)(char* uplo, blasint* n, blasint* kd, blasint* nrhs, lapack_complex_double* ab, blasint* ldab, lapack_complex_double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zpftrf,ZPFTRF)(char* transr, char* uplo, blasint* n, double complex* a, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zpftrf,ZPFTRF)(char* transr, char* uplo, blasint* n, lapack_complex_double* a, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zpftri,ZPFTRI)(char* transr, char* uplo, blasint* n, double complex* a, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zpftri,ZPFTRI)(char* transr, char* uplo, blasint* n, lapack_complex_double* a, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zpftrs,ZPFTRS)(char* transr, char* uplo, blasint* n, blasint* nrhs, double complex* a, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zpftrs,ZPFTRS)(char* transr, char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* a, lapack_complex_double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zpocon,ZPOCON)(char* uplo, blasint* n, double complex* a, blasint* lda, double* anorm, double* rcond, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zpocon,ZPOCON)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, double* anorm, double* rcond, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zpoequ,ZPOEQU)(blasint* n, double complex* a, blasint* lda, double* s, double* scond, double* amax, blasint* info);
+    void FC_GLOBAL(zpoequ,ZPOEQU)(blasint* n, lapack_complex_double* a, blasint* lda, double* s, double* scond, double* amax, blasint* info);
 
-    void FC_GLOBAL(zpoequb,ZPOEQUB)(blasint* n, double complex* a, blasint* lda, double* s, double* scond, double* amax, blasint* info);
+    void FC_GLOBAL(zpoequb,ZPOEQUB)(blasint* n, lapack_complex_double* a, blasint* lda, double* s, double* scond, double* amax, blasint* info);
 
-    void FC_GLOBAL(zporfs,ZPORFS)(char* uplo, blasint* n, blasint* nrhs, double complex* a, blasint* lda, double complex* af, blasint* ldaf, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* ferr, double* berr, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zporfs,ZPORFS)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, lapack_complex_double* af, blasint* ldaf, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, double* ferr, double* berr, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zposv,ZPOSV)(char* uplo, blasint* n, blasint* nrhs, double complex* a, blasint* lda, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zposv,ZPOSV)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zposvx,ZPOSVX)(char* fact, char* uplo, blasint* n, blasint* nrhs, double complex* a, blasint* lda, double complex* af, blasint* ldaf, char* equed, double* s, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* rcond, double* ferr, double* berr, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(zposvx,ZPOSVX)(char* fact, char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, lapack_complex_double* af, blasint* ldaf, char* equed, double* s, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, double* rcond, double* ferr, double* berr, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(zpotf2,ZPOTF2)(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zpotf2,ZPOTF2)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zpotrf,ZPOTRF)(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zpotrf,ZPOTRF)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zpotri,ZPOTRI)(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zpotri,ZPOTRI)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zpotrs,ZPOTRS)(char* uplo, blasint* n, blasint* nrhs, double complex* a, blasint* lda, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zpotrs,ZPOTRS)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zppcon,ZPPCON)(char* uplo, blasint* n, double complex* ap, double* anorm, double* rcond, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zppcon,ZPPCON)(char* uplo, blasint* n, lapack_complex_double* ap, double* anorm, double* rcond, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zppequ,ZPPEQU)(char* uplo, blasint* n, double complex* ap, double* s, double* scond, double* amax, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zppequ,ZPPEQU)(char* uplo, blasint* n, lapack_complex_double* ap, double* s, double* scond, double* amax, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zpprfs,ZPPRFS)(char* uplo, blasint* n, blasint* nrhs, double complex* ap, double complex* afp, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* ferr, double* berr, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zpprfs,ZPPRFS)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* ap, lapack_complex_double* afp, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, double* ferr, double* berr, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zppsv,ZPPSV)(char* uplo, blasint* n, blasint* nrhs, double complex* ap, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zppsv,ZPPSV)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* ap, lapack_complex_double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zppsvx,ZPPSVX)(char* fact, char* uplo, blasint* n, blasint* nrhs, double complex* ap, double complex* afp, char* equed, double* s, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* rcond, double* ferr, double* berr, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
+    void FC_GLOBAL(zppsvx,ZPPSVX)(char* fact, char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* ap, lapack_complex_double* afp, char* equed, double* s, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, double* rcond, double* ferr, double* berr, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_equed);
 
-    void FC_GLOBAL(zpptrf,ZPPTRF)(char* uplo, blasint* n, double complex* ap, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zpptrf,ZPPTRF)(char* uplo, blasint* n, lapack_complex_double* ap, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zpptri,ZPPTRI)(char* uplo, blasint* n, double complex* ap, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zpptri,ZPPTRI)(char* uplo, blasint* n, lapack_complex_double* ap, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zpptrs,ZPPTRS)(char* uplo, blasint* n, blasint* nrhs, double complex* ap, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zpptrs,ZPPTRS)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* ap, lapack_complex_double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zpstf2,ZPSTF2)(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* piv, blasint* rank_bn, double* tol, double* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zpstf2,ZPSTF2)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, blasint* piv, blasint* rank_bn, double* tol, double* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zpstrf,ZPSTRF)(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* piv, blasint* rank_bn, double* tol, double* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zpstrf,ZPSTRF)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, blasint* piv, blasint* rank_bn, double* tol, double* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zptcon,ZPTCON)(blasint* n, double* d, double complex* e, double* anorm, double* rcond, double* rwork, blasint* info);
+    void FC_GLOBAL(zptcon,ZPTCON)(blasint* n, double* d, lapack_complex_double* e, double* anorm, double* rcond, double* rwork, blasint* info);
 
-    void FC_GLOBAL(zpteqr,ZPTEQR)(char* compz, blasint* n, double* d, double* e, double complex* z, blasint* ldz, double* work, blasint* info, flexiblas_fortran_charlen_t len_compz);
+    void FC_GLOBAL(zpteqr,ZPTEQR)(char* compz, blasint* n, double* d, double* e, lapack_complex_double* z, blasint* ldz, double* work, blasint* info, flexiblas_fortran_charlen_t len_compz);
 
-    void FC_GLOBAL(zptrfs,ZPTRFS)(char* uplo, blasint* n, blasint* nrhs, double* d, double complex* e, double* df, double complex* ef, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* ferr, double* berr, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zptrfs,ZPTRFS)(char* uplo, blasint* n, blasint* nrhs, double* d, lapack_complex_double* e, double* df, lapack_complex_double* ef, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, double* ferr, double* berr, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zptsv,ZPTSV)(blasint* n, blasint* nrhs, double* d, double complex* e, double complex* b, blasint* ldb, blasint* info);
+    void FC_GLOBAL(zptsv,ZPTSV)(blasint* n, blasint* nrhs, double* d, lapack_complex_double* e, lapack_complex_double* b, blasint* ldb, blasint* info);
 
-    void FC_GLOBAL(zptsvx,ZPTSVX)(char* fact, blasint* n, blasint* nrhs, double* d, double complex* e, double* df, double complex* ef, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* rcond, double* ferr, double* berr, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact);
+    void FC_GLOBAL(zptsvx,ZPTSVX)(char* fact, blasint* n, blasint* nrhs, double* d, lapack_complex_double* e, double* df, lapack_complex_double* ef, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, double* rcond, double* ferr, double* berr, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact);
 
-    void FC_GLOBAL(zpttrf,ZPTTRF)(blasint* n, double* d, double complex* e, blasint* info);
+    void FC_GLOBAL(zpttrf,ZPTTRF)(blasint* n, double* d, lapack_complex_double* e, blasint* info);
 
-    void FC_GLOBAL(zpttrs,ZPTTRS)(char* uplo, blasint* n, blasint* nrhs, double* d, double complex* e, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zpttrs,ZPTTRS)(char* uplo, blasint* n, blasint* nrhs, double* d, lapack_complex_double* e, lapack_complex_double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zptts2,ZPTTS2)(blasint* iuplo, blasint* n, blasint* nrhs, double* d, double complex* e, double complex* b, blasint* ldb);
+    void FC_GLOBAL(zptts2,ZPTTS2)(blasint* iuplo, blasint* n, blasint* nrhs, double* d, lapack_complex_double* e, lapack_complex_double* b, blasint* ldb);
 
-    void FC_GLOBAL(zrot,ZROT)(blasint* n, double complex* cx, blasint* incx, double complex* cy, blasint* incy, double* c, double complex* s);
+    void FC_GLOBAL(zrot,ZROT)(blasint* n, lapack_complex_double* cx, blasint* incx, lapack_complex_double* cy, blasint* incy, double* c, lapack_complex_double* s);
 
-    void FC_GLOBAL(zspcon,ZSPCON)(char* uplo, blasint* n, double complex* ap, blasint* ipiv, double* anorm, double* rcond, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zspcon,ZSPCON)(char* uplo, blasint* n, lapack_complex_double* ap, blasint* ipiv, double* anorm, double* rcond, lapack_complex_double* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zspmv,ZSPMV)(char* uplo, blasint* n, double complex* alpha, double complex* ap, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zspmv,ZSPMV)(char* uplo, blasint* n, lapack_complex_double* alpha, lapack_complex_double* ap, lapack_complex_double* x, blasint* incx, lapack_complex_double* beta, lapack_complex_double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zspr,ZSPR)(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* ap, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zspr,ZSPR)(char* uplo, blasint* n, lapack_complex_double* alpha, lapack_complex_double* x, blasint* incx, lapack_complex_double* ap, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zsprfs,ZSPRFS)(char* uplo, blasint* n, blasint* nrhs, double complex* ap, double complex* afp, blasint* ipiv, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* ferr, double* berr, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zsprfs,ZSPRFS)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* ap, lapack_complex_double* afp, blasint* ipiv, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, double* ferr, double* berr, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zspsv,ZSPSV)(char* uplo, blasint* n, blasint* nrhs, double complex* ap, blasint* ipiv, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zspsv,ZSPSV)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* ap, blasint* ipiv, lapack_complex_double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zspsvx,ZSPSVX)(char* fact, char* uplo, blasint* n, blasint* nrhs, double complex* ap, double complex* afp, blasint* ipiv, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* rcond, double* ferr, double* berr, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zspsvx,ZSPSVX)(char* fact, char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* ap, lapack_complex_double* afp, blasint* ipiv, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, double* rcond, double* ferr, double* berr, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zsptrf,ZSPTRF)(char* uplo, blasint* n, double complex* ap, blasint* ipiv, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zsptrf,ZSPTRF)(char* uplo, blasint* n, lapack_complex_double* ap, blasint* ipiv, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zsptri,ZSPTRI)(char* uplo, blasint* n, double complex* ap, blasint* ipiv, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zsptri,ZSPTRI)(char* uplo, blasint* n, lapack_complex_double* ap, blasint* ipiv, lapack_complex_double* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zsptrs,ZSPTRS)(char* uplo, blasint* n, blasint* nrhs, double complex* ap, blasint* ipiv, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zsptrs,ZSPTRS)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* ap, blasint* ipiv, lapack_complex_double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zstedc,ZSTEDC)(char* compz, blasint* n, double* d, double* e, double complex* z, blasint* ldz, double complex* work, blasint* lwork, double* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_compz);
+    void FC_GLOBAL(zstedc,ZSTEDC)(char* compz, blasint* n, double* d, double* e, lapack_complex_double* z, blasint* ldz, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* lrwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_compz);
 
-    void FC_GLOBAL(zstegr,ZSTEGR)(char* jobz, char* range, blasint* n, double* d, double* e, double* vl, double* vu, blasint* il, blasint* iu, double* abstol, blasint* m, double* w, double complex* z, blasint* ldz, blasint* isuppz, double* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range);
+    void FC_GLOBAL(zstegr,ZSTEGR)(char* jobz, char* range, blasint* n, double* d, double* e, double* vl, double* vu, blasint* il, blasint* iu, double* abstol, blasint* m, double* w, lapack_complex_double* z, blasint* ldz, blasint* isuppz, double* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range);
 
-    void FC_GLOBAL(zstein,ZSTEIN)(blasint* n, double* d, double* e, blasint* m, double* w, blasint* iblock, blasint* isplit, double complex* z, blasint* ldz, double* work, blasint* iwork, blasint* ifail, blasint* info);
+    void FC_GLOBAL(zstein,ZSTEIN)(blasint* n, double* d, double* e, blasint* m, double* w, blasint* iblock, blasint* isplit, lapack_complex_double* z, blasint* ldz, double* work, blasint* iwork, blasint* ifail, blasint* info);
 
-    void FC_GLOBAL(zstemr,ZSTEMR)(char* jobz, char* range, blasint* n, double* d, double* e, double* vl, double* vu, blasint* il, blasint* iu, blasint* m, double* w, double complex* z, blasint* ldz, blasint* nzc, blasint* isuppz, blaslogical* tryrac, double* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range);
+    void FC_GLOBAL(zstemr,ZSTEMR)(char* jobz, char* range, blasint* n, double* d, double* e, double* vl, double* vu, blasint* il, blasint* iu, blasint* m, double* w, lapack_complex_double* z, blasint* ldz, blasint* nzc, blasint* isuppz, blaslogical* tryrac, double* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* info, flexiblas_fortran_charlen_t len_jobz, flexiblas_fortran_charlen_t len_range);
 
-    void FC_GLOBAL(zsteqr,ZSTEQR)(char* compz, blasint* n, double* d, double* e, double complex* z, blasint* ldz, double* work, blasint* info, flexiblas_fortran_charlen_t len_compz);
+    void FC_GLOBAL(zsteqr,ZSTEQR)(char* compz, blasint* n, double* d, double* e, lapack_complex_double* z, blasint* ldz, double* work, blasint* info, flexiblas_fortran_charlen_t len_compz);
 
-    void FC_GLOBAL(zsycon,ZSYCON)(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* ipiv, double* anorm, double* rcond, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zsycon,ZSYCON)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, blasint* ipiv, double* anorm, double* rcond, lapack_complex_double* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zsyconv,ZSYCONV)(char* uplo, char* way, blasint* n, double complex* a, blasint* lda, blasint* ipiv, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_way);
+    void FC_GLOBAL(zsyconv,ZSYCONV)(char* uplo, char* way, blasint* n, lapack_complex_double* a, blasint* lda, blasint* ipiv, lapack_complex_double* work, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_way);
 
-    void FC_GLOBAL(zsyequb,ZSYEQUB)(char* uplo, blasint* n, double complex* a, blasint* lda, double* s, double* scond, double* amax, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zsyequb,ZSYEQUB)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, double* s, double* scond, double* amax, lapack_complex_double* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zsymv,ZSYMV)(char* uplo, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* x, blasint* incx, double complex* beta, double complex* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zsymv,ZSYMV)(char* uplo, blasint* n, lapack_complex_double* alpha, lapack_complex_double* a, blasint* lda, lapack_complex_double* x, blasint* incx, lapack_complex_double* beta, lapack_complex_double* y, blasint* incy, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zsyr,ZSYR)(char* uplo, blasint* n, double complex* alpha, double complex* x, blasint* incx, double complex* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zsyr,ZSYR)(char* uplo, blasint* n, lapack_complex_double* alpha, lapack_complex_double* x, blasint* incx, lapack_complex_double* a, blasint* lda, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zsyrfs,ZSYRFS)(char* uplo, blasint* n, blasint* nrhs, double complex* a, blasint* lda, double complex* af, blasint* ldaf, blasint* ipiv, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* ferr, double* berr, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zsyrfs,ZSYRFS)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, lapack_complex_double* af, blasint* ldaf, blasint* ipiv, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, double* ferr, double* berr, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zsysv,ZSYSV)(char* uplo, blasint* n, blasint* nrhs, double complex* a, blasint* lda, blasint* ipiv, double complex* b, blasint* ldb, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zsysv,ZSYSV)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, blasint* ipiv, lapack_complex_double* b, blasint* ldb, lapack_complex_double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zsysvx,ZSYSVX)(char* fact, char* uplo, blasint* n, blasint* nrhs, double complex* a, blasint* lda, double complex* af, blasint* ldaf, blasint* ipiv, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* rcond, double* ferr, double* berr, double complex* work, blasint* lwork, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zsysvx,ZSYSVX)(char* fact, char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, lapack_complex_double* af, blasint* ldaf, blasint* ipiv, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, double* rcond, double* ferr, double* berr, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_fact, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zsyswapr,ZSYSWAPR)(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* i1, blasint* i2, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zsyswapr,ZSYSWAPR)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, blasint* i1, blasint* i2, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zsytf2,ZSYTF2)(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* ipiv, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zsytf2,ZSYTF2)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, blasint* ipiv, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zsytrf,ZSYTRF)(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* ipiv, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zsytrf,ZSYTRF)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, blasint* ipiv, lapack_complex_double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zsytri,ZSYTRI)(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* ipiv, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zsytri,ZSYTRI)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, blasint* ipiv, lapack_complex_double* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zsytri2,ZSYTRI2)(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* ipiv, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zsytri2,ZSYTRI2)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, blasint* ipiv, lapack_complex_double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zsytri2x,ZSYTRI2X)(char* uplo, blasint* n, double complex* a, blasint* lda, blasint* ipiv, double complex* work, blasint* nb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zsytri2x,ZSYTRI2X)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, blasint* ipiv, lapack_complex_double* work, blasint* nb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zsytrs,ZSYTRS)(char* uplo, blasint* n, blasint* nrhs, double complex* a, blasint* lda, blasint* ipiv, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zsytrs,ZSYTRS)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, blasint* ipiv, lapack_complex_double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zsytrs2,ZSYTRS2)(char* uplo, blasint* n, blasint* nrhs, double complex* a, blasint* lda, blasint* ipiv, double complex* b, blasint* ldb, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zsytrs2,ZSYTRS2)(char* uplo, blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, blasint* ipiv, lapack_complex_double* b, blasint* ldb, lapack_complex_double* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(ztbcon,ZTBCON)(char* norm, char* uplo, char* diag, blasint* n, blasint* kd, double complex* ab, blasint* ldab, double* rcond, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ztbcon,ZTBCON)(char* norm, char* uplo, char* diag, blasint* n, blasint* kd, lapack_complex_double* ab, blasint* ldab, double* rcond, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ztbrfs,ZTBRFS)(char* uplo, char* trans, char* diag, blasint* n, blasint* kd, blasint* nrhs, double complex* ab, blasint* ldab, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* ferr, double* berr, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ztbrfs,ZTBRFS)(char* uplo, char* trans, char* diag, blasint* n, blasint* kd, blasint* nrhs, lapack_complex_double* ab, blasint* ldab, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, double* ferr, double* berr, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ztbtrs,ZTBTRS)(char* uplo, char* trans, char* diag, blasint* n, blasint* kd, blasint* nrhs, double complex* ab, blasint* ldab, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ztbtrs,ZTBTRS)(char* uplo, char* trans, char* diag, blasint* n, blasint* kd, blasint* nrhs, lapack_complex_double* ab, blasint* ldab, lapack_complex_double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ztfsm,ZTFSM)(char* transr, char* side, char* uplo, char* trans, char* diag, blasint* m, blasint* n, double complex* alpha, double complex* a, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ztfsm,ZTFSM)(char* transr, char* side, char* uplo, char* trans, char* diag, blasint* m, blasint* n, lapack_complex_double* alpha, lapack_complex_double* a, lapack_complex_double* b, blasint* ldb, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ztftri,ZTFTRI)(char* transr, char* uplo, char* diag, blasint* n, double complex* a, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ztftri,ZTFTRI)(char* transr, char* uplo, char* diag, blasint* n, lapack_complex_double* a, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ztfttp,ZTFTTP)(char* transr, char* uplo, blasint* n, double complex* arf, double complex* ap, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(ztfttp,ZTFTTP)(char* transr, char* uplo, blasint* n, lapack_complex_double* arf, lapack_complex_double* ap, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(ztfttr,ZTFTTR)(char* transr, char* uplo, blasint* n, double complex* arf, double complex* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(ztfttr,ZTFTTR)(char* transr, char* uplo, blasint* n, lapack_complex_double* arf, lapack_complex_double* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(ztgevc,ZTGEVC)(char* side, char* howmny, blaslogical* selectfunc, blasint* n, double complex* s, blasint* lds, double complex* p, blasint* ldp, double complex* vl, blasint* ldvl, double complex* vr, blasint* ldvr, blasint* mm, blasint* m, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_howmny);
+    void FC_GLOBAL(ztgevc,ZTGEVC)(char* side, char* howmny, blaslogical* selectfunc, blasint* n, lapack_complex_double* s, blasint* lds, lapack_complex_double* p, blasint* ldp, lapack_complex_double* vl, blasint* ldvl, lapack_complex_double* vr, blasint* ldvr, blasint* mm, blasint* m, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_howmny);
 
-    void FC_GLOBAL(ztgex2,ZTGEX2)(blaslogical* wantq, blaslogical* wantz, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* q, blasint* ldq, double complex* z, blasint* ldz, blasint* j1, blasint* info);
+    void FC_GLOBAL(ztgex2,ZTGEX2)(blaslogical* wantq, blaslogical* wantz, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, lapack_complex_double* q, blasint* ldq, lapack_complex_double* z, blasint* ldz, blasint* j1, blasint* info);
 
-    void FC_GLOBAL(ztgexc,ZTGEXC)(blaslogical* wantq, blaslogical* wantz, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* q, blasint* ldq, double complex* z, blasint* ldz, blasint* ifst, blasint* ilst, blasint* info);
+    void FC_GLOBAL(ztgexc,ZTGEXC)(blaslogical* wantq, blaslogical* wantz, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, lapack_complex_double* q, blasint* ldq, lapack_complex_double* z, blasint* ldz, blasint* ifst, blasint* ilst, blasint* info);
 
-    void FC_GLOBAL(ztgsen,ZTGSEN)(blasint* ijob, blaslogical* wantq, blaslogical* wantz, blaslogical* selectfunc, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* alpha, double complex* beta, double complex* q, blasint* ldq, double complex* z, blasint* ldz, blasint* m, double* pl, double* pr, double* dif, double complex* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* info);
+    void FC_GLOBAL(ztgsen,ZTGSEN)(blasint* ijob, blaslogical* wantq, blaslogical* wantz, blaslogical* selectfunc, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, lapack_complex_double* alpha, lapack_complex_double* beta, lapack_complex_double* q, blasint* ldq, lapack_complex_double* z, blasint* ldz, blasint* m, double* pl, double* pr, double* dif, lapack_complex_double* work, blasint* lwork, blasint* iwork, blasint* liwork, blasint* info);
 
-    void FC_GLOBAL(ztgsja,ZTGSJA)(char* jobu, char* jobv, char* jobq, blasint* m, blasint* p, blasint* n, blasint* k, blasint* l, double complex* a, blasint* lda, double complex* b, blasint* ldb, double* tola, double* tolb, double* alpha, double* beta, double complex* u, blasint* ldu, double complex* v, blasint* ldv, double complex* q, blasint* ldq, double complex* work, blasint* ncycle, blasint* info, flexiblas_fortran_charlen_t len_jobu, flexiblas_fortran_charlen_t len_jobv, flexiblas_fortran_charlen_t len_jobq);
+    void FC_GLOBAL(ztgsja,ZTGSJA)(char* jobu, char* jobv, char* jobq, blasint* m, blasint* p, blasint* n, blasint* k, blasint* l, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, double* tola, double* tolb, double* alpha, double* beta, lapack_complex_double* u, blasint* ldu, lapack_complex_double* v, blasint* ldv, lapack_complex_double* q, blasint* ldq, lapack_complex_double* work, blasint* ncycle, blasint* info, flexiblas_fortran_charlen_t len_jobu, flexiblas_fortran_charlen_t len_jobv, flexiblas_fortran_charlen_t len_jobq);
 
-    void FC_GLOBAL(ztgsna,ZTGSNA)(char* job, char* howmny, blaslogical* selectfunc, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* vl, blasint* ldvl, double complex* vr, blasint* ldvr, double* s, double* dif, blasint* mm, blasint* m, double complex* work, blasint* lwork, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_howmny);
+    void FC_GLOBAL(ztgsna,ZTGSNA)(char* job, char* howmny, blaslogical* selectfunc, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, lapack_complex_double* vl, blasint* ldvl, lapack_complex_double* vr, blasint* ldvr, double* s, double* dif, blasint* mm, blasint* m, lapack_complex_double* work, blasint* lwork, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_howmny);
 
-    void FC_GLOBAL(ztgsy2,ZTGSY2)(char* trans, blasint* ijob, blasint* m, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* c, blasint* ldc, double complex* d, blasint* ldd, double complex* e, blasint* lde, double complex* f, blasint* ldf, double* scale, double* rdsum, double* rdscal, blasint* info, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(ztgsy2,ZTGSY2)(char* trans, blasint* ijob, blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, lapack_complex_double* c, blasint* ldc, lapack_complex_double* d, blasint* ldd, lapack_complex_double* e, blasint* lde, lapack_complex_double* f, blasint* ldf, double* scale, double* rdsum, double* rdscal, blasint* info, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(ztgsyl,ZTGSYL)(char* trans, blasint* ijob, blasint* m, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* c, blasint* ldc, double complex* d, blasint* ldd, double complex* e, blasint* lde, double complex* f, blasint* ldf, double* scale, double* dif, double complex* work, blasint* lwork, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(ztgsyl,ZTGSYL)(char* trans, blasint* ijob, blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, lapack_complex_double* c, blasint* ldc, lapack_complex_double* d, blasint* ldd, lapack_complex_double* e, blasint* lde, lapack_complex_double* f, blasint* ldf, double* scale, double* dif, lapack_complex_double* work, blasint* lwork, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(ztpcon,ZTPCON)(char* norm, char* uplo, char* diag, blasint* n, double complex* ap, double* rcond, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ztpcon,ZTPCON)(char* norm, char* uplo, char* diag, blasint* n, lapack_complex_double* ap, double* rcond, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ztprfs,ZTPRFS)(char* uplo, char* trans, char* diag, blasint* n, blasint* nrhs, double complex* ap, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* ferr, double* berr, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ztprfs,ZTPRFS)(char* uplo, char* trans, char* diag, blasint* n, blasint* nrhs, lapack_complex_double* ap, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, double* ferr, double* berr, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ztptri,ZTPTRI)(char* uplo, char* diag, blasint* n, double complex* ap, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ztptri,ZTPTRI)(char* uplo, char* diag, blasint* n, lapack_complex_double* ap, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ztptrs,ZTPTRS)(char* uplo, char* trans, char* diag, blasint* n, blasint* nrhs, double complex* ap, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ztptrs,ZTPTRS)(char* uplo, char* trans, char* diag, blasint* n, blasint* nrhs, lapack_complex_double* ap, lapack_complex_double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ztpttf,ZTPTTF)(char* transr, char* uplo, blasint* n, double complex* ap, double complex* arf, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(ztpttf,ZTPTTF)(char* transr, char* uplo, blasint* n, lapack_complex_double* ap, lapack_complex_double* arf, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(ztpttr,ZTPTTR)(char* uplo, blasint* n, double complex* ap, double complex* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(ztpttr,ZTPTTR)(char* uplo, blasint* n, lapack_complex_double* ap, lapack_complex_double* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(ztrcon,ZTRCON)(char* norm, char* uplo, char* diag, blasint* n, double complex* a, blasint* lda, double* rcond, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ztrcon,ZTRCON)(char* norm, char* uplo, char* diag, blasint* n, lapack_complex_double* a, blasint* lda, double* rcond, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_norm, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ztrevc,ZTREVC)(char* side, char* howmny, blaslogical* selectfunc, blasint* n, double complex* t, blasint* ldt, double complex* vl, blasint* ldvl, double complex* vr, blasint* ldvr, blasint* mm, blasint* m, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_howmny);
+    void FC_GLOBAL(ztrevc,ZTREVC)(char* side, char* howmny, blaslogical* selectfunc, blasint* n, lapack_complex_double* t, blasint* ldt, lapack_complex_double* vl, blasint* ldvl, lapack_complex_double* vr, blasint* ldvr, blasint* mm, blasint* m, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_howmny);
 
-    void FC_GLOBAL(ztrexc,ZTREXC)(char* compq, blasint* n, double complex* t, blasint* ldt, double complex* q, blasint* ldq, blasint* ifst, blasint* ilst, blasint* info, flexiblas_fortran_charlen_t len_compq);
+    void FC_GLOBAL(ztrexc,ZTREXC)(char* compq, blasint* n, lapack_complex_double* t, blasint* ldt, lapack_complex_double* q, blasint* ldq, blasint* ifst, blasint* ilst, blasint* info, flexiblas_fortran_charlen_t len_compq);
 
-    void FC_GLOBAL(ztrrfs,ZTRRFS)(char* uplo, char* trans, char* diag, blasint* n, blasint* nrhs, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* x, blasint* ldx, double* ferr, double* berr, double complex* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ztrrfs,ZTRRFS)(char* uplo, char* trans, char* diag, blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, lapack_complex_double* x, blasint* ldx, double* ferr, double* berr, lapack_complex_double* work, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ztrsen,ZTRSEN)(char* job, char* compq, blaslogical* selectfunc, blasint* n, double complex* t, blasint* ldt, double complex* q, blasint* ldq, double complex* w, blasint* m, double* s, double* sep, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_compq);
+    void FC_GLOBAL(ztrsen,ZTRSEN)(char* job, char* compq, blaslogical* selectfunc, blasint* n, lapack_complex_double* t, blasint* ldt, lapack_complex_double* q, blasint* ldq, lapack_complex_double* w, blasint* m, double* s, double* sep, lapack_complex_double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_compq);
 
-    void FC_GLOBAL(ztrsna,ZTRSNA)(char* job, char* howmny, blaslogical* selectfunc, blasint* n, double complex* t, blasint* ldt, double complex* vl, blasint* ldvl, double complex* vr, blasint* ldvr, double* s, double* sep, blasint* mm, blasint* m, double complex* work, blasint* ldwork, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_howmny);
+    void FC_GLOBAL(ztrsna,ZTRSNA)(char* job, char* howmny, blaslogical* selectfunc, blasint* n, lapack_complex_double* t, blasint* ldt, lapack_complex_double* vl, blasint* ldvl, lapack_complex_double* vr, blasint* ldvr, double* s, double* sep, blasint* mm, blasint* m, lapack_complex_double* work, blasint* ldwork, double* rwork, blasint* info, flexiblas_fortran_charlen_t len_job, flexiblas_fortran_charlen_t len_howmny);
 
-    void FC_GLOBAL(ztrsyl,ZTRSYL)(char* trana, char* tranb, blasint* isgn, blasint* m, blasint* n, double complex* a, blasint* lda, double complex* b, blasint* ldb, double complex* c, blasint* ldc, double* scale, blasint* info, flexiblas_fortran_charlen_t len_trana, flexiblas_fortran_charlen_t len_tranb);
+    void FC_GLOBAL(ztrsyl,ZTRSYL)(char* trana, char* tranb, blasint* isgn, blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, lapack_complex_double* c, blasint* ldc, double* scale, blasint* info, flexiblas_fortran_charlen_t len_trana, flexiblas_fortran_charlen_t len_tranb);
 
-    void FC_GLOBAL(ztrti2,ZTRTI2)(char* uplo, char* diag, blasint* n, double complex* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ztrti2,ZTRTI2)(char* uplo, char* diag, blasint* n, lapack_complex_double* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ztrtri,ZTRTRI)(char* uplo, char* diag, blasint* n, double complex* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ztrtri,ZTRTRI)(char* uplo, char* diag, blasint* n, lapack_complex_double* a, blasint* lda, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ztrtrs,ZTRTRS)(char* uplo, char* trans, char* diag, blasint* n, blasint* nrhs, double complex* a, blasint* lda, double complex* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
+    void FC_GLOBAL(ztrtrs,ZTRTRS)(char* uplo, char* trans, char* diag, blasint* n, blasint* nrhs, lapack_complex_double* a, blasint* lda, lapack_complex_double* b, blasint* ldb, blasint* info, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_diag);
 
-    void FC_GLOBAL(ztrttf,ZTRTTF)(char* transr, char* uplo, blasint* n, double complex* a, blasint* lda, double complex* arf, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(ztrttf,ZTRTTF)(char* transr, char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* arf, blasint* info, flexiblas_fortran_charlen_t len_transr, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(ztrttp,ZTRTTP)(char* uplo, blasint* n, double complex* a, blasint* lda, double complex* ap, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(ztrttp,ZTRTTP)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* ap, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(ztzrqf,ZTZRQF)(blasint* m, blasint* n, double complex* a, blasint* lda, double complex* tau, blasint* info);
+    void FC_GLOBAL(ztzrqf,ZTZRQF)(blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, blasint* info);
 
-    void FC_GLOBAL(ztzrzf,ZTZRZF)(blasint* m, blasint* n, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(ztzrzf,ZTZRZF)(blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(zunbdb,ZUNBDB)(char* trans, char* signs, blasint* m, blasint* p, blasint* q, double complex* x11, blasint* ldx11, double complex* x12, blasint* ldx12, double complex* x21, blasint* ldx21, double complex* x22, blasint* ldx22, double* theta, double* phi, double complex* taup1, double complex* taup2, double complex* tauq1, double complex* tauq2, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_signs);
+    void FC_GLOBAL(zunbdb,ZUNBDB)(char* trans, char* signs, blasint* m, blasint* p, blasint* q, lapack_complex_double* x11, blasint* ldx11, lapack_complex_double* x12, blasint* ldx12, lapack_complex_double* x21, blasint* ldx21, lapack_complex_double* x22, blasint* ldx22, double* theta, double* phi, lapack_complex_double* taup1, lapack_complex_double* taup2, lapack_complex_double* tauq1, lapack_complex_double* tauq2, lapack_complex_double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_signs);
 
-    void FC_GLOBAL(zuncsd,ZUNCSD)(char* jobu1, char* jobu2, char* jobv1t, char* jobv2t, char* trans, char* signs, blasint* m, blasint* p, blasint* q, double complex* x11, blasint* ldx11, double complex* x12, blasint* ldx12, double complex* x21, blasint* ldx21, double complex* x22, blasint* ldx22, double* theta, double complex* u1, blasint* ldu1, double complex* u2, blasint* ldu2, double complex* v1t, blasint* ldv1t, double complex* v2t, blasint* ldv2t, double complex* work, blasint* lwork, double* rwork, blasint* lrwork, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_jobu1, flexiblas_fortran_charlen_t len_jobu2, flexiblas_fortran_charlen_t len_jobv1t, flexiblas_fortran_charlen_t len_jobv2t, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_signs);
+    void FC_GLOBAL(zuncsd,ZUNCSD)(char* jobu1, char* jobu2, char* jobv1t, char* jobv2t, char* trans, char* signs, blasint* m, blasint* p, blasint* q, lapack_complex_double* x11, blasint* ldx11, lapack_complex_double* x12, blasint* ldx12, lapack_complex_double* x21, blasint* ldx21, lapack_complex_double* x22, blasint* ldx22, double* theta, lapack_complex_double* u1, blasint* ldu1, lapack_complex_double* u2, blasint* ldu2, lapack_complex_double* v1t, blasint* ldv1t, lapack_complex_double* v2t, blasint* ldv2t, lapack_complex_double* work, blasint* lwork, double* rwork, blasint* lrwork, blasint* iwork, blasint* info, flexiblas_fortran_charlen_t len_jobu1, flexiblas_fortran_charlen_t len_jobu2, flexiblas_fortran_charlen_t len_jobv1t, flexiblas_fortran_charlen_t len_jobv2t, flexiblas_fortran_charlen_t len_trans, flexiblas_fortran_charlen_t len_signs);
 
-    void FC_GLOBAL(zung2l,ZUNG2L)(blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* info);
+    void FC_GLOBAL(zung2l,ZUNG2L)(blasint* m, blasint* n, blasint* k, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* work, blasint* info);
 
-    void FC_GLOBAL(zung2r,ZUNG2R)(blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* info);
+    void FC_GLOBAL(zung2r,ZUNG2R)(blasint* m, blasint* n, blasint* k, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* work, blasint* info);
 
-    void FC_GLOBAL(zungbr,ZUNGBR)(char* vect, blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_vect);
+    void FC_GLOBAL(zungbr,ZUNGBR)(char* vect, blasint* m, blasint* n, blasint* k, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_vect);
 
-    void FC_GLOBAL(zunghr,ZUNGHR)(blasint* n, blasint* ilo, blasint* ihi, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(zunghr,ZUNGHR)(blasint* n, blasint* ilo, blasint* ihi, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(zungl2,ZUNGL2)(blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* info);
+    void FC_GLOBAL(zungl2,ZUNGL2)(blasint* m, blasint* n, blasint* k, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* work, blasint* info);
 
-    void FC_GLOBAL(zunglq,ZUNGLQ)(blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(zunglq,ZUNGLQ)(blasint* m, blasint* n, blasint* k, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(zungql,ZUNGQL)(blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(zungql,ZUNGQL)(blasint* m, blasint* n, blasint* k, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(zungqr,ZUNGQR)(blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(zungqr,ZUNGQR)(blasint* m, blasint* n, blasint* k, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(zungr2,ZUNGR2)(blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* info);
+    void FC_GLOBAL(zungr2,ZUNGR2)(blasint* m, blasint* n, blasint* k, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* work, blasint* info);
 
-    void FC_GLOBAL(zungrq,ZUNGRQ)(blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info);
+    void FC_GLOBAL(zungrq,ZUNGRQ)(blasint* m, blasint* n, blasint* k, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* work, blasint* lwork, blasint* info);
 
-    void FC_GLOBAL(zungtr,ZUNGTR)(char* uplo, blasint* n, double complex* a, blasint* lda, double complex* tau, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zungtr,ZUNGTR)(char* uplo, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zunm2l,ZUNM2L)(char* side, char* trans, blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* c, blasint* ldc, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zunm2l,ZUNM2L)(char* side, char* trans, blasint* m, blasint* n, blasint* k, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* c, blasint* ldc, lapack_complex_double* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zunm2r,ZUNM2R)(char* side, char* trans, blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* c, blasint* ldc, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zunm2r,ZUNM2R)(char* side, char* trans, blasint* m, blasint* n, blasint* k, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* c, blasint* ldc, lapack_complex_double* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zunmbr,ZUNMBR)(char* vect, char* side, char* trans, blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* c, blasint* ldc, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zunmbr,ZUNMBR)(char* vect, char* side, char* trans, blasint* m, blasint* n, blasint* k, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* c, blasint* ldc, lapack_complex_double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_vect, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zunmhr,ZUNMHR)(char* side, char* trans, blasint* m, blasint* n, blasint* ilo, blasint* ihi, double complex* a, blasint* lda, double complex* tau, double complex* c, blasint* ldc, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zunmhr,ZUNMHR)(char* side, char* trans, blasint* m, blasint* n, blasint* ilo, blasint* ihi, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* c, blasint* ldc, lapack_complex_double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zunml2,ZUNML2)(char* side, char* trans, blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* c, blasint* ldc, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zunml2,ZUNML2)(char* side, char* trans, blasint* m, blasint* n, blasint* k, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* c, blasint* ldc, lapack_complex_double* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zunmlq,ZUNMLQ)(char* side, char* trans, blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* c, blasint* ldc, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zunmlq,ZUNMLQ)(char* side, char* trans, blasint* m, blasint* n, blasint* k, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* c, blasint* ldc, lapack_complex_double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zunmql,ZUNMQL)(char* side, char* trans, blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* c, blasint* ldc, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zunmql,ZUNMQL)(char* side, char* trans, blasint* m, blasint* n, blasint* k, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* c, blasint* ldc, lapack_complex_double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zunmqr,ZUNMQR)(char* side, char* trans, blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* c, blasint* ldc, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zunmqr,ZUNMQR)(char* side, char* trans, blasint* m, blasint* n, blasint* k, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* c, blasint* ldc, lapack_complex_double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zunmr2,ZUNMR2)(char* side, char* trans, blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* c, blasint* ldc, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zunmr2,ZUNMR2)(char* side, char* trans, blasint* m, blasint* n, blasint* k, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* c, blasint* ldc, lapack_complex_double* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zunmr3,ZUNMR3)(char* side, char* trans, blasint* m, blasint* n, blasint* k, blasint* l, double complex* a, blasint* lda, double complex* tau, double complex* c, blasint* ldc, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zunmr3,ZUNMR3)(char* side, char* trans, blasint* m, blasint* n, blasint* k, blasint* l, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* c, blasint* ldc, lapack_complex_double* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zunmrq,ZUNMRQ)(char* side, char* trans, blasint* m, blasint* n, blasint* k, double complex* a, blasint* lda, double complex* tau, double complex* c, blasint* ldc, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zunmrq,ZUNMRQ)(char* side, char* trans, blasint* m, blasint* n, blasint* k, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* c, blasint* ldc, lapack_complex_double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zunmrz,ZUNMRZ)(char* side, char* trans, blasint* m, blasint* n, blasint* k, blasint* l, double complex* a, blasint* lda, double complex* tau, double complex* c, blasint* ldc, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zunmrz,ZUNMRZ)(char* side, char* trans, blasint* m, blasint* n, blasint* k, blasint* l, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* c, blasint* ldc, lapack_complex_double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zunmtr,ZUNMTR)(char* side, char* uplo, char* trans, blasint* m, blasint* n, double complex* a, blasint* lda, double complex* tau, double complex* c, blasint* ldc, double complex* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zunmtr,ZUNMTR)(char* side, char* uplo, char* trans, blasint* m, blasint* n, lapack_complex_double* a, blasint* lda, lapack_complex_double* tau, lapack_complex_double* c, blasint* ldc, lapack_complex_double* work, blasint* lwork, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zupgtr,ZUPGTR)(char* uplo, blasint* n, double complex* ap, double complex* tau, double complex* q, blasint* ldq, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
+    void FC_GLOBAL(zupgtr,ZUPGTR)(char* uplo, blasint* n, lapack_complex_double* ap, lapack_complex_double* tau, lapack_complex_double* q, blasint* ldq, lapack_complex_double* work, blasint* info, flexiblas_fortran_charlen_t len_uplo);
 
-    void FC_GLOBAL(zupmtr,ZUPMTR)(char* side, char* uplo, char* trans, blasint* m, blasint* n, double complex* ap, double complex* tau, double complex* c, blasint* ldc, double complex* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zupmtr,ZUPMTR)(char* side, char* uplo, char* trans, blasint* m, blasint* n, lapack_complex_double* ap, lapack_complex_double* tau, lapack_complex_double* c, blasint* ldc, lapack_complex_double* work, blasint* info, flexiblas_fortran_charlen_t len_side, flexiblas_fortran_charlen_t len_uplo, flexiblas_fortran_charlen_t len_trans);
 
 
 #ifdef __cplusplus

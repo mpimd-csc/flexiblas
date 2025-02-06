@@ -28,7 +28,26 @@
 #include "flexiblas_fortran_mangle.h"
 
 #include "flexiblas_fortran_char_len.h"
+
+/* Complex type (single precision) */
+#ifndef lapack_complex_float
+#ifndef __cplusplus
 #include <complex.h>
+#else
+#include <complex>
+#endif
+#define lapack_complex_float    float _Complex
+#endif
+
+/* Complex type (double precision) */
+#ifndef lapack_complex_double
+#ifndef __cplusplus
+#include <complex.h>
+#else
+#include <complex>
+#endif
+#define lapack_complex_double   double _Complex
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -790,10 +809,10 @@ extern "C" {
     void flexiblas_real_clacrt(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s);
     void flexiblas_chain_clacrt_(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s);
     void flexiblas_chain_clacrt(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s);
-    void flexiblas_real_cladiv_( float complex*returnvalue, void* x, void* y);
-    void flexiblas_real_cladiv( float complex*returnvalue, void* x, void* y);
-    void flexiblas_chain_cladiv_( float complex* returnvalue, void* x, void* y);
-    void flexiblas_chain_cladiv( float complex* returnvalue, void* x, void* y);
+    void flexiblas_real_cladiv_( lapack_complex_float*returnvalue, void* x, void* y);
+    void flexiblas_real_cladiv( lapack_complex_float*returnvalue, void* x, void* y);
+    void flexiblas_chain_cladiv_( lapack_complex_float* returnvalue, void* x, void* y);
+    void flexiblas_chain_cladiv( lapack_complex_float* returnvalue, void* x, void* y);
     void flexiblas_real_claed0_(void* qsiz, void* n, void* d, void* e, void* q, void* ldq, void* qstore, void* ldqs, void* rwork, void* iwork, void* info);
     void flexiblas_real_claed0(void* qsiz, void* n, void* d, void* e, void* q, void* ldq, void* qstore, void* ldqs, void* rwork, void* iwork, void* info);
     void flexiblas_chain_claed0_(void* qsiz, void* n, void* d, void* e, void* q, void* ldq, void* qstore, void* ldqs, void* rwork, void* iwork, void* info);
@@ -6478,10 +6497,10 @@ extern "C" {
     void flexiblas_real_zlacrt(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s);
     void flexiblas_chain_zlacrt_(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s);
     void flexiblas_chain_zlacrt(void* n, void* cx, void* incx, void* cy, void* incy, void* c, void* s);
-    void flexiblas_real_zladiv_( double complex*returnvalue, void* x, void* y);
-    void flexiblas_real_zladiv( double complex*returnvalue, void* x, void* y);
-    void flexiblas_chain_zladiv_( double complex* returnvalue, void* x, void* y);
-    void flexiblas_chain_zladiv( double complex* returnvalue, void* x, void* y);
+    void flexiblas_real_zladiv_( lapack_complex_double*returnvalue, void* x, void* y);
+    void flexiblas_real_zladiv( lapack_complex_double*returnvalue, void* x, void* y);
+    void flexiblas_chain_zladiv_( lapack_complex_double* returnvalue, void* x, void* y);
+    void flexiblas_chain_zladiv( lapack_complex_double* returnvalue, void* x, void* y);
     void flexiblas_real_zlaed0_(void* qsiz, void* n, void* d, void* e, void* q, void* ldq, void* qstore, void* ldqs, void* rwork, void* iwork, void* info);
     void flexiblas_real_zlaed0(void* qsiz, void* n, void* d, void* e, void* q, void* ldq, void* qstore, void* ldqs, void* rwork, void* iwork, void* info);
     void flexiblas_chain_zlaed0_(void* qsiz, void* n, void* d, void* e, void* q, void* ldq, void* qstore, void* ldqs, void* rwork, void* iwork, void* info);
