@@ -37,7 +37,7 @@
 #define FC_GLOBAL3(name,NAME)  NAME
 #define FC_GLOBAL3_(name,NAME) NAME
 
-#elif defined(FLEXIBLAS_MANGLE_WINDOWS)
+#elif defined(FLEXIBLAS_MANGLE_NO_UNDERSCORE)
 
 #define FC_GLOBAL(name,NAME) name
 #define FC_GLOBAL_(name,NAME) name

@@ -45,7 +45,6 @@ void flexiblas_set_num_threads(int num)
         flexiblas_set_num_threads_(&nx);
         return;
     }
-    printf("BLAS\n");
     fn = current_backend->set_num_threads_function[0];
     if ( fn == NULL) return;
     fn (num);

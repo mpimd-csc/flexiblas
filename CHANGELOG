@@ -1,3 +1,8 @@
+next
+----
+- Unnecessary printf in set_num_threads.c #64
+- Remove some GPL leftovers
+
 3.4.5 (January 30, 2025)
 ------------------------
 - Fix cblas scnrm2 typo (See GH #54)
