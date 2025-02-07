@@ -62,8 +62,8 @@ double FC_GLOBAL(dsecnd,DSECND)(void)
 double FC_GLOBAL2(dsecnd,DSECND)(void) __attribute__((alias(MTS(FC_GLOBAL(dsecnd,DSECND)))));
 double FC_GLOBAL3(dsecnd,DSECND)(void) __attribute__((alias(MTS(FC_GLOBAL(dsecnd,DSECND)))));
 #else
-double FC_GLOBAL2(dsecnd,DSECND)(void){ return FC_GLOBAL(dsecnd,DSECND)(void); }
-double FC_GLOBAL3(dsecnd,DSECND)(void){ return FC_GLOBAL(dsecnd,DSECND)(void); }
+double FC_GLOBAL2(dsecnd,DSECND)(void){ return FC_GLOBAL(dsecnd,DSECND)(); }
+double FC_GLOBAL3(dsecnd,DSECND)(void){ return FC_GLOBAL(dsecnd,DSECND)(); }
 #endif
 
 

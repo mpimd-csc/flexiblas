@@ -2,6 +2,12 @@ next
 ----
 - Unnecessary printf in set_num_threads.c #64
 - Remove some GPL leftovers
+- Fixes from GITHUB:
+ - Compiliation on MacOS GH #35
+ - useless printf GH #64
+ - F2C typo in main CMakeLists.txt GH #66
+ - GEMMTR test error GH #63
+ - Add C++ support to header files GH #69
 
 3.4.5 (January 30, 2025)
 ------------------------

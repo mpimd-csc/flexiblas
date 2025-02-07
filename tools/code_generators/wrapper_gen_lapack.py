@@ -17,7 +17,6 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-#
 
 
 
@@ -31,9 +30,9 @@ def dt_translator(fortran_type):
     D = {   "integer": "int",
             "real":    "float",
             "double precision": "double",
-            "complex8": "float complex",
-            "complex16": "double complex",
-            "double complex": "double complex",
+            "complex8": "lapack_complex_float",
+            "complex16": "lapack_complex_double",
+            "double complex": "lapack_complex_double",
             "character": "char",
             "logical": "blaslogical"
             }
@@ -49,7 +48,7 @@ def dt_translator(fortran_type):
     return D[datatype]
 
 def is_complex(t):
-    cpx=set(["complex", "complex8", "complex16", "double complex"])
+    cpx=set(["complex", "complex8", "complex16", "double complex", "lapack_complex_float", "lapack_complex_double"])
     if t in cpx:
         return True
     else:
@@ -700,19 +699,19 @@ static TLS_STORE uint8_t hook_pos_{funcname:s} = 0;
             s += self.c_headerx(intwidth = intwidth, suffix="", intel_interface=intel_interface, end="", number = "2")
             if self._function:
                 if intel_interface and is_complex(self._fvars[self._name]["typespec"]):
-                    s += "{ "+ self.funcnamex(intwidth = intwidth) + "( (void*) returnvalue, "+self._callsequence(intwidth = intwidth, void=True, typecast = True)+"); }\n"
+                    s += "{ "+ self.funcnamex(intwidth = intwidth) + "( (void*) returnvalue, "+self._callsequence(intwidth = intwidth, void=True, call = True,  typecast = True)+"); }\n"
                 else:
-                    s += "{ return "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, void=True, typecast = True)+"); }\n"
+                    s += "{ return "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, void=True, call = True,  typecast = True)+"); }\n"
             else:
-                s += "{ "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, void=True, typecast = True)+"); }\n"
+                s += "{ "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, void=True, typecast = True, call = True )+"); }\n"
             s += self.c_headerx(intwidth = intwidth, suffix="", intel_interface=intel_interface, end="", number = "3")
             if self._function:
                 if intel_interface and is_complex(self._fvars[self._name]["typespec"]):
-                    s += "{ "+ self.funcnamex(intwidth = intwidth) + "( (void*) returnvalue, "+self._callsequence(intwidth = intwidth, void=True, typecast = True)+"); }\n"
+                    s += "{ "+ self.funcnamex(intwidth = intwidth) + "( (void*) returnvalue, "+self._callsequence(intwidth = intwidth, void=True, call=True, typecast = True)+"); }\n"
                 else:
-                    s += "{ return "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, void=True, typecast = True)+"); }\n"
+                    s += "{ return "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, call = True, void=True, typecast = True)+"); }\n"
             else:
-                s += "{ "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, void=True, typecast = True)+"); }\n"
+                s += "{ "+ self.funcnamex(intwidth = intwidth) + "("+self._callsequence(intwidth = intwidth, call = True, void=True, typecast = True)+"); }\n"
             s += "#endif\n"
 
 #        if ( suffix == "_"):
@@ -772,7 +771,27 @@ class Wrapper(object):
         fn.write("\n#include \"flexiblas_config.h\"\n")
         fn.write("\n#include \"flexiblas_fortran_mangle.h\"\n")
         fn.write("\n#include \"flexiblas_fortran_char_len.h\"\n")
-        fn.write("#include <complex.h>\n\n")
+        fn.write("\n")
+        fn.write("/* Complex type (single precision) */\n")
+        fn.write("#ifndef lapack_complex_float\n")
+        fn.write("#ifndef __cplusplus\n")
+        fn.write("#include <complex.h>\n")
+        fn.write("#else\n")
+        fn.write("#include <complex>\n")
+        fn.write("#endif\n")
+        fn.write("#define lapack_complex_float    float _Complex\n")
+        fn.write("#endif\n")
+        fn.write("\n")
+        fn.write("/* Complex type (double precision) */\n")
+        fn.write("#ifndef lapack_complex_double\n")
+        fn.write("#ifndef __cplusplus\n")
+        fn.write("#include <complex.h>\n")
+        fn.write("#else\n")
+        fn.write("#include <complex>\n")
+        fn.write("#endif\n")
+        fn.write("#define lapack_complex_double   double _Complex\n")
+        fn.write("#endif\n")
+        fn.write("\n")
         fn.write("#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n")
 
     def _blas_defines(self, fn):
@@ -938,7 +957,6 @@ class Wrapper(object):
             s += "\t F_" + i.upper() + ",\n"
         s += "\t F_NONE\n } " + td_name + ";"
         return s
-
 
 
 

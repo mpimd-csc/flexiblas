@@ -460,6 +460,26 @@ void bli_thread_set_num_threads(FLEXIBLAS_API_INT num)
     flexiblas_set_num_threads(num);
 }
 
+void armpl_set_num_threads(int num)
+{
+    flexiblas_set_num_threads(num);
+}
+
+void armpl_omp_set_num_threads(int num)
+{
+    flexiblas_set_num_threads(num);
+}
+
+void armpl_set_num_threads_(FLEXIBLAS_API_INT* num)
+{
+    flexiblas_set_num_threads(*num);
+}
+
+void armpl_omp_set_num_threads_(FLEXIBLAS_API_INT* num)
+{
+    flexiblas_set_num_threads(*num);
+}
+
 
 /* Get number of threads  */
 typedef int (*get_num_threads_t) (void);
@@ -540,5 +560,24 @@ FLEXIBLAS_API_INT bli_thread_get_num_threads(void)
     return (FLEXIBLAS_API_INT) flexiblas_get_num_threads();
 }
 
+int armpl_get_num_threads(void)
+{
+    return flexiblas_get_num_threads();
+}
+
+int armpl_omp_get_num_threads(void)
+{
+    return flexiblas_get_num_threads();
+}
+
+FLEXIBLAS_API_INT armpl_get_num_threads_(void)
+{
+    return (FLEXIBLAS_API_INT) flexiblas_get_num_threads();
+}
+
+FLEXIBLAS_API_INT armpl_omp_get_num_threads_(void)
+{
+    return (FLEXIBLAS_API_INT) flexiblas_get_num_threads();
+}
 
 

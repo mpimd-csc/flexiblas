@@ -9,6 +9,8 @@ Contributors
 Please list yourself, optionally with an affiliation, and a one-liner of your contribution
 
 * Christian Himpe, Universität Münster, testing and bug hunting
-* Jörn Papenbroock, parts of the hook framework 
+* Jörn Papenbroock, parts of the hook framework
 * Iñaki Úcar, packaging for Fedora and bug hunting related to the build-system
-
+* Julian Hornich, Siemens
+  * adding support for ARMPL
+  * interoperability of complex types with C++ code

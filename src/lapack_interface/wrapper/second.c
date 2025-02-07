@@ -62,8 +62,8 @@ float FC_GLOBAL(second,SECOND)(void)
 float FC_GLOBAL2(second,SECOND)(void) __attribute__((alias(MTS(FC_GLOBAL(second,SECOND)))));
 float FC_GLOBAL3(second,SECOND)(void) __attribute__((alias(MTS(FC_GLOBAL(second,SECOND)))));
 #else
-float FC_GLOBAL2(second,SECOND)(void){ return FC_GLOBAL(second,SECOND)(void); }
-float FC_GLOBAL3(second,SECOND)(void){ return FC_GLOBAL(second,SECOND)(void); }
+float FC_GLOBAL2(second,SECOND)(void){ return FC_GLOBAL(second,SECOND)(); }
+float FC_GLOBAL3(second,SECOND)(void){ return FC_GLOBAL(second,SECOND)(); }
 #endif
 
 

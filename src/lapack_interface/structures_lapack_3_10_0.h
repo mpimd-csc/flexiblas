@@ -8,7 +8,26 @@
 #include "flexiblas_fortran_mangle.h"
 
 #include "flexiblas_fortran_char_len.h"
+
+/* Complex type (single precision) */
+#ifndef lapack_complex_float
+#ifndef __cplusplus
 #include <complex.h>
+#else
+#include <complex>
+#endif
+#define lapack_complex_float    float _Complex
+#endif
+
+/* Complex type (double precision) */
+#ifndef lapack_complex_double
+#ifndef __cplusplus
+#include <complex.h>
+#else
+#include <complex>
+#endif
+#define lapack_complex_double   double _Complex
+#endif
 
 #ifdef __cplusplus
 extern "C" {
