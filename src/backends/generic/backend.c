@@ -23,7 +23,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <complex.h>
+#ifndef __WIN32__
 #include <dlfcn.h>
+#endif
 #include "flexiblas_backend.h"
 #include "flexiblas_real_calls.h"
 

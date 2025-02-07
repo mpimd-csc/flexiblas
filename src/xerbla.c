@@ -31,10 +31,42 @@
 #include "flexiblas.h"
 #include "flexiblas_fortran_char_len.h"
 
-#include <dlfcn.h>
-#ifndef RTLD_DEFAULT
-# define RTLD_DEFAULT   ((void *) 0)
+#ifndef __WIN32__
+#  include <dlfcn.h>
+#  ifndef RTLD_DEFAULT
+#    define RTLD_DEFAULT   ((void *) 0)
+#  endif
+#else
+#  include <psapi.h>
 #endif
+
+
+#ifdef __WIN32__
+// FIXME: This is partly repeated from flexiblas_api_standalone.c
+void get_default_symbol(const char *symbol_name, FARPROC *global) {
+    // Emulate the symbol lookup for dlsym(RTLD_DEFAULT, "...").
+    HMODULE hMods[1024];
+    HANDLE hProcess = GetCurrentProcess();
+    DWORD cbNeeded;
+    FARPROC procAddress = NULL;
+    int global_index = 0;
+    global = NULL;
+
+    if (EnumProcessModules(hProcess, hMods, sizeof(hMods), &cbNeeded)) {
+        for (int i = 0; i < (cbNeeded / sizeof(HMODULE)); i++) {
+            procAddress = GetProcAddress(hMods[i], symbol_name);
+            if (procAddress != NULL) {
+                *global = procAddress;
+                global_index = i;
+                break;
+            }
+        }
+    }
+
+    return;
+}
+#endif
+
 
 // static int user_xerbla = 0;
 void flexiblas_internal_xerbla(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len);
@@ -85,8 +117,14 @@ int __flexiblas_setup_xerbla(flexiblas_backend_t *backend)
     /* Check if the user supplied a XERBLA function  */
     {
         int user_xerbla = 0;
+#ifdef __WIN32__
+        void *xerbla_symbol1 = GetProcAddress(backend->library_handle, "xerbla_");
+        void *xerbla_symbol2;
+        get_default_symbol("xerbla_", (FARPROC *) &xerbla_symbol2);
+#else
         void *xerbla_symbol1 = dlsym(backend->library_handle,"xerbla_");
         void *xerbla_symbol2 = dlsym(RTLD_DEFAULT,"xerbla_");
+#endif
         void (*flexiblas_internal) (char *, Int *, flexiblas_fortran_charlen_t);
         void *internal;
         flexiblas_internal = flexiblas_internal_xerbla;
@@ -142,7 +180,7 @@ int RowMajorStrg = 0;
 
 #define CBLAS_INT int32_t
 
-#if defined(__ELF__) || ((defined (__PGI) || defined(__NVCOMPILER)) && (defined(__linux__)  || defined(__unix__)))
+#if defined(__ELF__) || ((defined (__PGI) || defined(__NVCOMPILER)) && (defined(__linux__)  || defined(__unix__))) || defined(__MINGW32__)
 void internal_cblas_xerbla(CBLAS_INT info, const char *rout, const char *form, ...);
 void cblas_xerbla(CBLAS_INT info, const char *, const char *, ...) __attribute__ ((weak, alias ("internal_cblas_xerbla")));
 void internal_cblas_xerbla(CBLAS_INT _info, const char *rout, const char *form, ...)
