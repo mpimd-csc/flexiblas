@@ -31,6 +31,10 @@ if (NOT $ENV{FLEXIBLAS64_TEST} STREQUAL "")
     SET(ENV{FLEXIBLAS64} "$ENV{FLEXIBLAS64_TEST}")
 endif()
 
+IF(WIN32)
+    SET(ENV{PATH} "${BINARY_DIR}/src/;${BINARY_DIR}/src/fallback_blas/;$ENV{PATH}")
+ENDIF(WIN32)
+
 
 message("Running: ${TEST}")
 message("ARGS= ${ARGS}")

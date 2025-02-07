@@ -22,6 +22,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef __WIN32__
+#include <winsock.h>
+#endif
 #include "flexiblas.h"
 #include "helper.h"
 #define MAX_BUFFER_SIZE (4096 * 8)
@@ -103,6 +106,7 @@ HIDDEN char *__flexiblas_getenv(int what) {
             break;
         case FLEXIBLAS_ENV_HOST_RC:
 #ifdef __WIN32__
+            // FIXME: Implement on Windows
             snprintf(container, MAX_BUFFER_SIZE, "None");
 #else
             {

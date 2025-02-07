@@ -22,7 +22,9 @@
 
 #include "flexiblas.h"
 #include <errno.h>
-
+#ifdef __WIN32__
+#include <windows.h>
+#endif
 
 static int __flexiblas_load_fortran_hook_function( void * handle , struct flexiblas_hook_fn *ptr, const char *name)
 {
@@ -48,7 +50,11 @@ static int __flexiblas_load_fortran_hook_function( void * handle , struct flexib
             fprintf(stderr, "%s ", fname);
         }
 
+#ifdef __WIN32__
+        ptr_hsymbol = (void *) GetProcAddress(handle, fname);
+#else
         ptr_hsymbol = dlsym(handle, fname);
+#endif
 
         if (ptr_hsymbol!=NULL) {
             break;

@@ -25,7 +25,6 @@
 #define _GNU_SOURCE
 #endif
 #include "flexiblas.h"
-#include <dlfcn.h>
 #include <errno.h>
 #include <stddef.h>
 #include <string.h>
@@ -36,6 +35,7 @@
 
 #define DLOPEN_FLAGS_FROM_FILE -1
 #ifndef __WIN32__
+#include <dlfcn.h>
 #ifdef __linux__
 // Linux
 // #define DLOPEN_FLAGS (RTLD_LAZY)
@@ -49,10 +49,8 @@
 #define DLOPEN_FLAGS (0)
 #include <windows_fixes.h>
 
-// MSVC ucrt headers included via windows.h define this macro leading to conflicts in this file
-#ifdef interface
-#undef interface
-#endif
+#define RTLD_LAZY 0
+#define RTLD_LOCAL 0
 
 #endif
 
@@ -181,9 +179,15 @@ static void flexiblas_load_info(void *library, flexiblas_backend_t *backend)
 {
     memset(&(backend->info),0,sizeof(flexiblas_info_t));
     backend->info.flexiblas_integer_size = sizeof(Int);
+#ifdef __WIN32__
+    *(void **) &backend->info_function = (void *) GetProcAddress(library, FLEXIBLAS_INFO_FUNCTION_NAME);
+    *(void **) &backend->init_function = (void *) GetProcAddress(library, FLEXIBLAS_INIT_FUNCTION_NAME);
+    *(void **) &backend->exit_function = (void *) GetProcAddress(library, FLEXIBLAS_EXIT_FUNCTION_NAME);
+#else
     *(void **) &backend->info_function = dlsym(library, FLEXIBLAS_INFO_FUNCTION_NAME);
     *(void **) &backend->init_function = dlsym(library, FLEXIBLAS_INIT_FUNCTION_NAME);
     *(void **) &backend->exit_function = dlsym(library, FLEXIBLAS_EXIT_FUNCTION_NAME);
+#endif
 
     backend->library_handle = library;
 
@@ -216,15 +220,15 @@ static void flexiblas_load_info(void *library, flexiblas_backend_t *backend)
 #endif
 
     /* Get the Integer size of the backend */
-    flexiblas_interface_t interface = __flexiblas_get_interface(library);
-    if ( interface == FLEXIBLAS_INTERFACE_LP64 )
+    flexiblas_interface_t f_interface = __flexiblas_get_interface(library);
+    if ( f_interface == FLEXIBLAS_INTERFACE_LP64 )
     {
         DPRINTF(1, "--> BLAS uses LP64.\n");
 #ifdef FLEXIBLAS_INTEGER8
         DPRINTF_WARN(0, "The selected BLAS backend uses 4-byte integers (e.g. the LP64 model), but FlexiBLAS was configured with -DINTEGER8=ON. This causes problems in almost all use cases. Please select a different backend or recompile FlexiBLAS.\n");
 #endif
     }
-    else if ( interface == FLEXIBLAS_INTERFACE_ILP64 )
+    else if ( f_interface == FLEXIBLAS_INTERFACE_ILP64 )
     {
         DPRINTF(1, "--> BLAS uses ILP64.\n");
 #ifndef FLEXIBLAS_INTEGER8
@@ -606,8 +610,11 @@ __attribute__((constructor))
         char path[FLEXIBLAS_MGMT_MAX_BUFFER_LEN];
         flexiblas_backend_t  *backend = NULL;
         flexiblas_mgmt_location_t loc;
+#ifndef __WIN32__
         int fallback_flags = RTLD_LAZY | RTLD_LOCAL;
-
+#else
+        int fallback_flags = 0;
+#endif
         /*-----------------------------------------------------------------------------
          *  Read Environment Variables
          *-----------------------------------------------------------------------------*/
@@ -660,6 +667,7 @@ __attribute__((constructor))
 
 
         /* Backward Init */
+#ifndef __WIN32__
         void (*ptr_fn)(void) = & flexiblas_init;
         void *ptr;
         ptr = *((void **) &ptr_fn);
@@ -678,6 +686,10 @@ __attribute__((constructor))
             reload_handler = dlopen(fb_info.dli_fname, RTLD_NOW | RTLD_GLOBAL);
             fallback_flags = RTLD_LOCAL | RTLD_LAZY;
         }
+#else
+        GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                          (LPCTSTR)flexiblas_init, reload_handler);
+#endif
 
         /* Search all available hooks */
         __flexiblas_add_hooks();
@@ -717,7 +729,7 @@ __attribute__((constructor))
 
             __flexiblas_blas_fallback = __flexiblas_dlopen(blas_name, fallback_flags , NULL);
             if ( __flexiblas_blas_fallback == NULL ) {
-                DPRINTF_ERROR(0," Failed to load the BLAS fallback library.  Abort!\n");
+                DPRINTF_ERROR(0," Failed to load the BLAS fallback library '%s'.  Abort!\n", blas_name);
                 abort();
             }
             DPRINTF(2, "Load fallback_netlib at = 0x%lx\n", (unsigned long) __flexiblas_blas_fallback);
@@ -777,8 +789,11 @@ __attribute__((constructor))
         __flexiblas_hooks->hooks_loaded = 0;
         __flexiblas_hooks->initialized  = 0;
 
+#ifndef __WIN32__
+// FIXME: Implement on Windows!
         dlsym((void *) 0, "flexiblas_verbosity");
         dlsym((void *) 0, "flexiblas_chain_zlaqr5");
+#endif
 
 
         int hooks_to_load = 0;
@@ -835,9 +850,13 @@ __attribute__((constructor))
 
 
             __flexiblas_hooks->handles[k] = handle;
+#ifndef __WIN32__
             *(void **) &__flexiblas_hooks->hook_init[k] = dlsym(handle, FLEXIBLAS_HOOK_INIT_FUNCTION_NAME);
             *(void **) &__flexiblas_hooks->hook_exit[k] = dlsym(handle, FLEXIBLAS_HOOK_EXIT_FUNCTION_NAME);
-
+#else
+            *(void **) &__flexiblas_hooks->hook_init[k] = (void *)GetProcAddress(handle, FLEXIBLAS_HOOK_INIT_FUNCTION_NAME);
+            *(void **) &__flexiblas_hooks->hook_exit[k] = (void *)GetProcAddress(handle, FLEXIBLAS_HOOK_EXIT_FUNCTION_NAME);
+#endif
             __flexiblas_load_blas_hooks(__flexiblas_hooks, handle);
 
             __flexiblas_hooks->hooks_loaded ++;
@@ -888,7 +907,11 @@ __attribute__((destructor))
                 __flexiblas_hooks->hook_exit[k]();
                 if (__flexiblas_hooks->handles[k] != NULL)
                 {
+#ifdef __WIN32__
+                    FreeLibrary(__flexiblas_hooks->handles[k]);
+#else
                     dlclose(__flexiblas_hooks->handles[k]);
+#endif
                     __flexiblas_hooks->handles[k] = NULL;
                 }
             }
@@ -913,7 +936,11 @@ __attribute__((destructor))
                 }
                 free(loaded_backends[i]->name);
                 if ( loaded_backends[i]->library_handle != NULL){
-                    dlclose(loaded_backends[i]->library_handle );
+#ifdef __WIN32__
+                    FreeLibrary(loaded_backends[i]->library_handle);
+#else
+                    dlclose(loaded_backends[i]->library_handle);
+#endif
                     loaded_backends[i]->library_handle = NULL;
                 }
                 free(loaded_backends[i]);
@@ -931,14 +958,22 @@ __attribute__((destructor))
 
         if (__flexiblas_blas_fallback != NULL)
         {
+#ifdef __WIN32__
+            FreeLibrary(__flexiblas_blas_fallback);
+#else
             dlclose(__flexiblas_blas_fallback);
+#endif
             __flexiblas_blas_fallback = NULL;
         }
 
 #ifdef FLEXIBLAS_LAPACK
         if (__flexiblas_lapack_fallback != NULL)
         {
+#ifdef __WIN32__
+            FreeLibrary(__flexiblas_lapack_fallback);
+#else
             dlclose(__flexiblas_lapack_fallback);
+#endif
             __flexiblas_lapack_fallback = NULL;
         }
 #endif
@@ -951,7 +986,11 @@ __attribute__((destructor))
 
         if ( reload_handler)
         {
+#ifdef __WIN32__
+            FreeLibrary(reload_handler);
+#else
             dlclose(reload_handler);
+#endif
             reload_handler = NULL;
         }
     }

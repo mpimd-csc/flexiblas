@@ -32,7 +32,7 @@
 #include "cblas_f77.h"
 #include "../flexiblas.h"
 
-#if defined(__ELF__) || ((defined (__PGI) || defined(__NVCOMPILER)) && (defined(__linux__)  || defined(__unix__)))
+#if defined(__ELF__) || ((defined (__PGI) || defined(__NVCOMPILER)) && (defined(__linux__)  || defined(__unix__))) || defined(__MINGW32__)
 void internal_cblas_xerbla(CBLAS_INT info, const char *rout, const char *form, ...);
 void cblas_xerbla(CBLAS_INT info, const char *, const char *, ...) __attribute__ ((weak, alias ("internal_cblas_xerbla")));
 void internal_cblas_xerbla(CBLAS_INT info, const char *rout, const char *form, ...)

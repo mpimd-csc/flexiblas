@@ -26,6 +26,9 @@
 #include <unistd.h>
 #include <complex.h>
 #include <math.h>
+#ifdef __WIN32__
+#include <windows.h>
+#endif
 
 #include "flexiblas.h"
 
@@ -248,8 +251,13 @@ void __flexiblas_load_set_num_threads(flexiblas_backend_t * backend)
         if ( i != 1 ) {
             snprintf(fn2_name, 130, "%s_", fn_name);
         }
+#ifdef __WIN32__
+        ptr  = GetProcAddress(backend->library_handle, fn_name);
+        ptr2  = GetProcAddress(backend->library_handle, fn2_name);
+#else
         ptr  = dlsym(backend->library_handle, fn_name);
         ptr2  = dlsym(backend->library_handle, fn2_name);
+#endif
 
         if (ptr != NULL || ptr2 != NULL)
             break;
@@ -303,8 +311,13 @@ void __flexiblas_load_get_num_threads(flexiblas_backend_t * backend)
         if ( i != 1 )
             snprintf(fn2_name, 130, "%s_", fn_name);
 
+#ifdef __WIN32__
+        ptr  = GetProcAddress(backend->library_handle, fn_name);
+        ptr2  = GetProcAddress(backend->library_handle, fn2_name);
+#else
         ptr  = dlsym(backend->library_handle, fn_name);
         ptr2  = dlsym(backend->library_handle, fn2_name);
+#endif
 
         if (ptr != NULL || ptr2 != NULL)
             break;

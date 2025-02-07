@@ -38,7 +38,9 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <dirent.h>
+#ifndef __WIN32__
 #include <dlfcn.h>
+#endif
 
 #ifdef __WIN32__
 #include <windows_fixes.h>
@@ -129,6 +131,7 @@ static char *__flexiblas_mgmt_getenv(int what) {
             break;
         case FLEXIBLAS_ENV_HOST_RC:
 #ifdef __WIN32__
+            // FIXME: Implement for Windows
             return NULL;
 #else
             {

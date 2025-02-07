@@ -23,6 +23,10 @@
 #include "flexiblas.h"
 #include <errno.h>
 #include <complex.h>
+#ifdef __WIN32__
+#define WIN32_LEAN_AND_MEAN 1
+#include <windows.h>
+#endif
 
 #include "flexiblas_fortran_mangle.h"
 
@@ -44,7 +48,11 @@ HIDDEN int __flexiblas_load_cblas_function( void * handle , struct flexiblas_bla
 
     snprintf(cname, 39, "cblas_%s", name);
     DPRINTF(3, "Look up: %18s", cname);
+#ifdef __WIN32__
+    ptr_csymbol = GetProcAddress(handle, cname);
+#else
     ptr_csymbol = dlsym(handle, cname);
+#endif
 
     fn -> cblas_real = ptr_csymbol;
     fn -> cblas_function = ptr_csymbol;
@@ -96,7 +104,11 @@ HIDDEN void * __flexiblas_lookup_fortran_function(void * handle, const char *nam
             fprintf(stderr, "%10s ", fname);
         }
 
+#ifdef __WIN32__
+        ptr_fsymbol = GetProcAddress(handle, fname);
+#else
         ptr_fsymbol = dlsym(handle, fname);
+#endif
         if (ptr_fsymbol!=NULL) {
             break;
         }
