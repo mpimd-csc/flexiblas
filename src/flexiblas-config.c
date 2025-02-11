@@ -73,7 +73,11 @@ int main(int argc, char *argv[])
 
     /* Compile time related */
     if (strcmp(argv[1], "--incdir") == 0 ) {
+#if defined(__WIN32__)
+        printf("%s\\%s", CMAKE_INSTALL_FULL_INCLUDEDIR, FLEXIBLAS_LIBRARY_NAME);
+#else
         printf("%s/%s", CMAKE_INSTALL_FULL_INCLUDEDIR, FLEXIBLAS_LIBRARY_NAME);
+#endif
     }
 
     if (strcmp(argv[1], "--cflags") == 0 ) {
@@ -128,14 +132,22 @@ int main(int argc, char *argv[])
     /* Directory related */
 
     if (strcmp(argv[1],"--backenddir") == 0 ) {
+#if defined(__WIN32__)
+        printf("%s\\%s", CMAKE_INSTALL_FULL_LIBDIR, FLEXIBLAS_LIBRARY_DIR);
+#else
         printf("%s/%s", CMAKE_INSTALL_FULL_LIBDIR, FLEXIBLAS_LIBRARY_DIR);
+#endif
     }
 
     if (strcmp(argv[1],"--sysconfdir") == 0 ) {
         printf("%s", CMAKE_INSTALL_FULL_SYSCONFDIR);
     }
     if (strcmp(argv[1],"--rcdir") == 0 ) {
+#if defined(__WIN32__)
+        printf("%s\\%s", CMAKE_INSTALL_FULL_SYSCONFDIR, FLEXIBLAS_RC_DIR);
+#else
         printf("%s/%s", CMAKE_INSTALL_FULL_SYSCONFDIR, FLEXIBLAS_RC_DIR);
+#endif
     }
 
 

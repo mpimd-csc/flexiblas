@@ -25,7 +25,11 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#ifndef __WIN32__
 #include <pthread.h>
+#else
+#include "windows_fixes.h"
+#endif
 
     /**
       @file libcscutils/include/cscutils/inifile.h

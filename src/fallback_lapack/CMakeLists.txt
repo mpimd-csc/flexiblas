@@ -88,7 +88,7 @@ if ( SYS_LAPACK_LIBRARY )
     target_link_libraries(flexiblas_fallback_lapack PUBLIC flexiblas_lapack_import PRIVATE ${LIBM})
 else()
     add_library(flexiblas_fallback_lapack SHARED ${SRC} $<TARGET_OBJECTS:flexiblas_fallback_lapack_objs>)
-    target_link_libraries(flexiblas_fallback_lapack PRIVATE ${LIBM})
+    target_link_libraries(flexiblas_fallback_lapack flexiblas ${LIBM})
 endif()
 
 if (APPLE)
@@ -97,6 +97,13 @@ endif()
 
 target_include_directories(flexiblas_fallback_lapack PRIVATE ${PROJECT_BINARY_DIR}/include ${PROJECT_SOURCE_DIR}/src/lapack_interface/ ${PROJECT_SOURCE_DIR/src})
 
-install(TARGETS flexiblas_fallback_lapack LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR})
+if (WIN32)
+    install(TARGETS flexiblas_fallback_lapack
+            LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
+else()
+    install(TARGETS flexiblas_fallback_lapack LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR})
+endif()
 SET_TARGET_PROPERTIES(flexiblas_fallback_lapack  PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 

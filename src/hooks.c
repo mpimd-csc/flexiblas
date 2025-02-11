@@ -70,7 +70,11 @@ HIDDEN void __flexiblas_list_hooks(void)
             curfnl  = (strlen(curpath) + strlen(dir_entry->d_name) + 5);
             curfn = malloc(sizeof(char) * curfnl);
 
+#if defined(__WIN32__)
+            snprintf(curfn, curfnl, "%s\\%s", curpath, dir_entry->d_name);
+#else
             snprintf(curfn, curfnl, "%s/%s", curpath, dir_entry->d_name);
+#endif
             memset(&st, 0, sizeof(struct stat));
             if ( stat(curfn, &st)) continue;
             if ( ! ( S_ISREG(st.st_mode))) continue;
@@ -155,7 +159,11 @@ HIDDEN void __flexiblas_add_hooks(void)
             curfnl  = (strlen(curpath) + strlen(dir_entry->d_name) + 5);
             curfn = malloc(sizeof(char) * curfnl);
 
+#if defined(__WIN32__)
+            snprintf(curfn, curfnl, "%s\\%s", curpath, dir_entry->d_name);
+#else
             snprintf(curfn, curfnl, "%s/%s", curpath, dir_entry->d_name);
+#endif
             memset(&st, 0, sizeof(struct stat));
             if ( stat(curfn, &st)) continue;
             if ( ! ( S_ISREG(st.st_mode))) continue;

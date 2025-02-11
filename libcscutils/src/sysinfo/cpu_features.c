@@ -53,7 +53,7 @@ enum
 	FEATURE_MASK_AVX512CD = (1u<<28), // cpuid[eax=7,ecx=0]   :ebx[28]
 	FEATURE_MASK_AVX512BW = (1u<<30), // cpuid[eax=7,ecx=0]   :ebx[30]
 	FEATURE_MASK_AVX512VL = (1u<<31), // cpuid[eax=7,ecx=0]   :ebx[31]
-  	FEATURE_MASK_AVX512VNNI = (1u<<11), // cpuid[eax=7,ecx=0]   :ecx[11]
+	FEATURE_MASK_AVX512VNNI = (1u<<11), // cpuid[eax=7,ecx=0]   :ecx[11]
 	FEATURE_MASK_AVX512BF16 = (1u<< 5), // cpuid[eax=7,ecx=1]   :eax[5]
 	FEATURE_MASK_XGETBV   = (1u<<26)|
                             (1u<<27), // cpuid[eax=1]         :ecx[27:26]
@@ -619,7 +619,7 @@ static int __csc_sysinfo_cpuid_is_bulldozer( uint32_t family, uint32_t model, ui
 }
 
 // Intel CPUs
-int csc_sysinfo_cpuid_is_skx(  )
+int csc_sysinfo_cpuid_is_skx( void )
 {
     uint32_t family; 
     uint32_t model; 
@@ -632,7 +632,7 @@ int csc_sysinfo_cpuid_is_skx(  )
     return __csc_sysinfo_cpuid_is_skx(family, model, features); 
 }
 
-int csc_sysinfo_cpuid_is_knl(  )
+int csc_sysinfo_cpuid_is_knl( void )
 {
     uint32_t family; 
     uint32_t model; 
@@ -646,7 +646,7 @@ int csc_sysinfo_cpuid_is_knl(  )
 
 }
 
-int csc_sysinfo_cpuid_is_haswell(  )
+int csc_sysinfo_cpuid_is_haswell( void )
 {
     uint32_t family; 
     uint32_t model; 
@@ -659,7 +659,7 @@ int csc_sysinfo_cpuid_is_haswell(  )
     return __csc_sysinfo_cpuid_is_haswell(family, model, features); 
 }
 
-int csc_sysinfo_cpuid_is_sandybridge(  )
+int csc_sysinfo_cpuid_is_sandybridge( void )
 {
     uint32_t family; 
     uint32_t model; 
@@ -672,7 +672,7 @@ int csc_sysinfo_cpuid_is_sandybridge(  )
     return __csc_sysinfo_cpuid_is_sandybridge(family, model, features); 
 }
 
-int csc_sysinfo_cpuid_is_penryn(  )
+int csc_sysinfo_cpuid_is_penryn( void )
 {
     uint32_t family; 
     uint32_t model; 
@@ -686,7 +686,7 @@ int csc_sysinfo_cpuid_is_penryn(  )
 }
 
 // AMD
-int csc_sysinfo_cpuid_is_zen4(  )
+int csc_sysinfo_cpuid_is_zen4( void )
 {
     uint32_t family; 
     uint32_t model; 
@@ -699,7 +699,7 @@ int csc_sysinfo_cpuid_is_zen4(  )
     return __csc_sysinfo_cpuid_is_zen4(family, model, features); 
 }
 
-int csc_sysinfo_cpuid_is_zen3(  )
+int csc_sysinfo_cpuid_is_zen3( void )
 {
     uint32_t family; 
     uint32_t model; 
@@ -712,7 +712,7 @@ int csc_sysinfo_cpuid_is_zen3(  )
     return __csc_sysinfo_cpuid_is_zen3(family, model, features); 
 }
 
-int csc_sysinfo_cpuid_is_zen2(  )
+int csc_sysinfo_cpuid_is_zen2( void )
 {
     uint32_t family; 
     uint32_t model; 
@@ -725,7 +725,7 @@ int csc_sysinfo_cpuid_is_zen2(  )
     return __csc_sysinfo_cpuid_is_zen2(family, model, features); 
 }
 
-int csc_sysinfo_cpuid_is_zen(  )
+int csc_sysinfo_cpuid_is_zen( void )
 {
     uint32_t family; 
     uint32_t model; 
@@ -738,7 +738,7 @@ int csc_sysinfo_cpuid_is_zen(  )
     return __csc_sysinfo_cpuid_is_zen(family, model, features); 
 }
 
-int csc_sysinfo_cpuid_is_excavator(  )
+int csc_sysinfo_cpuid_is_excavator( void )
 {
     uint32_t family; 
     uint32_t model; 
@@ -751,7 +751,7 @@ int csc_sysinfo_cpuid_is_excavator(  )
     return __csc_sysinfo_cpuid_is_excavator(family, model, features); 
 }
 
-int csc_sysinfo_cpuid_is_steamroller(  )
+int csc_sysinfo_cpuid_is_steamroller( void )
 {
     uint32_t family; 
     uint32_t model; 
@@ -764,7 +764,7 @@ int csc_sysinfo_cpuid_is_steamroller(  )
     return __csc_sysinfo_cpuid_is_steamroller(family, model, features); 
 }
 
-int csc_sysinfo_cpuid_is_piledriver(  )
+int csc_sysinfo_cpuid_is_piledriver( void )
 {
     uint32_t family; 
     uint32_t model; 
@@ -777,7 +777,7 @@ int csc_sysinfo_cpuid_is_piledriver(  )
     return __csc_sysinfo_cpuid_is_piledriver(family, model, features); 
 }
 
-int csc_sysinfo_cpuid_is_bulldozer(  )
+int csc_sysinfo_cpuid_is_bulldozer( void )
 {
     uint32_t family; 
     uint32_t model; 
@@ -808,58 +808,58 @@ uint32_t csc_sysinfo_cpuid_query
 }
 
 // Intel CPUs
-int csc_sysinfo_cpuid_is_skx(  )
+int csc_sysinfo_cpuid_is_skx( void )
 {
     return 0;
 }
 
-int csc_sysinfo_cpuid_is_knl(  )
+int csc_sysinfo_cpuid_is_knl( void )
 {
     return 0;
 }
-int csc_sysinfo_cpuid_is_haswell(  )
+int csc_sysinfo_cpuid_is_haswell( void )
 {
     return 0;
 }
-int csc_sysinfo_cpuid_is_sandybridge(  )
+int csc_sysinfo_cpuid_is_sandybridge( void )
 {
     return 0;
 }
-int csc_sysinfo_cpuid_is_penryn(  )
+int csc_sysinfo_cpuid_is_penryn( void )
 {
     return 0;
 }
 
 // AMD
-int csc_sysinfo_cpuid_is_zen4(  )
+int csc_sysinfo_cpuid_is_zen4( void )
 {
     return 0;
 }
-int csc_sysinfo_cpuid_is_zen3(  )
+int csc_sysinfo_cpuid_is_zen3( void )
 {
     return 0;
 }
-int csc_sysinfo_cpuid_is_zen2(  )
+int csc_sysinfo_cpuid_is_zen2( void )
 {
     return 0;
 }
-int csc_sysinfo_cpuid_is_zen(  )
+int csc_sysinfo_cpuid_is_zen( void )
 {
     return 0;
 }
-int csc_sysinfo_cpuid_is_excavator(  )
+int csc_sysinfo_cpuid_is_excavator( void )
 {
     return 0;
 }
-int csc_sysinfo_cpuid_is_steamroller(  )
+int csc_sysinfo_cpuid_is_steamroller( void )
 {
     return 0;
 }
-int csc_sysinfo_cpuid_is_piledriver(  )
+int csc_sysinfo_cpuid_is_piledriver( void )
 {
     return 0;
 }
-int csc_sysinfo_cpuid_is_bulldozer(  )
+int csc_sysinfo_cpuid_is_bulldozer( void )
 {
     return 0;
 }

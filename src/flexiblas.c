@@ -25,6 +25,7 @@
 #define _GNU_SOURCE
 #endif
 #include "flexiblas.h"
+#include <dlfcn.h>
 #include <errno.h>
 #include <stddef.h>
 #include <string.h>
@@ -35,7 +36,6 @@
 
 #define DLOPEN_FLAGS_FROM_FILE -1
 #ifndef __WIN32__
-#include <dlfcn.h>
 #ifdef __linux__
 // Linux
 // #define DLOPEN_FLAGS (RTLD_LAZY)
@@ -47,8 +47,13 @@
 #else
 // Windows
 #define DLOPEN_FLAGS (0)
-#define strtok_r strtok_s
-#include <windows.h>
+#include <windows_fixes.h>
+
+// MSVC ucrt headers included via windows.h define this macro leading to conflicts in this file
+#ifdef interface
+#undef interface
+#endif
+
 #endif
 
 /*  Initialize global variables. */
@@ -176,15 +181,9 @@ static void flexiblas_load_info(void *library, flexiblas_backend_t *backend)
 {
     memset(&(backend->info),0,sizeof(flexiblas_info_t));
     backend->info.flexiblas_integer_size = sizeof(Int);
-#ifdef __WIN32__
-    *(void **) &backend->info_function = GetProcAddress(library, FLEXIBLAS_INFO_FUNCTION_NAME );
-    *(void **) &backend->init_function = GetProcAddress(library, FLEXIBLAS_INIT_FUNCTION_NAME);
-    *(void **) &backend->exit_function = GetProcAddress(library, FLEXIBLAS_EXIT_FUNCTION_NAME);
-#else
     *(void **) &backend->info_function = dlsym(library, FLEXIBLAS_INFO_FUNCTION_NAME);
     *(void **) &backend->init_function = dlsym(library, FLEXIBLAS_INIT_FUNCTION_NAME);
     *(void **) &backend->exit_function = dlsym(library, FLEXIBLAS_EXIT_FUNCTION_NAME);
-#endif
 
     backend->library_handle = library;
 
@@ -671,7 +670,11 @@ __attribute__((constructor))
             DPRINTF_WARN(0, "Failed to integrated FlexiBLAS's symbols globally. This might let applications like NumPy to run slowly. (err = %s)\n", dlerror());
             fallback_flags = RTLD_GLOBAL | RTLD_LAZY;
         } else {
+#if defined(__WIN32__)
+            DPRINTF(1, "flexiblas.dll is %s\n", fb_info.dli_fname);
+#else
             DPRINTF(1, "libflexiblas.so is %s\n", fb_info.dli_fname);
+#endif
             reload_handler = dlopen(fb_info.dli_fname, RTLD_NOW | RTLD_GLOBAL);
             fallback_flags = RTLD_LOCAL | RTLD_LAZY;
         }
@@ -869,43 +872,88 @@ continue_load:
 __attribute__((destructor))
 #endif
     void flexiblas_exit(void) {
+        /* early exit, Windows calls this function multiple times but we only need to do it once */
+        if (loaded_backends == NULL)
+        {
+            return;
+        }
+
         size_t i;
         if (__flexiblas_verbose ) DPRINTF(1,"cleanup\n");
 
-        int k;
-        for ( k = __flexiblas_hooks->hooks_loaded-1; k>=0; k--){
-            __flexiblas_hooks->hook_exit[k]();
-            dlclose(__flexiblas_hooks->handles[k]);
-        }
-        free(__flexiblas_hooks);
-        __flexiblas_free_paths();
-        __flexiblas_exit_hook();
+        if ( __flexiblas_hooks != NULL)
+        {
+            int k;
+            for ( k = __flexiblas_hooks->hooks_loaded-1; k>=0; k--){
+                __flexiblas_hooks->hook_exit[k]();
+                if (__flexiblas_hooks->handles[k] != NULL)
+                {
+                    dlclose(__flexiblas_hooks->handles[k]);
+                    __flexiblas_hooks->handles[k] = NULL;
+                }
+            }
 
+            if (__flexiblas_hooks != NULL)
+            {
+                free(__flexiblas_hooks);
+                __flexiblas_hooks = NULL;
+            }
+
+            nloaded_backends = 0;
+            __flexiblas_free_paths();
+            __flexiblas_exit_hook();
+        }
 
         for (i = 0; i < nloaded_backends ; i++) {
-            if ( loaded_backends[i]->exit_function != NULL) {
-                loaded_backends[i]->exit_function();
+            if (loaded_backends[i] != NULL)
+            {
+                if ( loaded_backends[i]->exit_function != NULL) {
+                    loaded_backends[i]->exit_function();
+                    loaded_backends[i]->exit_function = NULL;
+                }
+                free(loaded_backends[i]->name);
+                if ( loaded_backends[i]->library_handle != NULL){
+                    dlclose(loaded_backends[i]->library_handle );
+                    loaded_backends[i]->library_handle = NULL;
+                }
+                free(loaded_backends[i]);
+                loaded_backends[i] = NULL;
             }
-            free(loaded_backends[i]->name);
-            if ( loaded_backends[i]->library_handle != NULL){
-#ifdef __WIN32__
-                FreeLibrary(loaded_backends[i]->library_handle);
-#else
-                dlclose(loaded_backends[i]->library_handle );
-#endif
-            }
-            free(loaded_backends[i]);
         }
-        free(loaded_backends);
 
         nloaded_backends = 0;
-        dlclose(__flexiblas_blas_fallback);
+
+        if (loaded_backends != NULL)
+        {
+            free(loaded_backends);
+            loaded_backends = NULL;
+        }
+
+        if (__flexiblas_blas_fallback != NULL)
+        {
+            dlclose(__flexiblas_blas_fallback);
+            __flexiblas_blas_fallback = NULL;
+        }
+
 #ifdef FLEXIBLAS_LAPACK
-        dlclose(__flexiblas_lapack_fallback);
+        if (__flexiblas_lapack_fallback != NULL)
+        {
+            dlclose(__flexiblas_lapack_fallback);
+            __flexiblas_lapack_fallback = NULL;
+        }
 #endif
-        flexiblas_mgmt_free_config(__flexiblas_mgmt);
+
+        if (__flexiblas_mgmt != NULL)
+        {
+            flexiblas_mgmt_free_config(__flexiblas_mgmt);
+            __flexiblas_mgmt = NULL;
+        }
+
         if ( reload_handler)
+        {
             dlclose(reload_handler);
+            reload_handler = NULL;
+        }
     }
 
 

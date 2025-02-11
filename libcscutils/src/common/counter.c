@@ -29,6 +29,11 @@
 
 double csc_wtime(void)
 {
+#if defined(_WIN32)
+    struct timeval tv;
+    gettimeofday (&tv, NULL);
+    return tv.tv_sec + tv.tv_usec / 1e6;
+#else
     /** struct timeval tv; */
     struct timespec ts;
     double ret;
@@ -36,6 +41,7 @@ double csc_wtime(void)
     clock_gettime(CLOCK_REALTIME, &ts);
     ret = ts.tv_sec + ts.tv_nsec / 1e9;
     return ret;
+#endif
 }
 
 #if 0

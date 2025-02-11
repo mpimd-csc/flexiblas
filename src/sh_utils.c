@@ -44,6 +44,7 @@
 #else
 #define DLOPEN_FLAGS (0)
 #include <windows.h>
+#include "windows_fixes.h"
 #endif
 
 
@@ -122,7 +123,11 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
                 path =  __flexiblas_additional_paths[path_count];
                 len = strlen(path) + strlen(libname) + 5;
                 filepath = malloc(len * sizeof ( char ));
+#if defined(__WIN32__)
+                snprintf(filepath, len -1, "%s\\%s", path, libname);
+#else
                 snprintf(filepath, len -1, "%s/%s", path, libname);
+#endif
             }
             DPRINTF(1, "Check if shared library exist: %s\n", filepath);
             if ( file_exists(filepath) ){
@@ -143,6 +148,8 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
         char * resolvepath;
 #ifdef PATH_MAX
         path_max = PATH_MAX;
+#elif defined(MAX_PATH)
+        path_max = MAX_PATH;
 #else
         path_max = pathconf(path, _PC_PATH_MAX);
         if (path_max <= 0)
@@ -150,7 +157,11 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
 #endif
         resolvepath = calloc(path_max, sizeof(char));
 
+#if defined(_WIN32) || defined(_WIN64)
+        if (_fullpath(libname, resolvepath, path_max) == NULL) {
+#else
         if ( realpath(libname, resolvepath) == NULL ) {
+#endif
             DPRINTF_ERROR(0,"Cannot determine type to the path: %s or file does not exists.\n",libname );
             found = 0;
             if (filepath) free(filepath);
@@ -175,14 +186,11 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
 
 
     if( found ) {
-#ifdef __WIN32__
-        handle = LoadLibrary(filepath);
-#else
         void * ld_flags_sym_global;
         void * ld_flags_sym_lazy;
         int32_t ld_flags_global;
         int32_t ld_flags_lazy;
-#ifdef __linux__
+#if defined(__linux__) || defined(__WIN32__)
         void * ld_flags_sym_deep = NULL;
         int32_t ld_flags_deep = 0 ;
 #endif
@@ -215,7 +223,7 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
             } else {
                 ld_flags_lazy = *((int32_t*) ld_flags_sym_lazy);
             }
-#ifdef __linux__
+#if defined(__linux__) || defined(__WIN32__)
             ld_flags_sym_deep = dlsym(handle, "flexiblas_ld_deep");
             if ( ld_flags_sym_deep == NULL) {
                 ld_flags_deep = 0;
@@ -239,7 +247,7 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
                 flags |= RTLD_NOW;
             }
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__WIN32__)
             if ( ld_flags_deep != 0 ) {
                 flags |= RTLD_DEEPBIND;
                 DPRINTF(1, "Load backend with RTLD_DEEPBIND\n");
@@ -251,7 +259,6 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
         }
 
         handle = dlopen(filepath, flags);
-#endif
 
 
 
@@ -297,7 +304,11 @@ HIDDEN int __flexiblas_dl_symbol_exist( const char *libname, const char *symbol_
                 path =  __flexiblas_additional_paths[path_count];
                 len = strlen(path) + strlen(libname) + 5;
                 filepath = malloc(len * sizeof ( char ));
+#if defined(__WIN32__)
+                snprintf(filepath, len -1, "%s\\%s", path, libname);
+#else
                 snprintf(filepath, len -1, "%s/%s", path, libname);
+#endif
             }
             DPRINTF(1, "Check if shared library exist: %s\n", filepath);
             if ( file_exists(filepath) ){
@@ -318,6 +329,8 @@ HIDDEN int __flexiblas_dl_symbol_exist( const char *libname, const char *symbol_
         char * resolvepath;
 #ifdef PATH_MAX
         path_max = PATH_MAX;
+#elif defined(MAX_PATH)
+        path_max = MAX_PATH;
 #else
         path_max = pathconf(path, _PC_PATH_MAX);
         if (path_max <= 0)
@@ -325,7 +338,11 @@ HIDDEN int __flexiblas_dl_symbol_exist( const char *libname, const char *symbol_
 #endif
         resolvepath = calloc(path_max, sizeof(char));
 
+#if defined(_WIN32) || defined(_WIN64)
+        if (_fullpath(libname, resolvepath, path_max) == NULL) {
+#else
         if ( realpath(libname, resolvepath) == NULL ) {
+#endif
             DPRINTF_ERROR(0,"Cannot determine type to the path: %s or file does not exists.\n",libname );
             found = 0;
             if (filepath) free(filepath);

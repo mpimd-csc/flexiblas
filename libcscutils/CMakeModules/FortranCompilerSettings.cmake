@@ -135,7 +135,7 @@ ELSEIF(CMAKE_Fortran_COMPILER_ID STREQUAL "Intel" OR CMAKE_Fortran_COMPILER_ID S
             SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /4I8" CACHE INTERNAL "")
         ENDIF()
 
-        LIST(APPEND LIBRARIES "ifcore")
+        LIST(APPEND LIBRARIES "libifcore")
 
         SET(I8FLAG "/4I8")
     ELSE()

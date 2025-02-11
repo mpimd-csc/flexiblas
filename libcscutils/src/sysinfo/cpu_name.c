@@ -91,7 +91,7 @@ static inline void __cpuid_intrinsic(unsigned int* reg, unsigned int input) {
 #endif
 }
 
-char *csc_sysinfo_cpuname()
+char *csc_sysinfo_cpuname(void)
 {
     unsigned int brand[12];
 

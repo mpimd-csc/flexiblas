@@ -46,6 +46,12 @@ extern "C" {
 #include <stdint.h>
 #include <stdio.h>
 
+#ifdef _WIN64
+typedef long long int ssize_t;
+#elif _WIN32
+typedef long ssize_t;
+#endif
+
 /**
  * @brief Reads a line from a stream.
  * @param[in, out]  lineptr  Pointer to the buffer containing the line afterwards.

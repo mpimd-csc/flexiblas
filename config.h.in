@@ -22,13 +22,22 @@
 #ifndef FLEXIBLAS_CONFIG_H
 #define FLEXIBLAS_CONFIG_H
 
+#if defined(__WIN32__)
+#cmakedefine FLEXIBLAS_DEFAULT_LIB_PATH "@WIN_CMAKE_INSTALL_FULL_BINDIR@"
+#cmakedefine CMAKE_INSTALL_PREFIX "@WIN_CMAKE_INSTALL_PREFIX@"
+#cmakedefine CMAKE_INSTALL_FULL_LIBDIR "@WIN_CMAKE_INSTALL_FULL_BINDIR@"
+#cmakedefine CMAKE_INSTALL_FULL_INCLUDEDIR "@WIN_CMAKE_INSTALL_FULL_INCLUDEDIR@"
+#cmakedefine CMAKE_INSTALL_FULL_SYSCONFDIR "@WIN_CMAKE_INSTALL_FULL_SYSCONFDIR@"
+#else
 #cmakedefine FLEXIBLAS_DEFAULT_LIB_PATH "@FLEXIBLAS_DEFAULT_LIB_PATH@"
 #cmakedefine CMAKE_INSTALL_PREFIX "@CMAKE_INSTALL_PREFIX@"
 #cmakedefine CMAKE_INSTALL_FULL_LIBDIR "@CMAKE_INSTALL_FULL_LIBDIR@"
 #cmakedefine CMAKE_INSTALL_FULL_INCLUDEDIR "@CMAKE_INSTALL_FULL_INCLUDEDIR@"
+#cmakedefine CMAKE_INSTALL_FULL_SYSCONFDIR "@CMAKE_INSTALL_FULL_SYSCONFDIR@"
+#endif
+
 #cmakedefine FLEXIBLAS_LIBRARY_DIR "@FLEXIBLAS_LIBRARY_DIR@"
 #cmakedefine FLEXIBLAS_LIBRARY_NAME "@FLEXIBLAS_LIBRARY_NAME@"
-#cmakedefine CMAKE_INSTALL_FULL_SYSCONFDIR "@CMAKE_INSTALL_FULL_SYSCONFDIR@"
 
 #cmakedefine FLEXIBLAS_FC_I8FLAG "@FLEXIBLAS_FC_I8FLAG@"
 
@@ -116,14 +125,22 @@
  #define TLS_STORE thread_local
 #else
  #define TLS_STORE
- #warning Thread Local Storage not aviable. FlexiBLAS might cause problems in multithreaded applications.
+ #warning Thread Local Storage not avialable. FlexiBLAS might cause problems in multithreaded applications.
 #endif
 
 #ifndef FALLBACK_NAME
- #define FALLBACK_NAME "libflexiblas_netlib"
+ #if defined(__WIN32__)
+  #define FALLBACK_NAME "flexiblas_netlib"
+ #else
+  #define FALLBACK_NAME "libflexiblas_netlib"
+ #endif
 #endif
 #ifndef LAPACK_FALLBACK_NAME
- #define LAPACK_FALLBACK_NAME "libflexiblas_fallback_lapack"
+ #if defined(__WIN32__)
+  #define LAPACK_FALLBACK_NAME "flexiblas_fallback_lapack"
+ #else
+  #define LAPACK_FALLBACK_NAME "libflexiblas_fallback_lapack"
+ #endif
 #endif
 
 

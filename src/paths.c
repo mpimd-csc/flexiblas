@@ -27,6 +27,11 @@
 #include "helper.h"
 #include "cscutils/strutils.h"
 
+#ifdef _WIN32
+#include "windows_fixes.h"
+#include <windows.h>
+#endif
+
 HIDDEN char **  __flexiblas_additional_paths = NULL;
 HIDDEN int __flexiblas_count_additional_paths = 0;
 
@@ -42,11 +47,16 @@ HIDDEN void __flexiblas_init_default_paths(void) {
     searchpath = csc_str_remove_char(searchpath,'"');
     searchpath = csc_str_remove_char(searchpath,'\'');
 
+#if defined(__WIN32__)
+	const char * delim = ";";
+#else
+	const char * delim = ":";
+#endif
 
-    path = strtok_r(searchpath,":", &r);
+    path = strtok_r(searchpath, delim, &r);
     while ( path != NULL ) {
         __flexiblas_add_path(path);
-        path = strtok_r(NULL, ":",&r);
+        path = strtok_r(NULL, delim, &r);
     }
     free(searchpath);
 }
@@ -59,14 +69,21 @@ HIDDEN void __flexiblas_add_path_from_environment(void)
 {
     char * v;
     char * p;
+
+#if defined(__WIN32__)
+	const char * delim = ";";
+#else
+	const char * delim = ":";
+#endif
+
     if ( getenv(ENV_FLEXIBLAS_LIBRARY_PATH)){
         v = strdup(getenv(ENV_FLEXIBLAS_LIBRARY_PATH));
         v = csc_str_remove_char(v, '"');
         v = csc_str_remove_char(v,'\'');
-        p = strtok(v, ":");
+        p = strtok(v, delim);
         while ( p != NULL ) {
             if ( strlen(p) > 0 ) __flexiblas_add_path(p);
-            p = strtok( NULL, ":");
+            p = strtok( NULL, delim);
         }
         free(v);
     }
@@ -93,9 +110,20 @@ HIDDEN void __flexiblas_add_path(const char * path ) {
 HIDDEN void __flexiblas_free_paths(void) {
     int i = 0;
     for ( i = 0; i < __flexiblas_count_additional_paths; i++) {
-        free(__flexiblas_additional_paths[i]);
+        if ( __flexiblas_additional_paths[i] != NULL )
+        {
+            free(__flexiblas_additional_paths[i]);
+            __flexiblas_additional_paths[i] = NULL;
+        }
     }
-    if ( __flexiblas_additional_paths != NULL) free(__flexiblas_additional_paths);
+
+    __flexiblas_count_additional_paths = 0;
+
+    if ( __flexiblas_additional_paths != NULL )
+    {
+        free(__flexiblas_additional_paths);
+        __flexiblas_additional_paths = NULL;
+    }
 }
 
 

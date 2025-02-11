@@ -32,6 +32,10 @@
 #include "helper.h"
 #include "cscutils/strutils.h"
 
+#ifdef __WIN32__
+#include <windows_fixes.h>
+#endif
+
 static char *__struppercase(char *str) {
     char *ret = str;
     if ( str == NULL ) return NULL;

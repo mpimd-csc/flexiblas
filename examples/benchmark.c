@@ -59,6 +59,10 @@
 #include "flexiblas_fortran_mangle.h"
 #include "cscutils/counter.h"
 
+#ifdef __WIN32__
+#include <windows_fixes.h>
+#endif
+
 #ifndef FLEXIBLAS_CHARLEN_T
 #define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
