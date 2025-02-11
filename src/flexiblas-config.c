@@ -24,7 +24,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "paths.h"
 #include "flexiblas_config.h"
+
+#ifdef _WIN32
+#include "windows_fixes.h"
+#endif
 
 static void print_usage(const char * prgm)
 {
@@ -62,26 +67,33 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
+    char * folder = __flexiblas_get_library_location();
+    char * libdir = dirname(folder);
     /* LD related */
     if (strcmp(argv[1], "--ldflags") == 0) {
-        printf("-L%s -l%s", CMAKE_INSTALL_FULL_LIBDIR, FLEXIBLAS_LIBRARY_NAME);
+            printf("-L%s -l%s", libdir, FLEXIBLAS_LIBRARY_NAME);
     }
     if (strcmp(argv[1], "--libdir") == 0) {
-        printf("%s", CMAKE_INSTALL_FULL_LIBDIR);
+        printf("%s", libdir);
     }
 
+    char * basedir = dirname(libdir);
+    char * includedir = malloc(strlen(basedir) + 1 + strlen("include") + 1);
+    strcpy(includedir, basedir);
 
     /* Compile time related */
     if (strcmp(argv[1], "--incdir") == 0 ) {
 #if defined(__WIN32__)
-        printf("%s\\%s", CMAKE_INSTALL_FULL_INCLUDEDIR, FLEXIBLAS_LIBRARY_NAME);
+        strcat(includedir, "\\include");
+        printf("%s\\%s", includedir, FLEXIBLAS_LIBRARY_NAME);
 #else
-        printf("%s/%s", CMAKE_INSTALL_FULL_INCLUDEDIR, FLEXIBLAS_LIBRARY_NAME);
+        strcat(includedir, "/include");
+        printf("%s/%s", includedir, FLEXIBLAS_LIBRARY_NAME);
 #endif
     }
 
     if (strcmp(argv[1], "--cflags") == 0 ) {
-        printf("-I%s/%s",CMAKE_INSTALL_FULL_INCLUDEDIR, FLEXIBLAS_LIBRARY_NAME);
+        printf("-I%s/%s",includedir, FLEXIBLAS_LIBRARY_NAME);
 #ifdef FLEXIBLAS_INTEGER8
         printf(" -DFLEXIBLAS_INTEGER8");
 #else
@@ -91,7 +103,7 @@ int main(int argc, char *argv[])
     }
 
     if (strcmp(argv[1], "--fcflags") == 0 ) {
-        printf("-I%s/%s",CMAKE_INSTALL_FULL_INCLUDEDIR, FLEXIBLAS_LIBRARY_NAME);
+        printf("-I%s/%s",includedir, FLEXIBLAS_LIBRARY_NAME);
 #ifdef FLEXIBLAS_INTEGER8
         printf(" -DFLEXIBLAS_INTEGER8");
 #else
@@ -131,34 +143,58 @@ int main(int argc, char *argv[])
 
     /* Directory related */
 
+    char * backenddir = malloc(strlen(libdir) + 1 + strlen(FLEXIBLAS_LIBRARY_DIR) + 1);
+    strcpy(backenddir, libdir);
+
     if (strcmp(argv[1],"--backenddir") == 0 ) {
 #if defined(__WIN32__)
-        printf("%s\\%s", CMAKE_INSTALL_FULL_LIBDIR, FLEXIBLAS_LIBRARY_DIR);
+        strcat(backenddir, "\\");
+        strcat(backenddir, FLEXIBLAS_LIBRARY_DIR);
+        printf("%s\\%s", backenddir, FLEXIBLAS_LIBRARY_DIR);
 #else
-        printf("%s/%s", CMAKE_INSTALL_FULL_LIBDIR, FLEXIBLAS_LIBRARY_DIR);
+        strcat(backenddir, "/");
+        strcat(backenddir, FLEXIBLAS_LIBRARY_DIR);
+        printf("%s/%s", backenddir, FLEXIBLAS_LIBRARY_DIR);
 #endif
     }
+
+    char * sysconfdir = malloc(strlen(basedir) + 1 + strlen("etc") + 1);
+    strcpy(sysconfdir, basedir);
 
     if (strcmp(argv[1],"--sysconfdir") == 0 ) {
-        printf("%s", CMAKE_INSTALL_FULL_SYSCONFDIR);
+#if defined(__WIN32__)
+        strcat(sysconfdir, "\\etc");
+#else
+        strcat(sysconfdir, "/etc");
+#endif
+        printf("%s", sysconfdir);
     }
+
+    char * rcdir = malloc(strlen(basedir) + 1 + strlen(FLEXIBLAS_RC_DIR) + 1);
+    strcpy(rcdir, basedir);
+
     if (strcmp(argv[1],"--rcdir") == 0 ) {
 #if defined(__WIN32__)
-        printf("%s\\%s", CMAKE_INSTALL_FULL_SYSCONFDIR, FLEXIBLAS_RC_DIR);
+        strcat(rcdir, "\\");
+        strcat(rcdir, FLEXIBLAS_RC_DIR);
+        printf("%s", rcdir);
 #else
-        printf("%s/%s", CMAKE_INSTALL_FULL_SYSCONFDIR, FLEXIBLAS_RC_DIR);
+        strcat(rcdir, "/");
+        strcat(rcdir, FLEXIBLAS_RC_DIR);
+        printf("%s", rcdir);
 #endif
     }
 
-
+    free(folder);
+    free(includedir);
+    free(backenddir);
+    free(sysconfdir);
+    free(rcdir);
 
     /* Misc  */
     if ( strcmp(argv[1],"--version") == 0) {
         printf("%d.%d.%d", FLEXIBLAS_VERSION_MAJOR, FLEXIBLAS_VERSION_MINOR, FLEXIBLAS_VERSION_PATCH);
     }
-
-
-
 
     return 0;
 }

@@ -341,7 +341,8 @@ set(GENERIC_LIB_VERSION "${FLEXIBLAS_VERSION_MAJOR}.${FLEXIBLAS_VERSION_MINOR}")
 set(GENERIC_LIB_SOVERSION "${FLEXIBLAS_VERSION_MAJOR}")
 
 
-add_executable(flexiblas-config flexiblas-config.c)
+add_executable(flexiblas-config flexiblas-config.c flexiblas_printf.c mgmt.c utils.c paths.c hooks.c common.c sh_utils.c)
+TARGET_LINK_LIBRARIES(flexiblas-config PRIVATE ${DL_LIB} cscutils)
 
 IF ( C_W_PEDANTIC )
     target_compile_options(flexiblas PRIVATE "-Wpedantic")

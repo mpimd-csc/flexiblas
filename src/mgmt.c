@@ -42,6 +42,8 @@
 
 #ifdef __WIN32__
 #include <windows_fixes.h>
+#else
+#include <libgen.h>
 #endif
 
 #define MAX_BUFFER_SIZE 32*1024
@@ -113,18 +115,10 @@ static char *__flexiblas_mgmt_getenv(int what) {
 #endif
             break;
         case FLEXIBLAS_ENV_GLOBAL_RC:
-#ifdef __WIN32__
-            snprintf(container,MAX_BUFFER_SIZE,"%s\\%s", getenv("SYSTEMROOT"), FLEXIBLAS_RC);
-#else
-            snprintf(container,MAX_BUFFER_SIZE,"%s/%s",CMAKE_INSTALL_FULL_SYSCONFDIR,FLEXIBLAS_RC);
-#endif
+            __flexiblas_get_global_rc_path(container, MAX_BUFFER_SIZE, FLEXIBLAS_RC);
             break;
         case FLEXIBLAS_ENV_GLOBAL_RC_DIR:
-#ifdef __WIN32__
-            snprintf(container, MAX_BUFFER_SIZE, "None");
-#else
-            snprintf(container,MAX_BUFFER_SIZE,"%s/%s/",CMAKE_INSTALL_FULL_SYSCONFDIR,FLEXIBLAS_RC_DIR);
-#endif
+            __flexiblas_get_global_rc_path(container, MAX_BUFFER_SIZE, FLEXIBLAS_RC_DIR);
             break;
         case FLEXIBLAS_ENV_USER_RC:
 #ifdef __WIN32__
@@ -336,7 +330,7 @@ flexiblas_mgmt_t * flexiblas_mgmt_load_config(void)
         DPRINTF(1, "Load user config %s\n", path);
         csc_ini_load(path, ini, CSC_INI_LOAD_SECTION_UPPERCASE);
     } else {
-        DPRINTF_WARN(1, "Config %s does not exist.\n", path);
+        DPRINTF_WARN(1, "User config %s does not exist.\n", path);
     }
 
     if ( path ) free(path);
@@ -349,7 +343,7 @@ flexiblas_mgmt_t * flexiblas_mgmt_load_config(void)
         DPRINTF(1, "Load host config %s\n", path);
         csc_ini_load(path, ini, CSC_INI_LOAD_SECTION_UPPERCASE);
     } else {
-        DPRINTF_WARN(1, "Config %s does not exist.\n", path);
+        DPRINTF_WARN(1, "Host config %s does not exist.\n", path);
     }
 
     if ( path ) free(path);
@@ -631,8 +625,6 @@ iter:
 }
 
 
-static char flexiblas_mgmt_searchpath[] = FLEXIBLAS_DEFAULT_LIB_PATH;
-
 int flexiblas_mgmt_list_default_paths(char *path, void **help)
 {
 #if defined(__WIN32__)
@@ -641,9 +633,11 @@ int flexiblas_mgmt_list_default_paths(char *path, void **help)
     const char * delim = ":";
 #endif
     char *r;
-    // printf("%s\n", flexiblas_mgmt_searchpath);
     if ( *help == NULL ) {
+        char * folder = __flexiblas_get_library_location();
+        char * flexiblas_mgmt_searchpath = dirname(folder);
         strncpy(path, strtok_r(flexiblas_mgmt_searchpath, delim, &r), FLEXIBLAS_MGMT_MAX_BUFFER_LEN);
+        free(folder);
         *help = r;
         return 1;
     } else {

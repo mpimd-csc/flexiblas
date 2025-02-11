@@ -15,3 +15,4 @@ Please list yourself, optionally with an affiliation, and a one-liner of your co
   * adding support for ARMPL
   * interoperability of complex types with C++ code
   * adding Windows support
+  * making FlexiBLAS relocatable
