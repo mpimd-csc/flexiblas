@@ -111,7 +111,7 @@
  #define TLS_STORE thread_local
 #else
  #define TLS_STORE
- #warning Thread Local Storage not avialable. FlexiBLAS might cause problems in multithreaded applications.
+ #warning Thread Local Storage not available. FlexiBLAS might cause problems in multithreaded applications.
 #endif
 
 #ifndef FALLBACK_NAME
