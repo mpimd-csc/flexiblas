@@ -291,7 +291,6 @@ ELSE()
     SET(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 
     SET ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_FILE_OFFSET_BITS=64 -D__WIN32__ -D_WIN32")
-    SET ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Qstd=c99")
     SET ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-deprecated-declarations -Wno-unused-function -Wno-sometimes-uninitialized -Wno-self-assign")
     INCLUDE_DIRECTORIES(SYSTEM ${PROJECT_SOURCE_DIR}/windows_compatibility)
     IF(DEFINED FLEXIBLAS_WINDOWS_POSIX_HEADERS)
