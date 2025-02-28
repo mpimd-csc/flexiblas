@@ -75,7 +75,7 @@ endif()
 
 
 if (NEED_LINKING_AGAINST_LIBM)
-    SET(LIBM m)
+    SET(LIBM ${LIB_NAME})
 else()
     SET(LIBM)
 endif()

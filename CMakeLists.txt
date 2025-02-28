@@ -197,7 +197,7 @@ ENDIF()
 
 INCLUDE(cmake/libm.cmake)
 IF (NEED_LINKING_AGAINST_LIBM)
-    SET(LIBS ${LIBS} m)
+    SET(LIBS ${LIBS} ${LIBM_NAME})
 ENDIF()
 
 
