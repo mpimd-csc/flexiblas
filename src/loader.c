@@ -24,6 +24,8 @@
 #include <errno.h>
 #include <complex.h>
 
+#include "flexiblas_fortran_mangle.h"
+
 
 /*-----------------------------------------------------------------------------
  *  Load CBLAS
@@ -78,11 +80,15 @@ HIDDEN void * __flexiblas_lookup_fortran_function(void * handle, const char *nam
     }
 
     DPRINTF(3, "Look up (Fortran Symbol): ");
-    for (run = 0; run < 2 ; run++) {
+    for (run = 0; run < 3 ; run++) {
         if (run == 0) {
             snprintf(fname, 39, "%s_", name);
         } else if ( run == 1 ){
             snprintf(fname, 39, "%s", name);
+            for (char * p = &fname[0]; *p; ++p) { *p = tolower(*p); }
+        } else if ( run == 2 ){
+            snprintf(fname, 39, "%s", name);
+            for (char * p = &fname[0]; *p; ++p) { *p = toupper(*p); }
         } else {
             break;
         }
@@ -90,11 +96,7 @@ HIDDEN void * __flexiblas_lookup_fortran_function(void * handle, const char *nam
             fprintf(stderr, "%10s ", fname);
         }
 
-#ifdef __WIN32__
-        ptr_fsymbol = GetProcAddress(handle, fname);
-#else
         ptr_fsymbol = dlsym(handle, fname);
-#endif
         if (ptr_fsymbol!=NULL) {
             break;
         }
@@ -140,7 +142,7 @@ HIDDEN flexiblas_complex_interface_t __flexiblas_get_complex_interface(void *han
 #if defined(__i386__) || defined (__i686__)
     return FLEXIBLAS_COMPLEX_NONE_INTERFACE;
 #else
-    void *zdotc_ptr = __flexiblas_lookup_fortran_function(handle, "zdotc");
+    void *zdotc_ptr = __flexiblas_lookup_fortran_function(handle, MTS(FC_GLOBAL(zdotc,ZDOTC)));
     if ( zdotc_ptr == NULL) {
         DPRINTF(2, "Could not check complex return value interface. ZDOTC not found.\n");
         return FLEXIBLAS_COMPLEX_NONE_INTERFACE;
@@ -209,7 +211,7 @@ HIDDEN flexiblas_interface_t __flexiblas_get_interface(void *handle)
     return FLEXIBLAS_INTERFACE_LP64;
 #else
     int64_t (*isamax_function)(int64_t *, float *, int64_t *);
-    void *isamax_ptr = __flexiblas_lookup_fortran_function(handle, "isamax");
+    void *isamax_ptr = __flexiblas_lookup_fortran_function(handle, MTS(FC_GLOBAL(isamax, ISAMAX)));
     if ( isamax_ptr == NULL) {
         DPRINTF(2, "Could not check lp64/ilp64 interface. ISAMAX not found. \n");
         return FLEXIBLAS_INTERFACE_NONE;

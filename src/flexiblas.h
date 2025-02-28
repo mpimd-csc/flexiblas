@@ -39,9 +39,9 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <stdint.h>
+#include <dlfcn.h>
 
 #ifndef __WIN32__
-#include <dlfcn.h>
 #include <pthread.h>
 #endif
 

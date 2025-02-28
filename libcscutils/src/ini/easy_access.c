@@ -23,7 +23,9 @@
 #include <math.h>
 #include <ctype.h>
 #include <errno.h>
+#ifndef __WIN32__
 #include <pthread.h>
+#endif
 #include <limits.h>
 #include <stdlib.h>
 #include <unistd.h>
