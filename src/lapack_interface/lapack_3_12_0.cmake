@@ -1,3 +1,15 @@
+IF ( WIN32 )
+
+SET(LAPACK_SRC
+     lapack_interface/wrapper/lapack_c.c
+     lapack_interface/wrapper/lapack_d.c
+     lapack_interface/wrapper/lapack_i.c
+     lapack_interface/wrapper/lapack_s.c
+     lapack_interface/wrapper/lapack_x.c
+     lapack_interface/wrapper/lapack_z.c
+)
+ELSE()
+
 SET(LAPACK_SRC
     lapack_interface/wrapper/cbbcsd.c
     lapack_interface/wrapper/cbdsqr.c
@@ -1976,3 +1988,5 @@ SET(LAPACK_SRC
     lapack_interface/wrapper/zupgtr.c
     lapack_interface/wrapper/zupmtr.c
     )
+
+endif()

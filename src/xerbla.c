@@ -30,11 +30,10 @@
 
 #include "flexiblas.h"
 #include "flexiblas_fortran_char_len.h"
-#ifndef __WIN32__
+
 #include <dlfcn.h>
 #ifndef RTLD_DEFAULT
 # define RTLD_DEFAULT   ((void *) 0)
-#endif
 #endif
 
 // static int user_xerbla = 0;
@@ -83,7 +82,6 @@ void XERBLA(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len) {
 
 int __flexiblas_setup_xerbla(flexiblas_backend_t *backend)
 {
-#ifndef __WIN32__
     /* Check if the user supplied a XERBLA function  */
     {
         int user_xerbla = 0;
@@ -112,7 +110,6 @@ int __flexiblas_setup_xerbla(flexiblas_backend_t *backend)
             backend->xerbla.f77_blas_function = xerbla_symbol2;
         }
     }
-#endif
     return 0;
 }
 
@@ -141,7 +138,7 @@ void flexiblas_internal_xerbla(char *SNAME, Int *Info, flexiblas_fortran_charlen
 
 #ifdef FLEXIBLAS_CBLAS
 
-#ifndef __APPLE__
+#if !(defined(__APPLE__) || defined(__WIN32__))
 extern void internal_cblas_xerbla(int info, const char *rout, const char *form, ...);
 #else
 /* This routine is designed for MacOS */

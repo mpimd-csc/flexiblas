@@ -41,6 +41,8 @@ extern "C" {
     HIDDEN void __flexiblas_init_default_paths(void);
     HIDDEN void __flexiblas_add_path_from_environment(void);
     HIDDEN void __flexiblas_add_path_from_config( flexiblas_mgmt_t * config, flexiblas_mgmt_location_t loc);
+    HIDDEN char * __flexiblas_get_library_location(void);
+    HIDDEN void __flexiblas_get_global_rc_path(char * container, int max_buffer_size,  char const * suffix);
 
 #ifdef __cplusplus
 };

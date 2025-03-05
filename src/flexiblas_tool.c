@@ -349,7 +349,12 @@ int main(int argc, char **argv)
 
 
     /* Determine Config mode  */
+#ifdef _WIN32
+    /* FIXME there is no direct match for the Linux call below */
+    if (0) {
+#else
     if ( getuid() == 0 ) {
+#endif
         config_location = FLEXIBLAS_GLOBAL;
     } else {
         config_location = FLEXIBLAS_USER;

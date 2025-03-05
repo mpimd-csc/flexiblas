@@ -23,7 +23,11 @@
 extern "C" {
 #endif
     #include <stdint.h>
+#ifndef __WIN32__
     #include <pthread.h>
+#else
+    #include "windows_fixes.h"
+#endif
 
     typedef uint64_t (csc_map_hash_func_t)(const void *key, uint64_t size);
     typedef void (csc_map_key_free_t)(void *key);

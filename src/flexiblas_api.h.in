@@ -37,6 +37,32 @@
 #endif
 #endif
 
+/* Complex type (single precision) */
+#ifndef FLEXIBLAS_API_COMPLEX_FLOAT
+#ifndef __cplusplus
+#include <complex.h>
+#else
+#include <complex>
+#endif
+#define FLEXIBLAS_API_COMPLEX_FLOAT    float _Complex
+#endif
+
+/* Complex type (double precision) */
+#ifndef FLEXIBLAS_API_COMPLEX_DOUBLE
+#ifndef __cplusplus
+#include <complex.h>
+#else
+#include <complex>
+#endif
+#define FLEXIBLAS_API_COMPLEX_DOUBLE   double _Complex
+#endif
+
+#ifdef _WIN64
+typedef long long int ssize_t;
+#elif _WIN32
+typedef long ssize_t;
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif

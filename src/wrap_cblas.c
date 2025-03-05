@@ -39,7 +39,7 @@ HIDDEN int __flexiblas_load_cblas(flexiblas_backend_t *backend)
 {
     void * cblas_in_blis = dlsym(backend->library_handle, "bli_info_get_enable_cblas");
     if ( cblas_in_blis ) {
-        DPRINTF_WARN(1, "The desired BLAS library is BLIS. We do not load their CBLAS wrapper since it might alter the behavior of your programs.");
+        DPRINTF_WARN(1, "The desired BLAS library is BLIS. We do not load their CBLAS wrapper since it might alter the behavior of your programs.\n");
         return 0;
     }
     /*-----------------------------------------------------------------------------

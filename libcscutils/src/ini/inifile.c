@@ -36,7 +36,11 @@
 #include <math.h>
 #include <ctype.h>
 #include <errno.h>
+#ifndef __WIN32__
 #include <pthread.h>
+#else
+#include <windows.h>
+#endif
 #include <limits.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -232,6 +236,8 @@ csc_ini_error_t  csc_ini_load(const char *filename, csc_ini_file_t * content, un
 
 #ifdef PATH_MAX
     path_max = PATH_MAX;
+#elif defined(MAX_PATH)
+    path_max = MAX_PATH;
 #else
     path_max = pathconf(path, _PC_PATH_MAX);
     if (path_max <= 0)
@@ -400,6 +406,8 @@ csc_ini_error_t  csc_ini_write(const char * filename, csc_ini_file_t *ini)
 
 #ifdef PATH_MAX
     path_max = PATH_MAX;
+#elif defined(MAX_PATH)
+    path_max = MAX_PATH;
 #else
     path_max = pathconf(path, _PC_PATH_MAX);
     if (path_max <= 0)

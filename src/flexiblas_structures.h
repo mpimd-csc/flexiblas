@@ -25,7 +25,9 @@
 
 #include <stdint.h>
 #include <complex.h>
+#ifndef __WIN32__
 #include <pthread.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {
