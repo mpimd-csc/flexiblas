@@ -36,11 +36,11 @@ ENDIF()
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/libcscutils/include ${PROJECT_BINARY_DIR}/include/ ${PROJECT_BINARY_DIR}/libcscutils/include)
 foreach (srcfile ${SRC})
     add_executable (${srcfile} ${srcfile}.c)
-    target_link_libraries (${srcfile} ${LIBS} flexiblas cscutils ${LIBS})
+    target_link_libraries (${srcfile} flexiblas cscutils ${LIBS})
 endforeach (srcfile)
 
 add_executable(test_zdotc_fortran test_zdotc_fortran.f90)
-target_link_libraries(test_zdotc_fortran ${LIBS} flexiblas cscutils ${LIBS})
+target_link_libraries(test_zdotc_fortran flexiblas cscutils ${LIBS})
 
 add_executable(demo_api_standalone_all demo_api_standalone.c)
 add_executable(demo_api_standalone_allinv demo_api_standalone.c)

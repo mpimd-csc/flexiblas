@@ -115,7 +115,12 @@ ELSEIF(CMAKE_Fortran_COMPILER_ID STREQUAL "Intel" OR CMAKE_Fortran_COMPILER_ID S
     IF (WIN32)
         SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /recursive /heap-arrays:64" CACHE INTERNAL "")
         SET(CMAKE_Fortran_FLAGS_RELEASE "${CMAKE_Fortran_FLAGS_RELEASE} /O3 /Qunroll" CACHE INTERNAL "")
-        SET(CMAKE_Fortran_FLAGS_DEBUG "${CMAKE_Fortran_FLAGS_DEBUG} /warn all /Zi /warn nointerfaces /traceback /debug all" CACHE INTERNAL "")
+
+	ADD_FORTRAN_COMPILER_FLAG(CMAKE_Fortran_FLAGS_DEBUG "/warn:all")
+	ADD_FORTRAN_COMPILER_FLAG(CMAKE_Fortran_FLAGS_DEBUG "/Zi")
+	ADD_FORTRAN_COMPILER_FLAG(CMAKE_Fortran_FLAGS_DEBUG "/warn:nointerfaces")
+	ADD_FORTRAN_COMPILER_FLAG(CMAKE_Fortran_FLAGS_DEBUG "/traceback") 
+	ADD_FORTRAN_COMPILER_FLAG(CMAKE_Fortran_FLAGS_DEBUG "/debug:all")
 
         IF(DEBUGOPT STREQUAL ON)
             ADD_FORTRAN_COMPILER_FLAG(CMAKE_Fortran_FLAGS_DEBUG "/O3")
@@ -135,7 +140,7 @@ ELSEIF(CMAKE_Fortran_COMPILER_ID STREQUAL "Intel" OR CMAKE_Fortran_COMPILER_ID S
             SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /4I8" CACHE INTERNAL "")
         ENDIF()
 
-        LIST(APPEND LIBRARIES "ifcore")
+        LIST(APPEND LIBRARIES "libifcore")
 
         SET(I8FLAG "/4I8")
     ELSE()

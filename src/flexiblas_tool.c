@@ -159,6 +159,7 @@ static void print_usage(const char *prgmname) {
     printf(" -p, --pipe      Pipe/Script compatible output.\n");
     printf(" -h, --help      Print this information and exit.\n");
     printf(" -v, --version   Print the version information and exit.\n");
+    printf("   --> The long \"--xxx\" options are not available on Windows without MingW\n");
     printf("\n");
     printf("Possible properties are: \n");
     printf(" verbose         Sets the verbosity of FlexiBLAS (integer, 0 = quiet) \n");
@@ -349,7 +350,12 @@ int main(int argc, char **argv)
 
 
     /* Determine Config mode  */
+#ifdef _WIN32
+    /* FIXME there is no direct match for the Linux call below */
+    if (0) {
+#else
     if ( getuid() == 0 ) {
+#endif
         config_location = FLEXIBLAS_GLOBAL;
     } else {
         config_location = FLEXIBLAS_USER;
@@ -357,6 +363,7 @@ int main(int argc, char **argv)
 
     while (1)
     {
+#if defined(__unix__) || defined (__MINGW32__) || defined(__MINGW64__)
         static struct option long_options[] =
         {
             /* Use flags like so:
@@ -380,7 +387,9 @@ required_argument: ":"
 optional_argument: "::" */
 
         choice = getopt_long( argc, argv, "vhguHEp", long_options, &option_index);
-
+#else
+        choice = getopt(argc, argv, "vhguHEp");
+#endif
         if (choice == -1)
             break;
 

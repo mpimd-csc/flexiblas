@@ -1044,7 +1044,7 @@
 *
 *     .. Parameters ..
       INTEGER            NMAX
-      PARAMETER          ( NMAX = 132 )
+      PARAMETER          ( NMAX = 100 )
       INTEGER            NCMAX
       PARAMETER          ( NCMAX = 20 )
       INTEGER            NEED

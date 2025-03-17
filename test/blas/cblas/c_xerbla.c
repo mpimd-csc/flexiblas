@@ -5,6 +5,10 @@
 #include "cblas.h"
 #include "cblas_test.h"
 
+#ifdef _WIN32
+int RowMajorStrg;
+#endif 
+
 void cblas_xerbla(CBLAS_INT info, const char *rout, const char *form, ...)
 {
    extern F77_INT cblas_lerr, cblas_info, cblas_ok;

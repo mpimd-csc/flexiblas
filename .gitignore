@@ -11,6 +11,7 @@
 *.tar.gz
 *octave-workspace*
 *~
+.vs
 build*
 debian/*.substvars
 debian/.debhelper/*

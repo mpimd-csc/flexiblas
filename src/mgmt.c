@@ -40,6 +40,11 @@
 #include <dirent.h>
 #include <dlfcn.h>
 
+#ifdef __WIN32__
+#include <windows_fixes.h>
+#else
+#include <libgen.h>
+#endif
 
 #define MAX_BUFFER_SIZE 32*1024
 
@@ -110,18 +115,10 @@ static char *__flexiblas_mgmt_getenv(int what) {
 #endif
             break;
         case FLEXIBLAS_ENV_GLOBAL_RC:
-#ifdef __WIN32__
-            snprintf(container,MAX_BUFFER_SIZE,"%s\\%s", getenv("SYSTEMROOT"), FLEXIBLAS_RC);
-#else
-            snprintf(container,MAX_BUFFER_SIZE,"%s/%s",CMAKE_INSTALL_FULL_SYSCONFDIR,FLEXIBLAS_RC);
-#endif
+            __flexiblas_get_global_rc_path(container, MAX_BUFFER_SIZE, FLEXIBLAS_RC);
             break;
         case FLEXIBLAS_ENV_GLOBAL_RC_DIR:
-#ifdef __WIN32__
-#warning NOT IMPLEMENTED
-#else
-            snprintf(container,MAX_BUFFER_SIZE,"%s/%s/",CMAKE_INSTALL_FULL_SYSCONFDIR,FLEXIBLAS_RC_DIR);
-#endif
+            __flexiblas_get_global_rc_path(container, MAX_BUFFER_SIZE, FLEXIBLAS_RC_DIR);
             break;
         case FLEXIBLAS_ENV_USER_RC:
 #ifdef __WIN32__
@@ -132,7 +129,7 @@ static char *__flexiblas_mgmt_getenv(int what) {
             break;
         case FLEXIBLAS_ENV_HOST_RC:
 #ifdef __WIN32__
-#error Not implemented
+            return NULL;
 #else
             {
                 char hostname[MAX_BUFFER_SIZE-32];
@@ -142,7 +139,6 @@ static char *__flexiblas_mgmt_getenv(int what) {
 #endif
             break;
         case FLEXIBLAS_ENV_ENV_RC:
-#ifndef __WIN32__
             {
                 if ( getenv("FLEXIBLAS_CONFIG") != NULL ) {
                     snprintf(container, MAX_BUFFER_SIZE, "%s", getenv("FLEXIBLAS_CONFIG"));
@@ -152,7 +148,6 @@ static char *__flexiblas_mgmt_getenv(int what) {
                     return NULL;
                 }
             }
-#endif
             break;
         default:
             return NULL;
@@ -310,7 +305,11 @@ flexiblas_mgmt_t * flexiblas_mgmt_load_config(void)
                 DPRINTF_ERROR(0,"Failed to allocate memory for path %s/%s. Skip file.\n", path, dentry->d_name);
                 continue;
             }
+#if defined(__WIN32__)
+            snprintf(xpath, xpath_len-1, "%s\\%s", path, dentry->d_name);
+#else
             snprintf(xpath, xpath_len-1, "%s/%s", path, dentry->d_name);
+#endif
             DPRINTF(1, "Load config: %s\n", xpath);
             csc_ini_load(xpath, ini, CSC_INI_LOAD_SECTION_UPPERCASE);
             free(xpath);
@@ -331,7 +330,7 @@ flexiblas_mgmt_t * flexiblas_mgmt_load_config(void)
         DPRINTF(1, "Load user config %s\n", path);
         csc_ini_load(path, ini, CSC_INI_LOAD_SECTION_UPPERCASE);
     } else {
-        DPRINTF_WARN(1, "Config %s does not exist.\n", path);
+        DPRINTF_WARN(1, "User config %s does not exist.\n", path);
     }
 
     if ( path ) free(path);
@@ -344,7 +343,7 @@ flexiblas_mgmt_t * flexiblas_mgmt_load_config(void)
         DPRINTF(1, "Load host config %s\n", path);
         csc_ini_load(path, ini, CSC_INI_LOAD_SECTION_UPPERCASE);
     } else {
-        DPRINTF_WARN(1, "Config %s does not exist.\n", path);
+        DPRINTF_WARN(1, "Host config %s does not exist.\n", path);
     }
 
     if ( path ) free(path);
@@ -626,20 +625,25 @@ iter:
 }
 
 
-static char flexiblas_mgmt_searchpath[] = FLEXIBLAS_DEFAULT_LIB_PATH;
-
 int flexiblas_mgmt_list_default_paths(char *path, void **help)
 {
+#if defined(__WIN32__)
+    const char * delim = ";";
+#else
+    const char * delim = ":";
+#endif
     char *r;
-    // printf("%s\n", flexiblas_mgmt_searchpath);
     if ( *help == NULL ) {
-        strncpy(path, strtok_r(flexiblas_mgmt_searchpath, ":",&r), FLEXIBLAS_MGMT_MAX_BUFFER_LEN);
+        char * folder = __flexiblas_get_library_location();
+        char * flexiblas_mgmt_searchpath = dirname(folder);
+        strncpy(path, strtok_r(flexiblas_mgmt_searchpath, delim, &r), FLEXIBLAS_MGMT_MAX_BUFFER_LEN);
+        free(folder);
         *help = r;
         return 1;
     } else {
         char *p;
         r = (char *) *help ;
-        p = strtok_r(NULL, ":",&r);
+        p = strtok_r(NULL, delim, &r);
         if ( p == NULL ) {
             *help =  NULL;
             return 0;

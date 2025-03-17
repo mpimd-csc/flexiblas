@@ -32,7 +32,7 @@
 #define MAX(A,B) ((A)>(B)?(A):(B))
 
 static void print_row_ascii(FILE *stream, csc_table_t *t, const char *colsep, int r );
-static void print_header_ascii(FILE *stream, csc_table_t *t, const char *colsep);
+static void print_header_ascii(FILE *stream, csc_table_t *t, const char *colsep, int r);
 static void csc_table_column_destroy(csc_table_column_t col);
 
 
@@ -302,7 +302,7 @@ void csc_table_print_current_row(csc_table_t *t)
 
     if ( last <= 0 ) {
         csc_table_comment_print(stdout, t->comment);
-        print_header_ascii(stdout, t, " ");
+        print_header_ascii(stdout, t, " ", 1);
     } else {
         print_row_ascii(stdout, t, " ", last-1);
     }
@@ -315,7 +315,7 @@ int  csc_table_new_row(csc_table_t * t) {
     if ( t-> cp ) {
         if ( last <= 0 ) {
             csc_table_comment_print(stdout, t->comment);
-            print_header_ascii(stdout, t, " ");
+            print_header_ascii(stdout, t, " ", 1);
         } else {
             print_row_ascii(stdout, t, " ", last-1);
         }
@@ -544,13 +544,13 @@ int csc_table_append_row(csc_table_t *t, csc_table_t *tab, int row) {
     return 0;
 }
 
-static void print_header_ascii(FILE *stream, csc_table_t *t, const char *colsep)
+static void print_header_ascii(FILE *stream, csc_table_t *t, const char *colsep, int comment_style)
 {
     int i;
     int cwidth;
     char tmp[CSC_TABLE_MAXLEN+1];
 
-    fprintf(stream,"%s", t->comment->start);
+    if ( comment_style ) fprintf(stream,"%s", t->comment->start);
     for (i = 0; i < t->number_of_columns; i++) {
         cwidth = MAX(t->columns[i].minwidth, t->columns[i].width);
         csc_strcenter(t->columns[i].name, cwidth, tmp);
@@ -635,12 +635,26 @@ void csc_table_print_ascii(FILE *stream, csc_table_t *t, const char *colsep)
     if (!t) return;
 
     if ( t->comment) csc_table_comment_print(stream, t->comment);
-    print_header_ascii(stream, t, colsep);
+    print_header_ascii(stream, t, colsep, 1);
     for (r = 0; r < t->number_of_rows; r++) {
         print_row_ascii(stream, t, colsep, r);
     }
     return ;
 }
+
+void csc_table_print_pgfplotstable(FILE *stream, csc_table_t *t, const char *colsep)
+{
+    int r;
+    if (!t) return;
+
+    if ( t->comment) csc_table_comment_print(stream, t->comment);
+    print_header_ascii(stream, t, colsep, 0);
+    for (r = 0; r < t->number_of_rows; r++) {
+        print_row_ascii(stream, t, colsep, r);
+    }
+    return ;
+}
+
 
 void csc_table_print_fortran(csc_table_t *t, const char *colsep) {
     //DPRINTF(2, "[TABLE] Fortran Print table: %lx\n", (unsigned long) t);
@@ -663,6 +677,22 @@ int csc_table_save_ascii(const char * filename, csc_table_t *t, const char *cols
     fclose(fp);
     return 0;
 }
+
+int csc_table_save_pgfplotstable(const char * filename, csc_table_t *t, const char *colsep)
+{
+    FILE *fp;
+    if (!t) return -1 ;
+
+    fp = fopen(filename, "w");
+    if (!fp ) {
+        csc_error_message("Failed to open %s for writing.\n", filename);
+        return -1;
+    }
+    csc_table_print_pgfplotstable(fp, t, colsep);
+    fclose(fp);
+    return 0;
+}
+
 
 void csc_table_formater_integer(char *out, int len, csc_table_value_t type, ...)
 {

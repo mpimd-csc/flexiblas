@@ -185,6 +185,8 @@ extern "C" {
      */
     void csc_table_print_ascii(FILE *stream, csc_table_t *table, const char *colsep);
 
+    void csc_table_print_pgfplotstable(FILE *stream, csc_table_t *t, const char *colsep);
+
     /**
      * \brief Print the current row.
      * \param[in] t Table to print
@@ -222,6 +224,9 @@ extern "C" {
      * \see csc_table_print_ascii
      */
     int csc_table_save_ascii(const char *filename, csc_table_t *table, const char *colsep);
+
+    int csc_table_save_pgfplotstable(const char * filename, csc_table_t *t, const char *colsep);
+
 
     /**
      * \brief Write a Table as LaTex code to a file

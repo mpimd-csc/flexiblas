@@ -89,19 +89,11 @@ HIDDEN char *__flexiblas_getenv(int what) {
 #endif
             break;
         case FLEXIBLAS_ENV_GLOBAL_RC:
-#ifdef __WIN32__
-            snprintf(container,MAX_BUFFER_SIZE,"%s\\%s", getenv("SYSTEMROOT"), FLEXIBLAS_RC);
-#else
-            snprintf(container,MAX_BUFFER_SIZE,"%s/%s",CMAKE_INSTALL_FULL_SYSCONFDIR,FLEXIBLAS_RC);
-#endif
+            __flexiblas_get_global_rc_path(container, MAX_BUFFER_SIZE, FLEXIBLAS_RC);
             break;
         case FLEXIBLAS_ENV_GLOBAL_RC_DIR:
-#ifdef __WIN32__
-#warning NOT IMPLEMENTED
-#else
-            snprintf(container,MAX_BUFFER_SIZE,"%s/%s/",CMAKE_INSTALL_FULL_SYSCONFDIR,FLEXIBLAS_RC_DIR);
-#endif
-            break;
+            __flexiblas_get_global_rc_path(container, MAX_BUFFER_SIZE, FLEXIBLAS_RC_DIR);
+                break;
         case FLEXIBLAS_ENV_USER_RC:
 #ifdef __WIN32__
             snprintf(container,MAX_BUFFER_SIZE,"%s\\%s",getenv("APPDATA"), FLEXIBLAS_RC);
@@ -111,7 +103,7 @@ HIDDEN char *__flexiblas_getenv(int what) {
             break;
         case FLEXIBLAS_ENV_HOST_RC:
 #ifdef __WIN32__
-#error Not implemented
+            snprintf(container, MAX_BUFFER_SIZE, "None");
 #else
             {
                 char hostname[MAX_BUFFER_SIZE-20];
@@ -166,9 +158,17 @@ HIDDEN int __flexiblas_insert_fallback_blas(flexiblas_mgmt_t *config)
     char *tmp2;
 
     snprintf(tmp,len, "%s%s", FALLBACK_NAME,SO_EXTENSION);
+#if defined(__WIN32__)
+    len = strlen("flexiblas_netlib")+strlen(SO_EXTENSION)+2;
+#else
     len = strlen("libflexiblas_netlib")+strlen(SO_EXTENSION)+2;
+#endif
     tmp2 = (char*) calloc(len,sizeof(char));
+#if defined(__WIN32__)
+    snprintf(tmp2,len, "flexiblas_netlib%s", SO_EXTENSION);
+#else
     snprintf(tmp2,len, "libflexiblas_netlib%s", SO_EXTENSION);
+#endif
 
     if ( flexiblas_mgmt_blas_add(config, FLEXIBLAS_GLOBAL, "NETLIB", tmp2, NULL)){
         DPRINTF(0,"Can not insert Netlib BLAS library.\n");

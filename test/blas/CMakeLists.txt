@@ -30,6 +30,18 @@ macro(add_blas_test name src)
         set_property(TEST BLAS-${name} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS=NETLIB)
         set_property(TEST BLAS-${name} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS_CONFIG=${PROJECT_BINARY_DIR}/${FLEXIBLAS_RC})
     endif()
+    if (WIN32) 
+	    add_custom_command(TARGET ${name} POST_BUILD
+ 		 COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_RUNTIME_DLLS:${name}> $<TARGET_FILE_DIR:${name}>
+		 COMMAND_EXPAND_LISTS
+  		)
+	    #	    set(LISTE $<TARGET_RUNTIME_DLL_DIRS:${name}>)
+	    #foreach(DIR IN LISTS LISTE) 
+	    #	    message(STATUS "DIR: ${DIR}")
+	    #endforeach()
+	    # set_property(TEST BLAS-${name} PROPERTY ENVIRONMENT_MODIFICATION PATH=path_list_append:$<TARGET_RUNTIME_DLL_DIRS:${name}>)
+    endif()
+
 endmacro(add_blas_test)
 
 IF ( INTEGER8 STREQUAL ON )

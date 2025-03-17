@@ -59,6 +59,10 @@
 #include "flexiblas_fortran_mangle.h"
 #include "cscutils/counter.h"
 
+#ifdef __WIN32__
+#include "windows_fixes.h"
+#endif
+
 #ifndef FLEXIBLAS_CHARLEN_T
 #define FLEXIBLAS_CHARLEN_T
 #if __GNUC__ > 7
@@ -424,6 +428,7 @@ int main (int argc, char **argv) {
 
     while (1)
     {
+#if defined(__unix__) || defined (__MINGW32__) || defined(__MINGW64__)
         static struct option long_options[] =
         {
             /* Use flags like so:
@@ -453,6 +458,14 @@ optional_argument: "::" */
         choice = getopt_long( argc, argv, "hr:d:b:",
                 long_options, &option_index);
 
+#endif
+#else
+#ifndef STANDALONE
+        choice = getopt(argc, argv, "vhs:o:r:d:b:");
+#else
+        choice = getopt(argc, argv, "hr:d:b:");
+
+#endif
 #endif
 
         if (choice == -1)

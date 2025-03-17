@@ -62,7 +62,7 @@ logical FC_GLOBAL(lsamen,LSAMEN)(pint *len, char *ca, char *cb, ftnlen ca_len, f
     cb_len = cb_len;
 
     for (i = 0; i < *len; i++) {
-        if (!lsame_(&ca[i],&cb[i],1,1))
+        if (!FC_GLOBAL_(lsame,LSAME)(&ca[i],&cb[i],1,1))
             return 0;
     }
     return 1;
@@ -85,7 +85,7 @@ logical FC_GLOBAL2(lsamen,LSAMEN)(pint *len, char *ca, char *cb, ftnlen ca_len, 
     cb_len = cb_len;
 
     for (i = 0; i < *len; i++) {
-        if (!lsame_(&ca[i],&cb[i],1,1))
+        if (!FC_GLOBAL_(lsame,LSAME)(&ca[i],&cb[i],1,1))
             return 0;
     }
     return 1;
@@ -108,7 +108,7 @@ logical FC_GLOBAL3(lsamen,LSAMEN)(pint *len, char *ca, char *cb, ftnlen ca_len, 
     cb_len = cb_len;
 
     for (i = 0; i < *len; i++) {
-        if (!lsame_(&ca[i],&cb[i],1,1))
+        if (!FC_GLOBAL_(lsame,LSAME)(&ca[i],&cb[i],1,1))
             return 0;
     }
     return 1;
