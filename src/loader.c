@@ -44,7 +44,7 @@ HIDDEN int __flexiblas_load_cblas_function( void * handle , struct flexiblas_bla
 
     snprintf(cname, 39, "cblas_%s", name);
     DPRINTF(3, "Look up: %18s", cname);
-    ptr_csymbol = dlsym(handle, cname);
+    ptr_csymbol = __flexiblas_dlsym(handle, cname);
 
     fn -> cblas_real = ptr_csymbol;
     fn -> cblas_function = ptr_csymbol;
@@ -96,7 +96,7 @@ HIDDEN void * __flexiblas_lookup_fortran_function(void * handle, const char *nam
             fprintf(stderr, "%10s ", fname);
         }
 
-        ptr_fsymbol = dlsym(handle, fname);
+        ptr_fsymbol = __flexiblas_dlsym(handle, fname);
         if (ptr_fsymbol!=NULL) {
             break;
         }

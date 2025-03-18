@@ -36,17 +36,15 @@
 #ifdef _WIN32
 #include "windows_fixes.h"
 #include <windows.h>
-#define FUNC_RETURN_ADDRESS() _ReturnAddress()
 #else
 #define FUNC_RETURN_ADDRESS() __builtin_extract_return_addr(__builtin_return_address(0))
 #include <linux/limits.h>
 #include <libgen.h>
+#include <dlfcn.h>
 #endif
 
 HIDDEN char **  __flexiblas_additional_paths = NULL;
 HIDDEN int __flexiblas_count_additional_paths = 0;
-
-#include <dlfcn.h>
 
 
 __attribute__((noinline)) char *
@@ -57,7 +55,7 @@ __flexiblas_get_library_location_impl(void)
 
     HMODULE module;
     if (GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
-        (LPCTSTR)FUNC_RETURN_ADDRESS(), &module))
+        (LPCTSTR) &__flexiblas_get_library_location_impl, &module))
     {
         GetModuleFileNameA(module, buffer, MAX_PATH);
         char * base_path = dirname(buffer);

@@ -90,7 +90,11 @@ static int file_exists(const char * path )
     struct stat st_buf;
     memset (&st_buf, 0, sizeof(struct stat));
     if ( stat( path, &st_buf) == 0){
-        if ( (S_ISREG(st_buf.st_mode) || S_ISLNK (st_buf.st_mode) )){
+        if ( (S_ISREG(st_buf.st_mode)
+#ifdef S_ISLNK
+             || S_ISLNK (st_buf.st_mode)
+#endif
+             )){
             return 1;
         } else {
             return 0;
@@ -157,8 +161,8 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
 #endif
         resolvepath = calloc(path_max, sizeof(char));
 
-#if defined(_WIN32) || defined(_WIN64)
-        if (_fullpath(libname, resolvepath, path_max) == NULL) {
+#ifdef __WIN32__
+        if ( _fullpath(resolvepath, libname, path_max) == NULL ) {
 #else
         if ( realpath(libname, resolvepath) == NULL ) {
 #endif
@@ -186,11 +190,14 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
 
 
     if( found ) {
+#ifdef __WIN32__
+        handle = LoadLibrary(filepath);
+#else
         void * ld_flags_sym_global;
         void * ld_flags_sym_lazy;
         int32_t ld_flags_global;
         int32_t ld_flags_lazy;
-#if defined(__linux__) || defined(__WIN32__)
+#if defined(__linux__)
         void * ld_flags_sym_deep = NULL;
         int32_t ld_flags_deep = 0 ;
 #endif
@@ -223,7 +230,7 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
             } else {
                 ld_flags_lazy = *((int32_t*) ld_flags_sym_lazy);
             }
-#if defined(__linux__) || defined(__WIN32__)
+#if defined(__linux__)
             ld_flags_sym_deep = dlsym(handle, "flexiblas_ld_deep");
             if ( ld_flags_sym_deep == NULL) {
                 ld_flags_deep = 0;
@@ -247,7 +254,7 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
                 flags |= RTLD_NOW;
             }
 
-#if defined(__linux__) || defined(__WIN32__)
+#if defined(__linux__)
             if ( ld_flags_deep != 0 ) {
                 flags |= RTLD_DEEPBIND;
                 DPRINTF(1, "Load backend with RTLD_DEEPBIND\n");
@@ -259,7 +266,7 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
         }
 
         handle = dlopen(filepath, flags);
-
+#endif
 
 
         if (handle == NULL){
@@ -338,8 +345,8 @@ HIDDEN int __flexiblas_dl_symbol_exist( const char *libname, const char *symbol_
 #endif
         resolvepath = calloc(path_max, sizeof(char));
 
-#if defined(_WIN32) || defined(_WIN64)
-        if (_fullpath(libname, resolvepath, path_max) == NULL) {
+#ifdef __WIN32__
+        if ( _fullpath(resolvepath, libname, path_max) == NULL ) {
 #else
         if ( realpath(libname, resolvepath) == NULL ) {
 #endif
@@ -369,6 +376,28 @@ HIDDEN int __flexiblas_dl_symbol_exist( const char *libname, const char *symbol_
     if( found ) {
         void *sym = NULL;
         csc_strremovedup(filepath,'/');
+#ifdef __WIN32__
+        handle = LoadLibrary (filepath);
+        if (!handle) {
+            DWORD last_error = GetLastError ();
+
+            char *error_text = NULL;
+            FormatMessageA (FORMAT_MESSAGE_FROM_SYSTEM |
+                            FORMAT_MESSAGE_ALLOCATE_BUFFER |
+                            FORMAT_MESSAGE_IGNORE_INSERTS,
+                            NULL, last_error,
+                            MAKELANGID (LANG_NEUTRAL, SUBLANG_DEFAULT),
+                            (char *) (&error_text), 0, NULL);
+            if (error_text == NULL)
+                DPRINTF_ERROR(0, "Failed to load %s\n", filepath);
+            else
+                DPRINTF_ERROR(0, "Failed to load %s - error: %s \n", filepath, error_text);
+            if ( filepath) free(filepath);
+            return 0;
+        }
+        sym = (void *) GetProcAddress(handle, symbol_name);
+        CloseHandle(handle);
+#else
         dlerror();
         handle = dlopen(filepath, RTLD_LAZY | RTLD_LOCAL);
         if (!handle) {
@@ -378,6 +407,7 @@ HIDDEN int __flexiblas_dl_symbol_exist( const char *libname, const char *symbol_
         }
         sym = dlsym(handle, symbol_name);
         dlclose(handle);
+#endif
         if ( filepath) free(filepath);
         return (sym == NULL) ? 0 : 1;
     }
@@ -385,4 +415,20 @@ HIDDEN int __flexiblas_dl_symbol_exist( const char *libname, const char *symbol_
     return 0;
 }
 
+HIDDEN void * __flexiblas_dlsym(void *lib, const char *fname) {
+#ifdef __WIN32__
+    return (void *) GetProcAddress(lib, fname);
+#else
+    return dlsym(lib, fname);
+#endif
+}
+
+HIDDEN void __flexiblas_dlclose(void *lib) {
+#ifdef __WIN32__
+    FreeLibrary(lib);
+#else
+    dlclose(lib);
+#endif
+    return;
+}
 
