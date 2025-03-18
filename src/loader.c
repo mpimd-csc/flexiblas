@@ -23,10 +23,6 @@
 #include "flexiblas.h"
 #include <errno.h>
 #include <complex.h>
-#ifdef __WIN32__
-#define WIN32_LEAN_AND_MEAN 1
-#include <windows.h>
-#endif
 
 #include "flexiblas_fortran_mangle.h"
 #include <stdarg.h>
@@ -50,11 +46,7 @@ HIDDEN void * __flexiblas_lookup_cblas_function( void * handle , ...)
     dlerror();
     while ( (name = va_arg(args, char*)) != NULL) {
         DPRINTF(3, "Look up (C Symbol): %21s", name);
-#ifdef __WIN32__
-        ptr_csymbol = GetProcAddress(handle, cname);
-#else
-        ptr_csymbol = dlsym(handle, name);
-#endif
+        ptr_csymbol = __flexiblas_dlsym(handle, cname);
 
         if ( __flexiblas_verbose > 2) {
             fprintf(stderr, " %s at = 0x%lx in = 0x%lx.\n",(ptr_csymbol == NULL)?"failed":"success", (unsigned long) ptr_csymbol, (unsigned long) handle);
@@ -107,11 +99,9 @@ HIDDEN void * __flexiblas_lookup_fortran_function(void * handle, ...)
                 fprintf(stderr, "%18s", fname);
             }
 
-#ifdef __WIN32__
-            ptr_fsymbol = GetProcAddress(handle, fname);
-#else
-            ptr_fsymbol = dlsym(handle, fname);
-#endif
+            ptr_fsymbol = __flexiblas_dlsym(handle, fname);
+
+        if (ptr_fsymbol!=NULL) {
 
             if (ptr_fsymbol!=NULL) {
                 break;
