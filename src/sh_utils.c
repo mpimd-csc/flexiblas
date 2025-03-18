@@ -197,7 +197,7 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
         void * ld_flags_sym_lazy;
         int32_t ld_flags_global;
         int32_t ld_flags_lazy;
-#if defined(__linux__) || defined(__WIN32__)
+#if defined(__linux__)
         void * ld_flags_sym_deep = NULL;
         int32_t ld_flags_deep = 0 ;
 #endif
@@ -230,7 +230,7 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
             } else {
                 ld_flags_lazy = *((int32_t*) ld_flags_sym_lazy);
             }
-#if defined(__linux__) || defined(__WIN32__)
+#if defined(__linux__)
             ld_flags_sym_deep = dlsym(handle, "flexiblas_ld_deep");
             if ( ld_flags_sym_deep == NULL) {
                 ld_flags_deep = 0;
@@ -254,7 +254,7 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
                 flags |= RTLD_NOW;
             }
 
-#if defined(__linux__) || defined(__WIN32__)
+#if defined(__linux__)
             if ( ld_flags_deep != 0 ) {
                 flags |= RTLD_DEEPBIND;
                 DPRINTF(1, "Load backend with RTLD_DEEPBIND\n");
@@ -415,4 +415,20 @@ HIDDEN int __flexiblas_dl_symbol_exist( const char *libname, const char *symbol_
     return 0;
 }
 
+HIDDEN void * __flexiblas_dlsym(void *lib, const char *fname) {
+#ifdef __WIN32__
+    return (void *) GetProcAddress(lib, fname);
+#else
+    return dlsym(lib, fname);
+#endif
+}
+
+HIDDEN void __flexiblas_dlclose(void *lib) {
+#ifdef __WIN32__
+    FreeLibrary(lib);
+#else
+    dlclose(lib);
+#endif
+    return;
+}
 

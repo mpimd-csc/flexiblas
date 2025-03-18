@@ -34,7 +34,6 @@
 #ifndef __WIN32__
 #include <dlfcn.h>
 #else
-#include <windows.h>
 #define RTLD_LAZY 0
 #define RTLD_LOCAL 0
 #endif
@@ -170,11 +169,7 @@ int  show_hook(char *name)
         goto fin;
     }
 
-#ifdef __WIN32__
-    flexiblas_hook_register_t *reg = (flexiblas_hook_register_t *) GetProcAddress(handle, "flexiblas_register");
-#else
-    flexiblas_hook_register_t *reg = (flexiblas_hook_register_t *) dlsym(handle, "flexiblas_register");
-#endif
+    flexiblas_hook_register_t *reg = (flexiblas_hook_register_t *) __flexiblas_dlsym(handle, "flexiblas_register");
 
     printf("Name:          %s\n", reg->name);
     printf("Configuration: %s\n", reg->cfg_name);
@@ -183,11 +178,7 @@ int  show_hook(char *name)
 
     int cnt = 0;
     int nopts = 0;
-#ifdef __WIN32__
-    flexiblas_option_t *opts = (flexiblas_option_t *) GetProcAddress(handle, "flexiblas_options");
-#else
-    flexiblas_option_t *opts = (flexiblas_option_t *) dlsym(handle, "flexiblas_options");
-#endif
+    flexiblas_option_t *opts = (flexiblas_option_t *) __flexiblas_dlsym(handle, "flexiblas_options");
     if ( opts == NULL)
         nopts = 0;
     else {
@@ -215,11 +206,7 @@ int  show_hook(char *name)
     }
 fin:
     if ( handle != NULL)
-#ifdef __WIN32__
-        FreeLibrary(handle);
-#else
-        dlclose(handle);
-#endif
+        __flexiblas_dlclose(handle);
 
     return ecode;
 
@@ -394,30 +381,17 @@ int hook_option_set(flexiblas_mgmt_location_t loc, char *hookname, char *option,
         printf("Opening hook %s/%s failed.\n", hookname, sofile);
         return -1;
     }
-#ifdef __WIN32__
-    reg = (flexiblas_hook_register_t *) GetProcAddress(handle, "flexiblas_register");
-    opts = (flexiblas_option_t *) GetProcAddress(handle, "flexiblas_options");
-#else
-    reg = (flexiblas_hook_register_t *) dlsym(handle, "flexiblas_register");
-    opts = (flexiblas_option_t *) dlsym(handle, "flexiblas_options");
-#endif
+    reg = (flexiblas_hook_register_t *) __flexiblas_dlsym(handle, "flexiblas_register");
+    opts = (flexiblas_option_t *) __flexiblas_dlsym(handle, "flexiblas_options");
 
     if ( reg == NULL) {
         printf("The shared object %s is not a hook.\n", sofile);
-#ifdef __WIN32__
-        FreeLibrary(handle);
-#else
-        dlclose(handle);
-#endif
+        __flexiblas_dlclose(handle);
         return -1;
     }
     if ( opts == NULL) {
         printf("The hook %s does not have any options.\n", reg->cfg_name);
-#ifdef __WIN32__
-        FreeLibrary(handle);
-#else
-        dlclose(handle);
-#endif
+        __flexiblas_dlclose(handle);
         return -1;
     }
 
@@ -432,11 +406,7 @@ int hook_option_set(flexiblas_mgmt_location_t loc, char *hookname, char *option,
     }
     if (found < 0) {
         printf("Option %s not found in hook %s\n", option, hookname);
-#ifdef __WIN32__
-        FreeLibrary(handle);
-#else
-        dlclose(handle);
-#endif
+        __flexiblas_dlclose(handle);
         return -1;
     }
 
@@ -490,11 +460,8 @@ int hook_option_set(flexiblas_mgmt_location_t loc, char *hookname, char *option,
 
 fin:
     if ( config ) flexiblas_mgmt_free_config(config);
-#ifdef __WIN32__
-        FreeLibrary(handle);
-#else
-        dlclose(handle);
-#endif
+    __flexiblas_dlclose(handle);
+
     return ecode;
 }
 

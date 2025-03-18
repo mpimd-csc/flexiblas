@@ -50,11 +50,7 @@ static int __flexiblas_load_fortran_hook_function( void * handle , struct flexib
             fprintf(stderr, "%s ", fname);
         }
 
-#ifdef __WIN32__
-        ptr_hsymbol = (void *) GetProcAddress(handle, fname);
-#else
-        ptr_hsymbol = dlsym(handle, fname);
-#endif
+        ptr_hsymbol = __flexiblas_dlsym(handle, fname);
 
         if (ptr_hsymbol!=NULL) {
             break;

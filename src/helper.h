@@ -36,6 +36,8 @@ extern "C" {
 
     HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char **soname );
     HIDDEN int __flexiblas_dl_symbol_exist( const char *libname, const char *symbol_name );
+    HIDDEN void * __flexiblas_dlsym(void *lib, const char *fname);
+    HIDDEN void __flexiblas_dlclose(void *lib);
 
 
 #define	DPRINTF( level, ... )	do { if ( __flexiblas_verbose >= (level)) {flexiblas_print_info( "flexiblas", __VA_ARGS__); } } while(0) // ... represents the "text" and optionally the "args"
