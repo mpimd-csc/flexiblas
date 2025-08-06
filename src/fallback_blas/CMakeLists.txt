@@ -1,5 +1,12 @@
 INCLUDE(CheckFortranFunctionExists)
 
+if (NEED_LINKING_AGAINST_LIBM)
+    SET(LIBM ${LIBM_NAME})
+else()
+    SET(LIBM)
+endif()
+
+
 SET (SRC
     info.c
     dummy.c
@@ -24,7 +31,7 @@ if (SYS_BLAS_LIBRARY)
     set_property(TARGET flexiblas_netlib_import PROPERTY IMPORTED_LOCATION ${SYS_BLAS_LIBRARY})
 
     SET(_CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES})
-    SET(CMAKE_REQUIRED_LIBRARIES flexiblas_netlib_import)
+    SET(CMAKE_REQUIRED_LIBRARIES flexiblas_netlib_import ${LIBM})
 
     MACRO(add_blas_function check)
         CHECK_FORTRAN_FUNCTION_EXISTS(${check} ${check}_EXISTS)
@@ -48,28 +55,52 @@ else()
     SET(SRC ${SRC} dimatcopy.c simatcopy.c cimatcopy.c zimatcopy.c )
 endif()
 
-SET(CMAKE_REQUIRED_LIBRARIES ${_CMAKE_REQUIRED_LIBRARIES})
+IF (FLEXIBLAS_CBLAS)
+    SET(SRC ${SRC}
+        cblas_daxpby.c cblas_saxpby.c cblas_caxpby.c cblas_zaxpby.c
+        cblas_dgeadd.c cblas_sgeadd.c cblas_cgeadd.c cblas_zgeadd.c
+        cblas_domatcopy.c cblas_somatcopy.c cblas_comatcopy.c cblas_zomatcopy.c
+        cblas_dimatcopy.c cblas_simatcopy.c cblas_cimatcopy.c cblas_zimatcopy.c
+    )
 
-if (NEED_LINKING_AGAINST_LIBM)
-    SET(LIBM ${LIBM_NAME})
-else()
-    SET(LIBM)
-endif()
+ENDIF()
+
+SET(CMAKE_REQUIRED_LIBRARIES ${_CMAKE_REQUIRED_LIBRARIES})
 
 
 if ( SYS_BLAS_LIBRARY )
-    add_library(flexiblas_netlib SHARED ${SRC})
+    if (FLEXIBLAS_CBLAS)
+        add_library(flexiblas_netlib SHARED ${SRC} $<TARGET_OBJECTS:cblas_obj>)
+    else()
+        add_library(flexiblas_netlib SHARED ${SRC})
+    endif()
     target_link_libraries(flexiblas_netlib PUBLIC flexiblas_netlib_import PRIVATE ${LIBM})
 else()
-    add_library(flexiblas_netlib SHARED ${SRC} $<TARGET_OBJECTS:flexiblas_netlib_objs> )
+    if (FLEXIBLAS_CBLAS)
+        add_library(flexiblas_netlib SHARED ${SRC} $<TARGET_OBJECTS:flexiblas_netlib_objs> $<TARGET_OBJECTS:cblas_obj>)
+    else()
+        add_library(flexiblas_netlib SHARED ${SRC} $<TARGET_OBJECTS:flexiblas_netlib_objs> )
+    endif()
     target_link_libraries(flexiblas_netlib PRIVATE ${LIBM})
 endif()
 
 
-target_include_directories(flexiblas_netlib PRIVATE ${PROJECT_BINARY_DIR}/include ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/src)
+target_include_directories(flexiblas_netlib PRIVATE
+    ${PROJECT_BINARY_DIR}/include
+    ${PROJECT_BINARY_DIR}/
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/src
+    $<$<BOOL:${FLEXIBLAS_CBLAS}>:${PROJECT_SOURCE_DIR}/contributed/cblas/>
+)
+
+set_target_properties(flexiblas_netlib PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/${FLEXIBLAS_LIBRARY_DIR}/)
 
 if (APPLE)
     set_target_properties(flexiblas_netlib PROPERTIES LINK_FLAGS "-undefined dynamic_lookup -flat_namespace")
+endif()
+
+if(INTEGER8)
+    target_compile_definitions(flexiblas_netlib PRIVATE F77_INT=int64_t )
 endif()
 
 
@@ -86,4 +117,3 @@ else ()
 
     install(TARGETS flexiblas_netlib LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR})
 endif()
-SET_TARGET_PROPERTIES(flexiblas_netlib  PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")

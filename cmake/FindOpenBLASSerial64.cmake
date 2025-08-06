@@ -8,7 +8,7 @@ IF ( EXISTS /etc/debian_version )
     SET(SEARCH_PATH /usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/openblas64-serial)
     SET(SEARCH_NAME openblas64)
 ELSE()
-    SET(SEARCH_PATH /usr/lib/ /usr/lib64)
+    SET(SEARCH_PATH /usr/lib/ /usr/lib64 /opt/homebrew/opt/openblas/lib )
     SET(SEARCH_NAME openblas64)
 ENDIF()
 

@@ -23,12 +23,7 @@
 #ifndef FLEXIBLAS_H
 #define FLEXIBLAS_H
 
-
-
-
-
 #define PRINT_PREFIX "flexiblas"
-
 
 #include "flexiblas_config.h"
 
@@ -68,7 +63,6 @@
 #endif
 
 
-#include "cscutils/inifile.h"
 #include "flexiblas_structures.h"
 #include "flexiblas_backend.h"
 #include "flexiblas_api.h"
@@ -93,23 +87,10 @@
 #define FLEXIBLAS_ENV_ENV_RC  0x06
 #define FLEXIBLAS_ENV_GLOBAL_RC_DIR 0x07
 
-typedef enum {
-    FLEXIBLAS_COMPLEX_NONE_INTERFACE = -1,
-    FLEXIBLAS_COMPLEX_GNU_INTERFACE = 0,
-    FLEXIBLAS_COMPLEX_INTEL_INTERFACE = 1
-} flexiblas_complex_interface_t;
-
-typedef enum {
-    FLEXIBLAS_INTERFACE_NONE = -1,
-    FLEXIBLAS_INTERFACE_LP64 = 0,
-    FLEXIBLAS_INTERFACE_ILP64 = 1
-} flexiblas_interface_t;
-
 /*  Global Vars */
 extern flexiblas_backend_t *current_backend ;
 extern flexiblas_backend_t **loaded_backends;
 extern size_t               nloaded_backends;
-extern flexiblas_hook_t *__flexiblas_hooks;
 HIDDEN extern int __flexiblas_mgmt_init;
 HIDDEN extern flexiblas_mgmt_t *__flexiblas_mgmt;
 
@@ -138,14 +119,17 @@ int __flexiblas_setup_xerbla(flexiblas_backend_t * backend);
 #ifdef FLEXIBLAS_CBLAS
 int __flexiblas_setup_cblas_xerbla(flexiblas_backend_t *backend);
 #endif
+#ifdef FLEXIBLAS_LAPACKE
+int __flexiblas_load_lapacke( flexiblas_backend_t *backend );
+#endif
+
 void __flexiblas_load_set_num_threads(flexiblas_backend_t * backend);
 void __flexiblas_load_get_num_threads(flexiblas_backend_t * backend);
-int __flexiblas_load_cblas_function( void * handle , struct flexiblas_blasfn * fn, const char *name);
-int __flexiblas_load_fortran_function( void * handle , struct flexiblas_blasfn * fn, const char *name);
-int __flexiblas_load_blas_hooks(flexiblas_hook_t *backend, void *hook_handle);
-void * __flexiblas_lookup_fortran_function(void * handle, const char *name);
+void * __flexiblas_lookup_cblas_function(void * handle, ...);
+void * __flexiblas_lookup_fortran_function(void * handle, ...);
 flexiblas_complex_interface_t __flexiblas_get_complex_interface(void *handle);
 flexiblas_interface_t __flexiblas_get_interface(void *handle);
+int __flexiblas_get_f2c_float_return(void *handle);
 
 void __flexiblas_backend_init( flexiblas_backend_t * backend);
 
@@ -217,6 +201,33 @@ HIDDEN int __flexiblas_file_exist(const char *path);
     } else { *loaded = *loaded +1; }\
 } while(0);
 
+
+/*
+ * Hook Releated Functions
+ */
+#ifdef FLEXIBLAS_HOOK_API
+
+extern flexiblas_hook_t *__flexiblas_hooks;
+int __flexiblas_load_fortran_hook_function( void * handle , struct flexiblas_hook_fn *ptr, const char *name);
+int __flexiblas_load_cblas_hook_function( void * handle , struct flexiblas_hook_fn *ptr, const char *name);
+#define LOAD_HOOK(backend, handle,part,name) do { \
+    if ( __flexiblas_load_fortran_hook_function(handle, &(backend ->part),  #name ) > 0 ) { \
+        DPRINTF_WARN(3,"Cannot load hook for" #name "\n");\
+    } \
+} while(0);
+
+#define LOAD_CHOOK(backend, handle,part,name) do { \
+    if ( __flexiblas_load_cblas_hook_function(handle, &(backend ->part),  #name ) > 0 ) { \
+        DPRINTF_WARN(3,"Cannot load hook for" #name "\n");\
+    } \
+} while(0);
+
+
+int __flexiblas_load_blas_hooks(flexiblas_hook_t *backend, void *hook_handle);
+int __flexiblas_load_cblas_hooks(flexiblas_hook_t *backend, void *hook_handle);
+int __flexiblas_load_lapack_hooks(flexiblas_hook_t *backend, void *hook_handle);
+
+#endif
 
 // Macro to String
 #define MTSA(a) #a

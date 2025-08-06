@@ -1,24 +1,29 @@
 FlexiBLAS - A BLAS and LAPACK wrapper library with runtime exchangeable backends
 ================================================================================
 
-**Version 3.4.5-16** - DOI: 10.5281/zenodo.14764701
+**Version 3.4.80** - DOI: 10.5281/zenodo.14764701
 
 **Project Website:** https://www.mpi-magdeburg.mpg.de/projects/flexiblas
 
 **Git Repository:** https://gitlab.mpi-magdeburg.mpg.de/software/flexiblas-release
 
-Copyright 2013-2025 by *Martin Köhler* (0000-0003-2338-9904)
-                   and *Jens Saak* (0000-0001-5567-9637)
+Copyright 2013-2025 by *Martin Köhler* (ORCID: 0000-0003-2338-9904)
+                   and *Jens Saak* (ORCID: 0000-0001-5567-9637)
 
 ## Documentation
 
 [This Documentation includes](#documentation):
+
   * [About FlexiBLAS](#about-flexiblas)
   * [Installing FlexiBLAS](#install)
   * [Linking with FlexiBLAS](#linking-a-program-against-flexiblas)
   * [Setting up FlexiBLAS](#configuration-files)
   * [Runtime usage of FlexiBLAS](#selecting-the-backend-at-runtime)
+  * [Usage Examples](#usage-examples)
+  * [Environment Variables](#environment-variables)
   * [Profiling with FlexiBLAS](#profiling)
+  * [Octave Interface](#octave-interface)
+  * [Backend Builder](#backend-builder)
 
 ## About Flexiblas
 
@@ -43,325 +48,26 @@ files into a single surrogate library.
 
 ## Install
 
-The build system used by **FlexiBLAS** is *cmake* which prefers an out-of-source
-build:
+See [INSTALL.md](./INSTALL.md).
 
-        mkdir build
-        cd build
-        cmake ../ <FURTHEROPTIONS>
-        make
-        make install
+## Linking a Program Against **FlexiBLAS**
 
-If the build system should try to build backends for *BLAS* and *LAPACK*
-libraries that are not known to the *FindBLAS cmake* module, or reside in
-non-standard paths on your system, make sure to include their location
-(containing directory) to the `LD_LIBRARY_PATH` environment variable. At the
-end of the configuration step, *cmake* will inform you about the additional
-backends found on your system.
+By default **FlexiBLAS** produces a library called `libflexiblas.so`, which
+one can link against a program just like the reference *BLAS* implementation.
+Other libraries are not necessary.
 
-The configuration via *cmake* can be influenced further by the following
-options:
+### 64-Bit Integer Build
 
-* `-DCMAKE_INSTALL_PREFIX=/PATH/`
-
-    Defines an alternative location for the installation of the resulting
-    library. The default installation location is `/usr/local`.
-    The library called `libflexiblas.so` is installed in
-    `CMAKE_INSTALL_PREFIX/lib` and the default search path for backends is
-    `CMAKE_INSTALL_PREFIX/lib/flexiblas`.
-
-* `-DDEBUG=ON/OFF`
-
-    Turns the inclusion of debugging symbols `ON` or `OFF`. The default is
-    `OFF`.
-
-* `-DINTEGER8=ON/OFF`
-
-    Enables 8-byte integers for the *Fortran* interface. Be aware that the
-    application and the backend libraries must be compiled to support 8-byte
-    integers as well. Since most applications and libraries still use the
-    classic 32-bit integers the default is `OFF`.
-
-* `-DCBLAS=ON/OFF`
-
-    Enables the *CBLAS* frontend. If the backend itself contains a *CBLAS*
-    interface that one is used. Otherwise, **FlexiBLAS** acts like the
-    *CBLAS*-wrapper from *Netlib*. This option is set to `ON` by default.
-
-* `-DABI=GNU|Intel`
-
-    Selects the ABI (Application Binary Interface) of the *Fortran* Interface.
-    By default, the compiler used determines which ABI is used, but it can also
-    be forced using this parameter. The difference between both ABIs is how
-    complex values are returned from Functions. The *GNU*-style returns them as
-    a normal return value on the stack. The *Intel* (*F2C*, *GNU F77*) style
-    returns them as additional parameters in front of the proper function
-    arguments. That means it is a subroutine from the *C* point of view.
-
-* `-DBLASNAME=OFF`
-
-    Deactivate the automatic search for the *BLAS* library with the name
-    **BLASNAME**.
-
-* `-DEXTRA=List`
-
-    Add an additional list of *BLAS* libraries to the default setup of
-    **FlexiBLAS**. See below for details.
-
-* `-DMKL_BUILDER=ON/OFF`
-
-    Turn `ON`/`OFF` the build of an *Intel MKL* custom library instead of
-    searching for the *MKL* directly. This is necessary if you plan to switch
-    between single and multi-threaded *MKL* in your application. Turning this
-    option on requires having the `MKLROOT` environment variable set properly
-    and an *MKL* version >=11.1. The default is `OFF`.
-
-* `-DDEV=ON/OFF`
-
-    Configures the build to work only in the build directory. In this
-    case, **FlexiBLAS** searches in the root of the build directory for its
-    configuration file and the build directory is added to the default library
-    search path. Turning on this option is only useful during the development in
-    order to work independently from an installed **FlexiBLAS**. If you plan to
-    install **FlexiBLAS**, set it to `OFF` which is also the default value.
-
-* `-DBLAS_AUTO_DETECT=ON/OFF`
-
-    Enable/disable the automatic search for *BLAS* libraries during
-    configuration. They need to be added separately using the `-DEXTRA` option
-    or configured afterward. The default value is `ON`.
-
-* `-DLAPACK=ON/OFF`
-
-    Turn `ON`/`OFF` the *LAPACK* support of **FlexiBLAS**. If enabled
-    **FlexiBLAS** also includes the wrappers around *LAPACK*. Default value is
-    `ON`.
-
-* `-DLAPACK_API_VERSION=VERSION`
-
-    Selects *LAPACK* API compatibility level. By default, the newest one is used.
-    If a *LAPACK* library loaded at runtime does not provide all functions and
-    subroutines, the missing ones are loaded from the fallback.
-    The following *LAPACK* versions are supported:
-
-    | LAPACK_API_VERSION |                                          | Testing |
-    |--------------------|------------------------------------------|---------|
-    | 3.12.0             | LAPACK 3.12.0                            |   yes   |
-    | 3.12.0-wodprc      | LAPACK 3.12.0 without deprecated routines|   yes   |
-    | 3.11.0             | LAPACK 3.11.0                            |   yes   |
-    | 3.11.0-wodprc      | LAPACK 3.11.0 without deprecated routines|   yes   |
-    | 3.10.1             | LAPACK 3.10.1                            |   yes   |
-    | 3.10.1-wodprc      | LAPACK 3.10.1 without deprecated routines|   yes   |
-    | 3.10.0             | LAPACK 3.10.0                            |   yes   |
-    | 3.10.0-wodprc      | LAPACK 3.10.0 without deprecated routines|   yes   |
-    | 3.9.1              | LAPACK 3.9.1                             |   yes   |
-    | 3.9.1-wodprc       | LAPACK 3.9.1 without deprecated routines |   yes   |
-    | 3.9.0              | LAPACK 3.9.0                             |   yes   |
-    | 3.9.0-wodprc       | LAPACK 3.9.0 without deprecated routines |   yes   |
-    | 3.8.0              | LAPACK 3.8.0                             |   yes   |
-    | 3.8.0-wodprc       | LAPACK 3.8.0 without deprecated routines |   yes   |
-    | 3.7.1              | LAPACK 3.7.1                             |   yes   |
-    | 3.7.1-wodprc       | LAPACK 3.7.1 without deprecated routines |   yes   |
-    | 3.7.0              | LAPACK 3.7.0                             |   yes   |
-    | 3.7.0-wodprc       | LAPACK 3.7.0 without deprecated routines |   yes   |
-    | 3.6.1              | LAPACK 3.6.1                             |   yes   |
-    | 3.6.1-wodprc       | LAPACK 3.6.1 without deprecated routines |   yes   |
-    | 3.6.0              | LAPACK 3.6.0                             |   no    |
-    | 3.6.0-wodprc       | LAPACK 3.6.0 without deprecated routines |   no    |
-    | 3.5.0              | LAPACK 3.5.0                             |   no    |
-    | 3.4.2              | LAPACK 3.4.2                             |   no    |
-    | 3.4.1              | LAPACK 3.4.1                             |   no    |
-    | 3.4.0              | LAPACK 3.4.0                             |   no    |
-    | 3.3.1              | LAPACK 3.3.1                             |   no    |
-    | 3.3.0              | LAPACK 3.3.0                             |   no    |
-
-* `-DFLEXIBLAS_DEFAULT=NAME`
-
-    Set the default *BLAS* at compile time. If the option is not set `NETLIB` is
-    used by default.
-
-* `-DLINK_OPENMP=OFF/ON`
-    Link FlexiBLAS against the compiler's OpenMP implementation. This might be
-    necessary if Python/NumPy and OpenMP flags like OMP_PROC_BIND are used. Be
-    default this is avoided in order to avoid OpenMP as cross-dependency in
-    applications that do not require OpenMP. If the OS does not support the
-    `RTLD_NODELETE` flag in its `dlopen` call, setting this option to `ON` can
-    be helpful.
-
-* `-DLTO=ON/OFF`
-    Enables the Link Time Optimization in the compiler, if supported. By default
-    this is enabled.
-
-The `PROFILE=ON/OFF` option was removed from version 1.1.0 onward. Beginning
-with version 3.0.0 profiling is done using a hook functionality and is no
-longer compiled in **FlexiBLAS** directly. See the Profiling section for
-details.
-
-The following *BLAS* backends are tested during development:
-
-* *Netlib* [*BLAS*](https://www.netlib.org/blas/) and [*LAPACK*](https://www.netlib.org/lapack/) Reference Implementation
-* [*ATLAS*](http://math-atlas.sourceforge.net/)
-* [*OpenBLAS*](http://www.openblas.net/)
-* [*BLIS*](https://github.com/flame/blis)
-* [*Intel MKL*](https://software.intel.com/content/www/us/en/develop/tools/math-kernel-library.html)
-
-The following compilers are tested:
-
-* GCC >= 6.x
-* Intel icc/ifort Classic 2021
-* Intel icx/ifx oneAPI >= 2022
-* LLVM CLANG/FLANG >= 18
-* AMD AOCC 4.2.0
-* NVHPC on x86_64 (On ARM64 some issues exists.)
-
-Other compilers might work, but not tested.
-
-### Setup with precompiled reference BLAS and LAPACK
-
-On many Linux and *BSD* operating systems static versions of *BLAS* and *LAPACK*
-can be installed from the package management system. These versions can be used
-instead of **FlexiBLAS**'s internal fallback implementation. In order to use a
-provided static library providing a *BLAS* API it needs to be ensured that this
-library is compiled with support for position-independent code (`-fPIC`).
-
-The *BLAS* implementation is set in the configuration procedure via
+As already mentioned in the case when the 64-bit integer interface is enabled,
+the names of all libraries, directories, and environment variables are suffixed
+by `64`, that means in order to link against the 64-bit library, you have to
+use:
+```shell
+gcc -lflexiblas64 ...
 ```
-    cmake -DSYS_BLAS_LIBRARY=/absolute/path/to/liblas.a
-```
-The *BLAS* library has to provide all functions and subroutines available in
-the reference *BLAS* implementation since *LAPACK* 3.0.
+The flexiblas tool is now named `flexiblas64`. This allows to installed of both
+variants on a single system.
 
-The *LAPACK* fallback implementation can be provided in the same way via
-```
-    cmake -DSYS_LAPACK_LIBRARY=/absolute/path/to/liblapack.a \
-          -DLAPACK_API_VERSION="LAPACK-VERSION"
-```
-The *LAPACK* library must provide all symbols that the reference implementation
-from *NETLIB* with the given version provides. A list of supported *LAPACK*
-versions are given above.
-If the version is not specified *cmake* tries to obtain it with a call to
-*LAPACK*'s `ILAVER`. Note that the path must be absolute, the `~`-operator to
-reference the home directory is not allowed.
-
-### Setup with Custom *BLAS* and *LAPACK* Implementations.
-
-By default, **FlexiBLAS** tries to locate as many *BLAS* and *LAPACK*
-installations as possible on your system. If you want to add our own ones to the
-default setup you can pass the `-DEXTRA` option to *cmake*. It specifies a
-semicolon-separated list of additional *BLAS* names that should be added. For
-each additional library name `name` in the list, a path needs to be specified via
-`-Dname_LIBRARY=PATH_TO_NAME`. If special linker flags are required the option
-`-Dname_LINKER_FLAGS="FLAGS"` can be passed to *cmake*. For example, if a custom
-build *OpenBLAS-0.3.4* and *OpenBLAS-0.3.10* should be included, the following
-options have to be added to cmake:
-```
-    -DEXTRA="OpenBLAS034;OpenBLAS0310" \
-    -DOpenBLAS034_LIBRARY="/home/user/openblas-0.3.4/libopenblas.a;gomp;pthread;" \
-    -DOpenBLAS0310_LIBRARY="/home/user/openblas-0.3.10/libopenblas.a;gomp;pthread;"
-```
-
-### Setup on *Debian* and Derivatives
-
-The easiest way is to build a *Debian* package out of the source and install it.
-At the moment we support the package creation on *Ubuntu 20.04* and *Debian 11*
-(Testing) since they provide *OpenBLAS* and *BLIS* split in different
-packages depending on the used threading model. In order to build the package
-the following prerequisites need to be installed:
-```
-    sudo apt-get install debhelper cmake gfortran gcc libatlas-base-dev \
-	libopenblas-openmp-dev libopenblas-pthread-dev libopenblas-serial-dev \
-	libopenblas64-openmp-dev libopenblas64-pthread-dev \
-	libopenblas64-serial-dev libblis-openmp-dev libblis-pthread-dev \
-	libblis-serial-dev libblis64-openmp-dev libblis64-pthread-dev \
-	libblis64-serial-dev libblas-dev libblas64-dev liblapack-dev \
-	liblapack64-dev
-```
-Afterwards, you can build the *Debian* package out of the source code by typing:
-```
-    fakeroot dpkg-buildpackage -us -uc
-```
-inside the extracted source. After building the package the source directory can
-be cleaned using
-```
-    debian/rules clean
-```
-The build process creates a set of packages that are available one directory
-level above. They are installed using:
-```
-    sudo dpkg -i ../libflexiblas*.deb
-```
-
-If you update from **FlexiBLAS** <= 2.0.0 please remove all related packages and
-configuration files before.
-
-### Setup on Fedora
-If you are using Fedora Linux, you can install FlexiBLAS easily using `dnf`
-since FlexiBLAS is part of Fedora Linux. Just type
-```
-dnf install flexiblas
-```
-This installs most likely one of the latest FlexiBLAS releases.
-
-Thanks Iñaki Ucar (https://src.fedoraproject.org/user/iucar) for packaging and
-maintaining the Fedora integration.
-
-
-
-### Caveats
-
-* If **FlexiBLAS** is not automatically selected by the `update-alternatives`
-  mechanism you have to select it via (Ubuntu and Debian derivatives):
-
-        sudo update-alternatives --config libblas64.so.3-x86_64-linux-gnu
-        sudo update-alternatives --config libblas.so.3-x86_64-linux-gnu
-        sudo update-alternatives --config libblas64.so-x86_64-linux-gnu
-        sudo update-alternatives --config libblas.so-x86_64-linux-gnu
-
-  On non-Debian based systems the names may differ. If your are using a
-  non-x86_64 architecture, you have to adjust the architecture triplet
-  accordingly.
-
-* **FlexiBLAS** requires that you use the reference implementation of *LAPACK*
-  that means if `update-alternatives` uses the *LAPACK* implementation provided
-  by other BLAS libaries many programs will fail. Please select **FlexiBLAS** as
-  well via:
-
-        sudo update-alternatives --config liblapack64.so.3-x86_64-linux-gnu
-        sudo update-alternatives --config liblapack.so.3-x86_64-linux-gnu
-        sudo update-alternatives --config liblapack64.so-x86_64-linux-gnu
-        sudo update-alternatives --config liblapack.so-x86_64-linux-gnu
-
-  On non-Debian based systems the names may differ. If your are using a
-  non-x86_64 architecture, you have to adjust the architecture triplet
-  accordingly.
-
-* Due to a bug in the *Ubuntu* *OpenBLAS* packages **FlexiBLAS** does not work
-  with the **OpenBLAS** package versions between 0.2.6 and 0.2.8-4. If you have
-  one of these versions installed, please update *OpenBLAS* before installing
-  **FlexiBLAS**.
-
-* If FlexiBLAS should be used on MacOS X and OpenBLAS is installed via `brew`,
-  it is necessary to extend cmake's search path by setting:
-  ```
-  export CMAKE_PREFIX_PATH=/usr/local/opt/openblas:$CMAKE_PREFIX_PATH
-  ```
-
-* If the Intel Compiler suite is used, please ensure that either the classic or
-  the LLVM based compilers are used for both, C and Fortran.
-
-
-### Testing
-**FlexiBLAS** comes with the reference *BLAS* and reference *LAPACK* test suite.
-The tests are executed using
-```
-     make test
-```
-and use the *NETLIB BLAS* implementation by default in order to check
-compliance with the reference implementation. Other *BLAS* and *LAPACK*
-implementations can be tested by setting the `FLEXIBLAS_TEST` environment
-variable. The variable has the same meaning as the `FLEXIBLAS` environment
-variable but only for the tests. If single tests need to be selected we refer to
-the help of the *cmake* `ctest` utility.
 
 
 ## Configuration Files
@@ -375,21 +81,21 @@ the help of the *cmake* `ctest` utility.
 
 If **FlexiBLAS** is compiled with the `INTEGER8` option enabled, `flexiblasrc`
 is replaced by `flexiblasrc64`.
-
-        CMAKE_INSTALL_PREFIX/etc/flexiblasrc
-
+```shell
+CMAKE_INSTALL_PREFIX/etc/flexiblasrc
+```
 and:
-
-        ~/.flexiblasrc
-
+```shell
+~/.flexiblasrc
+```
 or:
-
-        CMAKE_INSTALL_PREFIX/etc/flexiblasrc64
-
+```shell
+CMAKE_INSTALL_PREFIX/etc/flexiblasrc64
+```
 and:
-
-        ~/.flexiblasrc64
-
+```shell
+~/.flexiblasrc64
+```
 in case of a 64-bit integer build.
 
 The files contain a mapping between the name of a backend and the corresponding
@@ -400,16 +106,16 @@ the *ini*-files known from early *MS-Windows* versions. Basically, it is a
 key-value store with section support. In the first section of the configuration
 file are global definitions like the default *BLAS* backend or the verbosity
 level:
-
-        default = NETLIB
-        verbose = 0
-
+```
+default = NETLIB
+verbose = 0
+```
 Then for each *BLAS* backend, there is a block of the following style:
-
-        [NAME_OF_THE_BACKEND]
-        library = shared_object.so
-        comment = Information text about the BLAS backend
-
+```
+[NAME_OF_THE_BACKEND]
+library = shared_object.so
+comment = Information text about the BLAS backend
+```
 If the library argument defines a relative path, **FlexiBLAS** searches inside
 its default path (`CMAKE_INSTALL_PREFIX/lib/flexiblas` or
 `CMAKE_INSTALL_PREFIX/lib/flexiblas64`) for this shared object. If the path is
@@ -419,9 +125,9 @@ case-insensitive!
 Additionally, one can define additional search paths in the first section.
 Therefore one has to add a key-value entry of the following style to the first
 section:
-
-        pathXXX = /additional/search/path
-
+```
+pathXXX = /additional/search/path
+```
 where the `XXX` part of the key should be an increasing unique integer for
 each additional search path.
 
@@ -434,20 +140,20 @@ additional search paths.
 
 The `flexiblas` tool can be used for example to:
 * List all installed backends and the complete configuration:
-
-        flexiblas list
-
+  ```shell
+  flexiblas list
+  ```
 * Set the default backend:
-
-        flexiblas default NAME_OF_THE_BACKEND
-
+  ```shell
+  flexiblas default NAME_OF_THE_BACKEND
+  ```
 If the name of the backend is not given, the default setting is removed.
 
 New *BLAS* backends can also be added to the configuration files using the
 `flexiblas` tool. For this please look at the output of
-
-        flexiblas help
-
+```shell
+flexiblas help
+```
 
 **Caution:** In case of a 64-bit integer build the `flexiblas` tool is
 renamed to `flexiblas64` in order to setup both, a 32-bit and a 64-bit version
@@ -475,22 +181,19 @@ details on the names, syntax, and locations of the configuration files.
 If **FlexiBLAS** is built with an interface to the *ATLAS* library then one can
 use the following in an application to call the *ATLAS* instead of the default
 *BLAS*:
-
-        FLEXIBLAS="libblas_atlas.so" ./yourapp
-
+```shell
+FLEXIBLAS="libblas_atlas.so" ./yourapp
+```
 In case **FlexiBLAS** should use *OpenBLAS* and is registered as `OpenBLAS` in
 one of the configuration files the application can be started as follows:
-
-        FLEXIBLAS=OpenBLAS ./yourapp
+```shell
+FLEXIBLAS=OpenBLAS ./yourapp
+```
 
 Remember you can list all installed backends with:
-
-        flexiblas list
-## Linking a Program Against **FlexiBLAS**
-
-By default **FlexiBLAS** produces a library called `libflexiblas.so`, which
-one can link against a program just like the reference *BLAS* implementation.
-Other libraries are not necessary.
+```shell
+flexiblas list
+```
 
 ## Environment Variables
 
@@ -545,18 +248,6 @@ Other libraries are not necessary.
 **Attention:** In the case of a 64-bit integer build, all environment variables
 begin with `FLEXIBLAS64` instead of `FLEXIBLAS`.
 
-## 64-Bit Integer Build
-
-As already mentioned in the case when the 64-bit integer interface is enabled,
-the names of all libraries, directories, and environment variables are suffixed
-by `64`, that means in order to link against the 64-bit library, you have to
-use:
-
-        gcc -lflexiblas64 ...
-
-The flexiblas tool is now named `flexiblas64`. This allows to installed of both
-variants on a single system.
-
 ## Profiling
 
 Since version 3.0.0 the profiling framework is no longer compiled into the
@@ -603,7 +294,14 @@ and *BSD* versions of *GNU Octave*, but **NOT** on any version of *MS-Windows*!
 
 In order to build backends later without reconfiguring or rebuilding FlexiBLAS,
 a CMake helper tool exists in `tools/backend_builder`. This tool can be used to
-build your own backends individually.
+build your own backends individually. Normally, this tool is not required, for
+single-file BLAS implementations, like OpenBLAS, BLIS,... But in case of
+libraries like Intel (oneAPI) MKL, this can be helpful.
+
+## Versioning
+FlexiBLAS uses semantic versioning, with an exception. If the patch level in
+`MAJOR.MINOR.PATCHLEVEL` is greater than or equal to 80, this is an alpha/beta/
+release candidate of the next FlexiBLAS minor or major release.
 
 ## Cite As
 

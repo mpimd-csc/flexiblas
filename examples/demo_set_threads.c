@@ -36,9 +36,22 @@ typedef int flexiblas_fortran_charlen_t;
 #endif
 #endif
 
+#define BLIS_API
+void set_threads(int num)
+{
+    int n;
+#ifdef BLIS_API
+    bli_thread_set_num_threads(num);
+    n = bli_thread_get_num_threads();
+#else
+    flexiblas_set_num_threads(num);
+    n = flexiblas_get_num_threads();
+#endif
+    printf("Requested Threads: %d queried threads: %d\n", num, n);
 
+}
 
-extern void FC_GLOBAL(sgemm,SGEMM)(char* transa, char* transb, int* m, int* n, int* k, float* alpha, float* a, int* lda, float* b, int* ldb, float* beta, float* c, int* ldc, flexiblas_fortran_charlen_t len1, flexiblas_fortran_charlen_t len2);
+void FC_GLOBAL(sgemm,SGEMM)(char* transa, char* transb, int* m, int* n, int* k, float* alpha, float* a, int* lda, float* b, int* ldb, float* beta, float* c, int* ldc, flexiblas_fortran_charlen_t len1, flexiblas_fortran_charlen_t len2);
 
 double wtime(void)
 {
@@ -86,11 +99,11 @@ int main(int argc, char **argv)
     }
 
     printf("Using 1 Thread (C-Interface)\n");
-    flexiblas_set_num_threads(1);
+    set_threads(1);
     gemm(N, A, B, C);
 
     printf("Using 2 Thread (C-Interface)\n");
-    flexiblas_set_num_threads(2);
+    set_threads(2);
     gemm(N, A, B, C);
 
     printf("Using 1 Thread (F77-Interface)\n");

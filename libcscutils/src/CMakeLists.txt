@@ -155,7 +155,8 @@ IF(NOT STANDALONE)
         SET_TARGET_PROPERTIES(cscutils_src PROPERTIES C_STANDARD 11 C_VISIBILITY_PRESET hidden Fortran_VISIBILITY_PRESET hidden)
     ENDIF()
 ENDIF()
-
+TARGET_LINK_LIBRARIES(cscutils_src PUBLIC $<$<BOOL:${OpenMP_C_FOUND}>:OpenMP::OpenMP_C>
+                                          $<$<BOOL:${OpenMP_Fortran_FOUND}>:OpenMP::OpenMP_Fortran>)
 
 
 # IF( INPROJECT AND CSCUTILS_OBJECT )

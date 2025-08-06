@@ -2,21 +2,61 @@
 # -*- makefile -*-
 
 # Uncomment this to turn on verbose mode.
-export DH_VERBOSE=1
-FLEXIBLAS_MAJOR_VERSION=3
-FLEXIBLAS_MINOR_VERSION=0
-FLEXIBLAS_PATCH_LEVEL=0
+# export DH_VERBOSE=1
+
+pkgsrc = $(shell LC_ALL=C dpkg-parsechangelog --show-field Source )
+pkgver = $(shell LC_ALL=C dpkg-parsechangelog --show-field Version )
+pkgdist = $(shell LC_ALL=C dpkg-parsechangelog --show-field Distribution )
+
+OS_MAJOR := $(shell grep ^VERSION_ID /etc/os-release | cut -d'=' -f2 | sed 's/\"//gI' | cut -d'.' -f1)
+OS_NAME := $(shell grep ^NAME /etc/os-release | cut -d '=' -f2 | sed 's/\"//gI')
+OS_VERSION := $(shell grep ^VERSION_ID /etc/os-release | cut -d'=' -f2 | sed 's/\"//gI')
+OS_DIST := $(shell grep ^VERSION_CODENAME /etc/os-release | cut -d'=' -f2 | sed 's/\"//gI')
+
+# BLIS package names
+BLIS3  := $(shell dpkg -l libblis3-openmp && echo "yes")
+
+ifeq ($(BLIS3),yes)
+	BLIS_VARS = -Vblis:openmp=libblis3-openmp -Vblis:pthread=libblis3-pthread -Vblis:serial=libblis3-serial \
+				 -Vblis64:openmp=libblis64-3-openmp -Vblis64:pthread=libblis64-3-pthread -Vblis64:serial=libblis64-3-serial
+else
+	BLIS_VARS = -Vblis:openmp=libblis4-openmp -Vblis:pthread=libblis4-pthread -Vblis:serial=libblis4-serial \
+			    -Vblis64:openmp=libblis64-4-openmp -Vblis64:pthread=libblis64-4-pthread -Vblis64:serial=libblis64-4-serial
+endif
+
+
+# Needed by debchange to set Name and EMAIL in changelog
+# DEBFULLNAME is filtered out by debuild
+# use DEB_FULLNAME instead, which will set DEBFULLNAME
+ifdef DEB_FULLNAME
+export DEBFULLNAME=$(DEB_FULLNAME)
+endif
+# DEBEMAIL is not filtered out by debuild
+#
+
+SC_VERSION = $(shell tools/get_version.sh deb)
+NEW_VERSION = $(shell dpkg --compare-versions $(SC_VERSION) gt $(pkgver) && echo $(SC_VERSION) )
 
 # export LD_LIBRARY_PATH:=/usr/lib/openblas-base:/usr/lib/atlas-base:$(LD_LIBRARY_PATH)
 CFLAGS=-g --param=max-vartrack-size=60000000
 FFLAGS=-g
 F77CFLAGS=-g
 
+
+override_dh_gencontrol:
+	dh_gencontrol -- $(BLIS_VARS)
+
 #override_dh_auto_configure:
 #	dh_auto_configure -- -DCMAKE_BUILD_TYPE=RelWithDebInfo -DTESTS=OFF
 
 override_dh_auto_configure:
-	mkdir -p build-32  &&\
+ifneq ($(NEW_VERSION),)
+	$(warning "Setting new version in debian changelog: $(NEW_VERSION)")
+	@debchange -v $(NEW_VERSION)$(VERSION_POSTFIX) "Version $(NEW_VERSION)" && debchange -m -D $(OS_DIST) -r ""
+endif
+	debchange -D $(OS_DIST) -m  ""
+
+	@mkdir -p build-32  &&\
 	cd build-32  &&\
 	cmake ../ -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RelWithDebInfo\
 	          -DTESTS=OFF  -DSYSCONFDIR=/etc -DCBLAS=ON -DBUILD_SHARED_LIBS=ON\
@@ -50,6 +90,10 @@ override_dh_auto_clean:
 	dh_auto_clean --builddirectory build-32
 	dh_auto_clean --builddirectory build-64
 	rm -f $(GENERATED_MAINTAINER_SCRIPTS)
+ifneq ($(NEW_VERSION),)
+	$(warning "Setting new version in debian changelog: $(NEW_VERSION)")
+	debchange -v $(NEW_VERSION)$(VERSION_POSTFIX) "Version $(NEW_VERSION)" && debchange -D $(OS_DIST) -m -r ""
+endif
 
 %:
 	dh $@

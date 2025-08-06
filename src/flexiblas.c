@@ -129,17 +129,16 @@ HIDDEN void __flexiblas_backend_init( flexiblas_backend_t * backend) {
         __flexiblas_setup_xerbla(backend);
 #ifdef FLEXIBLAS_CBLAS
         __flexiblas_setup_cblas_xerbla(backend);
+        /*-----------------------------------------------------------------------------
+         *  Load CBLAS
+         *-----------------------------------------------------------------------------*/
+        __flexiblas_load_cblas(backend);
 #endif
 
         /*-----------------------------------------------------------------------------
          *  Load Fortran BLAS
          *-----------------------------------------------------------------------------*/
         __flexiblas_load_fblas(backend, &load, &failed);
-
-        /*-----------------------------------------------------------------------------
-         *  Load CBLAS
-         *-----------------------------------------------------------------------------*/
-        __flexiblas_load_cblas(backend);
 
 #ifdef FLEXIBLAS_LAPACK
         /*-----------------------------------------------------------------------------
@@ -158,6 +157,10 @@ HIDDEN void __flexiblas_backend_init( flexiblas_backend_t * backend) {
         } else {
             __flexiblas_load_flapack(backend, &load, &failed);
         }
+#endif
+
+#ifdef FLEXIBLAS_LAPACKE
+        __flexiblas_load_lapacke(backend);
 #endif
 
         backend->post_init = 0;
@@ -188,8 +191,9 @@ static void flexiblas_load_info(void *library, flexiblas_backend_t *backend)
     backend->library_handle = library;
 
     /* Load the Environment information function   */
-    __flexiblas_load_set_num_threads(backend);
     __flexiblas_load_get_num_threads(backend);
+    __flexiblas_load_set_num_threads(backend);
+
     if ( backend->info_function ) {
         backend->info_function(&(backend->info));
     } else {
@@ -199,6 +203,7 @@ static void flexiblas_load_info(void *library, flexiblas_backend_t *backend)
 
 #if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
     backend->info.intel_interface = 0;
+
 #else
 
     /* Get the complex return type */
@@ -206,32 +211,46 @@ static void flexiblas_load_info(void *library, flexiblas_backend_t *backend)
     if ( cpx_interface == FLEXIBLAS_COMPLEX_INTEL_INTERFACE) {
         DPRINTF(1, "--> BLAS uses Intel interface for complex return values.\n");
         backend->info.intel_interface = 1;
+        backend->complex_interface = FLEXIBLAS_COMPLEX_INTEL_INTERFACE;
     } else if ( cpx_interface == FLEXIBLAS_COMPLEX_GNU_INTERFACE) {
         DPRINTF(1, "--> BLAS uses GNU interface for complex return values.\n");
         backend->info.intel_interface = 0;
+        backend->complex_interface = FLEXIBLAS_COMPLEX_GNU_INTERFACE;
     } else {
         DPRINTF(1,"Could not detect the complex-return-value interface style. Using information from backend, if provided.\n");
+        backend->complex_interface = FLEXIBLAS_COMPLEX_NONE_INTERFACE;
     }
 
 #endif
+    /* Check if the BLAS / LAPACK routine has the f2c float return defect. */
+    backend->info.f2c_float_return = __flexiblas_get_f2c_float_return(library);
+    if ( backend->info.f2c_float_return ) {
+        DPRINTF(1, "--> F2C float-return interface\n");
+    } else {
+        DPRINTF(1, "--> standard float-return interface\n");
+    }
 
     /* Get the Integer size of the backend */
     flexiblas_interface_t interface = __flexiblas_get_interface(library);
     if ( interface == FLEXIBLAS_INTERFACE_LP64 )
     {
-        DPRINTF(1, "--> BLAS uses LP64.\n");
+        DPRINTF(1, "--> BLAS uses LP64. (4-byte integers)\n");
+        backend->integer_interface = FLEXIBLAS_INTERFACE_LP64;
+
 #ifdef FLEXIBLAS_INTEGER8
         DPRINTF_WARN(0, "The selected BLAS backend uses 4-byte integers (e.g. the LP64 model), but FlexiBLAS was configured with -DINTEGER8=ON. This causes problems in almost all use cases. Please select a different backend or recompile FlexiBLAS.\n");
 #endif
     }
     else if ( interface == FLEXIBLAS_INTERFACE_ILP64 )
     {
-        DPRINTF(1, "--> BLAS uses ILP64.\n");
+        DPRINTF(1, "--> BLAS uses ILP64. (8-byte integers)\n");
+        backend->integer_interface = FLEXIBLAS_INTERFACE_ILP64;
 #ifndef FLEXIBLAS_INTEGER8
         DPRINTF_WARN(0, "The selected BLAS backend uses 8-byte integers (e.g. the ILP64 model), but FlexiBLAS was configured with -DINTEGER8=OFF. This causes problems in almost all uses cases. Please select a different backend or recompile FlexiBLAS.\n");
 #endif
     } else {
         DPRINTF(1, "--> BLAS integer model unknown.\n");
+        backend->integer_interface = FLEXIBLAS_INTERFACE_NONE;
     }
 
 }
@@ -245,12 +264,14 @@ static void print_info(flexiblas_backend_t *backend)
     DPRINTF(1," - intel_interface        = %d\n",backend->info.intel_interface);
     DPRINTF(1," - flexiblas_integer_size = %d\n",backend->info.flexiblas_integer_size);
     DPRINTF(1," - backend_integer_size   = %d\n",backend->info.backend_integer_size);
+    DPRINTF(1," - f2c_float_return       = %d\n",backend->info.f2c_float_return);
     DPRINTF(1," - post_init              = %d\n",backend->info.post_init);
 }
 
 static flexiblas_backend_t * flexiblas_load_library_from_init (flexiblas_mgmt_t *config, char *blas_default_map ) {
     char *env_FLEXIBLAS = NULL;
     flexiblas_backend_t *backend = NULL;
+    flexiblas_backend_t *old_current_backend = NULL;
     void *library = NULL;
     char name[FLEXIBLAS_MGMT_MAX_BUFFER_LEN];
     char blas_name[FLEXIBLAS_MGMT_MAX_BUFFER_LEN];
@@ -358,7 +379,8 @@ static flexiblas_backend_t * flexiblas_load_library_from_init (flexiblas_mgmt_t 
         DPRINTF(0, " Failed to allocate space for backend structure.\n");
         return NULL;
     }
-
+    old_current_backend = current_backend;
+    current_backend = backend;
     memset((void*) backend, 0, sizeof(flexiblas_backend_t));
     pthread_mutex_init(&(backend->post_init_mutex),NULL);
 
@@ -397,6 +419,7 @@ static flexiblas_backend_t * flexiblas_load_library_from_init (flexiblas_mgmt_t 
     }
 
     print_info(backend);
+    current_backend = old_current_backend;
     return backend;
 }
 
@@ -715,9 +738,10 @@ __attribute__((constructor))
             snprintf(blas_name,len, "%s%s", FALLBACK_NAME,SO_EXTENSION);
             free(SO_EXTENSION);
 
+            dlerror();
             __flexiblas_blas_fallback = __flexiblas_dlopen(blas_name, fallback_flags , NULL);
             if ( __flexiblas_blas_fallback == NULL ) {
-                DPRINTF_ERROR(0," Failed to load the BLAS fallback library.  Abort!\n");
+                DPRINTF_ERROR(0," Failed to load the BLAS fallback library.  Abort! errormsg=\"%s\"\n", dlerror());
                 abort();
             }
             DPRINTF(2, "Load fallback_netlib at = 0x%lx\n", (unsigned long) __flexiblas_blas_fallback);
@@ -838,7 +862,16 @@ __attribute__((constructor))
             *(void **) &__flexiblas_hooks->hook_init[k] = dlsym(handle, FLEXIBLAS_HOOK_INIT_FUNCTION_NAME);
             *(void **) &__flexiblas_hooks->hook_exit[k] = dlsym(handle, FLEXIBLAS_HOOK_EXIT_FUNCTION_NAME);
 
+#ifdef FLEXIBLAS_HOOK_API
             __flexiblas_load_blas_hooks(__flexiblas_hooks, handle);
+#ifdef FLEXIBLAS_CBLAS
+            __flexiblas_load_cblas_hooks(__flexiblas_hooks,handle);
+#endif
+#ifdef FLEXIBLAS_LAPACK
+            __flexiblas_load_lapack_hooks(__flexiblas_hooks, handle);
+#endif
+#endif
+
 
             __flexiblas_hooks->hooks_loaded ++;
             if ( __flexiblas_hooks->hooks_loaded >= FLEXIBLAS_MAX_HOOKS ) {

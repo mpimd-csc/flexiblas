@@ -18,16 +18,26 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
    */
 
-#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <complex.h>
-#include <math.h>
 
 #include "flexiblas.h"
+
+#ifdef mkl_set_num_threads
+#undef mkl_set_num_threads
+#endif
+
+#ifdef mkl_get_num_threads
+#undef mkl_get_num_threads
+#endif
+
+#ifdef mkl_get_max_threads
+#undef mkl_get_max_threads
+#endif
 
 
 /*-----------------------------------------------------------------------------
@@ -53,7 +63,7 @@ void flexiblas_set_num_threads(int num)
 
 #ifndef __APPLE__
 void openblas_set_num_threads(int num) __attribute__((weak,alias("flexiblas_set_num_threads")));
-void mkl_set_num_threads(int num) __attribute__((weak,alias("flexiblas_set_num_threads")));
+void MKL_Set_Num_Threads(int num) __attribute__((weak,alias("flexiblas_set_num_threads")));
 void acmlsetnumthreads(int num) __attribute__((weak,alias("flexiblas_set_num_threads")));
 void blas_set_num_threads(int num) __attribute__((weak,alias("flexiblas_set_num_threads")));
 void nvpl_blas_set_num_threads(int num) __attribute__((weak,alias("flexiblas_set_num_threads")));
@@ -62,7 +72,7 @@ void armpl_set_num_threads(int num) __attribute__((weak,alias("flexiblas_set_num
 void armpl_omp_set_num_threads(int num) __attribute__((weak,alias("flexiblas_set_num_threads")));
 #else
 void openblas_set_num_threads(int num) { flexiblas_set_num_threads(num); }
-void mkl_set_num_threads(int num) { flexiblas_set_num_threads(num); }
+void MKL_Set_Num_Threads(int num) { flexiblas_set_num_threads(num); }
 void acmlsetnumthreads(int num) { flexiblas_set_num_threads(num); }
 void blas_set_num_threads(int num)  { flexiblas_set_num_threads(num); }
 void nvpl_blas_set_num_threads(int num)  { flexiblas_set_num_threads(num); }
@@ -97,7 +107,8 @@ int flexiblas_get_num_threads(void)
 
 #ifndef __APPLE__
 int  openblas_get_num_threads(void) __attribute__((weak,alias("flexiblas_get_num_threads")));
-int  mkl_get_num_threads(void) __attribute__((weak,alias("flexiblas_get_num_threads")));
+int  MKL_Get_Num_Threads(void) __attribute__((weak,alias("flexiblas_get_num_threads")));
+int  MKL_Get_Max_Threads(void) __attribute__((weak,alias("flexiblas_get_num_threads")));
 int  acmlgetnumthreads(void) __attribute__((weak,alias("flexiblas_get_num_threads")));
 int  blas_get_num_threads(void) __attribute__((weak,alias("flexiblas_get_num_threads")));
 int  nvpl_blas_get_max_threads(void) __attribute__((weak,alias("flexiblas_get_num_threads")));
@@ -106,7 +117,8 @@ int  armpl_get_num_threads(void) __attribute__((weak,alias("flexiblas_get_num_th
 int  armpl_omp_get_num_threads(void) __attribute__((weak,alias("flexiblas_get_num_threads")));
 #else
 int  openblas_get_num_threads(void) { return flexiblas_get_num_threads(); }
-int  mkl_get_num_threads(void)	{ return flexiblas_get_num_threads(); }
+int  MKL_Get_Num_Threads(void)	{ return flexiblas_get_num_threads(); }
+int  MKL_Get_Max_Threads(void)	{ return flexiblas_get_num_threads(); }
 int  acmlgetnumthreads(void) 	{ return flexiblas_get_num_threads(); }
 int  blas_get_num_threads(void) 	{ return flexiblas_get_num_threads(); }
 int  nvpl_blas_get_max_threads(void) 	{ return flexiblas_get_num_threads(); }
@@ -149,14 +161,18 @@ void flexiblas_set_num_threads_(Int* num)
 
 #ifndef __APPLE__
 void openblas_set_num_threads_(Int *num) __attribute__((weak, alias("flexiblas_set_num_threads_")));
+void mkl_set_num_threads(Int *num) __attribute__((weak,alias("flexiblas_set_num_threads_")));
 void mkl_set_num_threads_(Int *num) __attribute__((weak,alias("flexiblas_set_num_threads_")));
+void MKL_SET_NUM_THREADS(Int *num) __attribute__((weak,alias("flexiblas_set_num_threads_")));
 void acmlsetnumthreads_(Int *num) __attribute__((weak,alias("flexiblas_set_num_threads_")));
 void blas_set_num_threads_(Int *num) __attribute__((weak,alias("flexiblas_set_num_threads_")));
 void armpl_set_num_threads_(Int *num) __attribute__((weak,alias("flexiblas_set_num_threads_")));
 void armpl_omp_set_num_threads_(Int *num) __attribute__((weak,alias("flexiblas_set_num_threads_")));
 #else
 void openblas_set_num_threads_(Int *num) { flexiblas_set_num_threads_(num); }
+void mkl_set_num_threads(Int *num)      { flexiblas_set_num_threads_(num); }
 void mkl_set_num_threads_(Int *num)      { flexiblas_set_num_threads_(num); }
+void MKL_SET_NUM_THREADS(Int *num)      { flexiblas_set_num_threads_(num); }
 void acmlsetnumthreads_(Int *num)        { flexiblas_set_num_threads_(num); }
 void blas_set_num_threads_(Int *num)     { flexiblas_set_num_threads_(num); }
 void armpl_set_num_threads_(Int *num)    { flexiblas_set_num_threads_(num); }
@@ -198,6 +214,11 @@ Int flexiblas_get_num_threads_(void)
 #ifndef __APPLE__
 Int  openblas_get_num_threads_(void) __attribute__((weak, alias("flexiblas_get_num_threads_")));
 Int  mkl_get_num_threads_(void) __attribute__((weak,alias("flexiblas_get_num_threads_")));
+Int  mkl_get_num_threads(void) __attribute__((weak,alias("flexiblas_get_num_threads_")));
+Int  MKL_GET_NUM_THREADS(void) __attribute__((weak,alias("flexiblas_get_num_threads_")));
+Int  mkl_get_max_threads_(void) __attribute__((weak,alias("flexiblas_get_num_threads_")));
+Int  mkl_get_max_threads(void) __attribute__((weak,alias("flexiblas_get_num_threads_")));
+Int  MKL_GET_MAX_THREADS(void) __attribute__((weak,alias("flexiblas_get_num_threads_")));
 Int  acmlgetnumthreads_(void) __attribute__((weak,alias("flexiblas_get_num_threads_")));
 Int  blas_get_num_threads_(void) __attribute__((weak,alias("flexiblas_get_num_threads_")));
 Int  armpl_get_num_threads_(void) __attribute__((weak,alias("flexiblas_get_num_threads_")));
@@ -205,6 +226,11 @@ Int  armpl_omp_get_num_threads_(void) __attribute__((weak,alias("flexiblas_get_n
 #else
 Int  openblas_get_num_threads_(void) { return flexiblas_get_num_threads_(); }
 Int  mkl_get_num_threads_(void)      { return flexiblas_get_num_threads_(); }
+Int  mkl_get_num_threads(void)      { return flexiblas_get_num_threads_(); }
+Int  MKL_GET_NUM_THREADS(void)      { return flexiblas_get_num_threads_(); }
+Int  mkl_get_max_threads_(void)      { return flexiblas_get_num_threads_(); }
+Int  mkl_get_max_threads(void)      { return flexiblas_get_num_threads_(); }
+Int  MKL_GET_MAX_THREADS(void)      { return flexiblas_get_num_threads_(); }
 Int  acmlgetnumthreads_(void)        { return flexiblas_get_num_threads_(); }
 Int  blas_get_num_threads_(void)     { return flexiblas_get_num_threads_(); }
 Int  armpl_get_num_threads_(void)    { return flexiblas_get_num_threads_(); }
@@ -224,15 +250,19 @@ void __flexiblas_load_set_num_threads(flexiblas_backend_t * backend)
     char fn_name[128];
     char fn2_name[130];
     int i = 0;
+    int fn2_empty = 1;
 
     for (i = 0; i < 8; i++) {
+        fn2_empty = 1;
         if (i == 0 )
             strncpy(fn_name, "hook_set_num_threads",127);
         else if ( i == 1) {
             strncpy(fn_name, "MKL_Set_Num_Threads",127);
             strncpy(fn2_name, "mkl_set_num_threads_",127);
-        } else if ( i == 2)
+            fn2_empty = 0;
+        } else if ( i == 2) {
             strncpy(fn_name, "openblas_set_num_threads",127);
+        }
         else if ( i == 3)
             strncpy(fn_name, "acmlsetnumthreads",127);
         else if ( i == 4 )
@@ -245,7 +275,7 @@ void __flexiblas_load_set_num_threads(flexiblas_backend_t * backend)
             strncpy(fn_name, "armpl_set_num_threads", 127);
         }
         fn_name[127] = '\0';
-        if ( i != 1 ) {
+        if ( fn2_empty ) {
             snprintf(fn2_name, 130, "%s_", fn_name);
         }
         ptr  = dlsym(backend->library_handle, fn_name);

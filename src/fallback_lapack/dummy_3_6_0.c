@@ -1,43 +1,40 @@
-
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2025 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2025 Martin Koehler
 
-    This program is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 3 of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 3 of the License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License
-    along with this program; if not, write to the Free Software Foundation,
-    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+   You should have received a copy of the GNU Lesser General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 */
 
-
-
-#include <stddef.h>
+#include <stdlib.h>
 #include <stdint.h>
-#include <stdio.h>
+#include <complex.h>
+
 #include "flexiblas_config.h"
-#include "flexiblas_fortran_mangle.h"
 #include "flexiblas_fortran_char_len.h"
+#include "flexiblas_fortran_mangle.h"
 
-#include "lapack_3_6_0.h"
-
-
-
+#ifdef FLEXIBLAS_ABI_GNU
+#include "lapack_3_6_0_gnu.h"
+#else
+#include "lapack_3_6_0_intel.h"
+#endif
 HIDDEN void *__flexiblas_lapack_addr[10240];
-HIDDEN void flexiblas_lapack_dummy_function_not_called(void)
-{
+HIDDEN void flexiblas_lapack_dummy_function_not_called(void) {
     size_t k = 0;
-    __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(slamc3,SLAMC3)));
-    __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(dlamc3,DLAMC3)));
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(cbbcsd,CBBCSD)));
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(cbdsqr,CBDSQR)));
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(cgbbrd,CGBBRD)));
@@ -571,6 +568,7 @@ HIDDEN void flexiblas_lapack_dummy_function_not_called(void)
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(dlals0,DLALS0)));
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(dlalsa,DLALSA)));
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(dlalsd,DLALSD)));
+    __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(dlamc3,DLAMC3)));
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(dlamch,DLAMCH)));
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(dlamrg,DLAMRG)));
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(dlaneg,DLANEG)));
@@ -1016,6 +1014,7 @@ HIDDEN void flexiblas_lapack_dummy_function_not_called(void)
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(slals0,SLALS0)));
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(slalsa,SLALSA)));
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(slalsd,SLALSD)));
+    __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(slamc3,SLAMC3)));
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(slamch,SLAMCH)));
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(slamrg,SLAMRG)));
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(slaneg,SLANEG)));
@@ -1300,7 +1299,6 @@ HIDDEN void flexiblas_lapack_dummy_function_not_called(void)
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(strttp,STRTTP)));
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(stzrqf,STZRQF)));
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(stzrzf,STZRZF)));
-    __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(xerbla_array,XERBLA_ARRAY)));
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(zbbcsd,ZBBCSD)));
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(zbdsqr,ZBDSQR)));
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(zcgesv,ZCGESV)));
@@ -1700,3 +1698,5 @@ HIDDEN void flexiblas_lapack_dummy_function_not_called(void)
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(zupgtr,ZUPGTR)));
     __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL(zupmtr,ZUPMTR)));
 }
+
+

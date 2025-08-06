@@ -24,6 +24,7 @@
 #ifndef FLEIXBLAS_FORTRAN_CHAR_LEN_H_
 #define FLEIXBLAS_FORTRAN_CHAR_LEN_H_
 #include <stdint.h>
+#include <stdlib.h>
 
 #ifndef FLEXIBLAS_CHARLEN_T
 #define FLEXIBLAS_CHARLEN_T

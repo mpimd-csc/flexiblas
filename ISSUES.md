@@ -16,7 +16,7 @@ Table of Contents
 8. gcc >= 10.0 and LAPACK 3.7/3.8
 9. LTO Type mismatch with gcc
 10. NVHPC
-
+11. MacOS X on Apple Silicon
 
 1. Profiling Numpy/Scipy with linked against FlexiBLAS
 ------------------------------------------------------
@@ -139,5 +139,9 @@ suite, which also appear if one compiles the reference LAPACK with the NVHPC
 compilers. Even simple routines like `dznrm2` are affected by error introduced
 by the NVHPC compiler.
 
-
-
+11. MacOS X on Apple Silicon
+----------------------------
+Using FlexiBLAS on MacOS X on an Apple Silicon CPU can cause problems, if gcc >=
+14.0 is used. The gfortran compiler generated wrong code if at least of the
+follwing flags is used: `-O2` or `-fexpensive-optimizations
+-ftree-loop-vectorize`. FlexiBLAS deactivates these flags.

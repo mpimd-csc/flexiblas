@@ -18,6 +18,12 @@ IF ( NOT DUMMY_HOOK)
 
     SET_TARGET_PROPERTIES(flexiblas_hook_dummy PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS}")
     TARGET_LINK_LIBRARIES(flexiblas_hook_dummy flexiblas)
+    set_target_properties(flexiblas_hook_dummy PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/${FLEXIBLAS_LIBRARY_DIR}/)
+
+    if (APPLE)
+       set_target_properties(flexiblas_hook_dummy PROPERTIES LINK_FLAGS "-undefined dynamic_lookup -flat_namespace")
+    endif()
+
     IF (WIN32)
         INSTALL(TARGETS flexiblas_hook_dummy
                 LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR}

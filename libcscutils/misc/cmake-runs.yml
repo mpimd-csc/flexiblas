@@ -1,8 +1,12 @@
 build-cmake:
     stage: build
-    when: manual
-    allow_failure: true
-    image: docker:latest
+    allow_failure: false
+    image: docker:28
+    rules:
+      - changes:
+          paths:
+            - misc/**
+            - .gitlab-ci.yml
     before_script:
         - apk add git curl bash
     script:
@@ -14,13 +18,6 @@ build-cmake:
     parallel:
         matrix:
             - CMAKE_VERSION:
-                - "3.5"
-                - "3.6"
-                - "3.7"
-                - "3.8"
-                - "3.9"
-                - "3.10"
-                - "3.11"
                 - "3.12"
                 - "3.13"
                 - "3.14"
@@ -37,6 +34,12 @@ build-cmake:
                 - "3.25"
                 - "3.26"
                 - "3.27"
+                - "3.28"
+                - "3.29"
+                - "3.30"
+                - "3.31"
+                - "4.0"
+                
 
 cmake-version-test:
     stage: build
@@ -47,13 +50,6 @@ cmake-version-test:
     parallel:
         matrix:
             - CMAKE_VERSION:
-                - "3.5"
-                - "3.6"
-                - "3.7"
-                - "3.8"
-                - "3.9"
-                - "3.10"
-                - "3.11"
                 - "3.12"
                 - "3.13"
                 - "3.14"
@@ -70,4 +66,10 @@ cmake-version-test:
                 - "3.25"
                 - "3.26"
                 - "3.27"
+                - "3.28"
+                - "3.29"
+                - "3.30"
+                - "3.31"
+                - "4.0"
+                
 

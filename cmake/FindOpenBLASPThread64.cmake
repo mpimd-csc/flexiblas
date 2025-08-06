@@ -6,11 +6,11 @@ IF ( EXISTS /etc/debian_version )
     # We are on debian
     MESSAGE(STATUS "${OPENBLAS_PREFIX} ${CMAKE_LIBRARY_ARCHITECTURE} ")
     SET(SEARCH_PATH /usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/openblas64-pthread)
-    SET(SEARCH_NAME openblas64)
 ELSE()
-    SET(SEARCH_PATH /usr/lib/ /usr/lib64)
-    SET(SEARCH_NAME openblasp64 openblas64)
+    SET(SEARCH_PATH /usr/lib/ /usr/lib64 /opt/homebrew/opt/openblas/lib )
 ENDIF()
+
+SET(SEARCH_NAME openblasp64 openblas64)
 
 FIND_LIBRARY(OpenBLAS${OPENBLAS_LIB_NAME}_LIBRARY NAMES ${SEARCH_NAME} HINTS ${SEARCH_PATH}   DOC "OpenBLAS-Serial Location")
 

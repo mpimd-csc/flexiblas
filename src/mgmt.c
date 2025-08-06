@@ -33,6 +33,7 @@
 #include "hooks.h"
 #include "paths.h"
 #include "cscutils/strutils.h"
+#include "cscutils/inifile.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>

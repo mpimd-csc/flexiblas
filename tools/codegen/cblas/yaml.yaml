@@ -1,0 +1,7775 @@
+- name: cblas_caxpby
+  load_name:
+  - cblas_caxpby
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: Y
+    quals: []
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_caxpy
+  load_name:
+  - cblas_caxpy
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals: []
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_ccopy
+  load_name:
+  - cblas_ccopy
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals: []
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_cdotc_sub
+  load_name:
+  - cblas_cdotc_sub
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: dotc
+    quals: []
+    type: void
+    pointer: true
+- name: cblas_cdotu_sub
+  load_name:
+  - cblas_cdotu_sub
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: dotu
+    quals: []
+    type: void
+    pointer: true
+- name: cblas_cgbmv
+  load_name:
+  - cblas_cgbmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: KL
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: KU
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: Y
+    quals: []
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_cgeadd
+  load_name:
+  - cblas_cgeadd
+  alt_names: []
+  return_type: void
+  args:
+  - name: CORDER
+    quals:
+    - const
+    type: CBLAS_ORDER
+    pointer: false
+  - name: crows
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: ccols
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: calpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: a
+    quals: []
+    type: void
+    pointer: true
+  - name: clda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: cbeta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: b
+    quals: []
+    type: void
+    pointer: true
+  - name: cldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_cgemm
+  load_name:
+  - cblas_cgemm
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: TransB
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: C
+    quals: []
+    type: void
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_cgemmtr
+  load_name:
+  - cblas_cgemmtr
+  - cblas_cgemmt
+  alt_names:
+  - cblas_cgemmt
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: TransB
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: C
+    quals: []
+    type: void
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_cgemv
+  load_name:
+  - cblas_cgemv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: Y
+    quals: []
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_cgerc
+  load_name:
+  - cblas_cgerc
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals: []
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_cgeru
+  load_name:
+  - cblas_cgeru
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals: []
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_chbmv
+  load_name:
+  - cblas_chbmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: Y
+    quals: []
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_chemm
+  load_name:
+  - cblas_chemm
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Side
+    quals: []
+    type: CBLAS_SIDE
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: C
+    quals: []
+    type: void
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_chemv
+  load_name:
+  - cblas_chemv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: Y
+    quals: []
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_cher
+  load_name:
+  - cblas_cher
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals: []
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_cher2
+  load_name:
+  - cblas_cher2
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals: []
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_cher2k
+  load_name:
+  - cblas_cher2k
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: Trans
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: C
+    quals: []
+    type: void
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_cherk
+  load_name:
+  - cblas_cherk
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: Trans
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: C
+    quals: []
+    type: void
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_chpmv
+  load_name:
+  - cblas_chpmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: Ap
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: Y
+    quals: []
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_chpr
+  load_name:
+  - cblas_chpr
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals: []
+    type: void
+    pointer: true
+- name: cblas_chpr2
+  load_name:
+  - cblas_chpr2
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Ap
+    quals: []
+    type: void
+    pointer: true
+- name: cblas_cimatcopy
+  load_name:
+  - cblas_cimatcopy
+  alt_names: []
+  return_type: void
+  args:
+  - name: CORDER
+    quals:
+    - const
+    type: CBLAS_ORDER
+    pointer: false
+  - name: CTRANS
+    quals:
+    - const
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: crows
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: ccols
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: calpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: a
+    quals: []
+    type: void
+    pointer: true
+  - name: clda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: cldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_comatcopy
+  load_name:
+  - cblas_comatcopy
+  alt_names: []
+  return_type: void
+  args:
+  - name: CORDER
+    quals:
+    - const
+    type: CBLAS_ORDER
+    pointer: false
+  - name: CTRANS
+    quals:
+    - const
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: crows
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: ccols
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: calpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: a
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: clda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: b
+    quals: []
+    type: void
+    pointer: true
+  - name: cldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_crotg
+  load_name:
+  - cblas_crotg
+  alt_names: []
+  return_type: void
+  args:
+  - name: a
+    quals: []
+    type: void
+    pointer: true
+  - name: b
+    quals: []
+    type: void
+    pointer: true
+  - name: c
+    quals: []
+    type: float
+    pointer: true
+  - name: s
+    quals: []
+    type: void
+    pointer: true
+- name: cblas_cscal
+  load_name:
+  - cblas_cscal
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: X
+    quals: []
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_csrot
+  load_name:
+  - cblas_csrot
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals: []
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: c
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: s
+    quals:
+    - const
+    type: float
+    pointer: false
+- name: cblas_csscal
+  load_name:
+  - cblas_csscal
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: X
+    quals: []
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_cswap
+  load_name:
+  - cblas_cswap
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals: []
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_csymm
+  load_name:
+  - cblas_csymm
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Side
+    quals: []
+    type: CBLAS_SIDE
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: C
+    quals: []
+    type: void
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_csyr2k
+  load_name:
+  - cblas_csyr2k
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: Trans
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: C
+    quals: []
+    type: void
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_csyrk
+  load_name:
+  - cblas_csyrk
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: Trans
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: C
+    quals: []
+    type: void
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_ctbmv
+  load_name:
+  - cblas_ctbmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_ctbsv
+  load_name:
+  - cblas_ctbsv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_ctpmv
+  load_name:
+  - cblas_ctpmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Ap
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: X
+    quals: []
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_ctpsv
+  load_name:
+  - cblas_ctpsv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Ap
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: X
+    quals: []
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_ctrmm
+  load_name:
+  - cblas_ctrmm
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Side
+    quals: []
+    type: CBLAS_SIDE
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals: []
+    type: void
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_ctrmv
+  load_name:
+  - cblas_ctrmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_ctrsm
+  load_name:
+  - cblas_ctrsm
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Side
+    quals: []
+    type: CBLAS_SIDE
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals: []
+    type: void
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_ctrsv
+  load_name:
+  - cblas_ctrsv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dasum
+  load_name:
+  - cblas_dasum
+  alt_names: []
+  return_type: double
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_daxpby
+  load_name:
+  - cblas_daxpby
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: Y
+    quals: []
+    type: double
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_daxpy
+  load_name:
+  - cblas_daxpy
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals: []
+    type: double
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dcabs1
+  load_name:
+  - cblas_dcabs1
+  alt_names: []
+  return_type: double
+  args:
+  - name: z
+    quals:
+    - const
+    type: void
+    pointer: true
+- name: cblas_dcopy
+  load_name:
+  - cblas_dcopy
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals: []
+    type: double
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_ddot
+  load_name:
+  - cblas_ddot
+  alt_names: []
+  return_type: double
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dgbmv
+  load_name:
+  - cblas_dgbmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: KL
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: KU
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: Y
+    quals: []
+    type: double
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dgeadd
+  load_name:
+  - cblas_dgeadd
+  alt_names: []
+  return_type: void
+  args:
+  - name: CORDER
+    quals:
+    - const
+    type: CBLAS_ORDER
+    pointer: false
+  - name: crows
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: ccols
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: calpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: a
+    quals: []
+    type: double
+    pointer: true
+  - name: clda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: cbeta
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: b
+    quals: []
+    type: double
+    pointer: true
+  - name: cldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dgemm
+  load_name:
+  - cblas_dgemm
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: TransB
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: C
+    quals: []
+    type: double
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dgemmtr
+  load_name:
+  - cblas_dgemmtr
+  - cblas_dgemmt
+  alt_names:
+  - cblas_dgemmt
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: TransB
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: C
+    quals: []
+    type: double
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dgemv
+  load_name:
+  - cblas_dgemv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: Y
+    quals: []
+    type: double
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dger
+  load_name:
+  - cblas_dger
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals: []
+    type: double
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dimatcopy
+  load_name:
+  - cblas_dimatcopy
+  alt_names: []
+  return_type: void
+  args:
+  - name: CORDER
+    quals:
+    - const
+    type: CBLAS_ORDER
+    pointer: false
+  - name: CTRANS
+    quals:
+    - const
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: crows
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: ccols
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: calpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: a
+    quals: []
+    type: double
+    pointer: true
+  - name: clda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: cldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dnrm2
+  load_name:
+  - cblas_dnrm2
+  alt_names: []
+  return_type: double
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_domatcopy
+  load_name:
+  - cblas_domatcopy
+  alt_names: []
+  return_type: void
+  args:
+  - name: CORDER
+    quals:
+    - const
+    type: CBLAS_ORDER
+    pointer: false
+  - name: CTRANS
+    quals:
+    - const
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: crows
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: ccols
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: calpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: a
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: clda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: b
+    quals: []
+    type: double
+    pointer: true
+  - name: cldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_drot
+  load_name:
+  - cblas_drot
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals: []
+    type: double
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: c
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: s
+    quals:
+    - const
+    type: double
+    pointer: false
+- name: cblas_drotg
+  load_name:
+  - cblas_drotg
+  alt_names: []
+  return_type: void
+  args:
+  - name: a
+    quals: []
+    type: double
+    pointer: true
+  - name: b
+    quals: []
+    type: double
+    pointer: true
+  - name: c
+    quals: []
+    type: double
+    pointer: true
+  - name: s
+    quals: []
+    type: double
+    pointer: true
+- name: cblas_drotm
+  load_name:
+  - cblas_drotm
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals: []
+    type: double
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: P
+    quals:
+    - const
+    type: double
+    pointer: true
+- name: cblas_drotmg
+  load_name:
+  - cblas_drotmg
+  alt_names: []
+  return_type: void
+  args:
+  - name: d1
+    quals: []
+    type: double
+    pointer: true
+  - name: d2
+    quals: []
+    type: double
+    pointer: true
+  - name: b1
+    quals: []
+    type: double
+    pointer: true
+  - name: b2
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: P
+    quals: []
+    type: double
+    pointer: true
+- name: cblas_dsbmv
+  load_name:
+  - cblas_dsbmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: Y
+    quals: []
+    type: double
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dscal
+  load_name:
+  - cblas_dscal
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: X
+    quals: []
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dsdot
+  load_name:
+  - cblas_dsdot
+  alt_names: []
+  return_type: double
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dspmv
+  load_name:
+  - cblas_dspmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: Ap
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: X
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: Y
+    quals: []
+    type: double
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dspr
+  load_name:
+  - cblas_dspr
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Ap
+    quals: []
+    type: double
+    pointer: true
+- name: cblas_dspr2
+  load_name:
+  - cblas_dspr2
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals: []
+    type: double
+    pointer: true
+- name: cblas_dswap
+  load_name:
+  - cblas_dswap
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals: []
+    type: double
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dsymm
+  load_name:
+  - cblas_dsymm
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Side
+    quals: []
+    type: CBLAS_SIDE
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: C
+    quals: []
+    type: double
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dsymv
+  load_name:
+  - cblas_dsymv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: Y
+    quals: []
+    type: double
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dsyr
+  load_name:
+  - cblas_dsyr
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals: []
+    type: double
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dsyr2
+  load_name:
+  - cblas_dsyr2
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals: []
+    type: double
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dsyr2k
+  load_name:
+  - cblas_dsyr2k
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: Trans
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: C
+    quals: []
+    type: double
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dsyrk
+  load_name:
+  - cblas_dsyrk
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: Trans
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: C
+    quals: []
+    type: double
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dtbmv
+  load_name:
+  - cblas_dtbmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dtbsv
+  load_name:
+  - cblas_dtbsv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dtpmv
+  load_name:
+  - cblas_dtpmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Ap
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: X
+    quals: []
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dtpsv
+  load_name:
+  - cblas_dtpsv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Ap
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: X
+    quals: []
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dtrmm
+  load_name:
+  - cblas_dtrmm
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Side
+    quals: []
+    type: CBLAS_SIDE
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals: []
+    type: double
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dtrmv
+  load_name:
+  - cblas_dtrmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dtrsm
+  load_name:
+  - cblas_dtrsm
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Side
+    quals: []
+    type: CBLAS_SIDE
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals: []
+    type: double
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dtrsv
+  load_name:
+  - cblas_dtrsv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dzasum
+  load_name:
+  - cblas_dzasum
+  alt_names: []
+  return_type: double
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_dznrm2
+  load_name:
+  - cblas_dznrm2
+  alt_names: []
+  return_type: double
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_icamax
+  load_name:
+  - cblas_icamax
+  alt_names: []
+  return_type: size_t
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_idamax
+  load_name:
+  - cblas_idamax
+  alt_names: []
+  return_type: size_t
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: double
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_isamax
+  load_name:
+  - cblas_isamax
+  alt_names: []
+  return_type: size_t
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_izamax
+  load_name:
+  - cblas_izamax
+  alt_names: []
+  return_type: size_t
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_sasum
+  load_name:
+  - cblas_sasum
+  alt_names: []
+  return_type: float
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_saxpby
+  load_name:
+  - cblas_saxpby
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: Y
+    quals: []
+    type: float
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_saxpy
+  load_name:
+  - cblas_saxpy
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals: []
+    type: float
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_scabs1
+  load_name:
+  - cblas_scabs1
+  alt_names: []
+  return_type: float
+  args:
+  - name: c
+    quals:
+    - const
+    type: void
+    pointer: true
+- name: cblas_scasum
+  load_name:
+  - cblas_scasum
+  alt_names: []
+  return_type: float
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_scnrm2
+  load_name:
+  - cblas_scnrm2
+  alt_names: []
+  return_type: float
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_scopy
+  load_name:
+  - cblas_scopy
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals: []
+    type: float
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_sdot
+  load_name:
+  - cblas_sdot
+  alt_names: []
+  return_type: float
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_sdsdot
+  load_name:
+  - cblas_sdsdot
+  alt_names: []
+  return_type: float
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_sgbmv
+  load_name:
+  - cblas_sgbmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: KL
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: KU
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: Y
+    quals: []
+    type: float
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_sgeadd
+  load_name:
+  - cblas_sgeadd
+  alt_names: []
+  return_type: void
+  args:
+  - name: CORDER
+    quals:
+    - const
+    type: CBLAS_ORDER
+    pointer: false
+  - name: crows
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: ccols
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: calpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: a
+    quals: []
+    type: float
+    pointer: true
+  - name: clda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: cbeta
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: b
+    quals: []
+    type: float
+    pointer: true
+  - name: cldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_sgemm
+  load_name:
+  - cblas_sgemm
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: TransB
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: C
+    quals: []
+    type: float
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_sgemmtr
+  load_name:
+  - cblas_sgemmtr
+  - cblas_sgemmt
+  alt_names:
+  - cblas_sgemmt
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: TransB
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: C
+    quals: []
+    type: float
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_sgemv
+  load_name:
+  - cblas_sgemv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals:
+    - const
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: TransA
+    quals:
+    - const
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: Y
+    quals: []
+    type: float
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_sger
+  load_name:
+  - cblas_sger
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals: []
+    type: float
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_simatcopy
+  load_name:
+  - cblas_simatcopy
+  alt_names: []
+  return_type: void
+  args:
+  - name: CORDER
+    quals:
+    - const
+    type: CBLAS_ORDER
+    pointer: false
+  - name: CTRANS
+    quals:
+    - const
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: crows
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: ccols
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: calpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: a
+    quals: []
+    type: float
+    pointer: true
+  - name: clda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: cldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_snrm2
+  load_name:
+  - cblas_snrm2
+  alt_names: []
+  return_type: float
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_somatcopy
+  load_name:
+  - cblas_somatcopy
+  alt_names: []
+  return_type: void
+  args:
+  - name: CORDER
+    quals:
+    - const
+    type: CBLAS_ORDER
+    pointer: false
+  - name: CTRANS
+    quals:
+    - const
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: crows
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: ccols
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: calpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: a
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: clda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: b
+    quals: []
+    type: float
+    pointer: true
+  - name: cldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_srot
+  load_name:
+  - cblas_srot
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals: []
+    type: float
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: c
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: s
+    quals:
+    - const
+    type: float
+    pointer: false
+- name: cblas_srotg
+  load_name:
+  - cblas_srotg
+  alt_names: []
+  return_type: void
+  args:
+  - name: a
+    quals: []
+    type: float
+    pointer: true
+  - name: b
+    quals: []
+    type: float
+    pointer: true
+  - name: c
+    quals: []
+    type: float
+    pointer: true
+  - name: s
+    quals: []
+    type: float
+    pointer: true
+- name: cblas_srotm
+  load_name:
+  - cblas_srotm
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals: []
+    type: float
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: P
+    quals:
+    - const
+    type: float
+    pointer: true
+- name: cblas_srotmg
+  load_name:
+  - cblas_srotmg
+  alt_names: []
+  return_type: void
+  args:
+  - name: d1
+    quals: []
+    type: float
+    pointer: true
+  - name: d2
+    quals: []
+    type: float
+    pointer: true
+  - name: b1
+    quals: []
+    type: float
+    pointer: true
+  - name: b2
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: P
+    quals: []
+    type: float
+    pointer: true
+- name: cblas_ssbmv
+  load_name:
+  - cblas_ssbmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: Y
+    quals: []
+    type: float
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_sscal
+  load_name:
+  - cblas_sscal
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: X
+    quals: []
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_sspmv
+  load_name:
+  - cblas_sspmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: Ap
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: X
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: Y
+    quals: []
+    type: float
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_sspr
+  load_name:
+  - cblas_sspr
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Ap
+    quals: []
+    type: float
+    pointer: true
+- name: cblas_sspr2
+  load_name:
+  - cblas_sspr2
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals: []
+    type: float
+    pointer: true
+- name: cblas_sswap
+  load_name:
+  - cblas_sswap
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals: []
+    type: float
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_ssymm
+  load_name:
+  - cblas_ssymm
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Side
+    quals: []
+    type: CBLAS_SIDE
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: C
+    quals: []
+    type: float
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_ssymv
+  load_name:
+  - cblas_ssymv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: Y
+    quals: []
+    type: float
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_ssyr
+  load_name:
+  - cblas_ssyr
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals: []
+    type: float
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_ssyr2
+  load_name:
+  - cblas_ssyr2
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals: []
+    type: float
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_ssyr2k
+  load_name:
+  - cblas_ssyr2k
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: Trans
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: C
+    quals: []
+    type: float
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_ssyrk
+  load_name:
+  - cblas_ssyrk
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: Trans
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: C
+    quals: []
+    type: float
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_stbmv
+  load_name:
+  - cblas_stbmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_stbsv
+  load_name:
+  - cblas_stbsv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_stpmv
+  load_name:
+  - cblas_stpmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Ap
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: X
+    quals: []
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_stpsv
+  load_name:
+  - cblas_stpsv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Ap
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: X
+    quals: []
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_strmm
+  load_name:
+  - cblas_strmm
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Side
+    quals: []
+    type: CBLAS_SIDE
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals: []
+    type: float
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_strmv
+  load_name:
+  - cblas_strmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_strsm
+  load_name:
+  - cblas_strsm
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Side
+    quals: []
+    type: CBLAS_SIDE
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: float
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals: []
+    type: float
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_strsv
+  load_name:
+  - cblas_strsv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: float
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: float
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zaxpby
+  load_name:
+  - cblas_zaxpby
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: Y
+    quals: []
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zaxpy
+  load_name:
+  - cblas_zaxpy
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals: []
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zcopy
+  load_name:
+  - cblas_zcopy
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals: []
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zdotc_sub
+  load_name:
+  - cblas_zdotc_sub
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: dotc
+    quals: []
+    type: void
+    pointer: true
+- name: cblas_zdotu_sub
+  load_name:
+  - cblas_zdotu_sub
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: dotu
+    quals: []
+    type: void
+    pointer: true
+- name: cblas_zdrot
+  load_name:
+  - cblas_zdrot
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals: []
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: c
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: s
+    quals:
+    - const
+    type: double
+    pointer: false
+- name: cblas_zdscal
+  load_name:
+  - cblas_zdscal
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: X
+    quals: []
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zgbmv
+  load_name:
+  - cblas_zgbmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: KL
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: KU
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: Y
+    quals: []
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zgeadd
+  load_name:
+  - cblas_zgeadd
+  alt_names: []
+  return_type: void
+  args:
+  - name: CORDER
+    quals:
+    - const
+    type: CBLAS_ORDER
+    pointer: false
+  - name: crows
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: ccols
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: calpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: a
+    quals: []
+    type: void
+    pointer: true
+  - name: clda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: cbeta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: b
+    quals: []
+    type: void
+    pointer: true
+  - name: cldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zgemm
+  load_name:
+  - cblas_zgemm
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: TransB
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: C
+    quals: []
+    type: void
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zgemmtr
+  load_name:
+  - cblas_zgemmtr
+  - cblas_zgemmt
+  alt_names:
+  - cblas_zgemmt
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: TransB
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: C
+    quals: []
+    type: void
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zgemv
+  load_name:
+  - cblas_zgemv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: Y
+    quals: []
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zgerc
+  load_name:
+  - cblas_zgerc
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals: []
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zgeru
+  load_name:
+  - cblas_zgeru
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals: []
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zhbmv
+  load_name:
+  - cblas_zhbmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: Y
+    quals: []
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zhemm
+  load_name:
+  - cblas_zhemm
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Side
+    quals: []
+    type: CBLAS_SIDE
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: C
+    quals: []
+    type: void
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zhemv
+  load_name:
+  - cblas_zhemv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: Y
+    quals: []
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zher
+  load_name:
+  - cblas_zher
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals: []
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zher2
+  load_name:
+  - cblas_zher2
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals: []
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zher2k
+  load_name:
+  - cblas_zher2k
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: Trans
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: C
+    quals: []
+    type: void
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zherk
+  load_name:
+  - cblas_zherk
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: Trans
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: C
+    quals: []
+    type: void
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zhpmv
+  load_name:
+  - cblas_zhpmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: Ap
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: Y
+    quals: []
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zhpr
+  load_name:
+  - cblas_zhpr
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: double
+    pointer: false
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals: []
+    type: void
+    pointer: true
+- name: cblas_zhpr2
+  load_name:
+  - cblas_zhpr2
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: X
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Ap
+    quals: []
+    type: void
+    pointer: true
+- name: cblas_zimatcopy
+  load_name:
+  - cblas_zimatcopy
+  alt_names: []
+  return_type: void
+  args:
+  - name: CORDER
+    quals:
+    - const
+    type: CBLAS_ORDER
+    pointer: false
+  - name: CTRANS
+    quals:
+    - const
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: crows
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: ccols
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: calpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: a
+    quals: []
+    type: void
+    pointer: true
+  - name: clda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: cldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zomatcopy
+  load_name:
+  - cblas_zomatcopy
+  alt_names: []
+  return_type: void
+  args:
+  - name: CORDER
+    quals:
+    - const
+    type: CBLAS_ORDER
+    pointer: false
+  - name: CTRANS
+    quals:
+    - const
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: crows
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: ccols
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: calpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: a
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: clda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: b
+    quals: []
+    type: void
+    pointer: true
+  - name: cldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zrotg
+  load_name:
+  - cblas_zrotg
+  alt_names: []
+  return_type: void
+  args:
+  - name: a
+    quals: []
+    type: void
+    pointer: true
+  - name: b
+    quals: []
+    type: void
+    pointer: true
+  - name: c
+    quals: []
+    type: double
+    pointer: true
+  - name: s
+    quals: []
+    type: void
+    pointer: true
+- name: cblas_zscal
+  load_name:
+  - cblas_zscal
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: X
+    quals: []
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zswap
+  load_name:
+  - cblas_zswap
+  alt_names: []
+  return_type: void
+  args:
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Y
+    quals: []
+    type: void
+    pointer: true
+  - name: incY
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zsymm
+  load_name:
+  - cblas_zsymm
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Side
+    quals: []
+    type: CBLAS_SIDE
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: C
+    quals: []
+    type: void
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zsyr2k
+  load_name:
+  - cblas_zsyr2k
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: Trans
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: C
+    quals: []
+    type: void
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_zsyrk
+  load_name:
+  - cblas_zsyrk
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: Trans
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: beta
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: C
+    quals: []
+    type: void
+    pointer: true
+  - name: ldc
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_ztbmv
+  load_name:
+  - cblas_ztbmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_ztbsv
+  load_name:
+  - cblas_ztbsv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: K
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_ztpmv
+  load_name:
+  - cblas_ztpmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Ap
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: X
+    quals: []
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_ztpsv
+  load_name:
+  - cblas_ztpsv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: Ap
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: X
+    quals: []
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_ztrmm
+  load_name:
+  - cblas_ztrmm
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Side
+    quals: []
+    type: CBLAS_SIDE
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals: []
+    type: void
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_ztrmv
+  load_name:
+  - cblas_ztrmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_ztrsm
+  load_name:
+  - cblas_ztrsm
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Side
+    quals: []
+    type: CBLAS_SIDE
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: M
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: alpha
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: B
+    quals: []
+    type: void
+    pointer: true
+  - name: ldb
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+- name: cblas_ztrsv
+  load_name:
+  - cblas_ztrsv
+  alt_names: []
+  return_type: void
+  args:
+  - name: layout
+    quals: []
+    type: CBLAS_LAYOUT
+    pointer: false
+  - name: Uplo
+    quals: []
+    type: CBLAS_UPLO
+    pointer: false
+  - name: TransA
+    quals: []
+    type: CBLAS_TRANSPOSE
+    pointer: false
+  - name: Diag
+    quals: []
+    type: CBLAS_DIAG
+    pointer: false
+  - name: N
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: A
+    quals:
+    - const
+    type: void
+    pointer: true
+  - name: lda
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false
+  - name: X
+    quals: []
+    type: void
+    pointer: true
+  - name: incX
+    quals:
+    - const
+    type: CBLAS_INT
+    pointer: false

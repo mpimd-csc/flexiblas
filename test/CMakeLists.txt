@@ -1,3 +1,9 @@
+IF ( APPLE AND (NOT CMAKE_C_COMPILER_ID STREQUAL CMAKE_Fortran_COMPILER_ID))
+	MESSAGE(WARNING "On MacOS the C and the Fortran Compiler needs to be from the same vendor") 
+	RETURN()
+ENDIF()
+	
+
 MESSAGE( STATUS "Enable Testing...")
 add_subdirectory(blas)
 SET(SUBDIR "none")
@@ -37,6 +43,11 @@ ENDIF()
 IF ( LAPACK AND (LAPACK_API_VERSION STREQUAL "3.12.0" OR LAPACK_API_VERSION STREQUAL "3.12.0-wodprc"))
     SET(SUBDIR lapack-3.12.0)
 ENDIF()
+
+IF ( LAPACK AND (LAPACK_API_VERSION STREQUAL "3.12.1" OR LAPACK_API_VERSION STREQUAL "3.12.1-wodprc"))
+    SET(SUBDIR lapack-3.12.1)
+ENDIF()
+
 IF (NOT SUBDIR STREQUAL "none")
     add_subdirectory(${SUBDIR})
     SET(LAPACK_TEST_DIR "${CMAKE_CURRENT_BINARY_DIR}/${SUBDIR}" PARENT_SCOPE)

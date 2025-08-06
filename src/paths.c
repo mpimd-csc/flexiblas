@@ -32,6 +32,7 @@
 #include "paths.h"
 #include "helper.h"
 #include "cscutils/strutils.h"
+#include "flexiblas.h"
 
 #ifdef _WIN32
 #include "windows_fixes.h"
@@ -39,8 +40,8 @@
 #define FUNC_RETURN_ADDRESS() _ReturnAddress()
 #else
 #define FUNC_RETURN_ADDRESS() __builtin_extract_return_addr(__builtin_return_address(0))
-#include <linux/limits.h>
 #include <libgen.h>
+#include <unistd.h>
 #endif
 
 HIDDEN char **  __flexiblas_additional_paths = NULL;
@@ -65,7 +66,18 @@ __flexiblas_get_library_location_impl(void)
         buffer = base_path;
     }
 #else
-    char * buffer = malloc(sizeof(char) * PATH_MAX);
+    long path_max;
+#ifdef PATH_MAX
+    path_max = PATH_MAX;
+#elif defined(MAX_PATH)
+    path_max = MAX_PATH;
+#else
+    path_max = pathconf("/", _PC_PATH_MAX);
+    if (path_max <= 0)
+        path_max = 32768;
+#endif
+
+    char * buffer = malloc(sizeof(char) * path_max);
 
     for (;;)
     {
@@ -93,30 +105,28 @@ __flexiblas_get_library_location(void)
 
 HIDDEN void __flexiblas_get_global_rc_path(char * container, int max_buffer_size,  char const * suffix)
 {
+#if !defined(__WIN32__)
+    /* On non MS Windows systems we are using the CMAKE_INSTALL_FULL_SYSCONFDIR variable */
+    snprintf(container, max_buffer_size, "%s/%s", CMAKE_INSTALL_FULL_SYSCONFDIR, suffix);
+    
+    return;
+#else
     char sysconfdir[MAX_BUFFER_SIZE];
     char sysconfdir_clean[MAX_BUFFER_SIZE];
     char *libpath = __flexiblas_get_library_location();
-
-    /* On Linux the rc path is in the libpath/../etc/suffix subdirectory */
+    /* On windows, we assume that the config resides in the FlexiBLAS library directory */
     if (libpath != NULL)
     {
-        char *folder = dirname(libpath);
-
+       char *folder = dirname(libpath);
         strcpy(sysconfdir, folder);
         strcat(sysconfdir, "/../etc");
-#if defined(__WIN32__)
         _fullpath(sysconfdir_clean, sysconfdir, MAX_BUFFER_SIZE);
-#else
-        if (!realpath(sysconfdir, sysconfdir_clean)) {
-            free(libpath);
-            return;
-        }
-#endif
-
-        snprintf(container, max_buffer_size, "%s/%s", sysconfdir_clean, suffix);
-
-        free(libpath);
+    } else {
+        snprintf(container, max_buffer_size, "%s", suffix );
     }
+    free(libpath);
+    return;
+#endif
 }
 
 /*-----------------------------------------------------------------------------

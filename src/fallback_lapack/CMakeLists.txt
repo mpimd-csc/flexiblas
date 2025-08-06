@@ -1,47 +1,51 @@
-IF(LAPACK_API_VERSION STREQUAL "3.12.0")
+IF(LAPACK_API_VERSION STREQUAL "3.12.1")
+    SET(_LAPACK_FILE_SUFFIX 3_12_1)
+ELSEIF (LAPACK_API_VERSION STREQUAL "3.12.1-wodprc")
+    SET(_LAPACK_FILE_SUFFIX 3_12_1_wodprc) #
+ELSEIF(LAPACK_API_VERSION STREQUAL "3.12.0")
     SET(_LAPACK_FILE_SUFFIX 3_12_0)
 ELSEIF (LAPACK_API_VERSION STREQUAL "3.12.0-wodprc")
-    SET(_LAPACK_FILE_SUFFIX 3_12_0-wodprc) #
+    SET(_LAPACK_FILE_SUFFIX 3_12_0_wodprc) #
 ELSEIF(LAPACK_API_VERSION STREQUAL "3.11.0")
     SET(_LAPACK_FILE_SUFFIX 3_11_0)
 ELSEIF (LAPACK_API_VERSION STREQUAL "3.11.0-wodprc")
-    SET(_LAPACK_FILE_SUFFIX 3_11_0-wodprc) #
+    SET(_LAPACK_FILE_SUFFIX 3_11_0_wodprc) #
 ELSEIF(LAPACK_API_VERSION STREQUAL "3.10.1")
     SET(_LAPACK_FILE_SUFFIX 3_10_1)
 ELSEIF (LAPACK_API_VERSION STREQUAL "3.10.1-wodprc")
-    SET(_LAPACK_FILE_SUFFIX 3_10_1-wodprc) #
+    SET(_LAPACK_FILE_SUFFIX 3_10_1_wodprc) #
 ELSEIF(LAPACK_API_VERSION STREQUAL "3.10.0")
     SET(_LAPACK_FILE_SUFFIX 3_10_0)
 ELSEIF (LAPACK_API_VERSION STREQUAL "3.10.0-wodprc")
-    SET(_LAPACK_FILE_SUFFIX 3_10_0-wodprc) #
+    SET(_LAPACK_FILE_SUFFIX 3_10_0_wodprc) #
 ELSEIF(LAPACK_API_VERSION STREQUAL "3.9.1")
     SET(_LAPACK_FILE_SUFFIX 3_9_1)
 ELSEIF (LAPACK_API_VERSION STREQUAL "3.9.1-wodprc")
-    SET(_LAPACK_FILE_SUFFIX 3_9_1-wodprc) #
+    SET(_LAPACK_FILE_SUFFIX 3_9_1_wodprc) #
 ELSEIF(LAPACK_API_VERSION STREQUAL "3.9.0")
     SET(_LAPACK_FILE_SUFFIX 3_9_0)
 ELSEIF (LAPACK_API_VERSION STREQUAL "3.9.0-wodprc")
-    SET(_LAPACK_FILE_SUFFIX 3_9_0-wodprc) #
+    SET(_LAPACK_FILE_SUFFIX 3_9_0_wodprc) #
 ELSEIF(LAPACK_API_VERSION STREQUAL "3.8.0")
     SET(_LAPACK_FILE_SUFFIX 3_8_0)
 ELSEIF (LAPACK_API_VERSION STREQUAL "3.8.0-wodprc")
-    SET(_LAPACK_FILE_SUFFIX 3_8_0-wodprc) #
+    SET(_LAPACK_FILE_SUFFIX 3_8_0_wodprc) #
 ELSEIF(LAPACK_API_VERSION STREQUAL "3.7.1")
     SET(_LAPACK_FILE_SUFFIX 3_7_0)
 ELSEIF (LAPACK_API_VERSION STREQUAL "3.7.1-wodprc")
-    SET(_LAPACK_FILE_SUFFIX 3_7_0-wodprc) #
+    SET(_LAPACK_FILE_SUFFIX 3_7_0_wodprc) #
 ELSEIF(LAPACK_API_VERSION STREQUAL "3.7.0")
     SET(_LAPACK_FILE_SUFFIX 3_7_0)
 ELSEIF (LAPACK_API_VERSION STREQUAL "3.7.0-wodprc")
-    SET(_LAPACK_FILE_SUFFIX 3_7_0-wodprc) #
+    SET(_LAPACK_FILE_SUFFIX 3_7_0_wodprc) #
 ELSEIF(LAPACK_API_VERSION STREQUAL "3.6.1")
     SET(_LAPACK_FILE_SUFFIX 3_6_1)
 ELSEIF (LAPACK_API_VERSION STREQUAL "3.6.1-wodprc")
-    SET(_LAPACK_FILE_SUFFIX 3_6_1-wodprc) #
+    SET(_LAPACK_FILE_SUFFIX 3_6_1_wodprc) #
 ELSEIF (LAPACK_API_VERSION STREQUAL "3.6.0")
     SET(_LAPACK_FILE_SUFFIX 3_6_0) #
 ELSEIF (LAPACK_API_VERSION STREQUAL "3.6.0-wodprc")
-    SET(_LAPACK_FILE_SUFFIX 3_6_0-wodprc) #
+    SET(_LAPACK_FILE_SUFFIX 3_6_0_wodprc) #
 ELSEIF (LAPACK_API_VERSION STREQUAL "3.5.0")
     SET(_LAPACK_FILE_SUFFIX 3_5_0) #
 ELSEIF (LAPACK_API_VERSION STREQUAL "3.4.2")
@@ -80,6 +84,10 @@ else()
     SET(LIBM)
 endif()
 
+if (LAPACKE)
+    set(SRC ${SRC} $<TARGET_OBJECTS:lapacke>)
+ENDIF()
+
 if ( SYS_LAPACK_LIBRARY )
     message(STATUS "Use system provided LAPACK for fallback generation. SYS_LAPACK_LIBRARY = ${SYS_LAPACK_LIBRARY}")
     add_library(flexiblas_lapack_import STATIC IMPORTED)
@@ -88,14 +96,16 @@ if ( SYS_LAPACK_LIBRARY )
     target_link_libraries(flexiblas_fallback_lapack PUBLIC flexiblas_lapack_import PRIVATE ${LIBM})
 else()
     add_library(flexiblas_fallback_lapack SHARED ${SRC} $<TARGET_OBJECTS:flexiblas_fallback_lapack_objs>)
-    target_link_libraries(flexiblas_fallback_lapack flexiblas ${LIBM})
+    target_link_libraries(flexiblas_fallback_lapack ${LIBM})
 endif()
 
 if (APPLE)
-    set_target_properties(flexiblas_fallback_lapack PROPERTIES LINK_FLAGS "-undefined dynamic_lookup ")
+    set_target_properties(flexiblas_fallback_lapack PROPERTIES LINK_FLAGS "-undefined dynamic_lookup -flat_namespace")
 endif()
+set_target_properties(flexiblas_fallback_lapack PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/${FLEXIBLAS_LIBRARY_DIR}/)
 
-target_include_directories(flexiblas_fallback_lapack PRIVATE ${PROJECT_BINARY_DIR}/include ${PROJECT_SOURCE_DIR}/src/lapack_interface/ ${PROJECT_SOURCE_DIR/src})
+
+target_include_directories(flexiblas_fallback_lapack PRIVATE ${PROJECT_BINARY_DIR}/include ${PROJECT_SOURCE_DIR}/src/lapack/ ${PROJECT_SOURCE_DIR/src})
 
 if (WIN32)
     install(TARGETS flexiblas_fallback_lapack
@@ -105,5 +115,4 @@ if (WIN32)
 else()
     install(TARGETS flexiblas_fallback_lapack LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR})
 endif()
-SET_TARGET_PROPERTIES(flexiblas_fallback_lapack  PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 

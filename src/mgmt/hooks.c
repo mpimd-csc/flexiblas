@@ -31,6 +31,7 @@
 #include "hooks.h"
 #include "helper.h"
 #include "cscutils/strutils.h"
+#include "cscutils/inifile.h"
 
 #ifdef __WIN32__
 #include <windows_fixes.h>

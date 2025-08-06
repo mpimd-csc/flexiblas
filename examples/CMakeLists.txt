@@ -8,6 +8,7 @@ ENDIF()
 
 
 SET (SRC ${SRC}  	demo_1
+    demo_1s
     demo_2
     demo_api
     demo_set_threads
@@ -23,6 +24,10 @@ SET (SRC ${SRC}  	demo_1
 IF ( LAPACK )
     SET (SRC ${SRC} benchmark_dgetrf)
 ENDIF ()
+
+IF (LAPACKE)
+    SET (SRC ${SRC} demo_lapacke)
+ENDIF()
 
 IF (CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
     SET (SRC ${SRC} benchmark_overhead_quickreturn)

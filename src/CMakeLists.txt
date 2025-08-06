@@ -27,11 +27,9 @@ SET ( SRC
     flexiblas.c
     flexiblas_api.c
     loader.c
-    hook_loader.c
     xerbla.c
     lsame.c
     set_num_threads.c
-    wrap_cblas.c
     cabs.c
     ${COMMON_SRC}
     )
@@ -50,188 +48,9 @@ ELSE ()
     SET (SRC ${SRC} wrapper_blas_gnu.c)
 ENDIF()
 
-
-SET ( CBLAS_SRC
-    # Globlas
-    cblas_interface/cblas_globals.c
-    cblas_interface/cblas_xerbla.c
-    # Double
-    cblas_interface/cblas_dasum.c
-    cblas_interface/cblas_daxpy.c
-    cblas_interface/cblas_dcopy.c
-    cblas_interface/cblas_ddot.c
-    cblas_interface/cblas_dgbmv.c
-    cblas_interface/cblas_dgemm.c
-    cblas_interface/cblas_dgemv.c
-    cblas_interface/cblas_dger.c
-    cblas_interface/cblas_dnrm2.c
-    cblas_interface/cblas_drot.c
-    cblas_interface/cblas_drotg.c
-    cblas_interface/cblas_drotm.c
-    cblas_interface/cblas_drotmg.c
-    cblas_interface/cblas_dsbmv.c
-    cblas_interface/cblas_dscal.c
-    cblas_interface/cblas_dsdot.c
-    cblas_interface/cblas_dspmv.c
-    cblas_interface/cblas_dspr.c
-    cblas_interface/cblas_dspr2.c
-    cblas_interface/cblas_dswap.c
-    cblas_interface/cblas_dsymm.c
-    cblas_interface/cblas_dsymv.c
-    cblas_interface/cblas_dsyr.c
-    cblas_interface/cblas_dsyr2.c
-    cblas_interface/cblas_dsyr2k.c
-    cblas_interface/cblas_dsyrk.c
-    cblas_interface/cblas_dtbmv.c
-    cblas_interface/cblas_dtbsv.c
-    cblas_interface/cblas_dtpmv.c
-    cblas_interface/cblas_dtpsv.c
-    cblas_interface/cblas_dtrmm.c
-    cblas_interface/cblas_dtrmv.c
-    cblas_interface/cblas_dtrsm.c
-    cblas_interface/cblas_dtrsv.c
-    cblas_interface/cblas_dzasum.c
-    cblas_interface/cblas_dznrm2.c
-    cblas_interface/cblas_idamax.c
-    # Single
-    cblas_interface/cblas_sasum.c
-    cblas_interface/cblas_saxpy.c
-    cblas_interface/cblas_scasum.c
-    cblas_interface/cblas_scnrm2.c
-    cblas_interface/cblas_scopy.c
-    cblas_interface/cblas_sdot.c
-    cblas_interface/cblas_sdsdot.c
-    cblas_interface/cblas_sgbmv.c
-    cblas_interface/cblas_sgemm.c
-    cblas_interface/cblas_sgemv.c
-    cblas_interface/cblas_sger.c
-    cblas_interface/cblas_snrm2.c
-    cblas_interface/cblas_srot.c
-    cblas_interface/cblas_srotg.c
-    cblas_interface/cblas_srotm.c
-    cblas_interface/cblas_srotmg.c
-    cblas_interface/cblas_ssbmv.c
-    cblas_interface/cblas_sscal.c
-    cblas_interface/cblas_sspmv.c
-    cblas_interface/cblas_sspr2.c
-    cblas_interface/cblas_sspr.c
-    cblas_interface/cblas_sswap.c
-    cblas_interface/cblas_ssymm.c
-    cblas_interface/cblas_ssymv.c
-    cblas_interface/cblas_ssyr2.c
-    cblas_interface/cblas_ssyr2k.c
-    cblas_interface/cblas_ssyr.c
-    cblas_interface/cblas_ssyrk.c
-    cblas_interface/cblas_stbmv.c
-    cblas_interface/cblas_stbsv.c
-    cblas_interface/cblas_stpmv.c
-    cblas_interface/cblas_stpsv.c
-    cblas_interface/cblas_strmm.c
-    cblas_interface/cblas_strmv.c
-    cblas_interface/cblas_strsm.c
-    cblas_interface/cblas_strsv.c
-    cblas_interface/cblas_isamax.c
-    # Complex Single
-    cblas_interface/cblas_caxpy.c
-    cblas_interface/cblas_ccopy.c
-    cblas_interface/cblas_cdotc_sub.c
-    cblas_interface/cblas_cdotu_sub.c
-    cblas_interface/cblas_cgbmv.c
-    cblas_interface/cblas_cgemm.c
-    cblas_interface/cblas_cgemv.c
-    cblas_interface/cblas_cgerc.c
-    cblas_interface/cblas_cgeru.c
-    cblas_interface/cblas_chbmv.c
-    cblas_interface/cblas_chemm.c
-    cblas_interface/cblas_chemv.c
-    cblas_interface/cblas_cher2.c
-    cblas_interface/cblas_cher2k.c
-    cblas_interface/cblas_cher.c
-    cblas_interface/cblas_cherk.c
-    cblas_interface/cblas_chpmv.c
-    cblas_interface/cblas_chpr2.c
-    cblas_interface/cblas_chpr.c
-    cblas_interface/cblas_crotg.c
-    cblas_interface/cblas_csrot.c
-    cblas_interface/cblas_cscal.c
-    cblas_interface/cblas_csscal.c
-    cblas_interface/cblas_cswap.c
-    cblas_interface/cblas_csymm.c
-    cblas_interface/cblas_csyr2k.c
-    cblas_interface/cblas_csyrk.c
-    cblas_interface/cblas_ctbmv.c
-    cblas_interface/cblas_ctbsv.c
-    cblas_interface/cblas_ctpmv.c
-    cblas_interface/cblas_ctpsv.c
-    cblas_interface/cblas_ctrmm.c
-    cblas_interface/cblas_ctrmv.c
-    cblas_interface/cblas_ctrsm.c
-    cblas_interface/cblas_ctrsv.c
-    cblas_interface/cblas_icamax.c
-    # Complex Double
-    cblas_interface/cblas_zaxpy.c
-    cblas_interface/cblas_zcopy.c
-    cblas_interface/cblas_zdotc_sub.c
-    cblas_interface/cblas_zdotu_sub.c
-    cblas_interface/cblas_zgbmv.c
-    cblas_interface/cblas_zgemm.c
-    cblas_interface/cblas_zgemv.c
-    cblas_interface/cblas_zgerc.c
-    cblas_interface/cblas_zgeru.c
-    cblas_interface/cblas_zhbmv.c
-    cblas_interface/cblas_zhemm.c
-    cblas_interface/cblas_zhemv.c
-    cblas_interface/cblas_zher2.c
-    cblas_interface/cblas_zher2k.c
-    cblas_interface/cblas_zher.c
-    cblas_interface/cblas_zherk.c
-    cblas_interface/cblas_zhpmv.c
-    cblas_interface/cblas_zhpr2.c
-    cblas_interface/cblas_zhpr.c
-    cblas_interface/cblas_zrotg.c
-    cblas_interface/cblas_zdrot.c
-    cblas_interface/cblas_zscal.c
-    cblas_interface/cblas_zdscal.c
-    cblas_interface/cblas_zswap.c
-    cblas_interface/cblas_zsymm.c
-    cblas_interface/cblas_zsyr2k.c
-    cblas_interface/cblas_zsyrk.c
-    cblas_interface/cblas_ztbmv.c
-    cblas_interface/cblas_ztbsv.c
-    cblas_interface/cblas_ztpmv.c
-    cblas_interface/cblas_ztpsv.c
-    cblas_interface/cblas_ztrmm.c
-    cblas_interface/cblas_ztrmv.c
-    cblas_interface/cblas_ztrsm.c
-    cblas_interface/cblas_ztrsv.c
-    cblas_interface/cblas_izamax.c
-    cblas_interface/cblas_daxpby.c
-    cblas_interface/cblas_saxpby.c
-    cblas_interface/cblas_caxpby.c
-    cblas_interface/cblas_zaxpby.c
-    cblas_interface/cblas_simatcopy.c
-    cblas_interface/cblas_dimatcopy.c
-    cblas_interface/cblas_cimatcopy.c
-    cblas_interface/cblas_zimatcopy.c
-    cblas_interface/cblas_somatcopy.c
-    cblas_interface/cblas_domatcopy.c
-    cblas_interface/cblas_comatcopy.c
-    cblas_interface/cblas_zomatcopy.c
-    cblas_interface/cblas_dgeadd.c
-    cblas_interface/cblas_cgeadd.c
-    cblas_interface/cblas_zgeadd.c
-    cblas_interface/cblas_sgeadd.c
-    cblas_interface/cblas_dgemmt.c
-    cblas_interface/cblas_cgemmt.c
-    cblas_interface/cblas_zgemmt.c
-    cblas_interface/cblas_sgemmt.c
-    cblas_interface/cblas_dgemmtr.c
-    cblas_interface/cblas_cgemmtr.c
-    cblas_interface/cblas_zgemmtr.c
-    cblas_interface/cblas_sgemmtr.c
-
-
-    )
+SET (CBLAS_SRC
+    wrapper_cblas.c
+)
 IF (CBLAS STREQUAL ON)
     SET (SRC ${SRC} ${CBLAS_SRC})
 ENDIF()
@@ -241,50 +60,78 @@ ENDIF()
 #
 IF ( LAPACK )
     # 3.7.1 and 3.7.0 share the same api/abi
-    IF(LAPACK_API_VERSION STREQUAL "3.12.0")
+    IF(LAPACK_API_VERSION STREQUAL "3.12.1")
+        SET(_LAPACK_FILE_SUFFIX 3_12_1)
+        SET(_LAPACKE_FILE_SUFFIX 3_12_1)
+    ELSEIF (LAPACK_API_VERSION STREQUAL "3.12.1-wodprc")
+        SET(_LAPACK_FILE_SUFFIX 3_12_1_wodprc)
+        SET(_LAPACKE_FILE_SUFFIX 3_12_1_wodprc)
+    ELSEIF(LAPACK_API_VERSION STREQUAL "3.12.0")
         SET(_LAPACK_FILE_SUFFIX 3_12_0)
+        SET(_LAPACKE_FILE_SUFFIX 3_12_0)
     ELSEIF (LAPACK_API_VERSION STREQUAL "3.12.0-wodprc")
-        SET(_LAPACK_FILE_SUFFIX 3_12_0-wodprc) #
+        SET(_LAPACK_FILE_SUFFIX 3_12_0_wodprc) #
+        SET(_LAPACKE_FILE_SUFFIX 3_12_0_wodprc) #
     ELSEIF(LAPACK_API_VERSION STREQUAL "3.11.0")
         SET(_LAPACK_FILE_SUFFIX 3_11_0)
+        SET(_LAPACKE_FILE_SUFFIX 3_11_0)
     ELSEIF (LAPACK_API_VERSION STREQUAL "3.11.0-wodprc")
-        SET(_LAPACK_FILE_SUFFIX 3_11_0-wodprc) #
+        SET(_LAPACK_FILE_SUFFIX 3_11_0_wodprc) #
+        SET(_LAPACKE_FILE_SUFFIX 3_11_0_wodprc) #
     ELSEIF(LAPACK_API_VERSION STREQUAL "3.10.1")
         SET(_LAPACK_FILE_SUFFIX 3_10_1)
+        SET(_LAPACKE_FILE_SUFFIX 3_10_1)
     ELSEIF (LAPACK_API_VERSION STREQUAL "3.10.1-wodprc")
-        SET(_LAPACK_FILE_SUFFIX 3_10_1-wodprc) #
+        SET(_LAPACK_FILE_SUFFIX 3_10_1_wodprc) #
+        SET(_LAPACKE_FILE_SUFFIX 3_10_1_wodprc) #
     ELSEIF(LAPACK_API_VERSION STREQUAL "3.10.0")
         SET(_LAPACK_FILE_SUFFIX 3_10_0)
+        SET(_LAPACKE_FILE_SUFFIX 3_10_0)
     ELSEIF (LAPACK_API_VERSION STREQUAL "3.10.0-wodprc")
-        SET(_LAPACK_FILE_SUFFIX 3_10_0-wodprc) #
+        SET(_LAPACK_FILE_SUFFIX 3_10_0_wodprc) #
+        SET(_LAPACKE_FILE_SUFFIX 3_10_0_wodprc) #
     ELSEIF(LAPACK_API_VERSION STREQUAL "3.9.1")
         SET(_LAPACK_FILE_SUFFIX 3_9_1)
+        SET(_LAPACKE_FILE_SUFFIX 3_9_1)
     ELSEIF (LAPACK_API_VERSION STREQUAL "3.9.1-wodprc")
-        SET(_LAPACK_FILE_SUFFIX 3_9_1-wodprc) #
+        SET(_LAPACK_FILE_SUFFIX 3_9_1_wodprc)
+        SET(_LAPACKE_FILE_SUFFIX 3_9_1_wodprc)
     ELSEIF(LAPACK_API_VERSION STREQUAL "3.9.0")
         SET(_LAPACK_FILE_SUFFIX 3_9_0)
+        SET(_LAPACKE_FILE_SUFFIX 3_9_0)
     ELSEIF (LAPACK_API_VERSION STREQUAL "3.9.0-wodprc")
-        SET(_LAPACK_FILE_SUFFIX 3_9_0-wodprc) #
+        SET(_LAPACK_FILE_SUFFIX 3_9_0_wodprc)
+        SET(_LAPACKE_FILE_SUFFIX 3_9_0_wodprc)
     ELSEIF(LAPACK_API_VERSION STREQUAL "3.8.0")
         SET(_LAPACK_FILE_SUFFIX 3_8_0)
+        SET(_LAPACKE_FILE_SUFFIX 3_8_0)
     ELSEIF (LAPACK_API_VERSION STREQUAL "3.8.0-wodprc")
-        SET(_LAPACK_FILE_SUFFIX 3_8_0-wodprc) #
+        SET(_LAPACK_FILE_SUFFIX 3_8_0_wodprc)
+        SET(_LAPACKE_FILE_SUFFIX 3_8_0_wodprc)
     ELSEIF(LAPACK_API_VERSION STREQUAL "3.7.1")
         SET(_LAPACK_FILE_SUFFIX 3_7_0)
+        SET(_LAPACKE_FILE_SUFFIX 3_7_0)
     ELSEIF (LAPACK_API_VERSION STREQUAL "3.7.1-wodprc")
-        SET(_LAPACK_FILE_SUFFIX 3_7_0-wodprc) #
+        SET(_LAPACK_FILE_SUFFIX 3_7_0_wodprc)
+        SET(_LAPACKE_FILE_SUFFIX 3_7_0_wodprc)
     ELSEIF(LAPACK_API_VERSION STREQUAL "3.7.0")
         SET(_LAPACK_FILE_SUFFIX 3_7_0)
+        SET(_LAPACKE_FILE_SUFFIX 3_7_0)
     ELSEIF (LAPACK_API_VERSION STREQUAL "3.7.0-wodprc")
-        SET(_LAPACK_FILE_SUFFIX 3_7_0-wodprc) #
+        SET(_LAPACK_FILE_SUFFIX 3_7_0_wodprc)
+        SET(_LAPACKE_FILE_SUFFIX 3_7_0_wodprc)
     ELSEIF(LAPACK_API_VERSION STREQUAL "3.6.1")
         SET(_LAPACK_FILE_SUFFIX 3_6_1)
+        SET(_LAPACKE_FILE_SUFFIX 3_6_1)
     ELSEIF (LAPACK_API_VERSION STREQUAL "3.6.1-wodprc")
-        SET(_LAPACK_FILE_SUFFIX 3_6_1-wodprc) #
+        SET(_LAPACK_FILE_SUFFIX 3_6_1_wodprc)
+        SET(_LAPACKE_FILE_SUFFIX 3_6_1_wodprc)
     ELSEIF (LAPACK_API_VERSION STREQUAL "3.6.0")
-        SET(_LAPACK_FILE_SUFFIX 3_6_0) #
+        SET(_LAPACK_FILE_SUFFIX 3_6_0)
+        SET(_LAPACKE_FILE_SUFFIX 3_6_0)
     ELSEIF (LAPACK_API_VERSION STREQUAL "3.6.0-wodprc")
-        SET(_LAPACK_FILE_SUFFIX 3_6_0-wodprc) #
+        SET(_LAPACK_FILE_SUFFIX 3_6_0_wodprc)
+        SET(_LAPACKE_FILE_SUFFIX 3_6_0_wodprc)
     ELSEIF (LAPACK_API_VERSION STREQUAL "3.5.0")
         SET(_LAPACK_FILE_SUFFIX 3_5_0) #
     ELSEIF (LAPACK_API_VERSION STREQUAL "3.4.2")
@@ -298,52 +145,65 @@ IF ( LAPACK )
     ELSEIF (LAPACK_API_VERSION STREQUAL "3.3.0")
         SET(_LAPACK_FILE_SUFFIX 3_3_0) #
     ENDIF()
-    INCLUDE(lapack_interface/lapack_${_LAPACK_FILE_SUFFIX}.cmake)
 
-    IF (FLEXIBLAS_LAPACK_SINGLE_SOURCE)
-        MESSAGE(STATUS "Join LAPACK sources...")
-        SET(_output "${CMAKE_CURRENT_BINARY_DIR}/lapack_combined.c")
-	file(WRITE ${_output} "// Joined LAPACK Wrapper Source. Generated by CMAKE\n")
-        foreach(SOURCE_FILE ${LAPACK_SRC})
-            file(READ ${SOURCE_FILE} CONTENTS)
-            string(REPLACE "small" "small_var" CONTENTSX "${CONTENTS}")
-	    file(APPEND ${_output} "// ${SOURCE_FILE}\n")
-            file(APPEND ${_output} "${CONTENTSX}\n")
-        endforeach()
-        set_source_files_properties(${_output} PROPERTIES GENERATED ON LANGUAGE C)
-        SET (SRC ${SRC} ${CMAKE_CURRENT_BINARY_DIR}/lapack_combined.c lapack_interface/ilaver.c
-            lapack_interface/load_lapack_${_LAPACK_FILE_SUFFIX}.c
-            lapack_interface/load_lapack_${_LAPACK_FILE_SUFFIX}_fallback.c
-            )
-
-    ELSE()
-        SET (SRC ${SRC} ${LAPACK_SRC} lapack_interface/ilaver.c
-            lapack_interface/load_lapack_${_LAPACK_FILE_SUFFIX}.c
-            lapack_interface/load_lapack_${_LAPACK_FILE_SUFFIX}_fallback.c
-        )
-    ENDIF()
+    SET (SRC ${SRC} ${LAPACK_SRC} ilaver.c
+           lapack/wrapper_lapack_${_LAPACK_FILE_SUFFIX}_${abi}.c
+    )
 
 
-
-    FILE(COPY lapack_interface/lapack_${_LAPACK_FILE_SUFFIX}.h DESTINATION ${PROJECT_BINARY_DIR}/include/)
-    FILE(RENAME  ${PROJECT_BINARY_DIR}/include/lapack_${_LAPACK_FILE_SUFFIX}.h ${PROJECT_BINARY_DIR}/include/lapack.h)
-    FILE(COPY lapack_interface/flexiblas_real_lapack_${_LAPACK_FILE_SUFFIX}.h DESTINATION ${PROJECT_BINARY_DIR}/include/)
+    FILE(COPY lapack/lapack_${_LAPACK_FILE_SUFFIX}_${abi}.h DESTINATION ${PROJECT_BINARY_DIR}/include/)
+    FILE(RENAME  ${PROJECT_BINARY_DIR}/include/lapack_${_LAPACK_FILE_SUFFIX}_${abi}.h ${PROJECT_BINARY_DIR}/include/lapack_f77.h)
+    FILE(COPY lapack/flexiblas_real_lapack_${_LAPACK_FILE_SUFFIX}.h DESTINATION ${PROJECT_BINARY_DIR}/include/)
     FILE(RENAME  ${PROJECT_BINARY_DIR}/include/flexiblas_real_lapack_${_LAPACK_FILE_SUFFIX}.h ${PROJECT_BINARY_DIR}/include/flexiblas_real_lapack.h)
+
+    IF (FLEXIBLAS_LAPACKE)
+        SET(SRC ${SRC} lapacke/wrapper_lapacke_${_LAPACKE_FILE_SUFFIX}.c)
+        FILE(COPY lapacke/lapacke_mangling.h DESTINATION ${PROJECT_BINARY_DIR}/include/)
+        FILE(COPY lapacke/flexiblas_real_lapacke_${_LAPACKE_FILE_SUFFIX}.h DESTINATION ${PROJECT_BINARY_DIR}/include/)
+        FILE(RENAME ${PROJECT_BINARY_DIR}/include/flexiblas_real_lapacke_${_LAPACKE_FILE_SUFFIX}.h ${PROJECT_BINARY_DIR}/include/flexiblas_real_lapacke.h)
+        INSTALL(FILES ${PROJECT_BINARY_DIR}/include/flexiblas_real_lapacke.h DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/${FLEXIBLAS_INCLUDE_PREFIX}/)
+        FOREACH(LH IN ITEMS lapack lapacke lapacke_64 lapacke_utils lapacke_config)
+            IF (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/lapacke/include/${LH}_${_LAPACKE_FILE_SUFFIX}.h)
+                MESSAGE(STATUS "Copy lapacke/include/${LH}_${_LAPACKE_FILE_SUFFIX}.h")
+                FILE(COPY ${CMAKE_CURRENT_SOURCE_DIR}/lapacke/include/${LH}_${_LAPACKE_FILE_SUFFIX}.h DESTINATION ${PROJECT_BINARY_DIR}/include)
+                FILE(RENAME ${PROJECT_BINARY_DIR}/include/${LH}_${_LAPACKE_FILE_SUFFIX}.h ${PROJECT_BINARY_DIR}/include/${LH}.h)
+                INSTALL(FILES ${PROJECT_BINARY_DIR}/include/${LH}.h DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/${FLEXIBLAS_INCLUDE_PREFIX}/)
+            ELSE()
+                MESSAGE(STATUS "lapacke/${LH}_${_LAPACKE_FILE_SUFFIX}.h does not exist.")
+            ENDIF()
+        ENDFOREACH()
+
+    ENDIF()
 
 ENDIF()
 
-FIND_PACKAGE(OpenMP)
 
-INCLUDE_DIRECTORIES(${INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/lapack_interface)
+INCLUDE_DIRECTORIES(${INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/lapack)
 add_library(flexiblas SHARED ${SRC}) #  $<TARGET_OBJECTS:cscutils_src>)
 add_executable(flexiblas-tool flexiblas_tool.c tool/hookhandling.c tool/blashandling.c ${TOOL_SRC} ) # $<TARGET_OBJECTS:cscutils_src>)
 
+target_include_directories(flexiblas
+    PRIVATE
+        ${INCLUDE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/lapack
+)
+
+target_include_directories(flexiblas-tool
+    PRIVATE
+        ${INCLUDE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/lapack
+)
+
+
+
 IF (LINK_OPENMP)
-    TARGET_LINK_LIBRARIES(flexiblas ${LIBS} cscutils OpenMP::OpenMP_C)
-    TARGET_LINK_LIBRARIES(flexiblas-tool PRIVATE flexiblas_mgmt ${LIBS} cscutils OpenMP::OpenMP_C)
+    TARGET_LINK_LIBRARIES(flexiblas ${LIBS} cscutils $<$<BOOL:${OpenMP_C_FOUND}>:OpenMP::OpenMP_C> $<$<BOOL:${OpenMP_Fortran_FOUND}>:OpenMP::OpenMP_Fortran> )
+    TARGET_LINK_LIBRARIES(flexiblas-tool PRIVATE flexiblas_mgmt ${LIBS} cscutils $<$<BOOL:${OpenMP_C_FOUND}>:OpenMP::OpenMP_C> $<$<BOOL:${OpenMP_Fortran_FOUND}>:OpenMP::OpenMP_Fortran> )
 ELSE()
-    TARGET_LINK_LIBRARIES(flexiblas ${LIBS} cscutils) # OpenMP::OpenMP_C)
-    TARGET_LINK_LIBRARIES(flexiblas-tool PRIVATE flexiblas_mgmt ${LIBS} cscutils) # OpenMP::OpenMP_C)
+    TARGET_LINK_LIBRARIES(flexiblas ${LIBS} cscutils)
+    TARGET_LINK_LIBRARIES(flexiblas-tool PRIVATE flexiblas_mgmt ${LIBS} cscutils)
 ENDIF()
 
 
@@ -458,6 +318,9 @@ MACRO(BuildNVPL)
             MESSAGE(STATUS "Build NVPL Backend for ${THR} / ${LP}")
             ADD_LIBRARY(flexiblas_nvpl_${LP}_${THR} SHARED ${BACKEND_CODE})
             TARGET_LINK_LIBRARIES(flexiblas_nvpl_${LP}_${THR} PUBLIC nvpl::blas_${LP}_${THR}  nvpl::lapack_${LP}_${THR})
+            set_target_properties(flexiblas_nvpl_${THR} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/${FLEXIBLAS_LIBRARY_DIR}/)
+
+
             IF (FLEXIBLAS_INTEGER8 OR BLAS_INTERFACE64)
                 SET(EXTRA_FLAGS "-DBACKEND_INTEGER8")
             ELSE ()
@@ -574,6 +437,7 @@ MACRO(BuildBackendBlas VENDOR BACKEND_CODE)
         ENDIF()
 
         TARGET_LINK_LIBRARIES(flexiblas_${ivendor} ${${VENDOR}_LIBRARY})
+        set_target_properties(flexiblas_${ivendor} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/${FLEXIBLAS_LIBRARY_DIR}/)
         INSTALL(TARGETS flexiblas_${ivendor} LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR})
 
         LIST(APPEND EXTRA_BLAS "${VENDOR}")
@@ -637,7 +501,12 @@ MACRO(Build_Extra_BLAS VENDOR BACKEND_CODE)
     ELSE ()
         MESSAGE(STATUS "Search for ${VENDOR}")
         IF (FLEXIBLAS_INTEGER8)
-            FIND_PACKAGE(BLAS64)
+            IF (CMAKE_VERSION VERSION_LESS 3.18)
+                FIND_PACKAGE(BLAS64)
+            ELSE()
+                SET(BLA_SIZEOF_INTEGER 8)
+                FIND_PACKAGE(BLAS)
+            ENDIF()
         ELSE()
             FIND_PACKAGE(BLAS)
         ENDIF()
@@ -669,7 +538,7 @@ MACRO(Build_Extra_BLAS VENDOR BACKEND_CODE)
             string(TOLOWER ${VENDOR} ivendor)
             string(TOUPPER ${VENDOR} uvendor)
             ADD_LIBRARY(flexiblas_${ivendor} SHARED ${BACKEND_CODE})
-            IF (FLEIXBLAS_INTEGER8 OR BLAS_INTERFACE64)
+	    IF (FLEXIBLAS_INTEGER8 OR BLAS_INTERFACE64)
                 SET(EXTRA_FLAGS "-DBACKEND_INTEGER8")
             ELSE ()
                 SET(EXTRA_FLAGS "")
@@ -695,6 +564,8 @@ MACRO(Build_Extra_BLAS VENDOR BACKEND_CODE)
             #ENDIF()
             MESSAGE(STATUS "Extra Linker Flags: ${BLAS_LINKER_FLAGS}")
             SET_TARGET_PROPERTIES(flexiblas_${ivendor} PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS}")
+            set_target_properties(flexiblas_${ivendor} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/${FLEXIBLAS_LIBRARY_DIR}/)
+
             # SET_TARGET_PROPERTIES(blas_${ivendor} PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS}" LINK_FLAGS "${BLAS_LINKER_FLAGS}")
 
             IF (CMAKE_C_COMPILER_ID STREQUAL "GNU")
@@ -779,8 +650,12 @@ IF( BLAS_AUTO_DETECT STREQUAL ON)
 
     ENDIF()
 
-    Build_Extra_BLAS(ATLAS  	backends/generic/backend.c)
-    Build_Extra_BLAS(Apple          backends/generic/backend.c)
+    BuildFindPackage(ATLAS  	backends/generic/backend.c)
+    BuildFindPackage(TATLAS  	backends/generic/backend.c)
+    IF ( APPLE AND NOT FLEXIBLAS_INTEGER8)
+	MESSAGE(STATUS "On MacOS... search for Accelerate")
+    	Build_Extra_BLAS(Apple          backends/generic/backend.c)
+    ENDIF()
 ENDIF()
 
 FOREACH(ADDITIONAL_BLAS ${EXTRA})
@@ -854,6 +729,8 @@ IF ( MKL_BUILDER STREQUAL ON)
     SET(INTEL_MKL_SEQ_BLAS_LIBRARIES "flexiblas_intel_mkl_seq" PARENT_SCOPE)
 
 
+    set_target_properties(flexiblas_intel_mkl PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/${FLEXIBLAS_LIBRARY_DIR}/)
+    set_target_properties(flexiblas_intel_mkl_seq PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/${FLEXIBLAS_LIBRARY_DIR}/)
 
     SET(LIBNAME "${CMAKE_SHARED_LIBRARY_PREFIX}flexiblas_intel_mkl${CMAKE_SHARED_LIBRARY_SUFFIX} ")
     FILE(APPEND "${CMAKE_BINARY_DIR}/${FLEXIBLASRC}" "[INTEL_MKL]\nlibrary = ${LIBNAME}\n\n")

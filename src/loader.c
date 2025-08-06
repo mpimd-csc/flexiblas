@@ -23,84 +23,90 @@
 #include "flexiblas.h"
 #include <errno.h>
 #include <complex.h>
-
 #include "flexiblas_fortran_mangle.h"
-
+#include <stdarg.h>
 
 /*-----------------------------------------------------------------------------
  *  Load CBLAS
  *-----------------------------------------------------------------------------*/
-HIDDEN int __flexiblas_load_cblas_function( void * handle , struct flexiblas_blasfn * fn, const char *name)
+HIDDEN void * __flexiblas_lookup_cblas_function( void * handle , ...)
 {
 #ifdef FLEXIBLAS_CBLAS
+    va_list args;
     void *ptr_csymbol = NULL;
-    char cname[40];
-
+    char *name = NULL;
     /* Quick return  */
     if ( handle == NULL ) {
-        return 1;
+        return NULL;
     }
 
+    va_start(args, handle);
 
-    snprintf(cname, 39, "cblas_%s", name);
-    DPRINTF(3, "Look up: %18s", cname);
-    ptr_csymbol = dlsym(handle, cname);
+    dlerror();
+    while ( (name = va_arg(args, char*)) != NULL) {
+        DPRINTF(3, "Look up (C Symbol): %21s", name);
+        ptr_csymbol = dlsym(handle, name);
 
-    fn -> cblas_real = ptr_csymbol;
-    fn -> cblas_function = ptr_csymbol;
+        if ( __flexiblas_verbose > 2) {
+            fprintf(stderr, " %s at = 0x%lx in = 0x%lx.\n",(ptr_csymbol == NULL)?"failed":"success", (unsigned long) ptr_csymbol, (unsigned long) handle);
+        }
+        if ( ptr_csymbol != NULL)
+            break;
 
-    if ( __flexiblas_verbose > 2) {
-        fprintf(stderr, " %s.\n",(fn->cblas_function == NULL)?"failed":"success");
     }
-
-    if (fn->cblas_function == NULL) {
-        return 1;
-    } else {
-        return 0;
-    }
+    va_end(args);
+    return ptr_csymbol;
 #else
-    fn->cblas_real = NULL;
-    fn->cblas_function = NULL;
-    return 0;
+    return NULL;
 #endif
 }
 
 /*-----------------------------------------------------------------------------
  *  Fortran Loader
  *-----------------------------------------------------------------------------*/
-HIDDEN void * __flexiblas_lookup_fortran_function(void * handle, const char *name)
+HIDDEN void * __flexiblas_lookup_fortran_function(void * handle, ...)
 {
     void *ptr_fsymbol = NULL;
     char fname[40];
     int run = 0;
+    va_list args;
+    char *name;
 
     if (handle == NULL)
     {
         return NULL;
     }
 
-    DPRINTF(3, "Look up (Fortran Symbol): ");
-    for (run = 0; run < 3 ; run++) {
-        if (run == 0) {
-            snprintf(fname, 39, "%s_", name);
-        } else if ( run == 1 ){
-            snprintf(fname, 39, "%s", name);
-            for (char * p = &fname[0]; *p; ++p) { *p = tolower(*p); }
-        } else if ( run == 2 ){
-            snprintf(fname, 39, "%s", name);
-            for (char * p = &fname[0]; *p; ++p) { *p = toupper(*p); }
-        } else {
-            break;
-        }
-        if ( __flexiblas_verbose > 2) {
-            fprintf(stderr, "%10s ", fname);
-        }
+    va_start(args, handle);
 
-        ptr_fsymbol = dlsym(handle, fname);
-        if (ptr_fsymbol!=NULL) {
-            break;
+    while ( (name = va_arg(args, char*)) != NULL) {
+        DPRINTF(3, "Look up (Fortran Symbol): ");
+        for (run = 0; run < 3 ; run++) {
+            if (run == 0) {
+                snprintf(fname, 39, "%s_", name);
+            } else if ( run == 1 ){
+                snprintf(fname, 39, "%s", name);
+                for (char * p = &fname[0]; *p; ++p) { *p = tolower(*p); }
+            } else if ( run == 2 ){
+                snprintf(fname, 39, "%s", name);
+                for (char * p = &fname[0]; *p; ++p) { *p = toupper(*p); }
+            } else {
+                break;
+            }
+
+            if ( __flexiblas_verbose > 2) {
+                fprintf(stderr, "%18s", fname);
+            }
+
+            ptr_fsymbol = dlsym(handle, fname);
+            if (ptr_fsymbol!=NULL) {
+                break;
+            }
         }
+        if ( ptr_fsymbol )
+            break;
     }
+    va_end(args);
     if ( ptr_fsymbol ) {
         if ( __flexiblas_verbose > 2) {
             fprintf(stderr, " at = 0x%lx  in = 0x%lx\n", (unsigned long)  ptr_fsymbol, (unsigned long) handle );
@@ -115,22 +121,7 @@ HIDDEN void * __flexiblas_lookup_fortran_function(void * handle, const char *nam
     return ptr_fsymbol;
 }
 
-HIDDEN int __flexiblas_load_fortran_function( void * handle , struct flexiblas_blasfn * fn, const char *name)
-{
-    /* Quick return  */
-    if ( handle == NULL ) {
-        fn ->f77_blas_function = NULL;
-        return 1;
-    }
 
-    fn -> f77_blas_function = __flexiblas_lookup_fortran_function(handle, name);
-
-    if (fn->f77_blas_function == NULL) {
-        return 1;
-    } else {
-        return 0;
-    }
-}
 
 #define FUNCTION_POINTER_ASSIGN(DST, SRC) *(void **)&(DST) = (void *)(SRC)
 
@@ -142,7 +133,7 @@ HIDDEN flexiblas_complex_interface_t __flexiblas_get_complex_interface(void *han
 #if defined(__i386__) || defined (__i686__)
     return FLEXIBLAS_COMPLEX_NONE_INTERFACE;
 #else
-    void *zdotc_ptr = __flexiblas_lookup_fortran_function(handle, MTS(FC_GLOBAL(zdotc,ZDOTC)));
+    void *zdotc_ptr = __flexiblas_lookup_fortran_function(handle, "zdotc", NULL);
     if ( zdotc_ptr == NULL) {
         DPRINTF(2, "Could not check complex return value interface. ZDOTC not found.\n");
         return FLEXIBLAS_COMPLEX_NONE_INTERFACE;
@@ -201,6 +192,44 @@ HIDDEN flexiblas_complex_interface_t __flexiblas_get_complex_interface(void *han
 #endif
 }
 
+
+HIDDEN int __flexiblas_get_f2c_float_return(void *handle)
+{
+    if (handle == NULL) {
+        return 0;
+    }
+    void *sdot_ptr = __flexiblas_lookup_fortran_function(handle, "sdot");
+    if ( sdot_ptr == NULL) {
+        DPRINTF(2, "Could not check for defect of functions with real return value. SDOT not found.\n");
+        return 0;
+    }
+
+    float retval = 0.0;
+    float x[2] = {1.0, 2.0};
+    float y[2] = {3.0, 4.0};
+#ifdef FLEXIBLAS_INTEGER8
+    int64_t n = 2;
+    int64_t one = 1;
+#else
+    int32_t n = 2;
+    int32_t one = 1;
+#endif
+#ifdef FLEXIBLAS_INTEGER8
+    float (*sdot_run)(int64_t *, float *, int64_t *, float *, int64_t *);
+#else
+    float (*sdot_run)(int32_t *, float *, int32_t *, float *, int32_t *);
+#endif
+	FUNCTION_POINTER_ASSIGN(sdot_run, sdot_ptr);
+
+    retval = sdot_run(&n, x, &one, y, &one);
+
+    if (retval == 11.0)
+        return 0;
+    else
+        return 1;
+}
+
+
 HIDDEN flexiblas_interface_t __flexiblas_get_interface(void *handle)
 {
     if (handle == NULL) {
@@ -211,7 +240,7 @@ HIDDEN flexiblas_interface_t __flexiblas_get_interface(void *handle)
     return FLEXIBLAS_INTERFACE_LP64;
 #else
     int64_t (*isamax_function)(int64_t *, float *, int64_t *);
-    void *isamax_ptr = __flexiblas_lookup_fortran_function(handle, MTS(FC_GLOBAL(isamax, ISAMAX)));
+    void *isamax_ptr = __flexiblas_lookup_fortran_function(handle, "isamax", NULL);
     if ( isamax_ptr == NULL) {
         DPRINTF(2, "Could not check lp64/ilp64 interface. ISAMAX not found. \n");
         return FLEXIBLAS_INTERFACE_NONE;
@@ -259,3 +288,98 @@ HIDDEN flexiblas_interface_t __flexiblas_get_interface(void *handle)
 #endif
 }
 
+
+/*
+ * Load a hook function
+ */
+#ifdef FLEXIBLAS_HOOK_API
+HIDDEN int __flexiblas_load_fortran_hook_function( void * handle , struct flexiblas_hook_fn *ptr, const char *name)
+{
+    char fname[40];
+    void * ptr_hsymbol = NULL;
+    int run = 0;
+
+    if ( handle == NULL) return 0;
+
+    /* Load Hook if available */
+    DPRINTF(3, "Look up hook: ");
+    for (run = 0; run < 3 ; run++) {
+        if (run == 0) {
+            snprintf(fname, 39, "hook_%s", name);
+        } else if ( run == 1 ){
+            snprintf(fname, 39, "hook_%s_", name);
+        } else if ( run == 2 ){
+            snprintf(fname, 39, "hook_%s__", name);
+        } else {
+            break;
+        }
+        if ( __flexiblas_verbose > 2) {
+            fprintf(stderr, "%s ", fname);
+        }
+
+        ptr_hsymbol = dlsym(handle, fname);
+
+        if (ptr_hsymbol!=NULL) {
+            break;
+        }
+    }
+    if ( __flexiblas_verbose > 2) {
+        fprintf(stderr, "%s\n", (ptr_hsymbol==NULL)?("not found."):("found."));
+    }
+    if ( ptr_hsymbol ) {
+        int p = ptr->nhook;
+        ptr->hook_function[p] = ptr_hsymbol;
+        ptr->nhook++;
+        if ( ptr->nhook >= FLEXIBLAS_MAX_HOOKS) {
+            DPRINTF_WARN(0, "Maximum number of installable hooks reached for %s. This may cause problems.\n");
+            ptr->nhook = FLEXIBLAS_MAX_HOOKS-1;
+        }
+    }
+
+    return 0;
+}
+
+HIDDEN int __flexiblas_load_cblas_hook_function( void * handle , struct flexiblas_hook_fn *ptr, const char *name)
+{
+    char fname[40];
+    void * ptr_hsymbol = NULL;
+    int run = 0;
+
+    if ( handle == NULL) return 0;
+
+    /* Load Hook if available */
+    DPRINTF(3, "Look up hook: ");
+    for (run = 0; run < 1 ; run++) {
+        if (run == 0) {
+            snprintf(fname, 39, "hook_%s", name);
+        } else {
+            break;
+        }
+        if ( __flexiblas_verbose > 2) {
+            fprintf(stderr, "%s ", fname);
+        }
+
+        ptr_hsymbol = dlsym(handle, fname);
+
+        if (ptr_hsymbol!=NULL) {
+            break;
+        }
+    }
+    if ( __flexiblas_verbose > 2) {
+        fprintf(stderr, "%s\n", (ptr_hsymbol==NULL)?("not found."):("found."));
+    }
+    if ( ptr_hsymbol ) {
+        int p = ptr->nhook;
+        ptr->hook_function[p] = ptr_hsymbol;
+        ptr->nhook++;
+        if ( ptr->nhook >= FLEXIBLAS_MAX_HOOKS) {
+            DPRINTF_WARN(0, "Maximum number of installable hooks reached for %s. This may cause problems.\n");
+            ptr->nhook = FLEXIBLAS_MAX_HOOKS-1;
+        }
+    }
+
+    return 0;
+}
+
+
+#endif

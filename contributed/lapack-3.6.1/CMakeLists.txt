@@ -56,6 +56,12 @@ IF ( INTEGER8 STREQUAL ON )
 	ADD_DEFINITIONS(-DINTEGER8)
 ENDIF()
 
+if ( CMAKE_Fortran_COMPILER_ID STREQUAL "GNU" AND
+        CMAKE_Fortran_COMPILER_VERSION VERSION_GREATER_EQUAL "10.0.0")
+    SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fallow-argument-mismatch")
+endif()
+
+
 # --------------------------------------------------
 # Precision to build
 # By default all precisions are generated

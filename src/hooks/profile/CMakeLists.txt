@@ -15,8 +15,15 @@ ELSE ()
     SET(EXTRA_FLAGS "")
 ENDIF()
 
+
+
 SET_TARGET_PROPERTIES(flexiblas_hook_profile PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS}")
-TARGET_LINK_LIBRARIES(flexiblas_hook_profile flexiblas cscutils)
+TARGET_LINK_LIBRARIES(flexiblas_hook_profile flexiblas cscutils $<$<BOOL:${OpenMP_C_FOUND}>:OpenMP::OpenMP_C>)
+set_target_properties(flexiblas_hook_profile PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/${FLEXIBLAS_LIBRARY_DIR}/)
+
+if (APPLE)
+    set_target_properties(flexiblas_hook_profile PROPERTIES LINK_FLAGS "-undefined dynamic_lookup -flat_namespace")
+endif()
 
 IF (WIN32)
     INSTALL(TARGETS flexiblas_hook_profile

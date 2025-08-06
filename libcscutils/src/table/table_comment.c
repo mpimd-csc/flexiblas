@@ -22,7 +22,9 @@
 #include <string.h>
 #include <stdarg.h>
 #include <time.h>
+#ifdef _OPENMP
 #include <omp.h>
+#endif
 
 #include "cscutils/error_message.h"
 #include "cscutils/strutils.h"

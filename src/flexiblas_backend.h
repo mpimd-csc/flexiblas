@@ -53,6 +53,7 @@ extern "C" {
         int flexiblas_integer_size;
         int backend_integer_size;
         int intel_interface;
+        int f2c_float_return;
         int post_init;
     } flexiblas_info_t;
 

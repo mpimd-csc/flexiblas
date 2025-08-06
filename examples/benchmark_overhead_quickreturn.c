@@ -44,6 +44,10 @@
 #define Int int
 #endif
 
+#ifdef STANDALONE
+int RowMajorStrg = 0;
+#endif
+
 #define RUNS 100000000
 
 int main ( int argc, char **argv ) {

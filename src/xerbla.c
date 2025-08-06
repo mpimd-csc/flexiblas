@@ -104,10 +104,10 @@ int __flexiblas_setup_xerbla(flexiblas_backend_t *backend)
 
         if ( user_xerbla == 0 ){
             DPRINTF(1,"Use XERBLA of the BLAS backend.\n");
-            backend->xerbla.f77_blas_function = xerbla_symbol1;
+            backend->xerbla = xerbla_symbol1;
         } else {
             DPRINTF(1,"Use XERBLA supplied by the user.\n");
-            backend->xerbla.f77_blas_function = xerbla_symbol2;
+            backend->xerbla = xerbla_symbol2;
         }
     }
     return 0;
@@ -115,7 +115,7 @@ int __flexiblas_setup_xerbla(flexiblas_backend_t *backend)
 
 void flexiblas_internal_xerbla(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len)  {
     void (*fn) (char *SNAME, Int *info, flexiblas_fortran_charlen_t len)  ;
-    *(void**) &fn = current_backend->xerbla.f77_blas_function;
+    *(void**) &fn = current_backend->xerbla;
 
     if ( fn == NULL ) {
         int _info = (int) *Info;
@@ -137,21 +137,119 @@ void flexiblas_internal_xerbla(char *SNAME, Int *Info, flexiblas_fortran_charlen
  */
 
 #ifdef FLEXIBLAS_CBLAS
+int RowMajorStrg = 0;
 
-#if !(defined(__APPLE__) || defined(__WIN32__))
-extern void internal_cblas_xerbla(int info, const char *rout, const char *form, ...);
+
+#define CBLAS_INT int32_t
+
+#if defined(__ELF__) || ((defined (__PGI) || defined(__NVCOMPILER)) && (defined(__linux__)  || defined(__unix__)))
+void internal_cblas_xerbla(CBLAS_INT info, const char *rout, const char *form, ...);
+void cblas_xerbla(CBLAS_INT info, const char *, const char *, ...) __attribute__ ((weak, alias ("internal_cblas_xerbla")));
+void internal_cblas_xerbla(CBLAS_INT _info, const char *rout, const char *form, ...)
 #else
+void internal_cblas_xerbla(CBLAS_INT _info, const char *rout, const char *form, ...)
+#endif
+{
+    extern int RowMajorStrg;
+    char empty[1] = "";
+    va_list argptr;
+
+    va_start(argptr, form);
+    Int info = _info; 
+
+    if (RowMajorStrg)
+    {
+        if (strstr(rout,"gemm") != 0)
+        {
+            if      (info == 5 ) info =  4;
+            else if (info == 4 ) info =  5;
+            else if (info == 11) info =  9;
+            else if (info == 9 ) info = 11;
+        }
+        else if (strstr(rout,"symm") != 0 || strstr(rout,"hemm") != 0)
+        {
+            if      (info == 5 ) info =  4;
+            else if (info == 4 ) info =  5;
+        }
+        else if (strstr(rout,"trmm") != 0 || strstr(rout,"trsm") != 0)
+        {
+            if      (info == 7 ) info =  6;
+            else if (info == 6 ) info =  7;
+        }
+        else if (strstr(rout,"gemv") != 0)
+        {
+            if      (info == 4)  info = 3;
+            else if (info == 3)  info = 4;
+        }
+        else if (strstr(rout,"gbmv") != 0)
+        {
+            if      (info == 4)  info = 3;
+            else if (info == 3)  info = 4;
+            else if (info == 6)  info = 5;
+            else if (info == 5)  info = 6;
+        }
+        else if (strstr(rout,"ger") != 0)
+        {
+            if      (info == 3) info = 2;
+            else if (info == 2) info = 3;
+            else if (info == 8) info = 6;
+            else if (info == 6) info = 8;
+        }
+        else if ( (strstr(rout,"her2") != 0 || strstr(rout,"hpr2") != 0)
+                && strstr(rout,"her2k") == 0 )
+        {
+            if      (info == 8) info = 6;
+            else if (info == 6) info = 8;
+        }
+    }
+
+    if (info)
+        fprintf(stderr, "Parameter %d to routine %s was incorrect\n", (int) info, rout);
+    vfprintf(stderr, form, argptr);
+    va_end(argptr);
+    if (info) {
+        if ( !info) {
+            FC_GLOBAL(xerbla,XERBLA)(empty, &info, 0);
+        }
+    }
+}
+
+
+#ifdef __ELF__
+CBLAS_INT  internal_cblas_errprn(CBLAS_INT ierr, CBLAS_INT info, const char *form, ...);
+CBLAS_INT  cblas_errprn(CBLAS_INT ierr, CBLAS_INT info, const char *, ...) __attribute__ ((weak, alias ("internal_cblas_errprn")));
+CBLAS_INT  internal_cblas_errprn(CBLAS_INT ierr, CBLAS_INT info, const char *form, ...)
+#else
+CBLAS_INT cblas_errprn(CBLAS_INT ierr, CBLAS_INT info,const char *form, ...)
+#endif
+{
+
+    va_list argptr;
+
+    va_start(argptr, form);
+#ifdef GCCWIN
+    vprintf(form, argptr);
+#else
+    vfprintf(stderr, form, argptr);
+#endif
+    va_end(argptr);
+    if ( ierr < info )
+        return ierr;
+    else
+        return info;
+}
+#if (defined(__APPLE__) || defined(__WIN32__))
 /* This routine is designed for MacOS */
 void internal_cblas_xerbla(int info, const char *rout, const char *form, ...);
 void cblas_xerbla(int info, const char *rout, const char *form, ...)
 {
     // printf("Hier in xerbla.c (0x%lx) backend = 0x%lx \n", (unsigned long)(void*) & cblas_xerbla, (unsigned long) current_backend->xerbla.cblas_function);
-    if ( current_backend->xerbla.cblas_function != NULL) {
+    if ( current_backend->cblas_xerbla != NULL) {
         va_list ap;
         void (*fn) ( int, const char*, const char*, ...);
         size_t a1, a2, a3, a4, a5;
 
-        fn = current_backend->xerbla.cblas_function;
+        fn = current_backend->cblas_xerbla;
         va_start(ap, form);
         fn(info, rout, form, a1, a2, a3, a4, a5);
         va_end(ap);
@@ -160,7 +258,7 @@ void cblas_xerbla(int info, const char *rout, const char *form, ...)
         void (*fn) ( int, const char*, const char*, ...);
         size_t a1, a2, a3, a4, a5;
 
-        fn = current_backend->xerbla.cblas_function;
+        fn = current_backend->cblas_xerbla;
         va_start(ap, form);
         internal_cblas_xerbla(info, rout, form, a1, a2, a3, a4, a5);
         va_end(ap);
@@ -203,10 +301,10 @@ int __flexiblas_setup_cblas_xerbla(flexiblas_backend_t *backend)
 
         if ( user_xerbla == 0 ){
             DPRINTF(1,"Use XERBLA of the BLAS backend.\n");
-            backend->xerbla.cblas_function = xerbla_symbol1;
+            backend->cblas_xerbla = xerbla_symbol1;
         } else {
             DPRINTF(1, "Use XERBLA supplied by the user.\n");
-            backend->xerbla.cblas_function = xerbla_symbol2;
+            backend->cblas_xerbla = xerbla_symbol2;
         }
     }
 #endif

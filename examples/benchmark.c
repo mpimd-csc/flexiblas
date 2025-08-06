@@ -52,8 +52,12 @@
 #define Int int
 #endif
 
+
 #ifndef STANDALONE
+
 #include "flexiblas_api.h"
+#else
+int RowMajorStrg = 0;
 #endif
 
 #include "flexiblas_fortran_mangle.h"

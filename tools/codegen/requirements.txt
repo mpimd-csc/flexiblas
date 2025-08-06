@@ -1,0 +1,7 @@
+jupyterlab
+pycparser
+tqdm>=4.42.0
+ipywidgets
+jupytext
+pyelftools
+jinja2

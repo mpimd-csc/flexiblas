@@ -1,3 +1,9 @@
+flexiblas (3.4.80) UNRELEASED; urgency=medium
+
+  * 1st prerelease of the 3.5.0 series
+
+ -- Martin Köhler <koehlerm@mpi-magdeburg.mpg.de>  Wed, 06 Aug 2025 09:37:54 +0200
+
 flexiblas (3.4.5) focal; urgency=medium
 
   * New patch release. See CHANGELOG

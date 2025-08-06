@@ -1,4 +1,4 @@
-IF (WIN32) 
+IF (WIN32)
     cmake_minimum_required(VERSION 3.18.0)
 ELSE()
     cmake_minimum_required(VERSION 3.10.0)
@@ -9,7 +9,7 @@ CheckPolicy(CMP0054 NEW)
 CheckPolicy(CMP0069 NEW)
 CheckPolicy(CMP0075 NEW)
 
-PROJECT(FlexiBLAS LANGUAGES C Fortran VERSION 3.4.5)
+PROJECT(FlexiBLAS LANGUAGES C Fortran VERSION 3.4.80)
 
 
 #
@@ -29,7 +29,7 @@ MESSAGE(STATUS "Configuring FlexiBLAS ${FlexiBLAS_VERSION_MAJOR}.${FlexiBLAS_VER
 SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/libcscutils/CMakeModules ${PROJECT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
-SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin) 
+SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 INCLUDE (CheckFeatureNeeded)
 INCLUDE (PreventInSourceBuilds)
 INCLUDE (PreventInBuildInstalls)
@@ -38,22 +38,27 @@ INCLUDE (CheckIPOSupported)
 #
 # Options
 #
+INCLUDE(CMakeDependentOption)
+
 OPTION(TESTS "Enable Tests" ON)
 OPTION(CBLAS "Enable CBLAS Interface" ON )
 OPTION(INTEGER8 "Use 8 Byte Integer" OFF)
 OPTION(BUILD_SHARED_LIBS "Enable Shared Library" ON)
 OPTION(LAPACK "Enable LAPACK Support" ON)
+CMAKE_DEPENDENT_OPTION(LAPACKE "Enable LAPACKE Support" ON "LAPACK" OFF)
+
 OPTION(DEV "Development Build" OFF)
 OPTION(MKL_BUILDER "Build MKL support with Intel MKLs Custom library builder" OFF)
 OPTION(EXAMPLES "Build Examples" ON)
 OPTION(BLAS_AUTO_DETECT "Enabled the BLAS auto detection during configuration" ON)
 OPTION(LINK_OPENMP "Link OpenMP to FlexiBLAS" OFF)
-OPTION(LTO "Enable Link Time Optimization / IPO" ON)
-IF (WIN32)
-    OPTION(FLEXIBLAS_LAPACK_SINGLE_SOURCE "Compile LAPACK as single file (ON on windows)" ON)
+IF (APPLE) 
+	OPTION(LTO "Enable Link Time Optimization / IPO" OFF)
 ELSE()
-    OPTION(FLEXIBLAS_LAPACK_SINGLE_SOURCE "Compile LAPACK as single file (ON on windows)" OFF)
+    OPTION(LTO "Enable Link Time Optimization / IPO" ON)
 ENDIF()
+
+OPTION(FLEXIBLAS_HOOK_API "Build the Hook API" ON)
 
 IF (NOT DEFINED FLEXIBLAS_DEFAULT_BLAS)
     SET(FLEXIBLAS_DEFAULT_BLAS "NETLIB")
@@ -65,7 +70,7 @@ ENDIF()
 # build type
 #
 MESSAGE(STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
-IF ( DEFINED DEBUG) 
+IF ( DEFINED DEBUG)
     IF (DEBUG STREQUAL ON)
         SET( CMAKE_BUILD_TYPE "Debug" )
         SET( DEBUG TRUE)
@@ -79,7 +84,7 @@ ELSE()
     IF( NOT CMAKE_BUILD_TYPE )
         SET( CMAKE_BUILD_TYPE "Release" )
     ENDIF( NOT CMAKE_BUILD_TYPE )
-    
+
     IF ( CMAKE_BUILD_TYPE STREQUAL "Debug" )
         SET ( DEBUG "ON" )
     ENDIF ( CMAKE_BUILD_TYPE STREQUAL "Debug" )
@@ -197,18 +202,45 @@ IF ( ${CMAKE_C_COMPILER_ID} STREQUAL "GNU")
 
 ENDIF()
 
-IF (LINK_OPENMP)
-    FIND_PACKAGE(OpenMP REQUIRED)
-    if(NOT TARGET OpenMP::OpenMP_C)
-        find_package(Threads REQUIRED)
-        add_library(OpenMP::OpenMP_C IMPORTED INTERFACE)
-        set_property(TARGET OpenMP::OpenMP_C
-            PROPERTY INTERFACE_COMPILE_OPTIONS ${OpenMP_C_FLAGS})
-        # Only works if the same flag is passed to the linker; use CMake 3.9+ otherwise (Intel, AppleClang)
-        set_property(TARGET OpenMP::OpenMP_C
-            PROPERTY INTERFACE_LINK_LIBRARIES ${OpenMP_C_FLAGS} Threads::Threads)
-    endif()
-ENDIF()
+#
+# MacOS on ARM produces wrong results with to expensive optimizations 
+#
+IF ( APPLE AND CMAKE_SYSTEM_PROCESSOR STREQUAL "arm64" AND CMAKE_Fortran_COMPILER_ID STREQUAL "GNU" 
+     AND CMAKE_Fortran_COMPILER_VERSION VERSION_GREATER_EQUAL "14.0.0" AND CMAKE_Fortran_COMPILER_VERSION VERSION_LESS_EQUAL "16.0.0")
+	message(WARNING "Your gfortran compiler is known to produce wrong code on MacOS/Apple Silicon. Turning off some optimizations. See https://github.com/Reference-LAPACK/lapack/issues/1073 for some details") 
+	check_c_compiler_flag("-fno-tree-loop-vectorize" C_F_NO_TREE_LOOP_VECTORIZE)
+	check_fortran_compiler_flag("-fno-tree-loop-vectorize" FC_F_NO_TREE_LOOP_VECTORIZE)
+	check_c_compiler_flag("-fno-expensive-optimizations" C_F_NO_EXPENSIVE_OPTIMIZATIONS)
+	check_fortran_compiler_flag("-fno-expensive-optimizations" FC_F_NO_EXPENSIVE_OPTIMIZATIONS)
+	if (C_F_NO_TREE_LOOP_VECTORIZE) 
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-tree-loop-vectorize")
+	endif()
+
+	if (FC_F_NO_TREE_LOOP_VECTORIZE) 
+		set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fno-tree-loop-vectorize")
+	endif()
+	if (C_F_NO_EXPENSIVE_OPTIMIZATIONS) 
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-expensive-optimizations")
+	endif()
+
+	if (FC_F_NO_EXPENSIVE_OPTIMIZATIONS) 
+		set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fno-expensive-optimizations")
+	endif()
+ENDIF()	
+
+
+
+FIND_PACKAGE(OpenMP)
+if(NOT TARGET OpenMP::OpenMP_C AND OpenMP_C_FOUND)
+    find_package(Threads REQUIRED)
+    add_library(OpenMP::OpenMP_C IMPORTED INTERFACE)
+    set_property(TARGET OpenMP::OpenMP_C
+        PROPERTY INTERFACE_COMPILE_OPTIONS ${OpenMP_C_FLAGS})
+    set_property(TARGET OpenMP_C::OpenMP_C INTERFACE_INCLUDE_DIRECTORIES ${OpenMP_C_INCLUDE_DIRS} )
+    # Only works if the same flag is passed to the linker; use CMake 3.9+ otherwise (Intel, AppleClang)
+    set_property(TARGET OpenMP::OpenMP_C
+        PROPERTY INTERFACE_LINK_LIBRARIES ${OpenMP_C_FLAGS} Threads::Threads)
+endif()
 
 INCLUDE(cmake/libm.cmake)
 IF (NEED_LINKING_AGAINST_LIBM)
@@ -241,11 +273,14 @@ ENDIF()
 IF ( ABI STREQUAL "Intel")
     SET(FLEXIBLAS_ABI_INTEL TRUE)
     SET(USE_INTERFACE_INTEL TRUE)
+    set(abi "intel")
 ELSEIF ( ABI STREQUAL "XL" )
     SET(FLEXIBLAS_ABI_IBM TRUE)
+    set(abi "intel")
 ELSE ()
     SET (FLEXIBLAS_ABI_GNU TRUE)
     SET(USE_INTERFACE_INTEL FALSE)
+    set(abi "gnu")
 ENDIF()
 
 # Name Mangling
@@ -394,6 +429,7 @@ ENDIF()
 ### Setup Integer8 option
 IF ( INTEGER8 STREQUAL ON )
     ADD_DEFINITIONS(-DINTEGER8)
+    ADD_DEFINITIONS(-DLAPACK_ILP64)
     SET(FLEXIBLAS_INTEGER8 TRUE)
     SET(FLEXIBLAS_INCLUDE_PREFIX "flexiblas64")
     SET(FLEXIBLAS_LIBRARY_DIR "flexiblas64")
@@ -521,13 +557,14 @@ INSTALL(FILES   ${CMAKE_SOURCE_DIR}/include/blas_gnu.h
     ${CMAKE_BINARY_DIR}/include/flexiblas_api.h
     DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/${FLEXIBLAS_INCLUDE_PREFIX}/)
 IF(LAPACK STREQUAL ON)
-    INSTALL(FILES   ${CMAKE_BINARY_DIR}/include/lapack.h
+    INSTALL(FILES   ${CMAKE_BINARY_DIR}/include/lapack_f77.h
         ${CMAKE_BINARY_DIR}/include/flexiblas_real_lapack.h
         DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/${FLEXIBLAS_INCLUDE_PREFIX}/)
 
 ENDIF()
 INSTALL(FILES   ${CMAKE_SOURCE_DIR}/src/flexiblas_backend.h
     ${CMAKE_SOURCE_DIR}/src/flexiblas_fortran_mangle.h
+    ${CMAKE_SOURCE_DIR}/src/flexiblas_hook_structure.h
     ${CMAKE_SOURCE_DIR}/src/flexiblas_real_calls.h
     ${CMAKE_SOURCE_DIR}/src/flexiblas_real_cblas_calls.h
     ${CMAKE_SOURCE_DIR}/src/flexiblas_dummy_fortran.h
@@ -586,6 +623,7 @@ MESSAGE(STATUS "LAPACK Support: ${LAPACK}")
 IF(LAPACK)
     MESSAGE(STATUS "LAPACK_API_VERSION: ${LAPACK_API_VERSION}")
 ENDIF()
+MESSAGE(STATUS "LAPACKE Support: ${LAPACKE}")
 MESSAGE(STATUS "ABI: ${ABI}")
 MESSAGE(STATUS "Interface to Extra BLAS Libraries:")
 FOREACH(EBLAS ${EXTRA_BLAS})

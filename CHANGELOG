@@ -1,13 +1,24 @@
 next
 ----
+- Import LAPACK 3.12.1
+- Support for LAPACKE
+- Better support for CBLAS
+- Reduce the number of files to compile.
 - Unnecessary printf in set_num_threads.c #64
 - Remove some GPL leftovers
+- Fix GNU Octave interface with Octave >= 10
+- Fix usage of AMD BLIS with AOCL_DTL enabled
+- Correct handling of MKL_Set_Num_Threads
+- Add MKL_Get_Max_Threads to maintain compatability
+- Fix compiler flags for GNU GCC on Apple Silicon 
 - Fixes from GITHUB:
  - Compiliation on MacOS GH #35
  - useless printf GH #64
  - F2C typo in main CMakeLists.txt GH #66
  - GEMMTR test error GH #63
  - Add C++ support to header files GH #69
+ - Detect F2C API for float return values
+
 
 3.4.5 (January 30, 2025)
 ------------------------

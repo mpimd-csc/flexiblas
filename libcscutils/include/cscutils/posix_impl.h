@@ -46,42 +46,42 @@ extern "C" {
 #include <stdint.h>
 #include <stdio.h>
 
-#ifdef _WIN64
-typedef long long int ssize_t;
-#elif _WIN32
-typedef long ssize_t;
+#if defined (_WIN64)
+    typedef long long int ssize_t;
+#elif defined (_WIN32)
+    typedef long ssize_t;
 #endif
 
-/**
- * @brief Reads a line from a stream.
- * @param[in, out]  lineptr  Pointer to the buffer containing the line afterwards.
- * @param[in, out]  n        Pointer to the number containing the size of the buffer pointed to by lineptr.
- * @param[in]       stream   Pointer to a FILE object containing the stream.
- * @return The number of characters read including the newline character on success, -1 else.
- *
- * The \ref csc_getline function implements the getline function as defined in POSIX.1-2008.
- * Errno is only set on failure if POSIX.1-2001 error names are available.
- * The error indicator for the stream may not be set.
- * See the documentation of getline for more information.
- *
- */
-ssize_t csc_getline(char** restrict lineptr, size_t* restrict n, FILE* restrict stream);
+    /**
+     * @brief Reads a line from a stream.
+     * @param[in, out]  lineptr  Pointer to the buffer containing the line afterwards.
+     * @param[in, out]  n        Pointer to the number containing the size of the buffer pointed to by lineptr.
+     * @param[in]       stream   Pointer to a FILE object containing the stream.
+     * @return The number of characters read including the newline character on success, -1 else.
+     *
+     * The \ref csc_getline function implements the getline function as defined in POSIX.1-2008.
+     * Errno is only set on failure if POSIX.1-2001 error names are available.
+     * The error indicator for the stream may not be set.
+     * See the documentation of getline for more information.
+     *
+     */
+    ssize_t csc_getline(char** restrict lineptr, size_t* restrict n, FILE* restrict stream);
 
-/**
- * @brief Reads a line delimited by a specific character from a stream.
- * @param[in, out]  lineptr  Pointer to the buffer containing the line afterwards.
- * @param[in, out]  n        Pointer to the number containing the size of the buffer pointed to by lineptr.
- * @param[in]       delim    Line delimiter.
- * @param[in]       stream   Pointer to a FILE object containing the stream.
- * @return The number of characters read including the newline character on success, -1 else.
- *
- * The \ref csc_getdelim function implements the getdelim function as defined in POSIX.1-2008.
- * Errno is only set on failure if POSIX.1-2001 error names are available.
- * Note that the error indicator for the stream may not be set.
- * See the documentation of getdelim for more information.
- *
- */
-ssize_t csc_getdelim(char** restrict lineptr, size_t* restrict n, int delim, FILE* restrict stream);
+    /**
+     * @brief Reads a line delimited by a specific character from a stream.
+     * @param[in, out]  lineptr  Pointer to the buffer containing the line afterwards.
+     * @param[in, out]  n        Pointer to the number containing the size of the buffer pointed to by lineptr.
+     * @param[in]       delim    Line delimiter.
+     * @param[in]       stream   Pointer to a FILE object containing the stream.
+     * @return The number of characters read including the newline character on success, -1 else.
+     *
+     * The \ref csc_getdelim function implements the getdelim function as defined in POSIX.1-2008.
+     * Errno is only set on failure if POSIX.1-2001 error names are available.
+     * Note that the error indicator for the stream may not be set.
+     * See the documentation of getdelim for more information.
+     *
+     */
+    ssize_t csc_getdelim(char** restrict lineptr, size_t* restrict n, int delim, FILE* restrict stream);
 
 #ifdef  __cplusplus
 }

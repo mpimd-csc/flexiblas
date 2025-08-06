@@ -1,22 +1,22 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
-    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-    Copyright (C) 2013-2024 Martin Koehler
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2024 Martin Koehler
 
-    This program is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 3 of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 3 of the License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License
-    along with this program; if not, write to the Free Software Foundation,
-    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-*/
+   You should have received a copy of the GNU Lesser General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+   */
 
 
 #ifndef FLEXIBLAS_CONFIG_H
@@ -24,6 +24,16 @@
 
 #cmakedefine FLEXIBLAS_LIBRARY_DIR "@FLEXIBLAS_LIBRARY_DIR@"
 #cmakedefine FLEXIBLAS_LIBRARY_NAME "@FLEXIBLAS_LIBRARY_NAME@"
+#cmakedefine FLEXIBLAS_DEFAULT_LIB_PATH "@FLEXIBLAS_DEFAULT_LIB_PATH@"
+
+#if !defined(__WIN32__)
+#cmakedefine CMAKE_INSTALL_PREFIX "@CMAKE_INSTALL_PREFIX@"
+#cmakedefine CMAKE_INSTALL_FULL_LIBDIR "@CMAKE_INSTALL_FULL_LIBDIR@"
+#cmakedefine CMAKE_INSTALL_FULL_INCLUDEDIR "@CMAKE_INSTALL_FULL_INCLUDEDIR@"
+#cmakedefine FLEXIBLAS_LIBRARY_DIR "@FLEXIBLAS_LIBRARY_DIR@"
+#cmakedefine FLEXIBLAS_LIBRARY_NAME "@FLEXIBLAS_LIBRARY_NAME@"
+#cmakedefine CMAKE_INSTALL_FULL_SYSCONFDIR "@CMAKE_INSTALL_FULL_SYSCONFDIR@"
+#endif
 
 #cmakedefine FLEXIBLAS_FC_I8FLAG "@FLEXIBLAS_FC_I8FLAG@"
 
@@ -37,12 +47,16 @@
 #cmakedefine HAVE_SYS_STAT_H
 #cmakedefine FALLBACK_NAME
 #cmakedefine FLEXIBLAS_LAPACK
+#cmakedefine FLEXIBLAS_LAPACKE
+
 
 #cmakedefine FLEXIBLAS_MANGLE_DEFAULT
 #cmakedefine FLEXIBLAS_MANGLE_NO_UNDERSCORE
 #cmakedefine FLEXIBLAS_MANGLE_UPPERCASE
 
 
+#cmakedefine FLEXIBLAS_LAPACK_3_12_1
+#cmakedefine FLEXIBLAS_LAPACK_3_12_1_WODPRC
 #cmakedefine FLEXIBLAS_LAPACK_3_12_0
 #cmakedefine FLEXIBLAS_LAPACK_3_12_0_WODPRC
 #cmakedefine FLEXIBLAS_LAPACK_3_11_0
@@ -92,6 +106,8 @@
 #cmakedefine FLEXIBLAS_ABI_INTEL
 #cmakedefine FLEXIBLAS_ABI_GNU
 
+#cmakedefine FLEXIBLAS_HOOK_API
+
 #cmakedefine HAVE_THREAD_LOCAL
 #cmakedefine HAVE__THREAD_LOCAL
 #cmakedefine HAVE_GNU_THREAD_LOCAL
@@ -104,29 +120,30 @@
 #define FLEXIBLAS_DEFAULT_BLAS "NETLIB"
 
 #if defined(HAVE_GNU_THREAD_LOCAL)
- #define TLS_STORE __thread
+#define TLS_STORE __thread
 #elif defined(HAVE__THREAD_LOCAL)
- #define TLS_STORE _Thread_local
+#define TLS_STORE _Thread_local
 #elif defined(HAVE_THREAD_LOCAL)
- #define TLS_STORE thread_local
+#define TLS_STORE thread_local
 #else
- #define TLS_STORE
- #warning Thread Local Storage not available. FlexiBLAS might cause problems in multithreaded applications.
+#define TLS_STORE
+#warning Thread Local Storage not available. FlexiBLAS might cause problems in multithreaded applications.
 #endif
 
 #ifndef FALLBACK_NAME
- #if defined(__WIN32__)
-  #define FALLBACK_NAME "flexiblas_netlib"
- #else
-  #define FALLBACK_NAME "libflexiblas_netlib"
- #endif
+#if defined(__WIN32__)
+#define FALLBACK_NAME "flexiblas_netlib"
+#else
+#define FALLBACK_NAME "libflexiblas_netlib"
 #endif
+#endif
+
 #ifndef LAPACK_FALLBACK_NAME
- #if defined(__WIN32__)
-  #define LAPACK_FALLBACK_NAME "flexiblas_fallback_lapack"
- #else
-  #define LAPACK_FALLBACK_NAME "libflexiblas_fallback_lapack"
- #endif
+#if defined(__WIN32__)
+#define LAPACK_FALLBACK_NAME "flexiblas_fallback_lapack"
+#else
+#define LAPACK_FALLBACK_NAME "libflexiblas_fallback_lapack"
+#endif
 #endif
 
 
@@ -139,19 +156,19 @@
 
 
 #ifdef FLEXIBLAS_INTEGER8
-    #define     ENV_FLEXIBLAS "FLEXIBLAS64"
-    #define     ENV_FLEXIBLAS_VERBOSE "FLEXIBLAS64_VERBOSE"
-    #define     ENV_FLEXIBLAS_COLOR_OUTPUT "FLEXIBLAS64_COLOR_OUTPUT"
-    #define     ENV_FLEXIBLAS_HOOK "FLEXIBLAS64_HOOK"
-    #define     ENV_FLEXIBLAS_LIBRARY_PATH "FLEXIBLAS64_LIBRARY_PATH"
-    #define     ENV_FLEXIBLAS_NOLAPACK "FLEXIBLAS64_NOLAPACK"
+#define     ENV_FLEXIBLAS "FLEXIBLAS64"
+#define     ENV_FLEXIBLAS_VERBOSE "FLEXIBLAS64_VERBOSE"
+#define     ENV_FLEXIBLAS_COLOR_OUTPUT "FLEXIBLAS64_COLOR_OUTPUT"
+#define     ENV_FLEXIBLAS_HOOK "FLEXIBLAS64_HOOK"
+#define     ENV_FLEXIBLAS_LIBRARY_PATH "FLEXIBLAS64_LIBRARY_PATH"
+#define     ENV_FLEXIBLAS_NOLAPACK "FLEXIBLAS64_NOLAPACK"
 #else
-    #define     ENV_FLEXIBLAS "FLEXIBLAS"
-    #define     ENV_FLEXIBLAS_VERBOSE "FLEXIBLAS_VERBOSE"
-    #define     ENV_FLEXIBLAS_COLOR_OUTPUT "FLEXIBLAS_COLOR_OUTPUT"
-    #define     ENV_FLEXIBLAS_HOOK "FLEXIBLAS_HOOK"
-    #define     ENV_FLEXIBLAS_LIBRARY_PATH "FLEXIBLAS_LIBRARY_PATH"
-    #define     ENV_FLEXIBLAS_NOLAPACK "FLEXIBLAS_NOLAPACK"
+#define     ENV_FLEXIBLAS "FLEXIBLAS"
+#define     ENV_FLEXIBLAS_VERBOSE "FLEXIBLAS_VERBOSE"
+#define     ENV_FLEXIBLAS_COLOR_OUTPUT "FLEXIBLAS_COLOR_OUTPUT"
+#define     ENV_FLEXIBLAS_HOOK "FLEXIBLAS_HOOK"
+#define     ENV_FLEXIBLAS_LIBRARY_PATH "FLEXIBLAS_LIBRARY_PATH"
+#define     ENV_FLEXIBLAS_NOLAPACK "FLEXIBLAS_NOLAPACK"
 #endif
 
 #endif   // Include guard

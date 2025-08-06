@@ -11,7 +11,7 @@ FLEXIBLAS_CF := $(shell pkg-config --cflags flexiblas64_api)
 endif
 
 LDFLAGS := $(shell $(MKOCTFILE) -p LDFLAGS) $(FLEXIBLAS_LD)
-CXXFLAGS := $(shell $(MKOCTFILE) -p CXXFLAGS) $(FLEXIBLAS_CF) -std=c++11 -Wall --verbose
+CXXFLAGS := $(shell $(MKOCTFILE) -p CXXFLAGS) $(FLEXIBLAS_CF) -Wall --verbose
 
 AR := $(shell $(MKOCTFILE) -p AR)
 

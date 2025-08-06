@@ -22,3 +22,5 @@ documentation check out the repository and run
   firefox doc/explore-html/index.html
 ```
 
+## CMake
+At the moment, CMAKE 3.12 is the oldest supported version.

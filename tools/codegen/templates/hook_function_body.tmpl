@@ -1,0 +1,19 @@
+/* Wrapper for {function_name:s} */
+{return_type:s} hook_{function_name:s}({arg_list:s})
+{{
+    double helpTime;
+    double helpTimeStop;
+    {return_type:s} return_value;
+
+    helpTime = flexiblas_wtime();
+    
+    return_value = flexiblas_chain_{function_name:s}({call_list_void:s});
+
+    helpTimeStop = flexiblas_wtime();
+
+    data->{function_name:s}.timings[0] += (helpTimeStop - helpTime);
+    data->{function_name:s}.calls[0]++;
+    
+    return return_value;
+}}
+

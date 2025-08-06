@@ -13,6 +13,11 @@ if( (CMAKE_Fortran_COMPILER_ID STREQUAL "VisualAge" ) OR  # CMake 2.6
 	endif()
 endif()
 
+if ( CMAKE_Fortran_COMPILER_ID STREQUAL "GNU" AND
+        CMAKE_Fortran_COMPILER_VERSION VERSION_GREATER_EQUAL "10.0.0")
+    SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fallow-argument-mismatch")
+endif()
+
 if ( CMAKE_Fortran_COMPILER_ID STREQUAL "GNU" )
 	SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Wno-conversion -Wno-maybe-uninitialized -Wno-unused-dummy-argument -Wno-unused-variable -Wno-intrinsic-shadow -Wno-surprising -Wno-tabs -mcmodel=large")
 endif()
