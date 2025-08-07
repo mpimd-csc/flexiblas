@@ -114,7 +114,9 @@ HIDDEN void __flexiblas_backend_init( flexiblas_backend_t * backend) {
         DPRINTF(0, PRINT_PREFIX " No current BLAS is set.\n");
         abort();
     }
+#ifndef __WIN32__
     pthread_mutex_lock(&(backend->post_init_mutex));
+#endif
     if ( backend->post_init != 0 ) {
         if (backend->init_function != NULL) {
             if ( backend->init_function() != 0 ) {
@@ -165,7 +167,9 @@ HIDDEN void __flexiblas_backend_init( flexiblas_backend_t * backend) {
     }
 
 
+#ifndef __WIN32__
     pthread_mutex_unlock(&(backend->post_init_mutex));
+#endif
 
     if ( failed > 0) {
         DPRINTF_ERROR(0," Failed to load the backend completely, some BLAS functions are missing. Abort!\n");
@@ -386,7 +390,9 @@ static flexiblas_backend_t * flexiblas_load_library_from_init (flexiblas_mgmt_t 
     old_current_backend = current_backend;
     current_backend = backend;
     memset((void*) backend, 0, sizeof(flexiblas_backend_t));
+#ifndef __WIN32__
     pthread_mutex_init(&(backend->post_init_mutex),NULL);
+#endif
 
     backend->library_handle = library;
     backend->name = strdup(name);
@@ -457,7 +463,9 @@ static flexiblas_backend_t * __flexiblas_load_backend_from_config(const char *bl
         return NULL;
     }
     memset((void*) backend, 0, sizeof(flexiblas_backend_t));
+#ifndef __WIN32__
     pthread_mutex_init(&(backend->post_init_mutex),NULL);
+#endif
 
     backend->library_handle = library;
     backend->name = strdup(blas_name);
@@ -550,7 +558,9 @@ static flexiblas_backend_t * __flexiblas_load_backend_from_file(const char *blas
         return NULL;
     }
     memset((void*) backend, 0, sizeof(flexiblas_backend_t));
+#ifndef __WIN32__
     pthread_mutex_init(&(backend->post_init_mutex),NULL);
+#endif
 
     backend->library_handle = library;
     backend->name = strdup(blas_sofile);

@@ -218,7 +218,10 @@ extern "C" {
         void* library_handle;
         int post_init;
         int hook_init;
+#ifndef __WIN32__
+        // FIXME: What to use on Windows?
         pthread_mutex_t post_init_mutex;
+#endif
         flexiblas_interface_t integer_interface;
         flexiblas_complex_interface_t complex_interface;
         flexiblas_info_t info;
