@@ -29,7 +29,11 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <limits.h>
+#ifndef __WIN32__
 #include <dlfcn.h>
+#else
+#include <windows.h>
+#endif
 #ifdef __linux__
 #define _GNU_SOURCE
 #endif
@@ -350,9 +354,24 @@ int main(int argc, char **argv)
 
 
     /* Determine Config mode  */
-#ifdef _WIN32
-    /* FIXME there is no direct match for the Linux call below */
-    if (0) {
+#ifdef __WIN32__
+    /* Check if running with elevated rights */
+    int is_elevated = 0;
+    HANDLE h_token = NULL;
+
+    if (OpenProcessToken (GetCurrentProcess (), TOKEN_QUERY, &h_token))
+      {
+        TOKEN_ELEVATION elevation;
+        DWORD return_length = sizeof (TOKEN_ELEVATION);
+        if (GetTokenInformation (h_token, TokenElevation, &elevation,
+                                 sizeof (elevation), &return_length))
+          is_elevated = elevation.TokenIsElevated;
+      }
+
+    if (h_token)
+      CloseHandle (h_token);
+
+    if ( is_elevated ) {
 #else
     if ( getuid() == 0 ) {
 #endif

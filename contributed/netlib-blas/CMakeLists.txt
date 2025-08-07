@@ -142,7 +142,6 @@ strmv.f
 strsm.f
 strsv.f
 xerbla_array.f
-xerbla.f
 zaxpy.f
 zcopy.f
 zdotc.f
@@ -179,6 +178,9 @@ ztrsm.f
 ztrsv.f
     )
 
+if (NOT FLEXIBLAS_CBLAS)
+	list( APPEND NETLIBSRC xerbla.f)
+endif()
 
 if( (CMAKE_Fortran_COMPILER_ID STREQUAL "VisualAge" ) OR  # CMake 2.6
 	(CMAKE_Fortran_COMPILER_ID STREQUAL "XL" ) )          # CMake 2.8

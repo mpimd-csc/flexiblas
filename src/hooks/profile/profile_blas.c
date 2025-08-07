@@ -24,7 +24,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <complex.h>
+#ifndef __WIN32
 #include <dlfcn.h>
+#endif
 #include "flexiblas_backend.h"
 
 #include "profile_hook.h"

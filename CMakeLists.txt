@@ -331,18 +331,18 @@ IF (APPLE)
     SET ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_FILE_OFFSET_BITS=64 ")
     SET ( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -rdynamic -Wl,-export_dynamic")
 ELSE()
-  IF (WIN32)
-    # Export all symbols on Windows when building shared libraries
-    SET(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+    IF (WIN32)
+        # Export all symbols on Windows when building shared libraries
+        SET(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 
-    SET ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_FILE_OFFSET_BITS=64 -D__WIN32__ -D_WIN32")
-    SET ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-deprecated-declarations -Wno-unused-function -Wno-sometimes-uninitialized -Wno-self-assign")
-    IF(NOT (MINGW OR MSYS))
-        SET(INCLUDE_DIR ${INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/contributed/win32ports)
-    ENDIF()
-  ELSE ()
-    SET ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_FILE_OFFSET_BITS=64")
-    IF  ( CMAKE_Fortran_COMPILER_ID STREQUAL "Intel" OR CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+        SET ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_FILE_OFFSET_BITS=64 -D__WIN32__ -D_WIN32")
+        SET ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-deprecated-declarations -Wno-unused-function -Wno-sometimes-uninitialized -Wno-self-assign")
+        IF(NOT (MINGW OR MSYS))
+            SET(INCLUDE_DIR ${INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/contributed/win32ports)
+        ENDIF()
+    ELSE ()
+        SET ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_FILE_OFFSET_BITS=64")
+        IF  ( CMAKE_Fortran_COMPILER_ID STREQUAL "Intel" OR CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
             set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -rdynamic -Wl,--export-dynamic")
         ENDIF()
         # SET ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_FILE_OFFSET_BITS=64 ")
@@ -363,11 +363,7 @@ IF (WIN32)
     IF (MINGW)
         MESSAGE(STATUS "Using MingW Compiler")
     ENDIF()
-
-    find_package(dlfcn-win32 REQUIRED)
-    INCLUDE_DIRECTORIES(${dlfcn-win32_INCLUDEDIR})
-    SET(DL_LIB dlfcn-win32::dl)
-    SET(LIBS ${LIBS} dlfcn-win32::dl)
+    SET(DL_LIB "")
 ELSE()
     # CHECK_INCLUDE_FILES (stdatomic.h HAVE_STDATOMIC_H)
     CHECK_INCLUDE_FILES (dlfcn.h	 HAVE_DLFCN_H)
@@ -473,7 +469,7 @@ ENDIF()
 
 
 
-# Check for Serveral Functions
+# Check for Several Functions
 IF(WIN32)
 
     CHECK_FEATURE_NEEDED(_strdup string.h HAVE_STRDUP STRDUP_FEATURE)
@@ -505,6 +501,18 @@ ELSE()
         MESSAGE(FATAL_ERROR "realpath not found")
     ENDIF()
 
+ENDIF()
+
+IF( WIN32 )
+    # On Windows, a replacement for realpath is used.
+    SET ( HAVE_REALPATH ON )
+ELSE ()
+    CHECK_FEATURE_NEEDED(realpath stdlib.h HAVE_REALPATH REALPATH_FEATURE)
+ENDIF()
+IF( HAVE_REALPATH )
+    ADD_DEFINITIONS("${REALPATH_FEATURE}")
+ELSE ()
+    MESSAGE(FATAL_ERROR "realpath not found")
 ENDIF()
 
 ### Add Source

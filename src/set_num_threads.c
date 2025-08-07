@@ -278,8 +278,8 @@ void __flexiblas_load_set_num_threads(flexiblas_backend_t * backend)
         if ( fn2_empty ) {
             snprintf(fn2_name, 130, "%s_", fn_name);
         }
-        ptr  = dlsym(backend->library_handle, fn_name);
-        ptr2  = dlsym(backend->library_handle, fn2_name);
+        ptr = __flexiblas_dlsym(backend->library_handle, fn_name);
+        ptr2 = __flexiblas_dlsym(backend->library_handle, fn2_name);
 
         if (ptr != NULL || ptr2 != NULL)
             break;
@@ -333,8 +333,8 @@ void __flexiblas_load_get_num_threads(flexiblas_backend_t * backend)
         if ( i != 1 )
             snprintf(fn2_name, 130, "%s_", fn_name);
 
-        ptr  = dlsym(backend->library_handle, fn_name);
-        ptr2  = dlsym(backend->library_handle, fn2_name);
+        ptr = __flexiblas_dlsym(backend->library_handle, fn_name);
+        ptr2 = __flexiblas_dlsym(backend->library_handle, fn2_name);
 
         if (ptr != NULL || ptr2 != NULL)
             break;

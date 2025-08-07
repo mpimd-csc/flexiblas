@@ -31,7 +31,9 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <limits.h>
+#ifndef __WIN32__
 #include <dlfcn.h>
+#endif
 #ifdef __linux__
 #define _GNU_SOURCE
 #endif

@@ -27,7 +27,13 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <dirent.h>
+#ifndef __WIN32__
 #include <dlfcn.h>
+#else
+#include <windows.h>
+#define RTLD_LAZY 0
+#define RTLD_LOCAL 0
+#endif
 #include <ctype.h>
 
 #include "cscutils/map.h"
@@ -84,12 +90,21 @@ HIDDEN void __flexiblas_list_hooks(void)
             handle  = __flexiblas_dlopen(curfn, RTLD_LAZY | RTLD_LOCAL , NULL);
             if ( !handle) continue;
 
+#ifdef __WIN32__
+            reg = (flexiblas_hook_register_t *) GetProcAddress(handle, "flexiblas_register");
+            if ( !reg ) {
+                DPRINTF(0, "%s is not a hook\n");
+                FreeLibrary(handle);
+                continue;
+            }
+#else
             reg = dlsym(handle,"flexiblas_register");
             if ( !reg ) {
                 DPRINTF(0, "%s is not a hook\n");
                 dlclose(handle);
                 continue;
             }
+#endif
 
             printf("Hook %s\n", curfn);
             printf("-> Name:     %s\n", reg->name);
@@ -97,11 +112,19 @@ HIDDEN void __flexiblas_list_hooks(void)
             printf("-> Descr:    %s\n", reg->desc);
             printf("-> Authors:  %s\n", reg->authors);
 
+#ifdef __WIN32__
+            opts = (flexiblas_option_t *) GetProcAddress(handle, "flexiblas_options");
+            if (!opts) {
+                FreeLibrary(handle);
+                continue;
+            }
+#else
             opts = dlsym(handle, "flexiblas_options");
-            if ( !opts) {
+            if (!opts) {
                 dlclose(handle);
                 continue;
             }
+#endif
 
             while ( opts->name != NULL) {
                 printf("opts->name: %s\n", opts->name);
@@ -110,7 +133,11 @@ HIDDEN void __flexiblas_list_hooks(void)
             }
 
 
+#ifdef __WIN32__
+            FreeLibrary(handle);
+#else
             dlclose(handle);
+#endif
         }
 
         closedir(folder);
@@ -172,19 +199,32 @@ HIDDEN void __flexiblas_add_hooks(void)
             if ( !handle) continue;
 
 
+#ifdef __WIN32__
+            reg = (flexiblas_hook_register_t *) GetProcAddress(handle, "flexiblas_register");
+            if ( !reg ) {
+                DPRINTF(0, "%s is not a hook\n");
+                FreeLibrary(handle);
+                continue;
+            }
+#else
             reg = dlsym(handle,"flexiblas_register");
             if ( !reg ) {
                 DPRINTF(1, "%s is not a hook\n", dir_entry->d_name);
                 dlclose(handle);
                 continue;
             }
+#endif
 
             DPRINTF(1, "Hook \"%s/%s\" found in %s\n", reg->name, reg->cfg_name, curfn);
             char * insert_str = __struppercase(strdup(reg->cfg_name));
             csc_map_insert(hook_map, insert_str, strdup(curfn));
 
             free(curfn);
+#ifdef __WIN32__
+            FreeLibrary(handle);
+#else
             dlclose(handle);
+#endif
         }
 
         closedir(folder);
@@ -201,7 +241,11 @@ HIDDEN char *  __flexiblas_hook_add_from_file(char *path)
     handle  = __flexiblas_dlopen(path, RTLD_LAZY | RTLD_LOCAL , NULL);
     if ( !handle) return NULL;
 
+#ifdef __WIN32__
+    reg = (flexiblas_hook_register_t *) GetProcAddress(handle, "flexiblas_register");
+#else
     reg = dlsym(handle, "flexiblas_register");
+#endif
     if ( !reg ) return NULL;
 
     ret = strdup(reg->cfg_name);
@@ -214,7 +258,11 @@ HIDDEN char *  __flexiblas_hook_add_from_file(char *path)
         csc_map_insert(hook_map, reg->cfg_name, strdup(path));
     }
 
+#ifdef __WIN32__
+    FreeLibrary(handle);
+#else
     dlclose(handle);
+#endif
     return ret;
 }
 

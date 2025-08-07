@@ -9666,7 +9666,8 @@ void flexiblas_chain_cblas_ztrsv_(CBLAS_LAYOUT layout, CBLAS_UPLO Uplo, CBLAS_TR
 HIDDEN int __flexiblas_load_cblas( flexiblas_backend_t *backend )  {
     int only_fallback = 0;
     int failed = 0;
-    void * cblas_in_blis = dlsym(backend->library_handle, "bli_info_get_enable_cblas");
+    void *cblas_in_blis = __flexiblas_dlsym(backend->library_handle, "bli_info_get_enable_cblas");
+
     if ( cblas_in_blis ) {
         DPRINTF_WARN(1, "The desired BLAS library is BLIS. We do not load their CBLAS wrapper since it might alter the behavior of your programs.\n");
         only_fallback = 1;
