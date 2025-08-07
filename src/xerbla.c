@@ -37,6 +37,7 @@
 #    define RTLD_DEFAULT   ((void *) 0)
 #  endif
 #else
+#  include <windows.h>
 #  include <psapi.h>
 #endif
 
@@ -93,15 +94,18 @@ void XERBLA(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len) {
 #endif
 
 #else
-#if defined(__ELF__) || ((defined (__PGI) || defined(__NVCOMPILER)) && (defined(__linux__)  || defined(__unix__)))
+#if defined(__ELF__) || ((defined (__PGI) || defined(__NVCOMPILER)) && (defined(__linux__) || defined(__unix__)))
 void xerbla_(char *, Int *, flexiblas_fortran_charlen_t) __attribute__ ((weak, alias ("flexiblas_internal_xerbla")));
 void xerbla (char *, Int *, flexiblas_fortran_charlen_t) __attribute__ ((weak, alias ("flexiblas_internal_xerbla")));
 void XERBLA (char *, Int *, flexiblas_fortran_charlen_t) __attribute__ ((weak, alias ("flexiblas_internal_xerbla")));
 
 #else
+#ifndef __WIN32__
+// FIXME: No support for weak symbols on Windows
 #pragma weak xerbla_
 #pragma weak xerbla
 #pragma weak XERBLA
+#endif
 void xerbla_(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len) {
     flexiblas_internal_xerbla(SNAME, Info, len);
 }
@@ -178,7 +182,7 @@ int RowMajorStrg = 0;
 
 #define CBLAS_INT int32_t
 
-#if defined(__ELF__) || ((defined (__PGI) || defined(__NVCOMPILER)) && (defined(__linux__)  || defined(__unix__))) || defined(__MINGW32__)
+#if defined(__ELF__) || ((defined (__PGI) || defined(__NVCOMPILER)) && (defined(__linux__) || defined(__unix__)))
 void internal_cblas_xerbla(CBLAS_INT info, const char *rout, const char *form, ...);
 void cblas_xerbla(CBLAS_INT info, const char *, const char *, ...) __attribute__ ((weak, alias ("internal_cblas_xerbla")));
 void internal_cblas_xerbla(CBLAS_INT _info, const char *rout, const char *form, ...)

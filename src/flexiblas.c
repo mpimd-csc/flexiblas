@@ -760,10 +760,18 @@ __attribute__((constructor))
             snprintf(blas_name,len, "%s%s", FALLBACK_NAME,SO_EXTENSION);
             free(SO_EXTENSION);
 
+#ifndef __WIN32__
             dlerror();
+#endif
             __flexiblas_blas_fallback = __flexiblas_dlopen(blas_name, fallback_flags , NULL);
             if ( __flexiblas_blas_fallback == NULL ) {
-                DPRINTF_ERROR(0," Failed to load the BLAS fallback library '%s'.  Abort! errormsg=\"%s\"\n", blas_name, dlerror());
+                DPRINTF_ERROR(0," Failed to load the BLAS fallback library '%s'.  Abort! errormsg=\"%s\"\n", blas_name,
+#ifdef __WIN32__
+                "unknown"  // FIXME: Implement for Windows
+#else
+                dlerror()
+#endif
+                );
                 abort();
             }
             DPRINTF(2, "Load fallback_netlib at = 0x%lx\n", (unsigned long) __flexiblas_blas_fallback);

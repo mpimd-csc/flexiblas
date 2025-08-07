@@ -43,10 +43,12 @@ HIDDEN void * __flexiblas_lookup_cblas_function( void * handle , ...)
 
     va_start(args, handle);
 
+#ifndef __WIN32__
     dlerror();
+#endif
     while ( (name = va_arg(args, char*)) != NULL) {
         DPRINTF(3, "Look up (C Symbol): %21s", name);
-        ptr_csymbol = __flexiblas_dlsym(handle, cname);
+        ptr_csymbol = __flexiblas_dlsym(handle, name);
 
         if ( __flexiblas_verbose > 2) {
             fprintf(stderr, " %s at = 0x%lx in = 0x%lx.\n",(ptr_csymbol == NULL)?"failed":"success", (unsigned long) ptr_csymbol, (unsigned long) handle);
@@ -100,6 +102,7 @@ HIDDEN void * __flexiblas_lookup_fortran_function(void * handle, ...)
             }
 
             ptr_fsymbol = __flexiblas_dlsym(handle, fname);
+        }
 
         if (ptr_fsymbol!=NULL) {
 
@@ -321,11 +324,7 @@ HIDDEN int __flexiblas_load_fortran_hook_function( void * handle , struct flexib
             fprintf(stderr, "%s ", fname);
         }
 
-#ifdef __WIN32__
-        ptr_hsymbol = (void *) GetProcAddress(handle, fname);
-#else
-        ptr_hsymbol = dlsym(handle, fname);
-#endif
+        ptr_hsymbol = __flexiblas_dlsym(handle, fname);
 
         if (ptr_hsymbol!=NULL) {
             break;
@@ -367,7 +366,7 @@ HIDDEN int __flexiblas_load_cblas_hook_function( void * handle , struct flexibla
             fprintf(stderr, "%s ", fname);
         }
 
-        ptr_hsymbol = dlsym(handle, fname);
+        ptr_hsymbol = __flexiblas_dlsym(handle, fname);
 
         if (ptr_hsymbol!=NULL) {
             break;
