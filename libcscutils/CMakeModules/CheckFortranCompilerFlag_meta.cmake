@@ -1,5 +1,0 @@
-IF(${CMAKE_VERSION} VERSION_LESS "3.0.0")
-        INCLUDE(CheckFortranCompilerFlag_old)
-ELSE()
-        INCLUDE(CheckFortranCompilerFlag)
-ENDIF()

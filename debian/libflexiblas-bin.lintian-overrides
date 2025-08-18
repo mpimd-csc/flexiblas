@@ -1,2 +1,0 @@
-# Installs a binary to /usr/bin
-libflexiblas-bin: arch-dependent-file-not-in-arch-specific-directory

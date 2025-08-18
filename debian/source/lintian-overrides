@@ -1,3 +1,0 @@
-libflexiblas-dev: arch-dependent-file-not-in-arch-specific-directory [usr/bin/flexiblas-config]
-libflexiblas64-dev: arch-dependent-file-not-in-arch-specific-directory [usr/bin/flexiblas64-config]
-

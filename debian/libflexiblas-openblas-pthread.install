@@ -1,3 +1,0 @@
-etc/flexiblasrc.d/OpenBLASPThread.conf
-usr/lib/*/flexiblas/libflexiblas_openblaspthread.so
-

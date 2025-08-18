@@ -1,3 +1,0 @@
-libflexiblas64-openblas-openmp: library-not-linked-against-libc
-libflexiblas64-openblas-openmp: binary-or-shlib-defines-rpath
-

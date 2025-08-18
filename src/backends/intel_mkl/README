@@ -1,2 +1,0 @@
-This backend is used to setup the MKL. The main difference to the generic
-backend is, that it adjust the calling sequence for some ext-blas calls.

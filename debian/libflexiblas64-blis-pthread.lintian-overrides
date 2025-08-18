@@ -1,2 +1,0 @@
-libflexiblas64-blis-pthread: binary-or-shlib-defines-rpath
-libflexiblas64-blis-pthread: library-not-linked-against-libc

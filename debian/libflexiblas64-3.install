@@ -1,6 +1,0 @@
-usr/lib/*/libflexiblas64.so.*
-usr/lib/*/libflexiblas64_mgmt.so.*
-usr/lib/*/flexiblas64/libflexiblas_netlib.so
-usr/lib/*/flexiblas64/libflexiblas_fallback_lapack.so
-etc/flexiblas64rc
-etc/flexiblas64rc.d/NETLIB.conf

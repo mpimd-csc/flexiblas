@@ -1,2 +1,0 @@
-libflexiblas64-openblas-pthread: library-not-linked-against-libc
-libflexiblas64-openblas-pthread: binary-or-shlib-defines-rpath
