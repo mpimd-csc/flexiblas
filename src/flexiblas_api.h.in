@@ -1,0 +1,150 @@
+//    SPDX-License-Identifier: LGPL-3.0-or-later
+/*
+   This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
+   Copyright (C) 2013-2025 Martin Koehler
+
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 3 of the License, or (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+   */
+
+#include <sys/types.h>
+
+#ifndef FLEXIBLAS_API_H
+#define FLEXIBLAS_API_H
+
+#ifndef FLEXIBLAS_INTEGER8
+#cmakedefine FLEXIBLAS_INTEGER8
+#endif
+
+
+#include <stdint.h>
+#ifndef FLEXIBLAS_API_INT
+#ifdef FLEXIBLAS_INTEGER8
+#define FLEXIBLAS_API_INT int64_t
+#else
+#define FLEXIBLAS_API_INT int
+#endif
+#endif
+
+/* Complex type (single precision) */
+#ifndef FLEXIBLAS_API_COMPLEX_FLOAT
+#ifndef __cplusplus
+#include <complex.h>
+#else
+#include <complex>
+#endif
+#define FLEXIBLAS_API_COMPLEX_FLOAT    float _Complex
+#endif
+
+/* Complex type (double precision) */
+#ifndef FLEXIBLAS_API_COMPLEX_DOUBLE
+#ifndef __cplusplus
+#include <complex.h>
+#else
+#include <complex>
+#endif
+#define FLEXIBLAS_API_COMPLEX_DOUBLE   double _Complex
+#endif
+
+#if defined(_WIN64)
+typedef long long int ssize_t;
+#elif defined(_WIN32)
+typedef long ssize_t;
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+    // #include "flexiblas_structures.h"
+
+    /*-----------------------------------------------------------------------------
+     *  External API of FlexiBLAS
+     *-----------------------------------------------------------------------------*/
+
+    /* Print Information  */
+    extern int flexiblas_avail(void);
+    extern int flexiblas_get_color_output(void);
+    extern void flexiblas_set_color_output(int s);
+    extern void flexiblas_get_version(int *major, int *minor, int *patch);
+    extern void flexiblas_print_loaded_backends(FILE *fp);
+    extern void flexiblas_print_avail_backends(FILE *fp);
+    extern void flexiblas_print_current_backend(FILE* fp);
+
+    /* Handle Backends  */
+    extern ssize_t flexiblas_list(char *name, const size_t len, const ssize_t pos);
+    extern ssize_t flexiblas_list_loaded(char *name, const size_t len, const ssize_t pos);
+    extern int flexiblas_load_backend(const char * name );
+    extern int flexiblas_load_backend_library(const char *libname);
+    extern int flexiblas_switch(int id);
+    extern int flexiblas_current_backend(char *name, size_t len);
+
+    /* Set number of threads  */
+#ifndef mkl_set_num_threads
+#define mkl_set_num_threads         MKL_Set_Num_Threads
+#endif
+    extern void flexiblas_set_num_threads(int num);
+    extern void openblas_set_num_threads(int num);
+    extern void MKL_Set_Num_Threads(int num);
+    extern void blas_set_num_threads(int num);
+    extern void acmlsetnumthreads(int num);
+    extern void bli_thread_set_num_threads(FLEXIBLAS_API_INT num);
+    extern void armpl_set_num_threads(int num);
+    extern void armpl_omp_set_num_threads(int num);
+
+    /* Get number of threads  */
+#ifndef mkl_get_num_threads
+#define mkl_get_num_threads         MKL_Get_Num_Threads
+#endif
+#ifndef mkl_get_max_threads
+#define mkl_get_max_threads         MKL_Get_Max_Threads
+#endif
+
+
+    extern int flexiblas_get_num_threads(void);
+    extern int openblas_get_num_threads(void);
+    extern int MKL_Get_Num_Threads(void);
+    extern int MKL_Get_Max_Threads(void);
+    extern int blas_get_num_threads(void);
+    extern int acmlgetnumthreads(void);
+    extern FLEXIBLAS_API_INT bli_thread_get_num_threads(void);
+    extern int armpl_get_num_threads(void);
+    extern int armpl_omp_get_num_threads(void);
+
+
+    /* Fortran Callable Routines, not intended to be called from C
+     *
+     * If these routines are called from C ensure that FLEXIBLAS_API_INT is defined
+     * as the default integer of your Fortran code. By default this is
+     * int, which corresponds to a 4 byte integer in Fortran on GNU Linux.*/
+
+    extern void flexiblas_set_num_threads_(FLEXIBLAS_API_INT* num);
+    extern FLEXIBLAS_API_INT acmlgetnumthreads_(void);
+    extern FLEXIBLAS_API_INT openblas_get_num_threads_(void);
+    extern FLEXIBLAS_API_INT mkl_get_num_threads_(void);
+    extern FLEXIBLAS_API_INT flexiblas_get_num_threads_(void);
+    extern FLEXIBLAS_API_INT blas_get_num_threads_(void);
+    extern FLEXIBLAS_API_INT armpl_get_num_threads_(void);
+    extern FLEXIBLAS_API_INT armpl_omp_get_num_threads_(void);
+    extern void blas_set_num_threads_(FLEXIBLAS_API_INT* num);
+    extern void openblas_set_num_threads_(FLEXIBLAS_API_INT* num);
+    extern void mkl_set_num_threads_(FLEXIBLAS_API_INT* num);
+    extern void acmlsetnumthreads_(FLEXIBLAS_API_INT* num);
+    extern void armpl_set_num_threads_(FLEXIBLAS_API_INT* num);
+    extern void armpl_omp_set_num_threads_(FLEXIBLAS_API_INT* num);
+
+#ifdef __cplusplus
+};
+#endif
+
+#endif /* end of include guard: FLEXIBLAS_API_H */

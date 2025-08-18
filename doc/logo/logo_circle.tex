@@ -1,0 +1,80 @@
+\documentclass[tikz]{standalone}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\renewcommand{\ttdefault}{pcr}
+\usetikzlibrary{decorations.text}
+\usetikzlibrary{shapes, positioning, calc, matrix,arrows,patterns,fit}
+\newcommand*{\mytextstyle}{\sffamily\bfseries\Huge\color{black!85}}
+
+\newcommand{\arcarrow}[5]{%
+   % inner radius, middle radius, outer radius, start angle,
+   % end angle, tip protusion angle, options, text
+   \pgfmathsetmacro{\rin}{3.5}
+   \pgfmathsetmacro{\rmid}{4.25}
+   \pgfmathsetmacro{\rout}{5.0}
+   \pgfmathsetmacro{\astart}{#1}
+   \pgfmathsetmacro{\aend}{#2}
+   \pgfmathsetmacro{\atip}{5}
+   \fill[#4, very thick]
+         (\astart:\rin) arc (\astart:\aend:\rin)
+      -- (\aend-\atip:\rmid)
+      -- (\aend:\rout)  arc (\aend:\astart:\rout)
+	 node (#5) [midway] {}
+      -- (\astart-\atip:\rmid) -- cycle;
+   \path[
+      decoration = {
+         text along path,
+         text = {|\mytextstyle|#3},
+	 text align = {align = center},
+	 raise = -1.5ex
+      },
+      decorate
+%    draw=black
+   ](\astart:\rmid) arc (\astart:\aend-\atip:\rmid);
+}
+
+\definecolor{MPIblue}{RGB}{51,165,195}
+\colorlet{mpiblue}{MPIblue}
+\definecolor{MPIgrey}{RGB}{135,135,141}
+\colorlet{mpigrey}{MPIgrey}
+\definecolor{MPIgreen}{RGB}{0,118,117}
+\colorlet{mpigreen}{MPIgreen}
+\definecolor{MPIred}{RGB}{120,0,75}
+\colorlet{mpired}{MPIred}
+\definecolor{MPIsand}{RGB}{236,233,212}
+\colorlet{mpisand}{MPIsand}
+\definecolor{MPItext}{RGB}{56,60,60}
+\colorlet{mpitext}{MPItext}
+\definecolor{MPIbluetext}{RGB}{23,161,193}
+\colorlet{mpibluetext}{MPIbluetext}
+\definecolor{MPIbackground}{RGB}{239,238,227}
+
+% \tikzstyle{every picture}+=[remember picture]
+% \tikzstyle{na} = [baseline=-.5ex]
+
+\renewcommand\familydefault{\sfdefault}
+
+\begin{document}
+  \tikzstyle{infonode}=[rectangle,rounded corners=10pt, inner sep=1.5ex,
+      ultra thick,minimum height=6ex,font=\Large\bfseries]
+  \tikzstyle{switchnode}=[infonode,draw=MPIgreen!60!MPIblue,fill=MPIgreen!40]
+  \tikzstyle{debugnode}=[infonode,draw=MPIred!60!black,fill=MPIred!40]
+  \tikzstyle{wrapnode}=[infonode,draw=orange!60!red,fill=orange!40]
+  \tikzstyle{offloadnode}=[infonode,draw=MPIblue!60!black,fill=MPIblue!40]
+  \begin{tikzpicture}
+	  \fill[even odd rule,mpired] circle (3.0);
+	  \node at (0,0) [
+		  font  = \mytextstyle\Huge,
+	  color = white,
+	  align = center
+  ]{FlexiBLAS};
+	  \arcarrow{87}{3}{Offload}{MPIblue!40}{node-offload}
+	  \arcarrow{177}{93}{Wrap}{orange!40}{node-wrap}
+	  \arcarrow{183}{267}{Switch}{MPIgreen!40}{node-switch}
+	  \arcarrow{273}{357}{ Debug }{MPIred!40}{node-debug}
+ \end{tikzpicture}
+\end{document}
+
+

@@ -1,0 +1,10 @@
+prefix=@prefix@
+libdir=@libdir@
+includedir=${prefix}/include/${flexiblasname}
+Name: flexiblas_api
+Description: BLAS wrapper library mimicing Netlib Reference but providing any installed BLAS Implementation(Non-BLAS API Only)
+Version: @FLEXIBLAS_VERSION@
+URL: http://www.mpi-magdeburg.mpg.de/mpcsc/software/FlexiBLAS/
+Libs: -L${libdir} -l${flexiblasname}_api
+Libs.private: -lm
+Cflags: -I${includedir}

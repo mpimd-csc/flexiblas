@@ -1,0 +1,530 @@
+Source: flexiblas
+Priority: optional
+Maintainer: Martin Köhler <koehlerm@mpi-magdeburg.mpg.de>
+Build-Depends: debhelper (>= 11.0.0), cmake, gfortran (>= 5.1.0), gcc (>= 5.1.0), libatlas-base-dev (>= 3.8.0),
+ libopenblas-openmp-dev, libopenblas-pthread-dev, libopenblas-serial-dev,
+ libopenblas64-openmp-dev, libopenblas64-pthread-dev, libopenblas64-serial-dev,
+ libblis-openmp-dev, libblis-pthread-dev, libblis-serial-dev,
+ libblis64-openmp-dev, libblis64-pthread-dev, libblis64-serial-dev,
+ libblas-dev, libblas64-dev, liblapack-dev, liblapack64-dev, libmkl-dev [amd64]
+Standards-Version: 4.5.0
+Section: libs
+Homepage: http://www.mpi-magdeburg.mpg.de/projects/flexiblas
+
+Package: libflexiblas3
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Flexible and Exchangeable BLAS library.
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ You can select the BLAS implementation which is used behind
+ FlexiBLAS using a configuration file or a environment variable.
+ It is integrated in Debian/Ubuntu using the update-alternatives
+ mechanism.
+ .
+ The package supports OpenBLAS, ATLAS and the reference Netlib
+ implementation. If you compile FlexiBLAS on your own, other
+ BLAS implementations like the old GotoBLAS or the Intel MKL
+ are supported.
+ .
+ This package contains the runtime part of FlexiBLAS.
+
+Package: libflexiblas64-3
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Flexible and Exchangeable BLAS library (64bit integers).
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ You can select the BLAS implementation which is used behind
+ FlexiBLAS using a configuration file or a environment variable.
+ It is integrated in Debian/Ubuntu using the update-alternatives
+ mechanism.
+ .
+ The package supports OpenBLAS, ATLAS and the reference Netlib
+ implementation. If you compile FlexiBLAS on your own, other
+ BLAS implementations like the old GotoBLAS or the Intel MKL
+ are supported.
+ .
+ This package contains the runtime part of FlexiBLAS. It contains
+ the 64 bit integer library of FlexiBLAS.
+
+Package: libflexiblas-bin
+Section: admin
+Architecture: any
+Multi-Arch: foreign
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Flexible and Exchangeable BLAS library. Management Tool.
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ You can select the BLAS implementation which is used behind
+ FlexiBLAS using a configuration file or a environment variable.
+ It is integrated in Debian/Ubuntu using the update-alternatives
+ mechanism.
+ .
+ The package supports OpenBLAS, ATLAS and the reference Netlib
+ implementation. If you compile FlexiBLAS on your own, other
+ BLAS implementations like the old GotoBLAS or the Intel MKL
+ are supported.
+ .
+ This package contains the management tool for the FlexiBLAS
+ library.
+
+Package: libflexiblas64-bin
+Section: admin
+Architecture: any
+Multi-Arch: foreign
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Flexible and Exchangeable BLAS library. Management Tool. (64bit integers).
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ You can select the BLAS implementation which is used behind
+ FlexiBLAS using a configuration file or a environment variable.
+ It is integrated in Debian/Ubuntu using the update-alternatives
+ mechanism.
+ .
+ The package supports OpenBLAS, ATLAS and the reference Netlib
+ implementation. If you compile FlexiBLAS on your own, other
+ BLAS implementations like the old GotoBLAS or the Intel MKL
+ are supported.
+ .
+ This package contains the management tool for the 64 bit integer
+ version of FlexiBLAS.
+
+
+Package: libflexiblas-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: libflexiblas3 (= ${binary:Version}), libblas-dev, liblapack-dev, ${misc:Depends}, ${shlibs:Depends},
+Description: Development files for libflexiblas3.
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ You can select the BLAS implementation which is used behind
+ FlexiBLAS using a configuration file or a environment variable.
+ It is integrated in Debian/Ubuntu using the update-alternatives
+ mechanism.
+ .
+ The package supports OpenBLAS, ATLAS and the reference Netlib
+ implementation. If you compile FlexiBLAS on your own, other
+ BLAS implementations like the old GotoBLAS or the Intel MKL
+ are supported.
+ .
+ This package contains the development files.
+
+Package: libflexiblas64-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: libflexiblas64-3 (= ${binary:Version}), libblas64-dev, liblapack64-dev, ${misc:Depends}, ${shlibs:Depends}
+Description: Development files for libflexiblas64.
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ You can select the BLAS implementation which is used behind
+ FlexiBLAS using a configuration file or a environment variable.
+ It is integrated in Debian/Ubuntu using the update-alternatives
+ mechanism.
+ .
+ The package supports OpenBLAS, ATLAS and the reference Netlib
+ implementation. If you compile FlexiBLAS on your own, other
+ BLAS implementations like the old GotoBLAS or the Intel MKL
+ are supported.
+ .
+ This package contains the development files for the 64 bit
+ integer build.
+
+Package: libflexiblas-api3
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Flexible and Exchangeable BLAS library. Standalone API
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ You can select the BLAS implementation which is used behind
+ FlexiBLAS using a configuration file or a environment variable.
+ It is integrated in Debian/Ubuntu using the update-alternatives
+ mechanism.
+ .
+ The package supports OpenBLAS, ATLAS and the reference Netlib
+ implementation. If you compile FlexiBLAS on your own, other
+ BLAS implementations like the old GotoBLAS or the Intel MKL
+ are supported.
+ .
+ This package contains the standalone API of FlexiBLAS.
+
+Package: libflexiblas64-api3
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Flexible and Exchangeable BLAS library. Standalone API (64bit integers).
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ You can select the BLAS implementation which is used behind
+ FlexiBLAS using a configuration file or a environment variable.
+ It is integrated in Debian/Ubuntu using the update-alternatives
+ mechanism.
+ .
+ The package supports OpenBLAS, ATLAS and the reference Netlib
+ implementation. If you compile FlexiBLAS on your own, other
+ BLAS implementations like the old GotoBLAS or the Intel MKL
+ are supported.
+ .
+ This package contains the standalone API of FlexiBLAS with 64bit
+ integers.
+
+
+Package: libflexiblas-api-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: libflexiblas-api3 (= ${binary:Version}), ${misc:Depends}
+Description: Flexible and Exchangeable BLAS library. Standalone API. Development Files.
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ You can select the BLAS implementation which is used behind
+ FlexiBLAS using a configuration file or a environment variable.
+ It is integrated in Debian/Ubuntu using the update-alternatives
+ mechanism.
+ .
+ The package supports OpenBLAS, ATLAS and the reference Netlib
+ implementation. If you compile FlexiBLAS on your own, other
+ BLAS implementations like the old GotoBLAS or the Intel MKL
+ are supported.
+ .
+ This package contains the development files for the
+ standalone API of FlexiBLAS.
+
+Package: libflexiblas64-api-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: libflexiblas64-api3 (= ${binary:Version}), ${misc:Depends}
+Description: Flexible and Exchangeable BLAS library. Standalone API. Development Files.
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ You can select the BLAS implementation which is used behind
+ FlexiBLAS using a configuration file or a environment variable.
+ It is integrated in Debian/Ubuntu using the update-alternatives
+ mechanism.
+ .
+ The package supports OpenBLAS, ATLAS and the reference Netlib
+ implementation. If you compile FlexiBLAS on your own, other
+ BLAS implementations like the old GotoBLAS or the Intel MKL
+ are supported.
+ .
+ This package contains the development files of the
+ standalone API of FlexiBLAS with 64 bit integers.
+
+Package: libflexiblas-hook-profile
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends:  libflexiblas3 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Description: Profile Addion for FlexiBLAS
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ The profile hook allows easy profiling of BLAS and LAPACK
+ related function calls.
+
+Package: libflexiblas64-hook-profile
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends:  libflexiblas64-3 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Description: Profile Addion for FlexiBLAS (64 bit integer)
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ The profile hook allows easy profiling of BLAS and LAPACK
+ related function calls.
+
+Package: libflexiblas-atlas
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends: libflexiblas3 (= ${binary:Version}), libatlas3-base, ${misc:Depends}
+Description: ATLAS backend for FlexiBLAS
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ This package contains the ATLAS backend for FlexiBLAS.
+
+Package: libflexiblas-openblas-serial
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends: libflexiblas3 (= ${binary:Version}), libopenblas0-serial, ${misc:Depends}
+Description: OpenBLAS Serial backend for FlexiBLAS
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ This package contains the OpenBLAS-Serial backend for FlexiBLAS.
+
+Package: libflexiblas-openblas-openmp
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends: libflexiblas3 (= ${binary:Version}), libopenblas0-openmp, ${misc:Depends}
+Description: OpenBLAS OpenMP backend for FlexiBLAS
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ This package contains the OpenBLAS-OpenMP backend for FlexiBLAS.
+
+Package: libflexiblas-openblas-pthread
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends: libflexiblas3 (= ${binary:Version}), libopenblas0-pthread, ${misc:Depends}
+Description: OpenBLAS Pthread backend for FlexiBLAS
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ This package contains the OpenBLAS-Pthread backend for FlexiBLAS.
+
+Package: libflexiblas-blis-serial
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends: libflexiblas3 (= ${binary:Version}), ${blis:serial}, ${misc:Depends}
+Description: BLIS Serial backend for FlexiBLAS
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ This package contains the BLIS-Serial backend for FlexiBLAS.
+
+Package: libflexiblas-blis-openmp
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends: libflexiblas3 (= ${binary:Version}), ${blis:openmp}, ${misc:Depends}
+Description: BLIS OpenMP backend for FlexiBLAS
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ This package contains the BLIS-OpenMP backend for FlexiBLAS.
+
+Package: libflexiblas-blis-pthread
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends: libflexiblas3 (= ${binary:Version}), ${blis:pthread}, ${misc:Depends}
+Description: BLIS Pthread backend for FlexiBLAS
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ This package contains the BLIS-Pthread backend for FlexiBLAS.
+
+Package: libflexiblas-mkl-serial
+Section: libs
+Architecture: amd64
+Multi-Arch: same
+Depends: libflexiblas3 (= ${binary:Version}), libmkl-sequential, libmkl-gf-lp64, ${misc:Depends}
+Description: Intel MKL Serial backend for FlexiBLAS
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ This package contains the Intel MKL Serial backend for FlexiBLAS.
+
+Package: libflexiblas-mkl-openmp
+Section: libs
+Architecture: amd64
+Multi-Arch: same
+Depends: libflexiblas3 (= ${binary:Version}), libmkl-gnu-thread, libmkl-gf-ilp64, ${misc:Depends}
+Description: Intel MKL OpenMP backend for FlexiBLAS
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ This package contains the Intel MKL OpenMP backend for FlexiBLAS.
+
+Package: libflexiblas64-openblas-serial
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends: libflexiblas64-3 (= ${binary:Version}), libopenblas64-0-serial, ${misc:Depends}
+Description: OpenBLAS Serial backend for FlexiBLAS (64 bit integers)
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ This package contains the OpenBLAS-Serial backend for FlexiBLAS.
+
+Package: libflexiblas64-openblas-openmp
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends: libflexiblas64-3 (= ${binary:Version}), libopenblas64-0-openmp, ${misc:Depends}
+Description: OpenBLAS OpenMP backend for FlexiBLAS (64 bit integers)
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ This package contains the OpenBLAS-OpenMP backend for FlexiBLAS.
+
+Package: libflexiblas64-openblas-pthread
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends: libflexiblas64-3 (= ${binary:Version}), libopenblas64-0-pthread, ${misc:Depends}
+Description: OpenBLAS Pthread backend for FlexiBLAS (64 bit integers)
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ This package contains the OpenBLAS-Pthread backend for FlexiBLAS.
+
+Package: libflexiblas64-blis-serial
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends: libflexiblas64-3 (= ${binary:Version}), ${blis64:serial}, ${misc:Depends}
+Description: BLIS Serial backend for FlexiBLAS (64 bit integers)
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ This package contains the BLIS-Serial backend for FlexiBLAS.
+
+Package: libflexiblas64-blis-openmp
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends: libflexiblas64-3 (= ${binary:Version}), ${blis64:openmp}, ${misc:Depends}
+Description: BLIS OpenMP backend for FlexiBLAS (64 bit integers)
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ This package contains the BLIS-OpenMP backend for FlexiBLAS.
+
+Package: libflexiblas64-blis-pthread
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends: libflexiblas64-3 (= ${binary:Version}), ${blis64:pthread}, ${misc:Depends}
+Description: BLIS Pthread backend for FlexiBLAS (64 bit integers)
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ This package contains the BLIS-Pthread backend for FlexiBLAS.
+
+Package: libflexiblas64-mkl-serial
+Section: libs
+Architecture: amd64
+Multi-Arch: same
+Depends: libflexiblas64-3 (= ${binary:Version}), libmkl-sequential, libmkl-gf-ilp64, ${misc:Depends}
+Description: Intel MKL Serial backend for FlexiBLAS (64 bit integers)
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ This package contains the Intel MKL Serial backend for FlexiBLAS.
+
+Package: libflexiblas64-mkl-openmp
+Section: libs
+Architecture: amd64
+Multi-Arch: same
+Depends: libflexiblas64-3 (= ${binary:Version}), libmkl-gnu-thread, libmkl-gf-ilp64, ${misc:Depends}
+Description: Intel MKL OpenMP backend for FlexiBLAS (64 bit integers)
+ The FlexiBLAS library is a flexible BLAS wrapper
+ which allows one to exchange the system wide BLAS
+ implementation without recompiling or relinking programs.
+ Even dealing with runtime-loader specific tricks is
+ not necessary with FlexiBLAS.
+ .
+ This package contains the Intel MKL OpenMP backend for FlexiBLAS.
+

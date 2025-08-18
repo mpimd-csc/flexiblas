@@ -1,0 +1,4 @@
+usr/lib/*/pkgconfig/flexiblas64_api.pc
+usr/lib/*/libflexiblas64_api.so
+usr/include/flexiblas64/flexiblas_api.h
+

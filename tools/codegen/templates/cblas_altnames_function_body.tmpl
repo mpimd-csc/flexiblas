@@ -1,0 +1,9 @@
+/* Alternative function name for {function_name_orig:s} -- {function_name} */
+#ifndef __APPLE__
+{return_type:s} {function_name:s}({arg_list:s}) __attribute__((alias(MTS({function_name_orig:s}))));
+#else
+{return_type:s} {function_name:s}({arg_list:s}) 
+{{
+    return {function_name_orig:s}({call_list:s});
+}}
+#endif

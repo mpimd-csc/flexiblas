@@ -1,0 +1,56 @@
+/*
+ * LICSCUTILS
+ * Copyright (C) Martin Koehler, 2018
+ *
+ * This library is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#ifndef CSC_UTILS_CONFIG_H
+
+#define CSC_UTILS_CONFIG_H
+
+// External
+#cmakedefine CSC_HAVE_ZLIB
+#cmakedefine CSC_HAVE_BZIP2
+#cmakedefine CSC_HAVE_LZMA
+#cmakedefine CSC_HAVE_ZSTD
+#cmakedefine CSC_HAVE_MMAP_IO
+#cmakedefine CSC_HAVE_HDF5
+#cmakedefine CSC_HAVE_CPUFREQ
+
+// Functionality
+#cmakedefine CSC_HAVE_STRNLEN
+#cmakedefine CSC_HAVE_STRNDUP
+#cmakedefine CSC_HAVE_PTHREAD_YIELD
+#cmakedefine CSC_HAVE_PTHREAD
+#cmakedefine CSC_HAVE_ATTR_CONSTRUCTOR
+#cmakedefine CSC_HAVE_ATTR_DEPRECATED
+#cmakedefine CSC_HAVE_BACKTRACE
+#cmakedefine CSC_HAVE_IOCTL
+#cmakedefine CSC_HAVE_UNISTD
+#cmakedefine CSC_HAVE_GETLINE
+#cmakedefine CSC_HAVE_GETDELIM
+#cmakedefine CSC_HAVE_REALPATH
+#cmakedefine CSC_HAVE_VSSCANF
+#cmakedefine CSC_HAVE_VSNPRINTF
+#cmakedefine CSC_HAVE_SYS_TYPES
+#cmakedefine CSC_HAVE_SYS_STAT
+#cmakedefine CSC_HAVE_SYS_MMAN
+#cmakedefine CSC_HAVE_FCNTL
+#cmakedefine CSC_HAVE_LSEEK
+#cmakedefine CSC_HAVE_OPEN
+#cmakedefine CSC_HAVE_MMAP
+
+#endif /* end of include guard: CSC_UTILS_CONFIG_H */

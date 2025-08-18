@@ -1,0 +1,29 @@
+#! /bin/sh
+#!/bin/sh
+set -e
+
+update-alternatives --install /usr/lib/@DEB_HOST_MULTIARCH@/libblas64.so \
+	libblas64.so-@DEB_HOST_MULTIARCH@ \
+	/usr/lib/@DEB_HOST_MULTIARCH@/libflexiblas64.so \
+	120 \
+	--slave /usr/include/@DEB_HOST_MULTIARCH@/cblas64.h \
+	cblas64.h-@DEB_HOST_MULTIARCH@ \
+	/usr/include/flexiblas64/cblas.h \
+	--slave /usr/lib/@DEB_HOST_MULTIARCH@/pkgconfig/blas64.pc \
+	blas64.pc-@DEB_HOST_MULTIARCH@ \
+	/usr/lib/@DEB_HOST_MULTIARCH@/pkgconfig/flexiblas64.pc
+
+update-alternatives --install /usr/lib/@DEB_HOST_MULTIARCH@/liblapack64.so \
+	liblapack64.so-@DEB_HOST_MULTIARCH@ \
+	/usr/lib/@DEB_HOST_MULTIARCH@/libflexiblas64.so \
+	120 \
+	--slave /usr/lib/@DEB_HOST_MULTIARCH@/pkgconfig/lapack64.pc \
+	lapack64.pc-@DEB_HOST_MULTIARCH@ \
+	/usr/lib/@DEB_HOST_MULTIARCH@/pkgconfig/flexiblas64.pc
+
+
+#DEBHELPER#
+
+exit 0
+
+

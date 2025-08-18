@@ -1,0 +1,2 @@
+arch-dependent-file-not-in-arch-specific-directory [*]
+no-manual-page [usr/bin/flexiblas64-config]

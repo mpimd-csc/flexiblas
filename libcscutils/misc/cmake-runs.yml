@@ -1,0 +1,75 @@
+build-cmake:
+    stage: build
+    allow_failure: false
+    image: docker:28
+    rules:
+      - changes:
+          paths:
+            - misc/**
+            - .gitlab-ci.yml
+    before_script:
+        - apk add git curl bash
+    script:
+        - |
+          docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+          VERSION=$(bash misc/cmake-latest.sh $CMAKE_VERSION)
+          cd misc/docker
+          bash builder.sh $VERSION
+    parallel:
+        matrix:
+            - CMAKE_VERSION:
+                - "3.12"
+                - "3.13"
+                - "3.14"
+                - "3.15"
+                - "3.16"
+                - "3.17"
+                - "3.18"
+                - "3.19"
+                - "3.20"
+                - "3.21"
+                - "3.22"
+                - "3.23"
+                - "3.24"
+                - "3.25"
+                - "3.26"
+                - "3.27"
+                - "3.28"
+                - "3.29"
+                - "3.30"
+                - "3.31"
+                - "4.0"
+                
+
+cmake-version-test:
+    stage: build
+    image: gitlab.mpi-magdeburg.mpg.de/software/libcscutils/cmake-focal:${CMAKE_VERSION}
+    script:
+        - |
+          bash ./misc/ci/test-cmake.sh
+    parallel:
+        matrix:
+            - CMAKE_VERSION:
+                - "3.12"
+                - "3.13"
+                - "3.14"
+                - "3.15"
+                - "3.16"
+                - "3.17"
+                - "3.18"
+                - "3.19"
+                - "3.20"
+                - "3.21"
+                - "3.22"
+                - "3.23"
+                - "3.24"
+                - "3.25"
+                - "3.26"
+                - "3.27"
+                - "3.28"
+                - "3.29"
+                - "3.30"
+                - "3.31"
+                - "4.0"
+                
+

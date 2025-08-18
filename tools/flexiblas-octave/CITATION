@@ -1,0 +1,25 @@
+The flexiblas package provides an interface for controlling FlexiBLAS
+from Octave. FlexiBLAS is free software but please cite the following technical
+report if you are using it for your work.
+
+ @TechReport{flexiblas,
+  URL =		 "http://www.netlib.org/lapack/lawnspdf/lawn284.pdf",
+  number =	 284,
+  institution =	 "LAPACK Working Note",
+  author =	 "M. K{\"o}hler and J. Saak",
+  title =	 "{FlexiBLAS} - {A} flexible {BLAS} library with
+                  runtime exchangeable backends",
+  month =	 jan,
+  year =	 2014,
+ }
+
+ @software{flexiblas30,
+  author       = {Martin Köhler and
+                  Jens Saak},
+  title        = {FlexiBLAS - A BLAS and LAPACK wrapper library with runtime
+	  	  exchangable backends},
+  month        = jun,
+  year         = 2020,
+  publisher    = {Zenodo},
+  doi          = {10.5281/zenodo.3949804},
+ }

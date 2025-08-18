@@ -1,0 +1,18 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: flexiblas
+Source: http://www.mpi-magdeburg.mpg.de/projects/flexiblas
+
+Files: *
+Copyright: 2013-2024 Martin Köhler <koehlerm@mpi-magdeburg.mpg.de>
+License: LGPL-3.0-or-later
+
+Files: debian/*
+Copyright: 2013-2024 Martin Köhler <koehlerm@mpi-magdeburg.mpg.de>
+License:  LGPL-3.0-or-later
+
+Files: contributed/*
+License: BSD-3-clause
+Copyright: 1992-2019 The University of Tennessee and The University of Tennessee Research Foundation. All rights reserved.
+	   2000-2011 The University of California Berkeley. All rights reserved.
+	   2006-2012 The University of Colorado Denver.  All rights reserved.
+

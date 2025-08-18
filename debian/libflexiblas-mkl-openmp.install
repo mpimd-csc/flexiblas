@@ -1,0 +1,3 @@
+etc/flexiblasrc.d/MklOpenMP.conf
+usr/lib/*/flexiblas/libflexiblas_mklopenmp.so
+

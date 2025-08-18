@@ -1,0 +1,3 @@
+The backend.c file is the generic dummy backend to interface the NVPL libraries
+from NVidia. This is required in order to catch the set/get number of threads
+API from NVidia, which splits into a BLAS and LAPACK part.

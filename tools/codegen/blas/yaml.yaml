@@ -1,0 +1,9023 @@
+- name: caxpby
+  load_name:
+  - caxpby
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ca
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: cx
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: cb
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: cy
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: caxpy
+  load_name:
+  - caxpy
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ca
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: cx
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: cy
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: ccopy
+  load_name:
+  - ccopy
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: cx
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: cy
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: cdotc
+  load_name:
+  - cdotc
+  alt_names: []
+  return_type: float _Complex
+  return_type_complex: true
+  return_base_type: float
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: cx
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: cy
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: cdotu
+  load_name:
+  - cdotu
+  alt_names: []
+  return_type: float _Complex
+  return_type_complex: true
+  return_base_type: float
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: cx
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: cy
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: cgbmv
+  load_name:
+  - cgbmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: kl
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ku
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: cgeadd
+  load_name:
+  - cgeadd
+  alt_names: []
+  return_type: void
+  args:
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: cgemm
+  load_name:
+  - cgemm
+  alt_names: []
+  return_type: void
+  args:
+  - name: transa
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: transb
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: transa_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: transb_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: cgemmtr
+  load_name:
+  - cgemmtr
+  - cgemmt
+  alt_names:
+  - cgemmt
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: transa
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: transb
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: transa_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: transb_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: cgemv
+  load_name:
+  - cgemv
+  alt_names: []
+  return_type: void
+  args:
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: cgerc
+  load_name:
+  - cgerc
+  alt_names: []
+  return_type: void
+  args:
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: cgeru
+  load_name:
+  - cgeru
+  alt_names: []
+  return_type: void
+  args:
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: chbmv
+  load_name:
+  - chbmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: chemm
+  load_name:
+  - chemm
+  alt_names: []
+  return_type: void
+  args:
+  - name: side
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: side_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: chemv
+  load_name:
+  - chemv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: cher
+  load_name:
+  - cher
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: cher2
+  load_name:
+  - cher2
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: cher2k
+  load_name:
+  - cher2k
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: cherk
+  load_name:
+  - cherk
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: chpmv
+  load_name:
+  - chpmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ap
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: chpr
+  load_name:
+  - chpr
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ap
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: chpr2
+  load_name:
+  - chpr2
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ap
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: cimatcopy
+  load_name:
+  - cimatcopy
+  alt_names: []
+  return_type: void
+  args:
+  - name: ORDER
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: TRANS
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: rows
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: cols
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: order_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: comatcopy
+  load_name:
+  - comatcopy
+  alt_names: []
+  return_type: void
+  args:
+  - name: ORDER
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: TRANS
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: rows
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: cols
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ORDER_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: TRANS_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: crotg
+  load_name:
+  - crotg
+  alt_names: []
+  return_type: void
+  args:
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: s
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+- name: cscal
+  load_name:
+  - cscal
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ca
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: cx
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: csrot
+  load_name:
+  - csrot
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: cx
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: cy
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: s
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+- name: csscal
+  load_name:
+  - csscal
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: sa
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: cx
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: cswap
+  load_name:
+  - cswap
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: cx
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: cy
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: csymm
+  load_name:
+  - csymm
+  alt_names: []
+  return_type: void
+  args:
+  - name: side
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: side_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: csyr2k
+  load_name:
+  - csyr2k
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: csyrk
+  load_name:
+  - csyrk
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: ctbmv
+  load_name:
+  - ctbmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: ctbsv
+  load_name:
+  - ctbsv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: ctpmv
+  load_name:
+  - ctpmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ap
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: ctpsv
+  load_name:
+  - ctpsv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ap
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: ctrmm
+  load_name:
+  - ctrmm
+  alt_names: []
+  return_type: void
+  args:
+  - name: side
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: transa
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: side_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: transa_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: ctrmv
+  load_name:
+  - ctrmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: ctrsm
+  load_name:
+  - ctrsm
+  alt_names: []
+  return_type: void
+  args:
+  - name: side
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: transa
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: side_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: transa_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: ctrsv
+  load_name:
+  - ctrsv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: dasum
+  load_name:
+  - dasum
+  alt_names: []
+  return_type: double
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: dx
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: daxpby
+  load_name:
+  - daxpby
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: da
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: dx
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: db
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: dy
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: daxpy
+  load_name:
+  - daxpy
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: da
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: dx
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: dy
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: dcopy
+  load_name:
+  - dcopy
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: dx
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: dy
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: ddot
+  load_name:
+  - ddot
+  alt_names: []
+  return_type: double
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: dx
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: dy
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: dgbmv
+  load_name:
+  - dgbmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: kl
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ku
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: dgeadd
+  load_name:
+  - dgeadd
+  alt_names: []
+  return_type: void
+  args:
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: dgemm
+  load_name:
+  - dgemm
+  alt_names: []
+  return_type: void
+  args:
+  - name: transa
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: transb
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: transa_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: transb_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: dgemmtr
+  load_name:
+  - dgemmtr
+  - dgemmt
+  alt_names:
+  - dgemmt
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: transa
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: transb
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: transa_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: transb_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: dgemv
+  load_name:
+  - dgemv
+  alt_names: []
+  return_type: void
+  args:
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: dger
+  load_name:
+  - dger
+  alt_names: []
+  return_type: void
+  args:
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: dimatcopy
+  load_name:
+  - dimatcopy
+  alt_names: []
+  return_type: void
+  args:
+  - name: ORDER
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: TRANS
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: rows
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: cols
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: order_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: dnrm2
+  load_name:
+  - dnrm2
+  alt_names: []
+  return_type: double
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: domatcopy
+  load_name:
+  - domatcopy
+  alt_names: []
+  return_type: void
+  args:
+  - name: ORDER
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: TRANS
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: rows
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: cols
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ORDER_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: TRANS_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: drot
+  load_name:
+  - drot
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: dx
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: dy
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: s
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+- name: drotg
+  load_name:
+  - drotg
+  alt_names: []
+  return_type: void
+  args:
+  - name: a
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: s
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+- name: drotm
+  load_name:
+  - drotm
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: dx
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: dy
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: dparam
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+- name: drotmg
+  load_name:
+  - drotmg
+  alt_names: []
+  return_type: void
+  args:
+  - name: dd1
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: dd2
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: dx1
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: dy1
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: dparam
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+- name: dsbmv
+  load_name:
+  - dsbmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: dscal
+  load_name:
+  - dscal
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: da
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: dx
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: dsdot
+  load_name:
+  - dsdot
+  alt_names: []
+  return_type: double
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: sx
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: sy
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: dspmv
+  load_name:
+  - dspmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ap
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: dspr
+  load_name:
+  - dspr
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ap
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: dspr2
+  load_name:
+  - dspr2
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ap
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: dswap
+  load_name:
+  - dswap
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: dx
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: dy
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: dsymm
+  load_name:
+  - dsymm
+  alt_names: []
+  return_type: void
+  args:
+  - name: side
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: side_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: dsymv
+  load_name:
+  - dsymv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: dsyr
+  load_name:
+  - dsyr
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: dsyr2
+  load_name:
+  - dsyr2
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: dsyr2k
+  load_name:
+  - dsyr2k
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: dsyrk
+  load_name:
+  - dsyrk
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: dtbmv
+  load_name:
+  - dtbmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: dtbsv
+  load_name:
+  - dtbsv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: dtpmv
+  load_name:
+  - dtpmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ap
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: dtpsv
+  load_name:
+  - dtpsv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ap
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: dtrmm
+  load_name:
+  - dtrmm
+  alt_names: []
+  return_type: void
+  args:
+  - name: side
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: transa
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: side_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: transa_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: dtrmv
+  load_name:
+  - dtrmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: dtrsm
+  load_name:
+  - dtrsm
+  alt_names: []
+  return_type: void
+  args:
+  - name: side
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: transa
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: side_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: transa_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: dtrsv
+  load_name:
+  - dtrsv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: dzasum
+  load_name:
+  - dzasum
+  alt_names: []
+  return_type: double
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: zx
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: dznrm2
+  load_name:
+  - dznrm2
+  alt_names: []
+  return_type: double
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: icamax
+  load_name:
+  - icamax
+  alt_names: []
+  return_type: int
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: cx
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: idamax
+  load_name:
+  - idamax
+  alt_names: []
+  return_type: int
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: dx
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: isamax
+  load_name:
+  - isamax
+  alt_names: []
+  return_type: int
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: sx
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: izamax
+  load_name:
+  - izamax
+  alt_names: []
+  return_type: int
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: zx
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: sasum
+  load_name:
+  - sasum
+  alt_names: []
+  return_type: float
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: sx
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: saxpby
+  load_name:
+  - saxpby
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: sa
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: sx
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: sb
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: sy
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: saxpy
+  load_name:
+  - saxpy
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: sa
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: sx
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: sy
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: scasum
+  load_name:
+  - scasum
+  alt_names: []
+  return_type: float
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: cx
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: scnrm2
+  load_name:
+  - scnrm2
+  alt_names: []
+  return_type: float
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: float _Complex
+    base_type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: scopy
+  load_name:
+  - scopy
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: sx
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: sy
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: sdot
+  load_name:
+  - sdot
+  alt_names: []
+  return_type: float
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: sx
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: sy
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: sdsdot
+  load_name:
+  - sdsdot
+  alt_names: []
+  return_type: float
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: sb
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: sx
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: sy
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: sgbmv
+  load_name:
+  - sgbmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: kl
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ku
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: sgeadd
+  load_name:
+  - sgeadd
+  alt_names: []
+  return_type: void
+  args:
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: sgemm
+  load_name:
+  - sgemm
+  alt_names: []
+  return_type: void
+  args:
+  - name: transa
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: transb
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: transa_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: transb_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: sgemmtr
+  load_name:
+  - sgemmtr
+  - sgemmt
+  alt_names:
+  - sgemmt
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: transa
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: transb
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: transa_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: transb_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: sgemv
+  load_name:
+  - sgemv
+  alt_names: []
+  return_type: void
+  args:
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: sger
+  load_name:
+  - sger
+  alt_names: []
+  return_type: void
+  args:
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: simatcopy
+  load_name:
+  - simatcopy
+  alt_names: []
+  return_type: void
+  args:
+  - name: ORDER
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: TRANS
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: rows
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: cols
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: order_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: snrm2
+  load_name:
+  - snrm2
+  alt_names: []
+  return_type: float
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: somatcopy
+  load_name:
+  - somatcopy
+  alt_names: []
+  return_type: void
+  args:
+  - name: ORDER
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: TRANS
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: rows
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: cols
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ORDER_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: TRANS_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: srot
+  load_name:
+  - srot
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: sx
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: sy
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: s
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+- name: srotg
+  load_name:
+  - srotg
+  alt_names: []
+  return_type: void
+  args:
+  - name: a
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: s
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+- name: srotm
+  load_name:
+  - srotm
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: sx
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: sy
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: sparam
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+- name: srotmg
+  load_name:
+  - srotmg
+  alt_names: []
+  return_type: void
+  args:
+  - name: sd1
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: sd2
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: sx1
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: sy1
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: sparam
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+- name: ssbmv
+  load_name:
+  - ssbmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: sscal
+  load_name:
+  - sscal
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: sa
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: sx
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: sspmv
+  load_name:
+  - sspmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ap
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: sspr
+  load_name:
+  - sspr
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ap
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: sspr2
+  load_name:
+  - sspr2
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ap
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: sswap
+  load_name:
+  - sswap
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: sx
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: sy
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: ssymm
+  load_name:
+  - ssymm
+  alt_names: []
+  return_type: void
+  args:
+  - name: side
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: side_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: ssymv
+  load_name:
+  - ssymv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: ssyr
+  load_name:
+  - ssyr
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: ssyr2
+  load_name:
+  - ssyr2
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: ssyr2k
+  load_name:
+  - ssyr2k
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: ssyrk
+  load_name:
+  - ssyrk
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: stbmv
+  load_name:
+  - stbmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: stbsv
+  load_name:
+  - stbsv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: stpmv
+  load_name:
+  - stpmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ap
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: stpsv
+  load_name:
+  - stpsv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ap
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: strmm
+  load_name:
+  - strmm
+  alt_names: []
+  return_type: void
+  args:
+  - name: side
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: transa
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: side_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: transa_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: strmv
+  load_name:
+  - strmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: strsm
+  load_name:
+  - strsm
+  alt_names: []
+  return_type: void
+  args:
+  - name: side
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: transa
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: side_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: transa_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: strsv
+  load_name:
+  - strsv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: false
+    type: float
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: zaxpby
+  load_name:
+  - zaxpby
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: za
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: zx
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: zb
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: zy
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: zaxpy
+  load_name:
+  - zaxpy
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: za
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: zx
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: zy
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: zcopy
+  load_name:
+  - zcopy
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: zx
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: zy
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: zdotc
+  load_name:
+  - zdotc
+  alt_names: []
+  return_type: double _Complex
+  return_type_complex: true
+  return_base_type: double
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: zx
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: zy
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: zdotu
+  load_name:
+  - zdotu
+  alt_names: []
+  return_type: double _Complex
+  return_type_complex: true
+  return_base_type: double
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: zx
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: zy
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: zdrot
+  load_name:
+  - zdrot
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: zx
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: zy
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: s
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+- name: zdscal
+  load_name:
+  - zdscal
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: da
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: zx
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: zgbmv
+  load_name:
+  - zgbmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: kl
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ku
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: zgeadd
+  load_name:
+  - zgeadd
+  alt_names: []
+  return_type: void
+  args:
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: zgemm
+  load_name:
+  - zgemm
+  alt_names: []
+  return_type: void
+  args:
+  - name: transa
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: transb
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: transa_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: transb_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: zgemmtr
+  load_name:
+  - zgemmtr
+  - zgemmt
+  alt_names:
+  - zgemmt
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: transa
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: transb
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: transa_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: transb_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: zgemv
+  load_name:
+  - zgemv
+  alt_names: []
+  return_type: void
+  args:
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: zgerc
+  load_name:
+  - zgerc
+  alt_names: []
+  return_type: void
+  args:
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: zgeru
+  load_name:
+  - zgeru
+  alt_names: []
+  return_type: void
+  args:
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: zhbmv
+  load_name:
+  - zhbmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: zhemm
+  load_name:
+  - zhemm
+  alt_names: []
+  return_type: void
+  args:
+  - name: side
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: side_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: zhemv
+  load_name:
+  - zhemv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: zher
+  load_name:
+  - zher
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: zher2
+  load_name:
+  - zher2
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: zher2k
+  load_name:
+  - zher2k
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: zherk
+  load_name:
+  - zherk
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: zhpmv
+  load_name:
+  - zhpmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ap
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: zhpr
+  load_name:
+  - zhpr
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ap
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: zhpr2
+  load_name:
+  - zhpr2
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: y
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ap
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: zimatcopy
+  load_name:
+  - zimatcopy
+  alt_names: []
+  return_type: void
+  args:
+  - name: ORDER
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: TRANS
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: rows
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: cols
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: order_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: zomatcopy
+  load_name:
+  - zomatcopy
+  alt_names: []
+  return_type: void
+  args:
+  - name: ORDER
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: TRANS
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: rows
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: cols
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ORDER_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: TRANS_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: zrotg
+  load_name:
+  - zrotg
+  alt_names: []
+  return_type: void
+  args:
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: false
+    type: double
+    pointer: true
+    hidden_str_len: false
+  - name: s
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+- name: zscal
+  load_name:
+  - zscal
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: za
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: zx
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: zswap
+  load_name:
+  - zswap
+  alt_names: []
+  return_type: void
+  args:
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: zx
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: zy
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incy
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+- name: zsymm
+  load_name:
+  - zsymm
+  alt_names: []
+  return_type: void
+  args:
+  - name: side
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: side_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: zsyr2k
+  load_name:
+  - zsyr2k
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: zsyrk
+  load_name:
+  - zsyrk
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: beta
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: c
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldc
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: ztbmv
+  load_name:
+  - ztbmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: ztbsv
+  load_name:
+  - ztbsv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: k
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: ztpmv
+  load_name:
+  - ztpmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ap
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: ztpsv
+  load_name:
+  - ztpsv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: ap
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: ztrmm
+  load_name:
+  - ztrmm
+  alt_names: []
+  return_type: void
+  args:
+  - name: side
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: transa
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: side_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: transa_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: ztrmv
+  load_name:
+  - ztrmv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: ztrsm
+  load_name:
+  - ztrsm
+  alt_names: []
+  return_type: void
+  args:
+  - name: side
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: transa
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: m
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: alpha
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: b
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: ldb
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: side_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: transa_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+- name: ztrsv
+  load_name:
+  - ztrsv
+  alt_names: []
+  return_type: void
+  args:
+  - name: uplo
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: trans
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: diag
+    complex: false
+    type: char
+    pointer: true
+    hidden_str_len: false
+  - name: n
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: a
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: lda
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: x
+    complex: true
+    type: double _Complex
+    base_type: double
+    pointer: true
+    hidden_str_len: false
+  - name: incx
+    complex: false
+    type: int
+    pointer: true
+    hidden_str_len: false
+  - name: uplo_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: trans_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true
+  - name: diag_len
+    complex: false
+    type: flexiblas_fortran_charlen_t
+    pointer: false
+    hidden_str_len: true

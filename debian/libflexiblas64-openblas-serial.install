@@ -1,0 +1,3 @@
+etc/flexiblas64rc.d/OpenBLASSerial64.conf
+usr/lib/*/flexiblas64/libflexiblas_openblasserial64.so
+

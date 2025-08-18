@@ -1,0 +1,10 @@
+build*
+*build*
+*.swp
+objs
+*.a
+*.svn*
+output_err
+*.mod
+.vscode
+.ccls-cache

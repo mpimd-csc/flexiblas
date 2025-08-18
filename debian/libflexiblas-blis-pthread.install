@@ -1,0 +1,3 @@
+etc/flexiblasrc.d/BlisPThread.conf
+usr/lib/*/flexiblas/libflexiblas_blispthread.so
+

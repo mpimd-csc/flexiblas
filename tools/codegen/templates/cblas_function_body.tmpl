@@ -1,0 +1,55 @@
+#ifdef FLEXIBLAS_HOOK_API
+static TLS_STORE uint8_t hook_pos_{function_name:s} = 0;
+#endif
+
+/* Wrapper for {function_name:s} */
+{return_type:s}  {function_name:s} ({arg_list:s})
+{{
+    {return_type:s} (*fn) ({arg_list_void:s});
+    #ifdef FLEXIBLAS_HOOK_API
+    {return_type:s} (*fn_hook) ({arg_list_void:s});
+    hook_pos_{function_name:s} = 0;
+    #endif
+
+    /* Post init if necessary */
+    if ( unlikely(current_backend->post_init != 0) ) {{
+        __flexiblas_backend_init(current_backend);
+        current_backend->post_init = 0;
+    }}
+
+    *(void **) &fn = current_backend->{component:s}.{function_name:s};
+    #ifdef FLEXIBLAS_HOOK_API
+    *(void **) &fn_hook = __flexiblas_hooks->{function_name:s}.hook_function[0];
+
+    if ( fn_hook != NULL ) {{
+        return fn_hook({call_list:s});
+    }} else {{
+        return fn({call_list:s});
+    }}
+    #else
+    return fn({call_list:s});
+    #endif
+}}
+
+#ifdef FLEXIBLAS_HOOK_API
+{return_type:s}  flexiblas_real_{function_name:s}({arg_list:s})
+{{
+    {return_type:s} (*fn) ({arg_list_void:s});
+    *(void **) &fn = current_backend->{component:s}.{function_name:s};
+    return fn({call_list:s});
+}}
+
+{return_type:s} flexiblas_chain_{function_name:s}({arg_list_void:s})
+{{
+    {return_type:s} (*fn) ({arg_list_void:s});
+    hook_pos_{function_name:s}++;
+    if ( hook_pos_{function_name:s} < __flexiblas_hooks->{function_name:s}.nhook ) {{
+        *(void **) &fn = __flexiblas_hooks->{function_name:s}.hook_function[hook_pos_{function_name:s}];
+    }} else {{
+        hook_pos_{function_name:s} = 0;
+        *(void **) &fn = current_backend->{component:s}.{function_name:s};
+    }}
+    return fn({call_list:s});
+}}
+
+#endif

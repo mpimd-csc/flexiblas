@@ -1,0 +1,18 @@
+
+/* Wrapper for {function_name:s} */
+void hook_{function_name:s}({arg_list:s})
+{{
+    double helpTime;
+    double helpTimeStop;
+
+    helpTime = flexiblas_wtime();
+    
+    flexiblas_chain_{function_name:s}({call_list_void:s});
+
+    helpTimeStop = flexiblas_wtime();
+
+    data->{function_name:s}.timings[0] += (helpTimeStop - helpTime);
+    data->{function_name:s}.calls[0]++;
+    
+    return;
+}}
