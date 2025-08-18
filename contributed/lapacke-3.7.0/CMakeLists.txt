@@ -10,7 +10,7 @@ endif()
 
 get_directory_property(DirDefs COMPILE_DEFINITIONS)
 
-include_directories(include ${LAPACK_BINARY_DIR}/include)
+include_directories(include ${FlexiBLAS_BINARY_DIR}/include)
 add_subdirectory(src)
 add_subdirectory(utils)
 

@@ -10,7 +10,8 @@ next
 - Fix usage of AMD BLIS with AOCL_DTL enabled
 - Correct handling of MKL_Set_Num_Threads
 - Add MKL_Get_Max_Threads to maintain compatability
-- Fix compiler flags for GNU GCC on Apple Silicon 
+- Fix compiler flags for GNU GCC on Apple Silicon
+- Find ATLAS and threaded ATLAS correctly on Fedora
 - Fixes from GITHUB:
  - Compiliation on MacOS GH #35
  - useless printf GH #64

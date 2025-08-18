@@ -95,7 +95,7 @@ if ( SYS_LAPACK_LIBRARY )
     add_library(flexiblas_fallback_lapack SHARED ${SRC})
     target_link_libraries(flexiblas_fallback_lapack PUBLIC flexiblas_lapack_import PRIVATE ${LIBM})
 else()
-    add_library(flexiblas_fallback_lapack SHARED ${SRC} $<TARGET_OBJECTS:flexiblas_fallback_lapack_objs>)
+    add_library(flexiblas_fallback_lapack SHARED ${SRC} $<TARGET_OBJECTS:flexiblas_fallback_lapack_objs> $<$<TARGET_EXISTS:mod_files>:$<TARGET_OBJECTS:mod_files>>)
     target_link_libraries(flexiblas_fallback_lapack ${LIBM})
 endif()
 

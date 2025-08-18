@@ -96,4 +96,7 @@ ifneq ($(NEW_VERSION),)
 endif
 
 %:
-	dh $@
+	dh $@ --with-missing
+
+override_dh_missing:
+	dh_missing --fail-missing

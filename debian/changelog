@@ -1,8 +1,12 @@
-flexiblas (3.4.80) UNRELEASED; urgency=medium
+flexiblas (3.4.80+7) noble; urgency=medium
 
+  [ Martin Köhler ]
   * 1st prerelease of the 3.5.0 series
 
- -- Martin Köhler <koehlerm@mpi-magdeburg.mpg.de>  Wed, 06 Aug 2025 09:37:54 +0200
+  [ Your Name ]
+  * Version 3.4.80+7
+
+ -- Your Name <you@example.org>  Fri, 08 Aug 2025 10:40:52 +0200
 
 flexiblas (3.4.5) focal; urgency=medium
 

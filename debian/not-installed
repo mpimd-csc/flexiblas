@@ -1,0 +1,6 @@
+etc/flexiblasrc.d/*TBB.conf
+etc/flexiblas64rc.d/*TBB64.conf
+usr/lib/*/flexiblas/libflexiblas_hook_dummy.so
+usr/lib/*/flexiblas/libflexiblas_mkltbb.so
+usr/lib/*/flexiblas64/libflexiblas_hook_dummy.so
+usr/lib/*/flexiblas64/libflexiblas_mkltbb.so

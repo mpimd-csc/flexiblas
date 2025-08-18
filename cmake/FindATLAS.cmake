@@ -27,7 +27,6 @@ macro(Check_Fortran_Libraries LIBRARIES _prefix _name _flags _list _thread)
   # N.B. _prefix is the prefix applied to the names of all cached variables that
   # are generated internally and marked advanced by this macro.
 
-  set(_libdir ${ARGN})
 
   set(_libraries_work TRUE)
   set(${LIBRARIES})
@@ -42,7 +41,11 @@ macro(Check_Fortran_Libraries LIBRARIES _prefix _name _flags _list _thread)
     endif ()
   endif ()
 
+  # if (DEFINED ARGN)
+    list(APPEND _libdir ${ARGN})
+  # endif()
   list(APPEND _libdir "${CMAKE_C_IMPLICIT_LINK_DIRECTORIES}")
+  message(STATUS "Search dirs for ATLAS(Serial) ${_libdir}")
 
   foreach(_library ${_list})
     set(_combined_name ${_combined_name}_${_library})
@@ -113,6 +116,8 @@ FOREACH(CANDIDATE IN LISTS CANDIDATES)
           ""
           "${${CANDIDATE}}"
           ""
+          "/usr/lib/atlas"
+          "/usr/lib64/atlas"
     )
     IF (ATLAS_LIBRARIES)
         SET(ATLAS_FOUND TRUE)

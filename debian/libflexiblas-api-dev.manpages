@@ -1,2 +1,2 @@
-doc/man/man3/*
-doc/man/man7/flexiblas-api*
+usr/share/man/man3/*
+usr/share/man/man7/flexiblas-api*
