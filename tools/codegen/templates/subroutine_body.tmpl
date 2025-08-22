@@ -82,7 +82,7 @@ void flexiblas_chain_{function_name:s}_({arg_list_void:s})
 #ifndef __APPLE__
 void flexiblas_chain_{function_name:s}({arg_list_void:s}) __attribute__((alias("flexiblas_chain_{function_name:s}_")));
 #else
-void flexiblas_chain_{function_name:s}({arg_list_void:s})
+void flexiblas_chain_{function_name:s}({arg_list_void:s})({arg_list_void:s})
 {{
     flexiblas_chain_{function_name:s}_({call_list_void:s});
     return;

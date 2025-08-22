@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.17.1
+#       jupytext_version: 1.17.0
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -241,21 +241,20 @@ def generate_all(inputs, outputs, ignore = list()):
     header_body = "" 
     hook_header_body =""
     
-    #r = process_map(load_yaml, inputs, max_workers = n_cores, chunksize=1)
-    r = load_yaml(inputs)
+    r = process_map(load_yaml, inputs, max_workers = n_cores, chunksize=1)
     for y in tqdm(r):
     #for r in inputs: 
         # y = load_yaml(r)
         # print("Generate Code for {}.".format(y[0]['name']))
-        name = y["name"]
+        name = y[0]["name"]
         if name in ignore: 
             continue
             
-        code, header, hook_header = generate_subroutine(y, intel_interface = False)
+        code, header, hook_header = generate_subroutine(y[0], intel_interface = False)
         fp.write(code)
       
-        loader_code += generate_loader_snippet(y) + "\n\n"
-        hook_loader_code += generate_hook_loader_snippet(y) + "\n" ; 
+        loader_code += generate_loader_snippet(y[0]) + "\n\n"
+        hook_loader_code += generate_hook_loader_snippet(y[0]) + "\n" ; 
         # if component == "lapack":
         #    loader_fallback_code += generate_loader_snippet(y[0], component = component, fallback=True) + "\n\n"
         header_body += header
@@ -297,7 +296,8 @@ def generate_lapacke(inputdir, version, ignore = list()):
     patch = int(varr2[0])
     extra = ""
     # Generate BLAS 
-    inputs = inputdir+'/'+version+'.yaml'
+    inputs = glob.glob(inputdir+'/'+version+'/*.yaml')
+    inputs.sort()
 
     try:
         ignore_file = load_yaml(inputdir+'/ignore-'+version+'.yaml')
@@ -319,14 +319,13 @@ def generate_lapacke(inputdir, version, ignore = list()):
     struct_code = ""
     struct_template = "    void *{function_name:s};\n"
     print("Generate Structure File for LAPACK {:s}".format(version))
-    # r = process_map(load_yaml, inputs, max_workers = n_cores, chunksize=1)
-    r = load_yaml(inputs)
+    r = process_map(load_yaml, inputs, max_workers = n_cores, chunksize=1)
     dummy_loader_code = ""; 
     for y in tqdm(r):
-        name = y["name"]
+        name = y[0]["name"]
         if name in ignore:
             continue
-        struct_code += struct_template.format(function_name = y['name'])
+        struct_code += struct_template.format(function_name = y[0]['name'])
         
     fp = open(base + 'src/lapacke/structure_lapacke_'+versionx +'.h', 'w')
     fp.write(structure_tmpl.format(lapack_major = major, 

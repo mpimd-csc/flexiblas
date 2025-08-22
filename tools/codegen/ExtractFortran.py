@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.17.1
+#       jupytext_version: 1.17.0
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -37,28 +37,9 @@ class FuncDeclVisitor(c_ast.NodeVisitor):
             function['name'] = node.type.declname[:-1]
         else:
             function['name'] = node.type.declname
-        if function['name'] == 'dcabs1':
-            return dict()
-        if function['name'] == 'scabs1':
-            return dict()
         function['load_name'] = list()
         function['load_name'].append(node.type.declname[:-1])
-        function['alt_names'] = list()        
-        # adjust gemmtr
-        if function['name'] == 'cgemmtr':
-            function['load_name'].append('cgemmt')
-            function['alt_names'].append('cgemmt')
-        if function['name'] == 'dgemmtr':
-            function['load_name'].append('dgemmt')
-            function['alt_names'].append('dgemmt')
-        if function['name'] == 'sgemmtr':
-            function['load_name'].append('sgemmt')
-            function['alt_names'].append('sgemmt')
-        if function['name'] == 'zgemmtr':
-            function['load_name'].append('zgemmt')
-            function['alt_names'].append('zgemmt')
-            
-
+        function['alt_names'] = list()
         function['return_type'] = " ".join(node.type.type.names)
         if len(node.type.type.names) > 1 and node.type.type.names[1] == "_Complex":
             function['return_type_complex'] = True
@@ -88,12 +69,11 @@ class FuncDeclVisitor(c_ast.NodeVisitor):
                         arg["hidden_str_len"] = False
                 args.append(arg)
         function['args'] = args
-        if len(function)  > 0:
-            self.funcs.append(function)
+        self.funcs.append(function)
 
 
 gen_list = dict()
-gen_list['blas/yaml'] = './blas/inputs/*.h'
+# gen_list['blas'] = './blas/inputs/*.h'
 gen_list['lapack/yaml/3.3.0'] = './lapack/inputs/3.3.0/*.h'
 gen_list['lapack/yaml/3.3.1'] = './lapack/inputs/3.3.1/*.h'
 gen_list['lapack/yaml/3.4.0'] = './lapack/inputs/3.4.0/*.h'
@@ -125,31 +105,23 @@ gen_list['lapack/yaml/3.12.0-wodprc'] = './lapack/inputs/3.12.0-wodprc/*.h'
 gen_list['lapack/yaml/3.12.1'] = './lapack/inputs/3.12.1/*.h'
 gen_list['lapack/yaml/3.12.1-wodprc'] = './lapack/inputs/3.12.1-wodprc/*.h'
 
-
-
-def gen_item(f, write_local = True):
+def gen_item(f):
     # try:
         #print("Parsing %s." % (f))
         ast = parse_file(f, use_cpp = True, cpp_args=r'-Ifake_libc_include')
         v = FuncDeclVisitor()
         v.visit(ast)
         try:
-            if write_local:
-                os.makedirs('./'+name)
+            os.makedirs('./'+name)
         except:
             pass
-        if write_local:
-            for fun in v.funcs:
-                fname = fun['name']
-                fp = open('./' + name + '/' + fname + '.yaml', 'w')
-                dp = list()
-                dp.append(fun)
-                yaml.dump(dp, fp, sort_keys=False, indent=2)
-                fp.close()
-        return v.funcs
-def gen_item_nowrite(f):
-    return gen_item(f, False)
-    
+        for fun in v.funcs:
+            fname = fun['name']
+            fp = open('./' + name + '/' + fname + '.yaml', 'w')
+            dp = list()
+            dp.append(fun)
+            yaml.dump(dp, fp, sort_keys=False, indent=2)
+            fp.close()
     #except:
     #    print("Error while parsing {:s}".format(f))
 
@@ -161,14 +133,8 @@ for name, d in gen_list.items():
     print("Generate YAML inputs for {:s}".format(name))
     # for f in tqdm(g):
     #    gen_item(f)
-    r2 = list();
-    r = process_map(gen_item_nowrite, g, max_workers = n_cores, chunksize=1)
-    for i in r:
-       r2.extend(i)
-    # print(r2[0])
-    r2.sort(key=lambda x: x['name'], reverse=False)
-    fp = open('./' + name + '.yaml', 'w')
-    yaml.dump(r2, fp, sort_keys=False, indent=2)
-    fp.close()
+    r = process_map(gen_item, g, max_workers = n_cores, chunksize=1)
+
+
 
 # %%

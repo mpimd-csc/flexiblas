@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.17.1
+#       jupytext_version: 1.17.0
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -83,7 +83,6 @@ def gen_item(f,version):
         os.makedirs('./lapacke/yaml/{}'.format(version))
     except:
         pass 
-    r = list();
     try:
         #print("Parsing %s." % (f))
 
@@ -91,33 +90,22 @@ def gen_item(f,version):
         ast = parse_file(f, use_cpp = True, cpp_args=[r"-Dlapack_int=int32_t",r"-Ifake_libc_include", r"-Ilapacke"])
         v = FuncDeclVisitor()
         v.visit(ast)
+
         for f in tqdm(v.funcs, desc= 'LAPACKE '+ version):
-        #for f in v.funcs:
+        # for f in v.funcs:
             fname = f['name']
             if not fname.startswith('LAPACKE_'):
                 continue
-            # fp = open('./lapacke/yaml/'+version+"/"+ fname + '.yaml', 'w')
-            # yaml.dump([f], fp, sort_keys=False, indent=2)
-            # fp.close()
-            r.extend([f])
-        
+            fp = open('./lapacke/yaml/'+version+"/"+ fname + '.yaml', 'w')
+            yaml.dump([f], fp, sort_keys=False, indent=2)
+            fp.close()
     except Exception as e:
         print("Error while parsing {:s}".format(f))
         print('Failed %s', e)
-    return r
 
 def gen_lapacke(version):
-    r = gen_item("./lapacke/"+version+"/lapacke.h", version)
-    # print(r)
-    r.sort(key=lambda x: x['name'])
-    fp = open('./lapacke/yaml/'+version+'.yaml','w');
-    yaml.dump(r, fp, sort_keys=False, indent=2)
-    fp.close()
-    r = gen_item("./lapacke/"+version+"-wodprc/lapacke.h", version+"-wodprc") 
-    r.sort(key=lambda x: x['name'])
-    fp = open('./lapacke/yaml/'+version+'-wodprc.yaml','w');
-    yaml.dump(r, fp, sort_keys=False, indent=2)
-    fp.close()
+    gen_item("./lapacke/"+version+"/lapacke.h", version)
+    gen_item("./lapacke/"+version+"-wodprc/lapacke.h", version+"-wodprc") 
     
 try:
     os.makedirs('./lapacke/yaml/')

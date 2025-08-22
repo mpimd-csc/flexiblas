@@ -31,7 +31,6 @@ if (NOT $ENV{FLEXIBLAS64_TEST} STREQUAL "")
     SET(ENV{FLEXIBLAS64} "$ENV{FLEXIBLAS64_TEST}")
 endif()
 
-
 message("Running: ${TEST}")
 message("ARGS= ${ARGS}")
 execute_process(COMMAND "${TEST}"

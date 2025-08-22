@@ -93,7 +93,8 @@ void flexiblas_mgmt_exit(void)
 }
 
 /*  Internal wrapper around getenv  */
-static char *__flexiblas_mgmt_getenv(int what) {
+char *__flexiblas_mgmt_getenv(int what)
+{
     char container[MAX_BUFFER_SIZE];
     container[0] = '\0';
     switch (what) {
@@ -119,7 +120,22 @@ static char *__flexiblas_mgmt_getenv(int what) {
             __flexiblas_get_global_rc_path(container, MAX_BUFFER_SIZE, FLEXIBLAS_RC);
             break;
         case FLEXIBLAS_ENV_GLOBAL_RC_DIR:
-            __flexiblas_get_global_rc_path(container, MAX_BUFFER_SIZE, FLEXIBLAS_RC_DIR);
+#ifndef FLEXIBLAS_INTEGER8
+            if (getenv("FLEXIBLASRC_DIR"))
+            {
+                snprintf(container, MAX_BUFFER_SIZE, "%s", getenv("FLEXIBLASRC_DIR"));
+            }
+#else
+            if (getenv("FLEXIBLAS64RC_DIR"))
+            {
+                snprintf(container, MAX_BUFFER_SIZE, "%s", getenv("FLEXIBLAS64RC_DIR"));
+            }
+#endif
+            else {
+                __flexiblas_get_global_rc_path(container, MAX_BUFFER_SIZE, FLEXIBLAS_RC_DIR);
+            }
+            csc_str_remove_char(container, '"');
+            csc_str_remove_char(container, '\"');
             break;
         case FLEXIBLAS_ENV_USER_RC:
 #ifdef __WIN32__
@@ -130,12 +146,15 @@ static char *__flexiblas_mgmt_getenv(int what) {
             break;
         case FLEXIBLAS_ENV_HOST_RC:
 #ifdef __WIN32__
-            return NULL;
+            snprintf(container, MAX_BUFFER_SIZE, "None");
 #else
             {
-                char hostname[MAX_BUFFER_SIZE-32];
-                gethostname(hostname, MAX_BUFFER_SIZE-32);
+                char hostname[MAX_BUFFER_SIZE-20];
+                gethostname(hostname, MAX_BUFFER_SIZE-20);
                 snprintf(container,MAX_BUFFER_SIZE,"%s/.%s.%s", getenv("HOME"), FLEXIBLAS_RC, hostname);
+                csc_str_remove_char(container, '"');
+                csc_str_remove_char(container, '\"');
+
             }
 #endif
             break;

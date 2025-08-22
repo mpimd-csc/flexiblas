@@ -19,33 +19,3 @@ void FC_GLOBAL3({function_name:s},{FUNCTION_NAME:s})({return_type:s} *ret, {arg_
     FC_GLOBAL({function_name_orig:s},{FUNCTION_NAME_ORIG:s})(ret, {call_list_void:s});
 }}
 #endif
-
-#ifdef FLEXIBLAS_HOOK_API
-#ifndef __APPLE__
-void flexiblas_real_{function_name:s}({return_type:s} *ret, {arg_list_void:s}) __attribute__((alias("flexiblas_real_{function_name_orig:s}")));
-void flexiblas_real_{function_name:s}_({return_type:s} *ret, {arg_list_void:s}) __attribute__((alias("flexiblas_real_{function_name_orig:s}")));
-void flexiblas_chain_{function_name:s}({return_type:s} *ret, {arg_list_void:s}) __attribute__((alias("flexiblas_chain_{function_name_orig:s}")));
-void flexiblas_chain_{function_name:s}_({return_type:s} *ret, {arg_list_void:s}) __attribute__((alias("flexiblas_chain_{function_name_orig:s}")));
-
-#else
-void flexiblas_real_{function_name:s}({return_type:s} *ret, {arg_list_void:s})
-{{
-    return flexiblas_real_{function_name_orig:s}(ret, {call_list_void:s});
-}}
-void flexiblas_real_{function_name:s}_({return_type:s} *ret, {arg_list_void:s})
-{{
-    return flexiblas_real_{function_name_orig:s}(ret, {call_list_void:s});
-}}
-
-void flexiblas_chain_{function_name:s}({return_type:s} *ret, {arg_list_void:s})
-{{
-    return flexiblas_chain_{function_name_orig:s}(ret, {call_list_void:s});
-}}
-
-void flexiblas_chain_{function_name:s}_({return_type:s} *ret, {arg_list_void:s})
-{{
-    return flexiblas_chain_{function_name_orig:s}(ret, {call_list_void:s});
-}}
-#endif
-
-#endif

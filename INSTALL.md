@@ -374,7 +374,8 @@ compliance with the reference implementation. Other *BLAS* and *LAPACK*
 implementations can be tested by setting the `FLEXIBLAS_TEST` environment
 variable. The variable has the same meaning as the `FLEXIBLAS` environment
 variable but only for the tests. If single tests need to be selected we refer to
-the help of the *cmake* `ctest` utility.
+the help of the *cmake* `ctest` utility. Running the tests with other backends
+then the NETLIB one, is not recommended.
 
 ## Windows Support
 

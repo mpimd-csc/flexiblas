@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.17.1
+#       jupytext_version: 1.17.0
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -42,20 +42,6 @@ class FuncDeclVisitor(c_ast.NodeVisitor):
         function['load_name'] = list()
         function['load_name'].append(node.type.declname)
         function['alt_names'] = list()
-        # adjust gemmtr
-        if function['name'] == 'cblas_cgemmtr':
-            function['load_name'].append('cblas_cgemmt')
-            function['alt_names'].append('cblas_cgemmt')
-        if function['name'] == 'cblas_dgemmtr':
-            function['load_name'].append('cblas_dgemmt')
-            function['alt_names'].append('cblas_dgemmt')
-        if function['name'] == 'cblas_sgemmtr':
-            function['load_name'].append('cblas_sgemmt')
-            function['alt_names'].append('cblas_sgemmt')
-        if function['name'] == 'cblas_zgemmtr':
-            function['load_name'].append('cblas_zgemmt')
-            function['alt_names'].append('cblas_zgemmt')
-            
         function['return_type'] = " ".join(node.type.type.names)
         args = list()
         try:
@@ -94,20 +80,15 @@ def gen_item(f):
         v = FuncDeclVisitor()
         v.visit(ast)
 
-        # for f in v.funcs:
-        #    fname = f['name']
-        #    fp = open('./cblas/yaml/' + fname + '.yaml', 'w')
-        #    yaml.dump([f], fp, sort_keys=False, indent=2)
-        #    fp.close()
-        return v.funcs   
+        for f in v.funcs:
+            fname = f['name']
+            fp = open('./cblas/yaml/' + fname + '.yaml', 'w')
+            yaml.dump([f], fp, sort_keys=False, indent=2)
+            fp.close()
     except:
         print("Error while parsing {:s}".format(f))
-# try:
-#    os.makedirs('./cblas/yaml/')
-# except:
-#    pass 
-r = gen_item("./cblas/inputs/cblas.h")
-r.sort(key=lambda x: x['name'], reverse=False)
-fp = open('./cblas/yaml.yaml', 'w')
-yaml.dump(r, fp, sort_keys=False, indent=2)
-fp.close()
+try:
+    os.makedirs('./cblas/yaml/')
+except:
+    pass 
+gen_item("./cblas/inputs/cblas.h")

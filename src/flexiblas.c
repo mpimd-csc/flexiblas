@@ -25,6 +25,7 @@
 #define _GNU_SOURCE
 #endif
 #include "flexiblas.h"
+#include "flexiblas_mgmt.h"
 #include <dlfcn.h>
 #include <errno.h>
 #include <stddef.h>
@@ -732,7 +733,7 @@ __attribute__((constructor))
          *  Load NETLIB Fallback
          *-----------------------------------------------------------------------------*/
         {
-            char *SO_EXTENSION = __flexiblas_getenv(FLEXIBLAS_ENV_SO_EXTENSION);
+            char *SO_EXTENSION = __flexiblas_mgmt_getenv(FLEXIBLAS_ENV_SO_EXTENSION);
             size_t len=strlen(FALLBACK_NAME)+strlen(SO_EXTENSION)+2;
             char *blas_name = (char *) calloc(len,sizeof(char));
             snprintf(blas_name,len, "%s%s", FALLBACK_NAME,SO_EXTENSION);
@@ -753,7 +754,7 @@ __attribute__((constructor))
          *  Load LAPACK Fallback
          *-----------------------------------------------------------------------------*/
         {
-            char *SO_EXTENSION = __flexiblas_getenv(FLEXIBLAS_ENV_SO_EXTENSION);
+            char *SO_EXTENSION = __flexiblas_mgmt_getenv(FLEXIBLAS_ENV_SO_EXTENSION);
             size_t len=strlen(LAPACK_FALLBACK_NAME)+strlen(SO_EXTENSION)+2;
             char *lapack_name = (char *) calloc(len,sizeof(char));
             snprintf(lapack_name,len, "%s%s", LAPACK_FALLBACK_NAME,SO_EXTENSION);

@@ -96,7 +96,8 @@ HIDDEN extern flexiblas_mgmt_t *__flexiblas_mgmt;
 
 
 extern void __flexiblas_print_copyright(int prefix);
-extern char * __flexiblas_getenv(int what);
+extern char *__flexiblas_mgmt_getenv(int what);
+
 extern int __flexiblas_file_exist(const char *path);
 extern int __flexiblas_directory_exists(const char * path);
 extern int __flexiblas_insert_fallback_blas(flexiblas_mgmt_t *conig);

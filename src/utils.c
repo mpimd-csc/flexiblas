@@ -66,62 +66,6 @@ HIDDEN int __flexiblas_str_endwith(const char * haystack, const char *needle )
     return strncmp(haystack + lenhaystack - lenneedle, needle, lenneedle) == 0;
 }
 
-HIDDEN char *__flexiblas_getenv(int what) {
-    static char container[MAX_BUFFER_SIZE];
-    container[0] = '\0';
-    switch (what) {
-        case FLEXIBLAS_ENV_SO_EXTENSION:
-#ifdef __APPLE__
-            snprintf(container, MAX_BUFFER_SIZE, ".dylib");
-#else
-#ifdef __WIN32__
-            snprintf(container, MAX_BUFFER_SIZE, ".dll");
-#else
-            snprintf(container, MAX_BUFFER_SIZE, ".so");
-#endif
-#endif
-            break;
-        case FLEXIBLAS_ENV_HOMEDIR:
-#ifdef __WIN32__
-            snprintf(container,MAX_BUFFER_SIZE,"%s\\%s\\",getenv("HOMEDRIVE"),getenv("HOMEPATH"));
-#else
-            snprintf(container,MAX_BUFFER_SIZE,"%s",getenv("HOME"));
-#endif
-            break;
-        case FLEXIBLAS_ENV_GLOBAL_RC:
-            __flexiblas_get_global_rc_path(container, MAX_BUFFER_SIZE, FLEXIBLAS_RC);
-            break;
-        case FLEXIBLAS_ENV_GLOBAL_RC_DIR:
-            __flexiblas_get_global_rc_path(container, MAX_BUFFER_SIZE, FLEXIBLAS_RC_DIR);
-                break;
-        case FLEXIBLAS_ENV_USER_RC:
-#ifdef __WIN32__
-            snprintf(container,MAX_BUFFER_SIZE,"%s\\%s",getenv("APPDATA"), FLEXIBLAS_RC);
-#else
-            snprintf(container,MAX_BUFFER_SIZE,"%s/.%s", getenv("HOME"), FLEXIBLAS_RC);
-#endif
-            break;
-        case FLEXIBLAS_ENV_HOST_RC:
-#ifdef __WIN32__
-            snprintf(container, MAX_BUFFER_SIZE, "None");
-#else
-            {
-                char hostname[MAX_BUFFER_SIZE-20];
-                gethostname(hostname, MAX_BUFFER_SIZE-20);
-                snprintf(container,MAX_BUFFER_SIZE,"%s/.%s.%s", getenv("HOME"), FLEXIBLAS_RC, hostname);
-                csc_str_remove_char(container, '"');
-                csc_str_remove_char(container, '\"');
-
-            }
-#endif
-            break;
-
-
-        default:
-            return NULL;
-    }
-    return strdup(container);
-}
 
 HIDDEN void __flexiblas_print_copyright (int prefix) {
     if (prefix){
@@ -152,7 +96,7 @@ HIDDEN void __flexiblas_print_copyright (int prefix) {
 HIDDEN int __flexiblas_insert_fallback_blas(flexiblas_mgmt_t *config)
 {
     int ret = 0;
-    char *SO_EXTENSION = __flexiblas_getenv(FLEXIBLAS_ENV_SO_EXTENSION);
+    char *SO_EXTENSION = __flexiblas_mgmt_getenv(FLEXIBLAS_ENV_SO_EXTENSION);
     size_t len=strlen(FALLBACK_NAME)+strlen(SO_EXTENSION)+2;
     char *tmp = (char *) calloc(len,sizeof(char));
     char *tmp2;

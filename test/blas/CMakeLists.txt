@@ -13,30 +13,34 @@ macro(add_blas_test name src)
 			-DINPUT=${TEST_INPUT}
             -DOUTPUT=${TEST_OUTPUT}
 			-DINTDIR=${CMAKE_CFG_INTDIR}
+            -DPROJECT_BINARY_DIR=${PROJECT_BINARY_DIR}
 			-P "${CMAKE_CURRENT_SOURCE_DIR}/runtest.cmake")
 	else()
 		add_test(NAME BLAS-${name} COMMAND "${CMAKE_COMMAND}"
 			-DTEST=$<TARGET_FILE:${name}>
 			-DINTDIR=${CMAKE_CFG_INTDIR}
+            -DPROJECT_BINARY_DIR=${PROJECT_BINARY_DIR}
 			-P "${CMAKE_CURRENT_SOURCE_DIR}/runtest.cmake")
 	endif()
 
     if ( INTEGER8 )
         set_property(TEST BLAS-${name} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS64_LIBRARY_PATH="${PROJECT_BINARY_DIR}/lib")
+        set_property(TEST BLAS-${name} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS64RC_DIR="${PROJECT_BINARY_DIR}/flexiblas64rc.d")
         set_property(TEST BLAS-${name} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS64=NETLIB)
         set_property(TEST BLAS-${name} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS64_CONFIG=${PROJECT_BINARY_DIR}/${FLEXIBLAS64_RC})
     else()
         set_property(TEST BLAS-${name} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS_LIBRARY_PATH="${PROJECT_BINARY_DIR}/lib")
+        set_property(TEST BLAS-${name} APPEND PROPERTY ENVIRONMENT  FLEXIBLASRC_DIR="${PROJECT_BINARY_DIR}/flexiblasrc.d")
         set_property(TEST BLAS-${name} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS=NETLIB)
         set_property(TEST BLAS-${name} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS_CONFIG=${PROJECT_BINARY_DIR}/${FLEXIBLAS_RC})
     endif()
-    if (WIN32) 
+    if (WIN32)
 	    add_custom_command(TARGET ${name} POST_BUILD
  		 COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_RUNTIME_DLLS:${name}> $<TARGET_FILE_DIR:${name}>
 		 COMMAND_EXPAND_LISTS
   		)
 	    #	    set(LISTE $<TARGET_RUNTIME_DLL_DIRS:${name}>)
-	    #foreach(DIR IN LISTS LISTE) 
+	    #foreach(DIR IN LISTS LISTE)
 	    #	    message(STATUS "DIR: ${DIR}")
 	    #endforeach()
 	    # set_property(TEST BLAS-${name} PROPERTY ENVIRONMENT_MODIFICATION PATH=path_list_append:$<TARGET_RUNTIME_DLL_DIRS:${name}>)

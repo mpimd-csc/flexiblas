@@ -39,6 +39,7 @@
 
 
 #include "flexiblas.h"
+#include "flexiblas_mgmt.h"
 #include "flexiblas_config.h"
 #include "paths.h"
 #include "helper.h"
@@ -101,11 +102,11 @@ properties_t properties[] =  {
 
 
 static void print_usage(const char *prgmname) {
-    char * 	system_config_file  = __flexiblas_getenv(FLEXIBLAS_ENV_GLOBAL_RC);
-    char * user_config_file = __flexiblas_getenv(FLEXIBLAS_ENV_USER_RC);
-    char * host_config_file = __flexiblas_getenv(FLEXIBLAS_ENV_HOST_RC);
-    char * env_config_file = __flexiblas_getenv(FLEXIBLAS_ENV_ENV_RC);
-    char * system_config_dir = __flexiblas_getenv(FLEXIBLAS_ENV_GLOBAL_RC_DIR);
+    char * 	system_config_file  = __flexiblas_mgmt_getenv(FLEXIBLAS_ENV_GLOBAL_RC);
+    char * user_config_file = __flexiblas_mgmt_getenv(FLEXIBLAS_ENV_USER_RC);
+    char * host_config_file = __flexiblas_mgmt_getenv(FLEXIBLAS_ENV_HOST_RC);
+    char * env_config_file = __flexiblas_mgmt_getenv(FLEXIBLAS_ENV_ENV_RC);
+    char * system_config_dir = __flexiblas_mgmt_getenv(FLEXIBLAS_ENV_GLOBAL_RC_DIR);
 
     printf("The flexiblas tool helps to set the user default BLAS backend for\n");
     printf("FlexiBLAS. The tool modifies the FlexiBLAS configuration files and sets the\n");

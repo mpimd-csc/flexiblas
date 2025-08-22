@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.17.1
+#       jupytext_version: 1.17.0
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -42,7 +42,6 @@ subroutine_body = read_file('templates/subroutine_body.tmpl')
 altnames_subroutine_body = read_file('templates/altnames_subroutine_body.tmpl')
 subroutine_header = read_file('templates/subroutine_header.tmpl')
 function_body = read_file('templates/function_body.tmpl')
-function_float_body = read_file('templates/function_float_body.tmpl')
 altnames_function_body = read_file('templates/altnames_function_body.tmpl')
 function_header = read_file('templates/function_header.tmpl')
 function_cpx_gnu_body = read_file('templates/function_cpx_gnu_body.tmpl')
@@ -289,10 +288,6 @@ def generate_subroutine(y, intel_interface = False, component = "blas"):
         return_type = y["return_type"];
         if return_type == "int": 
             return_type = "blasint"; 
-        if return_type == "float _Complex":
-            return_type = '{:s}_complex_float'.format(component)
-        if return_type == "double _Complex":
-            return_type = '{:s}_complex_double'.format(component)            
         if cpx_function and not intel_interface:
             body = function_cpx_gnu_body
             alt_body = altnames_function_cpx_gnu_body
@@ -303,8 +298,6 @@ def generate_subroutine(y, intel_interface = False, component = "blas"):
             alt_body = altnames_function_cpx_intel_body
             header = function_cpx_intel_header
             hook_header = function_hook_cpx_header
-        if return_type == "float":
-            body = function_float_body
                   
     h = ""       
     
@@ -319,9 +312,9 @@ def generate_subroutine(y, intel_interface = False, component = "blas"):
         if type_ == 'int':
             type_ = 'blasint' 
         if type_ == "float _Complex":
-            type_ = '{:s}_complex_float'.format(component)
+            type_ = 'lapack_complex_float'
         if type_ == "double _Complex":
-            type_ = '{:s}_complex_double'.format(component)            
+            type_ = 'lapack_complex_double'            
         if a['pointer']:
             arg_list += type_ + " *" + a['name']
             arg_list_void += "void *" + a['name']
@@ -407,22 +400,21 @@ def generate_all(inputs, outputs, ignore = list(), component = "blas"):
     struct_code = ""
     struct_template = "    flexiblas_blasfn {function_name:s};\n"
   
-    # r = process_map(load_yaml, inputs, max_workers = n_cores, chunksize=1)
-    r = load_yaml(inputs)
+    r = process_map(load_yaml, inputs, max_workers = n_cores, chunksize=1)
     for y in tqdm(r):
         # print("Generate Code for {}.".format(y[0]['name']))
-        name = y["name"]
+        name = y[0]["name"]
         if name in ignore: 
             continue
             
-        gnu_str, gnu_header, hook_header = generate_subroutine(y, intel_interface = False, component = component)
-        intel_str, intel_header, _ = generate_subroutine(y, intel_interface = True, component = component)
+        gnu_str, gnu_header, hook_header = generate_subroutine(y[0], intel_interface = False, component = component)
+        intel_str, intel_header, _ = generate_subroutine(y[0], intel_interface = True, component = component)
         fp_gnu.write(gnu_str)
         fp_intel.write(intel_str)
-        loader_code += generate_loader_snippet(y, component = component) + "\n\n"
-        hook_loader_code += generate_hook_loader_snippet(y) + "\n" ; 
+        loader_code += generate_loader_snippet(y[0], component = component) + "\n\n"
+        hook_loader_code += generate_hook_loader_snippet(y[0]) + "\n" ; 
         if component == "lapack":
-            loader_fallback_code += generate_loader_snippet(y, component = component, fallback=True) + "\n\n"
+            loader_fallback_code += generate_loader_snippet(y[0], component = component, fallback=True) + "\n\n"
         gnu_header_body += gnu_header
         intel_header_body += intel_header
         hook_header_body += hook_header + '\n'
@@ -483,7 +475,7 @@ outputs["header_guard"] = "BLAS_H"
 outputs["real_call_header" ] = base + '/src/flexiblas_real_calls.h'
 outputs["real_call_header_guard" ] = "FLEXIBLAS_REAL_BLAS_CALLS_H"
 print("Generate BLAS Wrappers")
-generate_all('./blas/yaml.yaml', outputs)
+generate_all(inputs, outputs)
 
 # %%
 # Generate LAPACK 
@@ -506,8 +498,9 @@ def generate_lapack(version):
     struct_code = ""
     struct_template = "    flexiblas_blasfn {function_name:s};\n"
     
-    inputs = './lapack/yaml/'+version+'.yaml'
-    
+    inputs = glob.glob('./lapack/yaml/'+version+'/*.yaml')
+    inputs.sort()
+
     try:
         ignore_file = load_yaml('./lapack/yaml/ignore-'+version+'.yaml')
         ignore = ignore_file["ignore"]
@@ -520,14 +513,13 @@ def generate_lapack(version):
         pass 
         
     print("Generate Structure File for LAPACK {:s}".format(version))
-    # r = process_map(load_yaml, inputs, max_workers = n_cores, chunksize=1)
-    r = load_yaml(inputs)
+    r = process_map(load_yaml, inputs, max_workers = n_cores, chunksize=1)
     dummy_loader_code = ""; 
     for y in tqdm(r):
-        name = y["name"]
+        name = y[0]["name"]
         if name in ignore:
             continue
-        struct_code += struct_template.format(function_name = y['name'])
+        struct_code += struct_template.format(function_name = y[0]['name'])
         dummy_loader_code += "    __flexiblas_lapack_addr[k++] = (void *)((size_t) &(FC_GLOBAL({:s},{:s})));\n".format(name, name.upper())
         
     fp = open(base + 'src/lapack/structure_lapack_'+versionx +'.h', 'w')
@@ -596,7 +588,6 @@ generate_lapack("3.6.0")
 generate_lapack("3.6.0-wodprc")
 generate_lapack("3.5.0")
 generate_lapack("3.4.2")
-
 generate_lapack("3.4.1")
 generate_lapack("3.4.0")
 generate_lapack("3.3.1")
@@ -611,43 +602,27 @@ def load_name_from_yaml(inp):
         return name
     
 def generate_hook_structure():
-    blas_yaml = glob.glob("blas/yaml.yaml")
-    cblas_yaml = glob.glob("cblas/yaml.yaml")
-    lapack_yaml = glob.glob("lapack/yaml/3*.yaml")
-    lapacke_yaml = glob.glob("lapacke/yaml/3*.yaml")
-
-    r = list()
-    for f in blas_yaml:
-        print("Load {:s}".format(f));
-        r.extend(load_yaml(f))
-    # r = process_map(load_yaml, blas_yaml, max_workers = n_cores, chunksize=1)
-    # print(r)
-    blas_list = list(dict.fromkeys([ x['name'] for x in r]))
+    blas_yaml = glob.glob("blas/yaml/*.yaml")
+    cblas_yaml = glob.glob("cblas/yaml/*.yaml")
+    lapack_yaml = glob.glob("lapack/yaml/*/*.yaml")
+    lapacke_yaml = glob.glob("lapacke/yaml/*/*.yaml")
+    
+    r = process_map(load_name_from_yaml, blas_yaml, max_workers = n_cores, chunksize=1)
+    
+    blas_list = list(dict.fromkeys(r))
     blas_list.extend(["cdotc_sub", "cdotu_sub", "zdotc_sub", "zdotu_sub"])
-
-    r2 = list()
-    for f in lapack_yaml:
-        print("Load {:s}".format(f));
-        r2.extend(load_yaml(f))
-    # r2 = process_map(load_yaml, lapack_yaml, max_workers = n_cores, chunksize=1)
     
-    lapack_list = list(dict.fromkeys([ x['name'] for x in r2]))
-
-    r3 = list()
-    for f in lapacke_yaml:
-        print("Load {:s}".format(f));
-        r3.extend(load_yaml(f))
-    # r3 = process_map(load_yaml, lapacke_yaml, max_workers = n_cores, chunksize=1)
+    r2 = process_map(load_name_from_yaml, lapack_yaml, max_workers = n_cores, chunksize=1)
     
-    lapacke_list = list(dict.fromkeys([ x['name'] for x in r3]))
+    lapack_list = list(dict.fromkeys(r2))
 
-    r4 = list()
-    for f in cblas_yaml:
-        print("Load {:s}".format(f));
-        r4.extend(load_yaml(f))
-    # r4 = process_map(load_yaml, cblas_yaml, max_workers = n_cores, chunksize=1)
+    r3 = process_map(load_name_from_yaml, lapacke_yaml, max_workers = n_cores, chunksize=1)
     
-    cblas_list = list(dict.fromkeys([ x['name'] for x in r4]))
+    lapacke_list = list(dict.fromkeys(r3))
+
+    r4 = process_map(load_name_from_yaml, cblas_yaml, max_workers = n_cores, chunksize=1)
+    
+    cblas_list = list(dict.fromkeys(r4))
    
     
     hooks_header = read_file('templates/blas_header.tmpl')

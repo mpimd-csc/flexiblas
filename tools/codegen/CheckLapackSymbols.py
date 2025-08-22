@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.17.1
+#       jupytext_version: 1.17.0
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -59,12 +59,12 @@ def load_yaml(inp):
 
 def check_symbols_lapack(version):
     print("Process LAPACK {:s}".format(version))
-    #inputs = glob.glob('./lapack/yaml/'+version+'/*.yaml')
-    #inputs.sort()
+    inputs = glob.glob('./lapack/yaml/'+version+'/*.yaml')
+    inputs.sort()
     output = './lapack/yaml/ignore-'+version+'.yaml'
 
-    # r = process_map(load_yaml, inputs, max_workers = n_cores, chunksize=1)
-    r = load_yaml('./lapack/yaml/'+version+'.yaml')
+    r = process_map(load_yaml, inputs, max_workers = n_cores, chunksize=1)
+
     lapack_file = base + "/"+version+"/usr/local/lib/liblapack.so"
 
     if not os.path.exists(lapack_file):
@@ -76,7 +76,7 @@ def check_symbols_lapack(version):
     ignore = list()
     
     for y in r:
-        name = y["name"]
+        name = y[0]["name"]
         if not name+"_" in shared_object:
             #print ("Symbol %s not found." % (str(name)))
             ignore.append(name)
@@ -89,16 +89,15 @@ def check_symbols_lapack(version):
     
 def check_symbols_lapacke(version):
     try:
-        inputs = glob.glob('./lapacke/yaml/'+version+'.yaml')
+        inputs = glob.glob('./lapacke/yaml/'+version+'/*.yaml')
     except:
         return 
-    print("Process LAPACKE {:s}".format(version))
+        print("Process LAPACKE {:s}".format(version))
     inputs.sort()
     output = './lapacke/yaml/ignore-'+version+'.yaml'
 
-    # r = process_map(load_yaml, inputs, max_workers = n_cores, chunksize=1)
-    r = load_yaml('./lapacke/yaml/'+version+'.yaml')
-  
+    r = process_map(load_yaml, inputs, max_workers = n_cores, chunksize=1)
+
     lapack_file = base + "/"+version+"/usr/local/lib/liblapacke.so"
 
     if not os.path.exists(lapack_file):
@@ -109,7 +108,7 @@ def check_symbols_lapacke(version):
     ignore = list()
     
     for y in r:
-        name = y["name"]
+        name = y[0]["name"]
         if not name in shared_object:
             # print ("Symbol %s not found." % (str(name)))
             ignore.append(name)
