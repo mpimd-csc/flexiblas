@@ -73,7 +73,7 @@ double hook_dasum(Int *N, double *A, Int *INCX)
     double * aptr = A;
     double ret;
 
-    printf("dasum called with: N = %d, INCX = %d\n", n, incx);
+    printf("dasum called with: N = %d, INCX = %d\n", (int)n, (int) incx);
     printf("x = [ \n");
     for (k = 0; k < n; k++) {
         printf("    %lg \n", *aptr);

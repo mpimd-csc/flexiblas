@@ -9,7 +9,7 @@ CheckPolicy(CMP0054 NEW)
 CheckPolicy(CMP0069 NEW)
 CheckPolicy(CMP0075 NEW)
 
-PROJECT(FlexiBLAS LANGUAGES C Fortran VERSION 3.8.82)
+PROJECT(FlexiBLAS LANGUAGES C Fortran VERSION 3.4.82)
 
 
 #
@@ -52,7 +52,7 @@ OPTION(MKL_BUILDER "Build MKL support with Intel MKLs Custom library builder" OF
 OPTION(EXAMPLES "Build Examples" ON)
 OPTION(BLAS_AUTO_DETECT "Enabled the BLAS auto detection during configuration" ON)
 OPTION(LINK_OPENMP "Link OpenMP to FlexiBLAS" OFF)
-IF (APPLE) 
+IF (APPLE)
 	OPTION(LTO "Enable Link Time Optimization / IPO" OFF)
 ELSE()
     OPTION(LTO "Enable Link Time Optimization / IPO" ON)
@@ -203,30 +203,30 @@ IF ( ${CMAKE_C_COMPILER_ID} STREQUAL "GNU")
 ENDIF()
 
 #
-# MacOS on ARM produces wrong results with to expensive optimizations 
+# MacOS on ARM produces wrong results with to expensive optimizations
 #
-IF ( APPLE AND CMAKE_SYSTEM_PROCESSOR STREQUAL "arm64" AND CMAKE_Fortran_COMPILER_ID STREQUAL "GNU" 
+IF ( APPLE AND CMAKE_SYSTEM_PROCESSOR STREQUAL "arm64" AND CMAKE_Fortran_COMPILER_ID STREQUAL "GNU"
      AND CMAKE_Fortran_COMPILER_VERSION VERSION_GREATER_EQUAL "14.0.0" AND CMAKE_Fortran_COMPILER_VERSION VERSION_LESS_EQUAL "16.0.0")
-	message(WARNING "Your gfortran compiler is known to produce wrong code on MacOS/Apple Silicon. Turning off some optimizations. See https://github.com/Reference-LAPACK/lapack/issues/1073 for some details") 
+	message(WARNING "Your gfortran compiler is known to produce wrong code on MacOS/Apple Silicon. Turning off some optimizations. See https://github.com/Reference-LAPACK/lapack/issues/1073 for some details")
 	check_c_compiler_flag("-fno-tree-loop-vectorize" C_F_NO_TREE_LOOP_VECTORIZE)
 	check_fortran_compiler_flag("-fno-tree-loop-vectorize" FC_F_NO_TREE_LOOP_VECTORIZE)
 	check_c_compiler_flag("-fno-expensive-optimizations" C_F_NO_EXPENSIVE_OPTIMIZATIONS)
 	check_fortran_compiler_flag("-fno-expensive-optimizations" FC_F_NO_EXPENSIVE_OPTIMIZATIONS)
-	if (C_F_NO_TREE_LOOP_VECTORIZE) 
+	if (C_F_NO_TREE_LOOP_VECTORIZE)
 		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-tree-loop-vectorize")
 	endif()
 
-	if (FC_F_NO_TREE_LOOP_VECTORIZE) 
+	if (FC_F_NO_TREE_LOOP_VECTORIZE)
 		set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fno-tree-loop-vectorize")
 	endif()
-	if (C_F_NO_EXPENSIVE_OPTIMIZATIONS) 
+	if (C_F_NO_EXPENSIVE_OPTIMIZATIONS)
 		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-expensive-optimizations")
 	endif()
 
-	if (FC_F_NO_EXPENSIVE_OPTIMIZATIONS) 
+	if (FC_F_NO_EXPENSIVE_OPTIMIZATIONS)
 		set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fno-expensive-optimizations")
 	endif()
-ENDIF()	
+ENDIF()
 
 
 
