@@ -203,6 +203,12 @@ options:
 * `-DLTO=ON/OFF`
     Enables the Link Time Optimization in the compiler, if supported. By default
     this is enabled.
+* `-DAGGREGATE_FILES=OFF/ON`
+    On some architectures or with very long paths, error messages like
+    `Argument list too long` can appear and kill the building process. In this
+    case you can set `-DAGGREGATE_FILES=ON`, which uses aggreated files for the
+    LAPACK, LAPACKE, BLAS, and CBLAS interfaces. This results in compiling less
+    files but a longer LTO procedure.
 
 The `PROFILE=ON/OFF` option was removed from version 1.1.0 onward. Beginning
 with version 3.0.0 profiling is done using a hook functionality and is no
@@ -358,6 +364,9 @@ maintaining the Fedora integration.
   ```shell
   export CMAKE_PREFIX_PATH=/usr/local/opt/openblas:$CMAKE_PREFIX_PATH
   ```
+
+* If an error message like `Argument list too long` is shown during the
+  compilation process, set `-DAGGREGATE_FILES=ON` as mentioned above
 
 * If the Intel Compiler suite is used, please ensure that either the classic or
   the LLVM based compilers are used for both, C and Fortran.

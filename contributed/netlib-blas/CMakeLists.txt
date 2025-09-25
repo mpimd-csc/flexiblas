@@ -34,151 +34,173 @@ ENDIF()
 SET (NETLIBSRC
     ${ROTG}
     ${NRM}
-caxpy.f
-ccopy.f
-cdotc.f
-cdotu.f
-cgbmv.f
-cgemm.f
-cgemv.f
-cgerc.f
-cgeru.f
-chbmv.f
-chemm.f
-chemv.f
-cher2.f
-cher2k.f
-cher.f
-cherk.f
-chpmv.f
-chpr2.f
-chpr.f
-cscal.f
-csrot.f
-csscal.f
-cswap.f
-csymm.f
-csyr2k.f
-csyrk.f
-ctbmv.f
-ctbsv.f
-ctpmv.f
-ctpsv.f
-ctrmm.f
-ctrmv.f
-ctrsm.f
-ctrsv.f
-dasum.f
-daxpy.f
-dcabs1.f
-dcopy.f
-ddot.f
-dgbmv.f
-dgemm.f
-dgemv.f
-dger.f
-drot.f
-drotm.f
-drotmg.f
-dsbmv.f
-dscal.f
-dsdot.f
-dspmv.f
-dspr2.f
-dspr.f
-dswap.f
-dsymm.f
-dsymv.f
-dsyr2.f
-dsyr2k.f
-dsyr.f
-dsyrk.f
-dtbmv.f
-dtbsv.f
-dtpmv.f
-dtpsv.f
-dtrmm.f
-dtrmv.f
-dtrsm.f
-dtrsv.f
-dzasum.f
-icamax.f
-idamax.f
-isamax.f
-izamax.f
-lsame.f
-sasum.f
-saxpy.f
-scabs1.f
-scasum.f
-scopy.f
-sdot.f
-sdsdot.f
-sgbmv.f
-sgemm.f
-sgemv.f
-sger.f
-srot.f
-srotm.f
-srotmg.f
-ssbmv.f
-sscal.f
-sspmv.f
-sspr2.f
-sspr.f
-sswap.f
-ssymm.f
-ssymv.f
-ssyr2.f
-ssyr2k.f
-ssyr.f
-ssyrk.f
-stbmv.f
-stbsv.f
-stpmv.f
-stpsv.f
-strmm.f
-strmv.f
-strsm.f
-strsv.f
-xerbla_array.f
-xerbla.f
-zaxpy.f
-zcopy.f
-zdotc.f
-zdotu.f
-zdrot.f
-zdscal.f
-zgbmv.f
-zgemm.f
-zgemv.f
-zgerc.f
-zgeru.f
-zhbmv.f
-zhemm.f
-zhemv.f
-zher2.f
-zher2k.f
-zher.f
-zherk.f
-zhpmv.f
-zhpr2.f
-zhpr.f
-zscal.f
-zswap.f
-zsymm.f
-zsyr2k.f
-zsyrk.f
-ztbmv.f
-ztbsv.f
-ztpmv.f
-ztpsv.f
-ztrmm.f
-ztrmv.f
-ztrsm.f
-ztrsv.f
+    caxpy.f
+    ccopy.f
+    cdotc.f
+    cdotu.f
+    cgbmv.f
+    cgemm.f
+    cgemv.f
+    cgerc.f
+    cgeru.f
+    chbmv.f
+    chemm.f
+    chemv.f
+    cher2.f
+    cher2k.f
+    cher.f
+    cherk.f
+    chpmv.f
+    chpr2.f
+    chpr.f
+    cscal.f
+    csrot.f
+    csscal.f
+    cswap.f
+    csymm.f
+    csyr2k.f
+    csyrk.f
+    ctbmv.f
+    ctbsv.f
+    ctpmv.f
+    ctpsv.f
+    ctrmm.f
+    ctrmv.f
+    ctrsm.f
+    ctrsv.f
+    dasum.f
+    daxpy.f
+    dcabs1.f
+    dcopy.f
+    ddot.f
+    dgbmv.f
+    dgemm.f
+    dgemv.f
+    dger.f
+    drot.f
+    drotm.f
+    drotmg.f
+    dsbmv.f
+    dscal.f
+    dsdot.f
+    dspmv.f
+    dspr2.f
+    dspr.f
+    dswap.f
+    dsymm.f
+    dsymv.f
+    dsyr2.f
+    dsyr2k.f
+    dsyr.f
+    dsyrk.f
+    dtbmv.f
+    dtbsv.f
+    dtpmv.f
+    dtpsv.f
+    dtrmm.f
+    dtrmv.f
+    dtrsm.f
+    dtrsv.f
+    dzasum.f
+    icamax.f
+    idamax.f
+    isamax.f
+    izamax.f
+    lsame.f
+    sasum.f
+    saxpy.f
+    scabs1.f
+    scasum.f
+    scopy.f
+    sdot.f
+    sdsdot.f
+    sgbmv.f
+    sgemm.f
+    sgemv.f
+    sger.f
+    srot.f
+    srotm.f
+    srotmg.f
+    ssbmv.f
+    sscal.f
+    sspmv.f
+    sspr2.f
+    sspr.f
+    sswap.f
+    ssymm.f
+    ssymv.f
+    ssyr2.f
+    ssyr2k.f
+    ssyr.f
+    ssyrk.f
+    stbmv.f
+    stbsv.f
+    stpmv.f
+    stpsv.f
+    strmm.f
+    strmv.f
+    strsm.f
+    strsv.f
+    xerbla_array.f
+    xerbla.f
+    zaxpy.f
+    zcopy.f
+    zdotc.f
+    zdotu.f
+    zdrot.f
+    zdscal.f
+    zgbmv.f
+    zgemm.f
+    zgemv.f
+    zgerc.f
+    zgeru.f
+    zhbmv.f
+    zhemm.f
+    zhemv.f
+    zher2.f
+    zher2k.f
+    zher.f
+    zherk.f
+    zhpmv.f
+    zhpr2.f
+    zhpr.f
+    zscal.f
+    zswap.f
+    zsymm.f
+    zsyr2k.f
+    zsyrk.f
+    ztbmv.f
+    ztbsv.f
+    ztpmv.f
+    ztpsv.f
+    ztrmm.f
+    ztrmv.f
+    ztrsm.f
+    ztrsv.f
     )
 
+message(STATUS "AGGREGATE_FILES: ${AGGREGATE_FILES}")
+
+if (AGGREGATE_FILES)
+    SET(OUTNAMEF "${CMAKE_CURRENT_BINARY_DIR}/netlibblas.f")
+    SET(OUTNAMEF90 "${CMAKE_CURRENT_BINARY_DIR}/netlibblas_90.f90")
+    file(WRITE "${OUTNAMEF}" "\n")
+    file(WRITE "${OUTNAMEF90}" "\n")
+
+    foreach(srcfile IN LISTS NETLIBSRC)
+        if (srcfile MATCHES ".*\.f$")
+            file(READ "${srcfile}" FILE_CONTENT)
+            file(APPEND "${OUTNAMEF}" ${FILE_CONTENT})
+            file(APPEND "${OUTNAMEF}" "\n")
+        endif()
+        if (srcfile MATCHES ".*\.f90$")
+            file(READ "${srcfile}" FILE_CONTENT)
+            file(APPEND "${OUTNAMEF90}" ${FILE_CONTENT})
+            file(APPEND "${OUTNAMEF90}" "\n")
+        endif()
+    endforeach()
+    SET(NETLIBSRC ${OUTNAMEF} ${OUTNAMEF90})
+endif()
 
 if( (CMAKE_Fortran_COMPILER_ID STREQUAL "VisualAge" ) OR  # CMake 2.6
 	(CMAKE_Fortran_COMPILER_ID STREQUAL "XL" ) )          # CMake 2.8

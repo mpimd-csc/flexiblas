@@ -27,8 +27,13 @@ append_subdir_files(SRCX_OBJ "src")
 append_subdir_files(MATGEN_OBJ "src")
 append_subdir_files(UTILS_OBJ "utils")
 
+if (AGGREGATE_FILES)
+    SET(SOURCES lapacke_joined.c )
+else()
+    SET(SOURCES ${SRC_OBJ} )
+endif()
 
-add_library(lapacke OBJECT ${SRC_OBJ} ${UTILS_OBJ})
+add_library(lapacke OBJECT ${SOURCES} ${UTILS_OBJ})
 set_target_properties(
   lapacke PROPERTIES
   LINKER_LANGUAGE C

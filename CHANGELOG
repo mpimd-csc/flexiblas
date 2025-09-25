@@ -20,7 +20,7 @@ next
  - GEMMTR test error GH #63
  - Add C++ support to header files GH #69
  - Detect F2C API for float return values
-
+ - Fix "Argument list too long" see GH #80
 
 3.4.5 (January 30, 2025)
 ------------------------

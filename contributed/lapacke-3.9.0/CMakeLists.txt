@@ -57,6 +57,9 @@ if(LAPACKE_WITH_TMG)
   list(APPEND SOURCES ${MATGEN})
 endif()
 list(APPEND SOURCES ${UTILS})
+if (AGGREGATE_FILES)
+    SET(SOURCES lapacke_joined.c )
+endif()
 
 add_library(lapacke OBJECT ${SOURCES})
 set_target_properties(

@@ -535,6 +535,26 @@ set_target_properties(
   Fortran_PREPROCESS ON
   )
 
+if (AGGREGATE_FILES)
+    SET(OUTNAMEF "${CMAKE_CURRENT_BINARY_DIR}/lapack.F")
+    SET(OUTNAMEF90 "${CMAKE_CURRENT_BINARY_DIR}/lapack90.F90")
+    FILE(REMOVE "${OUTNAMEF}")
+    FILE(REMOVE "${OUTNAMEF90}")
+
+    foreach(srcfile IN LISTS SOURCES)
+        if (srcfile MATCHES ".*\.[fF]$")
+            file(READ "${srcfile}" FILE_CONTENT)
+            file(APPEND "${OUTNAMEF}" ${FILE_CONTENT})
+            file(APPEND "${OUTNAMEF}" "\n")
+        endif()
+        if (srcfile MATCHES ".*\.[fF]90$")
+            file(READ "${srcfile}" FILE_CONTENT)
+            file(APPEND "${OUTNAMEF90}" ${FILE_CONTENT})
+            file(APPEND "${OUTNAMEF90}" "\n")
+        endif()
+    endforeach()
+    SET(SOURCES ${OUTNAMEF} ${OUTNAMEF90})
+endif()
 
 add_library(flexiblas_fallback_lapack_objs OBJECT ${SOURCES} $<TARGET_OBJECTS:mod_files> )
 target_link_libraries(flexiblas_fallback_lapack_objs mod_files)

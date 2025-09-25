@@ -116,6 +116,17 @@ set(SOURCES)
   list(APPEND SOURCES ${ZLEV1} ${ZLEV2} ${ZLEV3} ${ERRHAND})
 list(REMOVE_DUPLICATES SOURCES)
 
+if (AGGREGATE_FILES)
+    SET(SOURCESX)
+    FOREACH(S IN LISTS SOURCES)
+        IF (NOT ${S} MATCHES ".*\.c$")
+            LIST(APPEND SOURCESX ${S})
+        ENDIF()
+    ENDFOREACH()
+    SET(SOURCES cblas_joined.c ${SOURCESX})
+endif()
+
+
 add_library(${CBLASLIB}_obj OBJECT ${SOURCES})
 set_target_properties(${CBLASLIB}_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_include_directories(${CBLASLIB}_obj PRIVATE

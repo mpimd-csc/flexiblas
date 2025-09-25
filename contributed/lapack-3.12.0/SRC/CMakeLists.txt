@@ -34,19 +34,17 @@
 #  installation guide, LAPACK Working Note 41, for instructions.
 #
 #######################################################################
-set(BUILD_SINGLE 1)
-set(BUILD_DOUBLE 1)
-set(BUILD_COMPLEX 1)
-set(BUILD_COMPLEX16 1)
-set(BUILD_DEPRECATED 1)
+
+set(CONSTMOD la_constants.f90)
+set(NANMOD la_xisnan.F90)
+
 
 set(ALLAUX ilaenv.f ilaenv2stage.f ieeeck.f lsamen.f iparmq.f iparam2stage.F
-   ilaprec.f ilatrans.f ilauplo.f iladiag.f chla_transtype.f la_xisnan.F90
+   ilaprec.f ilatrans.f ilauplo.f iladiag.f chla_transtype.f
    ../INSTALL/ilaver.f ../INSTALL/lsame.f xerbla.f xerbla_array.f
    ../INSTALL/slamch.f)
 
 set(SCLAUX
-   la_constants.f90
    sbdsvdx.f sbdsdc.f
    sbdsqr.f sdisna.f slabad.f slacpy.f sladiv.f slae2.f  slaebz.f
    slaed0.f slaed1.f slaed2.f slaed3.f slaed4.f slaed5.f slaed6.f
@@ -483,7 +481,6 @@ set(ZXLASRC zgesvxx.f zgerfsx.f zla_gerfsx_extended.f zla_geamv.f
    zla_heamv.f zla_hercond_c.f zla_hercond_x.f zla_herpvgrw.f
    zla_lin_berr.f zlarscl2.f zlascl2.f zla_wwaddw.f)
 
-if(BUILD_DEPRECATED)
   list(APPEND SLASRC DEPRECATED/sgegs.f DEPRECATED/sgegv.f DEPRECATED/sgelqs.f
     DEPRECATED/sgelsx.f DEPRECATED/sgeqpf.f DEPRECATED/sgeqrs.f DEPRECATED/sggsvd.f
     DEPRECATED/sggsvp.f DEPRECATED/slahrd.f DEPRECATED/slatzm.f DEPRECATED/stzrqf.f)
@@ -496,7 +493,6 @@ if(BUILD_DEPRECATED)
   list(APPEND ZLASRC DEPRECATED/zgegs.f DEPRECATED/zgegv.f DEPRECATED/zgelqs.f
     DEPRECATED/zgelsx.f DEPRECATED/zgeqpf.f DEPRECATED/zgeqrs.f DEPRECATED/zggsvd.f
     DEPRECATED/zggsvp.f DEPRECATED/zlahrd.f DEPRECATED/zlatzm.f DEPRECATED/ztzrqf.f)
-endif()
 
 if(USE_XBLAS)
   list(APPEND SLASRC ${SXLASRC})
@@ -507,18 +503,55 @@ endif()
 
 
 set(SOURCES)
-if(BUILD_SINGLE)
   list(APPEND SOURCES ${SLASRC} ${DSLASRC} ${SCLAUX} ${ALLAUX})
-endif()
-if(BUILD_DOUBLE)
   list(APPEND SOURCES ${DLASRC} ${DSLASRC} ${DZLAUX} ${ALLAUX})
-endif()
-if(BUILD_COMPLEX)
   list(APPEND SOURCES ${CLASRC} ${ZCLASRC} ${SCLAUX} ${ALLAUX})
-endif()
-if(BUILD_COMPLEX16)
   list(APPEND SOURCES ${ZLASRC} ${ZCLASRC} ${DZLAUX} ${ALLAUX})
-endif()
 list(REMOVE_DUPLICATES SOURCES)
 
-add_library(flexiblas_fallback_lapack_objs OBJECT ${SOURCES})
+add_library(const_mod_file OBJECT ${CONSTMOD})
+set_target_properties(
+  const_mod_file PROPERTIES
+  POSITION_INDEPENDENT_CODE ON
+  Fortran_PREPROCESS ON
+  )
+
+add_library(mod_files OBJECT ${NANMOD} $<TARGET_OBJECTS:const_mod_file>)
+set_target_properties(
+  mod_files PROPERTIES
+  POSITION_INDEPENDENT_CODE ON
+  Fortran_PREPROCESS ON
+  )
+
+
+if (AGGREGATE_FILES)
+    SET(OUTNAMEF "${CMAKE_CURRENT_BINARY_DIR}/lapack.F")
+    SET(OUTNAMEF90 "${CMAKE_CURRENT_BINARY_DIR}/lapack90.F90")
+    FILE(REMOVE "${OUTNAMEF}")
+    FILE(REMOVE "${OUTNAMEF90}")
+
+
+    foreach(srcfile IN LISTS SOURCES)
+        if (srcfile MATCHES ".*\.[fF]$")
+            file(READ "${srcfile}" FILE_CONTENT)
+            file(APPEND "${OUTNAMEF}" ${FILE_CONTENT})
+            file(APPEND "${OUTNAMEF}" "\n")
+        endif()
+        if (srcfile MATCHES ".*\.[fF]90$")
+            file(READ "${srcfile}" FILE_CONTENT)
+            file(APPEND "${OUTNAMEF90}" ${FILE_CONTENT})
+            file(APPEND "${OUTNAMEF90}" "\n")
+        endif()
+    endforeach()
+    SET(SOURCES ${OUTNAMEF} ${OUTNAMEF90})
+endif()
+
+add_library(flexiblas_fallback_lapack_objs OBJECT ${SOURCES} $<TARGET_OBJECTS:mod_files> )
+target_link_libraries(flexiblas_fallback_lapack_objs mod_files)
+set_target_properties(
+  flexiblas_fallback_lapack_objs PROPERTIES
+  POSITION_INDEPENDENT_CODE ON
+  Fortran_PREPROCESS ON
+  )
+
+
