@@ -30,10 +30,10 @@ append_subdir_files(UTILS_OBJ "utils")
 if (AGGREGATE_FILES)
     SET(SOURCES lapacke_joined.c )
 else()
-    SET(SOURCES ${SRC_OBJ} )
+    SET(SOURCES ${SRC_OBJ} ${UTILS_OBJ})
 endif()
 
-add_library(lapacke OBJECT ${SOURCES} ${UTILS_OBJ})
+add_library(lapacke OBJECT ${SOURCES} )
 set_target_properties(
   lapacke PROPERTIES
   LINKER_LANGUAGE C

@@ -6,6 +6,9 @@
 #define XerblaStrLen 6
 #define XerblaStrLen1 7
 
+
+
+
 void
 #ifdef HAS_ATTRIBUTE_WEAK_SUPPORT
 __attribute__((weak))

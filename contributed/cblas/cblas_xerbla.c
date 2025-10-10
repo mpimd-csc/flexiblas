@@ -5,6 +5,10 @@
 #include "cblas.h"
 #include "cblas_f77.h"
 
+#if defined(_WIN32) || defined(_WIN64)
+int RowMajorStrg = 0;
+#endif 
+ 
 void
 #ifdef HAS_ATTRIBUTE_WEAK_SUPPORT
 __attribute__((weak))

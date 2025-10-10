@@ -24,7 +24,10 @@
 
 /** void dgesv_(int *n, int *nrhs, double *A, int *lda , int *ipiv, double *b, int *ldb, int *info); */
 
-int main() {
+int main(int argc, char ** argv) {
+    (void) argc;
+    (void) argv;
+
     int n = 4;
     int nrhs = 1;
     int lda = 4;

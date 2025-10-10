@@ -1529,293 +1529,6 @@ exit_level_0:
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
   THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************
-* Contents: Native high-level C interface to LAPACK function cgbrfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_cgbrfsx( int matrix_layout, char trans, char equed,
-                            lapack_int n, lapack_int kl, lapack_int ku,
-                            lapack_int nrhs, const lapack_complex_float* ab,
-                            lapack_int ldab, const lapack_complex_float* afb,
-                            lapack_int ldafb, const lapack_int* ipiv,
-                            const float* r, const float* c,
-                            const lapack_complex_float* b, lapack_int ldb,
-                            lapack_complex_float* x, lapack_int ldx,
-                            float* rcond, float* berr, lapack_int n_err_bnds,
-                            float* err_bnds_norm, float* err_bnds_comp,
-                            lapack_int nparams, float* params )
-{
-    lapack_int info = 0;
-    float* rwork = NULL;
-    lapack_complex_float* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_cgbrfsx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_cgb_nancheck( matrix_layout, n, n, kl, ku, ab, ldab ) ) {
-        return -8;
-    }
-    if( LAPACKE_cgb_nancheck( matrix_layout, n, n, kl, kl+ku, afb, ldafb ) ) {
-        return -10;
-    }
-    if( LAPACKE_cge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -15;
-    }
-    if( LAPACKE_lsame( equed, 'b' ) || LAPACKE_lsame( equed, 'c' ) ) {
-        if( LAPACKE_s_nancheck( n, c, 1 ) ) {
-            return -14;
-        }
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_s_nancheck( nparams, params, 1 ) ) {
-            return -25;
-        }
-    }
-    if( LAPACKE_lsame( equed, 'b' ) || LAPACKE_lsame( equed, 'r' ) ) {
-        if( LAPACKE_s_nancheck( n, r, 1 ) ) {
-            return -13;
-        }
-    }
-    if( LAPACKE_cge_nancheck( matrix_layout, n, nrhs, x, ldx ) ) {
-        return -17;
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    rwork = (float*)LAPACKE_malloc( sizeof(float) * MAX(1,3*n) );
-    if( rwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (lapack_complex_float*)
-        LAPACKE_malloc( sizeof(lapack_complex_float) * MAX(1,2*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_cgbrfsx_work( matrix_layout, trans, equed, n, kl, ku, nrhs,
-                                 ab, ldab, afb, ldafb, ipiv, r, c, b, ldb, x,
-                                 ldx, rcond, berr, n_err_bnds, err_bnds_norm,
-                                 err_bnds_comp, nparams, params, work, rwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( rwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_cgbrfsx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function cgbrfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_cgbrfsx_work( int matrix_layout, char trans, char equed,
-                                 lapack_int n, lapack_int kl, lapack_int ku,
-                                 lapack_int nrhs,
-                                 const lapack_complex_float* ab,
-                                 lapack_int ldab,
-                                 const lapack_complex_float* afb,
-                                 lapack_int ldafb, const lapack_int* ipiv,
-                                 const float* r, const float* c,
-                                 const lapack_complex_float* b, lapack_int ldb,
-                                 lapack_complex_float* x, lapack_int ldx,
-                                 float* rcond, float* berr,
-                                 lapack_int n_err_bnds, float* err_bnds_norm,
-                                 float* err_bnds_comp, lapack_int nparams,
-                                 float* params, lapack_complex_float* work,
-                                 float* rwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_cgbrfsx( &trans, &equed, &n, &kl, &ku, &nrhs, ab, &ldab, afb,
-                        &ldafb, ipiv, r, c, b, &ldb, x, &ldx, rcond, berr,
-                        &n_err_bnds, err_bnds_norm, err_bnds_comp, &nparams,
-                        params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int ldab_t = MAX(1,kl+ku+1);
-        lapack_int ldafb_t = MAX(1,2*kl+ku+1);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        lapack_complex_float* ab_t = NULL;
-        lapack_complex_float* afb_t = NULL;
-        lapack_complex_float* b_t = NULL;
-        lapack_complex_float* x_t = NULL;
-        float* err_bnds_norm_t = NULL;
-        float* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( ldab < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_cgbrfsx_work", info );
-            return info;
-        }
-        if( ldafb < n ) {
-            info = -11;
-            LAPACKE_xerbla( "LAPACKE_cgbrfsx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -16;
-            LAPACKE_xerbla( "LAPACKE_cgbrfsx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -18;
-            LAPACKE_xerbla( "LAPACKE_cgbrfsx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        ab_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) * ldab_t * MAX(1,n) );
-        if( ab_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        afb_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) * ldafb_t * MAX(1,n) );
-        if( afb_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) *
-                            ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) *
-                            ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_cgb_trans( matrix_layout, n, n, kl, ku, ab, ldab, ab_t, ldab_t );
-        LAPACKE_cgb_trans( matrix_layout, n, n, kl, kl+ku, afb, ldafb, afb_t,
-                           ldafb_t );
-        LAPACKE_cge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        LAPACKE_cge_trans( matrix_layout, n, nrhs, x, ldx, x_t, ldx_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_cgbrfsx( &trans, &equed, &n, &kl, &ku, &nrhs, ab_t, &ldab_t,
-                        afb_t, &ldafb_t, ipiv, r, c, b_t, &ldb_t, x_t, &ldx_t,
-                        rcond, berr, &n_err_bnds, err_bnds_norm_t,
-                        err_bnds_comp_t, &nparams, params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        LAPACKE_cge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, nrhs );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, nrhs );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( afb_t );
-exit_level_1:
-        LAPACKE_free( ab_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_cgbrfsx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_cgbrfsx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
 * Contents: Native high-level C interface to LAPACK function cgbsv
 * Author: Intel Corporation
 * Generated November 2015
@@ -2217,309 +1930,6 @@ exit_level_0:
     } else {
         info = -1;
         LAPACKE_xerbla( "LAPACKE_cgbsvx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native high-level C interface to LAPACK function cgbsvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_cgbsvxx( int matrix_layout, char fact, char trans,
-                            lapack_int n, lapack_int kl, lapack_int ku,
-                            lapack_int nrhs, lapack_complex_float* ab,
-                            lapack_int ldab, lapack_complex_float* afb,
-                            lapack_int ldafb, lapack_int* ipiv, char* equed,
-                            float* r, float* c, lapack_complex_float* b,
-                            lapack_int ldb, lapack_complex_float* x,
-                            lapack_int ldx, float* rcond, float* rpvgrw,
-                            float* berr, lapack_int n_err_bnds,
-                            float* err_bnds_norm, float* err_bnds_comp,
-                            lapack_int nparams, float* params )
-{
-    lapack_int info = 0;
-    float* rwork = NULL;
-    lapack_complex_float* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_cgbsvxx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_cgb_nancheck( matrix_layout, n, n, kl, ku, ab, ldab ) ) {
-        return -8;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) ) {
-        if( LAPACKE_cgb_nancheck( matrix_layout, n, n, kl, kl+ku, afb,
-            ldafb ) ) {
-            return -10;
-        }
-    }
-    if( LAPACKE_cge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -16;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-        LAPACKE_lsame( *equed, 'c' ) ) ) {
-        if( LAPACKE_s_nancheck( n, c, 1 ) ) {
-            return -15;
-        }
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_s_nancheck( nparams, params, 1 ) ) {
-            return -27;
-        }
-    }
-    if( LAPACKE_lsame( fact, 'f' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-        LAPACKE_lsame( *equed, 'r' ) ) ) {
-        if( LAPACKE_s_nancheck( n, r, 1 ) ) {
-            return -14;
-        }
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    rwork = (float*)LAPACKE_malloc( sizeof(float) * MAX(1,3*n) );
-    if( rwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (lapack_complex_float*)
-        LAPACKE_malloc( sizeof(lapack_complex_float) * MAX(1,2*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_cgbsvxx_work( matrix_layout, fact, trans, n, kl, ku, nrhs, ab,
-                                 ldab, afb, ldafb, ipiv, equed, r, c, b, ldb, x,
-                                 ldx, rcond, rpvgrw, berr, n_err_bnds,
-                                 err_bnds_norm, err_bnds_comp, nparams, params,
-                                 work, rwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( rwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_cgbsvxx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function cgbsvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_cgbsvxx_work( int matrix_layout, char fact, char trans,
-                                 lapack_int n, lapack_int kl, lapack_int ku,
-                                 lapack_int nrhs, lapack_complex_float* ab,
-                                 lapack_int ldab, lapack_complex_float* afb,
-                                 lapack_int ldafb, lapack_int* ipiv,
-                                 char* equed, float* r, float* c,
-                                 lapack_complex_float* b, lapack_int ldb,
-                                 lapack_complex_float* x, lapack_int ldx,
-                                 float* rcond, float* rpvgrw, float* berr,
-                                 lapack_int n_err_bnds, float* err_bnds_norm,
-                                 float* err_bnds_comp, lapack_int nparams,
-                                 float* params, lapack_complex_float* work,
-                                 float* rwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_cgbsvxx( &fact, &trans, &n, &kl, &ku, &nrhs, ab, &ldab, afb,
-                        &ldafb, ipiv, equed, r, c, b, &ldb, x, &ldx, rcond,
-                        rpvgrw, berr, &n_err_bnds, err_bnds_norm, err_bnds_comp,
-                        &nparams, params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int ldab_t = MAX(1,kl+ku+1);
-        lapack_int ldafb_t = MAX(1,2*kl+ku+1);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        lapack_complex_float* ab_t = NULL;
-        lapack_complex_float* afb_t = NULL;
-        lapack_complex_float* b_t = NULL;
-        lapack_complex_float* x_t = NULL;
-        float* err_bnds_norm_t = NULL;
-        float* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( ldab < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_cgbsvxx_work", info );
-            return info;
-        }
-        if( ldafb < n ) {
-            info = -11;
-            LAPACKE_xerbla( "LAPACKE_cgbsvxx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -17;
-            LAPACKE_xerbla( "LAPACKE_cgbsvxx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -19;
-            LAPACKE_xerbla( "LAPACKE_cgbsvxx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        ab_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) * ldab_t * MAX(1,n) );
-        if( ab_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        afb_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) * ldafb_t * MAX(1,n) );
-        if( afb_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) *
-                            ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) *
-                            ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_cgb_trans( matrix_layout, n, n, kl, ku, ab, ldab, ab_t, ldab_t );
-        if( LAPACKE_lsame( fact, 'f' ) ) {
-            LAPACKE_cgb_trans( matrix_layout, n, n, kl, kl+ku, afb, ldafb, afb_t,
-                               ldafb_t );
-        }
-        LAPACKE_cge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_cgbsvxx( &fact, &trans, &n, &kl, &ku, &nrhs, ab_t, &ldab_t,
-                        afb_t, &ldafb_t, ipiv, equed, r, c, b_t, &ldb_t, x_t,
-                        &ldx_t, rcond, rpvgrw, berr, &n_err_bnds,
-                        err_bnds_norm_t, err_bnds_comp_t, &nparams, params,
-                        work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        if( LAPACKE_lsame( fact, 'e' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-            LAPACKE_lsame( *equed, 'c' ) || LAPACKE_lsame( *equed, 'r' ) ) ) {
-            LAPACKE_cgb_trans( LAPACK_COL_MAJOR, n, n, kl, ku, ab_t, ldab_t, ab,
-                               ldab );
-        }
-        if( LAPACKE_lsame( fact, 'e' ) || LAPACKE_lsame( fact, 'n' ) ) {
-            LAPACKE_cgb_trans( LAPACK_COL_MAJOR, n, n, kl, kl+ku, afb_t,
-                               ldafb_t, afb, ldafb );
-        }
-        if( LAPACKE_lsame( fact, 'f' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-            LAPACKE_lsame( *equed, 'c' ) || LAPACKE_lsame( *equed, 'r' ) ) ) {
-            LAPACKE_cge_trans( LAPACK_COL_MAJOR, n, nrhs, b_t, ldb_t, b, ldb );
-        }
-        LAPACKE_cge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, n_err_bnds );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, n_err_bnds );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( afb_t );
-exit_level_1:
-        LAPACKE_free( ab_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_cgbsvxx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_cgbsvxx_work", info );
     }
     return info;
 }
@@ -8281,290 +7691,6 @@ exit_level_0:
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
   THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************
-* Contents: Native high-level C interface to LAPACK function cgerfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_cgerfsx( int matrix_layout, char trans, char equed,
-                            lapack_int n, lapack_int nrhs,
-                            const lapack_complex_float* a, lapack_int lda,
-                            const lapack_complex_float* af, lapack_int ldaf,
-                            const lapack_int* ipiv, const float* r,
-                            const float* c, const lapack_complex_float* b,
-                            lapack_int ldb, lapack_complex_float* x,
-                            lapack_int ldx, float* rcond, float* berr,
-                            lapack_int n_err_bnds, float* err_bnds_norm,
-                            float* err_bnds_comp, lapack_int nparams,
-                            float* params )
-{
-    lapack_int info = 0;
-    float* rwork = NULL;
-    lapack_complex_float* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_cgerfsx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_cge_nancheck( matrix_layout, n, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_cge_nancheck( matrix_layout, n, n, af, ldaf ) ) {
-        return -8;
-    }
-    if( LAPACKE_cge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -13;
-    }
-    if( LAPACKE_lsame( equed, 'b' ) || LAPACKE_lsame( equed, 'c' ) ) {
-        if( LAPACKE_s_nancheck( n, c, 1 ) ) {
-            return -12;
-        }
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_s_nancheck( nparams, params, 1 ) ) {
-            return -23;
-        }
-    }
-    if( LAPACKE_lsame( equed, 'b' ) || LAPACKE_lsame( equed, 'r' ) ) {
-        if( LAPACKE_s_nancheck( n, r, 1 ) ) {
-            return -11;
-        }
-    }
-    if( LAPACKE_cge_nancheck( matrix_layout, n, nrhs, x, ldx ) ) {
-        return -15;
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    rwork = (float*)LAPACKE_malloc( sizeof(float) * MAX(1,3*n) );
-    if( rwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (lapack_complex_float*)
-        LAPACKE_malloc( sizeof(lapack_complex_float) * MAX(1,2*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_cgerfsx_work( matrix_layout, trans, equed, n, nrhs, a, lda,
-                                 af, ldaf, ipiv, r, c, b, ldb, x, ldx, rcond,
-                                 berr, n_err_bnds, err_bnds_norm, err_bnds_comp,
-                                 nparams, params, work, rwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( rwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_cgerfsx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function cgerfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_cgerfsx_work( int matrix_layout, char trans, char equed,
-                                 lapack_int n, lapack_int nrhs,
-                                 const lapack_complex_float* a, lapack_int lda,
-                                 const lapack_complex_float* af,
-                                 lapack_int ldaf, const lapack_int* ipiv,
-                                 const float* r, const float* c,
-                                 const lapack_complex_float* b, lapack_int ldb,
-                                 lapack_complex_float* x, lapack_int ldx,
-                                 float* rcond, float* berr,
-                                 lapack_int n_err_bnds, float* err_bnds_norm,
-                                 float* err_bnds_comp, lapack_int nparams,
-                                 float* params, lapack_complex_float* work,
-                                 float* rwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_cgerfsx( &trans, &equed, &n, &nrhs, a, &lda, af, &ldaf, ipiv, r,
-                        c, b, &ldb, x, &ldx, rcond, berr, &n_err_bnds,
-                        err_bnds_norm, err_bnds_comp, &nparams, params, work,
-                        rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        lapack_complex_float* a_t = NULL;
-        lapack_complex_float* af_t = NULL;
-        lapack_complex_float* b_t = NULL;
-        lapack_complex_float* x_t = NULL;
-        float* err_bnds_norm_t = NULL;
-        float* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_cgerfsx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_cgerfsx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -14;
-            LAPACKE_xerbla( "LAPACKE_cgerfsx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -16;
-            LAPACKE_xerbla( "LAPACKE_cgerfsx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) *
-                            ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) *
-                            ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_cge_trans( matrix_layout, n, n, a, lda, a_t, lda_t );
-        LAPACKE_cge_trans( matrix_layout, n, n, af, ldaf, af_t, ldaf_t );
-        LAPACKE_cge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        LAPACKE_cge_trans( matrix_layout, n, nrhs, x, ldx, x_t, ldx_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_cgerfsx( &trans, &equed, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t,
-                        ipiv, r, c, b_t, &ldb_t, x_t, &ldx_t, rcond, berr,
-                        &n_err_bnds, err_bnds_norm_t, err_bnds_comp_t, &nparams,
-                        params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        LAPACKE_cge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, nrhs );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, nrhs );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_cgerfsx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_cgerfsx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
 * Contents: Native high-level C interface to LAPACK function cgerqf
 * Author: Intel Corporation
 * Generated November 2015
@@ -10109,302 +9235,6 @@ exit_level_0:
     } else {
         info = -1;
         LAPACKE_xerbla( "LAPACKE_cgesvx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native high-level C interface to LAPACK function cgesvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_cgesvxx( int matrix_layout, char fact, char trans,
-                            lapack_int n, lapack_int nrhs,
-                            lapack_complex_float* a, lapack_int lda,
-                            lapack_complex_float* af, lapack_int ldaf,
-                            lapack_int* ipiv, char* equed, float* r, float* c,
-                            lapack_complex_float* b, lapack_int ldb,
-                            lapack_complex_float* x, lapack_int ldx,
-                            float* rcond, float* rpvgrw, float* berr,
-                            lapack_int n_err_bnds, float* err_bnds_norm,
-                            float* err_bnds_comp, lapack_int nparams,
-                            float* params )
-{
-    lapack_int info = 0;
-    float* rwork = NULL;
-    lapack_complex_float* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_cgesvxx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_cge_nancheck( matrix_layout, n, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) ) {
-        if( LAPACKE_cge_nancheck( matrix_layout, n, n, af, ldaf ) ) {
-            return -8;
-        }
-    }
-    if( LAPACKE_cge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -14;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-        LAPACKE_lsame( *equed, 'c' ) ) ) {
-        if( LAPACKE_s_nancheck( n, c, 1 ) ) {
-            return -13;
-        }
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_s_nancheck( nparams, params, 1 ) ) {
-            return -25;
-        }
-    }
-    if( LAPACKE_lsame( fact, 'f' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-        LAPACKE_lsame( *equed, 'r' ) ) ) {
-        if( LAPACKE_s_nancheck( n, r, 1 ) ) {
-            return -12;
-        }
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    rwork = (float*)LAPACKE_malloc( sizeof(float) * MAX(1,3*n) );
-    if( rwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (lapack_complex_float*)
-        LAPACKE_malloc( sizeof(lapack_complex_float) * MAX(1,2*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_cgesvxx_work( matrix_layout, fact, trans, n, nrhs, a, lda, af,
-                                 ldaf, ipiv, equed, r, c, b, ldb, x, ldx, rcond,
-                                 rpvgrw, berr, n_err_bnds, err_bnds_norm,
-                                 err_bnds_comp, nparams, params, work, rwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( rwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_cgesvxx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function cgesvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_cgesvxx_work( int matrix_layout, char fact, char trans,
-                                 lapack_int n, lapack_int nrhs,
-                                 lapack_complex_float* a, lapack_int lda,
-                                 lapack_complex_float* af, lapack_int ldaf,
-                                 lapack_int* ipiv, char* equed, float* r,
-                                 float* c, lapack_complex_float* b,
-                                 lapack_int ldb, lapack_complex_float* x,
-                                 lapack_int ldx, float* rcond, float* rpvgrw,
-                                 float* berr, lapack_int n_err_bnds,
-                                 float* err_bnds_norm, float* err_bnds_comp,
-                                 lapack_int nparams, float* params,
-                                 lapack_complex_float* work, float* rwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_cgesvxx( &fact, &trans, &n, &nrhs, a, &lda, af, &ldaf, ipiv,
-                        equed, r, c, b, &ldb, x, &ldx, rcond, rpvgrw, berr,
-                        &n_err_bnds, err_bnds_norm, err_bnds_comp, &nparams,
-                        params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        lapack_complex_float* a_t = NULL;
-        lapack_complex_float* af_t = NULL;
-        lapack_complex_float* b_t = NULL;
-        lapack_complex_float* x_t = NULL;
-        float* err_bnds_norm_t = NULL;
-        float* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_cgesvxx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_cgesvxx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -15;
-            LAPACKE_xerbla( "LAPACKE_cgesvxx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -17;
-            LAPACKE_xerbla( "LAPACKE_cgesvxx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) *
-                            ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) *
-                            ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_cge_trans( matrix_layout, n, n, a, lda, a_t, lda_t );
-        if( LAPACKE_lsame( fact, 'f' ) ) {
-            LAPACKE_cge_trans( matrix_layout, n, n, af, ldaf, af_t, ldaf_t );
-        }
-        LAPACKE_cge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_cgesvxx( &fact, &trans, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t,
-                        ipiv, equed, r, c, b_t, &ldb_t, x_t, &ldx_t, rcond,
-                        rpvgrw, berr, &n_err_bnds, err_bnds_norm_t,
-                        err_bnds_comp_t, &nparams, params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        if( LAPACKE_lsame( fact, 'e' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-            LAPACKE_lsame( *equed, 'c' ) || LAPACKE_lsame( *equed, 'r' ) ) ) {
-            LAPACKE_cge_trans( LAPACK_COL_MAJOR, n, n, a_t, lda_t, a, lda );
-        }
-        if( LAPACKE_lsame( fact, 'e' ) || LAPACKE_lsame( fact, 'n' ) ) {
-            LAPACKE_cge_trans( LAPACK_COL_MAJOR, n, n, af_t, ldaf_t, af, ldaf );
-        }
-        if( LAPACKE_lsame( fact, 'f' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-            LAPACKE_lsame( *equed, 'c' ) || LAPACKE_lsame( *equed, 'r' ) ) ) {
-            LAPACKE_cge_trans( LAPACK_COL_MAJOR, n, nrhs, b_t, ldb_t, b, ldb );
-        }
-        LAPACKE_cge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, n_err_bnds );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, n_err_bnds );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_cgesvxx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_cgesvxx_work", info );
     }
     return info;
 }
@@ -20742,283 +19572,6 @@ exit_level_0:
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
   THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************
-* Contents: Native high-level C interface to LAPACK function cherfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_cherfsx( int matrix_layout, char uplo, char equed,
-                            lapack_int n, lapack_int nrhs,
-                            const lapack_complex_float* a, lapack_int lda,
-                            const lapack_complex_float* af, lapack_int ldaf,
-                            const lapack_int* ipiv, const float* s,
-                            const lapack_complex_float* b, lapack_int ldb,
-                            lapack_complex_float* x, lapack_int ldx,
-                            float* rcond, float* berr, lapack_int n_err_bnds,
-                            float* err_bnds_norm, float* err_bnds_comp,
-                            lapack_int nparams, float* params )
-{
-    lapack_int info = 0;
-    float* rwork = NULL;
-    lapack_complex_float* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_cherfsx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_che_nancheck( matrix_layout, uplo, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_che_nancheck( matrix_layout, uplo, n, af, ldaf ) ) {
-        return -8;
-    }
-    if( LAPACKE_cge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -12;
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_s_nancheck( nparams, params, 1 ) ) {
-            return -22;
-        }
-    }
-    if( LAPACKE_lsame( equed, 'y' ) ) {
-        if( LAPACKE_s_nancheck( n, s, 1 ) ) {
-            return -11;
-        }
-    }
-    if( LAPACKE_cge_nancheck( matrix_layout, n, nrhs, x, ldx ) ) {
-        return -14;
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    rwork = (float*)LAPACKE_malloc( sizeof(float) * MAX(1,3*n) );
-    if( rwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (lapack_complex_float*)
-        LAPACKE_malloc( sizeof(lapack_complex_float) * MAX(1,2*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_cherfsx_work( matrix_layout, uplo, equed, n, nrhs, a, lda, af,
-                                 ldaf, ipiv, s, b, ldb, x, ldx, rcond, berr,
-                                 n_err_bnds, err_bnds_norm, err_bnds_comp,
-                                 nparams, params, work, rwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( rwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_cherfsx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function cherfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_cherfsx_work( int matrix_layout, char uplo, char equed,
-                                 lapack_int n, lapack_int nrhs,
-                                 const lapack_complex_float* a, lapack_int lda,
-                                 const lapack_complex_float* af,
-                                 lapack_int ldaf, const lapack_int* ipiv,
-                                 const float* s, const lapack_complex_float* b,
-                                 lapack_int ldb, lapack_complex_float* x,
-                                 lapack_int ldx, float* rcond, float* berr,
-                                 lapack_int n_err_bnds, float* err_bnds_norm,
-                                 float* err_bnds_comp, lapack_int nparams,
-                                 float* params, lapack_complex_float* work,
-                                 float* rwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_cherfsx( &uplo, &equed, &n, &nrhs, a, &lda, af, &ldaf, ipiv, s,
-                        b, &ldb, x, &ldx, rcond, berr, &n_err_bnds,
-                        err_bnds_norm, err_bnds_comp, &nparams, params, work,
-                        rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        lapack_complex_float* a_t = NULL;
-        lapack_complex_float* af_t = NULL;
-        lapack_complex_float* b_t = NULL;
-        lapack_complex_float* x_t = NULL;
-        float* err_bnds_norm_t = NULL;
-        float* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_cherfsx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_cherfsx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -13;
-            LAPACKE_xerbla( "LAPACKE_cherfsx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -15;
-            LAPACKE_xerbla( "LAPACKE_cherfsx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) *
-                            ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) *
-                            ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_che_trans( matrix_layout, uplo, n, a, lda, a_t, lda_t );
-        LAPACKE_che_trans( matrix_layout, uplo, n, af, ldaf, af_t, ldaf_t );
-        LAPACKE_cge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        LAPACKE_cge_trans( matrix_layout, n, nrhs, x, ldx, x_t, ldx_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_cherfsx( &uplo, &equed, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t,
-                        ipiv, s, b_t, &ldb_t, x_t, &ldx_t, rcond, berr,
-                        &n_err_bnds, err_bnds_norm_t, err_bnds_comp_t, &nparams,
-                        params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        LAPACKE_cge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, nrhs );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, nrhs );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_cherfsx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_cherfsx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
 * Contents: Native high-level C interface to LAPACK function chesv
 * Author: Intel Corporation
 * Generated November 2015
@@ -21440,294 +19993,6 @@ exit_level_0:
     } else {
         info = -1;
         LAPACKE_xerbla( "LAPACKE_chesvx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native high-level C interface to LAPACK function chesvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_chesvxx( int matrix_layout, char fact, char uplo,
-                            lapack_int n, lapack_int nrhs,
-                            lapack_complex_float* a, lapack_int lda,
-                            lapack_complex_float* af, lapack_int ldaf,
-                            lapack_int* ipiv, char* equed, float* s,
-                            lapack_complex_float* b, lapack_int ldb,
-                            lapack_complex_float* x, lapack_int ldx,
-                            float* rcond, float* rpvgrw, float* berr,
-                            lapack_int n_err_bnds, float* err_bnds_norm,
-                            float* err_bnds_comp, lapack_int nparams,
-                            float* params )
-{
-    lapack_int info = 0;
-    float* rwork = NULL;
-    lapack_complex_float* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_chesvxx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_che_nancheck( matrix_layout, uplo, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) ) {
-        if( LAPACKE_che_nancheck( matrix_layout, uplo, n, af, ldaf ) ) {
-            return -8;
-        }
-    }
-    if( LAPACKE_cge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -13;
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_s_nancheck( nparams, params, 1 ) ) {
-            return -24;
-        }
-    }
-    if( LAPACKE_lsame( fact, 'f' ) ) {
-        if( LAPACKE_s_nancheck( n, s, 1 ) ) {
-            return -12;
-        }
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    rwork = (float*)LAPACKE_malloc( sizeof(float) * MAX(1,3*n) );
-    if( rwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (lapack_complex_float*)
-        LAPACKE_malloc( sizeof(lapack_complex_float) * MAX(1,2*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_chesvxx_work( matrix_layout, fact, uplo, n, nrhs, a, lda, af,
-                                 ldaf, ipiv, equed, s, b, ldb, x, ldx, rcond,
-                                 rpvgrw, berr, n_err_bnds, err_bnds_norm,
-                                 err_bnds_comp, nparams, params, work, rwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( rwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_chesvxx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function chesvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_chesvxx_work( int matrix_layout, char fact, char uplo,
-                                 lapack_int n, lapack_int nrhs,
-                                 lapack_complex_float* a, lapack_int lda,
-                                 lapack_complex_float* af, lapack_int ldaf,
-                                 lapack_int* ipiv, char* equed, float* s,
-                                 lapack_complex_float* b, lapack_int ldb,
-                                 lapack_complex_float* x, lapack_int ldx,
-                                 float* rcond, float* rpvgrw, float* berr,
-                                 lapack_int n_err_bnds, float* err_bnds_norm,
-                                 float* err_bnds_comp, lapack_int nparams,
-                                 float* params, lapack_complex_float* work,
-                                 float* rwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_chesvxx( &fact, &uplo, &n, &nrhs, a, &lda, af, &ldaf, ipiv,
-                        equed, s, b, &ldb, x, &ldx, rcond, rpvgrw, berr,
-                        &n_err_bnds, err_bnds_norm, err_bnds_comp, &nparams,
-                        params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        lapack_complex_float* a_t = NULL;
-        lapack_complex_float* af_t = NULL;
-        lapack_complex_float* b_t = NULL;
-        lapack_complex_float* x_t = NULL;
-        float* err_bnds_norm_t = NULL;
-        float* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_chesvxx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_chesvxx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -14;
-            LAPACKE_xerbla( "LAPACKE_chesvxx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -16;
-            LAPACKE_xerbla( "LAPACKE_chesvxx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) *
-                            ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) *
-                            ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_che_trans( matrix_layout, uplo, n, a, lda, a_t, lda_t );
-        if( LAPACKE_lsame( fact, 'f' ) ) {
-            LAPACKE_che_trans( matrix_layout, uplo, n, af, ldaf, af_t, ldaf_t );
-        }
-        LAPACKE_cge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_chesvxx( &fact, &uplo, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t,
-                        ipiv, equed, s, b_t, &ldb_t, x_t, &ldx_t, rcond, rpvgrw,
-                        berr, &n_err_bnds, err_bnds_norm_t, err_bnds_comp_t,
-                        &nparams, params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        if( LAPACKE_lsame( fact, 'e' ) && LAPACKE_lsame( *equed, 'y' ) ) {
-            LAPACKE_che_trans( LAPACK_COL_MAJOR, uplo, n, a_t, lda_t, a, lda );
-        }
-        if( LAPACKE_lsame( fact, 'e' ) || LAPACKE_lsame( fact, 'n' ) ) {
-            LAPACKE_che_trans( LAPACK_COL_MAJOR, uplo, n, af_t, ldaf_t, af,
-                               ldaf );
-        }
-        if( LAPACKE_lsame( fact, 'f' ) && LAPACKE_lsame( *equed, 'y' ) ) {
-            LAPACKE_cge_trans( LAPACK_COL_MAJOR, n, nrhs, b_t, ldb_t, b, ldb );
-        }
-        LAPACKE_cge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, n_err_bnds );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, n_err_bnds );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_chesvxx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_chesvxx_work", info );
     }
     return info;
 }
@@ -33004,282 +31269,6 @@ exit_level_0:
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
   THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************
-* Contents: Native high-level C interface to LAPACK function cporfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_cporfsx( int matrix_layout, char uplo, char equed,
-                            lapack_int n, lapack_int nrhs,
-                            const lapack_complex_float* a, lapack_int lda,
-                            const lapack_complex_float* af, lapack_int ldaf,
-                            const float* s, const lapack_complex_float* b,
-                            lapack_int ldb, lapack_complex_float* x,
-                            lapack_int ldx, float* rcond, float* berr,
-                            lapack_int n_err_bnds, float* err_bnds_norm,
-                            float* err_bnds_comp, lapack_int nparams,
-                            float* params )
-{
-    lapack_int info = 0;
-    float* rwork = NULL;
-    lapack_complex_float* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_cporfsx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_csy_nancheck( matrix_layout, uplo, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_csy_nancheck( matrix_layout, uplo, n, af, ldaf ) ) {
-        return -8;
-    }
-    if( LAPACKE_cge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -11;
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_s_nancheck( nparams, params, 1 ) ) {
-            return -21;
-        }
-    }
-    if( LAPACKE_lsame( equed, 'y' ) ) {
-        if( LAPACKE_s_nancheck( n, s, 1 ) ) {
-            return -10;
-        }
-    }
-    if( LAPACKE_cge_nancheck( matrix_layout, n, nrhs, x, ldx ) ) {
-        return -13;
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    rwork = (float*)LAPACKE_malloc( sizeof(float) * MAX(1,3*n) );
-    if( rwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (lapack_complex_float*)
-        LAPACKE_malloc( sizeof(lapack_complex_float) * MAX(1,2*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_cporfsx_work( matrix_layout, uplo, equed, n, nrhs, a, lda, af,
-                                 ldaf, s, b, ldb, x, ldx, rcond, berr,
-                                 n_err_bnds, err_bnds_norm, err_bnds_comp,
-                                 nparams, params, work, rwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( rwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_cporfsx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function cporfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_cporfsx_work( int matrix_layout, char uplo, char equed,
-                                 lapack_int n, lapack_int nrhs,
-                                 const lapack_complex_float* a, lapack_int lda,
-                                 const lapack_complex_float* af,
-                                 lapack_int ldaf, const float* s,
-                                 const lapack_complex_float* b, lapack_int ldb,
-                                 lapack_complex_float* x, lapack_int ldx,
-                                 float* rcond, float* berr,
-                                 lapack_int n_err_bnds, float* err_bnds_norm,
-                                 float* err_bnds_comp, lapack_int nparams,
-                                 float* params, lapack_complex_float* work,
-                                 float* rwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_cporfsx( &uplo, &equed, &n, &nrhs, a, &lda, af, &ldaf, s, b,
-                        &ldb, x, &ldx, rcond, berr, &n_err_bnds, err_bnds_norm,
-                        err_bnds_comp, &nparams, params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        lapack_complex_float* a_t = NULL;
-        lapack_complex_float* af_t = NULL;
-        lapack_complex_float* b_t = NULL;
-        lapack_complex_float* x_t = NULL;
-        float* err_bnds_norm_t = NULL;
-        float* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_cporfsx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_cporfsx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -12;
-            LAPACKE_xerbla( "LAPACKE_cporfsx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -14;
-            LAPACKE_xerbla( "LAPACKE_cporfsx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) *
-                            ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) *
-                            ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_csy_trans( matrix_layout, uplo, n, a, lda, a_t, lda_t );
-        LAPACKE_csy_trans( matrix_layout, uplo, n, af, ldaf, af_t, ldaf_t );
-        LAPACKE_cge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        LAPACKE_cge_trans( matrix_layout, n, nrhs, x, ldx, x_t, ldx_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_cporfsx( &uplo, &equed, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t, s,
-                        b_t, &ldb_t, x_t, &ldx_t, rcond, berr, &n_err_bnds,
-                        err_bnds_norm_t, err_bnds_comp_t, &nparams, params,
-                        work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        LAPACKE_cge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, nrhs );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, nrhs );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_cporfsx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_cporfsx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
 * Contents: Native high-level C interface to LAPACK function cposv
 * Author: Intel Corporation
 * Generated November 2015
@@ -33655,290 +31644,6 @@ exit_level_0:
     } else {
         info = -1;
         LAPACKE_xerbla( "LAPACKE_cposvx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native high-level C interface to LAPACK function cposvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_cposvxx( int matrix_layout, char fact, char uplo,
-                            lapack_int n, lapack_int nrhs,
-                            lapack_complex_float* a, lapack_int lda,
-                            lapack_complex_float* af, lapack_int ldaf,
-                            char* equed, float* s, lapack_complex_float* b,
-                            lapack_int ldb, lapack_complex_float* x,
-                            lapack_int ldx, float* rcond, float* rpvgrw,
-                            float* berr, lapack_int n_err_bnds,
-                            float* err_bnds_norm, float* err_bnds_comp,
-                            lapack_int nparams, float* params )
-{
-    lapack_int info = 0;
-    float* rwork = NULL;
-    lapack_complex_float* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_cposvxx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_cpo_nancheck( matrix_layout, uplo, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) ) {
-        if( LAPACKE_cpo_nancheck( matrix_layout, uplo, n, af, ldaf ) ) {
-            return -8;
-        }
-    }
-    if( LAPACKE_cge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -12;
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_s_nancheck( nparams, params, 1 ) ) {
-            return -23;
-        }
-    }
-    if( LAPACKE_lsame( fact, 'f' ) && LAPACKE_lsame( *equed, 'y' ) ) {
-        if( LAPACKE_s_nancheck( n, s, 1 ) ) {
-            return -11;
-        }
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    rwork = (float*)LAPACKE_malloc( sizeof(float) * MAX(1,3*n) );
-    if( rwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (lapack_complex_float*)
-        LAPACKE_malloc( sizeof(lapack_complex_float) * MAX(1,2*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_cposvxx_work( matrix_layout, fact, uplo, n, nrhs, a, lda, af,
-                                 ldaf, equed, s, b, ldb, x, ldx, rcond, rpvgrw,
-                                 berr, n_err_bnds, err_bnds_norm, err_bnds_comp,
-                                 nparams, params, work, rwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( rwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_cposvxx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function cposvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_cposvxx_work( int matrix_layout, char fact, char uplo,
-                                 lapack_int n, lapack_int nrhs,
-                                 lapack_complex_float* a, lapack_int lda,
-                                 lapack_complex_float* af, lapack_int ldaf,
-                                 char* equed, float* s, lapack_complex_float* b,
-                                 lapack_int ldb, lapack_complex_float* x,
-                                 lapack_int ldx, float* rcond, float* rpvgrw,
-                                 float* berr, lapack_int n_err_bnds,
-                                 float* err_bnds_norm, float* err_bnds_comp,
-                                 lapack_int nparams, float* params,
-                                 lapack_complex_float* work, float* rwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_cposvxx( &fact, &uplo, &n, &nrhs, a, &lda, af, &ldaf, equed, s,
-                        b, &ldb, x, &ldx, rcond, rpvgrw, berr, &n_err_bnds,
-                        err_bnds_norm, err_bnds_comp, &nparams, params, work,
-                        rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        lapack_complex_float* a_t = NULL;
-        lapack_complex_float* af_t = NULL;
-        lapack_complex_float* b_t = NULL;
-        lapack_complex_float* x_t = NULL;
-        float* err_bnds_norm_t = NULL;
-        float* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_cposvxx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_cposvxx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -13;
-            LAPACKE_xerbla( "LAPACKE_cposvxx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -15;
-            LAPACKE_xerbla( "LAPACKE_cposvxx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) *
-                            ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) *
-                            ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_cpo_trans( matrix_layout, uplo, n, a, lda, a_t, lda_t );
-        if( LAPACKE_lsame( fact, 'f' ) ) {
-            LAPACKE_cpo_trans( matrix_layout, uplo, n, af, ldaf, af_t, ldaf_t );
-        }
-        LAPACKE_cge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_cposvxx( &fact, &uplo, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t,
-                        equed, s, b_t, &ldb_t, x_t, &ldx_t, rcond, rpvgrw, berr,
-                        &n_err_bnds, err_bnds_norm_t, err_bnds_comp_t, &nparams,
-                        params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        if( LAPACKE_lsame( fact, 'e' ) && LAPACKE_lsame( *equed, 'y' ) ) {
-            LAPACKE_cpo_trans( LAPACK_COL_MAJOR, uplo, n, a_t, lda_t, a, lda );
-        }
-        if( LAPACKE_lsame( fact, 'e' ) || LAPACKE_lsame( fact, 'n' ) ) {
-            LAPACKE_cpo_trans( LAPACK_COL_MAJOR, uplo, n, af_t, ldaf_t, af,
-                               ldaf );
-        }
-        LAPACKE_cge_trans( LAPACK_COL_MAJOR, n, nrhs, b_t, ldb_t, b, ldb );
-        LAPACKE_cge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, n_err_bnds );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, n_err_bnds );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_cposvxx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_cposvxx_work", info );
     }
     return info;
 }
@@ -39978,283 +37683,6 @@ exit_level_0:
   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
   THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native high-level C interface to LAPACK function csyrfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_csyrfsx( int matrix_layout, char uplo, char equed,
-                            lapack_int n, lapack_int nrhs,
-                            const lapack_complex_float* a, lapack_int lda,
-                            const lapack_complex_float* af, lapack_int ldaf,
-                            const lapack_int* ipiv, const float* s,
-                            const lapack_complex_float* b, lapack_int ldb,
-                            lapack_complex_float* x, lapack_int ldx,
-                            float* rcond, float* berr, lapack_int n_err_bnds,
-                            float* err_bnds_norm, float* err_bnds_comp,
-                            lapack_int nparams, float* params )
-{
-    lapack_int info = 0;
-    float* rwork = NULL;
-    lapack_complex_float* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_csyrfsx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_csy_nancheck( matrix_layout, uplo, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_csy_nancheck( matrix_layout, uplo, n, af, ldaf ) ) {
-        return -8;
-    }
-    if( LAPACKE_cge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -12;
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_s_nancheck( nparams, params, 1 ) ) {
-            return -22;
-        }
-    }
-    if( LAPACKE_lsame( equed, 'y' ) ) {
-        if( LAPACKE_s_nancheck( n, s, 1 ) ) {
-            return -11;
-        }
-    }
-    if( LAPACKE_cge_nancheck( matrix_layout, n, nrhs, x, ldx ) ) {
-        return -14;
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    rwork = (float*)LAPACKE_malloc( sizeof(float) * MAX(1,3*n) );
-    if( rwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (lapack_complex_float*)
-        LAPACKE_malloc( sizeof(lapack_complex_float) * MAX(1,2*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_csyrfsx_work( matrix_layout, uplo, equed, n, nrhs, a, lda, af,
-                                 ldaf, ipiv, s, b, ldb, x, ldx, rcond, berr,
-                                 n_err_bnds, err_bnds_norm, err_bnds_comp,
-                                 nparams, params, work, rwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( rwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_csyrfsx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function csyrfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_csyrfsx_work( int matrix_layout, char uplo, char equed,
-                                 lapack_int n, lapack_int nrhs,
-                                 const lapack_complex_float* a, lapack_int lda,
-                                 const lapack_complex_float* af,
-                                 lapack_int ldaf, const lapack_int* ipiv,
-                                 const float* s, const lapack_complex_float* b,
-                                 lapack_int ldb, lapack_complex_float* x,
-                                 lapack_int ldx, float* rcond, float* berr,
-                                 lapack_int n_err_bnds, float* err_bnds_norm,
-                                 float* err_bnds_comp, lapack_int nparams,
-                                 float* params, lapack_complex_float* work,
-                                 float* rwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_csyrfsx( &uplo, &equed, &n, &nrhs, a, &lda, af, &ldaf, ipiv, s,
-                        b, &ldb, x, &ldx, rcond, berr, &n_err_bnds,
-                        err_bnds_norm, err_bnds_comp, &nparams, params, work,
-                        rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        lapack_complex_float* a_t = NULL;
-        lapack_complex_float* af_t = NULL;
-        lapack_complex_float* b_t = NULL;
-        lapack_complex_float* x_t = NULL;
-        float* err_bnds_norm_t = NULL;
-        float* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_csyrfsx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_csyrfsx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -13;
-            LAPACKE_xerbla( "LAPACKE_csyrfsx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -15;
-            LAPACKE_xerbla( "LAPACKE_csyrfsx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) *
-                            ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) *
-                            ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_csy_trans( matrix_layout, uplo, n, a, lda, a_t, lda_t );
-        LAPACKE_csy_trans( matrix_layout, uplo, n, af, ldaf, af_t, ldaf_t );
-        LAPACKE_cge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        LAPACKE_cge_trans( matrix_layout, n, nrhs, x, ldx, x_t, ldx_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_csyrfsx( &uplo, &equed, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t,
-                        ipiv, s, b_t, &ldb_t, x_t, &ldx_t, rcond, berr,
-                        &n_err_bnds, err_bnds_norm_t, err_bnds_comp_t, &nparams,
-                        params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        LAPACKE_cge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, nrhs );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, nrhs );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_csyrfsx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_csyrfsx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
 ******************************************************************************
 * Contents: Native middle-level C interface to LAPACK function csyr
 * Author: Intel Corporation
@@ -40957,294 +38385,6 @@ exit_level_0:
     } else {
         info = -1;
         LAPACKE_xerbla( "LAPACKE_csysvx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native high-level C interface to LAPACK function csysvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_csysvxx( int matrix_layout, char fact, char uplo,
-                            lapack_int n, lapack_int nrhs,
-                            lapack_complex_float* a, lapack_int lda,
-                            lapack_complex_float* af, lapack_int ldaf,
-                            lapack_int* ipiv, char* equed, float* s,
-                            lapack_complex_float* b, lapack_int ldb,
-                            lapack_complex_float* x, lapack_int ldx,
-                            float* rcond, float* rpvgrw, float* berr,
-                            lapack_int n_err_bnds, float* err_bnds_norm,
-                            float* err_bnds_comp, lapack_int nparams,
-                            float* params )
-{
-    lapack_int info = 0;
-    float* rwork = NULL;
-    lapack_complex_float* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_csysvxx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_csy_nancheck( matrix_layout, uplo, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) ) {
-        if( LAPACKE_csy_nancheck( matrix_layout, uplo, n, af, ldaf ) ) {
-            return -8;
-        }
-    }
-    if( LAPACKE_cge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -13;
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_s_nancheck( nparams, params, 1 ) ) {
-            return -24;
-        }
-    }
-    if( LAPACKE_lsame( fact, 'f' ) ) {
-        if( LAPACKE_s_nancheck( n, s, 1 ) ) {
-            return -12;
-        }
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    rwork = (float*)LAPACKE_malloc( sizeof(float) * MAX(1,3*n) );
-    if( rwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (lapack_complex_float*)
-        LAPACKE_malloc( sizeof(lapack_complex_float) * MAX(1,2*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_csysvxx_work( matrix_layout, fact, uplo, n, nrhs, a, lda, af,
-                                 ldaf, ipiv, equed, s, b, ldb, x, ldx, rcond,
-                                 rpvgrw, berr, n_err_bnds, err_bnds_norm,
-                                 err_bnds_comp, nparams, params, work, rwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( rwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_csysvxx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function csysvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_csysvxx_work( int matrix_layout, char fact, char uplo,
-                                 lapack_int n, lapack_int nrhs,
-                                 lapack_complex_float* a, lapack_int lda,
-                                 lapack_complex_float* af, lapack_int ldaf,
-                                 lapack_int* ipiv, char* equed, float* s,
-                                 lapack_complex_float* b, lapack_int ldb,
-                                 lapack_complex_float* x, lapack_int ldx,
-                                 float* rcond, float* rpvgrw, float* berr,
-                                 lapack_int n_err_bnds, float* err_bnds_norm,
-                                 float* err_bnds_comp, lapack_int nparams,
-                                 float* params, lapack_complex_float* work,
-                                 float* rwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_csysvxx( &fact, &uplo, &n, &nrhs, a, &lda, af, &ldaf, ipiv,
-                        equed, s, b, &ldb, x, &ldx, rcond, rpvgrw, berr,
-                        &n_err_bnds, err_bnds_norm, err_bnds_comp, &nparams,
-                        params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        lapack_complex_float* a_t = NULL;
-        lapack_complex_float* af_t = NULL;
-        lapack_complex_float* b_t = NULL;
-        lapack_complex_float* x_t = NULL;
-        float* err_bnds_norm_t = NULL;
-        float* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_csysvxx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_csysvxx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -14;
-            LAPACKE_xerbla( "LAPACKE_csysvxx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -16;
-            LAPACKE_xerbla( "LAPACKE_csysvxx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) *
-                            ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (lapack_complex_float*)
-            LAPACKE_malloc( sizeof(lapack_complex_float) *
-                            ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_csy_trans( matrix_layout, uplo, n, a, lda, a_t, lda_t );
-        if( LAPACKE_lsame( fact, 'f' ) ) {
-            LAPACKE_csy_trans( matrix_layout, uplo, n, af, ldaf, af_t, ldaf_t );
-        }
-        LAPACKE_cge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_csysvxx( &fact, &uplo, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t,
-                        ipiv, equed, s, b_t, &ldb_t, x_t, &ldx_t, rcond, rpvgrw,
-                        berr, &n_err_bnds, err_bnds_norm_t, err_bnds_comp_t,
-                        &nparams, params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        if( LAPACKE_lsame( fact, 'e' ) && LAPACKE_lsame( *equed, 'y' ) ) {
-            LAPACKE_csy_trans( LAPACK_COL_MAJOR, uplo, n, a_t, lda_t, a, lda );
-        }
-        if( LAPACKE_lsame( fact, 'e' ) || LAPACKE_lsame( fact, 'n' ) ) {
-            LAPACKE_csy_trans( LAPACK_COL_MAJOR, uplo, n, af_t, ldaf_t, af,
-                               ldaf );
-        }
-        if( LAPACKE_lsame( fact, 'f' ) && LAPACKE_lsame( *equed, 'y' ) ) {
-            LAPACKE_cge_trans( LAPACK_COL_MAJOR, n, nrhs, b_t, ldb_t, b, ldb );
-        }
-        LAPACKE_cge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, n_err_bnds );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, n_err_bnds );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_csysvxx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_csysvxx_work", info );
     }
     return info;
 }
@@ -55508,282 +52648,6 @@ exit_level_0:
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
   THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************
-* Contents: Native high-level C interface to LAPACK function dgbrfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_dgbrfsx( int matrix_layout, char trans, char equed,
-                            lapack_int n, lapack_int kl, lapack_int ku,
-                            lapack_int nrhs, const double* ab, lapack_int ldab,
-                            const double* afb, lapack_int ldafb,
-                            const lapack_int* ipiv, const double* r,
-                            const double* c, const double* b, lapack_int ldb,
-                            double* x, lapack_int ldx, double* rcond,
-                            double* berr, lapack_int n_err_bnds,
-                            double* err_bnds_norm, double* err_bnds_comp,
-                            lapack_int nparams, double* params )
-{
-    lapack_int info = 0;
-    lapack_int* iwork = NULL;
-    double* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_dgbrfsx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_dgb_nancheck( matrix_layout, n, n, kl, ku, ab, ldab ) ) {
-        return -8;
-    }
-    if( LAPACKE_dgb_nancheck( matrix_layout, n, n, kl, kl+ku, afb, ldafb ) ) {
-        return -10;
-    }
-    if( LAPACKE_dge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -15;
-    }
-    if( LAPACKE_lsame( equed, 'b' ) || LAPACKE_lsame( equed, 'c' ) ) {
-        if( LAPACKE_d_nancheck( n, c, 1 ) ) {
-            return -14;
-        }
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_d_nancheck( nparams, params, 1 ) ) {
-            return -25;
-        }
-    }
-    if( LAPACKE_lsame( equed, 'b' ) || LAPACKE_lsame( equed, 'r' ) ) {
-        if( LAPACKE_d_nancheck( n, r, 1 ) ) {
-            return -13;
-        }
-    }
-    if( LAPACKE_dge_nancheck( matrix_layout, n, nrhs, x, ldx ) ) {
-        return -17;
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    iwork = (lapack_int*)LAPACKE_malloc( sizeof(lapack_int) * MAX(1,n) );
-    if( iwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (double*)LAPACKE_malloc( sizeof(double) * MAX(1,4*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_dgbrfsx_work( matrix_layout, trans, equed, n, kl, ku, nrhs,
-                                 ab, ldab, afb, ldafb, ipiv, r, c, b, ldb, x,
-                                 ldx, rcond, berr, n_err_bnds, err_bnds_norm,
-                                 err_bnds_comp, nparams, params, work, iwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( iwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_dgbrfsx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function dgbrfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_dgbrfsx_work( int matrix_layout, char trans, char equed,
-                                 lapack_int n, lapack_int kl, lapack_int ku,
-                                 lapack_int nrhs, const double* ab,
-                                 lapack_int ldab, const double* afb,
-                                 lapack_int ldafb, const lapack_int* ipiv,
-                                 const double* r, const double* c,
-                                 const double* b, lapack_int ldb, double* x,
-                                 lapack_int ldx, double* rcond, double* berr,
-                                 lapack_int n_err_bnds, double* err_bnds_norm,
-                                 double* err_bnds_comp, lapack_int nparams,
-                                 double* params, double* work,
-                                 lapack_int* iwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_dgbrfsx( &trans, &equed, &n, &kl, &ku, &nrhs, ab, &ldab, afb,
-                        &ldafb, ipiv, r, c, b, &ldb, x, &ldx, rcond, berr,
-                        &n_err_bnds, err_bnds_norm, err_bnds_comp, &nparams,
-                        params, work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int ldab_t = MAX(1,kl+ku+1);
-        lapack_int ldafb_t = MAX(1,2*kl+ku+1);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        double* ab_t = NULL;
-        double* afb_t = NULL;
-        double* b_t = NULL;
-        double* x_t = NULL;
-        double* err_bnds_norm_t = NULL;
-        double* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( ldab < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_dgbrfsx_work", info );
-            return info;
-        }
-        if( ldafb < n ) {
-            info = -11;
-            LAPACKE_xerbla( "LAPACKE_dgbrfsx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -16;
-            LAPACKE_xerbla( "LAPACKE_dgbrfsx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -18;
-            LAPACKE_xerbla( "LAPACKE_dgbrfsx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        ab_t = (double*)LAPACKE_malloc( sizeof(double) * ldab_t * MAX(1,n) );
-        if( ab_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        afb_t = (double*)LAPACKE_malloc( sizeof(double) * ldafb_t * MAX(1,n) );
-        if( afb_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (double*)LAPACKE_malloc( sizeof(double) * ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (double*)LAPACKE_malloc( sizeof(double) * ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_dgb_trans( matrix_layout, n, n, kl, ku, ab, ldab, ab_t, ldab_t );
-        LAPACKE_dgb_trans( matrix_layout, n, n, kl, kl+ku, afb, ldafb, afb_t,
-                           ldafb_t );
-        LAPACKE_dge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        LAPACKE_dge_trans( matrix_layout, n, nrhs, x, ldx, x_t, ldx_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_dgbrfsx( &trans, &equed, &n, &kl, &ku, &nrhs, ab_t, &ldab_t,
-                        afb_t, &ldafb_t, ipiv, r, c, b_t, &ldb_t, x_t, &ldx_t,
-                        rcond, berr, &n_err_bnds, err_bnds_norm_t,
-                        err_bnds_comp_t, &nparams, params, work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, nrhs );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, nrhs );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( afb_t );
-exit_level_1:
-        LAPACKE_free( ab_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_dgbrfsx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_dgbrfsx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
 * Contents: Native high-level C interface to LAPACK function dgbsv
 * Author: Intel Corporation
 * Generated November 2015
@@ -56170,300 +53034,6 @@ exit_level_0:
     } else {
         info = -1;
         LAPACKE_xerbla( "LAPACKE_dgbsvx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native high-level C interface to LAPACK function dgbsvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_dgbsvxx( int matrix_layout, char fact, char trans,
-                            lapack_int n, lapack_int kl, lapack_int ku,
-                            lapack_int nrhs, double* ab, lapack_int ldab,
-                            double* afb, lapack_int ldafb, lapack_int* ipiv,
-                            char* equed, double* r, double* c, double* b,
-                            lapack_int ldb, double* x, lapack_int ldx,
-                            double* rcond, double* rpvgrw, double* berr,
-                            lapack_int n_err_bnds, double* err_bnds_norm,
-                            double* err_bnds_comp, lapack_int nparams,
-                            double* params )
-{
-    lapack_int info = 0;
-    lapack_int* iwork = NULL;
-    double* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_dgbsvxx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_dgb_nancheck( matrix_layout, n, n, kl, ku, ab, ldab ) ) {
-        return -8;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) ) {
-        if( LAPACKE_dgb_nancheck( matrix_layout, n, n, kl, kl+ku, afb,
-            ldafb ) ) {
-            return -10;
-        }
-    }
-    if( LAPACKE_dge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -16;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-        LAPACKE_lsame( *equed, 'c' ) ) ) {
-        if( LAPACKE_d_nancheck( n, c, 1 ) ) {
-            return -15;
-        }
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_d_nancheck( nparams, params, 1 ) ) {
-            return -27;
-        }
-    }
-    if( LAPACKE_lsame( fact, 'f' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-        LAPACKE_lsame( *equed, 'r' ) ) ) {
-        if( LAPACKE_d_nancheck( n, r, 1 ) ) {
-            return -14;
-        }
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    iwork = (lapack_int*)LAPACKE_malloc( sizeof(lapack_int) * MAX(1,n) );
-    if( iwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (double*)LAPACKE_malloc( sizeof(double) * MAX(1,4*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_dgbsvxx_work( matrix_layout, fact, trans, n, kl, ku, nrhs, ab,
-                                 ldab, afb, ldafb, ipiv, equed, r, c, b, ldb, x,
-                                 ldx, rcond, rpvgrw, berr, n_err_bnds,
-                                 err_bnds_norm, err_bnds_comp, nparams, params,
-                                 work, iwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( iwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_dgbsvxx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function dgbsvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_dgbsvxx_work( int matrix_layout, char fact, char trans,
-                                 lapack_int n, lapack_int kl, lapack_int ku,
-                                 lapack_int nrhs, double* ab, lapack_int ldab,
-                                 double* afb, lapack_int ldafb,
-                                 lapack_int* ipiv, char* equed, double* r,
-                                 double* c, double* b, lapack_int ldb,
-                                 double* x, lapack_int ldx, double* rcond,
-                                 double* rpvgrw, double* berr,
-                                 lapack_int n_err_bnds, double* err_bnds_norm,
-                                 double* err_bnds_comp, lapack_int nparams,
-                                 double* params, double* work,
-                                 lapack_int* iwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_dgbsvxx( &fact, &trans, &n, &kl, &ku, &nrhs, ab, &ldab, afb,
-                        &ldafb, ipiv, equed, r, c, b, &ldb, x, &ldx, rcond,
-                        rpvgrw, berr, &n_err_bnds, err_bnds_norm, err_bnds_comp,
-                        &nparams, params, work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int ldab_t = MAX(1,kl+ku+1);
-        lapack_int ldafb_t = MAX(1,2*kl+ku+1);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        double* ab_t = NULL;
-        double* afb_t = NULL;
-        double* b_t = NULL;
-        double* x_t = NULL;
-        double* err_bnds_norm_t = NULL;
-        double* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( ldab < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_dgbsvxx_work", info );
-            return info;
-        }
-        if( ldafb < n ) {
-            info = -11;
-            LAPACKE_xerbla( "LAPACKE_dgbsvxx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -17;
-            LAPACKE_xerbla( "LAPACKE_dgbsvxx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -19;
-            LAPACKE_xerbla( "LAPACKE_dgbsvxx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        ab_t = (double*)LAPACKE_malloc( sizeof(double) * ldab_t * MAX(1,n) );
-        if( ab_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        afb_t = (double*)LAPACKE_malloc( sizeof(double) * ldafb_t * MAX(1,n) );
-        if( afb_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (double*)LAPACKE_malloc( sizeof(double) * ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (double*)LAPACKE_malloc( sizeof(double) * ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_dgb_trans( matrix_layout, n, n, kl, ku, ab, ldab, ab_t, ldab_t );
-        if( LAPACKE_lsame( fact, 'f' ) ) {
-            LAPACKE_dgb_trans( matrix_layout, n, n, kl, kl+ku, afb, ldafb, afb_t,
-                               ldafb_t );
-        }
-        LAPACKE_dge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_dgbsvxx( &fact, &trans, &n, &kl, &ku, &nrhs, ab_t, &ldab_t,
-                        afb_t, &ldafb_t, ipiv, equed, r, c, b_t, &ldb_t, x_t,
-                        &ldx_t, rcond, rpvgrw, berr, &n_err_bnds,
-                        err_bnds_norm_t, err_bnds_comp_t, &nparams, params,
-                        work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        if( LAPACKE_lsame( fact, 'e' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-            LAPACKE_lsame( *equed, 'c' ) || LAPACKE_lsame( *equed, 'r' ) ) ) {
-            LAPACKE_dgb_trans( LAPACK_COL_MAJOR, n, n, kl, ku, ab_t, ldab_t, ab,
-                               ldab );
-        }
-        if( LAPACKE_lsame( fact, 'e' ) || LAPACKE_lsame( fact, 'n' ) ) {
-            LAPACKE_dgb_trans( LAPACK_COL_MAJOR, n, n, kl, kl+ku, afb_t,
-                               ldafb_t, afb, ldafb );
-        }
-        if( LAPACKE_lsame( fact, 'f' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-            LAPACKE_lsame( *equed, 'c' ) || LAPACKE_lsame( *equed, 'r' ) ) ) {
-            LAPACKE_dge_trans( LAPACK_COL_MAJOR, n, nrhs, b_t, ldb_t, b, ldb );
-        }
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, n_err_bnds );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, n_err_bnds );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( afb_t );
-exit_level_1:
-        LAPACKE_free( ab_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_dgbsvxx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_dgbsvxx_work", info );
     }
     return info;
 }
@@ -61983,279 +58553,6 @@ exit_level_0:
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
   THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************
-* Contents: Native high-level C interface to LAPACK function dgerfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_dgerfsx( int matrix_layout, char trans, char equed,
-                            lapack_int n, lapack_int nrhs, const double* a,
-                            lapack_int lda, const double* af, lapack_int ldaf,
-                            const lapack_int* ipiv, const double* r,
-                            const double* c, const double* b, lapack_int ldb,
-                            double* x, lapack_int ldx, double* rcond,
-                            double* berr, lapack_int n_err_bnds,
-                            double* err_bnds_norm, double* err_bnds_comp,
-                            lapack_int nparams, double* params )
-{
-    lapack_int info = 0;
-    lapack_int* iwork = NULL;
-    double* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_dgerfsx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_dge_nancheck( matrix_layout, n, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_dge_nancheck( matrix_layout, n, n, af, ldaf ) ) {
-        return -8;
-    }
-    if( LAPACKE_dge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -13;
-    }
-    if( LAPACKE_lsame( equed, 'b' ) || LAPACKE_lsame( equed, 'c' ) ) {
-        if( LAPACKE_d_nancheck( n, c, 1 ) ) {
-            return -12;
-        }
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_d_nancheck( nparams, params, 1 ) ) {
-            return -23;
-        }
-    }
-    if( LAPACKE_lsame( equed, 'b' ) || LAPACKE_lsame( equed, 'r' ) ) {
-        if( LAPACKE_d_nancheck( n, r, 1 ) ) {
-            return -11;
-        }
-    }
-    if( LAPACKE_dge_nancheck( matrix_layout, n, nrhs, x, ldx ) ) {
-        return -15;
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    iwork = (lapack_int*)LAPACKE_malloc( sizeof(lapack_int) * MAX(1,n) );
-    if( iwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (double*)LAPACKE_malloc( sizeof(double) * MAX(1,4*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_dgerfsx_work( matrix_layout, trans, equed, n, nrhs, a, lda,
-                                 af, ldaf, ipiv, r, c, b, ldb, x, ldx, rcond,
-                                 berr, n_err_bnds, err_bnds_norm, err_bnds_comp,
-                                 nparams, params, work, iwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( iwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_dgerfsx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function dgerfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_dgerfsx_work( int matrix_layout, char trans, char equed,
-                                 lapack_int n, lapack_int nrhs, const double* a,
-                                 lapack_int lda, const double* af,
-                                 lapack_int ldaf, const lapack_int* ipiv,
-                                 const double* r, const double* c,
-                                 const double* b, lapack_int ldb, double* x,
-                                 lapack_int ldx, double* rcond, double* berr,
-                                 lapack_int n_err_bnds, double* err_bnds_norm,
-                                 double* err_bnds_comp, lapack_int nparams,
-                                 double* params, double* work,
-                                 lapack_int* iwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_dgerfsx( &trans, &equed, &n, &nrhs, a, &lda, af, &ldaf, ipiv, r,
-                        c, b, &ldb, x, &ldx, rcond, berr, &n_err_bnds,
-                        err_bnds_norm, err_bnds_comp, &nparams, params, work,
-                        iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        double* a_t = NULL;
-        double* af_t = NULL;
-        double* b_t = NULL;
-        double* x_t = NULL;
-        double* err_bnds_norm_t = NULL;
-        double* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_dgerfsx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_dgerfsx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -14;
-            LAPACKE_xerbla( "LAPACKE_dgerfsx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -16;
-            LAPACKE_xerbla( "LAPACKE_dgerfsx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (double*)LAPACKE_malloc( sizeof(double) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (double*)LAPACKE_malloc( sizeof(double) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (double*)LAPACKE_malloc( sizeof(double) * ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (double*)LAPACKE_malloc( sizeof(double) * ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_dge_trans( matrix_layout, n, n, a, lda, a_t, lda_t );
-        LAPACKE_dge_trans( matrix_layout, n, n, af, ldaf, af_t, ldaf_t );
-        LAPACKE_dge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        LAPACKE_dge_trans( matrix_layout, n, nrhs, x, ldx, x_t, ldx_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_dgerfsx( &trans, &equed, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t,
-                        ipiv, r, c, b_t, &ldb_t, x_t, &ldx_t, rcond, berr,
-                        &n_err_bnds, err_bnds_norm_t, err_bnds_comp_t, &nparams,
-                        params, work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, nrhs );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, nrhs );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_dgerfsx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_dgerfsx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
 * Contents: Native high-level C interface to LAPACK function dgerqf
 * Author: Intel Corporation
 * Generated November 2015
@@ -63712,292 +60009,6 @@ exit_level_0:
     } else {
         info = -1;
         LAPACKE_xerbla( "LAPACKE_dgesvx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native high-level C interface to LAPACK function dgesvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_dgesvxx( int matrix_layout, char fact, char trans,
-                            lapack_int n, lapack_int nrhs, double* a,
-                            lapack_int lda, double* af, lapack_int ldaf,
-                            lapack_int* ipiv, char* equed, double* r, double* c,
-                            double* b, lapack_int ldb, double* x,
-                            lapack_int ldx, double* rcond, double* rpvgrw,
-                            double* berr, lapack_int n_err_bnds,
-                            double* err_bnds_norm, double* err_bnds_comp,
-                            lapack_int nparams, double* params )
-{
-    lapack_int info = 0;
-    lapack_int* iwork = NULL;
-    double* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_dgesvxx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_dge_nancheck( matrix_layout, n, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) ) {
-        if( LAPACKE_dge_nancheck( matrix_layout, n, n, af, ldaf ) ) {
-            return -8;
-        }
-    }
-    if( LAPACKE_dge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -14;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-        LAPACKE_lsame( *equed, 'c' ) ) ) {
-        if( LAPACKE_d_nancheck( n, c, 1 ) ) {
-            return -13;
-        }
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_d_nancheck( nparams, params, 1 ) ) {
-            return -25;
-        }
-    }
-    if( LAPACKE_lsame( fact, 'f' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-        LAPACKE_lsame( *equed, 'r' ) ) ) {
-        if( LAPACKE_d_nancheck( n, r, 1 ) ) {
-            return -12;
-        }
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    iwork = (lapack_int*)LAPACKE_malloc( sizeof(lapack_int) * MAX(1,n) );
-    if( iwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (double*)LAPACKE_malloc( sizeof(double) * MAX(1,4*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_dgesvxx_work( matrix_layout, fact, trans, n, nrhs, a, lda, af,
-                                 ldaf, ipiv, equed, r, c, b, ldb, x, ldx, rcond,
-                                 rpvgrw, berr, n_err_bnds, err_bnds_norm,
-                                 err_bnds_comp, nparams, params, work, iwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( iwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_dgesvxx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function dgesvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_dgesvxx_work( int matrix_layout, char fact, char trans,
-                                 lapack_int n, lapack_int nrhs, double* a,
-                                 lapack_int lda, double* af, lapack_int ldaf,
-                                 lapack_int* ipiv, char* equed, double* r,
-                                 double* c, double* b, lapack_int ldb,
-                                 double* x, lapack_int ldx, double* rcond,
-                                 double* rpvgrw, double* berr,
-                                 lapack_int n_err_bnds, double* err_bnds_norm,
-                                 double* err_bnds_comp, lapack_int nparams,
-                                 double* params, double* work,
-                                 lapack_int* iwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_dgesvxx( &fact, &trans, &n, &nrhs, a, &lda, af, &ldaf, ipiv,
-                        equed, r, c, b, &ldb, x, &ldx, rcond, rpvgrw, berr,
-                        &n_err_bnds, err_bnds_norm, err_bnds_comp, &nparams,
-                        params, work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        double* a_t = NULL;
-        double* af_t = NULL;
-        double* b_t = NULL;
-        double* x_t = NULL;
-        double* err_bnds_norm_t = NULL;
-        double* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_dgesvxx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_dgesvxx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -15;
-            LAPACKE_xerbla( "LAPACKE_dgesvxx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -17;
-            LAPACKE_xerbla( "LAPACKE_dgesvxx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (double*)LAPACKE_malloc( sizeof(double) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (double*)LAPACKE_malloc( sizeof(double) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (double*)LAPACKE_malloc( sizeof(double) * ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (double*)LAPACKE_malloc( sizeof(double) * ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_dge_trans( matrix_layout, n, n, a, lda, a_t, lda_t );
-        if( LAPACKE_lsame( fact, 'f' ) ) {
-            LAPACKE_dge_trans( matrix_layout, n, n, af, ldaf, af_t, ldaf_t );
-        }
-        LAPACKE_dge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_dgesvxx( &fact, &trans, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t,
-                        ipiv, equed, r, c, b_t, &ldb_t, x_t, &ldx_t, rcond,
-                        rpvgrw, berr, &n_err_bnds, err_bnds_norm_t,
-                        err_bnds_comp_t, &nparams, params, work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        if( LAPACKE_lsame( fact, 'e' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-            LAPACKE_lsame( *equed, 'c' ) || LAPACKE_lsame( *equed, 'r' ) ) ) {
-            LAPACKE_dge_trans( LAPACK_COL_MAJOR, n, n, a_t, lda_t, a, lda );
-        }
-        if( LAPACKE_lsame( fact, 'e' ) || LAPACKE_lsame( fact, 'n' ) ) {
-            LAPACKE_dge_trans( LAPACK_COL_MAJOR, n, n, af_t, ldaf_t, af, ldaf );
-        }
-        if( LAPACKE_lsame( fact, 'f' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-            LAPACKE_lsame( *equed, 'c' ) || LAPACKE_lsame( *equed, 'r' ) ) ) {
-            LAPACKE_dge_trans( LAPACK_COL_MAJOR, n, nrhs, b_t, ldb_t, b, ldb );
-        }
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, n_err_bnds );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, n_err_bnds );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_dgesvxx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_dgesvxx_work", info );
     }
     return info;
 }
@@ -80585,271 +76596,6 @@ exit_level_0:
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
   THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************
-* Contents: Native high-level C interface to LAPACK function dporfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_dporfsx( int matrix_layout, char uplo, char equed,
-                            lapack_int n, lapack_int nrhs, const double* a,
-                            lapack_int lda, const double* af, lapack_int ldaf,
-                            const double* s, const double* b, lapack_int ldb,
-                            double* x, lapack_int ldx, double* rcond,
-                            double* berr, lapack_int n_err_bnds,
-                            double* err_bnds_norm, double* err_bnds_comp,
-                            lapack_int nparams, double* params )
-{
-    lapack_int info = 0;
-    lapack_int* iwork = NULL;
-    double* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_dporfsx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_dsy_nancheck( matrix_layout, uplo, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_dsy_nancheck( matrix_layout, uplo, n, af, ldaf ) ) {
-        return -8;
-    }
-    if( LAPACKE_dge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -11;
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_d_nancheck( nparams, params, 1 ) ) {
-            return -21;
-        }
-    }
-    if( LAPACKE_lsame( equed, 'y' ) ) {
-        if( LAPACKE_d_nancheck( n, s, 1 ) ) {
-            return -10;
-        }
-    }
-    if( LAPACKE_dge_nancheck( matrix_layout, n, nrhs, x, ldx ) ) {
-        return -13;
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    iwork = (lapack_int*)LAPACKE_malloc( sizeof(lapack_int) * MAX(1,n) );
-    if( iwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (double*)LAPACKE_malloc( sizeof(double) * MAX(1,4*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_dporfsx_work( matrix_layout, uplo, equed, n, nrhs, a, lda, af,
-                                 ldaf, s, b, ldb, x, ldx, rcond, berr,
-                                 n_err_bnds, err_bnds_norm, err_bnds_comp,
-                                 nparams, params, work, iwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( iwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_dporfsx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function dporfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_dporfsx_work( int matrix_layout, char uplo, char equed,
-                                 lapack_int n, lapack_int nrhs, const double* a,
-                                 lapack_int lda, const double* af,
-                                 lapack_int ldaf, const double* s,
-                                 const double* b, lapack_int ldb, double* x,
-                                 lapack_int ldx, double* rcond, double* berr,
-                                 lapack_int n_err_bnds, double* err_bnds_norm,
-                                 double* err_bnds_comp, lapack_int nparams,
-                                 double* params, double* work,
-                                 lapack_int* iwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_dporfsx( &uplo, &equed, &n, &nrhs, a, &lda, af, &ldaf, s, b,
-                        &ldb, x, &ldx, rcond, berr, &n_err_bnds, err_bnds_norm,
-                        err_bnds_comp, &nparams, params, work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        double* a_t = NULL;
-        double* af_t = NULL;
-        double* b_t = NULL;
-        double* x_t = NULL;
-        double* err_bnds_norm_t = NULL;
-        double* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_dporfsx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_dporfsx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -12;
-            LAPACKE_xerbla( "LAPACKE_dporfsx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -14;
-            LAPACKE_xerbla( "LAPACKE_dporfsx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (double*)LAPACKE_malloc( sizeof(double) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (double*)LAPACKE_malloc( sizeof(double) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (double*)LAPACKE_malloc( sizeof(double) * ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (double*)LAPACKE_malloc( sizeof(double) * ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_dsy_trans( matrix_layout, uplo, n, a, lda, a_t, lda_t );
-        LAPACKE_dsy_trans( matrix_layout, uplo, n, af, ldaf, af_t, ldaf_t );
-        LAPACKE_dge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        LAPACKE_dge_trans( matrix_layout, n, nrhs, x, ldx, x_t, ldx_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_dporfsx( &uplo, &equed, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t, s,
-                        b_t, &ldb_t, x_t, &ldx_t, rcond, berr, &n_err_bnds,
-                        err_bnds_norm_t, err_bnds_comp_t, &nparams, params,
-                        work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, nrhs );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, nrhs );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_dporfsx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_dporfsx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
 * Contents: Native high-level C interface to LAPACK function dposv
 * Author: Intel Corporation
 * Generated November 2015
@@ -81209,280 +76955,6 @@ exit_level_0:
     } else {
         info = -1;
         LAPACKE_xerbla( "LAPACKE_dposvx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native high-level C interface to LAPACK function dposvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_dposvxx( int matrix_layout, char fact, char uplo,
-                            lapack_int n, lapack_int nrhs, double* a,
-                            lapack_int lda, double* af, lapack_int ldaf,
-                            char* equed, double* s, double* b, lapack_int ldb,
-                            double* x, lapack_int ldx, double* rcond,
-                            double* rpvgrw, double* berr, lapack_int n_err_bnds,
-                            double* err_bnds_norm, double* err_bnds_comp,
-                            lapack_int nparams, double* params )
-{
-    lapack_int info = 0;
-    lapack_int* iwork = NULL;
-    double* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_dposvxx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_dpo_nancheck( matrix_layout, uplo, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) ) {
-        if( LAPACKE_dpo_nancheck( matrix_layout, uplo, n, af, ldaf ) ) {
-            return -8;
-        }
-    }
-    if( LAPACKE_dge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -12;
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_d_nancheck( nparams, params, 1 ) ) {
-            return -23;
-        }
-    }
-    if( LAPACKE_lsame( fact, 'f' ) && LAPACKE_lsame( *equed, 'y' ) ) {
-        if( LAPACKE_d_nancheck( n, s, 1 ) ) {
-            return -11;
-        }
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    iwork = (lapack_int*)LAPACKE_malloc( sizeof(lapack_int) * MAX(1,n) );
-    if( iwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (double*)LAPACKE_malloc( sizeof(double) * MAX(1,4*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_dposvxx_work( matrix_layout, fact, uplo, n, nrhs, a, lda, af,
-                                 ldaf, equed, s, b, ldb, x, ldx, rcond, rpvgrw,
-                                 berr, n_err_bnds, err_bnds_norm, err_bnds_comp,
-                                 nparams, params, work, iwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( iwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_dposvxx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function dposvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_dposvxx_work( int matrix_layout, char fact, char uplo,
-                                 lapack_int n, lapack_int nrhs, double* a,
-                                 lapack_int lda, double* af, lapack_int ldaf,
-                                 char* equed, double* s, double* b,
-                                 lapack_int ldb, double* x, lapack_int ldx,
-                                 double* rcond, double* rpvgrw, double* berr,
-                                 lapack_int n_err_bnds, double* err_bnds_norm,
-                                 double* err_bnds_comp, lapack_int nparams,
-                                 double* params, double* work,
-                                 lapack_int* iwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_dposvxx( &fact, &uplo, &n, &nrhs, a, &lda, af, &ldaf, equed, s,
-                        b, &ldb, x, &ldx, rcond, rpvgrw, berr, &n_err_bnds,
-                        err_bnds_norm, err_bnds_comp, &nparams, params, work,
-                        iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        double* a_t = NULL;
-        double* af_t = NULL;
-        double* b_t = NULL;
-        double* x_t = NULL;
-        double* err_bnds_norm_t = NULL;
-        double* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_dposvxx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_dposvxx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -13;
-            LAPACKE_xerbla( "LAPACKE_dposvxx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -15;
-            LAPACKE_xerbla( "LAPACKE_dposvxx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (double*)LAPACKE_malloc( sizeof(double) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (double*)LAPACKE_malloc( sizeof(double) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (double*)LAPACKE_malloc( sizeof(double) * ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (double*)LAPACKE_malloc( sizeof(double) * ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_dpo_trans( matrix_layout, uplo, n, a, lda, a_t, lda_t );
-        if( LAPACKE_lsame( fact, 'f' ) ) {
-            LAPACKE_dpo_trans( matrix_layout, uplo, n, af, ldaf, af_t, ldaf_t );
-        }
-        LAPACKE_dge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_dposvxx( &fact, &uplo, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t,
-                        equed, s, b_t, &ldb_t, x_t, &ldx_t, rcond, rpvgrw, berr,
-                        &n_err_bnds, err_bnds_norm_t, err_bnds_comp_t, &nparams,
-                        params, work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        if( LAPACKE_lsame( fact, 'e' ) && LAPACKE_lsame( *equed, 'y' ) ) {
-            LAPACKE_dpo_trans( LAPACK_COL_MAJOR, uplo, n, a_t, lda_t, a, lda );
-        }
-        if( LAPACKE_lsame( fact, 'e' ) || LAPACKE_lsame( fact, 'n' ) ) {
-            LAPACKE_dpo_trans( LAPACK_COL_MAJOR, uplo, n, af_t, ldaf_t, af,
-                               ldaf );
-        }
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, n, nrhs, b_t, ldb_t, b, ldb );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, n_err_bnds );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, n_err_bnds );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_dposvxx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_dposvxx_work", info );
     }
     return info;
 }
@@ -93579,274 +89051,6 @@ exit_level_0:
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
   THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************
-* Contents: Native high-level C interface to LAPACK function dsyrfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_dsyrfsx( int matrix_layout, char uplo, char equed,
-                            lapack_int n, lapack_int nrhs, const double* a,
-                            lapack_int lda, const double* af, lapack_int ldaf,
-                            const lapack_int* ipiv, const double* s,
-                            const double* b, lapack_int ldb, double* x,
-                            lapack_int ldx, double* rcond, double* berr,
-                            lapack_int n_err_bnds, double* err_bnds_norm,
-                            double* err_bnds_comp, lapack_int nparams,
-                            double* params )
-{
-    lapack_int info = 0;
-    lapack_int* iwork = NULL;
-    double* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_dsyrfsx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_dsy_nancheck( matrix_layout, uplo, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_dsy_nancheck( matrix_layout, uplo, n, af, ldaf ) ) {
-        return -8;
-    }
-    if( LAPACKE_dge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -12;
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_d_nancheck( nparams, params, 1 ) ) {
-            return -22;
-        }
-    }
-    if( LAPACKE_lsame( equed, 'y' ) ) {
-        if( LAPACKE_d_nancheck( n, s, 1 ) ) {
-            return -11;
-        }
-    }
-    if( LAPACKE_dge_nancheck( matrix_layout, n, nrhs, x, ldx ) ) {
-        return -14;
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    iwork = (lapack_int*)LAPACKE_malloc( sizeof(lapack_int) * MAX(1,n) );
-    if( iwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (double*)LAPACKE_malloc( sizeof(double) * MAX(1,4*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_dsyrfsx_work( matrix_layout, uplo, equed, n, nrhs, a, lda, af,
-                                 ldaf, ipiv, s, b, ldb, x, ldx, rcond, berr,
-                                 n_err_bnds, err_bnds_norm, err_bnds_comp,
-                                 nparams, params, work, iwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( iwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_dsyrfsx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function dsyrfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_dsyrfsx_work( int matrix_layout, char uplo, char equed,
-                                 lapack_int n, lapack_int nrhs, const double* a,
-                                 lapack_int lda, const double* af,
-                                 lapack_int ldaf, const lapack_int* ipiv,
-                                 const double* s, const double* b,
-                                 lapack_int ldb, double* x, lapack_int ldx,
-                                 double* rcond, double* berr,
-                                 lapack_int n_err_bnds, double* err_bnds_norm,
-                                 double* err_bnds_comp, lapack_int nparams,
-                                 double* params, double* work,
-                                 lapack_int* iwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_dsyrfsx( &uplo, &equed, &n, &nrhs, a, &lda, af, &ldaf, ipiv, s,
-                        b, &ldb, x, &ldx, rcond, berr, &n_err_bnds,
-                        err_bnds_norm, err_bnds_comp, &nparams, params, work,
-                        iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        double* a_t = NULL;
-        double* af_t = NULL;
-        double* b_t = NULL;
-        double* x_t = NULL;
-        double* err_bnds_norm_t = NULL;
-        double* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_dsyrfsx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_dsyrfsx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -13;
-            LAPACKE_xerbla( "LAPACKE_dsyrfsx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -15;
-            LAPACKE_xerbla( "LAPACKE_dsyrfsx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (double*)LAPACKE_malloc( sizeof(double) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (double*)LAPACKE_malloc( sizeof(double) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (double*)LAPACKE_malloc( sizeof(double) * ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (double*)LAPACKE_malloc( sizeof(double) * ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_dsy_trans( matrix_layout, uplo, n, a, lda, a_t, lda_t );
-        LAPACKE_dsy_trans( matrix_layout, uplo, n, af, ldaf, af_t, ldaf_t );
-        LAPACKE_dge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        LAPACKE_dge_trans( matrix_layout, n, nrhs, x, ldx, x_t, ldx_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_dsyrfsx( &uplo, &equed, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t,
-                        ipiv, s, b_t, &ldb_t, x_t, &ldx_t, rcond, berr,
-                        &n_err_bnds, err_bnds_norm_t, err_bnds_comp_t, &nparams,
-                        params, work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, nrhs );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, nrhs );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_dsyrfsx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_dsyrfsx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
 * Contents: Native high-level C interface to LAPACK function dsysv
 * Author: Intel Corporation
 * Generated November 2015
@@ -94442,283 +89646,6 @@ exit_level_0:
     } else {
         info = -1;
         LAPACKE_xerbla( "LAPACKE_dsysvx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native high-level C interface to LAPACK function dsysvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_dsysvxx( int matrix_layout, char fact, char uplo,
-                            lapack_int n, lapack_int nrhs, double* a,
-                            lapack_int lda, double* af, lapack_int ldaf,
-                            lapack_int* ipiv, char* equed, double* s, double* b,
-                            lapack_int ldb, double* x, lapack_int ldx,
-                            double* rcond, double* rpvgrw, double* berr,
-                            lapack_int n_err_bnds, double* err_bnds_norm,
-                            double* err_bnds_comp, lapack_int nparams,
-                            double* params )
-{
-    lapack_int info = 0;
-    lapack_int* iwork = NULL;
-    double* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_dsysvxx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_dsy_nancheck( matrix_layout, uplo, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) ) {
-        if( LAPACKE_dsy_nancheck( matrix_layout, uplo, n, af, ldaf ) ) {
-            return -8;
-        }
-    }
-    if( LAPACKE_dge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -13;
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_d_nancheck( nparams, params, 1 ) ) {
-            return -24;
-        }
-    }
-    if( LAPACKE_lsame( fact, 'f' ) ) {
-        if( LAPACKE_d_nancheck( n, s, 1 ) ) {
-            return -12;
-        }
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    iwork = (lapack_int*)LAPACKE_malloc( sizeof(lapack_int) * MAX(1,n) );
-    if( iwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (double*)LAPACKE_malloc( sizeof(double) * MAX(1,4*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_dsysvxx_work( matrix_layout, fact, uplo, n, nrhs, a, lda, af,
-                                 ldaf, ipiv, equed, s, b, ldb, x, ldx, rcond,
-                                 rpvgrw, berr, n_err_bnds, err_bnds_norm,
-                                 err_bnds_comp, nparams, params, work, iwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( iwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_dsysvxx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function dsysvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_dsysvxx_work( int matrix_layout, char fact, char uplo,
-                                 lapack_int n, lapack_int nrhs, double* a,
-                                 lapack_int lda, double* af, lapack_int ldaf,
-                                 lapack_int* ipiv, char* equed, double* s,
-                                 double* b, lapack_int ldb, double* x,
-                                 lapack_int ldx, double* rcond, double* rpvgrw,
-                                 double* berr, lapack_int n_err_bnds,
-                                 double* err_bnds_norm, double* err_bnds_comp,
-                                 lapack_int nparams, double* params,
-                                 double* work, lapack_int* iwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_dsysvxx( &fact, &uplo, &n, &nrhs, a, &lda, af, &ldaf, ipiv,
-                        equed, s, b, &ldb, x, &ldx, rcond, rpvgrw, berr,
-                        &n_err_bnds, err_bnds_norm, err_bnds_comp, &nparams,
-                        params, work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        double* a_t = NULL;
-        double* af_t = NULL;
-        double* b_t = NULL;
-        double* x_t = NULL;
-        double* err_bnds_norm_t = NULL;
-        double* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_dsysvxx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_dsysvxx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -14;
-            LAPACKE_xerbla( "LAPACKE_dsysvxx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -16;
-            LAPACKE_xerbla( "LAPACKE_dsysvxx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (double*)LAPACKE_malloc( sizeof(double) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (double*)LAPACKE_malloc( sizeof(double) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (double*)LAPACKE_malloc( sizeof(double) * ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (double*)LAPACKE_malloc( sizeof(double) * ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_dsy_trans( matrix_layout, uplo, n, a, lda, a_t, lda_t );
-        if( LAPACKE_lsame( fact, 'f' ) ) {
-            LAPACKE_dsy_trans( matrix_layout, uplo, n, af, ldaf, af_t, ldaf_t );
-        }
-        LAPACKE_dge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_dsysvxx( &fact, &uplo, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t,
-                        ipiv, equed, s, b_t, &ldb_t, x_t, &ldx_t, rcond, rpvgrw,
-                        berr, &n_err_bnds, err_bnds_norm_t, err_bnds_comp_t,
-                        &nparams, params, work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        if( LAPACKE_lsame( fact, 'e' ) && LAPACKE_lsame( *equed, 'y' ) ) {
-            LAPACKE_dsy_trans( LAPACK_COL_MAJOR, uplo, n, a_t, lda_t, a, lda );
-        }
-        if( LAPACKE_lsame( fact, 'e' ) || LAPACKE_lsame( fact, 'n' ) ) {
-            LAPACKE_dsy_trans( LAPACK_COL_MAJOR, uplo, n, af_t, ldaf_t, af,
-                               ldaf );
-        }
-        if( LAPACKE_lsame( fact, 'f' ) && LAPACKE_lsame( *equed, 'y' ) ) {
-            LAPACKE_dge_trans( LAPACK_COL_MAJOR, n, nrhs, b_t, ldb_t, b, ldb );
-        }
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, n_err_bnds );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, n_err_bnds );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_dsysvxx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_dsysvxx_work", info );
     }
     return info;
 }
@@ -104851,281 +99778,6 @@ exit_level_0:
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
   THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************
-* Contents: Native high-level C interface to LAPACK function sgbrfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_sgbrfsx( int matrix_layout, char trans, char equed,
-                            lapack_int n, lapack_int kl, lapack_int ku,
-                            lapack_int nrhs, const float* ab, lapack_int ldab,
-                            const float* afb, lapack_int ldafb,
-                            const lapack_int* ipiv, const float* r,
-                            const float* c, const float* b, lapack_int ldb,
-                            float* x, lapack_int ldx, float* rcond, float* berr,
-                            lapack_int n_err_bnds, float* err_bnds_norm,
-                            float* err_bnds_comp, lapack_int nparams,
-                            float* params )
-{
-    lapack_int info = 0;
-    lapack_int* iwork = NULL;
-    float* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_sgbrfsx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_sgb_nancheck( matrix_layout, n, n, kl, ku, ab, ldab ) ) {
-        return -8;
-    }
-    if( LAPACKE_sgb_nancheck( matrix_layout, n, n, kl, kl+ku, afb, ldafb ) ) {
-        return -10;
-    }
-    if( LAPACKE_sge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -15;
-    }
-    if( LAPACKE_lsame( equed, 'b' ) || LAPACKE_lsame( equed, 'c' ) ) {
-        if( LAPACKE_s_nancheck( n, c, 1 ) ) {
-            return -14;
-        }
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_s_nancheck( nparams, params, 1 ) ) {
-            return -25;
-        }
-    }
-    if( LAPACKE_lsame( equed, 'b' ) || LAPACKE_lsame( equed, 'r' ) ) {
-        if( LAPACKE_s_nancheck( n, r, 1 ) ) {
-            return -13;
-        }
-    }
-    if( LAPACKE_sge_nancheck( matrix_layout, n, nrhs, x, ldx ) ) {
-        return -17;
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    iwork = (lapack_int*)LAPACKE_malloc( sizeof(lapack_int) * MAX(1,n) );
-    if( iwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (float*)LAPACKE_malloc( sizeof(float) * MAX(1,4*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_sgbrfsx_work( matrix_layout, trans, equed, n, kl, ku, nrhs,
-                                 ab, ldab, afb, ldafb, ipiv, r, c, b, ldb, x,
-                                 ldx, rcond, berr, n_err_bnds, err_bnds_norm,
-                                 err_bnds_comp, nparams, params, work, iwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( iwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_sgbrfsx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function sgbrfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_sgbrfsx_work( int matrix_layout, char trans, char equed,
-                                 lapack_int n, lapack_int kl, lapack_int ku,
-                                 lapack_int nrhs, const float* ab,
-                                 lapack_int ldab, const float* afb,
-                                 lapack_int ldafb, const lapack_int* ipiv,
-                                 const float* r, const float* c, const float* b,
-                                 lapack_int ldb, float* x, lapack_int ldx,
-                                 float* rcond, float* berr,
-                                 lapack_int n_err_bnds, float* err_bnds_norm,
-                                 float* err_bnds_comp, lapack_int nparams,
-                                 float* params, float* work, lapack_int* iwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_sgbrfsx( &trans, &equed, &n, &kl, &ku, &nrhs, ab, &ldab, afb,
-                        &ldafb, ipiv, r, c, b, &ldb, x, &ldx, rcond, berr,
-                        &n_err_bnds, err_bnds_norm, err_bnds_comp, &nparams,
-                        params, work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int ldab_t = MAX(1,kl+ku+1);
-        lapack_int ldafb_t = MAX(1,2*kl+ku+1);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        float* ab_t = NULL;
-        float* afb_t = NULL;
-        float* b_t = NULL;
-        float* x_t = NULL;
-        float* err_bnds_norm_t = NULL;
-        float* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( ldab < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_sgbrfsx_work", info );
-            return info;
-        }
-        if( ldafb < n ) {
-            info = -11;
-            LAPACKE_xerbla( "LAPACKE_sgbrfsx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -16;
-            LAPACKE_xerbla( "LAPACKE_sgbrfsx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -18;
-            LAPACKE_xerbla( "LAPACKE_sgbrfsx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        ab_t = (float*)LAPACKE_malloc( sizeof(float) * ldab_t * MAX(1,n) );
-        if( ab_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        afb_t = (float*)LAPACKE_malloc( sizeof(float) * ldafb_t * MAX(1,n) );
-        if( afb_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (float*)LAPACKE_malloc( sizeof(float) * ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (float*)LAPACKE_malloc( sizeof(float) * ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_sgb_trans( matrix_layout, n, n, kl, ku, ab, ldab, ab_t, ldab_t );
-        LAPACKE_sgb_trans( matrix_layout, n, n, kl, kl+ku, afb, ldafb, afb_t,
-                           ldafb_t );
-        LAPACKE_sge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        LAPACKE_sge_trans( matrix_layout, n, nrhs, x, ldx, x_t, ldx_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_sgbrfsx( &trans, &equed, &n, &kl, &ku, &nrhs, ab_t, &ldab_t,
-                        afb_t, &ldafb_t, ipiv, r, c, b_t, &ldb_t, x_t, &ldx_t,
-                        rcond, berr, &n_err_bnds, err_bnds_norm_t,
-                        err_bnds_comp_t, &nparams, params, work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, nrhs );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, nrhs );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( afb_t );
-exit_level_1:
-        LAPACKE_free( ab_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_sgbrfsx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_sgbrfsx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
 * Contents: Native high-level C interface to LAPACK function sgbsv
 * Author: Intel Corporation
 * Generated November 2015
@@ -105512,298 +100164,6 @@ exit_level_0:
     } else {
         info = -1;
         LAPACKE_xerbla( "LAPACKE_sgbsvx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native high-level C interface to LAPACK function sgbsvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_sgbsvxx( int matrix_layout, char fact, char trans,
-                            lapack_int n, lapack_int kl, lapack_int ku,
-                            lapack_int nrhs, float* ab, lapack_int ldab,
-                            float* afb, lapack_int ldafb, lapack_int* ipiv,
-                            char* equed, float* r, float* c, float* b,
-                            lapack_int ldb, float* x, lapack_int ldx,
-                            float* rcond, float* rpvgrw, float* berr,
-                            lapack_int n_err_bnds, float* err_bnds_norm,
-                            float* err_bnds_comp, lapack_int nparams,
-                            float* params )
-{
-    lapack_int info = 0;
-    lapack_int* iwork = NULL;
-    float* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_sgbsvxx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_sgb_nancheck( matrix_layout, n, n, kl, ku, ab, ldab ) ) {
-        return -8;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) ) {
-        if( LAPACKE_sgb_nancheck( matrix_layout, n, n, kl, kl+ku, afb,
-            ldafb ) ) {
-            return -10;
-        }
-    }
-    if( LAPACKE_sge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -16;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-        LAPACKE_lsame( *equed, 'c' ) ) ) {
-        if( LAPACKE_s_nancheck( n, c, 1 ) ) {
-            return -15;
-        }
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_s_nancheck( nparams, params, 1 ) ) {
-            return -27;
-        }
-    }
-    if( LAPACKE_lsame( fact, 'f' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-        LAPACKE_lsame( *equed, 'r' ) ) ) {
-        if( LAPACKE_s_nancheck( n, r, 1 ) ) {
-            return -14;
-        }
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    iwork = (lapack_int*)LAPACKE_malloc( sizeof(lapack_int) * MAX(1,n) );
-    if( iwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (float*)LAPACKE_malloc( sizeof(float) * MAX(1,4*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_sgbsvxx_work( matrix_layout, fact, trans, n, kl, ku, nrhs, ab,
-                                 ldab, afb, ldafb, ipiv, equed, r, c, b, ldb, x,
-                                 ldx, rcond, rpvgrw, berr, n_err_bnds,
-                                 err_bnds_norm, err_bnds_comp, nparams, params,
-                                 work, iwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( iwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_sgbsvxx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function sgbsvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_sgbsvxx_work( int matrix_layout, char fact, char trans,
-                                 lapack_int n, lapack_int kl, lapack_int ku,
-                                 lapack_int nrhs, float* ab, lapack_int ldab,
-                                 float* afb, lapack_int ldafb, lapack_int* ipiv,
-                                 char* equed, float* r, float* c, float* b,
-                                 lapack_int ldb, float* x, lapack_int ldx,
-                                 float* rcond, float* rpvgrw, float* berr,
-                                 lapack_int n_err_bnds, float* err_bnds_norm,
-                                 float* err_bnds_comp, lapack_int nparams,
-                                 float* params, float* work, lapack_int* iwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_sgbsvxx( &fact, &trans, &n, &kl, &ku, &nrhs, ab, &ldab, afb,
-                        &ldafb, ipiv, equed, r, c, b, &ldb, x, &ldx, rcond,
-                        rpvgrw, berr, &n_err_bnds, err_bnds_norm, err_bnds_comp,
-                        &nparams, params, work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int ldab_t = MAX(1,kl+ku+1);
-        lapack_int ldafb_t = MAX(1,2*kl+ku+1);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        float* ab_t = NULL;
-        float* afb_t = NULL;
-        float* b_t = NULL;
-        float* x_t = NULL;
-        float* err_bnds_norm_t = NULL;
-        float* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( ldab < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_sgbsvxx_work", info );
-            return info;
-        }
-        if( ldafb < n ) {
-            info = -11;
-            LAPACKE_xerbla( "LAPACKE_sgbsvxx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -17;
-            LAPACKE_xerbla( "LAPACKE_sgbsvxx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -19;
-            LAPACKE_xerbla( "LAPACKE_sgbsvxx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        ab_t = (float*)LAPACKE_malloc( sizeof(float) * ldab_t * MAX(1,n) );
-        if( ab_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        afb_t = (float*)LAPACKE_malloc( sizeof(float) * ldafb_t * MAX(1,n) );
-        if( afb_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (float*)LAPACKE_malloc( sizeof(float) * ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (float*)LAPACKE_malloc( sizeof(float) * ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_sgb_trans( matrix_layout, n, n, kl, ku, ab, ldab, ab_t, ldab_t );
-        if( LAPACKE_lsame( fact, 'f' ) ) {
-            LAPACKE_sgb_trans( matrix_layout, n, n, kl, kl+ku, afb, ldafb, afb_t,
-                               ldafb_t );
-        }
-        LAPACKE_sge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_sgbsvxx( &fact, &trans, &n, &kl, &ku, &nrhs, ab_t, &ldab_t,
-                        afb_t, &ldafb_t, ipiv, equed, r, c, b_t, &ldb_t, x_t,
-                        &ldx_t, rcond, rpvgrw, berr, &n_err_bnds,
-                        err_bnds_norm_t, err_bnds_comp_t, &nparams, params,
-                        work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        if( LAPACKE_lsame( fact, 'e' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-            LAPACKE_lsame( *equed, 'c' ) || LAPACKE_lsame( *equed, 'r' ) ) ) {
-            LAPACKE_sgb_trans( LAPACK_COL_MAJOR, n, n, kl, ku, ab_t, ldab_t, ab,
-                               ldab );
-        }
-        if( LAPACKE_lsame( fact, 'e' ) || LAPACKE_lsame( fact, 'n' ) ) {
-            LAPACKE_sgb_trans( LAPACK_COL_MAJOR, n, n, kl, kl+ku, afb_t,
-                               ldafb_t, afb, ldafb );
-        }
-        if( LAPACKE_lsame( fact, 'f' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-            LAPACKE_lsame( *equed, 'c' ) || LAPACKE_lsame( *equed, 'r' ) ) ) {
-            LAPACKE_sge_trans( LAPACK_COL_MAJOR, n, nrhs, b_t, ldb_t, b, ldb );
-        }
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, n_err_bnds );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, n_err_bnds );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( afb_t );
-exit_level_1:
-        LAPACKE_free( ab_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_sgbsvxx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_sgbsvxx_work", info );
     }
     return info;
 }
@@ -111312,278 +105672,6 @@ exit_level_0:
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
   THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************
-* Contents: Native high-level C interface to LAPACK function sgerfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_sgerfsx( int matrix_layout, char trans, char equed,
-                            lapack_int n, lapack_int nrhs, const float* a,
-                            lapack_int lda, const float* af, lapack_int ldaf,
-                            const lapack_int* ipiv, const float* r,
-                            const float* c, const float* b, lapack_int ldb,
-                            float* x, lapack_int ldx, float* rcond, float* berr,
-                            lapack_int n_err_bnds, float* err_bnds_norm,
-                            float* err_bnds_comp, lapack_int nparams,
-                            float* params )
-{
-    lapack_int info = 0;
-    lapack_int* iwork = NULL;
-    float* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_sgerfsx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_sge_nancheck( matrix_layout, n, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_sge_nancheck( matrix_layout, n, n, af, ldaf ) ) {
-        return -8;
-    }
-    if( LAPACKE_sge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -13;
-    }
-    if( LAPACKE_lsame( equed, 'b' ) || LAPACKE_lsame( equed, 'c' ) ) {
-        if( LAPACKE_s_nancheck( n, c, 1 ) ) {
-            return -12;
-        }
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_s_nancheck( nparams, params, 1 ) ) {
-            return -23;
-        }
-    }
-    if( LAPACKE_lsame( equed, 'b' ) || LAPACKE_lsame( equed, 'r' ) ) {
-        if( LAPACKE_s_nancheck( n, r, 1 ) ) {
-            return -11;
-        }
-    }
-    if( LAPACKE_sge_nancheck( matrix_layout, n, nrhs, x, ldx ) ) {
-        return -15;
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    iwork = (lapack_int*)LAPACKE_malloc( sizeof(lapack_int) * MAX(1,n) );
-    if( iwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (float*)LAPACKE_malloc( sizeof(float) * MAX(1,4*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_sgerfsx_work( matrix_layout, trans, equed, n, nrhs, a, lda,
-                                 af, ldaf, ipiv, r, c, b, ldb, x, ldx, rcond,
-                                 berr, n_err_bnds, err_bnds_norm, err_bnds_comp,
-                                 nparams, params, work, iwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( iwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_sgerfsx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function sgerfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_sgerfsx_work( int matrix_layout, char trans, char equed,
-                                 lapack_int n, lapack_int nrhs, const float* a,
-                                 lapack_int lda, const float* af,
-                                 lapack_int ldaf, const lapack_int* ipiv,
-                                 const float* r, const float* c, const float* b,
-                                 lapack_int ldb, float* x, lapack_int ldx,
-                                 float* rcond, float* berr,
-                                 lapack_int n_err_bnds, float* err_bnds_norm,
-                                 float* err_bnds_comp, lapack_int nparams,
-                                 float* params, float* work, lapack_int* iwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_sgerfsx( &trans, &equed, &n, &nrhs, a, &lda, af, &ldaf, ipiv, r,
-                        c, b, &ldb, x, &ldx, rcond, berr, &n_err_bnds,
-                        err_bnds_norm, err_bnds_comp, &nparams, params, work,
-                        iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        float* a_t = NULL;
-        float* af_t = NULL;
-        float* b_t = NULL;
-        float* x_t = NULL;
-        float* err_bnds_norm_t = NULL;
-        float* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_sgerfsx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_sgerfsx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -14;
-            LAPACKE_xerbla( "LAPACKE_sgerfsx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -16;
-            LAPACKE_xerbla( "LAPACKE_sgerfsx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (float*)LAPACKE_malloc( sizeof(float) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (float*)LAPACKE_malloc( sizeof(float) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (float*)LAPACKE_malloc( sizeof(float) * ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (float*)LAPACKE_malloc( sizeof(float) * ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_sge_trans( matrix_layout, n, n, a, lda, a_t, lda_t );
-        LAPACKE_sge_trans( matrix_layout, n, n, af, ldaf, af_t, ldaf_t );
-        LAPACKE_sge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        LAPACKE_sge_trans( matrix_layout, n, nrhs, x, ldx, x_t, ldx_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_sgerfsx( &trans, &equed, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t,
-                        ipiv, r, c, b_t, &ldb_t, x_t, &ldx_t, rcond, berr,
-                        &n_err_bnds, err_bnds_norm_t, err_bnds_comp_t, &nparams,
-                        params, work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, nrhs );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, nrhs );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_sgerfsx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_sgerfsx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
 * Contents: Native high-level C interface to LAPACK function sgerqf
 * Author: Intel Corporation
 * Generated November 2015
@@ -113038,291 +107126,6 @@ exit_level_0:
     } else {
         info = -1;
         LAPACKE_xerbla( "LAPACKE_sgesvx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native high-level C interface to LAPACK function sgesvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_sgesvxx( int matrix_layout, char fact, char trans,
-                            lapack_int n, lapack_int nrhs, float* a,
-                            lapack_int lda, float* af, lapack_int ldaf,
-                            lapack_int* ipiv, char* equed, float* r, float* c,
-                            float* b, lapack_int ldb, float* x, lapack_int ldx,
-                            float* rcond, float* rpvgrw, float* berr,
-                            lapack_int n_err_bnds, float* err_bnds_norm,
-                            float* err_bnds_comp, lapack_int nparams,
-                            float* params )
-{
-    lapack_int info = 0;
-    lapack_int* iwork = NULL;
-    float* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_sgesvxx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_sge_nancheck( matrix_layout, n, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) ) {
-        if( LAPACKE_sge_nancheck( matrix_layout, n, n, af, ldaf ) ) {
-            return -8;
-        }
-    }
-    if( LAPACKE_sge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -14;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-        LAPACKE_lsame( *equed, 'c' ) ) ) {
-        if( LAPACKE_s_nancheck( n, c, 1 ) ) {
-            return -13;
-        }
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_s_nancheck( nparams, params, 1 ) ) {
-            return -25;
-        }
-    }
-    if( LAPACKE_lsame( fact, 'f' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-        LAPACKE_lsame( *equed, 'r' ) ) ) {
-        if( LAPACKE_s_nancheck( n, r, 1 ) ) {
-            return -12;
-        }
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    iwork = (lapack_int*)LAPACKE_malloc( sizeof(lapack_int) * MAX(1,n) );
-    if( iwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (float*)LAPACKE_malloc( sizeof(float) * MAX(1,4*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_sgesvxx_work( matrix_layout, fact, trans, n, nrhs, a, lda, af,
-                                 ldaf, ipiv, equed, r, c, b, ldb, x, ldx, rcond,
-                                 rpvgrw, berr, n_err_bnds, err_bnds_norm,
-                                 err_bnds_comp, nparams, params, work, iwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( iwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_sgesvxx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function sgesvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_sgesvxx_work( int matrix_layout, char fact, char trans,
-                                 lapack_int n, lapack_int nrhs, float* a,
-                                 lapack_int lda, float* af, lapack_int ldaf,
-                                 lapack_int* ipiv, char* equed, float* r,
-                                 float* c, float* b, lapack_int ldb, float* x,
-                                 lapack_int ldx, float* rcond, float* rpvgrw,
-                                 float* berr, lapack_int n_err_bnds,
-                                 float* err_bnds_norm, float* err_bnds_comp,
-                                 lapack_int nparams, float* params, float* work,
-                                 lapack_int* iwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_sgesvxx( &fact, &trans, &n, &nrhs, a, &lda, af, &ldaf, ipiv,
-                        equed, r, c, b, &ldb, x, &ldx, rcond, rpvgrw, berr,
-                        &n_err_bnds, err_bnds_norm, err_bnds_comp, &nparams,
-                        params, work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        float* a_t = NULL;
-        float* af_t = NULL;
-        float* b_t = NULL;
-        float* x_t = NULL;
-        float* err_bnds_norm_t = NULL;
-        float* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_sgesvxx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_sgesvxx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -15;
-            LAPACKE_xerbla( "LAPACKE_sgesvxx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -17;
-            LAPACKE_xerbla( "LAPACKE_sgesvxx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (float*)LAPACKE_malloc( sizeof(float) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (float*)LAPACKE_malloc( sizeof(float) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (float*)LAPACKE_malloc( sizeof(float) * ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (float*)LAPACKE_malloc( sizeof(float) * ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_sge_trans( matrix_layout, n, n, a, lda, a_t, lda_t );
-        if( LAPACKE_lsame( fact, 'f' ) ) {
-            LAPACKE_sge_trans( matrix_layout, n, n, af, ldaf, af_t, ldaf_t );
-        }
-        LAPACKE_sge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_sgesvxx( &fact, &trans, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t,
-                        ipiv, equed, r, c, b_t, &ldb_t, x_t, &ldx_t, rcond,
-                        rpvgrw, berr, &n_err_bnds, err_bnds_norm_t,
-                        err_bnds_comp_t, &nparams, params, work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        if( LAPACKE_lsame( fact, 'e' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-            LAPACKE_lsame( *equed, 'c' ) || LAPACKE_lsame( *equed, 'r' ) ) ) {
-            LAPACKE_sge_trans( LAPACK_COL_MAJOR, n, n, a_t, lda_t, a, lda );
-        }
-        if( LAPACKE_lsame( fact, 'e' ) || LAPACKE_lsame( fact, 'n' ) ) {
-            LAPACKE_sge_trans( LAPACK_COL_MAJOR, n, n, af_t, ldaf_t, af, ldaf );
-        }
-        if( LAPACKE_lsame( fact, 'f' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-            LAPACKE_lsame( *equed, 'c' ) || LAPACKE_lsame( *equed, 'r' ) ) ) {
-            LAPACKE_sge_trans( LAPACK_COL_MAJOR, n, nrhs, b_t, ldb_t, b, ldb );
-        }
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, n_err_bnds );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, n_err_bnds );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_sgesvxx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_sgesvxx_work", info );
     }
     return info;
 }
@@ -129890,270 +123693,6 @@ exit_level_0:
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
   THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************
-* Contents: Native high-level C interface to LAPACK function sporfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_sporfsx( int matrix_layout, char uplo, char equed,
-                            lapack_int n, lapack_int nrhs, const float* a,
-                            lapack_int lda, const float* af, lapack_int ldaf,
-                            const float* s, const float* b, lapack_int ldb,
-                            float* x, lapack_int ldx, float* rcond, float* berr,
-                            lapack_int n_err_bnds, float* err_bnds_norm,
-                            float* err_bnds_comp, lapack_int nparams,
-                            float* params )
-{
-    lapack_int info = 0;
-    lapack_int* iwork = NULL;
-    float* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_sporfsx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_ssy_nancheck( matrix_layout, uplo, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_ssy_nancheck( matrix_layout, uplo, n, af, ldaf ) ) {
-        return -8;
-    }
-    if( LAPACKE_sge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -11;
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_s_nancheck( nparams, params, 1 ) ) {
-            return -21;
-        }
-    }
-    if( LAPACKE_lsame( equed, 'y' ) ) {
-        if( LAPACKE_s_nancheck( n, s, 1 ) ) {
-            return -10;
-        }
-    }
-    if( LAPACKE_sge_nancheck( matrix_layout, n, nrhs, x, ldx ) ) {
-        return -13;
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    iwork = (lapack_int*)LAPACKE_malloc( sizeof(lapack_int) * MAX(1,n) );
-    if( iwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (float*)LAPACKE_malloc( sizeof(float) * MAX(1,4*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_sporfsx_work( matrix_layout, uplo, equed, n, nrhs, a, lda, af,
-                                 ldaf, s, b, ldb, x, ldx, rcond, berr,
-                                 n_err_bnds, err_bnds_norm, err_bnds_comp,
-                                 nparams, params, work, iwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( iwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_sporfsx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function sporfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_sporfsx_work( int matrix_layout, char uplo, char equed,
-                                 lapack_int n, lapack_int nrhs, const float* a,
-                                 lapack_int lda, const float* af,
-                                 lapack_int ldaf, const float* s,
-                                 const float* b, lapack_int ldb, float* x,
-                                 lapack_int ldx, float* rcond, float* berr,
-                                 lapack_int n_err_bnds, float* err_bnds_norm,
-                                 float* err_bnds_comp, lapack_int nparams,
-                                 float* params, float* work, lapack_int* iwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_sporfsx( &uplo, &equed, &n, &nrhs, a, &lda, af, &ldaf, s, b,
-                        &ldb, x, &ldx, rcond, berr, &n_err_bnds, err_bnds_norm,
-                        err_bnds_comp, &nparams, params, work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        float* a_t = NULL;
-        float* af_t = NULL;
-        float* b_t = NULL;
-        float* x_t = NULL;
-        float* err_bnds_norm_t = NULL;
-        float* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_sporfsx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_sporfsx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -12;
-            LAPACKE_xerbla( "LAPACKE_sporfsx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -14;
-            LAPACKE_xerbla( "LAPACKE_sporfsx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (float*)LAPACKE_malloc( sizeof(float) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (float*)LAPACKE_malloc( sizeof(float) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (float*)LAPACKE_malloc( sizeof(float) * ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (float*)LAPACKE_malloc( sizeof(float) * ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_ssy_trans( matrix_layout, uplo, n, a, lda, a_t, lda_t );
-        LAPACKE_ssy_trans( matrix_layout, uplo, n, af, ldaf, af_t, ldaf_t );
-        LAPACKE_sge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        LAPACKE_sge_trans( matrix_layout, n, nrhs, x, ldx, x_t, ldx_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_sporfsx( &uplo, &equed, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t, s,
-                        b_t, &ldb_t, x_t, &ldx_t, rcond, berr, &n_err_bnds,
-                        err_bnds_norm_t, err_bnds_comp_t, &nparams, params,
-                        work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, nrhs );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, nrhs );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_sporfsx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_sporfsx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
 * Contents: Native high-level C interface to LAPACK function sposv
 * Author: Intel Corporation
 * Generated November 2015
@@ -130513,279 +124052,6 @@ exit_level_0:
     } else {
         info = -1;
         LAPACKE_xerbla( "LAPACKE_sposvx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native high-level C interface to LAPACK function sposvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_sposvxx( int matrix_layout, char fact, char uplo,
-                            lapack_int n, lapack_int nrhs, float* a,
-                            lapack_int lda, float* af, lapack_int ldaf,
-                            char* equed, float* s, float* b, lapack_int ldb,
-                            float* x, lapack_int ldx, float* rcond,
-                            float* rpvgrw, float* berr, lapack_int n_err_bnds,
-                            float* err_bnds_norm, float* err_bnds_comp,
-                            lapack_int nparams, float* params )
-{
-    lapack_int info = 0;
-    lapack_int* iwork = NULL;
-    float* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_sposvxx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_spo_nancheck( matrix_layout, uplo, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) ) {
-        if( LAPACKE_spo_nancheck( matrix_layout, uplo, n, af, ldaf ) ) {
-            return -8;
-        }
-    }
-    if( LAPACKE_sge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -12;
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_s_nancheck( nparams, params, 1 ) ) {
-            return -23;
-        }
-    }
-    if( LAPACKE_lsame( fact, 'f' ) && LAPACKE_lsame( *equed, 'y' ) ) {
-        if( LAPACKE_s_nancheck( n, s, 1 ) ) {
-            return -11;
-        }
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    iwork = (lapack_int*)LAPACKE_malloc( sizeof(lapack_int) * MAX(1,n) );
-    if( iwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (float*)LAPACKE_malloc( sizeof(float) * MAX(1,4*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_sposvxx_work( matrix_layout, fact, uplo, n, nrhs, a, lda, af,
-                                 ldaf, equed, s, b, ldb, x, ldx, rcond, rpvgrw,
-                                 berr, n_err_bnds, err_bnds_norm, err_bnds_comp,
-                                 nparams, params, work, iwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( iwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_sposvxx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function sposvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_sposvxx_work( int matrix_layout, char fact, char uplo,
-                                 lapack_int n, lapack_int nrhs, float* a,
-                                 lapack_int lda, float* af, lapack_int ldaf,
-                                 char* equed, float* s, float* b,
-                                 lapack_int ldb, float* x, lapack_int ldx,
-                                 float* rcond, float* rpvgrw, float* berr,
-                                 lapack_int n_err_bnds, float* err_bnds_norm,
-                                 float* err_bnds_comp, lapack_int nparams,
-                                 float* params, float* work, lapack_int* iwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_sposvxx( &fact, &uplo, &n, &nrhs, a, &lda, af, &ldaf, equed, s,
-                        b, &ldb, x, &ldx, rcond, rpvgrw, berr, &n_err_bnds,
-                        err_bnds_norm, err_bnds_comp, &nparams, params, work,
-                        iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        float* a_t = NULL;
-        float* af_t = NULL;
-        float* b_t = NULL;
-        float* x_t = NULL;
-        float* err_bnds_norm_t = NULL;
-        float* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_sposvxx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_sposvxx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -13;
-            LAPACKE_xerbla( "LAPACKE_sposvxx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -15;
-            LAPACKE_xerbla( "LAPACKE_sposvxx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (float*)LAPACKE_malloc( sizeof(float) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (float*)LAPACKE_malloc( sizeof(float) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (float*)LAPACKE_malloc( sizeof(float) * ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (float*)LAPACKE_malloc( sizeof(float) * ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_spo_trans( matrix_layout, uplo, n, a, lda, a_t, lda_t );
-        if( LAPACKE_lsame( fact, 'f' ) ) {
-            LAPACKE_spo_trans( matrix_layout, uplo, n, af, ldaf, af_t, ldaf_t );
-        }
-        LAPACKE_sge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_sposvxx( &fact, &uplo, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t,
-                        equed, s, b_t, &ldb_t, x_t, &ldx_t, rcond, rpvgrw, berr,
-                        &n_err_bnds, err_bnds_norm_t, err_bnds_comp_t, &nparams,
-                        params, work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        if( LAPACKE_lsame( fact, 'e' ) && LAPACKE_lsame( *equed, 'y' ) ) {
-            LAPACKE_spo_trans( LAPACK_COL_MAJOR, uplo, n, a_t, lda_t, a, lda );
-        }
-        if( LAPACKE_lsame( fact, 'e' ) || LAPACKE_lsame( fact, 'n' ) ) {
-            LAPACKE_spo_trans( LAPACK_COL_MAJOR, uplo, n, af_t, ldaf_t, af,
-                               ldaf );
-        }
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, n, nrhs, b_t, ldb_t, b, ldb );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, n_err_bnds );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, n_err_bnds );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_sposvxx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_sposvxx_work", info );
     }
     return info;
 }
@@ -142475,273 +135741,6 @@ exit_level_0:
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
   THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************
-* Contents: Native high-level C interface to LAPACK function ssyrfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_ssyrfsx( int matrix_layout, char uplo, char equed,
-                            lapack_int n, lapack_int nrhs, const float* a,
-                            lapack_int lda, const float* af, lapack_int ldaf,
-                            const lapack_int* ipiv, const float* s,
-                            const float* b, lapack_int ldb, float* x,
-                            lapack_int ldx, float* rcond, float* berr,
-                            lapack_int n_err_bnds, float* err_bnds_norm,
-                            float* err_bnds_comp, lapack_int nparams,
-                            float* params )
-{
-    lapack_int info = 0;
-    lapack_int* iwork = NULL;
-    float* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_ssyrfsx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_ssy_nancheck( matrix_layout, uplo, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_ssy_nancheck( matrix_layout, uplo, n, af, ldaf ) ) {
-        return -8;
-    }
-    if( LAPACKE_sge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -12;
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_s_nancheck( nparams, params, 1 ) ) {
-            return -22;
-        }
-    }
-    if( LAPACKE_lsame( equed, 'y' ) ) {
-        if( LAPACKE_s_nancheck( n, s, 1 ) ) {
-            return -11;
-        }
-    }
-    if( LAPACKE_sge_nancheck( matrix_layout, n, nrhs, x, ldx ) ) {
-        return -14;
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    iwork = (lapack_int*)LAPACKE_malloc( sizeof(lapack_int) * MAX(1,n) );
-    if( iwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (float*)LAPACKE_malloc( sizeof(float) * MAX(1,4*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_ssyrfsx_work( matrix_layout, uplo, equed, n, nrhs, a, lda, af,
-                                 ldaf, ipiv, s, b, ldb, x, ldx, rcond, berr,
-                                 n_err_bnds, err_bnds_norm, err_bnds_comp,
-                                 nparams, params, work, iwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( iwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_ssyrfsx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function ssyrfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_ssyrfsx_work( int matrix_layout, char uplo, char equed,
-                                 lapack_int n, lapack_int nrhs, const float* a,
-                                 lapack_int lda, const float* af,
-                                 lapack_int ldaf, const lapack_int* ipiv,
-                                 const float* s, const float* b, lapack_int ldb,
-                                 float* x, lapack_int ldx, float* rcond,
-                                 float* berr, lapack_int n_err_bnds,
-                                 float* err_bnds_norm, float* err_bnds_comp,
-                                 lapack_int nparams, float* params, float* work,
-                                 lapack_int* iwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_ssyrfsx( &uplo, &equed, &n, &nrhs, a, &lda, af, &ldaf, ipiv, s,
-                        b, &ldb, x, &ldx, rcond, berr, &n_err_bnds,
-                        err_bnds_norm, err_bnds_comp, &nparams, params, work,
-                        iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        float* a_t = NULL;
-        float* af_t = NULL;
-        float* b_t = NULL;
-        float* x_t = NULL;
-        float* err_bnds_norm_t = NULL;
-        float* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_ssyrfsx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_ssyrfsx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -13;
-            LAPACKE_xerbla( "LAPACKE_ssyrfsx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -15;
-            LAPACKE_xerbla( "LAPACKE_ssyrfsx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (float*)LAPACKE_malloc( sizeof(float) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (float*)LAPACKE_malloc( sizeof(float) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (float*)LAPACKE_malloc( sizeof(float) * ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (float*)LAPACKE_malloc( sizeof(float) * ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_ssy_trans( matrix_layout, uplo, n, a, lda, a_t, lda_t );
-        LAPACKE_ssy_trans( matrix_layout, uplo, n, af, ldaf, af_t, ldaf_t );
-        LAPACKE_sge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        LAPACKE_sge_trans( matrix_layout, n, nrhs, x, ldx, x_t, ldx_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_ssyrfsx( &uplo, &equed, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t,
-                        ipiv, s, b_t, &ldb_t, x_t, &ldx_t, rcond, berr,
-                        &n_err_bnds, err_bnds_norm_t, err_bnds_comp_t, &nparams,
-                        params, work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, nrhs );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, nrhs );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_ssyrfsx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_ssyrfsx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
 * Contents: Native high-level C interface to LAPACK function ssysv
 * Author: Intel Corporation
 * Generated November 2015
@@ -143337,283 +136336,6 @@ exit_level_0:
     } else {
         info = -1;
         LAPACKE_xerbla( "LAPACKE_ssysvx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native high-level C interface to LAPACK function ssysvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_ssysvxx( int matrix_layout, char fact, char uplo,
-                            lapack_int n, lapack_int nrhs, float* a,
-                            lapack_int lda, float* af, lapack_int ldaf,
-                            lapack_int* ipiv, char* equed, float* s, float* b,
-                            lapack_int ldb, float* x, lapack_int ldx,
-                            float* rcond, float* rpvgrw, float* berr,
-                            lapack_int n_err_bnds, float* err_bnds_norm,
-                            float* err_bnds_comp, lapack_int nparams,
-                            float* params )
-{
-    lapack_int info = 0;
-    lapack_int* iwork = NULL;
-    float* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_ssysvxx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_ssy_nancheck( matrix_layout, uplo, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) ) {
-        if( LAPACKE_ssy_nancheck( matrix_layout, uplo, n, af, ldaf ) ) {
-            return -8;
-        }
-    }
-    if( LAPACKE_sge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -13;
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_s_nancheck( nparams, params, 1 ) ) {
-            return -24;
-        }
-    }
-    if( LAPACKE_lsame( fact, 'f' ) ) {
-        if( LAPACKE_s_nancheck( n, s, 1 ) ) {
-            return -12;
-        }
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    iwork = (lapack_int*)LAPACKE_malloc( sizeof(lapack_int) * MAX(1,n) );
-    if( iwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (float*)LAPACKE_malloc( sizeof(float) * MAX(1,4*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_ssysvxx_work( matrix_layout, fact, uplo, n, nrhs, a, lda, af,
-                                 ldaf, ipiv, equed, s, b, ldb, x, ldx, rcond,
-                                 rpvgrw, berr, n_err_bnds, err_bnds_norm,
-                                 err_bnds_comp, nparams, params, work, iwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( iwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_ssysvxx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function ssysvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_ssysvxx_work( int matrix_layout, char fact, char uplo,
-                                 lapack_int n, lapack_int nrhs, float* a,
-                                 lapack_int lda, float* af, lapack_int ldaf,
-                                 lapack_int* ipiv, char* equed, float* s,
-                                 float* b, lapack_int ldb, float* x,
-                                 lapack_int ldx, float* rcond, float* rpvgrw,
-                                 float* berr, lapack_int n_err_bnds,
-                                 float* err_bnds_norm, float* err_bnds_comp,
-                                 lapack_int nparams, float* params, float* work,
-                                 lapack_int* iwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_ssysvxx( &fact, &uplo, &n, &nrhs, a, &lda, af, &ldaf, ipiv,
-                        equed, s, b, &ldb, x, &ldx, rcond, rpvgrw, berr,
-                        &n_err_bnds, err_bnds_norm, err_bnds_comp, &nparams,
-                        params, work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        float* a_t = NULL;
-        float* af_t = NULL;
-        float* b_t = NULL;
-        float* x_t = NULL;
-        float* err_bnds_norm_t = NULL;
-        float* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_ssysvxx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_ssysvxx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -14;
-            LAPACKE_xerbla( "LAPACKE_ssysvxx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -16;
-            LAPACKE_xerbla( "LAPACKE_ssysvxx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (float*)LAPACKE_malloc( sizeof(float) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (float*)LAPACKE_malloc( sizeof(float) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (float*)LAPACKE_malloc( sizeof(float) * ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (float*)LAPACKE_malloc( sizeof(float) * ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (float*)
-            LAPACKE_malloc( sizeof(float) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_ssy_trans( matrix_layout, uplo, n, a, lda, a_t, lda_t );
-        if( LAPACKE_lsame( fact, 'f' ) ) {
-            LAPACKE_ssy_trans( matrix_layout, uplo, n, af, ldaf, af_t, ldaf_t );
-        }
-        LAPACKE_sge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_ssysvxx( &fact, &uplo, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t,
-                        ipiv, equed, s, b_t, &ldb_t, x_t, &ldx_t, rcond, rpvgrw,
-                        berr, &n_err_bnds, err_bnds_norm_t, err_bnds_comp_t,
-                        &nparams, params, work, iwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        if( LAPACKE_lsame( fact, 'e' ) && LAPACKE_lsame( *equed, 'y' ) ) {
-            LAPACKE_ssy_trans( LAPACK_COL_MAJOR, uplo, n, a_t, lda_t, a, lda );
-        }
-        if( LAPACKE_lsame( fact, 'e' ) || LAPACKE_lsame( fact, 'n' ) ) {
-            LAPACKE_ssy_trans( LAPACK_COL_MAJOR, uplo, n, af_t, ldaf_t, af,
-                               ldaf );
-        }
-        if( LAPACKE_lsame( fact, 'f' ) && LAPACKE_lsame( *equed, 'y' ) ) {
-            LAPACKE_sge_trans( LAPACK_COL_MAJOR, n, nrhs, b_t, ldb_t, b, ldb );
-        }
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, n_err_bnds );
-        LAPACKE_sge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, n_err_bnds );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_ssysvxx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_ssysvxx_work", info );
     }
     return info;
 }
@@ -153698,294 +146420,6 @@ exit_level_0:
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
   THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************
-* Contents: Native high-level C interface to LAPACK function zgbrfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_zgbrfsx( int matrix_layout, char trans, char equed,
-                            lapack_int n, lapack_int kl, lapack_int ku,
-                            lapack_int nrhs, const lapack_complex_double* ab,
-                            lapack_int ldab, const lapack_complex_double* afb,
-                            lapack_int ldafb, const lapack_int* ipiv,
-                            const double* r, const double* c,
-                            const lapack_complex_double* b, lapack_int ldb,
-                            lapack_complex_double* x, lapack_int ldx,
-                            double* rcond, double* berr, lapack_int n_err_bnds,
-                            double* err_bnds_norm, double* err_bnds_comp,
-                            lapack_int nparams, double* params )
-{
-    lapack_int info = 0;
-    double* rwork = NULL;
-    lapack_complex_double* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_zgbrfsx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_zgb_nancheck( matrix_layout, n, n, kl, ku, ab, ldab ) ) {
-        return -8;
-    }
-    if( LAPACKE_zgb_nancheck( matrix_layout, n, n, kl, kl+ku, afb, ldafb ) ) {
-        return -10;
-    }
-    if( LAPACKE_zge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -15;
-    }
-    if( LAPACKE_lsame( equed, 'b' ) || LAPACKE_lsame( equed, 'c' ) ) {
-        if( LAPACKE_d_nancheck( n, c, 1 ) ) {
-            return -14;
-        }
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_d_nancheck( nparams, params, 1 ) ) {
-            return -25;
-        }
-    }
-    if( LAPACKE_lsame( equed, 'b' ) || LAPACKE_lsame( equed, 'r' ) ) {
-        if( LAPACKE_d_nancheck( n, r, 1 ) ) {
-            return -13;
-        }
-    }
-    if( LAPACKE_zge_nancheck( matrix_layout, n, nrhs, x, ldx ) ) {
-        return -17;
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    rwork = (double*)LAPACKE_malloc( sizeof(double) * MAX(1,3*n) );
-    if( rwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (lapack_complex_double*)
-        LAPACKE_malloc( sizeof(lapack_complex_double) * MAX(1,2*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_zgbrfsx_work( matrix_layout, trans, equed, n, kl, ku, nrhs,
-                                 ab, ldab, afb, ldafb, ipiv, r, c, b, ldb, x,
-                                 ldx, rcond, berr, n_err_bnds, err_bnds_norm,
-                                 err_bnds_comp, nparams, params, work, rwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( rwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_zgbrfsx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function zgbrfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_zgbrfsx_work( int matrix_layout, char trans, char equed,
-                                 lapack_int n, lapack_int kl, lapack_int ku,
-                                 lapack_int nrhs,
-                                 const lapack_complex_double* ab,
-                                 lapack_int ldab,
-                                 const lapack_complex_double* afb,
-                                 lapack_int ldafb, const lapack_int* ipiv,
-                                 const double* r, const double* c,
-                                 const lapack_complex_double* b, lapack_int ldb,
-                                 lapack_complex_double* x, lapack_int ldx,
-                                 double* rcond, double* berr,
-                                 lapack_int n_err_bnds, double* err_bnds_norm,
-                                 double* err_bnds_comp, lapack_int nparams,
-                                 double* params, lapack_complex_double* work,
-                                 double* rwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_zgbrfsx( &trans, &equed, &n, &kl, &ku, &nrhs, ab, &ldab, afb,
-                        &ldafb, ipiv, r, c, b, &ldb, x, &ldx, rcond, berr,
-                        &n_err_bnds, err_bnds_norm, err_bnds_comp, &nparams,
-                        params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int ldab_t = MAX(1,kl+ku+1);
-        lapack_int ldafb_t = MAX(1,2*kl+ku+1);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        lapack_complex_double* ab_t = NULL;
-        lapack_complex_double* afb_t = NULL;
-        lapack_complex_double* b_t = NULL;
-        lapack_complex_double* x_t = NULL;
-        double* err_bnds_norm_t = NULL;
-        double* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( ldab < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_zgbrfsx_work", info );
-            return info;
-        }
-        if( ldafb < n ) {
-            info = -11;
-            LAPACKE_xerbla( "LAPACKE_zgbrfsx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -16;
-            LAPACKE_xerbla( "LAPACKE_zgbrfsx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -18;
-            LAPACKE_xerbla( "LAPACKE_zgbrfsx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        ab_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) * ldab_t * MAX(1,n) );
-        if( ab_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        afb_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) *
-                            ldafb_t * MAX(1,n) );
-        if( afb_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) *
-                            ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) *
-                            ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_zgb_trans( matrix_layout, n, n, kl, ku, ab, ldab, ab_t, ldab_t );
-        LAPACKE_zgb_trans( matrix_layout, n, n, kl, kl+ku, afb, ldafb, afb_t,
-                           ldafb_t );
-        LAPACKE_zge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        LAPACKE_zge_trans( matrix_layout, n, nrhs, x, ldx, x_t, ldx_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_zgbrfsx( &trans, &equed, &n, &kl, &ku, &nrhs, ab_t, &ldab_t,
-                        afb_t, &ldafb_t, ipiv, r, c, b_t, &ldb_t, x_t, &ldx_t,
-                        rcond, berr, &n_err_bnds, err_bnds_norm_t,
-                        err_bnds_comp_t, &nparams, params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        LAPACKE_zge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, nrhs );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, nrhs );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( afb_t );
-exit_level_1:
-        LAPACKE_free( ab_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_zgbrfsx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_zgbrfsx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
 * Contents: Native high-level C interface to LAPACK function zgbsv
 * Author: Intel Corporation
 * Generated November 2015
@@ -154388,310 +146822,6 @@ exit_level_0:
     } else {
         info = -1;
         LAPACKE_xerbla( "LAPACKE_zgbsvx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native high-level C interface to LAPACK function zgbsvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_zgbsvxx( int matrix_layout, char fact, char trans,
-                            lapack_int n, lapack_int kl, lapack_int ku,
-                            lapack_int nrhs, lapack_complex_double* ab,
-                            lapack_int ldab, lapack_complex_double* afb,
-                            lapack_int ldafb, lapack_int* ipiv, char* equed,
-                            double* r, double* c, lapack_complex_double* b,
-                            lapack_int ldb, lapack_complex_double* x,
-                            lapack_int ldx, double* rcond, double* rpvgrw,
-                            double* berr, lapack_int n_err_bnds,
-                            double* err_bnds_norm, double* err_bnds_comp,
-                            lapack_int nparams, double* params )
-{
-    lapack_int info = 0;
-    double* rwork = NULL;
-    lapack_complex_double* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_zgbsvxx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_zgb_nancheck( matrix_layout, n, n, kl, ku, ab, ldab ) ) {
-        return -8;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) ) {
-        if( LAPACKE_zgb_nancheck( matrix_layout, n, n, kl, kl+ku, afb,
-            ldafb ) ) {
-            return -10;
-        }
-    }
-    if( LAPACKE_zge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -16;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-        LAPACKE_lsame( *equed, 'c' ) ) ) {
-        if( LAPACKE_d_nancheck( n, c, 1 ) ) {
-            return -15;
-        }
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_d_nancheck( nparams, params, 1 ) ) {
-            return -27;
-        }
-    }
-    if( LAPACKE_lsame( fact, 'f' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-        LAPACKE_lsame( *equed, 'r' ) ) ) {
-        if( LAPACKE_d_nancheck( n, r, 1 ) ) {
-            return -14;
-        }
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    rwork = (double*)LAPACKE_malloc( sizeof(double) * MAX(1,3*n) );
-    if( rwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (lapack_complex_double*)
-        LAPACKE_malloc( sizeof(lapack_complex_double) * MAX(1,2*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_zgbsvxx_work( matrix_layout, fact, trans, n, kl, ku, nrhs, ab,
-                                 ldab, afb, ldafb, ipiv, equed, r, c, b, ldb, x,
-                                 ldx, rcond, rpvgrw, berr, n_err_bnds,
-                                 err_bnds_norm, err_bnds_comp, nparams, params,
-                                 work, rwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( rwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_zgbsvxx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function zgbsvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_zgbsvxx_work( int matrix_layout, char fact, char trans,
-                                 lapack_int n, lapack_int kl, lapack_int ku,
-                                 lapack_int nrhs, lapack_complex_double* ab,
-                                 lapack_int ldab, lapack_complex_double* afb,
-                                 lapack_int ldafb, lapack_int* ipiv,
-                                 char* equed, double* r, double* c,
-                                 lapack_complex_double* b, lapack_int ldb,
-                                 lapack_complex_double* x, lapack_int ldx,
-                                 double* rcond, double* rpvgrw, double* berr,
-                                 lapack_int n_err_bnds, double* err_bnds_norm,
-                                 double* err_bnds_comp, lapack_int nparams,
-                                 double* params, lapack_complex_double* work,
-                                 double* rwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_zgbsvxx( &fact, &trans, &n, &kl, &ku, &nrhs, ab, &ldab, afb,
-                        &ldafb, ipiv, equed, r, c, b, &ldb, x, &ldx, rcond,
-                        rpvgrw, berr, &n_err_bnds, err_bnds_norm, err_bnds_comp,
-                        &nparams, params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int ldab_t = MAX(1,kl+ku+1);
-        lapack_int ldafb_t = MAX(1,2*kl+ku+1);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        lapack_complex_double* ab_t = NULL;
-        lapack_complex_double* afb_t = NULL;
-        lapack_complex_double* b_t = NULL;
-        lapack_complex_double* x_t = NULL;
-        double* err_bnds_norm_t = NULL;
-        double* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( ldab < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_zgbsvxx_work", info );
-            return info;
-        }
-        if( ldafb < n ) {
-            info = -11;
-            LAPACKE_xerbla( "LAPACKE_zgbsvxx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -17;
-            LAPACKE_xerbla( "LAPACKE_zgbsvxx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -19;
-            LAPACKE_xerbla( "LAPACKE_zgbsvxx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        ab_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) * ldab_t * MAX(1,n) );
-        if( ab_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        afb_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) *
-                            ldafb_t * MAX(1,n) );
-        if( afb_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) *
-                            ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) *
-                            ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_zgb_trans( matrix_layout, n, n, kl, ku, ab, ldab, ab_t, ldab_t );
-        if( LAPACKE_lsame( fact, 'f' ) ) {
-            LAPACKE_zgb_trans( matrix_layout, n, n, kl, kl+ku, afb, ldafb, afb_t,
-                               ldafb_t );
-        }
-        LAPACKE_zge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_zgbsvxx( &fact, &trans, &n, &kl, &ku, &nrhs, ab_t, &ldab_t,
-                        afb_t, &ldafb_t, ipiv, equed, r, c, b_t, &ldb_t, x_t,
-                        &ldx_t, rcond, rpvgrw, berr, &n_err_bnds,
-                        err_bnds_norm_t, err_bnds_comp_t, &nparams, params,
-                        work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        if( LAPACKE_lsame( fact, 'e' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-            LAPACKE_lsame( *equed, 'c' ) || LAPACKE_lsame( *equed, 'r' ) ) ) {
-            LAPACKE_zgb_trans( LAPACK_COL_MAJOR, n, n, kl, ku, ab_t, ldab_t, ab,
-                               ldab );
-        }
-        if( LAPACKE_lsame( fact, 'e' ) || LAPACKE_lsame( fact, 'n' ) ) {
-            LAPACKE_zgb_trans( LAPACK_COL_MAJOR, n, n, kl, kl+ku, afb_t,
-                               ldafb_t, afb, ldafb );
-        }
-        if( LAPACKE_lsame( fact, 'f' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-            LAPACKE_lsame( *equed, 'c' ) || LAPACKE_lsame( *equed, 'r' ) ) ) {
-            LAPACKE_zge_trans( LAPACK_COL_MAJOR, n, nrhs, b_t, ldb_t, b, ldb );
-        }
-        LAPACKE_zge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, n_err_bnds );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, n_err_bnds );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( afb_t );
-exit_level_1:
-        LAPACKE_free( ab_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_zgbsvxx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_zgbsvxx_work", info );
     }
     return info;
 }
@@ -160455,290 +152585,6 @@ exit_level_0:
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
   THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************
-* Contents: Native high-level C interface to LAPACK function zgerfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_zgerfsx( int matrix_layout, char trans, char equed,
-                            lapack_int n, lapack_int nrhs,
-                            const lapack_complex_double* a, lapack_int lda,
-                            const lapack_complex_double* af, lapack_int ldaf,
-                            const lapack_int* ipiv, const double* r,
-                            const double* c, const lapack_complex_double* b,
-                            lapack_int ldb, lapack_complex_double* x,
-                            lapack_int ldx, double* rcond, double* berr,
-                            lapack_int n_err_bnds, double* err_bnds_norm,
-                            double* err_bnds_comp, lapack_int nparams,
-                            double* params )
-{
-    lapack_int info = 0;
-    double* rwork = NULL;
-    lapack_complex_double* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_zgerfsx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_zge_nancheck( matrix_layout, n, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_zge_nancheck( matrix_layout, n, n, af, ldaf ) ) {
-        return -8;
-    }
-    if( LAPACKE_zge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -13;
-    }
-    if( LAPACKE_lsame( equed, 'b' ) || LAPACKE_lsame( equed, 'c' ) ) {
-        if( LAPACKE_d_nancheck( n, c, 1 ) ) {
-            return -12;
-        }
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_d_nancheck( nparams, params, 1 ) ) {
-            return -23;
-        }
-    }
-    if( LAPACKE_lsame( equed, 'b' ) || LAPACKE_lsame( equed, 'r' ) ) {
-        if( LAPACKE_d_nancheck( n, r, 1 ) ) {
-            return -11;
-        }
-    }
-    if( LAPACKE_zge_nancheck( matrix_layout, n, nrhs, x, ldx ) ) {
-        return -15;
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    rwork = (double*)LAPACKE_malloc( sizeof(double) * MAX(1,3*n) );
-    if( rwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (lapack_complex_double*)
-        LAPACKE_malloc( sizeof(lapack_complex_double) * MAX(1,2*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_zgerfsx_work( matrix_layout, trans, equed, n, nrhs, a, lda,
-                                 af, ldaf, ipiv, r, c, b, ldb, x, ldx, rcond,
-                                 berr, n_err_bnds, err_bnds_norm, err_bnds_comp,
-                                 nparams, params, work, rwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( rwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_zgerfsx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function zgerfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_zgerfsx_work( int matrix_layout, char trans, char equed,
-                                 lapack_int n, lapack_int nrhs,
-                                 const lapack_complex_double* a, lapack_int lda,
-                                 const lapack_complex_double* af,
-                                 lapack_int ldaf, const lapack_int* ipiv,
-                                 const double* r, const double* c,
-                                 const lapack_complex_double* b, lapack_int ldb,
-                                 lapack_complex_double* x, lapack_int ldx,
-                                 double* rcond, double* berr,
-                                 lapack_int n_err_bnds, double* err_bnds_norm,
-                                 double* err_bnds_comp, lapack_int nparams,
-                                 double* params, lapack_complex_double* work,
-                                 double* rwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_zgerfsx( &trans, &equed, &n, &nrhs, a, &lda, af, &ldaf, ipiv, r,
-                        c, b, &ldb, x, &ldx, rcond, berr, &n_err_bnds,
-                        err_bnds_norm, err_bnds_comp, &nparams, params, work,
-                        rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        lapack_complex_double* a_t = NULL;
-        lapack_complex_double* af_t = NULL;
-        lapack_complex_double* b_t = NULL;
-        lapack_complex_double* x_t = NULL;
-        double* err_bnds_norm_t = NULL;
-        double* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_zgerfsx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_zgerfsx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -14;
-            LAPACKE_xerbla( "LAPACKE_zgerfsx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -16;
-            LAPACKE_xerbla( "LAPACKE_zgerfsx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) *
-                            ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) *
-                            ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_zge_trans( matrix_layout, n, n, a, lda, a_t, lda_t );
-        LAPACKE_zge_trans( matrix_layout, n, n, af, ldaf, af_t, ldaf_t );
-        LAPACKE_zge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        LAPACKE_zge_trans( matrix_layout, n, nrhs, x, ldx, x_t, ldx_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_zgerfsx( &trans, &equed, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t,
-                        ipiv, r, c, b_t, &ldb_t, x_t, &ldx_t, rcond, berr,
-                        &n_err_bnds, err_bnds_norm_t, err_bnds_comp_t, &nparams,
-                        params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        LAPACKE_zge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, nrhs );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, nrhs );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_zgerfsx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_zgerfsx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
 * Contents: Native high-level C interface to LAPACK function zgerqf
 * Author: Intel Corporation
 * Generated November 2015
@@ -162283,302 +154129,6 @@ exit_level_0:
     } else {
         info = -1;
         LAPACKE_xerbla( "LAPACKE_zgesvx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native high-level C interface to LAPACK function zgesvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_zgesvxx( int matrix_layout, char fact, char trans,
-                            lapack_int n, lapack_int nrhs,
-                            lapack_complex_double* a, lapack_int lda,
-                            lapack_complex_double* af, lapack_int ldaf,
-                            lapack_int* ipiv, char* equed, double* r, double* c,
-                            lapack_complex_double* b, lapack_int ldb,
-                            lapack_complex_double* x, lapack_int ldx,
-                            double* rcond, double* rpvgrw, double* berr,
-                            lapack_int n_err_bnds, double* err_bnds_norm,
-                            double* err_bnds_comp, lapack_int nparams,
-                            double* params )
-{
-    lapack_int info = 0;
-    double* rwork = NULL;
-    lapack_complex_double* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_zgesvxx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_zge_nancheck( matrix_layout, n, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) ) {
-        if( LAPACKE_zge_nancheck( matrix_layout, n, n, af, ldaf ) ) {
-            return -8;
-        }
-    }
-    if( LAPACKE_zge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -14;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-        LAPACKE_lsame( *equed, 'c' ) ) ) {
-        if( LAPACKE_d_nancheck( n, c, 1 ) ) {
-            return -13;
-        }
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_d_nancheck( nparams, params, 1 ) ) {
-            return -25;
-        }
-    }
-    if( LAPACKE_lsame( fact, 'f' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-        LAPACKE_lsame( *equed, 'r' ) ) ) {
-        if( LAPACKE_d_nancheck( n, r, 1 ) ) {
-            return -12;
-        }
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    rwork = (double*)LAPACKE_malloc( sizeof(double) * MAX(1,3*n) );
-    if( rwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (lapack_complex_double*)
-        LAPACKE_malloc( sizeof(lapack_complex_double) * MAX(1,2*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_zgesvxx_work( matrix_layout, fact, trans, n, nrhs, a, lda, af,
-                                 ldaf, ipiv, equed, r, c, b, ldb, x, ldx, rcond,
-                                 rpvgrw, berr, n_err_bnds, err_bnds_norm,
-                                 err_bnds_comp, nparams, params, work, rwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( rwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_zgesvxx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function zgesvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_zgesvxx_work( int matrix_layout, char fact, char trans,
-                                 lapack_int n, lapack_int nrhs,
-                                 lapack_complex_double* a, lapack_int lda,
-                                 lapack_complex_double* af, lapack_int ldaf,
-                                 lapack_int* ipiv, char* equed, double* r,
-                                 double* c, lapack_complex_double* b,
-                                 lapack_int ldb, lapack_complex_double* x,
-                                 lapack_int ldx, double* rcond, double* rpvgrw,
-                                 double* berr, lapack_int n_err_bnds,
-                                 double* err_bnds_norm, double* err_bnds_comp,
-                                 lapack_int nparams, double* params,
-                                 lapack_complex_double* work, double* rwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_zgesvxx( &fact, &trans, &n, &nrhs, a, &lda, af, &ldaf, ipiv,
-                        equed, r, c, b, &ldb, x, &ldx, rcond, rpvgrw, berr,
-                        &n_err_bnds, err_bnds_norm, err_bnds_comp, &nparams,
-                        params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        lapack_complex_double* a_t = NULL;
-        lapack_complex_double* af_t = NULL;
-        lapack_complex_double* b_t = NULL;
-        lapack_complex_double* x_t = NULL;
-        double* err_bnds_norm_t = NULL;
-        double* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_zgesvxx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_zgesvxx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -15;
-            LAPACKE_xerbla( "LAPACKE_zgesvxx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -17;
-            LAPACKE_xerbla( "LAPACKE_zgesvxx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) *
-                            ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) *
-                            ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_zge_trans( matrix_layout, n, n, a, lda, a_t, lda_t );
-        if( LAPACKE_lsame( fact, 'f' ) ) {
-            LAPACKE_zge_trans( matrix_layout, n, n, af, ldaf, af_t, ldaf_t );
-        }
-        LAPACKE_zge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_zgesvxx( &fact, &trans, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t,
-                        ipiv, equed, r, c, b_t, &ldb_t, x_t, &ldx_t, rcond,
-                        rpvgrw, berr, &n_err_bnds, err_bnds_norm_t,
-                        err_bnds_comp_t, &nparams, params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        if( LAPACKE_lsame( fact, 'e' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-            LAPACKE_lsame( *equed, 'c' ) || LAPACKE_lsame( *equed, 'r' ) ) ) {
-            LAPACKE_zge_trans( LAPACK_COL_MAJOR, n, n, a_t, lda_t, a, lda );
-        }
-        if( LAPACKE_lsame( fact, 'e' ) || LAPACKE_lsame( fact, 'n' ) ) {
-            LAPACKE_zge_trans( LAPACK_COL_MAJOR, n, n, af_t, ldaf_t, af, ldaf );
-        }
-        if( LAPACKE_lsame( fact, 'f' ) && ( LAPACKE_lsame( *equed, 'b' ) ||
-            LAPACKE_lsame( *equed, 'c' ) || LAPACKE_lsame( *equed, 'r' ) ) ) {
-            LAPACKE_zge_trans( LAPACK_COL_MAJOR, n, nrhs, b_t, ldb_t, b, ldb );
-        }
-        LAPACKE_zge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, n_err_bnds );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, n_err_bnds );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_zgesvxx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_zgesvxx_work", info );
     }
     return info;
 }
@@ -172930,284 +164480,6 @@ exit_level_0:
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
   THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************
-* Contents: Native high-level C interface to LAPACK function zherfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_zherfsx( int matrix_layout, char uplo, char equed,
-                            lapack_int n, lapack_int nrhs,
-                            const lapack_complex_double* a, lapack_int lda,
-                            const lapack_complex_double* af, lapack_int ldaf,
-                            const lapack_int* ipiv, const double* s,
-                            const lapack_complex_double* b, lapack_int ldb,
-                            lapack_complex_double* x, lapack_int ldx,
-                            double* rcond, double* berr, lapack_int n_err_bnds,
-                            double* err_bnds_norm, double* err_bnds_comp,
-                            lapack_int nparams, double* params )
-{
-    lapack_int info = 0;
-    double* rwork = NULL;
-    lapack_complex_double* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_zherfsx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_zhe_nancheck( matrix_layout, uplo, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_zhe_nancheck( matrix_layout, uplo, n, af, ldaf ) ) {
-        return -8;
-    }
-    if( LAPACKE_zge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -12;
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_d_nancheck( nparams, params, 1 ) ) {
-            return -22;
-        }
-    }
-    if( LAPACKE_lsame( equed, 'y' ) ) {
-        if( LAPACKE_d_nancheck( n, s, 1 ) ) {
-            return -11;
-        }
-    }
-    if( LAPACKE_zge_nancheck( matrix_layout, n, nrhs, x, ldx ) ) {
-        return -14;
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    rwork = (double*)LAPACKE_malloc( sizeof(double) * MAX(1,3*n) );
-    if( rwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (lapack_complex_double*)
-        LAPACKE_malloc( sizeof(lapack_complex_double) * MAX(1,2*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_zherfsx_work( matrix_layout, uplo, equed, n, nrhs, a, lda, af,
-                                 ldaf, ipiv, s, b, ldb, x, ldx, rcond, berr,
-                                 n_err_bnds, err_bnds_norm, err_bnds_comp,
-                                 nparams, params, work, rwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( rwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_zherfsx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function zherfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_zherfsx_work( int matrix_layout, char uplo, char equed,
-                                 lapack_int n, lapack_int nrhs,
-                                 const lapack_complex_double* a, lapack_int lda,
-                                 const lapack_complex_double* af,
-                                 lapack_int ldaf, const lapack_int* ipiv,
-                                 const double* s,
-                                 const lapack_complex_double* b, lapack_int ldb,
-                                 lapack_complex_double* x, lapack_int ldx,
-                                 double* rcond, double* berr,
-                                 lapack_int n_err_bnds, double* err_bnds_norm,
-                                 double* err_bnds_comp, lapack_int nparams,
-                                 double* params, lapack_complex_double* work,
-                                 double* rwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_zherfsx( &uplo, &equed, &n, &nrhs, a, &lda, af, &ldaf, ipiv, s,
-                        b, &ldb, x, &ldx, rcond, berr, &n_err_bnds,
-                        err_bnds_norm, err_bnds_comp, &nparams, params, work,
-                        rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        lapack_complex_double* a_t = NULL;
-        lapack_complex_double* af_t = NULL;
-        lapack_complex_double* b_t = NULL;
-        lapack_complex_double* x_t = NULL;
-        double* err_bnds_norm_t = NULL;
-        double* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_zherfsx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_zherfsx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -13;
-            LAPACKE_xerbla( "LAPACKE_zherfsx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -15;
-            LAPACKE_xerbla( "LAPACKE_zherfsx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) *
-                            ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) *
-                            ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_zhe_trans( matrix_layout, uplo, n, a, lda, a_t, lda_t );
-        LAPACKE_zhe_trans( matrix_layout, uplo, n, af, ldaf, af_t, ldaf_t );
-        LAPACKE_zge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        LAPACKE_zge_trans( matrix_layout, n, nrhs, x, ldx, x_t, ldx_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_zherfsx( &uplo, &equed, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t,
-                        ipiv, s, b_t, &ldb_t, x_t, &ldx_t, rcond, berr,
-                        &n_err_bnds, err_bnds_norm_t, err_bnds_comp_t, &nparams,
-                        params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        LAPACKE_zge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, nrhs );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, nrhs );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_zherfsx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_zherfsx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
 * Contents: Native high-level C interface to LAPACK function zhesv
 * Author: Intel Corporation
 * Generated November 2015
@@ -173630,294 +164902,6 @@ exit_level_0:
     } else {
         info = -1;
         LAPACKE_xerbla( "LAPACKE_zhesvx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native high-level C interface to LAPACK function zhesvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_zhesvxx( int matrix_layout, char fact, char uplo,
-                            lapack_int n, lapack_int nrhs,
-                            lapack_complex_double* a, lapack_int lda,
-                            lapack_complex_double* af, lapack_int ldaf,
-                            lapack_int* ipiv, char* equed, double* s,
-                            lapack_complex_double* b, lapack_int ldb,
-                            lapack_complex_double* x, lapack_int ldx,
-                            double* rcond, double* rpvgrw, double* berr,
-                            lapack_int n_err_bnds, double* err_bnds_norm,
-                            double* err_bnds_comp, lapack_int nparams,
-                            double* params )
-{
-    lapack_int info = 0;
-    double* rwork = NULL;
-    lapack_complex_double* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_zhesvxx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_zhe_nancheck( matrix_layout, uplo, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) ) {
-        if( LAPACKE_zhe_nancheck( matrix_layout, uplo, n, af, ldaf ) ) {
-            return -8;
-        }
-    }
-    if( LAPACKE_zge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -13;
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_d_nancheck( nparams, params, 1 ) ) {
-            return -24;
-        }
-    }
-    if( LAPACKE_lsame( fact, 'f' ) ) {
-        if( LAPACKE_d_nancheck( n, s, 1 ) ) {
-            return -12;
-        }
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    rwork = (double*)LAPACKE_malloc( sizeof(double) * MAX(1,3*n) );
-    if( rwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (lapack_complex_double*)
-        LAPACKE_malloc( sizeof(lapack_complex_double) * MAX(1,2*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_zhesvxx_work( matrix_layout, fact, uplo, n, nrhs, a, lda, af,
-                                 ldaf, ipiv, equed, s, b, ldb, x, ldx, rcond,
-                                 rpvgrw, berr, n_err_bnds, err_bnds_norm,
-                                 err_bnds_comp, nparams, params, work, rwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( rwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_zhesvxx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function zhesvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_zhesvxx_work( int matrix_layout, char fact, char uplo,
-                                 lapack_int n, lapack_int nrhs,
-                                 lapack_complex_double* a, lapack_int lda,
-                                 lapack_complex_double* af, lapack_int ldaf,
-                                 lapack_int* ipiv, char* equed, double* s,
-                                 lapack_complex_double* b, lapack_int ldb,
-                                 lapack_complex_double* x, lapack_int ldx,
-                                 double* rcond, double* rpvgrw, double* berr,
-                                 lapack_int n_err_bnds, double* err_bnds_norm,
-                                 double* err_bnds_comp, lapack_int nparams,
-                                 double* params, lapack_complex_double* work,
-                                 double* rwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_zhesvxx( &fact, &uplo, &n, &nrhs, a, &lda, af, &ldaf, ipiv,
-                        equed, s, b, &ldb, x, &ldx, rcond, rpvgrw, berr,
-                        &n_err_bnds, err_bnds_norm, err_bnds_comp, &nparams,
-                        params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        lapack_complex_double* a_t = NULL;
-        lapack_complex_double* af_t = NULL;
-        lapack_complex_double* b_t = NULL;
-        lapack_complex_double* x_t = NULL;
-        double* err_bnds_norm_t = NULL;
-        double* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_zhesvxx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_zhesvxx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -14;
-            LAPACKE_xerbla( "LAPACKE_zhesvxx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -16;
-            LAPACKE_xerbla( "LAPACKE_zhesvxx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) *
-                            ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) *
-                            ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_zhe_trans( matrix_layout, uplo, n, a, lda, a_t, lda_t );
-        if( LAPACKE_lsame( fact, 'f' ) ) {
-            LAPACKE_zhe_trans( matrix_layout, uplo, n, af, ldaf, af_t, ldaf_t );
-        }
-        LAPACKE_zge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_zhesvxx( &fact, &uplo, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t,
-                        ipiv, equed, s, b_t, &ldb_t, x_t, &ldx_t, rcond, rpvgrw,
-                        berr, &n_err_bnds, err_bnds_norm_t, err_bnds_comp_t,
-                        &nparams, params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        if( LAPACKE_lsame( fact, 'e' ) && LAPACKE_lsame( *equed, 'y' ) ) {
-            LAPACKE_zhe_trans( LAPACK_COL_MAJOR, uplo, n, a_t, lda_t, a, lda );
-        }
-        if( LAPACKE_lsame( fact, 'e' ) || LAPACKE_lsame( fact, 'n' ) ) {
-            LAPACKE_zhe_trans( LAPACK_COL_MAJOR, uplo, n, af_t, ldaf_t, af,
-                               ldaf );
-        }
-        if( LAPACKE_lsame( fact, 'f' ) && LAPACKE_lsame( *equed, 'y' ) ) {
-            LAPACKE_zge_trans( LAPACK_COL_MAJOR, n, nrhs, b_t, ldb_t, b, ldb );
-        }
-        LAPACKE_zge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, n_err_bnds );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, n_err_bnds );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_zhesvxx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_zhesvxx_work", info );
     }
     return info;
 }
@@ -185206,282 +176190,6 @@ exit_level_0:
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
   THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************
-* Contents: Native high-level C interface to LAPACK function zporfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_zporfsx( int matrix_layout, char uplo, char equed,
-                            lapack_int n, lapack_int nrhs,
-                            const lapack_complex_double* a, lapack_int lda,
-                            const lapack_complex_double* af, lapack_int ldaf,
-                            const double* s, const lapack_complex_double* b,
-                            lapack_int ldb, lapack_complex_double* x,
-                            lapack_int ldx, double* rcond, double* berr,
-                            lapack_int n_err_bnds, double* err_bnds_norm,
-                            double* err_bnds_comp, lapack_int nparams,
-                            double* params )
-{
-    lapack_int info = 0;
-    double* rwork = NULL;
-    lapack_complex_double* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_zporfsx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_zsy_nancheck( matrix_layout, uplo, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_zsy_nancheck( matrix_layout, uplo, n, af, ldaf ) ) {
-        return -8;
-    }
-    if( LAPACKE_zge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -11;
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_d_nancheck( nparams, params, 1 ) ) {
-            return -21;
-        }
-    }
-    if( LAPACKE_lsame( equed, 'y' ) ) {
-        if( LAPACKE_d_nancheck( n, s, 1 ) ) {
-            return -10;
-        }
-    }
-    if( LAPACKE_zge_nancheck( matrix_layout, n, nrhs, x, ldx ) ) {
-        return -13;
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    rwork = (double*)LAPACKE_malloc( sizeof(double) * MAX(1,3*n) );
-    if( rwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (lapack_complex_double*)
-        LAPACKE_malloc( sizeof(lapack_complex_double) * MAX(1,2*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_zporfsx_work( matrix_layout, uplo, equed, n, nrhs, a, lda, af,
-                                 ldaf, s, b, ldb, x, ldx, rcond, berr,
-                                 n_err_bnds, err_bnds_norm, err_bnds_comp,
-                                 nparams, params, work, rwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( rwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_zporfsx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function zporfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_zporfsx_work( int matrix_layout, char uplo, char equed,
-                                 lapack_int n, lapack_int nrhs,
-                                 const lapack_complex_double* a, lapack_int lda,
-                                 const lapack_complex_double* af,
-                                 lapack_int ldaf, const double* s,
-                                 const lapack_complex_double* b, lapack_int ldb,
-                                 lapack_complex_double* x, lapack_int ldx,
-                                 double* rcond, double* berr,
-                                 lapack_int n_err_bnds, double* err_bnds_norm,
-                                 double* err_bnds_comp, lapack_int nparams,
-                                 double* params, lapack_complex_double* work,
-                                 double* rwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_zporfsx( &uplo, &equed, &n, &nrhs, a, &lda, af, &ldaf, s, b,
-                        &ldb, x, &ldx, rcond, berr, &n_err_bnds, err_bnds_norm,
-                        err_bnds_comp, &nparams, params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        lapack_complex_double* a_t = NULL;
-        lapack_complex_double* af_t = NULL;
-        lapack_complex_double* b_t = NULL;
-        lapack_complex_double* x_t = NULL;
-        double* err_bnds_norm_t = NULL;
-        double* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_zporfsx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_zporfsx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -12;
-            LAPACKE_xerbla( "LAPACKE_zporfsx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -14;
-            LAPACKE_xerbla( "LAPACKE_zporfsx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) *
-                            ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) *
-                            ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_zsy_trans( matrix_layout, uplo, n, a, lda, a_t, lda_t );
-        LAPACKE_zsy_trans( matrix_layout, uplo, n, af, ldaf, af_t, ldaf_t );
-        LAPACKE_zge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        LAPACKE_zge_trans( matrix_layout, n, nrhs, x, ldx, x_t, ldx_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_zporfsx( &uplo, &equed, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t, s,
-                        b_t, &ldb_t, x_t, &ldx_t, rcond, berr, &n_err_bnds,
-                        err_bnds_norm_t, err_bnds_comp_t, &nparams, params,
-                        work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        LAPACKE_zge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, nrhs );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, nrhs );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_zporfsx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_zporfsx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
 * Contents: Native high-level C interface to LAPACK function zposv
 * Author: Intel Corporation
 * Generated November 2015
@@ -185857,291 +176565,6 @@ exit_level_0:
     } else {
         info = -1;
         LAPACKE_xerbla( "LAPACKE_zposvx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native high-level C interface to LAPACK function zposvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_zposvxx( int matrix_layout, char fact, char uplo,
-                            lapack_int n, lapack_int nrhs,
-                            lapack_complex_double* a, lapack_int lda,
-                            lapack_complex_double* af, lapack_int ldaf,
-                            char* equed, double* s, lapack_complex_double* b,
-                            lapack_int ldb, lapack_complex_double* x,
-                            lapack_int ldx, double* rcond, double* rpvgrw,
-                            double* berr, lapack_int n_err_bnds,
-                            double* err_bnds_norm, double* err_bnds_comp,
-                            lapack_int nparams, double* params )
-{
-    lapack_int info = 0;
-    double* rwork = NULL;
-    lapack_complex_double* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_zposvxx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_zpo_nancheck( matrix_layout, uplo, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) ) {
-        if( LAPACKE_zpo_nancheck( matrix_layout, uplo, n, af, ldaf ) ) {
-            return -8;
-        }
-    }
-    if( LAPACKE_zge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -12;
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_d_nancheck( nparams, params, 1 ) ) {
-            return -23;
-        }
-    }
-    if( LAPACKE_lsame( fact, 'f' ) && LAPACKE_lsame( *equed, 'y' ) ) {
-        if( LAPACKE_d_nancheck( n, s, 1 ) ) {
-            return -11;
-        }
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    rwork = (double*)LAPACKE_malloc( sizeof(double) * MAX(1,3*n) );
-    if( rwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (lapack_complex_double*)
-        LAPACKE_malloc( sizeof(lapack_complex_double) * MAX(1,2*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_zposvxx_work( matrix_layout, fact, uplo, n, nrhs, a, lda, af,
-                                 ldaf, equed, s, b, ldb, x, ldx, rcond, rpvgrw,
-                                 berr, n_err_bnds, err_bnds_norm, err_bnds_comp,
-                                 nparams, params, work, rwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( rwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_zposvxx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function zposvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_zposvxx_work( int matrix_layout, char fact, char uplo,
-                                 lapack_int n, lapack_int nrhs,
-                                 lapack_complex_double* a, lapack_int lda,
-                                 lapack_complex_double* af, lapack_int ldaf,
-                                 char* equed, double* s,
-                                 lapack_complex_double* b, lapack_int ldb,
-                                 lapack_complex_double* x, lapack_int ldx,
-                                 double* rcond, double* rpvgrw, double* berr,
-                                 lapack_int n_err_bnds, double* err_bnds_norm,
-                                 double* err_bnds_comp, lapack_int nparams,
-                                 double* params, lapack_complex_double* work,
-                                 double* rwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_zposvxx( &fact, &uplo, &n, &nrhs, a, &lda, af, &ldaf, equed, s,
-                        b, &ldb, x, &ldx, rcond, rpvgrw, berr, &n_err_bnds,
-                        err_bnds_norm, err_bnds_comp, &nparams, params, work,
-                        rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        lapack_complex_double* a_t = NULL;
-        lapack_complex_double* af_t = NULL;
-        lapack_complex_double* b_t = NULL;
-        lapack_complex_double* x_t = NULL;
-        double* err_bnds_norm_t = NULL;
-        double* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_zposvxx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_zposvxx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -13;
-            LAPACKE_xerbla( "LAPACKE_zposvxx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -15;
-            LAPACKE_xerbla( "LAPACKE_zposvxx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) *
-                            ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) *
-                            ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_zpo_trans( matrix_layout, uplo, n, a, lda, a_t, lda_t );
-        if( LAPACKE_lsame( fact, 'f' ) ) {
-            LAPACKE_zpo_trans( matrix_layout, uplo, n, af, ldaf, af_t, ldaf_t );
-        }
-        LAPACKE_zge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_zposvxx( &fact, &uplo, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t,
-                        equed, s, b_t, &ldb_t, x_t, &ldx_t, rcond, rpvgrw, berr,
-                        &n_err_bnds, err_bnds_norm_t, err_bnds_comp_t, &nparams,
-                        params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        if( LAPACKE_lsame( fact, 'e' ) && LAPACKE_lsame( *equed, 'y' ) ) {
-            LAPACKE_zpo_trans( LAPACK_COL_MAJOR, uplo, n, a_t, lda_t, a, lda );
-        }
-        if( LAPACKE_lsame( fact, 'e' ) || LAPACKE_lsame( fact, 'n' ) ) {
-            LAPACKE_zpo_trans( LAPACK_COL_MAJOR, uplo, n, af_t, ldaf_t, af,
-                               ldaf );
-        }
-        LAPACKE_zge_trans( LAPACK_COL_MAJOR, n, nrhs, b_t, ldb_t, b, ldb );
-        LAPACKE_zge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, n_err_bnds );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, n_err_bnds );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_zposvxx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_zposvxx_work", info );
     }
     return info;
 }
@@ -192191,284 +182614,6 @@ exit_level_0:
   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
   THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native high-level C interface to LAPACK function zsyrfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_zsyrfsx( int matrix_layout, char uplo, char equed,
-                            lapack_int n, lapack_int nrhs,
-                            const lapack_complex_double* a, lapack_int lda,
-                            const lapack_complex_double* af, lapack_int ldaf,
-                            const lapack_int* ipiv, const double* s,
-                            const lapack_complex_double* b, lapack_int ldb,
-                            lapack_complex_double* x, lapack_int ldx,
-                            double* rcond, double* berr, lapack_int n_err_bnds,
-                            double* err_bnds_norm, double* err_bnds_comp,
-                            lapack_int nparams, double* params )
-{
-    lapack_int info = 0;
-    double* rwork = NULL;
-    lapack_complex_double* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_zsyrfsx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_zsy_nancheck( matrix_layout, uplo, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_zsy_nancheck( matrix_layout, uplo, n, af, ldaf ) ) {
-        return -8;
-    }
-    if( LAPACKE_zge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -12;
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_d_nancheck( nparams, params, 1 ) ) {
-            return -22;
-        }
-    }
-    if( LAPACKE_lsame( equed, 'y' ) ) {
-        if( LAPACKE_d_nancheck( n, s, 1 ) ) {
-            return -11;
-        }
-    }
-    if( LAPACKE_zge_nancheck( matrix_layout, n, nrhs, x, ldx ) ) {
-        return -14;
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    rwork = (double*)LAPACKE_malloc( sizeof(double) * MAX(1,3*n) );
-    if( rwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (lapack_complex_double*)
-        LAPACKE_malloc( sizeof(lapack_complex_double) * MAX(1,2*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_zsyrfsx_work( matrix_layout, uplo, equed, n, nrhs, a, lda, af,
-                                 ldaf, ipiv, s, b, ldb, x, ldx, rcond, berr,
-                                 n_err_bnds, err_bnds_norm, err_bnds_comp,
-                                 nparams, params, work, rwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( rwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_zsyrfsx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function zsyrfsx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_zsyrfsx_work( int matrix_layout, char uplo, char equed,
-                                 lapack_int n, lapack_int nrhs,
-                                 const lapack_complex_double* a, lapack_int lda,
-                                 const lapack_complex_double* af,
-                                 lapack_int ldaf, const lapack_int* ipiv,
-                                 const double* s,
-                                 const lapack_complex_double* b, lapack_int ldb,
-                                 lapack_complex_double* x, lapack_int ldx,
-                                 double* rcond, double* berr,
-                                 lapack_int n_err_bnds, double* err_bnds_norm,
-                                 double* err_bnds_comp, lapack_int nparams,
-                                 double* params, lapack_complex_double* work,
-                                 double* rwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_zsyrfsx( &uplo, &equed, &n, &nrhs, a, &lda, af, &ldaf, ipiv, s,
-                        b, &ldb, x, &ldx, rcond, berr, &n_err_bnds,
-                        err_bnds_norm, err_bnds_comp, &nparams, params, work,
-                        rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        lapack_complex_double* a_t = NULL;
-        lapack_complex_double* af_t = NULL;
-        lapack_complex_double* b_t = NULL;
-        lapack_complex_double* x_t = NULL;
-        double* err_bnds_norm_t = NULL;
-        double* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_zsyrfsx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_zsyrfsx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -13;
-            LAPACKE_xerbla( "LAPACKE_zsyrfsx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -15;
-            LAPACKE_xerbla( "LAPACKE_zsyrfsx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) *
-                            ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) *
-                            ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_zsy_trans( matrix_layout, uplo, n, a, lda, a_t, lda_t );
-        LAPACKE_zsy_trans( matrix_layout, uplo, n, af, ldaf, af_t, ldaf_t );
-        LAPACKE_zge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        LAPACKE_zge_trans( matrix_layout, n, nrhs, x, ldx, x_t, ldx_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_zsyrfsx( &uplo, &equed, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t,
-                        ipiv, s, b_t, &ldb_t, x_t, &ldx_t, rcond, berr,
-                        &n_err_bnds, err_bnds_norm_t, err_bnds_comp_t, &nparams,
-                        params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        LAPACKE_zge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, nrhs );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, nrhs );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_zsyrfsx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_zsyrfsx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
 ******************************************************************************
 * Contents: Native middle-level C interface to LAPACK function zsyr
 * Author: Intel Corporation
@@ -193172,294 +183317,6 @@ exit_level_0:
     } else {
         info = -1;
         LAPACKE_xerbla( "LAPACKE_zsysvx_work", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native high-level C interface to LAPACK function zsysvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_zsysvxx( int matrix_layout, char fact, char uplo,
-                            lapack_int n, lapack_int nrhs,
-                            lapack_complex_double* a, lapack_int lda,
-                            lapack_complex_double* af, lapack_int ldaf,
-                            lapack_int* ipiv, char* equed, double* s,
-                            lapack_complex_double* b, lapack_int ldb,
-                            lapack_complex_double* x, lapack_int ldx,
-                            double* rcond, double* rpvgrw, double* berr,
-                            lapack_int n_err_bnds, double* err_bnds_norm,
-                            double* err_bnds_comp, lapack_int nparams,
-                            double* params )
-{
-    lapack_int info = 0;
-    double* rwork = NULL;
-    lapack_complex_double* work = NULL;
-    if( matrix_layout != LAPACK_COL_MAJOR && matrix_layout != LAPACK_ROW_MAJOR ) {
-        LAPACKE_xerbla( "LAPACKE_zsysvxx", -1 );
-        return -1;
-    }
-#ifndef LAPACK_DISABLE_NAN_CHECK
-    /* Optionally check input matrices for NaNs */
-    if( LAPACKE_zsy_nancheck( matrix_layout, uplo, n, a, lda ) ) {
-        return -6;
-    }
-    if( LAPACKE_lsame( fact, 'f' ) ) {
-        if( LAPACKE_zsy_nancheck( matrix_layout, uplo, n, af, ldaf ) ) {
-            return -8;
-        }
-    }
-    if( LAPACKE_zge_nancheck( matrix_layout, n, nrhs, b, ldb ) ) {
-        return -13;
-    }
-    if( nparams>0 ) {
-        if( LAPACKE_d_nancheck( nparams, params, 1 ) ) {
-            return -24;
-        }
-    }
-    if( LAPACKE_lsame( fact, 'f' ) ) {
-        if( LAPACKE_d_nancheck( n, s, 1 ) ) {
-            return -12;
-        }
-    }
-#endif
-    /* Allocate memory for working array(s) */
-    rwork = (double*)LAPACKE_malloc( sizeof(double) * MAX(1,3*n) );
-    if( rwork == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_0;
-    }
-    work = (lapack_complex_double*)
-        LAPACKE_malloc( sizeof(lapack_complex_double) * MAX(1,2*n) );
-    if( work == NULL ) {
-        info = LAPACK_WORK_MEMORY_ERROR;
-        goto exit_level_1;
-    }
-    /* Call middle-level interface */
-    info = LAPACKE_zsysvxx_work( matrix_layout, fact, uplo, n, nrhs, a, lda, af,
-                                 ldaf, ipiv, equed, s, b, ldb, x, ldx, rcond,
-                                 rpvgrw, berr, n_err_bnds, err_bnds_norm,
-                                 err_bnds_comp, nparams, params, work, rwork );
-    /* Release memory and exit */
-    LAPACKE_free( work );
-exit_level_1:
-    LAPACKE_free( rwork );
-exit_level_0:
-    if( info == LAPACK_WORK_MEMORY_ERROR ) {
-        LAPACKE_xerbla( "LAPACKE_zsysvxx", info );
-    }
-    return info;
-}
-
-/*****************************************************************************
-  Copyright (c) 2014, Intel Corp.
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Intel Corporation nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*****************************************************************************
-* Contents: Native middle-level C interface to LAPACK function zsysvxx
-* Author: Intel Corporation
-* Generated November 2015
-*****************************************************************************/
-
-#include "lapacke_utils.h"
-
-lapack_int LAPACKE_zsysvxx_work( int matrix_layout, char fact, char uplo,
-                                 lapack_int n, lapack_int nrhs,
-                                 lapack_complex_double* a, lapack_int lda,
-                                 lapack_complex_double* af, lapack_int ldaf,
-                                 lapack_int* ipiv, char* equed, double* s,
-                                 lapack_complex_double* b, lapack_int ldb,
-                                 lapack_complex_double* x, lapack_int ldx,
-                                 double* rcond, double* rpvgrw, double* berr,
-                                 lapack_int n_err_bnds, double* err_bnds_norm,
-                                 double* err_bnds_comp, lapack_int nparams,
-                                 double* params, lapack_complex_double* work,
-                                 double* rwork )
-{
-    lapack_int info = 0;
-    if( matrix_layout == LAPACK_COL_MAJOR ) {
-        /* Call LAPACK function and adjust info */
-        LAPACK_zsysvxx( &fact, &uplo, &n, &nrhs, a, &lda, af, &ldaf, ipiv,
-                        equed, s, b, &ldb, x, &ldx, rcond, rpvgrw, berr,
-                        &n_err_bnds, err_bnds_norm, err_bnds_comp, &nparams,
-                        params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-    } else if( matrix_layout == LAPACK_ROW_MAJOR ) {
-        lapack_int lda_t = MAX(1,n);
-        lapack_int ldaf_t = MAX(1,n);
-        lapack_int ldb_t = MAX(1,n);
-        lapack_int ldx_t = MAX(1,n);
-        lapack_complex_double* a_t = NULL;
-        lapack_complex_double* af_t = NULL;
-        lapack_complex_double* b_t = NULL;
-        lapack_complex_double* x_t = NULL;
-        double* err_bnds_norm_t = NULL;
-        double* err_bnds_comp_t = NULL;
-        /* Check leading dimension(s) */
-        if( lda < n ) {
-            info = -7;
-            LAPACKE_xerbla( "LAPACKE_zsysvxx_work", info );
-            return info;
-        }
-        if( ldaf < n ) {
-            info = -9;
-            LAPACKE_xerbla( "LAPACKE_zsysvxx_work", info );
-            return info;
-        }
-        if( ldb < nrhs ) {
-            info = -14;
-            LAPACKE_xerbla( "LAPACKE_zsysvxx_work", info );
-            return info;
-        }
-        if( ldx < nrhs ) {
-            info = -16;
-            LAPACKE_xerbla( "LAPACKE_zsysvxx_work", info );
-            return info;
-        }
-        /* Allocate memory for temporary array(s) */
-        a_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) * lda_t * MAX(1,n) );
-        if( a_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_0;
-        }
-        af_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) * ldaf_t * MAX(1,n) );
-        if( af_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_1;
-        }
-        b_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) *
-                            ldb_t * MAX(1,nrhs) );
-        if( b_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_2;
-        }
-        x_t = (lapack_complex_double*)
-            LAPACKE_malloc( sizeof(lapack_complex_double) *
-                            ldx_t * MAX(1,nrhs) );
-        if( x_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_3;
-        }
-        err_bnds_norm_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_norm_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_4;
-        }
-        err_bnds_comp_t = (double*)
-            LAPACKE_malloc( sizeof(double) * nrhs * MAX(1,n_err_bnds) );
-        if( err_bnds_comp_t == NULL ) {
-            info = LAPACK_TRANSPOSE_MEMORY_ERROR;
-            goto exit_level_5;
-        }
-        /* Transpose input matrices */
-        LAPACKE_zsy_trans( matrix_layout, uplo, n, a, lda, a_t, lda_t );
-        if( LAPACKE_lsame( fact, 'f' ) ) {
-            LAPACKE_zsy_trans( matrix_layout, uplo, n, af, ldaf, af_t, ldaf_t );
-        }
-        LAPACKE_zge_trans( matrix_layout, n, nrhs, b, ldb, b_t, ldb_t );
-        /* Call LAPACK function and adjust info */
-        LAPACK_zsysvxx( &fact, &uplo, &n, &nrhs, a_t, &lda_t, af_t, &ldaf_t,
-                        ipiv, equed, s, b_t, &ldb_t, x_t, &ldx_t, rcond, rpvgrw,
-                        berr, &n_err_bnds, err_bnds_norm_t, err_bnds_comp_t,
-                        &nparams, params, work, rwork, &info );
-        if( info < 0 ) {
-            info = info - 1;
-        }
-        /* Transpose output matrices */
-        if( LAPACKE_lsame( fact, 'e' ) && LAPACKE_lsame( *equed, 'y' ) ) {
-            LAPACKE_zsy_trans( LAPACK_COL_MAJOR, uplo, n, a_t, lda_t, a, lda );
-        }
-        if( LAPACKE_lsame( fact, 'e' ) || LAPACKE_lsame( fact, 'n' ) ) {
-            LAPACKE_zsy_trans( LAPACK_COL_MAJOR, uplo, n, af_t, ldaf_t, af,
-                               ldaf );
-        }
-        if( LAPACKE_lsame( fact, 'f' ) && LAPACKE_lsame( *equed, 'y' ) ) {
-            LAPACKE_zge_trans( LAPACK_COL_MAJOR, n, nrhs, b_t, ldb_t, b, ldb );
-        }
-        LAPACKE_zge_trans( LAPACK_COL_MAJOR, n, nrhs, x_t, ldx_t, x, ldx );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_norm_t,
-                           nrhs, err_bnds_norm, n_err_bnds );
-        LAPACKE_dge_trans( LAPACK_COL_MAJOR, nrhs, n_err_bnds, err_bnds_comp_t,
-                           nrhs, err_bnds_comp, n_err_bnds );
-        /* Release memory and exit */
-        LAPACKE_free( err_bnds_comp_t );
-exit_level_5:
-        LAPACKE_free( err_bnds_norm_t );
-exit_level_4:
-        LAPACKE_free( x_t );
-exit_level_3:
-        LAPACKE_free( b_t );
-exit_level_2:
-        LAPACKE_free( af_t );
-exit_level_1:
-        LAPACKE_free( a_t );
-exit_level_0:
-        if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
-            LAPACKE_xerbla( "LAPACKE_zsysvxx_work", info );
-        }
-    } else {
-        info = -1;
-        LAPACKE_xerbla( "LAPACKE_zsysvxx_work", info );
     }
     return info;
 }
@@ -205779,5 +195636,8877 @@ exit_level_0:
         LAPACKE_xerbla( "LAPACKE_zupmtr_work", info );
     }
     return info;
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_cgb_nancheck( int matrix_layout, lapack_int m,
+                                      lapack_int n, lapack_int kl,
+                                      lapack_int ku,
+                                      const lapack_complex_float *ab,
+                                      lapack_int ldab )
+{
+    lapack_int i, j;
+
+    if( ab == NULL ) return (lapack_logical) 0;
+
+    if( matrix_layout == LAPACK_COL_MAJOR ) {
+        for( j = 0; j < n; j++ ) {
+            for( i = MAX( ku-j, 0 ); i < MIN3( ldab, m+ku-j, kl+ku+1 );
+                 i++ ) {
+                if( LAPACK_CISNAN( ab[i+(size_t)j*ldab] ) )
+                     return (lapack_logical) 1;
+            }
+        }
+    } else if ( matrix_layout == LAPACK_ROW_MAJOR ) {
+        for( j = 0; j < MIN( n, ldab ); j++ ) {
+            for( i = MAX( ku-j, 0 ); i < MIN( m+ku-j, kl+ku+1 ); i++ ) {
+                if( LAPACK_CISNAN( ab[(size_t)i*ldab+j] ) )
+                     return (lapack_logical) 1;
+            }
+        }
+    }
+    return (lapack_logical) 0;
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input general band matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_cgb_trans( int matrix_layout, lapack_int m, lapack_int n,
+                        lapack_int kl, lapack_int ku,
+                        const lapack_complex_float *in, lapack_int ldin,
+                        lapack_complex_float *out, lapack_int ldout )
+{
+    lapack_int i, j;
+
+    if( in == NULL || out == NULL ) return;
+
+    if( matrix_layout == LAPACK_COL_MAJOR ) {
+        for( j = 0; j < MIN( ldout, n ); j++ ) {
+            for( i = MAX( ku-j, 0 ); i < MIN3( ldin, m+ku-j, kl+ku+1 );
+                 i++ ) {
+                out[(size_t)i*ldout+j] = in[i+(size_t)j*ldin];
+            }
+        }
+    } else if ( matrix_layout == LAPACK_ROW_MAJOR ) {
+        /* TODO: interchange loops for performance.
+         * This is just reference impemeltation.
+         */
+        for( j = 0; j < MIN( n, ldin ); j++ ) {
+            for( i = MAX( ku-j, 0 ); i < MIN3( ldout, m+ku-j, kl+ku+1 );
+                 i++ ) {
+                out[i+(size_t)j*ldout] = in[(size_t)i*ldin+j];
+            }
+        }
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_cge_nancheck( int matrix_layout, lapack_int m,
+                                      lapack_int n,
+                                      const lapack_complex_float *a,
+                                      lapack_int lda )
+{
+    lapack_int i, j;
+
+    if( a == NULL ) return (lapack_logical) 0;
+
+    if( matrix_layout == LAPACK_COL_MAJOR ) {
+        for( j = 0; j < n; j++ ) {
+            for( i = 0; i < MIN( m, lda ); i++ ) {
+                if( LAPACK_CISNAN( a[i+(size_t)j*lda] ) )
+                    return (lapack_logical) 1;
+            }
+        }
+    } else if ( matrix_layout == LAPACK_ROW_MAJOR ) {
+        for( i = 0; i < m; i++ ) {
+            for( j = 0; j < MIN( n, lda ); j++ ) {
+                if( LAPACK_CISNAN( a[(size_t)i*lda+j] ) )
+                    return (lapack_logical) 1;
+            }
+        }
+    }
+    return (lapack_logical) 0;
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input general matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_cge_trans( int matrix_layout, lapack_int m, lapack_int n,
+                        const lapack_complex_float* in, lapack_int ldin,
+                        lapack_complex_float* out, lapack_int ldout )
+{
+    lapack_int i, j, x, y;
+
+    if( in == NULL || out == NULL ) return;
+
+    if( matrix_layout == LAPACK_COL_MAJOR ) {
+        x = n;
+        y = m;
+    } else if ( matrix_layout == LAPACK_ROW_MAJOR ) {
+        x = m;
+        y = n;
+    } else {
+        /* Unknown input layout */
+        return;
+    }
+
+    /* In case of incorrect m, n, ldin or ldout the function does nothing */
+    for( i = 0; i < MIN( y, ldin ); i++ ) {
+        for( j = 0; j < MIN( x, ldout ); j++ ) {
+            out[ (size_t)i*ldout + j ] = in[ (size_t)j*ldin + i ];
+        }
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_cgg_nancheck( int matrix_layout, lapack_int m,
+                                      lapack_int n,
+                                      const lapack_complex_float *a,
+                                      lapack_int lda )
+{
+    return LAPACKE_cge_nancheck( matrix_layout, m, n, a, lda );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input general matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_cgg_trans( int matrix_layout, lapack_int m, lapack_int n,
+                        const lapack_complex_float* in, lapack_int ldin,
+                        lapack_complex_float* out, lapack_int ldout )
+{
+    LAPACKE_cge_trans( matrix_layout, m, n, in, ldin, out, ldout );
+}
+
+/*****************************************************************************
+  Copyright (c) 2010, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_cgt_nancheck( lapack_int n,
+                                      const lapack_complex_float *dl,
+                                      const lapack_complex_float *d,
+                                      const lapack_complex_float *du )
+{
+    return LAPACKE_c_nancheck( n-1, dl, 1 )
+        || LAPACKE_c_nancheck( n  , d,  1 )
+        || LAPACKE_c_nancheck( n-1, du, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_chb_nancheck( int matrix_layout, char uplo,
+                                      lapack_int n, lapack_int kd,
+                                      const lapack_complex_float* ab,
+                                      lapack_int ldab )
+{
+    if( LAPACKE_lsame( uplo, 'u' ) ) {
+        return LAPACKE_cgb_nancheck( matrix_layout, n, n, 0, kd, ab, ldab );
+    } else if( LAPACKE_lsame( uplo, 'l' ) ) {
+        return LAPACKE_cgb_nancheck( matrix_layout, n, n, kd, 0, ab, ldab );
+    }
+    return (lapack_logical) 0;
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input Hermitian band matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_chb_trans( int matrix_layout, char uplo, lapack_int n,
+                        lapack_int kd,
+                        const lapack_complex_float *in, lapack_int ldin,
+                        lapack_complex_float *out, lapack_int ldout )
+{
+    if( LAPACKE_lsame( uplo, 'u' ) ) {
+        LAPACKE_cgb_trans( matrix_layout, n, n, 0, kd, in, ldin, out, ldout );
+    } else if( LAPACKE_lsame( uplo, 'l' ) ) {
+        LAPACKE_cgb_trans( matrix_layout, n, n, kd, 0, in, ldin, out, ldout );
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_che_nancheck( int matrix_layout, char uplo,
+                                      lapack_int n,
+                                      const lapack_complex_float *a,
+                                      lapack_int lda )
+{
+    return LAPACKE_ctr_nancheck( matrix_layout, uplo, 'n', n, a, lda );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input Hermitian matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_che_trans( int matrix_layout, char uplo, lapack_int n,
+                        const lapack_complex_float *in, lapack_int ldin,
+                        lapack_complex_float *out, lapack_int ldout )
+{
+    LAPACKE_ctr_trans( matrix_layout, uplo, 'n', n, in, ldin, out, ldout );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries.
+ * Since matrix in packed format stored continiously it just required to
+ * check 1d array for NaNs. It doesn't depend upon uplo or matrix_layout.
+ */
+
+lapack_logical LAPACKE_chp_nancheck( lapack_int n,
+                                      const lapack_complex_float *ap )
+{
+    lapack_int len = n*(n+1)/2;
+    return LAPACKE_c_nancheck( len, ap, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input Hermitian packed matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_chp_trans( int matrix_layout, char uplo, lapack_int n,
+                        const lapack_complex_float *in,
+                        lapack_complex_float *out )
+{
+    LAPACKE_ctp_trans( matrix_layout, uplo, 'n', n, in, out );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_chs_nancheck( int matrix_layout, lapack_int n,
+                                      const lapack_complex_float *a,
+                                      lapack_int lda )
+{
+    lapack_logical subdiag_nans;
+
+    if( a == NULL ) return (lapack_logical) 0;
+
+    /* Check subdiagonal first */
+    if( matrix_layout == LAPACK_COL_MAJOR ) {
+        subdiag_nans = LAPACKE_c_nancheck( n-1, &a[1], lda+1 );
+    } else if ( matrix_layout == LAPACK_ROW_MAJOR ) {
+        subdiag_nans = LAPACKE_c_nancheck( n-1, &a[lda], lda+1 );
+    } else {
+        return (lapack_logical) 0;
+    }
+
+    /* Check upper triangular if subdiagonal has no NaNs. */
+    return subdiag_nans || LAPACKE_ctr_nancheck( matrix_layout, 'u', 'n',
+                                                 n, a, lda);
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input Hessenberg matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_chs_trans( int matrix_layout, lapack_int n,
+                        const lapack_complex_float *in, lapack_int ldin,
+                        lapack_complex_float *out, lapack_int ldout )
+{
+    if( in == NULL || out == NULL ) return;
+
+    /* Convert subdiagonal first */
+    if( matrix_layout == LAPACK_COL_MAJOR ) {
+        LAPACKE_cge_trans( LAPACK_COL_MAJOR, 1, n-1, &in[1], ldin+1,
+                           &out[ldout], ldout+1 );
+    } else if ( matrix_layout == LAPACK_ROW_MAJOR ) {
+        LAPACKE_cge_trans( LAPACK_ROW_MAJOR, n-1, 1, &in[ldin], ldin+1,
+                           &out[1], ldout+1 );
+    } else {
+        return;
+    }
+
+    /* Convert upper triangular. */
+    LAPACKE_ctr_trans( matrix_layout, 'u', 'n', n, in, ldin, out, ldout);
+}
+
+/*****************************************************************************
+  Copyright (c) 2010, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a vector for NaN entries. */
+
+lapack_logical LAPACKE_c_nancheck( lapack_int n,
+                                    const lapack_complex_float *x,
+                                    lapack_int incx )
+{
+    lapack_int i, inc;
+
+    if( incx == 0 ) return (lapack_logical) LAPACK_CISNAN( x[0] );
+    inc = ( incx > 0 ) ? incx : -incx ;
+
+    for( i = 0; i < n*inc; i+=inc ) {
+        if( LAPACK_CISNAN( x[i] ) )
+            return (lapack_logical) 1;
+    }
+    return (lapack_logical) 0;
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_cpb_nancheck( int matrix_layout, char uplo,
+                                      lapack_int n, lapack_int kd,
+                                      const lapack_complex_float* ab,
+                                      lapack_int ldab )
+{
+    if( LAPACKE_lsame( uplo, 'u' ) ) {
+        return LAPACKE_cgb_nancheck( matrix_layout, n, n, 0, kd, ab, ldab );
+    } else if( LAPACKE_lsame( uplo, 'l' ) ) {
+        return LAPACKE_cgb_nancheck( matrix_layout, n, n, kd, 0, ab, ldab );
+    }
+    return (lapack_logical) 0;
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input symmetric banded matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_cpb_trans( int matrix_layout, char uplo, lapack_int n,
+                        lapack_int kd,
+                        const lapack_complex_float *in, lapack_int ldin,
+                        lapack_complex_float *out, lapack_int ldout )
+{
+    if( LAPACKE_lsame( uplo, 'u' ) ) {
+        LAPACKE_cgb_trans( matrix_layout, n, n, 0, kd, in, ldin, out, ldout );
+    } else if( LAPACKE_lsame( uplo, 'l' ) ) {
+        LAPACKE_cgb_trans( matrix_layout, n, n, kd, 0, in, ldin, out, ldout );
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries.
+ * Since matrix in packed format stored continiously it just required to
+ * check 1d array for NaNs. It doesn't depend upon uplo, transr or
+ * matrix_layout.
+ */
+
+lapack_logical LAPACKE_cpf_nancheck( lapack_int n,
+                                      const lapack_complex_float *a )
+{
+    lapack_int len = n*(n+1)/2;
+    return LAPACKE_c_nancheck( len, a, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input RFP matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_cpf_trans( int matrix_layout, char transr, char uplo,
+                        lapack_int n, const lapack_complex_float *in,
+                        lapack_complex_float *out )
+{
+    LAPACKE_ctf_trans( matrix_layout, transr, uplo, 'n', n, in, out );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_cpo_nancheck( int matrix_layout, char uplo,
+                                      lapack_int n,
+                                      const lapack_complex_float *a,
+                                      lapack_int lda )
+{
+    return LAPACKE_ctr_nancheck( matrix_layout, uplo, 'n', n, a, lda );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input symmetric matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_cpo_trans( int matrix_layout, char uplo, lapack_int n,
+                        const lapack_complex_float *in, lapack_int ldin,
+                        lapack_complex_float *out, lapack_int ldout )
+{
+    LAPACKE_ctr_trans( matrix_layout, uplo, 'n', n, in, ldin, out, ldout );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries.
+ * Since matrix in packed format stored continiously it just required to
+ * check 1d array for NaNs. It doesn't depend upon uplo or matrix_layout.
+ */
+
+lapack_logical LAPACKE_cpp_nancheck( lapack_int n,
+                                      const lapack_complex_float *ap )
+{
+    lapack_int len = n*(n+1)/2;
+    return LAPACKE_c_nancheck( len, ap, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input symmetric packed matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_cpp_trans( int matrix_layout, char uplo, lapack_int n,
+                        const lapack_complex_float *in,
+                        lapack_complex_float *out )
+{
+    LAPACKE_ctp_trans( matrix_layout, uplo, 'n', n, in, out );
+}
+
+/*****************************************************************************
+  Copyright (c) 2010, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_cpt_nancheck( lapack_int n,
+                                      const float *d,
+                                      const lapack_complex_float *e )
+{
+    return LAPACKE_s_nancheck( n,   d, 1 )
+        || LAPACKE_c_nancheck( n-1, e, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries.
+ * Since matrix in packed format stored continiously it just required to
+ * check 1d array for NaNs. It doesn't depend upon uplo or matrix_layout.
+ */
+
+lapack_logical LAPACKE_csp_nancheck( lapack_int n,
+                                      const lapack_complex_float *ap )
+{
+    lapack_int len = n*(n+1)/2;
+    return LAPACKE_c_nancheck( len, ap, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input symmetric packed matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_csp_trans( int matrix_layout, char uplo, lapack_int n,
+                        const lapack_complex_float *in,
+                        lapack_complex_float *out )
+{
+    LAPACKE_ctp_trans( matrix_layout, uplo, 'n', n, in, out );
+}
+
+/*****************************************************************************
+  Copyright (c) 2010, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_cst_nancheck( lapack_int n,
+                                      const lapack_complex_float *d,
+                                      const lapack_complex_float *e )
+{
+    return LAPACKE_c_nancheck( n,   d, 1 )
+        || LAPACKE_c_nancheck( n-1, e, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_csy_nancheck( int matrix_layout, char uplo,
+                                      lapack_int n,
+                                      const lapack_complex_float *a,
+                                      lapack_int lda )
+{
+    return LAPACKE_ctr_nancheck( matrix_layout, uplo, 'n', n, a, lda );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input symmetric matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_csy_trans( int matrix_layout, char uplo, lapack_int n,
+                        const lapack_complex_float *in, lapack_int ldin,
+                        lapack_complex_float *out, lapack_int ldout )
+{
+    LAPACKE_ctr_trans( matrix_layout, uplo, 'n', n, in, ldin, out, ldout );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_ctb_nancheck( int matrix_layout, char uplo, char diag,
+                                      lapack_int n, lapack_int kd,
+                                      const lapack_complex_float* ab,
+                                      lapack_int ldab )
+{
+    lapack_logical colmaj, upper, unit;
+
+    if( ab == NULL ) return (lapack_logical) 0;
+
+    colmaj = ( matrix_layout == LAPACK_COL_MAJOR );
+    upper  = LAPACKE_lsame( uplo, 'u' );
+    unit   = LAPACKE_lsame( diag, 'u' );
+
+    if( ( !colmaj && ( matrix_layout != LAPACK_ROW_MAJOR ) ) ||
+        ( !upper  && !LAPACKE_lsame( uplo, 'l' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag, 'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return (lapack_logical) 0;
+    }
+
+    if( unit ) {
+        /* Unit case, diagonal should be excluded from the check for NaN. */
+        if( colmaj ) {
+            if( upper ) {
+                return LAPACKE_cgb_nancheck( matrix_layout, n-1, n-1, 0, kd-1,
+                                             &ab[ldab], ldab );
+            } else {
+                return LAPACKE_cgb_nancheck( matrix_layout, n-1, n-1, kd-1, 0,
+                                             &ab[1], ldab );
+            }
+        } else {
+            if( upper ) {
+                return LAPACKE_cgb_nancheck( matrix_layout, n-1, n-1, 0, kd-1,
+                                             &ab[1], ldab );
+            } else {
+                return LAPACKE_cgb_nancheck( matrix_layout, n-1, n-1, kd-1, 0,
+                                             &ab[ldab], ldab );
+            }
+        }
+    } else {
+        /* Non-unit case */
+        if( upper ) {
+            return LAPACKE_cgb_nancheck( matrix_layout, n, n, 0, kd, ab, ldab );
+        } else {
+            return LAPACKE_cgb_nancheck( matrix_layout, n, n, kd, 0, ab, ldab );
+        }
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input triangular banded matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_ctb_trans( int matrix_layout, char uplo, char diag,
+                        lapack_int n, lapack_int kd,
+                        const lapack_complex_float *in, lapack_int ldin,
+                        lapack_complex_float *out, lapack_int ldout )
+{
+    lapack_logical colmaj, upper, unit;
+
+    if( in == NULL || out == NULL ) return;
+
+    colmaj = ( matrix_layout == LAPACK_COL_MAJOR );
+    upper  = LAPACKE_lsame( uplo, 'u' );
+    unit   = LAPACKE_lsame( diag, 'u' );
+
+    if( ( !colmaj && ( matrix_layout != LAPACK_ROW_MAJOR ) ) ||
+        ( !upper  && !LAPACKE_lsame( uplo, 'l' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag, 'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return;
+    }
+
+    if( unit ) {
+        /* Unit case, diagonal excluded from transposition */
+        if( colmaj ) {
+            if( upper ) {
+                LAPACKE_cgb_trans( matrix_layout, n-1, n-1, 0, kd-1,
+                                   &in[ldin], ldin, &out[1], ldout );
+            } else {
+                LAPACKE_cgb_trans( matrix_layout, n-1, n-1, kd-1, 0,
+                                   &in[1], ldin, &out[ldout], ldout );
+            }
+        } else {
+            if( upper ) {
+                LAPACKE_cgb_trans( matrix_layout, n-1, n-1, 0, kd-1,
+                                   &in[1], ldin, &out[ldout], ldout );
+            } else {
+                LAPACKE_cgb_trans( matrix_layout, n-1, n-1, kd-1, 0,
+                                   &in[ldin], ldin, &out[1], ldout );
+            }
+        }
+    } else {
+        /* Non-unit case */
+        if( upper ) {
+            LAPACKE_cgb_trans( matrix_layout, n, n, 0, kd, in, ldin, out,
+                               ldout );
+        } else {
+            LAPACKE_cgb_trans( matrix_layout, n, n, kd, 0, in, ldin, out,
+                               ldout );
+        }
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_ctf_nancheck( int matrix_layout, char transr,
+                                      char uplo, char diag,
+                                      lapack_int n,
+                                      const lapack_complex_float *a )
+{
+    lapack_int len;
+    lapack_logical rowmaj, ntr, lower, unit;
+    lapack_int n1, n2, k;
+
+    if( a == NULL ) return (lapack_logical) 0;
+
+    rowmaj = (matrix_layout == LAPACK_ROW_MAJOR);
+    ntr    = LAPACKE_lsame( transr, 'n' );
+    lower  = LAPACKE_lsame( uplo,   'l' );
+    unit   = LAPACKE_lsame( diag,   'u' );
+
+    if( ( !rowmaj && ( matrix_layout != LAPACK_COL_MAJOR ) ) ||
+        ( !ntr    && !LAPACKE_lsame( transr, 't' )
+                  && !LAPACKE_lsame( transr, 'c' ) ) ||
+        ( !lower  && !LAPACKE_lsame( uplo,   'u' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag,   'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return (lapack_logical) 0;
+    }
+
+    if( unit ) {
+        /* Unit case, diagonal should be excluded from the check for NaN.
+         * Decoding RFP and checking both triangulars and rectangular
+         * for NaNs.
+         */
+        if( lower ) {
+            n2 = n / 2;
+            n1 = n - n2;
+        } else {
+            n1 = n / 2;
+            n2 = n - n1;
+        }
+        if( n % 2 == 1 ) {
+            /* N is odd */
+            if( ( rowmaj || ntr ) && !( rowmaj && ntr ) ) {
+                /* N is odd and ( TRANSR = 'N' .XOR. ROWMAJOR) */
+                if( lower ) {
+                    return LAPACKE_ctr_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 n1, &a[0], n )
+                        || LAPACKE_cge_nancheck( LAPACK_ROW_MAJOR, n2, n1,
+                                                 &a[n1], n )
+                        || LAPACKE_ctr_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 n2, &a[n], n );
+                } else {
+                    return LAPACKE_ctr_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 n1, &a[n2], n )
+                        || LAPACKE_cge_nancheck( LAPACK_ROW_MAJOR, n1, n2,
+                                                 &a[0], n )
+                        || LAPACKE_ctr_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 n2, &a[n1], n );
+                }
+            } else {
+                /* N is odd and
+                   ( ( TRANSR = 'C' || TRANSR = 'T' ) .XOR. COLMAJOR ) */
+                if( lower ) {
+                    return LAPACKE_ctr_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 n1, &a[0], n1 )
+                        || LAPACKE_cge_nancheck( LAPACK_ROW_MAJOR, n1, n2,
+                                                 &a[1], n1 )
+                        || LAPACKE_ctr_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 n2, &a[1], n1 );
+                } else {
+                    return LAPACKE_ctr_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 n1, &a[(size_t)n2*n2], n2 )
+                        || LAPACKE_cge_nancheck( LAPACK_ROW_MAJOR, n2, n1,
+                                                 &a[0], n2 )
+                        || LAPACKE_ctr_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 n2, &a[(size_t)n1*n2], n2 );
+                }
+            }
+        } else {
+            /* N is even */
+            k = n / 2;
+            if( ( rowmaj || ntr ) && !( rowmaj && ntr ) ) {
+                /* N is even and ( TRANSR = 'N' .XOR. ROWMAJOR) */
+                if( lower ) {
+                    return LAPACKE_ctr_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 k, &a[1], n+1 )
+                        || LAPACKE_cge_nancheck( LAPACK_ROW_MAJOR, k, k,
+                                                 &a[k+1], n+1 )
+                        || LAPACKE_ctr_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 k, &a[0], n+1 );
+                } else {
+                    return LAPACKE_ctr_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 k, &a[k+1], n+1 )
+                        || LAPACKE_cge_nancheck( LAPACK_ROW_MAJOR, k, k,
+                                                 &a[0], n+1 )
+                        || LAPACKE_ctr_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 k, &a[k], n+1 );
+                }
+            } else {
+                /* N is even and
+                   ( ( TRANSR = 'C' || TRANSR = 'T' ) .XOR. COLMAJOR ) */
+                if( lower ) {
+                    return LAPACKE_ctr_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 k, &a[k], k )
+                        || LAPACKE_cge_nancheck( LAPACK_ROW_MAJOR, k, k,
+                                                 &a[(size_t)k*(k+1)], k )
+                        || LAPACKE_ctr_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 k, &a[0], k );
+                } else {
+                    return LAPACKE_ctr_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 k, &a[(size_t)k*(k+1)], k )
+                        || LAPACKE_cge_nancheck( LAPACK_ROW_MAJOR, k, k,
+                                                 &a[0], k )
+                        || LAPACKE_ctr_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 k, &a[(size_t)k*k], k );
+                }
+            }
+        }
+    } else {
+        /* Non-unit case - just check whole array for NaNs. */
+        len = n*(n+1)/2;
+        return LAPACKE_cge_nancheck( LAPACK_COL_MAJOR, len, 1, a, len );
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input RFP matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ * This functions does copy diagonal for both unit and non-unit cases.
+ */
+
+void LAPACKE_ctf_trans( int matrix_layout, char transr, char uplo, char diag,
+                        lapack_int n, const lapack_complex_float *in,
+                        lapack_complex_float *out )
+{
+    lapack_int row, col;
+    lapack_logical rowmaj, ntr, lower, unit;
+
+    if( in == NULL || out == NULL ) return ;
+
+    rowmaj = (matrix_layout == LAPACK_ROW_MAJOR);
+    ntr    = LAPACKE_lsame( transr, 'n' );
+    lower  = LAPACKE_lsame( uplo,   'l' );
+    unit   = LAPACKE_lsame( diag,   'u' );
+
+    if( ( !rowmaj && ( matrix_layout != LAPACK_COL_MAJOR ) ) ||
+        ( !ntr    && !LAPACKE_lsame( transr, 't' ) &&
+                     !LAPACKE_lsame( transr, 'c' ) ) ||
+        ( !lower  && !LAPACKE_lsame( uplo,   'u' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag,   'n' ) ) ) {
+        /* Just exit if input parameters are wrong */
+        return;
+    }
+
+    /* Determine parameters of array representing RFP */
+    if( ntr ) {
+        if( n%2 == 0 ) {
+            row = n + 1;
+            col = n / 2;
+        } else {
+            row = n;
+            col = (n + 1) / 2;
+        }
+    } else {
+        if( n%2 == 0 ) {
+            row = n / 2;
+            col = n + 1;
+        } else {
+            row = (n + 1) / 2;
+            col = n;
+        }
+    }
+
+    /* Perform conversion: */
+    if( rowmaj ) {
+        LAPACKE_cge_trans( LAPACK_ROW_MAJOR, row, col, in, col, out, row );
+    } else {
+        LAPACKE_cge_trans( LAPACK_COL_MAJOR, row, col, in, row, out, col );
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries.
+ * Since matrix in packed format stored continiously it just required to
+ * check 1d array for NaNs. It doesn't depend upon uplo or matrix_layout.
+ */
+
+lapack_logical LAPACKE_ctp_nancheck( int matrix_layout, char uplo, char diag,
+                                      lapack_int n,
+                                      const lapack_complex_float *ap )
+{
+    lapack_int i, len;
+    lapack_logical colmaj, upper, unit;
+
+    if( ap == NULL ) return (lapack_logical) 0;
+
+    colmaj = ( matrix_layout == LAPACK_COL_MAJOR );
+    upper  = LAPACKE_lsame( uplo, 'u' );
+    unit   = LAPACKE_lsame( diag, 'u' );
+
+    if( ( !colmaj && ( matrix_layout != LAPACK_ROW_MAJOR ) ) ||
+        ( !upper  && !LAPACKE_lsame( uplo, 'l' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag, 'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return (lapack_logical) 0;
+    }
+
+    if( unit ) {
+        /* Unit case, diagonal should be excluded from the check for NaN. */
+
+        /* Since col_major upper and row_major lower are equal,
+         * and col_major lower and row_major upper are equals too -
+         * using one code for equal cases. XOR( colmaj, upper )
+         */
+        if( ( colmaj || upper ) && !( colmaj && upper ) ) {
+            for( i = 1; i < n; i++ )
+                if( LAPACKE_c_nancheck( i, &ap[ ((size_t)i+1)*i/2 ], 1 ) )
+                    return (lapack_logical) 1;
+        } else {
+            for( i = 0; i < n-1; i++ )
+                if( LAPACKE_c_nancheck( n-i-1,
+                    &ap[ (size_t)i+1 + i*((size_t)2*n-i+1)/2 ], 1 ) )
+                    return (lapack_logical) 1;
+        }
+        return (lapack_logical) 0;
+    } else {
+        /* Non-unit case - just check whole array for NaNs. */
+        len = n*(n+1)/2;
+        return LAPACKE_c_nancheck( len, ap, 1 );
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input triangular packed matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_ctp_trans( int matrix_layout, char uplo, char diag,
+                        lapack_int n, const lapack_complex_float *in,
+                        lapack_complex_float *out )
+{
+    lapack_int i, j, st;
+    lapack_logical colmaj, upper, unit;
+
+    if( in == NULL || out == NULL ) return ;
+
+    colmaj = ( matrix_layout == LAPACK_COL_MAJOR );
+    upper  = LAPACKE_lsame( uplo, 'u' );
+    unit   = LAPACKE_lsame( diag, 'u' );
+
+    if( ( !colmaj && ( matrix_layout != LAPACK_ROW_MAJOR ) ) ||
+        ( !upper  && !LAPACKE_lsame( uplo, 'l' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag, 'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return;
+    }
+    if( unit ) {
+        /* If unit, then don't touch diagonal, start from 1st column or row */
+        st = 1;
+    } else  {
+        /* If non-unit, then check diagonal also, starting from [0,0] */
+        st = 0;
+    }
+
+    /* Perform conversion:
+     * Since col_major upper and row_major lower are equal,
+     * and col_major lower and row_major upper are equals too -
+     * using one code for equal cases. XOR( colmaj, upper )
+     */
+    if( ( colmaj || upper ) && !( colmaj && upper ) ) {
+        for( j = st; j < n; j++ ) {
+            for( i = 0; i < j+1-st; i++ ) {
+                out[ j-i + (i*(2*n-i+1))/2 ] = in[ ((j+1)*j)/2 + i ];
+            }
+        }
+    } else {
+        for( j = 0; j < n-st; j++ ) {
+            for( i = j+st; i < n; i++ ) {
+                out[ j + ((i+1)*i)/2 ] = in[ (j*(2*n-j+1))/2 + i-j ];
+            }
+        }
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_ctr_nancheck( int matrix_layout, char uplo, char diag,
+                                      lapack_int n,
+                                      const lapack_complex_float *a,
+                                      lapack_int lda )
+{
+    lapack_int i, j, st;
+    lapack_logical colmaj, lower, unit;
+
+    if( a == NULL ) return (lapack_logical) 0;
+
+    colmaj = ( matrix_layout == LAPACK_COL_MAJOR );
+    lower  = LAPACKE_lsame( uplo, 'l' );
+    unit   = LAPACKE_lsame( diag, 'u' );
+
+    if( ( !colmaj && ( matrix_layout != LAPACK_ROW_MAJOR ) ) ||
+        ( !lower  && !LAPACKE_lsame( uplo, 'u' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag, 'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return (lapack_logical) 0;
+    }
+    if( unit ) {
+        /* If unit, then don't touch diagonal, start from 1st column or row */
+        st = 1;
+    } else  {
+        /* If non-unit, then check diagonal also, starting from [0,0] */
+        st = 0;
+    }
+
+    /* Since col_major upper and row_major lower are equal,
+     * and col_major lower and row_major upper are equals too -
+     * using one code for equal cases. XOR( colmaj, upper )
+     */
+    if( ( colmaj || lower ) && !( colmaj && lower ) ) {
+        for( j = st; j < n; j++ ) {
+            for( i = 0; i < MIN( j+1-st, lda ); i++ ) {
+                if( LAPACK_CISNAN( a[i+j*lda] ) )
+                    return (lapack_logical) 1;
+            }
+        }
+    } else {
+        for( j = 0; j < n-st; j++ ) {
+            for( i = j+st; i < MIN( n, lda ); i++ ) {
+                if( LAPACK_CISNAN( a[i+j*lda] ) )
+                    return (lapack_logical) 1;
+            }
+        }
+    }
+    return (lapack_logical) 0;
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input triangular matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_ctr_trans( int matrix_layout, char uplo, char diag, lapack_int n,
+                        const lapack_complex_float *in, lapack_int ldin,
+                        lapack_complex_float *out, lapack_int ldout )
+{
+    lapack_int i, j, st;
+    lapack_logical colmaj, lower, unit;
+
+    if( in == NULL || out == NULL ) return ;
+
+    colmaj = ( matrix_layout == LAPACK_COL_MAJOR );
+    lower  = LAPACKE_lsame( uplo, 'l' );
+    unit   = LAPACKE_lsame( diag, 'u' );
+
+    if( ( !colmaj && ( matrix_layout != LAPACK_ROW_MAJOR ) ) ||
+        ( !lower  && !LAPACKE_lsame( uplo, 'u' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag, 'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return;
+    }
+    if( unit ) {
+        /* If unit, then don't touch diagonal, start from 1st column or row */
+        st = 1;
+    } else  {
+        /* If non-unit, then check diagonal also, starting from [0,0] */
+        st = 0;
+    }
+
+    /* Perform conversion:
+     * Since col_major upper and row_major lower are equal,
+     * and col_major lower and row_major upper are equals too -
+     * using one code for equal cases. XOR( colmaj, upper )
+     */
+    if( ( colmaj || lower ) && !( colmaj && lower ) ) {
+        for( j = st; j < MIN( n, ldout ); j++ ) {
+            for( i = 0; i < MIN( j+1-st, ldin ); i++ ) {
+                out[ j+i*ldout ] = in[ i+j*ldin ];
+            }
+        }
+    } else {
+        for( j = 0; j < MIN( n-st, ldout ); j++ ) {
+            for( i = j+st; i < MIN( n, ldin ); i++ ) {
+                out[ j+i*ldout ] = in[ i+j*ldin ];
+            }
+        }
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_dgb_nancheck( int matrix_layout, lapack_int m,
+                                      lapack_int n, lapack_int kl,
+                                      lapack_int ku,
+                                      const double *ab,
+                                      lapack_int ldab )
+{
+    lapack_int i, j;
+
+    if( ab == NULL ) return (lapack_logical) 0;
+
+    if( matrix_layout == LAPACK_COL_MAJOR ) {
+        for( j = 0; j < n; j++ ) {
+            for( i = MAX( ku-j, 0 ); i < MIN3( ldab, m+ku-j, kl+ku+1 );
+                 i++ ) {
+                if( LAPACK_DISNAN( ab[i+(size_t)j*ldab] ) )
+                     return (lapack_logical) 1;
+            }
+        }
+    } else if ( matrix_layout == LAPACK_ROW_MAJOR ) {
+        for( j = 0; j < MIN( n, ldab ); j++ ) {
+            for( i = MAX( ku-j, 0 ); i < MIN( m+ku-j, kl+ku+1 ); i++ ) {
+                if( LAPACK_DISNAN( ab[(size_t)i*ldab+j] ) )
+                     return (lapack_logical) 1;
+            }
+        }
+    }
+    return (lapack_logical) 0;
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input general band matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_dgb_trans( int matrix_layout, lapack_int m, lapack_int n,
+                        lapack_int kl, lapack_int ku,
+                        const double *in, lapack_int ldin,
+                        double *out, lapack_int ldout )
+{
+    lapack_int i, j;
+
+    if( in == NULL || out == NULL ) return;
+
+    if( matrix_layout == LAPACK_COL_MAJOR ) {
+        for( j = 0; j < MIN( ldout, n ); j++ ) {
+            for( i = MAX( ku-j, 0 ); i < MIN3( ldin, m+ku-j, kl+ku+1 );
+                 i++ ) {
+                out[(size_t)i*ldout+j] = in[i+(size_t)j*ldin];
+            }
+        }
+    } else if ( matrix_layout == LAPACK_ROW_MAJOR ) {
+        /* TODO: interchange loops for performance.
+         * This is just reference impemeltation.
+         */
+        for( j = 0; j < MIN( n, ldin ); j++ ) {
+            for( i = MAX( ku-j, 0 ); i < MIN3( ldout, m+ku-j, kl+ku+1 );
+                 i++ ) {
+                out[i+(size_t)j*ldout] = in[(size_t)i*ldin+j];
+            }
+        }
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_dge_nancheck( int matrix_layout, lapack_int m,
+                                      lapack_int n,
+                                      const double *a,
+                                      lapack_int lda )
+{
+    lapack_int i, j;
+
+    if( a == NULL ) return (lapack_logical) 0;
+
+    if( matrix_layout == LAPACK_COL_MAJOR ) {
+        for( j = 0; j < n; j++ ) {
+            for( i = 0; i < MIN( m, lda ); i++ ) {
+                if( LAPACK_DISNAN( a[i+(size_t)j*lda] ) )
+                    return (lapack_logical) 1;
+            }
+        }
+    } else if ( matrix_layout == LAPACK_ROW_MAJOR ) {
+        for( i = 0; i < m; i++ ) {
+            for( j = 0; j < MIN( n, lda ); j++ ) {
+                if( LAPACK_DISNAN( a[(size_t)i*lda+j] ) )
+                    return (lapack_logical) 1;
+            }
+        }
+    }
+    return (lapack_logical) 0;
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input general matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_dge_trans( int matrix_layout, lapack_int m, lapack_int n,
+                        const double* in, lapack_int ldin,
+                        double* out, lapack_int ldout )
+{
+    lapack_int i, j, x, y;
+
+    if( in == NULL || out == NULL ) return;
+
+    if( matrix_layout == LAPACK_COL_MAJOR ) {
+        x = n;
+        y = m;
+    } else if ( matrix_layout == LAPACK_ROW_MAJOR ) {
+        x = m;
+        y = n;
+    } else {
+        /* Unknown input layout */
+        return;
+    }
+
+    /* In case of incorrect m, n, ldin or ldout the function does nothing */
+    for( i = 0; i < MIN( y, ldin ); i++ ) {
+        for( j = 0; j < MIN( x, ldout ); j++ ) {
+            out[ (size_t)i*ldout + j ] = in[ (size_t)j*ldin + i ];
+        }
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_dgg_nancheck( int matrix_layout, lapack_int m,
+                                      lapack_int n,
+                                      const double *a,
+                                      lapack_int lda )
+{
+    return LAPACKE_dge_nancheck( matrix_layout, m, n, a, lda );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input general matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_dgg_trans( int matrix_layout, lapack_int m, lapack_int n,
+                        const double* in, lapack_int ldin,
+                        double* out, lapack_int ldout )
+{
+    LAPACKE_dge_trans( matrix_layout, m, n, in, ldin, out, ldout );
+}
+
+/*****************************************************************************
+  Copyright (c) 2010, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_dgt_nancheck( lapack_int n,
+                                      const double *dl,
+                                      const double *d,
+                                      const double *du )
+{
+    return LAPACKE_d_nancheck( n-1, dl, 1 )
+        || LAPACKE_d_nancheck( n  , d,  1 )
+        || LAPACKE_d_nancheck( n-1, du, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_dhs_nancheck( int matrix_layout, lapack_int n,
+                                      const double *a,
+                                      lapack_int lda )
+{
+    lapack_logical subdiag_nans;
+
+    if( a == NULL ) return (lapack_logical) 0;
+
+    /* Check subdiagonal first */
+    if( matrix_layout == LAPACK_COL_MAJOR ) {
+        subdiag_nans = LAPACKE_d_nancheck( n-1, &a[1], lda+1 );
+    } else if ( matrix_layout == LAPACK_ROW_MAJOR ) {
+        subdiag_nans = LAPACKE_d_nancheck( n-1, &a[lda], lda+1 );
+    } else {
+        return (lapack_logical) 0;
+    }
+
+    /* Check upper triangular if subdiagonal has no NaNs. */
+    return subdiag_nans || LAPACKE_dtr_nancheck( matrix_layout, 'u', 'n',
+                                                 n, a, lda);
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input Hessenberg matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_dhs_trans( int matrix_layout, lapack_int n,
+                        const double *in, lapack_int ldin,
+                        double *out, lapack_int ldout )
+{
+    if( in == NULL || out == NULL ) return;
+
+    /* Convert subdiagonal first */
+    if( matrix_layout == LAPACK_COL_MAJOR ) {
+        LAPACKE_dge_trans( LAPACK_COL_MAJOR, 1, n-1, &in[1], ldin+1,
+                           &out[ldout], ldout+1 );
+    } else if ( matrix_layout == LAPACK_ROW_MAJOR ) {
+        LAPACKE_dge_trans( LAPACK_ROW_MAJOR, n-1, 1, &in[ldin], ldin+1,
+                           &out[1], ldout+1 );
+    } else {
+        return;
+    }
+
+    /* Convert upper triangular. */
+    LAPACKE_dtr_trans( matrix_layout, 'u', 'n', n, in, ldin, out, ldout);
+}
+
+/*****************************************************************************
+  Copyright (c) 2010, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a vector for NaN entries. */
+
+lapack_logical LAPACKE_d_nancheck( lapack_int n,
+                                    const double *x,
+                                    lapack_int incx )
+{
+    lapack_int i, inc;
+
+    if( incx == 0 ) return (lapack_logical) LAPACK_DISNAN( x[0] );
+    inc = ( incx > 0 ) ? incx : -incx ;
+
+    for( i = 0; i < n*inc; i+=inc ) {
+        if( LAPACK_DISNAN( x[i] ) )
+            return (lapack_logical) 1;
+    }
+    return (lapack_logical) 0;
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_dpb_nancheck( int matrix_layout, char uplo,
+                                      lapack_int n, lapack_int kd,
+                                      const double* ab,
+                                      lapack_int ldab )
+{
+    if( LAPACKE_lsame( uplo, 'u' ) ) {
+        return LAPACKE_dgb_nancheck( matrix_layout, n, n, 0, kd, ab, ldab );
+    } else if( LAPACKE_lsame( uplo, 'l' ) ) {
+        return LAPACKE_dgb_nancheck( matrix_layout, n, n, kd, 0, ab, ldab );
+    }
+    return (lapack_logical) 0;
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input symmetric banded matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_dpb_trans( int matrix_layout, char uplo, lapack_int n,
+                        lapack_int kd,
+                        const double *in, lapack_int ldin,
+                        double *out, lapack_int ldout )
+{
+    if( LAPACKE_lsame( uplo, 'u' ) ) {
+        LAPACKE_dgb_trans( matrix_layout, n, n, 0, kd, in, ldin, out, ldout );
+    } else if( LAPACKE_lsame( uplo, 'l' ) ) {
+        LAPACKE_dgb_trans( matrix_layout, n, n, kd, 0, in, ldin, out, ldout );
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries.
+ * Since matrix in packed format stored continiously it just required to
+ * check 1d array for NaNs. It doesn't depend upon uplo, transr or
+ * matrix_layout.
+ */
+
+lapack_logical LAPACKE_dpf_nancheck( lapack_int n,
+                                      const double *a )
+{
+    lapack_int len = n*(n+1)/2;
+    return LAPACKE_d_nancheck( len, a, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input RFP matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_dpf_trans( int matrix_layout, char transr, char uplo,
+                        lapack_int n, const double *in,
+                        double *out )
+{
+    LAPACKE_dtf_trans( matrix_layout, transr, uplo, 'n', n, in, out );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_dpo_nancheck( int matrix_layout, char uplo,
+                                      lapack_int n,
+                                      const double *a,
+                                      lapack_int lda )
+{
+    return LAPACKE_dtr_nancheck( matrix_layout, uplo, 'n', n, a, lda );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input symmetric matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_dpo_trans( int matrix_layout, char uplo, lapack_int n,
+                        const double *in, lapack_int ldin,
+                        double *out, lapack_int ldout )
+{
+    LAPACKE_dtr_trans( matrix_layout, uplo, 'n', n, in, ldin, out, ldout );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries.
+ * Since matrix in packed format stored continiously it just required to
+ * check 1d array for NaNs. It doesn't depend upon uplo or matrix_layout.
+ */
+
+lapack_logical LAPACKE_dpp_nancheck( lapack_int n,
+                                      const double *ap )
+{
+    lapack_int len = n*(n+1)/2;
+    return LAPACKE_d_nancheck( len, ap, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input symmetric packed matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_dpp_trans( int matrix_layout, char uplo, lapack_int n,
+                        const double *in,
+                        double *out )
+{
+    LAPACKE_dtp_trans( matrix_layout, uplo, 'n', n, in, out );
+}
+
+/*****************************************************************************
+  Copyright (c) 2010, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_dpt_nancheck( lapack_int n,
+                                      const double *d,
+                                      const double *e )
+{
+    return LAPACKE_d_nancheck( n,   d, 1 )
+        || LAPACKE_d_nancheck( n-1, e, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_dsb_nancheck( int matrix_layout, char uplo,
+                                      lapack_int n, lapack_int kd,
+                                      const double* ab,
+                                      lapack_int ldab )
+{
+    if( LAPACKE_lsame( uplo, 'u' ) ) {
+        return LAPACKE_dgb_nancheck( matrix_layout, n, n, 0, kd, ab, ldab );
+    } else if( LAPACKE_lsame( uplo, 'l' ) ) {
+        return LAPACKE_dgb_nancheck( matrix_layout, n, n, kd, 0, ab, ldab );
+    }
+    return (lapack_logical) 0;
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input symmetrical band matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_dsb_trans( int matrix_layout, char uplo, lapack_int n,
+                        lapack_int kd,
+                        const double *in, lapack_int ldin,
+                        double *out, lapack_int ldout )
+{
+    if( LAPACKE_lsame( uplo, 'u' ) ) {
+        LAPACKE_dgb_trans( matrix_layout, n, n, 0, kd, in, ldin, out, ldout );
+    } else if( LAPACKE_lsame( uplo, 'l' ) ) {
+        LAPACKE_dgb_trans( matrix_layout, n, n, kd, 0, in, ldin, out, ldout );
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries.
+ * Since matrix in packed format stored continiously it just required to
+ * check 1d array for NaNs. It doesn't depend upon uplo or matrix_layout.
+ */
+
+lapack_logical LAPACKE_dsp_nancheck( lapack_int n,
+                                      const double *ap )
+{
+    lapack_int len = n*(n+1)/2;
+    return LAPACKE_d_nancheck( len, ap, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input symmetric packed matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_dsp_trans( int matrix_layout, char uplo, lapack_int n,
+                        const double *in,
+                        double *out )
+{
+    LAPACKE_dtp_trans( matrix_layout, uplo, 'n', n, in, out );
+}
+
+/*****************************************************************************
+  Copyright (c) 2010, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_dst_nancheck( lapack_int n,
+                                      const double *d,
+                                      const double *e )
+{
+    return LAPACKE_d_nancheck( n,   d, 1 )
+        || LAPACKE_d_nancheck( n-1, e, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_dsy_nancheck( int matrix_layout, char uplo,
+                                      lapack_int n,
+                                      const double *a,
+                                      lapack_int lda )
+{
+    return LAPACKE_dtr_nancheck( matrix_layout, uplo, 'n', n, a, lda );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input symmetric matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_dsy_trans( int matrix_layout, char uplo, lapack_int n,
+                        const double *in, lapack_int ldin,
+                        double *out, lapack_int ldout )
+{
+    LAPACKE_dtr_trans( matrix_layout, uplo, 'n', n, in, ldin, out, ldout );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_dtb_nancheck( int matrix_layout, char uplo, char diag,
+                                      lapack_int n, lapack_int kd,
+                                      const double* ab,
+                                      lapack_int ldab )
+{
+    lapack_logical colmaj, upper, unit;
+
+    if( ab == NULL ) return (lapack_logical) 0;
+
+    colmaj = ( matrix_layout == LAPACK_COL_MAJOR );
+    upper  = LAPACKE_lsame( uplo, 'u' );
+    unit   = LAPACKE_lsame( diag, 'u' );
+
+    if( ( !colmaj && ( matrix_layout != LAPACK_ROW_MAJOR ) ) ||
+        ( !upper  && !LAPACKE_lsame( uplo, 'l' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag, 'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return (lapack_logical) 0;
+    }
+
+    if( unit ) {
+        /* Unit case, diagonal should be excluded from the check for NaN. */
+        if( colmaj ) {
+            if( upper ) {
+                return LAPACKE_dgb_nancheck( matrix_layout, n-1, n-1, 0, kd-1,
+                                             &ab[ldab], ldab );
+            } else {
+                return LAPACKE_dgb_nancheck( matrix_layout, n-1, n-1, kd-1, 0,
+                                             &ab[1], ldab );
+            }
+        } else {
+            if( upper ) {
+                return LAPACKE_dgb_nancheck( matrix_layout, n-1, n-1, 0, kd-1,
+                                             &ab[1], ldab );
+            } else {
+                return LAPACKE_dgb_nancheck( matrix_layout, n-1, n-1, kd-1, 0,
+                                             &ab[ldab], ldab );
+            }
+        }
+    } else {
+        /* Non-unit case */
+        if( upper ) {
+            return LAPACKE_dgb_nancheck( matrix_layout, n, n, 0, kd, ab, ldab );
+        } else {
+            return LAPACKE_dgb_nancheck( matrix_layout, n, n, kd, 0, ab, ldab );
+        }
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input triangular banded matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_dtb_trans( int matrix_layout, char uplo, char diag,
+                        lapack_int n, lapack_int kd,
+                        const double *in, lapack_int ldin,
+                        double *out, lapack_int ldout )
+{
+    lapack_logical colmaj, upper, unit;
+
+    if( in == NULL || out == NULL ) return;
+
+    colmaj = ( matrix_layout == LAPACK_COL_MAJOR );
+    upper  = LAPACKE_lsame( uplo, 'u' );
+    unit   = LAPACKE_lsame( diag, 'u' );
+
+    if( ( !colmaj && ( matrix_layout != LAPACK_ROW_MAJOR ) ) ||
+        ( !upper  && !LAPACKE_lsame( uplo, 'l' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag, 'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return;
+    }
+
+    if( unit ) {
+        /* Unit case, diagonal excluded from transposition */
+        if( colmaj ) {
+            if( upper ) {
+                LAPACKE_dgb_trans( matrix_layout, n-1, n-1, 0, kd-1,
+                                   &in[ldin], ldin, &out[1], ldout );
+            } else {
+                LAPACKE_dgb_trans( matrix_layout, n-1, n-1, kd-1, 0,
+                                   &in[1], ldin, &out[ldout], ldout );
+            }
+        } else {
+            if( upper ) {
+                LAPACKE_dgb_trans( matrix_layout, n-1, n-1, 0, kd-1,
+                                   &in[1], ldin, &out[ldout], ldout );
+            } else {
+                LAPACKE_dgb_trans( matrix_layout, n-1, n-1, kd-1, 0,
+                                   &in[ldin], ldin, &out[1], ldout );
+            }
+        }
+    } else {
+        /* Non-unit case */
+        if( upper ) {
+            LAPACKE_dgb_trans( matrix_layout, n, n, 0, kd, in, ldin, out,
+                               ldout );
+        } else {
+            LAPACKE_dgb_trans( matrix_layout, n, n, kd, 0, in, ldin, out,
+                               ldout );
+        }
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_dtf_nancheck( int matrix_layout, char transr,
+                                      char uplo, char diag,
+                                      lapack_int n,
+                                      const double *a )
+{
+    lapack_int len;
+    lapack_logical rowmaj, ntr, lower, unit;
+    lapack_int n1, n2, k;
+
+    if( a == NULL ) return (lapack_logical) 0;
+
+    rowmaj = (matrix_layout == LAPACK_ROW_MAJOR);
+    ntr    = LAPACKE_lsame( transr, 'n' );
+    lower  = LAPACKE_lsame( uplo,   'l' );
+    unit   = LAPACKE_lsame( diag,   'u' );
+
+    if( ( !rowmaj && ( matrix_layout != LAPACK_COL_MAJOR ) ) ||
+        ( !ntr    && !LAPACKE_lsame( transr, 't' )
+                  && !LAPACKE_lsame( transr, 'c' ) ) ||
+        ( !lower  && !LAPACKE_lsame( uplo,   'u' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag,   'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return (lapack_logical) 0;
+    }
+
+    if( unit ) {
+        /* Unit case, diagonal should be excluded from the check for NaN.
+         * Decoding RFP and checking both triangulars and rectangular
+         * for NaNs.
+         */
+        if( lower ) {
+            n2 = n / 2;
+            n1 = n - n2;
+        } else {
+            n1 = n / 2;
+            n2 = n - n1;
+        }
+        if( n % 2 == 1 ) {
+            /* N is odd */
+            if( ( rowmaj || ntr ) && !( rowmaj && ntr ) ) {
+                /* N is odd and ( TRANSR = 'N' .XOR. ROWMAJOR) */
+                if( lower ) {
+                    return LAPACKE_dtr_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 n1, &a[0], n )
+                        || LAPACKE_dge_nancheck( LAPACK_ROW_MAJOR, n2, n1,
+                                                 &a[n1], n )
+                        || LAPACKE_dtr_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 n2, &a[n], n );
+                } else {
+                    return LAPACKE_dtr_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 n1, &a[n2], n )
+                        || LAPACKE_dge_nancheck( LAPACK_ROW_MAJOR, n1, n2,
+                                                 &a[0], n )
+                        || LAPACKE_dtr_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 n2, &a[n1], n );
+                }
+            } else {
+                /* N is odd and
+                   ( ( TRANSR = 'C' || TRANSR = 'T' ) .XOR. COLMAJOR ) */
+                if( lower ) {
+                    return LAPACKE_dtr_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 n1, &a[0], n1 )
+                        || LAPACKE_dge_nancheck( LAPACK_ROW_MAJOR, n1, n2,
+                                                 &a[1], n1 )
+                        || LAPACKE_dtr_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 n2, &a[1], n1 );
+                } else {
+                    return LAPACKE_dtr_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 n1, &a[(size_t)n2*n2], n2 )
+                        || LAPACKE_dge_nancheck( LAPACK_ROW_MAJOR, n2, n1,
+                                                 &a[0], n2 )
+                        || LAPACKE_dtr_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 n2, &a[(size_t)n1*n2], n2 );
+                }
+            }
+        } else {
+            /* N is even */
+            k = n / 2;
+            if( ( rowmaj || ntr ) && !( rowmaj && ntr ) ) {
+                /* N is even and ( TRANSR = 'N' .XOR. ROWMAJOR) */
+                if( lower ) {
+                    return LAPACKE_dtr_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 k, &a[1], n+1 )
+                        || LAPACKE_dge_nancheck( LAPACK_ROW_MAJOR, k, k,
+                                                 &a[k+1], n+1 )
+                        || LAPACKE_dtr_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 k, &a[0], n+1 );
+                } else {
+                    return LAPACKE_dtr_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 k, &a[k+1], n+1 )
+                        || LAPACKE_dge_nancheck( LAPACK_ROW_MAJOR, k, k,
+                                                 &a[0], n+1 )
+                        || LAPACKE_dtr_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 k, &a[k], n+1 );
+                }
+            } else {
+                /* N is even and
+                   ( ( TRANSR = 'C' || TRANSR = 'T' ) .XOR. COLMAJOR ) */
+                if( lower ) {
+                    return LAPACKE_dtr_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 k, &a[k], k )
+                        || LAPACKE_dge_nancheck( LAPACK_ROW_MAJOR, k, k,
+                                                 &a[(size_t)k*(k+1)], k )
+                        || LAPACKE_dtr_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 k, &a[0], k );
+                } else {
+                    return LAPACKE_dtr_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 k, &a[(size_t)k*(k+1)], k )
+                        || LAPACKE_dge_nancheck( LAPACK_ROW_MAJOR, k, k,
+                                                 &a[0], k )
+                        || LAPACKE_dtr_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 k, &a[(size_t)k*k], k );
+                }
+            }
+        }
+    } else {
+        /* Non-unit case - just check whole array for NaNs. */
+        len = n*(n+1)/2;
+        return LAPACKE_dge_nancheck( LAPACK_COL_MAJOR, len, 1, a, len );
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input RFP matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ * This functions does copy diagonal for both unit and non-unit cases.
+ */
+
+void LAPACKE_dtf_trans( int matrix_layout, char transr, char uplo, char diag,
+                        lapack_int n, const double *in,
+                        double *out )
+{
+    lapack_int row, col;
+    lapack_logical rowmaj, ntr, lower, unit;
+
+    if( in == NULL || out == NULL ) return ;
+
+    rowmaj = (matrix_layout == LAPACK_ROW_MAJOR);
+    ntr    = LAPACKE_lsame( transr, 'n' );
+    lower  = LAPACKE_lsame( uplo,   'l' );
+    unit   = LAPACKE_lsame( diag,   'u' );
+
+    if( ( !rowmaj && ( matrix_layout != LAPACK_COL_MAJOR ) ) ||
+        ( !ntr    && !LAPACKE_lsame( transr, 't' ) &&
+                     !LAPACKE_lsame( transr, 'c' ) ) ||
+        ( !lower  && !LAPACKE_lsame( uplo,   'u' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag,   'n' ) ) ) {
+        /* Just exit if input parameters are wrong */
+        return;
+    }
+
+    /* Determine parameters of array representing RFP */
+    if( ntr ) {
+        if( n%2 == 0 ) {
+            row = n + 1;
+            col = n / 2;
+        } else {
+            row = n;
+            col = (n + 1) / 2;
+        }
+    } else {
+        if( n%2 == 0 ) {
+            row = n / 2;
+            col = n + 1;
+        } else {
+            row = (n + 1) / 2;
+            col = n;
+        }
+    }
+
+    /* Perform conversion: */
+    if( rowmaj ) {
+        LAPACKE_dge_trans( LAPACK_ROW_MAJOR, row, col, in, col, out, row );
+    } else {
+        LAPACKE_dge_trans( LAPACK_COL_MAJOR, row, col, in, row, out, col );
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries.
+ * Since matrix in packed format stored continiously it just required to
+ * check 1d array for NaNs. It doesn't depend upon uplo or matrix_layout.
+ */
+
+lapack_logical LAPACKE_dtp_nancheck( int matrix_layout, char uplo, char diag,
+                                      lapack_int n,
+                                      const double *ap )
+{
+    lapack_int i, len;
+    lapack_logical colmaj, upper, unit;
+
+    if( ap == NULL ) return (lapack_logical) 0;
+
+    colmaj = ( matrix_layout == LAPACK_COL_MAJOR );
+    upper  = LAPACKE_lsame( uplo, 'u' );
+    unit   = LAPACKE_lsame( diag, 'u' );
+
+    if( ( !colmaj && ( matrix_layout != LAPACK_ROW_MAJOR ) ) ||
+        ( !upper  && !LAPACKE_lsame( uplo, 'l' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag, 'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return (lapack_logical) 0;
+    }
+
+    if( unit ) {
+        /* Unit case, diagonal should be excluded from the check for NaN. */
+
+        /* Since col_major upper and row_major lower are equal,
+         * and col_major lower and row_major upper are equals too -
+         * using one code for equal cases. XOR( colmaj, upper )
+         */
+        if( ( colmaj || upper ) && !( colmaj && upper ) ) {
+            for( i = 1; i < n; i++ )
+                if( LAPACKE_d_nancheck( i, &ap[ ((size_t)i+1)*i/2 ], 1 ) )
+                    return (lapack_logical) 1;
+        } else {
+            for( i = 0; i < n-1; i++ )
+                if( LAPACKE_d_nancheck( n-i-1,
+                    &ap[ (size_t)i+1 + i*((size_t)2*n-i+1)/2 ], 1 ) )
+                    return (lapack_logical) 1;
+        }
+        return (lapack_logical) 0;
+    } else {
+        /* Non-unit case - just check whole array for NaNs. */
+        len = n*(n+1)/2;
+        return LAPACKE_d_nancheck( len, ap, 1 );
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input triangular packed matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_dtp_trans( int matrix_layout, char uplo, char diag,
+                        lapack_int n, const double *in,
+                        double *out )
+{
+    lapack_int i, j, st;
+    lapack_logical colmaj, upper, unit;
+
+    if( in == NULL || out == NULL ) return ;
+
+    colmaj = ( matrix_layout == LAPACK_COL_MAJOR );
+    upper  = LAPACKE_lsame( uplo, 'u' );
+    unit   = LAPACKE_lsame( diag, 'u' );
+
+    if( ( !colmaj && ( matrix_layout != LAPACK_ROW_MAJOR ) ) ||
+        ( !upper  && !LAPACKE_lsame( uplo, 'l' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag, 'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return;
+    }
+    if( unit ) {
+        /* If unit, then don't touch diagonal, start from 1st column or row */
+        st = 1;
+    } else  {
+        /* If non-unit, then check diagonal also, starting from [0,0] */
+        st = 0;
+    }
+
+    /* Perform conversion:
+     * Since col_major upper and row_major lower are equal,
+     * and col_major lower and row_major upper are equals too -
+     * using one code for equal cases. XOR( colmaj, upper )
+     */
+    if( ( colmaj || upper ) && !( colmaj && upper ) ) {
+        for( j = st; j < n; j++ ) {
+            for( i = 0; i < j+1-st; i++ ) {
+                out[ j-i + (i*(2*n-i+1))/2 ] = in[ ((j+1)*j)/2 + i ];
+            }
+        }
+    } else {
+        for( j = 0; j < n-st; j++ ) {
+            for( i = j+st; i < n; i++ ) {
+                out[ j + ((i+1)*i)/2 ] = in[ (j*(2*n-j+1))/2 + i-j ];
+            }
+        }
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_dtr_nancheck( int matrix_layout, char uplo, char diag,
+                                      lapack_int n,
+                                      const double *a,
+                                      lapack_int lda )
+{
+    lapack_int i, j, st;
+    lapack_logical colmaj, lower, unit;
+
+    if( a == NULL ) return (lapack_logical) 0;
+
+    colmaj = ( matrix_layout == LAPACK_COL_MAJOR );
+    lower  = LAPACKE_lsame( uplo, 'l' );
+    unit   = LAPACKE_lsame( diag, 'u' );
+
+    if( ( !colmaj && ( matrix_layout != LAPACK_ROW_MAJOR ) ) ||
+        ( !lower  && !LAPACKE_lsame( uplo, 'u' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag, 'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return (lapack_logical) 0;
+    }
+    if( unit ) {
+        /* If unit, then don't touch diagonal, start from 1st column or row */
+        st = 1;
+    } else  {
+        /* If non-unit, then check diagonal also, starting from [0,0] */
+        st = 0;
+    }
+
+    /* Since col_major upper and row_major lower are equal,
+     * and col_major lower and row_major upper are equals too -
+     * using one code for equal cases. XOR( colmaj, upper )
+     */
+    if( ( colmaj || lower ) && !( colmaj && lower ) ) {
+        for( j = st; j < n; j++ ) {
+            for( i = 0; i < MIN( j+1-st, lda ); i++ ) {
+                if( LAPACK_DISNAN( a[i+j*lda] ) )
+                    return (lapack_logical) 1;
+            }
+        }
+    } else {
+        for( j = 0; j < n-st; j++ ) {
+            for( i = j+st; i < MIN( n, lda ); i++ ) {
+                if( LAPACK_DISNAN( a[i+j*lda] ) )
+                    return (lapack_logical) 1;
+            }
+        }
+    }
+    return (lapack_logical) 0;
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input triangular matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_dtr_trans( int matrix_layout, char uplo, char diag, lapack_int n,
+                        const double *in, lapack_int ldin,
+                        double *out, lapack_int ldout )
+{
+    lapack_int i, j, st;
+    lapack_logical colmaj, lower, unit;
+
+    if( in == NULL || out == NULL ) return ;
+
+    colmaj = ( matrix_layout == LAPACK_COL_MAJOR );
+    lower  = LAPACKE_lsame( uplo, 'l' );
+    unit   = LAPACKE_lsame( diag, 'u' );
+
+    if( ( !colmaj && ( matrix_layout != LAPACK_ROW_MAJOR ) ) ||
+        ( !lower  && !LAPACKE_lsame( uplo, 'u' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag, 'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return;
+    }
+    if( unit ) {
+        /* If unit, then don't touch diagonal, start from 1st column or row */
+        st = 1;
+    } else  {
+        /* If non-unit, then check diagonal also, starting from [0,0] */
+        st = 0;
+    }
+
+    /* Perform conversion:
+     * Since col_major upper and row_major lower are equal,
+     * and col_major lower and row_major upper are equals too -
+     * using one code for equal cases. XOR( colmaj, upper )
+     */
+    if( ( colmaj || lower ) && !( colmaj && lower ) ) {
+        for( j = st; j < MIN( n, ldout ); j++ ) {
+            for( i = 0; i < MIN( j+1-st, ldin ); i++ ) {
+                out[ j+i*ldout ] = in[ i+j*ldin ];
+            }
+        }
+    } else {
+        for( j = 0; j < MIN( n-st, ldout ); j++ ) {
+            for( i = j+st; i < MIN( n, ldin ); i++ ) {
+                out[ j+i*ldout ] = in[ i+j*ldin ];
+            }
+        }
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2010, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK lsame
+* Author: Intel Corporation
+* Created in January, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+lapack_logical LAPACKE_lsame( char ca,  char cb )
+{
+    return (lapack_logical) LAPACK_lsame( &ca, &cb, 1, 1 );
+}
+
+
+
+/*****************************************************************************
+  Copyright (c) 2010, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in May, 2010
+*****************************************************************************/
+#include "lapacke.h"
+#include "lapacke_utils.h"
+
+#ifndef LAPACK_COMPLEX_CUSTOM
+lapack_complex_double lapack_make_complex_double( double re, double im ) {
+    lapack_complex_double z;
+#if defined(LAPACK_COMPLEX_STRUCTURE)
+    z.real = re;
+    z.imag = im;
+#elif defined(LAPACK_COMPLEX_C99)
+    z = re + im * I;
+#elif defined(LAPACK_COMPLEX_CPP)
+    z = std::complex<double>(re,im);
+#else /* C99 is default */
+    z = re + im*I;
+#endif
+   return z;
+}
+#endif
+
+/*****************************************************************************
+  Copyright (c) 2010, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in May, 2010
+*****************************************************************************/
+#include "lapacke.h"
+#include "lapacke_utils.h"
+
+#ifndef LAPACK_COMPLEX_CUSTOM
+lapack_complex_float lapack_make_complex_float( float re, float im ) {
+   lapack_complex_float z;
+#if defined(LAPACK_COMPLEX_STRUCTURE)
+    z.real = re;
+    z.imag = im;
+#elif defined(LAPACK_COMPLEX_C99)
+    z = re + im * I;
+#elif defined(LAPACK_COMPLEX_CPP)
+    z = std::complex<float>(re,im);
+#else /* C99 is default */
+    z = re + im*I;
+#endif
+   return z;
+}
+#endif
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_sgb_nancheck( int matrix_layout, lapack_int m,
+                                      lapack_int n, lapack_int kl,
+                                      lapack_int ku,
+                                      const float *ab,
+                                      lapack_int ldab )
+{
+    lapack_int i, j;
+
+    if( ab == NULL ) return (lapack_logical) 0;
+
+    if( matrix_layout == LAPACK_COL_MAJOR ) {
+        for( j = 0; j < n; j++ ) {
+            for( i = MAX( ku-j, 0 ); i < MIN3( ldab, m+ku-j, kl+ku+1 );
+                 i++ ) {
+                if( LAPACK_SISNAN( ab[i+(size_t)j*ldab] ) )
+                     return (lapack_logical) 1;
+            }
+        }
+    } else if ( matrix_layout == LAPACK_ROW_MAJOR ) {
+        for( j = 0; j < MIN( n, ldab ); j++ ) {
+            for( i = MAX( ku-j, 0 ); i < MIN( m+ku-j, kl+ku+1 ); i++ ) {
+                if( LAPACK_SISNAN( ab[(size_t)i*ldab+j] ) )
+                     return (lapack_logical) 1;
+            }
+        }
+    }
+    return (lapack_logical) 0;
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input general band matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_sgb_trans( int matrix_layout, lapack_int m, lapack_int n,
+                        lapack_int kl, lapack_int ku,
+                        const float *in, lapack_int ldin,
+                        float *out, lapack_int ldout )
+{
+    lapack_int i, j;
+
+    if( in == NULL || out == NULL ) return;
+
+    if( matrix_layout == LAPACK_COL_MAJOR ) {
+        for( j = 0; j < MIN( ldout, n ); j++ ) {
+            for( i = MAX( ku-j, 0 ); i < MIN3( ldin, m+ku-j, kl+ku+1 );
+                 i++ ) {
+                out[(size_t)i*ldout+j] = in[i+(size_t)j*ldin];
+            }
+        }
+    } else if ( matrix_layout == LAPACK_ROW_MAJOR ) {
+        /* TODO: interchange loops for performance.
+         * This is just reference impemeltation.
+         */
+        for( j = 0; j < MIN( n, ldin ); j++ ) {
+            for( i = MAX( ku-j, 0 ); i < MIN3( ldout, m+ku-j, kl+ku+1 );
+                 i++ ) {
+                out[i+(size_t)j*ldout] = in[(size_t)i*ldin+j];
+            }
+        }
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_sge_nancheck( int matrix_layout, lapack_int m,
+                                      lapack_int n,
+                                      const float *a,
+                                      lapack_int lda )
+{
+    lapack_int i, j;
+
+    if( a == NULL ) return (lapack_logical) 0;
+
+    if( matrix_layout == LAPACK_COL_MAJOR ) {
+        for( j = 0; j < n; j++ ) {
+            for( i = 0; i < MIN( m, lda ); i++ ) {
+                if( LAPACK_SISNAN( a[i+(size_t)j*lda] ) )
+                    return (lapack_logical) 1;
+            }
+        }
+    } else if ( matrix_layout == LAPACK_ROW_MAJOR ) {
+        for( i = 0; i < m; i++ ) {
+            for( j = 0; j < MIN( n, lda ); j++ ) {
+                if( LAPACK_SISNAN( a[(size_t)i*lda+j] ) )
+                    return (lapack_logical) 1;
+            }
+        }
+    }
+    return (lapack_logical) 0;
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input general matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_sge_trans( int matrix_layout, lapack_int m, lapack_int n,
+                        const float* in, lapack_int ldin,
+                        float* out, lapack_int ldout )
+{
+    lapack_int i, j, x, y;
+
+    if( in == NULL || out == NULL ) return;
+
+    if( matrix_layout == LAPACK_COL_MAJOR ) {
+        x = n;
+        y = m;
+    } else if ( matrix_layout == LAPACK_ROW_MAJOR ) {
+        x = m;
+        y = n;
+    } else {
+        /* Unknown input layout */
+        return;
+    }
+
+    /* In case of incorrect m, n, ldin or ldout the function does nothing */
+    for( i = 0; i < MIN( y, ldin ); i++ ) {
+        for( j = 0; j < MIN( x, ldout ); j++ ) {
+            out[ (size_t)i*ldout + j ] = in[ (size_t)j*ldin + i ];
+        }
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_sgg_nancheck( int matrix_layout, lapack_int m,
+                                      lapack_int n,
+                                      const float *a,
+                                      lapack_int lda )
+{
+    return LAPACKE_sge_nancheck( matrix_layout, m, n, a, lda );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input general matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_sgg_trans( int matrix_layout, lapack_int m, lapack_int n,
+                        const float* in, lapack_int ldin,
+                        float* out, lapack_int ldout )
+{
+    LAPACKE_sge_trans( matrix_layout, m, n, in, ldin, out, ldout );
+}
+
+/*****************************************************************************
+  Copyright (c) 2010, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_sgt_nancheck( lapack_int n,
+                                      const float *dl,
+                                      const float *d,
+                                      const float *du )
+{
+    return LAPACKE_s_nancheck( n-1, dl, 1 )
+        || LAPACKE_s_nancheck( n  , d,  1 )
+        || LAPACKE_s_nancheck( n-1, du, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_shs_nancheck( int matrix_layout, lapack_int n,
+                                      const float *a,
+                                      lapack_int lda )
+{
+    lapack_logical subdiag_nans;
+
+    if( a == NULL ) return (lapack_logical) 0;
+
+    /* Check subdiagonal first */
+    if( matrix_layout == LAPACK_COL_MAJOR ) {
+        subdiag_nans = LAPACKE_s_nancheck( n-1, &a[1], lda+1 );
+    } else if ( matrix_layout == LAPACK_ROW_MAJOR ) {
+        subdiag_nans = LAPACKE_s_nancheck( n-1, &a[lda], lda+1 );
+    } else {
+        return (lapack_logical) 0;
+    }
+
+    /* Check upper triangular if subdiagonal has no NaNs. */
+    return subdiag_nans || LAPACKE_str_nancheck( matrix_layout, 'u', 'n',
+                                                 n, a, lda);
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input Hessenberg matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_shs_trans( int matrix_layout, lapack_int n,
+                        const float *in, lapack_int ldin,
+                        float *out, lapack_int ldout )
+{
+    if( in == NULL || out == NULL ) return;
+
+    /* Convert subdiagonal first */
+    if( matrix_layout == LAPACK_COL_MAJOR ) {
+        LAPACKE_sge_trans( LAPACK_COL_MAJOR, 1, n-1, &in[1], ldin+1,
+                           &out[ldout], ldout+1 );
+    } else if ( matrix_layout == LAPACK_ROW_MAJOR ) {
+        LAPACKE_sge_trans( LAPACK_ROW_MAJOR, n-1, 1, &in[ldin], ldin+1,
+                           &out[1], ldout+1 );
+    } else {
+        return;
+    }
+
+    /* Convert upper triangular. */
+    LAPACKE_str_trans( matrix_layout, 'u', 'n', n, in, ldin, out, ldout);
+}
+
+/*****************************************************************************
+  Copyright (c) 2010, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a vector for NaN entries. */
+
+lapack_logical LAPACKE_s_nancheck( lapack_int n,
+                                    const float *x,
+                                    lapack_int incx )
+{
+    lapack_int i, inc;
+
+    if( incx == 0 ) return (lapack_logical) LAPACK_SISNAN( x[0] );
+    inc = ( incx > 0 ) ? incx : -incx ;
+
+    for( i = 0; i < n*inc; i+=inc ) {
+        if( LAPACK_SISNAN( x[i] ) )
+            return (lapack_logical) 1;
+    }
+    return (lapack_logical) 0;
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_spb_nancheck( int matrix_layout, char uplo,
+                                      lapack_int n, lapack_int kd,
+                                      const float* ab,
+                                      lapack_int ldab )
+{
+    if( LAPACKE_lsame( uplo, 'u' ) ) {
+        return LAPACKE_sgb_nancheck( matrix_layout, n, n, 0, kd, ab, ldab );
+    } else if( LAPACKE_lsame( uplo, 'l' ) ) {
+        return LAPACKE_sgb_nancheck( matrix_layout, n, n, kd, 0, ab, ldab );
+    }
+    return (lapack_logical) 0;
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input symmetric banded matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_spb_trans( int matrix_layout, char uplo, lapack_int n,
+                        lapack_int kd,
+                        const float *in, lapack_int ldin,
+                        float *out, lapack_int ldout )
+{
+    if( LAPACKE_lsame( uplo, 'u' ) ) {
+        LAPACKE_sgb_trans( matrix_layout, n, n, 0, kd, in, ldin, out, ldout );
+    } else if( LAPACKE_lsame( uplo, 'l' ) ) {
+        LAPACKE_sgb_trans( matrix_layout, n, n, kd, 0, in, ldin, out, ldout );
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries.
+ * Since matrix in packed format stored continiously it just required to
+ * check 1d array for NaNs. It doesn't depend upon uplo, transr or
+ * matrix_layout.
+ */
+
+lapack_logical LAPACKE_spf_nancheck( lapack_int n,
+                                      const float *a )
+{
+    lapack_int len = n*(n+1)/2;
+    return LAPACKE_s_nancheck( len, a, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input RFP matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_spf_trans( int matrix_layout, char transr, char uplo,
+                        lapack_int n, const float *in,
+                        float *out )
+{
+    LAPACKE_stf_trans( matrix_layout, transr, uplo, 'n', n, in, out );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_spo_nancheck( int matrix_layout, char uplo,
+                                      lapack_int n,
+                                      const float *a,
+                                      lapack_int lda )
+{
+    return LAPACKE_str_nancheck( matrix_layout, uplo, 'n', n, a, lda );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input symmetric matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_spo_trans( int matrix_layout, char uplo, lapack_int n,
+                        const float *in, lapack_int ldin,
+                        float *out, lapack_int ldout )
+{
+    LAPACKE_str_trans( matrix_layout, uplo, 'n', n, in, ldin, out, ldout );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries.
+ * Since matrix in packed format stored continiously it just required to
+ * check 1d array for NaNs. It doesn't depend upon uplo or matrix_layout.
+ */
+
+lapack_logical LAPACKE_spp_nancheck( lapack_int n,
+                                      const float *ap )
+{
+    lapack_int len = n*(n+1)/2;
+    return LAPACKE_s_nancheck( len, ap, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input symmetric packed matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_spp_trans( int matrix_layout, char uplo, lapack_int n,
+                        const float *in,
+                        float *out )
+{
+    LAPACKE_stp_trans( matrix_layout, uplo, 'n', n, in, out );
+}
+
+/*****************************************************************************
+  Copyright (c) 2010, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_spt_nancheck( lapack_int n,
+                                      const float *d,
+                                      const float *e )
+{
+    return LAPACKE_s_nancheck( n,   d, 1 )
+        || LAPACKE_s_nancheck( n-1, e, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_ssb_nancheck( int matrix_layout, char uplo,
+                                      lapack_int n, lapack_int kd,
+                                      const float* ab,
+                                      lapack_int ldab )
+{
+    if( LAPACKE_lsame( uplo, 'u' ) ) {
+        return LAPACKE_sgb_nancheck( matrix_layout, n, n, 0, kd, ab, ldab );
+    } else if( LAPACKE_lsame( uplo, 'l' ) ) {
+        return LAPACKE_sgb_nancheck( matrix_layout, n, n, kd, 0, ab, ldab );
+    }
+    return (lapack_logical) 0;
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input symmetrical band matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_ssb_trans( int matrix_layout, char uplo, lapack_int n,
+                        lapack_int kd,
+                        const float *in, lapack_int ldin,
+                        float *out, lapack_int ldout )
+{
+    if( LAPACKE_lsame( uplo, 'u' ) ) {
+        LAPACKE_sgb_trans( matrix_layout, n, n, 0, kd, in, ldin, out, ldout );
+    } else if( LAPACKE_lsame( uplo, 'l' ) ) {
+        LAPACKE_sgb_trans( matrix_layout, n, n, kd, 0, in, ldin, out, ldout );
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries.
+ * Since matrix in packed format stored continiously it just required to
+ * check 1d array for NaNs. It doesn't depend upon uplo or matrix_layout.
+ */
+
+lapack_logical LAPACKE_ssp_nancheck( lapack_int n,
+                                      const float *ap )
+{
+    lapack_int len = n*(n+1)/2;
+    return LAPACKE_s_nancheck( len, ap, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input symmetric packed matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_ssp_trans( int matrix_layout, char uplo, lapack_int n,
+                        const float *in,
+                        float *out )
+{
+    LAPACKE_stp_trans( matrix_layout, uplo, 'n', n, in, out );
+}
+
+
+/*****************************************************************************
+  Copyright (c) 2010, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_sst_nancheck( lapack_int n,
+                                      const float *d,
+                                      const float *e )
+{
+    return LAPACKE_s_nancheck( n,   d, 1 )
+        || LAPACKE_s_nancheck( n-1, e, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_ssy_nancheck( int matrix_layout, char uplo,
+                                      lapack_int n,
+                                      const float *a,
+                                      lapack_int lda )
+{
+    return LAPACKE_str_nancheck( matrix_layout, uplo, 'n', n, a, lda );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input symmetric matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_ssy_trans( int matrix_layout, char uplo, lapack_int n,
+                        const float *in, lapack_int ldin,
+                        float *out, lapack_int ldout )
+{
+    LAPACKE_str_trans( matrix_layout, uplo, 'n', n, in, ldin, out, ldout );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_stb_nancheck( int matrix_layout, char uplo, char diag,
+                                      lapack_int n, lapack_int kd,
+                                      const float* ab,
+                                      lapack_int ldab )
+{
+    lapack_logical colmaj, upper, unit;
+
+    if( ab == NULL ) return (lapack_logical) 0;
+
+    colmaj = ( matrix_layout == LAPACK_COL_MAJOR );
+    upper  = LAPACKE_lsame( uplo, 'u' );
+    unit   = LAPACKE_lsame( diag, 'u' );
+
+    if( ( !colmaj && ( matrix_layout != LAPACK_ROW_MAJOR ) ) ||
+        ( !upper  && !LAPACKE_lsame( uplo, 'l' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag, 'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return (lapack_logical) 0;
+    }
+
+    if( unit ) {
+        /* Unit case, diagonal should be excluded from the check for NaN. */
+        if( colmaj ) {
+            if( upper ) {
+                return LAPACKE_sgb_nancheck( matrix_layout, n-1, n-1, 0, kd-1,
+                                             &ab[ldab], ldab );
+            } else {
+                return LAPACKE_sgb_nancheck( matrix_layout, n-1, n-1, kd-1, 0,
+                                             &ab[1], ldab );
+            }
+        } else {
+            if( upper ) {
+                return LAPACKE_sgb_nancheck( matrix_layout, n-1, n-1, 0, kd-1,
+                                             &ab[1], ldab );
+            } else {
+                return LAPACKE_sgb_nancheck( matrix_layout, n-1, n-1, kd-1, 0,
+                                             &ab[ldab], ldab );
+            }
+        }
+    } else {
+        /* Non-unit case */
+        if( upper ) {
+            return LAPACKE_sgb_nancheck( matrix_layout, n, n, 0, kd, ab, ldab );
+        } else {
+            return LAPACKE_sgb_nancheck( matrix_layout, n, n, kd, 0, ab, ldab );
+        }
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input triangular banded matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_stb_trans( int matrix_layout, char uplo, char diag,
+                        lapack_int n, lapack_int kd,
+                        const float *in, lapack_int ldin,
+                        float *out, lapack_int ldout )
+{
+    lapack_logical colmaj, upper, unit;
+
+    if( in == NULL || out == NULL ) return;
+
+    colmaj = ( matrix_layout == LAPACK_COL_MAJOR );
+    upper  = LAPACKE_lsame( uplo, 'u' );
+    unit   = LAPACKE_lsame( diag, 'u' );
+
+    if( ( !colmaj && ( matrix_layout != LAPACK_ROW_MAJOR ) ) ||
+        ( !upper  && !LAPACKE_lsame( uplo, 'l' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag, 'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return;
+    }
+
+    if( unit ) {
+        /* Unit case, diagonal excluded from transposition */
+        if( colmaj ) {
+            if( upper ) {
+                LAPACKE_sgb_trans( matrix_layout, n-1, n-1, 0, kd-1,
+                                   &in[ldin], ldin, &out[1], ldout );
+            } else {
+                LAPACKE_sgb_trans( matrix_layout, n-1, n-1, kd-1, 0,
+                                   &in[1], ldin, &out[ldout], ldout );
+            }
+        } else {
+            if( upper ) {
+                LAPACKE_sgb_trans( matrix_layout, n-1, n-1, 0, kd-1,
+                                   &in[1], ldin, &out[ldout], ldout );
+            } else {
+                LAPACKE_sgb_trans( matrix_layout, n-1, n-1, kd-1, 0,
+                                   &in[ldin], ldin, &out[1], ldout );
+            }
+        }
+    } else {
+        /* Non-unit case */
+        if( upper ) {
+            LAPACKE_sgb_trans( matrix_layout, n, n, 0, kd, in, ldin, out,
+                               ldout );
+        } else {
+            LAPACKE_sgb_trans( matrix_layout, n, n, kd, 0, in, ldin, out,
+                               ldout );
+        }
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_stf_nancheck( int matrix_layout, char transr,
+                                      char uplo, char diag,
+                                      lapack_int n,
+                                      const float *a )
+{
+    lapack_int len;
+    lapack_logical rowmaj, ntr, lower, unit;
+    lapack_int n1, n2, k;
+
+    if( a == NULL ) return (lapack_logical) 0;
+
+    rowmaj = (matrix_layout == LAPACK_ROW_MAJOR);
+    ntr    = LAPACKE_lsame( transr, 'n' );
+    lower  = LAPACKE_lsame( uplo,   'l' );
+    unit   = LAPACKE_lsame( diag,   'u' );
+
+    if( ( !rowmaj && ( matrix_layout != LAPACK_COL_MAJOR ) ) ||
+        ( !ntr    && !LAPACKE_lsame( transr, 't' )
+                  && !LAPACKE_lsame( transr, 'c' ) ) ||
+        ( !lower  && !LAPACKE_lsame( uplo,   'u' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag,   'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return (lapack_logical) 0;
+    }
+
+    if( unit ) {
+        /* Unit case, diagonal should be excluded from the check for NaN.
+         * Decoding RFP and checking both triangulars and rectangular
+         * for NaNs.
+         */
+        if( lower ) {
+            n2 = n / 2;
+            n1 = n - n2;
+        } else {
+            n1 = n / 2;
+            n2 = n - n1;
+        }
+        if( n % 2 == 1 ) {
+            /* N is odd */
+            if( ( rowmaj || ntr ) && !( rowmaj && ntr ) ) {
+                /* N is odd and ( TRANSR = 'N' .XOR. ROWMAJOR) */
+                if( lower ) {
+                    return LAPACKE_str_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 n1, &a[0], n )
+                        || LAPACKE_sge_nancheck( LAPACK_ROW_MAJOR, n2, n1,
+                                                 &a[n1], n )
+                        || LAPACKE_str_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 n2, &a[n], n );
+                } else {
+                    return LAPACKE_str_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 n1, &a[n2], n )
+                        || LAPACKE_sge_nancheck( LAPACK_ROW_MAJOR, n1, n2,
+                                                 &a[0], n )
+                        || LAPACKE_str_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 n2, &a[n1], n );
+                }
+            } else {
+                /* N is odd and
+                   ( ( TRANSR = 'C' || TRANSR = 'T' ) .XOR. COLMAJOR ) */
+                if( lower ) {
+                    return LAPACKE_str_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 n1, &a[0], n1 )
+                        || LAPACKE_sge_nancheck( LAPACK_ROW_MAJOR, n1, n2,
+                                                 &a[1], n1 )
+                        || LAPACKE_str_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 n2, &a[1], n1 );
+                } else {
+                    return LAPACKE_str_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 n1, &a[(size_t)n2*n2], n2 )
+                        || LAPACKE_sge_nancheck( LAPACK_ROW_MAJOR, n2, n1,
+                                                 &a[0], n2 )
+                        || LAPACKE_str_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 n2, &a[(size_t)n1*n2], n2 );
+                }
+            }
+        } else {
+            /* N is even */
+            k = n / 2;
+            if( ( rowmaj || ntr ) && !( rowmaj && ntr ) ) {
+                /* N is even and ( TRANSR = 'N' .XOR. ROWMAJOR) */
+                if( lower ) {
+                    return LAPACKE_str_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 k, &a[1], n+1 )
+                        || LAPACKE_sge_nancheck( LAPACK_ROW_MAJOR, k, k,
+                                                 &a[k+1], n+1 )
+                        || LAPACKE_str_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 k, &a[0], n+1 );
+                } else {
+                    return LAPACKE_str_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 k, &a[k+1], n+1 )
+                        || LAPACKE_sge_nancheck( LAPACK_ROW_MAJOR, k, k,
+                                                 &a[0], n+1 )
+                        || LAPACKE_str_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 k, &a[k], n+1 );
+                }
+            } else {
+                /* N is even and
+                 * ( ( TRANSR = 'C' || TRANSR = 'T' ) .XOR. COLMAJOR )
+                 */
+                if( lower ) {
+                    return LAPACKE_str_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 k, &a[k], k )
+                        || LAPACKE_sge_nancheck( LAPACK_ROW_MAJOR, k, k,
+                                                 &a[(size_t)k*(k+1)], k )
+                        || LAPACKE_str_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 k, &a[0], k );
+                } else {
+                    return LAPACKE_str_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 k, &a[(size_t)k*(k+1)], k )
+                        || LAPACKE_sge_nancheck( LAPACK_ROW_MAJOR, k, k,
+                                                 &a[0], k )
+                        || LAPACKE_str_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 k, &a[(size_t)k*k], k );
+                }
+            }
+        }
+    } else {
+        /* Non-unit case - just check whole array for NaNs. */
+        len = n*(n+1)/2;
+        return LAPACKE_sge_nancheck( LAPACK_COL_MAJOR, len, 1, a, len );
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input RFP matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ * This functions does copy diagonal for both unit and non-unit cases.
+ */
+
+void LAPACKE_stf_trans( int matrix_layout, char transr, char uplo, char diag,
+                        lapack_int n, const float *in,
+                        float *out )
+{
+    lapack_int row, col;
+    lapack_logical rowmaj, ntr, lower, unit;
+
+    if( in == NULL || out == NULL ) return ;
+
+    rowmaj = (matrix_layout == LAPACK_ROW_MAJOR);
+    ntr    = LAPACKE_lsame( transr, 'n' );
+    lower  = LAPACKE_lsame( uplo,   'l' );
+    unit   = LAPACKE_lsame( diag,   'u' );
+
+    if( ( !rowmaj && ( matrix_layout != LAPACK_COL_MAJOR ) ) ||
+        ( !ntr    && !LAPACKE_lsame( transr, 't' ) &&
+                     !LAPACKE_lsame( transr, 'c' ) ) ||
+        ( !lower  && !LAPACKE_lsame( uplo,   'u' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag,   'n' ) ) ) {
+        /* Just exit if input parameters are wrong */
+        return;
+    }
+
+    /* Determine parameters of array representing RFP */
+    if( ntr ) {
+        if( n%2 == 0 ) {
+            row = n + 1;
+            col = n / 2;
+        } else {
+            row = n;
+            col = (n + 1) / 2;
+        }
+    } else {
+        if( n%2 == 0 ) {
+            row = n / 2;
+            col = n + 1;
+        } else {
+            row = (n + 1) / 2;
+            col = n;
+        }
+    }
+
+    /* Perform conversion: */
+    if( rowmaj ) {
+        LAPACKE_sge_trans( LAPACK_ROW_MAJOR, row, col, in, col, out, row );
+    } else {
+        LAPACKE_sge_trans( LAPACK_COL_MAJOR, row, col, in, row, out, col );
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries.
+ * Since matrix in packed format stored continiously it just required to
+ * check 1d array for NaNs. It doesn't depend upon uplo or matrix_layout.
+ */
+
+lapack_logical LAPACKE_stp_nancheck( int matrix_layout, char uplo, char diag,
+                                      lapack_int n,
+                                      const float *ap )
+{
+    lapack_int i, len;
+    lapack_logical colmaj, upper, unit;
+
+    if( ap == NULL ) return (lapack_logical) 0;
+
+    colmaj = ( matrix_layout == LAPACK_COL_MAJOR );
+    upper  = LAPACKE_lsame( uplo, 'u' );
+    unit   = LAPACKE_lsame( diag, 'u' );
+
+    if( ( !colmaj && ( matrix_layout != LAPACK_ROW_MAJOR ) ) ||
+        ( !upper  && !LAPACKE_lsame( uplo, 'l' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag, 'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return (lapack_logical) 0;
+    }
+
+    if( unit ) {
+        /* Unit case, diagonal should be excluded from the check for NaN. */
+
+        /* Since col_major upper and row_major lower are equal,
+         * and col_major lower and row_major upper are equals too -
+         * using one code for equal cases. XOR( colmaj, upper )
+         */
+        if( ( colmaj || upper ) && !( colmaj && upper ) ) {
+            for( i = 1; i < n; i++ )
+                if( LAPACKE_s_nancheck( i, &ap[ ((size_t)i+1)*i/2 ], 1 ) )
+                    return (lapack_logical) 1;
+        } else {
+            for( i = 0; i < n-1; i++ )
+                if( LAPACKE_s_nancheck( n-i-1,
+                    &ap[ (size_t)i+1 + i*((size_t)2*n-i+1)/2 ], 1 ) )
+                    return (lapack_logical) 1;
+        }
+        return (lapack_logical) 0;
+    } else {
+        /* Non-unit case - just check whole array for NaNs. */
+        len = n*(n+1)/2;
+        return LAPACKE_s_nancheck( len, ap, 1 );
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input triangular packed matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_stp_trans( int matrix_layout, char uplo, char diag,
+                        lapack_int n, const float *in,
+                        float *out )
+{
+    lapack_int i, j, st;
+    lapack_logical colmaj, upper, unit;
+
+    if( in == NULL || out == NULL ) return ;
+
+    colmaj = ( matrix_layout == LAPACK_COL_MAJOR );
+    upper  = LAPACKE_lsame( uplo, 'u' );
+    unit   = LAPACKE_lsame( diag, 'u' );
+
+    if( ( !colmaj && ( matrix_layout != LAPACK_ROW_MAJOR ) ) ||
+        ( !upper  && !LAPACKE_lsame( uplo, 'l' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag, 'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return;
+    }
+    if( unit ) {
+        /* If unit, then don't touch diagonal, start from 1st column or row */
+        st = 1;
+    } else  {
+        /* If non-unit, then check diagonal also, starting from [0,0] */
+        st = 0;
+    }
+
+    /* Perform conversion:
+     * Since col_major upper and row_major lower are equal,
+     * and col_major lower and row_major upper are equals too -
+     * using one code for equal cases. XOR( colmaj, upper )
+     */
+    if( ( colmaj || upper ) && !( colmaj && upper ) ) {
+        for( j = st; j < n; j++ ) {
+            for( i = 0; i < j+1-st; i++ ) {
+                out[ j-i + (i*(2*n-i+1))/2 ] = in[ ((j+1)*j)/2 + i ];
+            }
+        }
+    } else {
+        for( j = 0; j < n-st; j++ ) {
+            for( i = j+st; i < n; i++ ) {
+                out[ j + ((i+1)*i)/2 ] = in[ (j*(2*n-j+1))/2 + i-j ];
+            }
+        }
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_str_nancheck( int matrix_layout, char uplo, char diag,
+                                      lapack_int n,
+                                      const float *a,
+                                      lapack_int lda )
+{
+    lapack_int i, j, st;
+    lapack_logical colmaj, lower, unit;
+
+    if( a == NULL ) return (lapack_logical) 0;
+
+    colmaj = ( matrix_layout == LAPACK_COL_MAJOR );
+    lower  = LAPACKE_lsame( uplo, 'l' );
+    unit   = LAPACKE_lsame( diag, 'u' );
+
+    if( ( !colmaj && ( matrix_layout != LAPACK_ROW_MAJOR ) ) ||
+        ( !lower  && !LAPACKE_lsame( uplo, 'u' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag, 'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return (lapack_logical) 0;
+    }
+    if( unit ) {
+        /* If unit, then don't touch diagonal, start from 1st column or row */
+        st = 1;
+    } else  {
+        /* If non-unit, then check diagonal also, starting from [0,0] */
+        st = 0;
+    }
+
+    /* Since col_major upper and row_major lower are equal,
+     * and col_major lower and row_major upper are equals too -
+     * using one code for equal cases. XOR( colmaj, upper )
+     */
+    if( ( colmaj || lower ) && !( colmaj && lower ) ) {
+        for( j = st; j < n; j++ ) {
+            for( i = 0; i < MIN( j+1-st, lda ); i++ ) {
+                if( LAPACK_SISNAN( a[i+j*lda] ) )
+                    return (lapack_logical) 1;
+            }
+        }
+    } else {
+        for( j = 0; j < n-st; j++ ) {
+            for( i = j+st; i < MIN( n, lda ); i++ ) {
+                if( LAPACK_SISNAN( a[i+j*lda] ) )
+                    return (lapack_logical) 1;
+            }
+        }
+    }
+    return (lapack_logical) 0;
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input triangular matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_str_trans( int matrix_layout, char uplo, char diag, lapack_int n,
+                        const float *in, lapack_int ldin,
+                        float *out, lapack_int ldout )
+{
+    lapack_int i, j, st;
+    lapack_logical colmaj, lower, unit;
+
+    if( in == NULL || out == NULL ) return ;
+
+    colmaj = ( matrix_layout == LAPACK_COL_MAJOR );
+    lower  = LAPACKE_lsame( uplo, 'l' );
+    unit   = LAPACKE_lsame( diag, 'u' );
+
+    if( ( !colmaj && ( matrix_layout != LAPACK_ROW_MAJOR ) ) ||
+        ( !lower  && !LAPACKE_lsame( uplo, 'u' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag, 'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return;
+    }
+    if( unit ) {
+        /* If unit, then don't touch diagonal, start from 1st column or row */
+        st = 1;
+    } else  {
+        /* If non-unit, then check diagonal also, starting from [0,0] */
+        st = 0;
+    }
+
+    /* Perform conversion:
+     * Since col_major upper and row_major lower are equal,
+     * and col_major lower and row_major upper are equals too -
+     * using one code for equal cases. XOR( colmaj, upper )
+     */
+    if( ( colmaj || lower ) && !( colmaj && lower ) ) {
+        for( j = st; j < MIN( n, ldout ); j++ ) {
+            for( i = 0; i < MIN( j+1-st, ldin ); i++ ) {
+                out[ j+i*ldout ] = in[ i+j*ldin ];
+            }
+        }
+    } else {
+        for( j = 0; j < MIN( n-st, ldout ); j++ ) {
+            for( i = j+st; i < MIN( n, ldin ); i++ ) {
+                out[ j+i*ldout ] = in[ i+j*ldin ];
+            }
+        }
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2010, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK lsame
+* Author: Intel Corporation
+* Created in January, 2010
+*****************************************************************************/
+
+#include <stdio.h>
+#include "lapacke_utils.h"
+
+void LAPACKE_xerbla( const char *name, lapack_int info )
+{
+    if( info == LAPACK_WORK_MEMORY_ERROR ) {
+        printf( "Not enough memory to allocate work array in %s\n", name );
+    } else if( info == LAPACK_TRANSPOSE_MEMORY_ERROR ) {
+        printf( "Not enough memory to transpose matrix in %s\n", name );
+    } else if( info < 0 ) {
+        printf( "Wrong parameter %d in %s\n", -(int) info, name );
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_zgb_nancheck( int matrix_layout, lapack_int m,
+                                      lapack_int n, lapack_int kl,
+                                      lapack_int ku,
+                                      const lapack_complex_double *ab,
+                                      lapack_int ldab )
+{
+    lapack_int i, j;
+
+    if( ab == NULL ) return (lapack_logical) 0;
+
+    if( matrix_layout == LAPACK_COL_MAJOR ) {
+        for( j = 0; j < n; j++ ) {
+            for( i = MAX( ku-j, 0 ); i < MIN3( ldab, m+ku-j, kl+ku+1 );
+                 i++ ) {
+                if( LAPACK_ZISNAN( ab[i+(size_t)j*ldab] ) )
+                     return (lapack_logical) 1;
+            }
+        }
+    } else if ( matrix_layout == LAPACK_ROW_MAJOR ) {
+        for( j = 0; j < MIN( n, ldab ); j++ ) {
+            for( i = MAX( ku-j, 0 ); i < MIN( m+ku-j, kl+ku+1 ); i++ ) {
+                if( LAPACK_ZISNAN( ab[(size_t)i*ldab+j] ) )
+                     return (lapack_logical) 1;
+            }
+        }
+    }
+    return (lapack_logical) 0;
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input general band matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_zgb_trans( int matrix_layout, lapack_int m, lapack_int n,
+                        lapack_int kl, lapack_int ku,
+                        const lapack_complex_double *in, lapack_int ldin,
+                        lapack_complex_double *out, lapack_int ldout )
+{
+    lapack_int i, j;
+
+    if( in == NULL || out == NULL ) return;
+
+    if( matrix_layout == LAPACK_COL_MAJOR ) {
+        for( j = 0; j < MIN( ldout, n ); j++ ) {
+            for( i = MAX( ku-j, 0 ); i < MIN3( ldin, m+ku-j, kl+ku+1 );
+                 i++ ) {
+                out[(size_t)i*ldout+j] = in[i+(size_t)j*ldin];
+            }
+        }
+    } else if ( matrix_layout == LAPACK_ROW_MAJOR ) {
+        /* TODO: interchange loops for performance.
+         * This is just reference impemeltation
+         */
+        for( j = 0; j < MIN( n, ldin ); j++ ) {
+            for( i = MAX( ku-j, 0 ); i < MIN3( ldout, m+ku-j, kl+ku+1 );
+                 i++ ) {
+                out[i+(size_t)j*ldout] = in[(size_t)i*ldin+j];
+            }
+        }
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_zge_nancheck( int matrix_layout, lapack_int m,
+                                      lapack_int n,
+                                      const lapack_complex_double *a,
+                                      lapack_int lda )
+{
+    lapack_int i, j;
+
+    if( a == NULL ) return (lapack_logical) 0;
+
+    if( matrix_layout == LAPACK_COL_MAJOR ) {
+        for( j = 0; j < n; j++ ) {
+            for( i = 0; i < MIN( m, lda ); i++ ) {
+                if( LAPACK_ZISNAN( a[i+(size_t)j*lda] ) )
+                    return (lapack_logical) 1;
+            }
+        }
+    } else if ( matrix_layout == LAPACK_ROW_MAJOR ) {
+        for( i = 0; i < m; i++ ) {
+            for( j = 0; j < MIN( n, lda ); j++ ) {
+                if( LAPACK_ZISNAN( a[(size_t)i*lda+j] ) )
+                    return (lapack_logical) 1;
+            }
+        }
+    }
+    return (lapack_logical) 0;
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input general matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_zge_trans( int matrix_layout, lapack_int m, lapack_int n,
+                        const lapack_complex_double* in, lapack_int ldin,
+                        lapack_complex_double* out, lapack_int ldout )
+{
+    lapack_int i, j, x, y;
+
+    if( in == NULL || out == NULL ) return;
+
+    if( matrix_layout == LAPACK_COL_MAJOR ) {
+        x = n;
+        y = m;
+    } else if ( matrix_layout == LAPACK_ROW_MAJOR ) {
+        x = m;
+        y = n;
+    } else {
+        /* Unknown input layout */
+        return;
+    }
+
+    /* In case of incorrect m, n, ldin or ldout the function does nothing */
+    for( i = 0; i < MIN( y, ldin ); i++ ) {
+        for( j = 0; j < MIN( x, ldout ); j++ ) {
+            out[ (size_t)i*ldout + j ] = in[ (size_t)j*ldin + i ];
+        }
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_zgg_nancheck( int matrix_layout, lapack_int m,
+                                      lapack_int n,
+                                      const lapack_complex_double *a,
+                                      lapack_int lda )
+{
+    return LAPACKE_zge_nancheck( matrix_layout, m, n, a, lda );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input general matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_zgg_trans( int matrix_layout, lapack_int m, lapack_int n,
+                        const lapack_complex_double* in, lapack_int ldin,
+                        lapack_complex_double* out, lapack_int ldout )
+{
+    LAPACKE_zge_trans( matrix_layout, m, n, in, ldin, out, ldout );
+}
+
+/*****************************************************************************
+  Copyright (c) 2010, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_zgt_nancheck( lapack_int n,
+                                      const lapack_complex_double *dl,
+                                      const lapack_complex_double *d,
+                                      const lapack_complex_double *du )
+{
+    return LAPACKE_z_nancheck( n-1, dl, 1 )
+        || LAPACKE_z_nancheck( n  , d,  1 )
+        || LAPACKE_z_nancheck( n-1, du, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_zhb_nancheck( int matrix_layout, char uplo,
+                                      lapack_int n, lapack_int kd,
+                                      const lapack_complex_double* ab,
+                                      lapack_int ldab )
+{
+    if( LAPACKE_lsame( uplo, 'u' ) ) {
+        return LAPACKE_zgb_nancheck( matrix_layout, n, n, 0, kd, ab, ldab );
+    } else if( LAPACKE_lsame( uplo, 'l' ) ) {
+        return LAPACKE_zgb_nancheck( matrix_layout, n, n, kd, 0, ab, ldab );
+    }
+    return (lapack_logical) 0;
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input Hermitian band matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_zhb_trans( int matrix_layout, char uplo, lapack_int n,
+                        lapack_int kd,
+                        const lapack_complex_double *in, lapack_int ldin,
+                        lapack_complex_double *out, lapack_int ldout )
+{
+    if( LAPACKE_lsame( uplo, 'u' ) ) {
+        LAPACKE_zgb_trans( matrix_layout, n, n, 0, kd, in, ldin, out, ldout );
+    } else if( LAPACKE_lsame( uplo, 'l' ) ) {
+        LAPACKE_zgb_trans( matrix_layout, n, n, kd, 0, in, ldin, out, ldout );
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_zhe_nancheck( int matrix_layout, char uplo,
+                                      lapack_int n,
+                                      const lapack_complex_double *a,
+                                      lapack_int lda )
+{
+    return LAPACKE_ztr_nancheck( matrix_layout, uplo, 'n', n, a, lda );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input Hermitian matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_zhe_trans( int matrix_layout, char uplo, lapack_int n,
+                        const lapack_complex_double *in, lapack_int ldin,
+                        lapack_complex_double *out, lapack_int ldout )
+{
+    LAPACKE_ztr_trans( matrix_layout, uplo, 'n', n, in, ldin, out, ldout );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries.
+ * Since matrix in packed format stored continiously it just required to
+ * check 1d array for NaNs. It doesn't depend upon uplo or matrix_layout.
+ */
+
+lapack_logical LAPACKE_zhp_nancheck( lapack_int n,
+                                      const lapack_complex_double *ap )
+{
+    lapack_int len = n*(n+1)/2;
+    return LAPACKE_z_nancheck( len, ap, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input Hermitian packed matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_zhp_trans( int matrix_layout, char uplo, lapack_int n,
+                        const lapack_complex_double *in,
+                        lapack_complex_double *out )
+{
+    LAPACKE_ztp_trans( matrix_layout, uplo, 'n', n, in, out );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_zhs_nancheck( int matrix_layout, lapack_int n,
+                                      const lapack_complex_double *a,
+                                      lapack_int lda )
+{
+    lapack_logical subdiag_nans;
+
+    if( a == NULL ) return (lapack_logical) 0;
+
+    /* Check subdiagonal first */
+    if( matrix_layout == LAPACK_COL_MAJOR ) {
+        subdiag_nans = LAPACKE_z_nancheck( n-1, &a[1], lda+1 );
+    } else if ( matrix_layout == LAPACK_ROW_MAJOR ) {
+        subdiag_nans = LAPACKE_z_nancheck( n-1, &a[lda], lda+1 );
+    } else {
+        return (lapack_logical) 0;
+    }
+
+    /* Check upper triangular if subdiagonal has no NaNs. */
+    return subdiag_nans || LAPACKE_ztr_nancheck( matrix_layout, 'u', 'n',
+                                                 n, a, lda);
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input Hessenberg matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_zhs_trans( int matrix_layout, lapack_int n,
+                        const lapack_complex_double *in, lapack_int ldin,
+                        lapack_complex_double *out, lapack_int ldout )
+{
+    if( in == NULL || out == NULL ) return;
+
+    /* Convert subdiagonal first */
+    if( matrix_layout == LAPACK_COL_MAJOR ) {
+        LAPACKE_zge_trans( LAPACK_COL_MAJOR, 1, n-1, &in[1], ldin+1,
+                           &out[ldout], ldout+1 );
+    } else if ( matrix_layout == LAPACK_ROW_MAJOR ) {
+        LAPACKE_zge_trans( LAPACK_ROW_MAJOR, n-1, 1, &in[ldin], ldin+1,
+                           &out[1], ldout+1 );
+    } else {
+        return;
+    }
+
+    /* Convert upper triangular. */
+    LAPACKE_ztr_trans( matrix_layout, 'u', 'n', n, in, ldin, out, ldout);
+}
+
+/*****************************************************************************
+  Copyright (c) 2010, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a vector for NaN entries. */
+
+lapack_logical LAPACKE_z_nancheck( lapack_int n,
+                                    const lapack_complex_double *x,
+                                    lapack_int incx )
+{
+    lapack_int i, inc;
+
+    if( incx == 0 ) return (lapack_logical) LAPACK_ZISNAN( x[0] );
+    inc = ( incx > 0 ) ? incx : -incx ;
+
+    for( i = 0; i < n*inc; i+=inc ) {
+        if( LAPACK_ZISNAN( x[i] ) )
+            return (lapack_logical) 1;
+    }
+    return (lapack_logical) 0;
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_zpb_nancheck( int matrix_layout, char uplo,
+                                      lapack_int n, lapack_int kd,
+                                      const lapack_complex_double* ab,
+                                      lapack_int ldab )
+{
+    if( LAPACKE_lsame( uplo, 'u' ) ) {
+        return LAPACKE_zgb_nancheck( matrix_layout, n, n, 0, kd, ab, ldab );
+    } else if( LAPACKE_lsame( uplo, 'l' ) ) {
+        return LAPACKE_zgb_nancheck( matrix_layout, n, n, kd, 0, ab, ldab );
+    }
+    return (lapack_logical) 0;
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input symmetric banded matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_zpb_trans( int matrix_layout, char uplo, lapack_int n,
+                        lapack_int kd,
+                        const lapack_complex_double *in, lapack_int ldin,
+                        lapack_complex_double *out, lapack_int ldout )
+{
+    if( LAPACKE_lsame( uplo, 'u' ) ) {
+        LAPACKE_zgb_trans( matrix_layout, n, n, 0, kd, in, ldin, out, ldout );
+    } else if( LAPACKE_lsame( uplo, 'l' ) ) {
+        LAPACKE_zgb_trans( matrix_layout, n, n, kd, 0, in, ldin, out, ldout );
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries.
+ * Since matrix in packed format stored continiously it just required to
+ * check 1d array for NaNs. It doesn't depend upon uplo, transr or
+ * matrix_layout.
+ */
+
+lapack_logical LAPACKE_zpf_nancheck( lapack_int n,
+                                      const lapack_complex_double *a )
+{
+    lapack_int len = n*(n+1)/2;
+    return LAPACKE_z_nancheck( len, a, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input RFP matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_zpf_trans( int matrix_layout, char transr, char uplo,
+                        lapack_int n, const lapack_complex_double *in,
+                        lapack_complex_double *out )
+{
+    LAPACKE_ztf_trans( matrix_layout, transr, uplo, 'n', n, in, out );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_zpo_nancheck( int matrix_layout, char uplo,
+                                      lapack_int n,
+                                      const lapack_complex_double *a,
+                                      lapack_int lda )
+{
+    return LAPACKE_ztr_nancheck( matrix_layout, uplo, 'n', n, a, lda );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input symmetric matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_zpo_trans( int matrix_layout, char uplo, lapack_int n,
+                        const lapack_complex_double *in, lapack_int ldin,
+                        lapack_complex_double *out, lapack_int ldout )
+{
+    LAPACKE_ztr_trans( matrix_layout, uplo, 'n', n, in, ldin, out, ldout );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries.
+ * Since matrix in packed format stored continiously it just required to
+ * check 1d array for NaNs. It doesn't depend upon uplo or matrix_layout.
+ */
+
+lapack_logical LAPACKE_zpp_nancheck( lapack_int n,
+                                      const lapack_complex_double *ap )
+{
+    lapack_int len = n*(n+1)/2;
+    return LAPACKE_z_nancheck( len, ap, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input symmetric packed matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_zpp_trans( int matrix_layout, char uplo, lapack_int n,
+                        const lapack_complex_double *in,
+                        lapack_complex_double *out )
+{
+    LAPACKE_ztp_trans( matrix_layout, uplo, 'n', n, in, out );
+}
+
+/*****************************************************************************
+  Copyright (c) 2010, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_zpt_nancheck( lapack_int n,
+                                      const double *d,
+                                      const lapack_complex_double *e )
+{
+    return LAPACKE_d_nancheck( n,   d, 1 )
+        || LAPACKE_z_nancheck( n-1, e, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries.
+ * Since matrix in packed format stored continiously it just required to
+ * check 1d array for NaNs. It doesn't depend upon uplo or matrix_layout.
+ */
+
+lapack_logical LAPACKE_zsp_nancheck( lapack_int n,
+                                      const lapack_complex_double *ap )
+{
+    lapack_int len = n*(n+1)/2;
+    return LAPACKE_z_nancheck( len, ap, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input symmetric packed matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_zsp_trans( int matrix_layout, char uplo, lapack_int n,
+                        const lapack_complex_double *in,
+                        lapack_complex_double *out )
+{
+    LAPACKE_ztp_trans( matrix_layout, uplo, 'n', n, in, out );
+}
+
+/*****************************************************************************
+  Copyright (c) 2010, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_zst_nancheck( lapack_int n,
+                                      const lapack_complex_double *d,
+                                      const lapack_complex_double *e )
+{
+    return LAPACKE_z_nancheck( n,   d, 1 )
+        || LAPACKE_z_nancheck( n-1, e, 1 );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_zsy_nancheck( int matrix_layout, char uplo,
+                                      lapack_int n,
+                                      const lapack_complex_double *a,
+                                      lapack_int lda )
+{
+    return LAPACKE_ztr_nancheck( matrix_layout, uplo, 'n', n, a, lda );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input symmetric matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_zsy_trans( int matrix_layout, char uplo, lapack_int n,
+                        const lapack_complex_double *in, lapack_int ldin,
+                        lapack_complex_double *out, lapack_int ldout )
+{
+    LAPACKE_ztr_trans( matrix_layout, uplo, 'n', n, in, ldin, out, ldout );
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_ztb_nancheck( int matrix_layout, char uplo, char diag,
+                                      lapack_int n, lapack_int kd,
+                                      const lapack_complex_double* ab,
+                                      lapack_int ldab )
+{
+    lapack_logical colmaj, upper, unit;
+
+    if( ab == NULL ) return (lapack_logical) 0;
+
+    colmaj = ( matrix_layout == LAPACK_COL_MAJOR );
+    upper  = LAPACKE_lsame( uplo, 'u' );
+    unit   = LAPACKE_lsame( diag, 'u' );
+
+    if( ( !colmaj && ( matrix_layout != LAPACK_ROW_MAJOR ) ) ||
+        ( !upper  && !LAPACKE_lsame( uplo, 'l' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag, 'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return (lapack_logical) 0;
+    }
+
+    if( unit ) {
+        /* Unit case, diagonal should be excluded from the check for NaN. */
+        if( colmaj ) {
+            if( upper ) {
+                return LAPACKE_zgb_nancheck( matrix_layout, n-1, n-1, 0, kd-1,
+                                             &ab[ldab], ldab );
+            } else {
+                return LAPACKE_zgb_nancheck( matrix_layout, n-1, n-1, kd-1, 0,
+                                             &ab[1], ldab );
+            }
+        } else {
+            if( upper ) {
+                return LAPACKE_zgb_nancheck( matrix_layout, n-1, n-1, 0, kd-1,
+                                             &ab[1], ldab );
+            } else {
+                return LAPACKE_zgb_nancheck( matrix_layout, n-1, n-1, kd-1, 0,
+                                             &ab[ldab], ldab );
+            }
+        }
+    } else {
+        /* Non-unit case */
+        if( upper ) {
+            return LAPACKE_zgb_nancheck( matrix_layout, n, n, 0, kd, ab, ldab );
+        } else {
+            return LAPACKE_zgb_nancheck( matrix_layout, n, n, kd, 0, ab, ldab );
+        }
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input triangular banded matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_ztb_trans( int matrix_layout, char uplo, char diag,
+                        lapack_int n, lapack_int kd,
+                        const lapack_complex_double *in, lapack_int ldin,
+                        lapack_complex_double *out, lapack_int ldout )
+{
+    lapack_logical colmaj, upper, unit;
+
+    if( in == NULL || out == NULL ) return;
+
+    colmaj = ( matrix_layout == LAPACK_COL_MAJOR );
+    upper  = LAPACKE_lsame( uplo, 'u' );
+    unit   = LAPACKE_lsame( diag, 'u' );
+
+    if( ( !colmaj && ( matrix_layout != LAPACK_ROW_MAJOR ) ) ||
+        ( !upper  && !LAPACKE_lsame( uplo, 'l' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag, 'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return;
+    }
+
+    if( unit ) {
+        /* Unit case, diagonal excluded from transposition */
+        if( colmaj ) {
+            if( upper ) {
+                LAPACKE_zgb_trans( matrix_layout, n-1, n-1, 0, kd-1,
+                                   &in[ldin], ldin, &out[1], ldout );
+            } else {
+                LAPACKE_zgb_trans( matrix_layout, n-1, n-1, kd-1, 0,
+                                   &in[1], ldin, &out[ldout], ldout );
+            }
+        } else {
+            if( upper ) {
+                LAPACKE_zgb_trans( matrix_layout, n-1, n-1, 0, kd-1,
+                                   &in[1], ldin, &out[ldout], ldout );
+            } else {
+                LAPACKE_zgb_trans( matrix_layout, n-1, n-1, kd-1, 0,
+                                   &in[ldin], ldin, &out[1], ldout );
+            }
+        }
+    } else {
+        /* Non-unit case */
+        if( upper ) {
+            LAPACKE_zgb_trans( matrix_layout, n, n, 0, kd, in, ldin, out,
+                               ldout );
+        } else {
+            LAPACKE_zgb_trans( matrix_layout, n, n, kd, 0, in, ldin, out,
+                               ldout );
+        }
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_ztf_nancheck( int matrix_layout, char transr,
+                                      char uplo, char diag,
+                                      lapack_int n,
+                                      const lapack_complex_double *a )
+{
+    lapack_int len;
+    lapack_logical rowmaj, ntr, lower, unit;
+    lapack_int n1, n2, k;
+
+    if( a == NULL ) return (lapack_logical) 0;
+
+    rowmaj = (matrix_layout == LAPACK_ROW_MAJOR);
+    ntr    = LAPACKE_lsame( transr, 'n' );
+    lower  = LAPACKE_lsame( uplo,   'l' );
+    unit   = LAPACKE_lsame( diag,   'u' );
+
+    if( ( !rowmaj && ( matrix_layout != LAPACK_COL_MAJOR ) ) ||
+        ( !ntr    && !LAPACKE_lsame( transr, 't' )
+                  && !LAPACKE_lsame( transr, 'c' ) ) ||
+        ( !lower  && !LAPACKE_lsame( uplo,   'u' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag,   'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return (lapack_logical) 0;
+    }
+
+    if( unit ) {
+        /* Unit case, diagonal should be excluded from the check for NaN.
+         * Decoding RFP and checking both triangulars and rectangular
+         * for NaNs.
+         */
+        if( lower ) {
+            n2 = n / 2;
+            n1 = n - n2;
+        } else {
+            n1 = n / 2;
+            n2 = n - n1;
+        }
+        if( n % 2 == 1 ) {
+            /* N is odd */
+            if( ( rowmaj || ntr ) && !( rowmaj && ntr ) ) {
+                /* N is odd and ( TRANSR = 'N' .XOR. ROWMAJOR) */
+                if( lower ) {
+                    return LAPACKE_ztr_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 n1, &a[0], n )
+                        || LAPACKE_zge_nancheck( LAPACK_ROW_MAJOR, n2, n1,
+                                                 &a[n1], n )
+                        || LAPACKE_ztr_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 n2, &a[n], n );
+                } else {
+                    return LAPACKE_ztr_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 n1, &a[n2], n )
+                        || LAPACKE_zge_nancheck( LAPACK_ROW_MAJOR, n1, n2,
+                                                 &a[0], n )
+                        || LAPACKE_ztr_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 n2, &a[n1], n );
+                }
+            } else {
+                /* N is odd and
+                 * ( ( TRANSR = 'C' || TRANSR = 'T' ) .XOR. COLMAJOR )
+                 */
+                if( lower ) {
+                    return LAPACKE_ztr_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 n1, &a[0], n1 )
+                        || LAPACKE_zge_nancheck( LAPACK_ROW_MAJOR, n1, n2,
+                                                 &a[1], n1 )
+                        || LAPACKE_ztr_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 n2, &a[1], n1 );
+                } else {
+                    return LAPACKE_ztr_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 n1, &a[(size_t)n2*n2], n2 )
+                        || LAPACKE_zge_nancheck( LAPACK_ROW_MAJOR, n2, n1,
+                                                 &a[0], n2 )
+                        || LAPACKE_ztr_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 n2, &a[(size_t)n1*n2], n2 );
+                }
+            }
+        } else {
+            /* N is even */
+            k = n / 2;
+            if( ( rowmaj || ntr ) && !( rowmaj && ntr ) ) {
+                /* N is even and ( TRANSR = 'N' .XOR. ROWMAJOR) */
+                if( lower ) {
+                    return LAPACKE_ztr_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 k, &a[1], n+1 )
+                        || LAPACKE_zge_nancheck( LAPACK_ROW_MAJOR, k, k,
+                                                 &a[k+1], n+1 )
+                        || LAPACKE_ztr_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 k, &a[0], n+1 );
+                } else {
+                    return LAPACKE_ztr_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 k, &a[k+1], n+1 )
+                        || LAPACKE_zge_nancheck( LAPACK_ROW_MAJOR, k, k,
+                                                 &a[0], n+1 )
+                        || LAPACKE_ztr_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 k, &a[k], n+1 );
+                }
+            } else {
+                /* N is even and
+                   ( ( TRANSR = 'C' || TRANSR = 'T' ) .XOR. COLMAJOR ) */
+                if( lower ) {
+                    return LAPACKE_ztr_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 k, &a[k], k )
+                        || LAPACKE_zge_nancheck( LAPACK_ROW_MAJOR, k, k,
+                                                 &a[(size_t)k*(k+1)], k )
+                        || LAPACKE_ztr_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 k, &a[0], k );
+                } else {
+                    return LAPACKE_ztr_nancheck( LAPACK_ROW_MAJOR, 'u', 'u',
+                                                 k, &a[(size_t)k*(k+1)], k )
+                        || LAPACKE_zge_nancheck( LAPACK_ROW_MAJOR, k, k,
+                                                 &a[0], k )
+                        || LAPACKE_ztr_nancheck( LAPACK_ROW_MAJOR, 'l', 'u',
+                                                 k, &a[(size_t)k*k], k );
+                }
+            }
+        }
+    } else {
+        /* Non-unit case - just check whole array for NaNs. */
+        len = n*(n+1)/2;
+        return LAPACKE_zge_nancheck( LAPACK_COL_MAJOR, len, 1, a, len );
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input RFP matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ * This functions does copy diagonal for both unit and non-unit cases.
+ */
+
+void LAPACKE_ztf_trans( int matrix_layout, char transr, char uplo, char diag,
+                        lapack_int n, const lapack_complex_double *in,
+                        lapack_complex_double *out )
+{
+    lapack_int row, col;
+    lapack_logical rowmaj, ntr, lower, unit;
+
+    if( in == NULL || out == NULL ) return ;
+
+    rowmaj = (matrix_layout == LAPACK_ROW_MAJOR);
+    ntr    = LAPACKE_lsame( transr, 'n' );
+    lower  = LAPACKE_lsame( uplo,   'l' );
+    unit   = LAPACKE_lsame( diag,   'u' );
+
+    if( ( !rowmaj && ( matrix_layout != LAPACK_COL_MAJOR ) ) ||
+        ( !ntr    && !LAPACKE_lsame( transr, 't' ) &&
+                     !LAPACKE_lsame( transr, 'c' ) ) ||
+        ( !lower  && !LAPACKE_lsame( uplo,   'u' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag,   'n' ) ) ) {
+        /* Just exit if input parameters are wrong */
+        return;
+    }
+
+    /* Determine parameters of array representing RFP */
+    if( ntr ) {
+        if( n%2 == 0 ) {
+            row = n + 1;
+            col = n / 2;
+        } else {
+            row = n;
+            col = (n + 1) / 2;
+        }
+    } else {
+        if( n%2 == 0 ) {
+            row = n / 2;
+            col = n + 1;
+        } else {
+            row = (n + 1) / 2;
+            col = n;
+        }
+    }
+
+    /* Perform conversion: */
+    if( rowmaj ) {
+        LAPACKE_zge_trans( LAPACK_ROW_MAJOR, row, col, in, col, out, row );
+    } else {
+        LAPACKE_zge_trans( LAPACK_COL_MAJOR, row, col, in, row, out, col );
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries.
+ * Since matrix in packed format stored continiously it just required to
+ * check 1d array for NaNs. It doesn't depend upon uplo or matrix_layout.
+ */
+
+lapack_logical LAPACKE_ztp_nancheck( int matrix_layout, char uplo, char diag,
+                                      lapack_int n,
+                                      const lapack_complex_double *ap )
+{
+    lapack_int i, len;
+    lapack_logical colmaj, upper, unit;
+
+    if( ap == NULL ) return (lapack_logical) 0;
+
+    colmaj = ( matrix_layout == LAPACK_COL_MAJOR );
+    upper  = LAPACKE_lsame( uplo, 'u' );
+    unit   = LAPACKE_lsame( diag, 'u' );
+
+    if( ( !colmaj && ( matrix_layout != LAPACK_ROW_MAJOR ) ) ||
+        ( !upper  && !LAPACKE_lsame( uplo, 'l' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag, 'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return (lapack_logical) 0;
+    }
+
+    if( unit ) {
+        /* Unit case, diagonal should be excluded from the check for NaN. */
+
+        /* Since col_major upper and row_major lower are equal,
+         * and col_major lower and row_major upper are equals too -
+         * using one code for equal cases. XOR( colmaj, upper )
+         */
+        if( ( colmaj || upper ) && !( colmaj && upper ) ) {
+            for( i = 1; i < n; i++ )
+                if( LAPACKE_z_nancheck( i, &ap[ ((size_t)i+1)*i/2 ], 1 ) )
+                    return (lapack_logical) 1;
+        } else {
+            for( i = 0; i < n-1; i++ )
+                if( LAPACKE_z_nancheck( n-i-1,
+                    &ap[ (size_t)i+1 + i*((size_t)2*n-i+1)/2 ], 1 ) )
+                    return (lapack_logical) 1;
+        }
+        return (lapack_logical) 0;
+    } else {
+        /* Non-unit case - just check whole array for NaNs. */
+        len = n*(n+1)/2;
+        return LAPACKE_z_nancheck( len, ap, 1 );
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input triangular packed matrix from row-major(C) to
+ * column-major(Fortran) layout or vice versa.
+ */
+
+void LAPACKE_ztp_trans( int matrix_layout, char uplo, char diag,
+                        lapack_int n, const lapack_complex_double *in,
+                        lapack_complex_double *out )
+{
+    lapack_int i, j, st;
+    lapack_logical colmaj, upper, unit;
+
+    if( in == NULL || out == NULL ) return ;
+
+    colmaj = ( matrix_layout == LAPACK_COL_MAJOR );
+    upper  = LAPACKE_lsame( uplo, 'u' );
+    unit   = LAPACKE_lsame( diag, 'u' );
+
+    if( ( !colmaj && ( matrix_layout != LAPACK_ROW_MAJOR ) ) ||
+        ( !upper  && !LAPACKE_lsame( uplo, 'l' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag, 'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return;
+    }
+    if( unit ) {
+        /* If unit, then don't touch diagonal, start from 1st column or row */
+        st = 1;
+    } else  {
+        /* If non-unit, then check diagonal also, starting from [0,0] */
+        st = 0;
+    }
+
+    /* Perform conversion:
+     * Since col_major upper and row_major lower are equal,
+     * and col_major lower and row_major upper are equals too -
+     * using one code for equal cases. XOR( colmaj, upper )
+     */
+    if( ( colmaj || upper ) && !( colmaj && upper ) ) {
+        for( j = st; j < n; j++ ) {
+            for( i = 0; i < j+1-st; i++ ) {
+                out[ j-i + (i*(2*n-i+1))/2 ] = in[ ((j+1)*j)/2 + i ];
+            }
+        }
+    } else {
+        for( j = 0; j < n-st; j++ ) {
+            for( i = j+st; i < n; i++ ) {
+                out[ j + ((i+1)*i)/2 ] = in[ (j*(2*n-j+1))/2 + i-j ];
+            }
+        }
+    }
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+#include "lapacke_utils.h"
+
+/* Check a matrix for NaN entries. */
+
+lapack_logical LAPACKE_ztr_nancheck( int matrix_layout, char uplo, char diag,
+                                      lapack_int n,
+                                      const lapack_complex_double *a,
+                                      lapack_int lda )
+{
+    lapack_int i, j, st;
+    lapack_logical colmaj, lower, unit;
+
+    if( a == NULL ) return (lapack_logical) 0;
+
+    colmaj = ( matrix_layout == LAPACK_COL_MAJOR );
+    lower  = LAPACKE_lsame( uplo, 'l' );
+    unit   = LAPACKE_lsame( diag, 'u' );
+
+    if( ( !colmaj && ( matrix_layout != LAPACK_ROW_MAJOR ) ) ||
+        ( !lower  && !LAPACKE_lsame( uplo, 'u' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag, 'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return (lapack_logical) 0;
+    }
+    if( unit ) {
+        /* If unit, then don't touch diagonal, start from 1st column or row */
+        st = 1;
+    } else  {
+        /* If non-unit, then check diagonal also, starting from [0,0] */
+        st = 0;
+    }
+
+    /* Since col_major upper and row_major lower are equal,
+     * and col_major lower and row_major upper are equals too -
+     * using one code for equal cases. XOR( colmaj, upper )
+     */
+    if( ( colmaj || lower ) && !( colmaj && lower ) ) {
+        for( j = st; j < n; j++ ) {
+            for( i = 0; i < MIN( j+1-st, lda ); i++ ) {
+                if( LAPACK_ZISNAN( a[i+j*lda] ) )
+                    return (lapack_logical) 1;
+            }
+        }
+    } else {
+        for( j = 0; j < n-st; j++ ) {
+            for( i = j+st; i < MIN( n, lda ); i++ ) {
+                if( LAPACK_ZISNAN( a[i+j*lda] ) )
+                    return (lapack_logical) 1;
+            }
+        }
+    }
+    return (lapack_logical) 0;
+}
+
+/*****************************************************************************
+  Copyright (c) 2014, Intel Corp.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Intel Corporation nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+******************************************************************************
+* Contents: Native C interface to LAPACK utility function
+* Author: Intel Corporation
+* Created in February, 2010
+*****************************************************************************/
+
+#include "lapacke_utils.h"
+
+/* Converts input triangular matrix from row-major(C) to column-major(Fortran)
+ * layout or vice versa.
+ */
+
+void LAPACKE_ztr_trans( int matrix_layout, char uplo, char diag, lapack_int n,
+                        const lapack_complex_double *in, lapack_int ldin,
+                        lapack_complex_double *out, lapack_int ldout )
+{
+    lapack_int i, j, st;
+    lapack_logical colmaj, lower, unit;
+
+    if( in == NULL || out == NULL ) return ;
+
+    colmaj = ( matrix_layout == LAPACK_COL_MAJOR );
+    lower  = LAPACKE_lsame( uplo, 'l' );
+    unit   = LAPACKE_lsame( diag, 'u' );
+
+    if( ( !colmaj && ( matrix_layout != LAPACK_ROW_MAJOR ) ) ||
+        ( !lower  && !LAPACKE_lsame( uplo, 'u' ) ) ||
+        ( !unit   && !LAPACKE_lsame( diag, 'n' ) ) ) {
+        /* Just exit if any of input parameters are wrong */
+        return;
+    }
+    if( unit ) {
+        /* If unit, then don't touch diagonal, start from 1st column or row */
+        st = 1;
+    } else  {
+        /* If non-unit, then check diagonal also, starting from [0,0] */
+        st = 0;
+    }
+
+    /* Perform conversion:
+     * Since col_major upper and row_major lower are equal,
+     * and col_major lower and row_major upper are equals too -
+     * using one code for equal cases. XOR( colmaj, upper )
+     */
+    if( ( colmaj || lower ) && !( colmaj && lower ) ) {
+        for( j = st; j < MIN( n, ldout ); j++ ) {
+            for( i = 0; i < MIN( j+1-st, ldin ); i++ ) {
+                out[ j+i*ldout ] = in[ i+j*ldin ];
+            }
+        }
+    } else {
+        for( j = 0; j < MIN( n-st, ldout ); j++ ) {
+            for( i = j+st; i < MIN( n, ldin ); i++ ) {
+                out[ j+i*ldout ] = in[ i+j*ldin ];
+            }
+        }
+    }
 }
 

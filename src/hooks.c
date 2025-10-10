@@ -32,6 +32,7 @@
 
 #include "cscutils/map.h"
 
+#include "flexiblas.h"
 #include "flexiblas_backend.h"
 #include "hooks.h"
 #include "paths.h"
@@ -47,13 +48,18 @@ HIDDEN void __flexiblas_list_hooks(void)
     char *curpath;
     DIR* folder;
     struct dirent *dir_entry;
-    size_t len = strlen("libflexiblas_hook");
+    size_t len = 0;
     struct stat st;
     char *curfn;
     size_t curfnl;
     void * handle;
+    char flexiblas_hook_prefix[256];
     flexiblas_hook_register_t *reg;
     flexiblas_option_t *opts;
+
+    snprintf(flexiblas_hook_prefix,254, "%s%s", FLEXIBLAS_LIBRARY_PREFIX, "flexiblas_hook");
+    len = strlen(flexiblas_hook_prefix);
+
 
     for (i = 0; i < __flexiblas_count_additional_paths; i++) {
         curpath = __flexiblas_additional_paths[i];
@@ -65,7 +71,7 @@ HIDDEN void __flexiblas_list_hooks(void)
         while ((dir_entry = readdir(folder)) != NULL) {
             if ( strncmp(dir_entry->d_name, "..", 2) == 0 ) continue;
             if ( strncmp(dir_entry->d_name, ".", 1) == 0 ) continue;
-            if ( strncmp(dir_entry->d_name, "libflexiblas_hook", len) != 0 ) continue;
+            if ( strncmp(dir_entry->d_name, flexiblas_hook_prefix, len) != 0 ) continue;
 
             curfnl  = (strlen(curpath) + strlen(dir_entry->d_name) + 5);
             curfn = malloc(sizeof(char) * curfnl);
@@ -84,10 +90,10 @@ HIDDEN void __flexiblas_list_hooks(void)
             handle  = __flexiblas_dlopen(curfn, RTLD_LAZY | RTLD_LOCAL , NULL);
             if ( !handle) continue;
 
-            reg = dlsym(handle,"flexiblas_register");
+            reg = __flexiblas_dlsym(handle,"flexiblas_register");
             if ( !reg ) {
                 DPRINTF(0, "%s is not a hook\n");
-                dlclose(handle);
+                __flexiblas_dlclose(handle);
                 continue;
             }
 
@@ -97,9 +103,9 @@ HIDDEN void __flexiblas_list_hooks(void)
             printf("-> Descr:    %s\n", reg->desc);
             printf("-> Authors:  %s\n", reg->authors);
 
-            opts = dlsym(handle, "flexiblas_options");
+            opts = __flexiblas_dlsym(handle, "flexiblas_options");
             if ( !opts) {
-                dlclose(handle);
+                __flexiblas_dlclose(handle);
                 continue;
             }
 
@@ -110,7 +116,7 @@ HIDDEN void __flexiblas_list_hooks(void)
             }
 
 
-            dlclose(handle);
+            __flexiblas_dlclose(handle);
         }
 
         closedir(folder);
@@ -128,6 +134,16 @@ static char *__struppercase(char *str) {
     return ret;
 }
 
+static int __endswith(const char *str, const char *ends) {
+    size_t str_len = strlen(str);
+    size_t ends_len = strlen(ends);
+
+    if (ends_len > str_len) {
+        return 0; // ends ist länger als str, kann also nicht das Ende sein
+    }
+
+    return strncmp(str + str_len - ends_len, ends, ends_len) == 0;
+}
 
 HIDDEN void __flexiblas_add_hooks(void)
 {
@@ -136,12 +152,21 @@ HIDDEN void __flexiblas_add_hooks(void)
     char *curpath;
     DIR* folder;
     struct dirent *dir_entry;
-    size_t len = strlen("libflexiblas_hook");
+    size_t len = 0;
     struct stat st;
     char *curfn;
     size_t curfnl;
     void * handle;
     flexiblas_hook_register_t *reg;
+    char flexiblas_hook_prefix[256];
+    char *SO_EXTENSION = __flexiblas_mgmt_getenv(FLEXIBLAS_ENV_SO_EXTENSION); 
+    char SO[128];
+    strncpy(SO, SO_EXTENSION, 128);
+    free(SO_EXTENSION);
+
+    snprintf(flexiblas_hook_prefix,254, "%s%s", FLEXIBLAS_LIBRARY_PREFIX, "flexiblas_hook");
+    len = strlen(flexiblas_hook_prefix);
+
 
     hook_map = csc_map_new_string_key(257,free);
 
@@ -154,7 +179,8 @@ HIDDEN void __flexiblas_add_hooks(void)
         while ((dir_entry = readdir(folder)) != NULL) {
             if ( strncmp(dir_entry->d_name, "..", 2) == 0 ) continue;
             if ( strncmp(dir_entry->d_name, ".", 1) == 0 ) continue;
-            if ( strncmp(dir_entry->d_name, "libflexiblas_hook", len) != 0 ) continue;
+            if ( strncmp(dir_entry->d_name, flexiblas_hook_prefix, len) != 0 ) continue;
+	    if ( !__endswith(dir_entry->d_name, SO)) continue;
 
             curfnl  = (strlen(curpath) + strlen(dir_entry->d_name) + 5);
             curfn = malloc(sizeof(char) * curfnl);
@@ -172,10 +198,10 @@ HIDDEN void __flexiblas_add_hooks(void)
             if ( !handle) continue;
 
 
-            reg = dlsym(handle,"flexiblas_register");
+            reg = __flexiblas_dlsym(handle,"flexiblas_register");
             if ( !reg ) {
                 DPRINTF(1, "%s is not a hook\n", dir_entry->d_name);
-                dlclose(handle);
+                __flexiblas_dlclose(handle);
                 continue;
             }
 
@@ -184,7 +210,7 @@ HIDDEN void __flexiblas_add_hooks(void)
             csc_map_insert(hook_map, insert_str, strdup(curfn));
 
             free(curfn);
-            dlclose(handle);
+            __flexiblas_dlclose(handle);
         }
 
         closedir(folder);
@@ -201,7 +227,7 @@ HIDDEN char *  __flexiblas_hook_add_from_file(char *path)
     handle  = __flexiblas_dlopen(path, RTLD_LAZY | RTLD_LOCAL , NULL);
     if ( !handle) return NULL;
 
-    reg = dlsym(handle, "flexiblas_register");
+    reg = __flexiblas_dlsym(handle, "flexiblas_register");
     if ( !reg ) return NULL;
 
     ret = strdup(reg->cfg_name);
@@ -214,7 +240,7 @@ HIDDEN char *  __flexiblas_hook_add_from_file(char *path)
         csc_map_insert(hook_map, reg->cfg_name, strdup(path));
     }
 
-    dlclose(handle);
+    __flexiblas_dlclose(handle);
     return ret;
 }
 

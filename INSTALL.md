@@ -389,9 +389,26 @@ then the NETLIB one, is not recommended.
 ## Windows Support
 
 In general FlexiBLAS supports Microsoft Windows as well, but this support is
-experimental supporting issues can not be guaranteed. At the moment the
-support is limited to the Microsoft Visual Studio >= 2019 together with the
-Intel C/C++ and Fortran compilers.
+experimental supporting issues can not be guaranteed.
+
+### Intel Compiler and Visual Studio
+One way to use FlexiBLAS under Windows is with Microsoft Visual Studio and the
+Intel OneAPI Suite. This requires:
+
+- Intel OneAPI Base and HPC Kit
+- Mircosoft Visual Studio compatible with Intel OneAPI toolkit
+- dlfcn-win32
+- cmake and ninja installed with the `PATH` variable set correctly
+
+
+The FlexiBLAS can be built from the Intel OneAPI commandline using:
+```shell
+cmake -S . -B build-dir <FURTHER OPTIONS>
+cmake --build build-dir
+```
+
+### MingW / MSYS2
+
 
 ## MacOS Support
 

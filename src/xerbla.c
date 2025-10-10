@@ -59,23 +59,42 @@ void XERBLA(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len) {
 #endif
 
 #else
+
 #if defined(__ELF__) || ((defined (__PGI) || defined(__NVCOMPILER)) && (defined(__linux__)  || defined(__unix__)))
 void xerbla_(char *, Int *, flexiblas_fortran_charlen_t) __attribute__ ((weak, alias ("flexiblas_internal_xerbla")));
 void xerbla (char *, Int *, flexiblas_fortran_charlen_t) __attribute__ ((weak, alias ("flexiblas_internal_xerbla")));
 void XERBLA (char *, Int *, flexiblas_fortran_charlen_t) __attribute__ ((weak, alias ("flexiblas_internal_xerbla")));
 
 #else
-#pragma weak xerbla_
+/* #pragma weak xerbla_
 #pragma weak xerbla
 #pragma weak XERBLA
+*/ 
+
+/*
+#ifdef _WIN32 
+__declspec(dllexport)
+#endif */
 void xerbla_(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len) {
     flexiblas_internal_xerbla(SNAME, Info, len);
 }
+
+/*
+#ifdef _WIN32 
+__declspec(dllexport)
+#endif
+*/
 void xerbla(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len) {
     flexiblas_internal_xerbla(SNAME, Info, len);
 }
+
+/* #ifdef _WIN32 
+__declspec(dllexport)
+#endif
+*/ 
+
 void XERBLA(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len) {
-    flexiblas_internal_xerbla(SNAME, Info, len);
+    	flexiblas_internal_xerbla(SNAME, Info, len);
 }
 #endif
 #endif
@@ -86,8 +105,8 @@ int __flexiblas_setup_xerbla(flexiblas_backend_t *backend)
     /* Check if the user supplied a XERBLA function  */
     {
         int user_xerbla = 0;
-        void *xerbla_symbol1 = dlsym(backend->library_handle,"xerbla_");
-        void *xerbla_symbol2 = dlsym(RTLD_DEFAULT,"xerbla_");
+        void *xerbla_symbol1 = __flexiblas_dlsym(backend->library_handle,"xerbla_");
+        void *xerbla_symbol2 = __flexiblas_dlsym(RTLD_DEFAULT,"xerbla_");
         void (*flexiblas_internal) (char *, Int *, flexiblas_fortran_charlen_t);
         void *internal;
         flexiblas_internal = flexiblas_internal_xerbla;
@@ -300,8 +319,8 @@ int __flexiblas_setup_cblas_xerbla(flexiblas_backend_t *backend)
     /* Check if the user supplied a XERBLA function  */
     {
         int user_xerbla = 0;
-        void *xerbla_symbol1 = dlsym(backend->library_handle,"cblas_xerbla");
-        void *xerbla_symbol2 = dlsym(RTLD_DEFAULT,"cblas_xerbla");
+        void *xerbla_symbol1 = __flexiblas_dlsym(backend->library_handle,"cblas_xerbla");
+        void *xerbla_symbol2 = __flexiblas_dlsym(RTLD_DEFAULT,"cblas_xerbla");
 #ifndef __APPLE__
         void (*flexiblas_internal)(int, const char *, const char *, ...);
         flexiblas_internal = internal_cblas_xerbla;

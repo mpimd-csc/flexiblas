@@ -68,10 +68,12 @@ inline char * dirname( char const * pathname)
 }
 
 #include <windows.h>
-
-/* pthread mutex mocking */
+#ifndef PTHREAD_REPLACE
+#define PTHREAD_REPLACE
 typedef CRITICAL_SECTION pthread_mutex_t;
 typedef void* pthread_mutexattr_t;
+#endif 
+
 
 inline int pthread_mutex_init(pthread_mutex_t * mutex, const pthread_mutexattr_t * attr)
 {

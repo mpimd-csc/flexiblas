@@ -130,25 +130,23 @@
 #warning Thread Local Storage not available. FlexiBLAS might cause problems in multithreaded applications.
 #endif
 
+#if (defined(__WIN32__) || defined(__WIN64__)) && ! (defined (__MINGW32__) || defined(__MINGW64__))
+#define FLEXIBLAS_LIBRARY_PREFIX ""
+#else 
+#define FLEXIBLAS_LIBRARY_PREFIX "lib"
+#endif 
+
 #ifndef FALLBACK_NAME
-#if defined(__WIN32__)
 #define FALLBACK_NAME "flexiblas_netlib"
-#else
-#define FALLBACK_NAME "libflexiblas_netlib"
-#endif
 #endif
 
 #ifndef LAPACK_FALLBACK_NAME
-#if defined(__WIN32__)
 #define LAPACK_FALLBACK_NAME "flexiblas_fallback_lapack"
-#else
-#define LAPACK_FALLBACK_NAME "libflexiblas_fallback_lapack"
-#endif
 #endif
 
 
 // Hidden function
-#ifdef HAVE_ATTR_HIDDEN
+#if defined(HAVE_ATTR_HIDDEN) && !(defined(__MINGW32__) || defined(__MINGW64__))
 #define HIDDEN __attribute__((visibility ("hidden")))
 #else
 #define HIDDEN

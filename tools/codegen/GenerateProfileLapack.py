@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.17.0
+#       jupytext_version: 1.17.1
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -51,7 +51,7 @@ def is_complex_function(y):
     cpx_function = ("return_type_complex" in y and y["return_type_complex"])
     return cpx_function
         
-def generate_subroutine(y, intel_interface = False):
+def generate_subroutine(y, intel_interface = False, component = "lapack"):
     function_name = y['name'];
     arg_list = ""
     arg_list_void = ""
@@ -83,6 +83,10 @@ def generate_subroutine(y, intel_interface = False):
         type_ = a['type']
         if type_ == 'int':
             type_ = 'blasint' 
+        if type_ == "float _Complex":
+            type_ = '{:s}_complex_float'.format(component)
+        if type_ == "double _Complex":
+            type_ = '{:s}_complex_double'.format(component)            
         if a['pointer']:
             arg_list += type_ + " *" + a['name']
             arg_list_void += "void *" + a['name']
@@ -122,9 +126,8 @@ def generate_lapack(version):
     else:
         extra = "with deprecated"
 
-    inputs = glob.glob('./lapack/yaml/'+version+'/*.yaml')
-    inputs.sort()
-
+    inputs = './lapack/yaml/'+version+'.yaml'
+    
     try:
         ignore_file = load_yaml('./lapack/yaml/ignore-'+version+'.yaml')
         ignore = ignore_file["ignore"]
@@ -138,22 +141,24 @@ def generate_lapack(version):
     body += '#include "flexiblas_real_lapack_'+versionx+'.h"\n'
     body += '\n\n'   
 
-    r = process_map(load_yaml, inputs, max_workers = n_cores, chunksize=1)
+        
+    # r = process_map(load_yaml, inputs, max_workers = n_cores, chunksize=1)
+    r = load_yaml(inputs)
     function_list = list();
     for y in tqdm(r):
-        name = y[0]["name"]
+        name = y["name"]
         if name in ignore: 
             continue
         function_list.append(name)
-        if is_complex_function(y[0]):
+        if is_complex_function(y):
             body += "#ifdef FLEXIBLAS_ABI_GNU\n"
-            body += generate_subroutine(y[0], intel_interface = False) + '\n'
+            body += generate_subroutine(y, intel_interface = False) + '\n'
             body += "#else\n"
-            body += generate_subroutine(y[0], intel_interface = True) + '\n'
+            body += generate_subroutine(y, intel_interface = True) + '\n'
             body += "#endif\n"
             
         else:
-            body += generate_subroutine(y[0]) + '\n'
+            body += generate_subroutine(y) + '\n'
             
     body += "void profile_lapack_add(csc_table_t *tab, int col_name, int col_calls, int col_time) {\n"
     for name in function_list:
@@ -208,11 +213,13 @@ def load_name_from_yaml(inp):
         return name
     
 def generate_profile_structure():
-    lapack_yaml = glob.glob("lapack/yaml/*/*.yaml")
-    r2 = process_map(load_name_from_yaml, lapack_yaml, max_workers = n_cores, chunksize=1)
-    lapack_list = list(dict.fromkeys(r2))
-    print(lapack_l
-
+    lapack_yaml = glob.glob("lapack/yaml/3*.yaml")
+    r = list()
+    for f in tqdm(lapack_yaml):
+        r.extend(load_yaml(f))
+    # r2 = process_map(load_yaml, lapack_yaml, max_workers = n_cores, chunksize=1)
+    lapack_list = list(dict.fromkeys([x['name'] for x in r]))
+    
     fp = open(base+'/src/hooks/profile/profile_data_lapack.h', 'w')
     for name in tqdm(lapack_list):
         fp.write('profile_data_t {:s};\n'.format(name))

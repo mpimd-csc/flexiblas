@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.17.0
+#       jupytext_version: 1.17.1
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -250,20 +250,19 @@ def generate_all(inputs, outputs, ignore = list()):
     header_body = "" 
     hook_header_body =""
     
-    r = process_map(load_yaml, inputs, max_workers = n_cores, chunksize=1)
+    #r = process_map(load_yaml, inputs, max_workers = n_cores, chunksize=1)
+    r = load_yaml(inputs)
     for y in tqdm(r):
         # print("Generate Code for {}.".format(y[0]['name']))
-        name = y[0]["name"]
+        name = y["name"]
         if name in ignore: 
             continue
             
-        code, header, hook_header = generate_subroutine(y[0], intel_interface = False)
+        code, header, hook_header = generate_subroutine(y, intel_interface = False)
         fp.write(code)
       
-        loader_code += generate_loader_snippet(y[0]) + "\n\n"
-        hook_loader_code += generate_hook_loader_snippet(y[0]) + "\n" ; 
-        # if component == "lapack":
-        #    loader_fallback_code += generate_loader_snippet(y[0], component = component, fallback=True) + "\n\n"
+        loader_code += generate_loader_snippet(y) + "\n\n"
+        hook_loader_code += generate_hook_loader_snippet(y) + "\n" ; 
         header_body += header
         hook_header_body += hook_header + '\n'
         struct_code += struct_template.format(function_name = name)
@@ -300,8 +299,7 @@ def generate_all(inputs, outputs, ignore = list()):
 
 # %%
 # Generate BLAS 
-inputs = glob.glob('./cblas/yaml/*.yaml')
-inputs.sort()
+inputs = './cblas/yaml.yaml'
 
 ignore = ['cblas_dcabs1','cblas_scabs1' ]
 
@@ -312,7 +310,7 @@ outputs["structure_file"] = base + "/src/flexiblas_structure_cblas.h"
 outputs["header_guard"] = "CBLAS_H"
 outputs["real_call_header" ] = base + '/src/flexiblas_real_cblas_calls.h'
 outputs["real_call_header_guard" ] = "FLEXIBLAS_REAL_BLAS_CALLS_CBLAS_H"
-print("Generate BLAS Wrappers")
+print("Generate CBLAS Wrappers")
 generate_all(inputs, outputs, ignore)
 
 # %%

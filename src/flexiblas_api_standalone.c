@@ -32,7 +32,12 @@
 #define  RTLD_DEFAULT   ((void *) 0)
 #endif
 
+#ifndef HIDDEN
+#define HIDDEN 
+#endif 
+
 #include "flexiblas_api.h"
+#include "helper.h" 
 
 typedef int (*flexiblas_avail_t) (void);
 
@@ -40,8 +45,8 @@ int flexiblas_avail(void)
 {
     int (*fnptr) (void);
     flexiblas_avail_t  ptr_next, ptr_default, ptr_self;
-    *(void **) &ptr_next    = dlsym(RTLD_NEXT, "flexiblas_avail");
-    *(void **) &ptr_default = dlsym(RTLD_DEFAULT, "flexiblas_avail");
+    *(void **) &ptr_next    = __flexiblas_dlsym(RTLD_NEXT, "flexiblas_avail");
+    *(void **) &ptr_default = __flexiblas_dlsym(RTLD_DEFAULT, "flexiblas_avail");
     ptr_self    = &flexiblas_avail;
 
     // printf("next: %lx \t default: %lx \t self: %lx\n", ptr_next, ptr_default, ptr_self);
@@ -65,8 +70,8 @@ typedef int (*get_color_function_t) ( void );
 int flexiblas_get_color_output(void) {
     int (*fnptr)(void);
     get_color_function_t ptr_next, ptr_default, ptr_self;
-    *(void **) &ptr_next    = dlsym(RTLD_NEXT, "flexiblas_get_color_output");
-    *(void **) &ptr_default = dlsym(RTLD_DEFAULT, "flexiblas_get_color_output");
+    *(void **) &ptr_next    = __flexiblas_dlsym(RTLD_NEXT, "flexiblas_get_color_output");
+    *(void **) &ptr_default = __flexiblas_dlsym(RTLD_DEFAULT, "flexiblas_get_color_output");
     ptr_self = &flexiblas_get_color_output;
 
     /*  -lflexiblas_api -lflexiblas */
@@ -88,8 +93,8 @@ typedef void (*set_color_output_t) (int);
 void flexiblas_set_color_output(int s) {
     void (*fnptr)(int);
     set_color_output_t ptr_next, ptr_default, ptr_self;
-    *(void **) &ptr_next    = dlsym(RTLD_NEXT, "flexiblas_set_color_output");
-    *(void **) &ptr_default = dlsym(RTLD_DEFAULT, "flexiblas_set_color_output");
+    *(void **) &ptr_next    = __flexiblas_dlsym(RTLD_NEXT, "flexiblas_set_color_output");
+    *(void **) &ptr_default = __flexiblas_dlsym(RTLD_DEFAULT, "flexiblas_set_color_output");
     ptr_self = &flexiblas_set_color_output;
 
     /*  -lflexiblas_api -lflexiblas */
@@ -113,8 +118,8 @@ void flexiblas_get_version(int *major, int *minor, int *patch)
 {
     void (*fnptr) (int *, int*, int *);
     get_version_t ptr_next, ptr_default, ptr_self;
-    *(void**) &ptr_next    = dlsym(RTLD_NEXT, "flexiblas_get_version");
-    *(void**) &ptr_default = dlsym(RTLD_DEFAULT, "flexiblas_get_version");
+    *(void**) &ptr_next    = __flexiblas_dlsym(RTLD_NEXT, "flexiblas_get_version");
+    *(void**) &ptr_default = __flexiblas_dlsym(RTLD_DEFAULT, "flexiblas_get_version");
     ptr_self = &flexiblas_get_version;
 
     // printf("next: %lx \t default: %lx \t self: %lx\n", ptr_next, ptr_default, ptr_self);
@@ -144,8 +149,8 @@ void flexiblas_print_loaded_backends(FILE *fp)
     void (*fnptr) (FILE *);
     print_loaded_backends_t ptr_next, ptr_default, ptr_self;
 
-    *(void**) &ptr_next    = dlsym(RTLD_NEXT, "flexiblas_print_loaded_backends");
-    *(void**) &ptr_default = dlsym(RTLD_DEFAULT, "flexiblas_print_loaded_backends");
+    *(void**) &ptr_next    = __flexiblas_dlsym(RTLD_NEXT, "flexiblas_print_loaded_backends");
+    *(void**) &ptr_default = __flexiblas_dlsym(RTLD_DEFAULT, "flexiblas_print_loaded_backends");
     ptr_self = &flexiblas_print_loaded_backends;
 
     // printf("next: %lx \t default: %lx \t self: %lx\n", ptr_next, ptr_default, ptr_self);
@@ -173,8 +178,8 @@ void flexiblas_print_avail_backends(FILE *fp)
     void (*fnptr) (FILE *);
     print_avail_backend_t ptr_next, ptr_default, ptr_self;
 
-    *(void **) &ptr_next    = dlsym(RTLD_NEXT, "flexiblas_print_avail_backends");
-    *(void **) &ptr_default = dlsym(RTLD_DEFAULT, "flexiblas_print_avail_backends");
+    *(void **) &ptr_next    = __flexiblas_dlsym(RTLD_NEXT, "flexiblas_print_avail_backends");
+    *(void **) &ptr_default = __flexiblas_dlsym(RTLD_DEFAULT, "flexiblas_print_avail_backends");
     ptr_self = &flexiblas_print_avail_backends;
 
     // printf("next: %lx \t default: %lx \t self: %lx\n", ptr_next, ptr_default, ptr_self);
@@ -202,8 +207,8 @@ void flexiblas_print_current_backend(FILE* fp)
 {
     void (*fnptr) (FILE *);
     print_current_backend_t ptr_next, ptr_default, ptr_self;
-    *(void**) &ptr_next    = dlsym(RTLD_NEXT, "flexiblas_print_current_backend");
-    *(void**) &ptr_default = dlsym(RTLD_DEFAULT, "flexiblas_print_current_backend");
+    *(void**) &ptr_next    = __flexiblas_dlsym(RTLD_NEXT, "flexiblas_print_current_backend");
+    *(void**) &ptr_default = __flexiblas_dlsym(RTLD_DEFAULT, "flexiblas_print_current_backend");
     ptr_self = &flexiblas_print_current_backend;
 
     // printf("next: %lx \t default: %lx \t self: %lx\n", ptr_next, ptr_default, ptr_self);
@@ -232,8 +237,8 @@ ssize_t flexiblas_list(char *name, const size_t len, const ssize_t pos)
 {
     ssize_t (*fnptr) (char *, size_t, ssize_t);
     list_t ptr_next, ptr_default, ptr_self;
-    *(void**) &ptr_next    = dlsym(RTLD_NEXT, "flexiblas_list");
-    *(void**) &ptr_default = dlsym(RTLD_DEFAULT, "flexiblas_list");
+    *(void**) &ptr_next    = __flexiblas_dlsym(RTLD_NEXT, "flexiblas_list");
+    *(void**) &ptr_default = __flexiblas_dlsym(RTLD_DEFAULT, "flexiblas_list");
     ptr_self = &flexiblas_list;
 
     // printf("next: %lx \t default: %lx \t self: %lx\n", ptr_next, ptr_default, ptr_self);
@@ -256,8 +261,8 @@ ssize_t flexiblas_list_loaded(char *name, size_t len, ssize_t pos)
 {
     ssize_t (*fnptr) (char *, size_t, ssize_t);
     list_t ptr_next, ptr_default, ptr_self;
-    *(void **) &ptr_next    = dlsym(RTLD_NEXT, "flexiblas_list_loaded");
-    *(void **) &ptr_default = dlsym(RTLD_DEFAULT, "flexiblas_list_loaded");
+    *(void **) &ptr_next    = __flexiblas_dlsym(RTLD_NEXT, "flexiblas_list_loaded");
+    *(void **) &ptr_default = __flexiblas_dlsym(RTLD_DEFAULT, "flexiblas_list_loaded");
     ptr_self = &flexiblas_list_loaded;
 
     // printf("next: %lx \t default: %lx \t self: %lx\n", ptr_next, ptr_default, ptr_self);
@@ -283,8 +288,8 @@ int flexiblas_load_backend(const char * name )
 {
     int (*fnptr) (const char *);
     load_backend_t ptr_next, ptr_default, ptr_self;
-    *(void**) &ptr_next    = dlsym(RTLD_NEXT, "flexiblas_load_backend");
-    *(void**) &ptr_default = dlsym(RTLD_DEFAULT, "flexiblas_load_backend");
+    *(void**) &ptr_next    = __flexiblas_dlsym(RTLD_NEXT, "flexiblas_load_backend");
+    *(void**) &ptr_default = __flexiblas_dlsym(RTLD_DEFAULT, "flexiblas_load_backend");
     ptr_self = &flexiblas_load_backend;
 
     // printf("next: %lx \t default: %lx \t self: %lx\n", ptr_next, ptr_default, ptr_self);
@@ -307,8 +312,8 @@ int flexiblas_load_backend_library(const char *libname)
 {
     int (*fnptr) (const char *);
     load_backend_t ptr_next, ptr_default, ptr_self;
-    *(void **) &ptr_next    = dlsym(RTLD_NEXT, "flexiblas_load_backend_library");
-    *(void **) &ptr_default = dlsym(RTLD_DEFAULT, "flexiblas_load_backend_library");
+    *(void **) &ptr_next    = __flexiblas_dlsym(RTLD_NEXT, "flexiblas_load_backend_library");
+    *(void **) &ptr_default = __flexiblas_dlsym(RTLD_DEFAULT, "flexiblas_load_backend_library");
     ptr_self = &flexiblas_load_backend_library;
 
     // printf("next: %lx \t default: %lx \t self: %lx\n", ptr_next, ptr_default, ptr_self);
@@ -334,8 +339,8 @@ int flexiblas_switch(int id)
     int (*fnptr) (int);
     switch_t ptr_next, ptr_default, ptr_self;
 
-    *(void **) &ptr_next    = dlsym(RTLD_NEXT, "flexiblas_switch");
-    *(void **) &ptr_default = dlsym(RTLD_DEFAULT, "flexiblas_switch");
+    *(void **) &ptr_next    = __flexiblas_dlsym(RTLD_NEXT, "flexiblas_switch");
+    *(void **) &ptr_default = __flexiblas_dlsym(RTLD_DEFAULT, "flexiblas_switch");
     ptr_self = &flexiblas_switch;
 
     // printf("next: %lx \t default: %lx \t self: %lx\n", ptr_next, ptr_default, ptr_self);
@@ -361,8 +366,8 @@ int flexiblas_current_backend(char *name, size_t len)
 {
     int (*fnptr) (char *, size_t);
     current_backend_t ptr_next, ptr_default, ptr_self;
-    *(void **) &ptr_next    = dlsym(RTLD_NEXT, "flexiblas_current_backend");
-    *(void **) &ptr_default = dlsym(RTLD_DEFAULT, "flexiblas_current_backend");
+    *(void **) &ptr_next    = __flexiblas_dlsym(RTLD_NEXT, "flexiblas_current_backend");
+    *(void **) &ptr_default = __flexiblas_dlsym(RTLD_DEFAULT, "flexiblas_current_backend");
     ptr_self = &flexiblas_current_backend;
 
     // printf("next: %lx \t default: %lx \t self: %lx\n", ptr_next, ptr_default, ptr_self);
@@ -388,8 +393,8 @@ void flexiblas_set_num_threads(int num)
 {
     void (*fnptr) (int);
     set_num_threads_t ptr_next, ptr_default, ptr_self;
-    *(void**) &ptr_next    = dlsym(RTLD_NEXT, "flexiblas_set_num_threads");
-    *(void**) &ptr_default = dlsym(RTLD_DEFAULT, "flexiblas_set_num_threads");
+    *(void**) &ptr_next    = __flexiblas_dlsym(RTLD_NEXT, "flexiblas_set_num_threads");
+    *(void**) &ptr_default = __flexiblas_dlsym(RTLD_DEFAULT, "flexiblas_set_num_threads");
     ptr_self = &flexiblas_set_num_threads;
 
     // printf("next: %lx \t default: %lx \t self: %lx\n", ptr_next, ptr_default, ptr_self);
@@ -503,8 +508,8 @@ int flexiblas_get_num_threads(void)
 {
     int (*fnptr) (void);
     get_num_threads_t ptr_next, ptr_default, ptr_self;
-    *(void**) &ptr_next    = dlsym(RTLD_NEXT, "flexiblas_get_num_threads");
-    *(void**) &ptr_default = dlsym(RTLD_DEFAULT, "flexiblas_get_num_threads");
+    *(void**) &ptr_next    = __flexiblas_dlsym(RTLD_NEXT, "flexiblas_get_num_threads");
+    *(void**) &ptr_default = __flexiblas_dlsym(RTLD_DEFAULT, "flexiblas_get_num_threads");
     ptr_self = &flexiblas_get_num_threads;
 
     // printf("next: %lx \t default: %lx \t self: %lx\n", ptr_next, ptr_default, ptr_self);

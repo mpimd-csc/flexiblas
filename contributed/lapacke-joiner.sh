@@ -13,11 +13,19 @@ do
     cd "${i}"
     rm -f lapacke_joined.c
     cd src
-    for i in *.c ;
+    for f in *.c ;
     do
-        cat $i >> ../lapacke_joined.c
+        cat $f >> ../lapacke_joined.c
         echo "" >> ../lapacke_joined.c
     done
+    cd ..
+    cd utils
+    for f in *.c ;
+    do
+        cat $f >> ../lapacke_joined.c
+        echo "" >> ../lapacke_joined.c
+    done
+
 done
 
 # CBLAS

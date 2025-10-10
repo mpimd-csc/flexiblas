@@ -37,12 +37,18 @@
 #ifdef _WIN32
 #include "windows_fixes.h"
 #include <windows.h>
+#if !defined(__MINGW32__) && !defined(__MINGW64__)
 #define FUNC_RETURN_ADDRESS() _ReturnAddress()
+#else 
+#define FUNC_RETURN_ADDRESS() __builtin_extract_return_addr(__builtin_return_address(0))
+#endif 
 #else
 #define FUNC_RETURN_ADDRESS() __builtin_extract_return_addr(__builtin_return_address(0))
 #include <libgen.h>
 #include <unistd.h>
 #endif
+
+
 
 HIDDEN char **  __flexiblas_additional_paths = NULL;
 HIDDEN int __flexiblas_count_additional_paths = 0;
@@ -53,7 +59,7 @@ HIDDEN int __flexiblas_count_additional_paths = 0;
 __attribute__((noinline)) char *
 __flexiblas_get_library_location_impl(void)
 {
-#ifdef __WIN32__
+#if defined(__WIN32__) || defined(__WIN64__)
     char * buffer = malloc(sizeof(char) * MAX_PATH);
 
     HMODULE module;
@@ -62,10 +68,13 @@ __flexiblas_get_library_location_impl(void)
     {
         GetModuleFileNameA(module, buffer, MAX_PATH);
         char * base_path = dirname(buffer);
-        free(buffer);
         buffer = base_path;
+    } else {
+	free(buffer);
+	buffer = NULL;
     }
 #else
+
     long path_max;
 #ifdef PATH_MAX
     path_max = PATH_MAX;
@@ -108,7 +117,7 @@ HIDDEN void __flexiblas_get_global_rc_path(char * container, int max_buffer_size
 #if !defined(__WIN32__)
     /* On non MS Windows systems we are using the CMAKE_INSTALL_FULL_SYSCONFDIR variable */
     snprintf(container, max_buffer_size, "%s/%s", CMAKE_INSTALL_FULL_SYSCONFDIR, suffix);
-    
+
     return;
 #else
     char sysconfdir[MAX_BUFFER_SIZE];
@@ -124,7 +133,7 @@ HIDDEN void __flexiblas_get_global_rc_path(char * container, int max_buffer_size
     } else {
         snprintf(container, max_buffer_size, "%s", suffix );
     }
-    free(libpath);
+    if ( libpath ) free(libpath);
     return;
 #endif
 }
@@ -247,10 +256,12 @@ HIDDEN void __flexiblas_add_path_from_config( flexiblas_mgmt_t * config, flexibl
     char path[FLEXIBLAS_MGMT_MAX_BUFFER_LEN];
     void * iter_helper = NULL;
     iter_helper = NULL;
+#ifndef FLEXIBLAS_API_STANDALONE
     while ( flexiblas_mgmt_list_paths(config, loc, path, &iter_helper) > 0)
     {
         if ( strlen(path) > 0 ) __flexiblas_add_path(path);
     }
+#endif
 
 }
 

@@ -90,7 +90,11 @@ static int file_exists(const char * path )
     struct stat st_buf;
     memset (&st_buf, 0, sizeof(struct stat));
     if ( stat( path, &st_buf) == 0){
-        if ( (S_ISREG(st_buf.st_mode) || S_ISLNK (st_buf.st_mode) )){
+        if ( (S_ISREG(st_buf.st_mode)
+#ifndef _WIN32			       	
+				|| S_ISLNK (st_buf.st_mode)
+#endif 	    
+	     )){
             return 1;
         } else {
             return 0;
@@ -197,7 +201,7 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
         /* flags = RTLD_GLOBAL | RTLD_NOW; */
 
         if ( flags < 0 ) {
-            dlerror();
+            __flexiblas_dlerror();
             csc_strremovedup(filepath, '/');
 #ifdef HAVE_RTLD_NODELETE
             handle = dlopen(filepath, RTLD_LAZY | RTLD_LOCAL | RTLD_NODELETE);
@@ -205,33 +209,33 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
             handle = dlopen(filepath, RTLD_LAZY | RTLD_LOCAL );
 #endif
             if (!handle) {
-                DPRINTF_ERROR(0, "Failed to load %s - error: %s \n", filepath, dlerror());
+                DPRINTF_ERROR(0, "Failed to load %s - error: %s \n", filepath, __flexiblas_dlerror());
                 if ( filepath) free(filepath);
                 return NULL;
             }
 
-            ld_flags_sym_global = dlsym(handle, "flexiblas_ld_global");
+            ld_flags_sym_global = __flexiblas_dlsym(handle, "flexiblas_ld_global");
             if ( ld_flags_sym_global == NULL) {
                 ld_flags_global = 0;
             } else {
                 ld_flags_global = *((int32_t*) ld_flags_sym_global);
             }
 
-            ld_flags_sym_lazy = dlsym(handle, "flexiblas_ld_lazy");
+            ld_flags_sym_lazy = __flexiblas_dlsym(handle, "flexiblas_ld_lazy");
             if ( ld_flags_sym_lazy == NULL) {
                 ld_flags_lazy = 0;
             } else {
                 ld_flags_lazy = *((int32_t*) ld_flags_sym_lazy);
             }
 #if defined(__linux__) || defined(__WIN32__)
-            ld_flags_sym_deep = dlsym(handle, "flexiblas_ld_deep");
+            ld_flags_sym_deep = __flexiblas_dlsym(handle, "flexiblas_ld_deep");
             if ( ld_flags_sym_deep == NULL) {
                 ld_flags_deep = 0;
             } else {
                 ld_flags_deep = *((int32_t*) ld_flags_sym_deep);
             }
 #endif
-            dlclose(handle);
+            __flexiblas_dlclose(handle);
 
             if ( ld_flags_global != 0 ) {
                 flags = RTLD_GLOBAL;
@@ -266,7 +270,7 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
 #ifdef __WIN32__
             DPRINTF_ERROR(0, "Unable to load library: %s\r\n", filepath);
 #else
-            DPRINTF_ERROR(0, "dlopen: %s\n", dlerror());
+            DPRINTF_ERROR(0, "dlopen: %s\n", __flexiblas_dlerror());
 #endif
         }
         if (sofile != NULL) {
@@ -369,15 +373,15 @@ HIDDEN int __flexiblas_dl_symbol_exist( const char *libname, const char *symbol_
     if( found ) {
         void *sym = NULL;
         csc_strremovedup(filepath,'/');
-        dlerror();
+        __flexiblas_dlerror();
         handle = dlopen(filepath, RTLD_LAZY | RTLD_LOCAL);
         if (!handle) {
-            DPRINTF_ERROR(0, "Failed to load %s - error: %s \n", filepath, dlerror());
+            DPRINTF_ERROR(0, "Failed to load %s - error: %s \n", filepath, __flexiblas_dlerror());
             if ( filepath) free(filepath);
             return 0;
         }
-        sym = dlsym(handle, symbol_name);
-        dlclose(handle);
+        sym = __flexiblas_dlsym(handle, symbol_name);
+        __flexiblas_dlclose(handle);
         if ( filepath) free(filepath);
         return (sym == NULL) ? 0 : 1;
     }
@@ -385,4 +389,26 @@ HIDDEN int __flexiblas_dl_symbol_exist( const char *libname, const char *symbol_
     return 0;
 }
 
+HIDDEN void * __flexiblas_dlsym(void *lib, const char *fname)
+{
+/** #ifdef __WIN32__ */
+    /** return (void *) GetProcAddress(lib, fname); */
+/** #else */
+    return dlsym(lib, fname);
+/** #endif */
+}
 
+HIDDEN void __flexiblas_dlclose(void *lib) {
+/** #ifdef __WIN32__ */
+    /** FreeLibrary(lib); */
+/** #else */
+    dlclose(lib);
+/** #endif */
+    return;
+}
+
+HIDDEN char* __flexiblas_dlerror()
+{
+    return dlerror();
+
+}

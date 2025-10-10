@@ -69,6 +69,8 @@ static char * make_message(const char *fmt, va_list ap)
     return p;
 }
 
+#ifndef FLEXIBLAS_API_STANDALONE
+
 int flexiblas_get_color_output(void) {
     return color_output;
 }
@@ -76,6 +78,7 @@ int flexiblas_get_color_output(void) {
 void flexiblas_set_color_output(int s) {
     color_output = s;
 }
+#endif
 
 void flexiblas_print_error(const char *prefix, const char *path, const int line, const char *fmt, ... )
 {

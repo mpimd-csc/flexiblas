@@ -29,6 +29,21 @@
 #include <pthread.h>
 #endif
 
+#if defined(_WIN32) || defined (_WIN64)
+#include <windows.h>
+/* pthread mutex mocking */
+#ifndef PTHREAD_REPLACE
+#define PTHREAD_REPLACE
+typedef CRITICAL_SECTION pthread_mutex_t;
+typedef void* pthread_mutexattr_t;
+#endif 
+#ifdef small 
+#undef small 
+#endif 
+
+#endif
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif

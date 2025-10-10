@@ -80,10 +80,10 @@ FLEXIBLAS_INIT_FUNCTION(void) {
     void *pset_thr_lapack;
     void *pget_thr_lapack;
 
-    pset_thr_blas = dlsym(RTLD_NEXT, "nvpl_blas_set_num_threads");
-    pset_thr_lapack = dlsym(RTLD_NEXT, "nvpl_lapack_set_num_threads");
-    pget_thr_blas = dlsym(RTLD_NEXT, "nvpl_blas_get_max_threads");
-    pget_thr_lapack = dlsym(RTLD_NEXT, "nvpl_lapack_get_max_threads");
+    pset_thr_blas = __flexiblas_dlsym(RTLD_NEXT, "nvpl_blas_set_num_threads");
+    pset_thr_lapack = __flexiblas_dlsym(RTLD_NEXT, "nvpl_lapack_set_num_threads");
+    pget_thr_blas = __flexiblas_dlsym(RTLD_NEXT, "nvpl_blas_get_max_threads");
+    pget_thr_lapack = __flexiblas_dlsym(RTLD_NEXT, "nvpl_lapack_get_max_threads");
 
     *((void **) &set_blas_thr) = * (void **) & pset_thr_blas;
     *((void **) &set_lapack_thr) = * (void **) & pset_thr_lapack;

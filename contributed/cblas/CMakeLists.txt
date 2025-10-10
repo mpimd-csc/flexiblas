@@ -8,7 +8,7 @@ check_c_source_compiles("int __attribute__((weak)) main() {};"
 
 set(CBLASLIB cblas)
 # Error handling routines for level 2 & 3
-set(ERRHAND cblas_globals.c cblas_xerbla.c xerbla.c)
+set(ERRHAND cblas_globals.c cblas_xerbla.c)
 
 #
 #

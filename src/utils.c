@@ -89,6 +89,26 @@ HIDDEN void __flexiblas_print_copyright (int prefix) {
 
 
 
+static int mgmt_add_blas(flexiblas_mgmt_t *config, 
+		char *name, 
+		char *libname)
+{
+	int ret = 0;
+	size_t len = strlen(libname);
+	char *LIB_PREFIX = FLEXIBLAS_LIBRARY_PREFIX;
+	char *SO_EXTENSION = __flexiblas_mgmt_getenv(FLEXIBLAS_ENV_SO_EXTENSION); 
+	size_t ext_len = strlen(SO_EXTENSION);
+	size_t prefix_len = strlen(LIB_PREFIX);
+	
+    	char *tmp = (char *) calloc(len+prefix_len+ext_len+10,sizeof(char));
+    	snprintf(tmp,len+prefix_len+ext_len+10, "%s%s%s", LIB_PREFIX, libname, SO_EXTENSION);
+	
+	ret = flexiblas_mgmt_blas_add(config, FLEXIBLAS_GLOBAL, name, tmp, NULL);
+	free(tmp);
+	free(SO_EXTENSION);
+	return ret;
+}
+
 
 /*-----------------------------------------------------------------------------
  *  Other Stuff
@@ -96,36 +116,19 @@ HIDDEN void __flexiblas_print_copyright (int prefix) {
 HIDDEN int __flexiblas_insert_fallback_blas(flexiblas_mgmt_t *config)
 {
     int ret = 0;
-    char *SO_EXTENSION = __flexiblas_mgmt_getenv(FLEXIBLAS_ENV_SO_EXTENSION);
-    size_t len=strlen(FALLBACK_NAME)+strlen(SO_EXTENSION)+2;
-    char *tmp = (char *) calloc(len,sizeof(char));
-    char *tmp2;
+    int overall_ret = 0;
 
-    snprintf(tmp,len, "%s%s", FALLBACK_NAME,SO_EXTENSION);
-#if defined(__WIN32__)
-    len = strlen("flexiblas_netlib")+strlen(SO_EXTENSION)+2;
-#else
-    len = strlen("libflexiblas_netlib")+strlen(SO_EXTENSION)+2;
-#endif
-    tmp2 = (char*) calloc(len,sizeof(char));
-#if defined(__WIN32__)
-    snprintf(tmp2,len, "flexiblas_netlib%s", SO_EXTENSION);
-#else
-    snprintf(tmp2,len, "libflexiblas_netlib%s", SO_EXTENSION);
-#endif
-
-    if ( flexiblas_mgmt_blas_add(config, FLEXIBLAS_GLOBAL, "NETLIB", tmp2, NULL)){
-        DPRINTF(0,"Can not insert Netlib BLAS library.\n");
-        ret ++;
-    }
-    if (  flexiblas_mgmt_blas_add(config, FLEXIBLAS_GLOBAL, "__FALLBACK__", tmp2, NULL)) {
-        DPRINTF(0,"Can not insert Netlib BLAS library as fallback.\n");
-        ret++;
+    ret = mgmt_add_blas(config, "NETLIB", "flexiblas_netlib");
+    if ( ret ) {
+         DPRINTF(0,"Can not insert Netlib BLAS library.\n");
+	 overall_ret ++;
     }
 
-    free(tmp);
-    free(tmp2);
-    free(SO_EXTENSION);
+    ret = mgmt_add_blas(config, "__FALLBACK__", FALLBACK_NAME);
+    if ( ret ) {
+         DPRINTF(0,"Can not insert the fall BLAS library (%s).\n", FALLBACK_NAME);
+	 overall_ret ++;
+    }
     return ret;
 }
 

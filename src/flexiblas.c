@@ -185,9 +185,9 @@ static void flexiblas_load_info(void *library, flexiblas_backend_t *backend)
 {
     memset(&(backend->info),0,sizeof(flexiblas_info_t));
     backend->info.flexiblas_integer_size = sizeof(Int);
-    *(void **) &backend->info_function = dlsym(library, FLEXIBLAS_INFO_FUNCTION_NAME);
-    *(void **) &backend->init_function = dlsym(library, FLEXIBLAS_INIT_FUNCTION_NAME);
-    *(void **) &backend->exit_function = dlsym(library, FLEXIBLAS_EXIT_FUNCTION_NAME);
+    *(void **) &backend->info_function = __flexiblas_dlsym(library, FLEXIBLAS_INFO_FUNCTION_NAME);
+    *(void **) &backend->init_function = __flexiblas_dlsym(library, FLEXIBLAS_INIT_FUNCTION_NAME);
+    *(void **) &backend->exit_function = __flexiblas_dlsym(library, FLEXIBLAS_EXIT_FUNCTION_NAME);
 
     backend->library_handle = library;
 
@@ -689,17 +689,13 @@ __attribute__((constructor))
         ptr = *((void **) &ptr_fn);
         Dl_info fb_info;
         memset(&fb_info, 0, sizeof(Dl_info));
-        dlerror();
+        __flexiblas_dlerror();
         if ( dladdr(ptr, &fb_info) == 0 || fb_info.dli_fname == NULL)  {
-            DPRINTF_WARN(0, "Failed to integrated FlexiBLAS's symbols globally. This might let applications like NumPy to run slowly. (err = %s)\n", dlerror());
+            DPRINTF_WARN(0, "Failed to integrated FlexiBLAS's symbols globally. This might let applications like NumPy to run slowly. (err = %s)\n", __flexiblas_dlerror());
             fallback_flags = RTLD_GLOBAL | RTLD_LAZY;
         } else {
-#if defined(__WIN32__)
-            DPRINTF(1, "flexiblas.dll is %s\n", fb_info.dli_fname);
-#else
-            DPRINTF(1, "libflexiblas.so is %s\n", fb_info.dli_fname);
-#endif
-            reload_handler = dlopen(fb_info.dli_fname, RTLD_NOW | RTLD_GLOBAL);
+            DPRINTF(1, "%sflexiblas.(so|dll) is %s\n", FLEXIBLAS_LIBRARY_PREFIX, fb_info.dli_fname);
+            reload_handler = __flexiblas_dlopen(fb_info.dli_fname, RTLD_NOW | RTLD_GLOBAL, NULL);
             fallback_flags = RTLD_LOCAL | RTLD_LAZY;
         }
 
@@ -734,15 +730,17 @@ __attribute__((constructor))
          *-----------------------------------------------------------------------------*/
         {
             char *SO_EXTENSION = __flexiblas_mgmt_getenv(FLEXIBLAS_ENV_SO_EXTENSION);
-            size_t len=strlen(FALLBACK_NAME)+strlen(SO_EXTENSION)+2;
+	    char *LIB_PREFIX = FLEXIBLAS_LIBRARY_PREFIX;
+	    size_t len = strlen(FALLBACK_NAME) + strlen(SO_EXTENSION)
+		         + strlen(LIB_PREFIX) + 10;
             char *blas_name = (char *) calloc(len,sizeof(char));
-            snprintf(blas_name,len, "%s%s", FALLBACK_NAME,SO_EXTENSION);
+            snprintf(blas_name,len, "%s%s%s", LIB_PREFIX, FALLBACK_NAME,SO_EXTENSION);
             free(SO_EXTENSION);
 
-            dlerror();
+            __flexiblas_dlerror();
             __flexiblas_blas_fallback = __flexiblas_dlopen(blas_name, fallback_flags , NULL);
             if ( __flexiblas_blas_fallback == NULL ) {
-                DPRINTF_ERROR(0," Failed to load the BLAS fallback library.  Abort! errormsg=\"%s\"\n", dlerror());
+                DPRINTF_ERROR(0," Failed to load the BLAS fallback library.  Abort! errormsg=\"%s\"\n", __flexiblas_dlerror());
                 abort();
             }
             DPRINTF(2, "Load fallback_netlib at = 0x%lx\n", (unsigned long) __flexiblas_blas_fallback);
@@ -755,9 +753,11 @@ __attribute__((constructor))
          *-----------------------------------------------------------------------------*/
         {
             char *SO_EXTENSION = __flexiblas_mgmt_getenv(FLEXIBLAS_ENV_SO_EXTENSION);
-            size_t len=strlen(LAPACK_FALLBACK_NAME)+strlen(SO_EXTENSION)+2;
+	    char *LIB_PREFIX = FLEXIBLAS_LIBRARY_PREFIX;
+            size_t len = strlen(LAPACK_FALLBACK_NAME) + strlen(SO_EXTENSION)
+		         + strlen(LIB_PREFIX) + 10;
             char *lapack_name = (char *) calloc(len,sizeof(char));
-            snprintf(lapack_name,len, "%s%s", LAPACK_FALLBACK_NAME,SO_EXTENSION);
+            snprintf(lapack_name,len, "%s%s%s", LIB_PREFIX, LAPACK_FALLBACK_NAME,SO_EXTENSION);
             free(SO_EXTENSION);
 #ifdef LAPACK_DEEPBIND
             __flexiblas_lapack_fallback = __flexiblas_dlopen(lapack_name, fallback_flags | RTLD_DEEPBIND , NULL);
@@ -802,8 +802,8 @@ __attribute__((constructor))
         __flexiblas_hooks->hooks_loaded = 0;
         __flexiblas_hooks->initialized  = 0;
 
-        dlsym((void *) 0, "flexiblas_verbosity");
-        dlsym((void *) 0, "flexiblas_chain_zlaqr5");
+        __flexiblas_dlsym((void *) 0, "flexiblas_verbosity");
+        __flexiblas_dlsym((void *) 0, "flexiblas_chain_zlaqr5");
 
 
         int hooks_to_load = 0;
@@ -860,8 +860,8 @@ __attribute__((constructor))
 
 
             __flexiblas_hooks->handles[k] = handle;
-            *(void **) &__flexiblas_hooks->hook_init[k] = dlsym(handle, FLEXIBLAS_HOOK_INIT_FUNCTION_NAME);
-            *(void **) &__flexiblas_hooks->hook_exit[k] = dlsym(handle, FLEXIBLAS_HOOK_EXIT_FUNCTION_NAME);
+            *(void **) &__flexiblas_hooks->hook_init[k] = __flexiblas_dlsym(handle, FLEXIBLAS_HOOK_INIT_FUNCTION_NAME);
+            *(void **) &__flexiblas_hooks->hook_exit[k] = __flexiblas_dlsym(handle, FLEXIBLAS_HOOK_EXIT_FUNCTION_NAME);
 
 #ifdef FLEXIBLAS_HOOK_API
             __flexiblas_load_blas_hooks(__flexiblas_hooks, handle);
@@ -922,7 +922,7 @@ __attribute__((destructor))
                 __flexiblas_hooks->hook_exit[k]();
                 if (__flexiblas_hooks->handles[k] != NULL)
                 {
-                    dlclose(__flexiblas_hooks->handles[k]);
+                    __flexiblas_dlclose(__flexiblas_hooks->handles[k]);
                     __flexiblas_hooks->handles[k] = NULL;
                 }
             }
@@ -947,7 +947,7 @@ __attribute__((destructor))
                 }
                 free(loaded_backends[i]->name);
                 if ( loaded_backends[i]->library_handle != NULL){
-                    dlclose(loaded_backends[i]->library_handle );
+                    __flexiblas_dlclose(loaded_backends[i]->library_handle );
                     loaded_backends[i]->library_handle = NULL;
                 }
                 free(loaded_backends[i]);
@@ -965,14 +965,14 @@ __attribute__((destructor))
 
         if (__flexiblas_blas_fallback != NULL)
         {
-            dlclose(__flexiblas_blas_fallback);
+            __flexiblas_dlclose(__flexiblas_blas_fallback);
             __flexiblas_blas_fallback = NULL;
         }
 
 #ifdef FLEXIBLAS_LAPACK
         if (__flexiblas_lapack_fallback != NULL)
         {
-            dlclose(__flexiblas_lapack_fallback);
+            __flexiblas_dlclose(__flexiblas_lapack_fallback);
             __flexiblas_lapack_fallback = NULL;
         }
 #endif
@@ -985,7 +985,7 @@ __attribute__((destructor))
 
         if ( reload_handler)
         {
-            dlclose(reload_handler);
+            __flexiblas_dlclose(reload_handler);
             reload_handler = NULL;
         }
     }
@@ -1009,7 +1009,6 @@ int flexiblas_verbosity(void)
 
 
 #ifdef __WIN32__
-#include <windows.h>
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
     switch (fdwReason)
@@ -1036,6 +1035,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
     return TRUE;
 }
 #endif
+
 
 
 flexiblas_mgmt_t * flexiblas_mgmt(void)
