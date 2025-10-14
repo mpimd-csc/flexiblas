@@ -21,6 +21,7 @@ next
  - Add C++ support to header files GH #69
  - Detect F2C API for float return values
  - Fix "Argument list too long" see GH #80
+- improve Debian/Ubuntu packaging
 
 3.4.5 (January 30, 2025)
 ------------------------
