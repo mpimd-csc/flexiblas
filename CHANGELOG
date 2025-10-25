@@ -1,5 +1,5 @@
-next
-----
+3.5.0 (October 24, 2025)
+------------------------
 - Import LAPACK 3.12.1
 - Support for LAPACKE
 - Better support for CBLAS

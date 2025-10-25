@@ -16,6 +16,7 @@ if [ "${OS_ID}" = "ubuntu" ]; then
 else
     export OS_DIST=$(grep ^VERSION_CODENAME /etc/os-release | cut -d'=' -f2 | sed 's/\"//gI')
     debian_version=$(grep ^VERSION_ID /etc/os-release | cut -d'=' -f 2 | sed 's/\"//gI' )
+    echo "Setup for Debian ${debian_version}"
     if [ ${debian_version} -gt 12 ]; then
         ln -sf control.no_atlas control
     else
