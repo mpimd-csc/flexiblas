@@ -42,7 +42,7 @@ or to the path of a shared object containing a BLAS implementation
 .SS Hooks
 FlexiBLAS supports so called hooks to modify/extent/change the behavior of BLAS and
 LAPACK functions. This can be used for profiling, automatic offloadlind, and other
-debuging purposes. The hooks are configured either via the \fBFLEXIBLAS_HOOK\fR environment
+debugging purposes. The hooks are configured either via the \fBFLEXIBLAS_HOOK\fR environment
 variable or the \fBflexiblas\fR tool. The \fBFLEXIBLAS_HOOK\fR variable contains
 a colon separate list of hooks or shared libraries containing the hook. The hooks
 are loaded in the order they are specified. If the \fIhook_enabled\fR setting
@@ -52,7 +52,7 @@ command the \fIhook_enabled\fR entry is removed and thus no hook settings are in
 configuration.
 
 .SS Configuration Priority
-FlexiBLAS uses serveral configuration paths to select the BLAS backend or enable and disable
+FlexiBLAS uses several configuration paths to select the BLAS backend or enable and disable
 other functionality. The configuration is read in the following order, thereby previous read
 information is overwritten. That means that last read configuration has the highest priority.
 
@@ -69,7 +69,7 @@ information is overwritten. That means that last read configuration has the high
 \fB6.\fR \fIFLEXIBLAS\fR, \fIFLEXIBLAS_HOOK\fR - Select a BLAS implementation or a hook without changing the config.
 
 .SS 64-bit Integers
-If FlexiBLAS is compiled with 64 bit intergers, \fIflexiblas\fR is replaced by \fIflexiblas64\fR and \fIFLEXIBLAS\fR
+If FlexiBLAS is compiled with 64 bit integers, \fIflexiblas\fR is replaced by \fIflexiblas64\fR and \fIFLEXIBLAS\fR
 is replaced by \fIFLEXIBLAS64\fR in all names of configuration files, environment variable, etc.
 
 .SH OPTIONS
@@ -202,7 +202,7 @@ The FLEXIBLAS_HOOK variable contains a colon separated list of hooks which shoul
 to a shared object instead of a name of an available hook, FlexiBLAS tries to  load this library as a hook,
 .TP
 \fIFLEXIBLAS_LIBRARY_PATH\fR
-The FLEXIBLAS_LIBRARY_PATH variable contains a colon separated list of addtional search paths for FlexiBLAS.
+The FLEXIBLAS_LIBRARY_PATH variable contains a colon separated list of additional search paths for FlexiBLAS.
 The paths are used to find BLAS implementations and hooks.
 
 .SH REPORTING BUGS

@@ -67,7 +67,7 @@ extern "C" {
         void *system_config; /**<  System config, usually etc/flexiblasrc */
         void *user_config;   /**<  User config, usually ~/.flexiblasrc */
         void *host_config;   /**<  Host config, usually ~/.flexiblasrc.HOSTNAME */
-        void *env_config;    /**<  Enviroment-supplied config. */
+        void *env_config;    /**<  Environment-supplied config. */
         void *system_dir_config; /**< Global config directory, read only. */
         char **blas_names;   /**<  Array of char containing all backend names. */
         size_t  nblas_names; /**<  Number of elements in the blas_names array. */

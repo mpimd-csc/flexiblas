@@ -149,8 +149,8 @@ int list_all_blas(void)
             if (!pipe_output) printf("Host config:\n");
             ecode += print_blas(config, FLEXIBLAS_HOST, "host");
         } else if ( i == 4){
-            if (!pipe_output) printf("Enviroment config:\n");
-            ecode += print_blas(config, FLEXIBLAS_ENV, "enviroment");
+            if (!pipe_output) printf("Environment config:\n");
+            ecode += print_blas(config, FLEXIBLAS_ENV, "environment");
         }
     }
     flexiblas_mgmt_free_config(config);

@@ -236,7 +236,7 @@ char *flexiblas_mgmt_location_to_string(flexiblas_mgmt_location_t loc){
     static char *system_str = "System";
     static char *user_str   = "User";
     static char *host_str   = "Host";
-    static char *env_str    = "Enviroment";
+    static char *env_str    = "Environment";
     static char *system_dir_str = "System Directory";
     static char *default_str = "Compiled-in default";
     static char *lz = "";
@@ -368,12 +368,12 @@ flexiblas_mgmt_t * flexiblas_mgmt_load_config(void)
 
     if ( path ) free(path);
 
-    /* Enviroment supplied config file  */
+    /* Environment supplied config file  */
     path = __flexiblas_mgmt_getenv(FLEXIBLAS_ENV_ENV_RC);
     ini = (csc_ini_file_t *) config->env_config;
     csc_ini_empty(ini);
     if ( __flexiblas_file_exist(path)) {
-        DPRINTF(1, "Load enviroment config %s\n", path);
+        DPRINTF(1, "Load environment config %s\n", path);
         csc_ini_load(path, ini, CSC_INI_LOAD_SECTION_UPPERCASE);
     } else {
         DPRINTF_WARN(1, "Environment supplied config (%s) does not exist.\n", path);
