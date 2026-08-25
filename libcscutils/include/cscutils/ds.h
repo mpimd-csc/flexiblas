@@ -131,7 +131,7 @@ extern "C" {
         int (*remove)(struct _csc_ds_t *ds, const void *key);
         /** Cleanup function to remove all elements from the data structure.  */
         void (*remove_all)(struct _csc_ds_t *ds);
-        /** Dump the data structure to a FILE. This is used for debbuging purpose only. */
+        /** Dump the data structure to a FILE. This is used for debugging purpose only. */
         void (*dump)(FILE *out, struct _csc_ds_t *ds);
         /** Internal Mutex */
         csc_ds_mutex_t mutex;
@@ -211,7 +211,7 @@ extern "C" {
      * @param[in]   ds  Data structure which to dump in to the FILE.
      *
      * The csc_ds_dump function dumps the data structure to a FILE (or stdout). The primary
-     * usage of this function is for debbuging purpose.
+     * usage of this function is for debugging purpose.
      */
     void csc_ds_dump(FILE *out, csc_ds_t *ds);
 

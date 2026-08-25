@@ -219,7 +219,7 @@ static int print_config(void) {
     printf("\nHost config (%s):\n", host_config_file);
     print_blas(config, FLEXIBLAS_HOST, NULL);
     if(env_config_file){
-        printf("\nEnviroment (%s):\n", env_config_file);
+        printf("\nEnvironment (%s):\n", env_config_file);
         print_blas(config, FLEXIBLAS_ENV,NULL);
     }
 
