@@ -394,7 +394,13 @@ then the NETLIB one, is not recommended.
 ## Windows Support
 
 In general FlexiBLAS supports Microsoft Windows as well, but this support is
-experimental supporting issues can not be guaranteed.
+experimental supporting issues can not be guaranteed. It *requires*
+`dlfcn-win32`.
+
+In case of `vcpkg`, this can be installed using:
+```shell
+vcpkg install dlfcn-win32
+```
 
 ### Intel Compiler and Visual Studio
 One way to use FlexiBLAS under Windows is with Microsoft Visual Studio and the
