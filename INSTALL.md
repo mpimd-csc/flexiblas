@@ -323,6 +323,11 @@ This installs most likely one of the latest FlexiBLAS releases.
 Thanks Iñaki Ucar (https://src.fedoraproject.org/user/iucar) for packaging and
 maintaining the Fedora integration.
 
+### Homebrew (macOS/Linux)
+FlexiBLAS is packaged on Homebrew:
+```shell
+brew install FlexiBLAS
+```
 
 
 ### Caveats
