@@ -125,9 +125,11 @@ char * csc_sysinfo_machine(void)
         case PROCESSOR_ARCHITECTURE_AMD64:
             ret = strdup("x86_64");
             break;
+#ifdef PROCESSOR_ARCHITECTURE_ARM64
         case PROCESSOR_ARCHITECTURE_ARM64:
             ret = strdup("ARM64");
             break;
+#endif
         case PROCESSOR_ARCHITECTURE_UNKNOWN:
         default:
             ret = strdup("Unknown");
