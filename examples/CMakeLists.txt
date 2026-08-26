@@ -69,13 +69,13 @@ SET_TARGET_PROPERTIES (demo_api_standalone_fb PROPERTIES COMPILE_FLAGS "-DLINK_B
 # Netlib Benchmark
 #
 add_executable (benchmark.NETLIB benchmark.c)
-target_link_libraries (benchmark.NETLIB flexiblas_netlib cscutils ${LIBS})
+target_link_libraries (benchmark.NETLIB flexiblas_netlib flexiblas_api cscutils ${LIBS})
 SET_TARGET_PROPERTIES (benchmark.NETLIB PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS} -DSTANDALONE -DBACKEND=\\\"NETLIB\\\"")
 
 
 IF (CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
     add_executable (benchmark_overhead_quickreturn.NETLIB benchmark_overhead_quickreturn.c)
-    target_link_libraries (benchmark_overhead_quickreturn.NETLIB flexiblas_netlib cscutils ${LIBS})
+    target_link_libraries (benchmark_overhead_quickreturn.NETLIB flexiblas_netlib flexiblas_api cscutils ${LIBS})
     SET_TARGET_PROPERTIES (benchmark_overhead_quickreturn.NETLIB PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS} -DSTANDALONE -DBACKEND=\\\"NETLIB\\\"")
 ENDIF()
 
@@ -91,14 +91,14 @@ FOREACH(EBLAS ${EXTRA_BLAS})
     MESSAGE(STATUS "${EBLAS} - ${BLAS_LIBS} - ${LINKER_FLAGS}")
     add_executable (benchmark.${EBLAS} benchmark.c)
 
-    target_link_libraries (benchmark.${EBLAS} ${BLAS_LIBS} cscutils ${LIBS})
+    target_link_libraries (benchmark.${EBLAS} ${BLAS_LIBS} flexiblas_api cscutils ${LIBS})
     SET_TARGET_PROPERTIES (benchmark.${EBLAS} PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS} -DSTANDALONE -DBACKEND=\\\"${EBLAS}\\\"" LINK_FLAGS "${LINKER_FLAGS}")
     # MESSAGE(STATUS " - ${EBLAS}")
 
 
     IF (CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
         add_executable (benchmark_overhead_quickreturn.${EBLAS} benchmark_overhead_quickreturn.c)
-        target_link_libraries (benchmark_overhead_quickreturn.${EBLAS} ${BLAS_LIBS} cscutils ${LIBS})
+        target_link_libraries (benchmark_overhead_quickreturn.${EBLAS} ${BLAS_LIBS} flexiblas_api cscutils ${LIBS})
         SET_TARGET_PROPERTIES (benchmark_overhead_quickreturn.${EBLAS} PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS} -DSTANDALONE -DBACKEND=\\\"${EBLAS}\\\"" LINK_FLAGS "${LINKER_FLAGS}")
     ENDIF()
 
