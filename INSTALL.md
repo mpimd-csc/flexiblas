@@ -341,7 +341,7 @@ brew install FlexiBLAS
   sudo update-alternatives --config libblas.so-x86_64-linux-gnu
   ```
 
-  On non-Debian based systems the names may differ. If your are using a
+  On non-Debian based systems the names may differ. If you are using a
   non-x86_64 architecture, you have to adjust the architecture triplet
   accordingly.
 
@@ -420,6 +420,14 @@ cmake --build build-dir
 
 ### MingW / MSYS2
 
+The basic recipe with `cmake` and `gmake`:
+
+```shell
+mkdir build
+cd build
+cmake ../ -DCBLAS=ON -DDEV=ON -DCMAKE_MAKE_PROGRAM=gmake -G "MinGW Makefiles"
+gmake
+```
 
 ## MacOS Support
 
