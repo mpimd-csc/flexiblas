@@ -17,6 +17,8 @@ Table of Contents
 9. LTO Type mismatch with gcc
 10. NVHPC
 11. MacOS X on Apple Silicon
+12. MinGW and `gfortran` error during configuration
+13. GCC 8.* and 9.* on MinGW
 
 1. Profiling Numpy/Scipy with linked against FlexiBLAS
 ------------------------------------------------------
@@ -145,3 +147,40 @@ Using FlexiBLAS on MacOS X on an Apple Silicon CPU can cause problems, if gcc >=
 14.0 is used. The gfortran compiler generated wrong code if at least of the
 follwing flags is used: `-O2` or `-fexpensive-optimizations
 -ftree-loop-vectorize`. FlexiBLAS deactivates these flags.
+
+12. MinGW and `gfortran` error during configuration
+---------------------------------------------------
+If you see errors during configuration resembling:
+
+```
+        gcc.exe -O3 -DNDEBUG  CMakeFiles/VerifyFortranC.dir/main.c.obj CMakeFiles/VerifyFortranC.dir/VerifyC.c.obj -o VerifyFortranC.exe -Wl,--out-implib,libVerifyFortranC.dll.a -Wl,--major-image-version,0,--minor-image-version,0  libVerifyFortran.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+       ld.exe: libVerifyFortran.a(VerifyFortran.f.obj):VerifyFortran.:(.text+0x2e): undefined reference to `_gfortran_st_write'
+```
+
+This is caused by a bug in `cmake`, which you can work around by adding to your `cmake` invocation:
+```shell
+    -DCMAKE_EXE_LINKER_FLAGS="-Wl,--start-group -lgfortran -lquadmath"
+```
+
+13. GCC 8.* and 9.* on MinGW
+----------------------------
+If you see an error during build resembling:
+
+```
+gmake[2]: *** [contributed\lapack-3.12.1\SRC\CMakeFiles\flexiblas_fallback_lapack_objs.dir\build.make:173: contributed/lapack-3.12.1/SRC/CMakeFiles/flexiblas_fallback_lapack_objs.dir/sgbtrf.f.obj] Error 1
+during RTL pass: final
+flexiblas\contributed\lapack-3.12.1\SRC\dgbtrf.f:521:0:
+
+       END
+
+internal compiler error: in i386_pe_seh_unwind_emit, at config/i386/winnt.c:1258
+libbacktrace could not find executable to open
+Please submit a full bug report,
+with preprocessed source if appropriate.
+See <https://sourceforge.net/projects/mingw-w64> for instructions.
+```
+
+this is caused by a bug in at least GCC 8.3.0 (apparently 8.* and 9.*) at `-O2` and above, and the workaround is to rerun the `gmake` like so:
+```shell
+gmake Fortran_FLAGS=-O1 C_FLAGS=-O1
+```

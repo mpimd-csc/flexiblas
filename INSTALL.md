@@ -323,6 +323,11 @@ This installs most likely one of the latest FlexiBLAS releases.
 Thanks Iñaki Ucar (https://src.fedoraproject.org/user/iucar) for packaging and
 maintaining the Fedora integration.
 
+### Homebrew (macOS/Linux)
+FlexiBLAS is packaged on Homebrew:
+```shell
+brew install FlexiBLAS
+```
 
 
 ### Caveats
@@ -336,7 +341,7 @@ maintaining the Fedora integration.
   sudo update-alternatives --config libblas.so-x86_64-linux-gnu
   ```
 
-  On non-Debian based systems the names may differ. If your are using a
+  On non-Debian based systems the names may differ. If you are using a
   non-x86_64 architecture, you have to adjust the architecture triplet
   accordingly.
 
@@ -389,7 +394,13 @@ then the NETLIB one, is not recommended.
 ## Windows Support
 
 In general FlexiBLAS supports Microsoft Windows as well, but this support is
-experimental supporting issues can not be guaranteed.
+experimental supporting issues can not be guaranteed. It *requires*
+`dlfcn-win32`.
+
+In case of `vcpkg`, this can be installed using:
+```shell
+vcpkg install dlfcn-win32
+```
 
 ### Intel Compiler and Visual Studio
 One way to use FlexiBLAS under Windows is with Microsoft Visual Studio and the
@@ -409,6 +420,14 @@ cmake --build build-dir
 
 ### MingW / MSYS2
 
+The basic recipe with `cmake` and `gmake`:
+
+```shell
+mkdir build
+cd build
+cmake ../ -DCBLAS=ON -DDEV=ON -DCMAKE_MAKE_PROGRAM=gmake -G "MinGW Makefiles"
+gmake
+```
 
 ## MacOS Support
 
