@@ -180,7 +180,10 @@ with preprocessed source if appropriate.
 See <https://sourceforge.net/projects/mingw-w64> for instructions.
 ```
 
-this is caused by a bug in at least GCC 8.3.0 (apparently 8.* and 9.*) at `-O2` and above, and the workaround is to rerun the `gmake` like so:
+this is caused by a bug in at least GCC 8.3.0 (apparently 8.* and 9.*) at `-O2` and above, and the workaround is to configure like so (or replace `DEBUG` with `RELEASE`):
 ```shell
-gmake Fortran_FLAGS=-O1 C_FLAGS=-O1
+cmake ../ -G "Unix Makefiles" \
+  -DCMAKE_BUILD_TYPE=DEBUG \
+  -DCMAKE_Fortran_FLAGS_DEBUG="-O1 -fno-stack-clash-protection -fopenmp" \
+  -DCMAKE_C_FLAGS_DEBUG="-O1 -fno-stack-clash-protection -fopenmp"
 ```
