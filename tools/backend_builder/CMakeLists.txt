@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 PROJECT(FBBACKEND LANGUAGES C Fortran)
-SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../../cmake ${CMAKE_MODULE_PATH})
 
 INCLUDE(CheckCSourceRuns)
 INCLUDE(CheckFortranFunctionExists)
@@ -79,9 +79,9 @@ MACRO(BuildBackendBlas VENDOR)
     # Use the MKL Backend Code if it is MKL
     IF(NOT BACKEND_CODE)
         IF(_MKL_VERSION)
-            SET(BACKEND_CODE src/intel_mkl/backend.c)
+            SET(BACKEND_CODE ../../src/backends/intel_mkl/backend.c)
         ELSE()
-            SET(BACKEND_CODE src/generic/backend.c)
+            SET(BACKEND_CODE ../../src/backends/generic/backend.c)
         ENDIF()
     ENDIF()
 
