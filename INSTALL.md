@@ -93,7 +93,7 @@ options:
 
 * `-DABI=GNU|Intel`
 
-    Selects the ABI (Application Binary Interface) of the *Fortran* Interface.
+    Selects the ABI (Application Binary Interface) of the *Fortran* interface.
     By default, the compiler used determines which ABI is used, but it can also
     be forced using this parameter. The difference between both ABIs is how
     complex values are returned from Functions. The *GNU*-style returns them as
@@ -206,8 +206,8 @@ options:
 * `-DAGGREGATE_FILES=OFF/ON`
     On some architectures or with very long paths, error messages like
     `Argument list too long` can appear and kill the building process. In this
-    case you can set `-DAGGREGATE_FILES=ON`, which uses aggreated files for the
-    LAPACK, LAPACKE, BLAS, and CBLAS interfaces. This results in compiling less
+    case you can set `-DAGGREGATE_FILES=ON`, which uses aggregated files for the
+    LAPACK, LAPACKE, BLAS, and CBLAS interfaces. This results in compiling fewer
     files but a longer LTO procedure.
 
 The `PROFILE=ON/OFF` option was removed from version 1.1.0 onward. Beginning
@@ -355,7 +355,7 @@ brew install FlexiBLAS
   sudo update-alternatives --config liblapack64.so-x86_64-linux-gnu
   sudo update-alternatives --config liblapack.so-x86_64-linux-gnu
   ```
-  On non-Debian based systems the names may differ. If your are using a
+  On non-Debian based systems the names may differ. If you are using a
   non-x86_64 architecture, you have to adjust the architecture triplet
   accordingly.
 
@@ -374,7 +374,7 @@ brew install FlexiBLAS
   compilation process, set `-DAGGREGATE_FILES=ON` as mentioned above
 
 * If the Intel Compiler suite is used, please ensure that either the classic or
-  the LLVM based compilers are used for both, C and Fortran.
+  the LLVM based compilers are used for both C and Fortran.
 
 
 ## Testing
@@ -394,7 +394,7 @@ then the NETLIB one, is not recommended.
 ## Windows Support
 
 In general FlexiBLAS supports Microsoft Windows as well, but this support is
-experimental supporting issues can not be guaranteed. It *requires*
+experimental; supporting issues can not be guaranteed. It *requires*
 `dlfcn-win32`.
 
 In case of `vcpkg`, this can be installed using:
@@ -420,12 +420,13 @@ cmake --build build-dir
 
 ### MingW / MSYS2
 
-The basic recipe with `cmake` and `gmake`:
+The basic recipe with `cmake` and `gmake` (if your MinGW prefixes `gmake`, you can
+remove that variable from the invocation):
 
 ```shell
 mkdir build
 cd build
-cmake ../ -DCBLAS=ON -DDEV=ON -DCMAKE_MAKE_PROGRAM=gmake -G "MinGW Makefiles"
+cmake ../ -DCMAKE_MAKE_PROGRAM=gmake -G "MinGW Makefiles"
 gmake
 ```
 
