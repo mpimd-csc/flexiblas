@@ -251,6 +251,13 @@ If the version is not specified *cmake* tries to obtain it with a call to
 *LAPACK*'s `ILAVER`. Note that the path must be absolute, the `~`-operator to
 reference the home directory is not allowed.
 
+The *LAPACKE* fallback implementation can be provided in the same way via
+```shell
+cmake -DSYS_LAPACKE_LIBRARY=/absolute/path/to/liblapacke.a
+```
+The *LAPACKE* library must provide all symbols that the *LAPACK* implementation
+from *NETLIB* with the given version provides.
+
 ### Setup with Custom *BLAS* and *LAPACK* Implementations.
 
 By default, **FlexiBLAS** tries to locate as many *BLAS* and *LAPACK*
