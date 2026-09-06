@@ -230,6 +230,15 @@ The *BLAS* implementation is set in the configuration procedure via
 The *BLAS* library has to provide all functions and subroutines available in
 the reference *BLAS* implementation since *LAPACK* 3.0.
 
+The *CBLAS* implementation is set in the configuration procedure via
+```shell
+    cmake -DSYS_CBLAS_LIBRARY=/absolute/path/to/libcblas.a
+```
+The *CBLAS* library has to provide all functions and subroutines available in
+the reference *CBLAS* implementation since *LAPACK* 3.0. Note this
+might be in the same library file as the system *BLAS*. That is not
+a problem.
+
 The *LAPACK* fallback implementation can be provided in the same way via
 ```shell
 cmake -DSYS_LAPACK_LIBRARY=/absolute/path/to/liblapack.a \

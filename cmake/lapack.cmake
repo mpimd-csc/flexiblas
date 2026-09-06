@@ -241,7 +241,9 @@ IF(NOT SYS_BLAS_LIBRARY)
     add_subdirectory(contributed/netlib-blas/)
 ENDIF()
 
-add_subdirectory(contributed/cblas)
+IF(NOT SYS_CBLAS_LIBRARY)
+    add_subdirectory(contributed/cblas)
+ENDIF()
 
 IF (LAPACK AND NOT SYS_LAPACK_LIBRARY)
     IF (FLEXIBLAS_LAPACK_3_12_1 OR FLEXIBLAS_LAPACK_3_12_1_WODPRC)
