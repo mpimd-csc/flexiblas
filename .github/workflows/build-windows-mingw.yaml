@@ -1,88 +1,95 @@
-name: build-ubuntu
+name: build-mingw
 on:
   workflow_dispatch:
   push:
   pull_request:
 
-concurrency: ci-ubuntu-${{ github.ref }}
+concurrency: ci-windows-mingw-${{ github.ref }}
 
 jobs:
 
-  ubuntu:
+  mingw:
     # For available GitHub-hosted runners, see:
     # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
     runs-on: ${{ matrix.os }}
 
-    name: ${{ matrix.os }} (${{ matrix.compiler }})
+    name: mingw-w64 (${{ matrix.msystem }})
+
+    defaults:
+      run:
+        # Use MSYS2 as default shell
+        shell: msys2 {0}
 
     strategy:
       # Allow other runners in the matrix to continue if some fail
       fail-fast: false
 
       matrix:
-        os: [ubuntu-latest]
-        compiler: [gcc]
+        msystem: [UCRT64, CLANG64, CLANGARM64]
         include:
-          - os: ubuntu-latest
-            compiler: gcc
-            compiler-pkgs: "g++ gcc"
-            cc: "gcc"
-            cxx: "g++"
-          - os: ubuntu-24.04-arm
-            compiler: gcc
-            compiler-pkgs: "g++ gcc"
-            cc: "gcc"
-            cxx: "g++"
-          # Building with Clang fails with a linker error:
-          #   undefined reference to `csc_cycles'
-          # Comment out for now.
-          # - os: ubuntu-latest
-          #   compiler: clang
-          #   compiler-pkgs: "clang"
-          #   cc: "clang"
-          #   cxx: "clang++"
-
-    env:
-      CC: ${{ matrix.cc }}
-      CXX: ${{ matrix.cxx }}
+          - msystem: UCRT64
+            os: windows-latest
+          - msystem: CLANG64
+            os: windows-latest
+          - msystem: CLANGARM64
+            os: windows-11-arm
 
     steps:
-      - name: get CPU information
-        run: lscpu
+      - name: get runner hardware information
+        shell: pwsh
+        run : |
+          Get-PSDrive -PSProvider FileSystem
+          Get-CIMInstance -Class Win32_Processor | Select-Object -Property Name
+
+      - name: install MSYS2 build environment
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+
+          # Use pre-installed version if possible to save disc space on
+          # partition with source.  We need that space for building.
+          release: ${{ matrix.msystem == 'CLANGARM64' }}
+
+          msystem: ${{ matrix.msystem }}
+
+          pacboy: >-
+            cc:p
+            fc:p
+            cmake:p
+            ccache:p
+            dlfcn:p
+            lapack:p
+            openblas:p
 
       - name: checkout repository
-        uses: actions/checkout@v4
-
-      - name: install dependencies
-        run: |
-          sudo apt -qq update
-          sudo apt install -y ${{ matrix.compiler-pkgs }} gfortran cmake ccache \
-            ${{ matrix.compiler == 'clang' && 'libomp-dev' || '' }} \
-            libblas-dev liblapack-dev libopenblas-dev
+        uses: actions/checkout@v5
 
       - name: prepare ccache
         # create key with human readable timestamp
         # used in action/cache/restore and action/cache/save steps
         id: ccache-prepare
         run: |
-          echo "key=ccache:${{ matrix.os }}:${{ matrix.compiler }}::${{ github.ref }}:$(date +"%Y-%m-%d_%H-%M-%S"):${{ github.sha }}" >> $GITHUB_OUTPUT
+          echo "key=ccache:mingw:${{ matrix.os }}:${{ matrix.msystem }}:${{ github.ref }}:$(date +"%Y-%m-%d_%H-%M-%S"):${{ github.sha }}" >> $GITHUB_OUTPUT
+          echo "ccachedir=$(cygpath -m $(ccache -k cache_dir))" >> $GITHUB_OUTPUT
 
       - name: restore ccache
         # setup the GitHub cache used to maintain the ccache from one job to the next
         uses: actions/cache/restore@v4
         with:
-          path: ~/.ccache
+          path: ${{ steps.ccache-prepare.outputs.ccachedir }}
           key: ${{ steps.ccache-prepare.outputs.key }}
           # Prefer caches from the same branch. Fall back to caches from the dev branch.
           restore-keys: |
-            ccache:${{ matrix.os }}:${{ matrix.compiler }}:${{ github.ref }}:
-            ccache:${{ matrix.os }}:${{ matrix.compiler }}:
+            ccache:mingw:${{ matrix.os }}:${{ matrix.msystem }}:${{ github.ref }}:
+            ccache:mingw:${{ matrix.os }}:${{ matrix.msystem }}:
 
       - name: configure ccache
         run: |
-          test -d ~/.ccache || mkdir ~/.ccache
-          echo "max_size = 400M" >> ~/.ccache/ccache.conf
-          echo "compression = true" >> ~/.ccache/ccache.conf
+          which ccache
+          test -d ${{ steps.ccache-prepare.outputs.ccachedir }} || mkdir -p ${{ steps.ccache-prepare.outputs.ccachedir }}
+          echo "max_size = 100M" >> ${{ steps.ccache-prepare.outputs.ccachedir }}/ccache.conf
+          echo "compression = true" >> ${{ steps.ccache-prepare.outputs.ccachedir }}/ccache.conf
+          ccache -p
           ccache -s
           echo "/usr/lib/ccache" >> $GITHUB_PATH
 
@@ -93,12 +100,14 @@ jobs:
           cmake \
             -DCMAKE_BUILD_TYPE="Release" \
             -DCMAKE_INSTALL_PREFIX="${GITHUB_WORKSPACE}/usr" \
+            -DCMAKE_C_COMPILER_LAUNCHER="ccache" \
+            -DCMAKE_Fortran_COMPILER_LAUNCHER="ccache" \
             ..
 
       - name: build
         run: |
           cd ${GITHUB_WORKSPACE}/build
-          cmake --build . -j$(nproc)
+          cmake --build .
 
       - name: ccache status
         continue-on-error: true
@@ -109,7 +118,7 @@ jobs:
         # This helps to retain the ccache even if the subsequent steps are failing.
         uses: actions/cache/save@v4
         with:
-          path: ~/.ccache
+          path: ${{ steps.ccache-prepare.outputs.ccachedir }}
           key: ${{ steps.ccache-prepare.outputs.key }}
 
       - name: install
