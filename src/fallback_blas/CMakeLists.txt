@@ -56,13 +56,21 @@ else()
 endif()
 
 IF (FLEXIBLAS_CBLAS)
-    SET(SRC ${SRC}
-        cblas_daxpby.c cblas_saxpby.c cblas_caxpby.c cblas_zaxpby.c
-        cblas_dgeadd.c cblas_sgeadd.c cblas_cgeadd.c cblas_zgeadd.c
-        cblas_domatcopy.c cblas_somatcopy.c cblas_comatcopy.c cblas_zomatcopy.c
-        cblas_dimatcopy.c cblas_simatcopy.c cblas_cimatcopy.c cblas_zimatcopy.c
-    )
-
+    if (SYS_CBLAS_LIBRARY)
+        message(STATUS "Use system provided NETLIB CBLAS. SYS_CBLAS_LIBRARY = ${SYS_CBLAS_LIBRARY}")
+        add_library(flexiblas_netlib_cblas_import STATIC IMPORTED)
+        set_property(TARGET flexiblas_netlib_cblas_import PROPERTY IMPORTED_LOCATION ${SYS_CBLAS_LIBRARY})
+        SET(_CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES})
+        SET(CMAKE_REQUIRED_LIBRARIES flexiblas_netlib_cblas_import ${LIBM})
+    else()
+        SET(SRC ${SRC}
+            cblas_daxpby.c cblas_saxpby.c cblas_caxpby.c cblas_zaxpby.c
+            cblas_dgeadd.c cblas_sgeadd.c cblas_cgeadd.c cblas_zgeadd.c
+	    cblas_domatcopy.c cblas_somatcopy.c cblas_comatcopy.c
+	    cblas_zomatcopy.c cblas_dimatcopy.c cblas_simatcopy.c
+	    cblas_cimatcopy.c cblas_zimatcopy.c
+        )
+    endif()
 ENDIF()
 
 SET(CMAKE_REQUIRED_LIBRARIES ${_CMAKE_REQUIRED_LIBRARIES})
@@ -70,18 +78,30 @@ SET(CMAKE_REQUIRED_LIBRARIES ${_CMAKE_REQUIRED_LIBRARIES})
 
 if ( SYS_BLAS_LIBRARY )
     if (FLEXIBLAS_CBLAS)
-        add_library(flexiblas_netlib SHARED ${SRC} $<TARGET_OBJECTS:cblas_obj>)
+        if (SYS_CBLAS_LIBRARY)
+            add_library(flexiblas_netlib SHARED ${SRC})
+            target_link_libraries(flexiblas_netlib PUBLIC flexiblas_netlib_import flexiblas_netlib_cblas_import PRIVATE ${LIBM})
+        else()
+            add_library(flexiblas_netlib SHARED ${SRC} $<TARGET_OBJECTS:cblas_obj>)
+            target_link_libraries(flexiblas_netlib PUBLIC flexiblas_netlib_import PRIVATE ${LIBM})
+        endif()
     else()
         add_library(flexiblas_netlib SHARED ${SRC})
+        target_link_libraries(flexiblas_netlib PUBLIC flexiblas_netlib_import PRIVATE ${LIBM})
     endif()
-    target_link_libraries(flexiblas_netlib PUBLIC flexiblas_netlib_import PRIVATE ${LIBM})
 else()
     if (FLEXIBLAS_CBLAS)
-        add_library(flexiblas_netlib SHARED ${SRC} $<TARGET_OBJECTS:flexiblas_netlib_objs> $<TARGET_OBJECTS:cblas_obj>)
+        if (SYS_CBLAS_LIBRARY)
+            add_library(flexiblas_netlib SHARED ${SRC} $<TARGET_OBJECTS:flexiblas_netlib_objs>)
+            target_link_libraries(flexiblas_netlib PUBLIC flexiblas_netlib_cblas_import PRIVATE ${LIBM})
+        else()
+            add_library(flexiblas_netlib SHARED ${SRC} $<TARGET_OBJECTS:flexiblas_netlib_objs> $<TARGET_OBJECTS:cblas_obj>)
+            target_link_libraries(flexiblas_netlib PRIVATE ${LIBM})
+        endif()
     else()
         add_library(flexiblas_netlib SHARED ${SRC} $<TARGET_OBJECTS:flexiblas_netlib_objs> )
+        target_link_libraries(flexiblas_netlib PRIVATE ${LIBM})
     endif()
-    target_link_libraries(flexiblas_netlib PRIVATE ${LIBM})
 endif()
 
 
