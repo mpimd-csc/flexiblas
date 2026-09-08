@@ -130,11 +130,10 @@ int main(int argc, char *argv[])
 #endif
     }
 
-    if (is_i8fcflag) {
+    if (is_i8fcflag || is_fcflags) {
 #ifdef FLEXIBLAS_FC_I8FLAG
+        if (need_space) printf(" "); need_space = 1;
         printf("%s", FLEXIBLAS_FC_I8FLAG);
-#else
-        printf(" ");
 #endif
     }
 
