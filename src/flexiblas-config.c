@@ -103,7 +103,12 @@ int main(int argc, char *argv[])
         printf("%s", includedir);
     }
 
-    if (strcmp(argv[1], "--cflags") == 0 ) {
+    int is_cflags = strcmp(argv[1], "--cflags") == 0,
+        is_fcflags = strcmp(argv[1], "--fcflags") == 0,
+        is_i8cflag = strcmp(argv[1], "--i8cflag") == 0,
+        is_i8fcflag = strcmp(argv[1],"--i8fcflag") == 0,
+        need_space = 0;
+    if (is_cflags) {
         printf("-I%s", includedir);
 #ifdef FLEXIBLAS_INTEGER8
         printf(" -DFLEXIBLAS_INTEGER8");
@@ -112,7 +117,7 @@ int main(int argc, char *argv[])
 #endif
     }
 
-    if (strcmp(argv[1], "--fcflags") == 0 ) {
+    if (is_fcflags) {
         printf("-I%s", includedir);
 #ifdef FLEXIBLAS_INTEGER8
         printf(" -DFLEXIBLAS_INTEGER8");
@@ -127,7 +132,7 @@ int main(int argc, char *argv[])
     }
 
     /* 64 Bit integer related */
-    if (strcmp(argv[1], "--i8cflag") == 0) {
+    if (is_i8cflag) {
 #ifdef FLEXIBLAS_INTEGER8
         printf(" -DFLEXIBLAS_INTEGER8");
 #else
@@ -135,7 +140,7 @@ int main(int argc, char *argv[])
 #endif
     }
 
-    if (strcmp(argv[1],"--i8fcflag") == 0) {
+    if (is_i8fcflag) {
 #ifdef FLEXIBLAS_FC_I8FLAG
         printf("%s", FLEXIBLAS_FC_I8FLAG);
 #else
