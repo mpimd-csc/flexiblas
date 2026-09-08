@@ -5,6 +5,7 @@ fcflags=-I${includedir} @PKGCONF_VAR_INTEGER8@
 i8cflag=@PKGCONF_VAR_INTEGER8@
 i8=@PKGCONF_VAR_I8@
 backenddir=${libdir}/@FLEXIBLAS_LIBRARY_DIR@
+sysconfdir="@CMAKE_INSTALL_FULL_SYSCONFDIR@"
 rcdir="@CMAKE_INSTALL_FULL_SYSCONFDIR@/@FLEXIBLAS_RC_DIR@"
 Name: flexiblas
 Description: BLAS wrapper library mimicing Netlib Reference but providing any installed BLAS Implementation
