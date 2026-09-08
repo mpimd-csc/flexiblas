@@ -3,6 +3,7 @@ libdir=@libdir@
 includedir=${prefix}/include/${flexiblasname}
 fcflags=-I${includedir} @PKGCONF_VAR_INTEGER8@
 i8cflag=@PKGCONF_VAR_INTEGER8@
+i8fcflag=@FLEXIBLAS_FC_I8FLAG@
 i8=@PKGCONF_VAR_I8@
 backenddir=${libdir}/@FLEXIBLAS_LIBRARY_DIR@
 sysconfdir="@CMAKE_INSTALL_FULL_SYSCONFDIR@"
