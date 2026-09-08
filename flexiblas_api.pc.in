@@ -3,6 +3,7 @@ libdir=@libdir@
 includedir=${prefix}/include/${flexiblasname}
 fcflags=-I${includedir} @PKGCONF_VAR_INTEGER8@
 i8cflag=@PKGCONF_VAR_INTEGER8@
+i8=@PKGCONF_VAR_I8@
 Name: flexiblas_api
 Description: BLAS wrapper library mimicing Netlib Reference but providing any installed BLAS Implementation(Non-BLAS API Only)
 Version: @FLEXIBLAS_VERSION@
