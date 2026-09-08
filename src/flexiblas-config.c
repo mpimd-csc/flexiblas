@@ -162,16 +162,13 @@ int main(int argc, char *argv[])
         free(backenddir);
     }
 
-    char * sysconfdir = malloc(strlen(basedir) + 1 + strlen("etc") + 1);
-    strcpy(sysconfdir, basedir);
-
     if (strcmp(argv[1],"--sysconfdir") == 0 ) {
-#if defined(__WIN32__)
-        strcat(sysconfdir, "\\etc");
-#else
-        strcat(sysconfdir, "/etc");
-#endif
+        char * sysconfdir = malloc(strlen(basedir) + 1 + strlen("etc") + 1);
+        strcpy(sysconfdir, basedir);
+        strcat(sysconfdir, dirsep);
+        strcat(sysconfdir, "etc");
         printf("%s", sysconfdir);
+        free(sysconfdir);
     }
 
     char * rcdir = malloc(strlen(basedir) + 1 + strlen(FLEXIBLAS_RC_DIR) + 1);
@@ -191,7 +188,6 @@ int main(int argc, char *argv[])
 
     free(folder);
     free(includedir);
-    free(sysconfdir);
     free(rcdir);
 
     /* Misc  */
