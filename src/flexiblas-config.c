@@ -153,19 +153,13 @@ int main(int argc, char *argv[])
 
     /* Directory related */
 
-    char * backenddir = malloc(strlen(libdir) + 1 + strlen(FLEXIBLAS_LIBRARY_DIR) + 1);
-    strcpy(backenddir, libdir);
-
     if (strcmp(argv[1],"--backenddir") == 0 ) {
-#if defined(__WIN32__)
-        strcat(backenddir, "\\");
+        char * backenddir = malloc(strlen(libdir) + 1 + strlen(FLEXIBLAS_LIBRARY_DIR) + 1);
+        strcpy(backenddir, libdir);
+        strcat(backenddir, dirsep);
         strcat(backenddir, FLEXIBLAS_LIBRARY_DIR);
-        printf("%s\\%s", backenddir, FLEXIBLAS_LIBRARY_DIR);
-#else
-        strcat(backenddir, "/");
-        strcat(backenddir, FLEXIBLAS_LIBRARY_DIR);
-        printf("%s/%s", backenddir, FLEXIBLAS_LIBRARY_DIR);
-#endif
+        printf("%s", backenddir);
+        free(backenddir);
     }
 
     char * sysconfdir = malloc(strlen(basedir) + 1 + strlen("etc") + 1);
@@ -197,7 +191,6 @@ int main(int argc, char *argv[])
 
     free(folder);
     free(includedir);
-    free(backenddir);
     free(sysconfdir);
     free(rcdir);
 
