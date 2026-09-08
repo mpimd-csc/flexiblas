@@ -7,4 +7,4 @@ Version: @FLEXIBLAS_VERSION@
 URL: http://www.mpi-magdeburg.mpg.de/mpcsc/software/FlexiBLAS/
 Libs: -L${libdir} -l${flexiblasname}
 Libs.private: -lm
-Cflags: -I${includedir}
+Cflags: -I${includedir} @PKGCONF_VAR_INTEGER8@
