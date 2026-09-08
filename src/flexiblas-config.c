@@ -171,24 +171,17 @@ int main(int argc, char *argv[])
         free(sysconfdir);
     }
 
-    char * rcdir = malloc(strlen(basedir) + 1 + strlen(FLEXIBLAS_RC_DIR) + 1);
-    strcpy(rcdir, basedir);
-
     if (strcmp(argv[1],"--rcdir") == 0 ) {
-#if defined(__WIN32__)
-        strcat(rcdir, "\\");
+        char * rcdir = malloc(strlen(basedir) + 1 + strlen(FLEXIBLAS_RC_DIR) + 1);
+        strcpy(rcdir, basedir);
+        strcat(rcdir, dirsep);
         strcat(rcdir, FLEXIBLAS_RC_DIR);
         printf("%s", rcdir);
-#else
-        strcat(rcdir, "/");
-        strcat(rcdir, FLEXIBLAS_RC_DIR);
-        printf("%s", rcdir);
-#endif
+        free(rcdir);
     }
 
     free(folder);
     free(includedir);
-    free(rcdir);
 
     /* Misc  */
     if ( strcmp(argv[1],"--version") == 0) {
