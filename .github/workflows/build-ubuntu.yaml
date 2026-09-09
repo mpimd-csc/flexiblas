@@ -16,6 +16,7 @@ jobs:
       ${{ matrix.integer8 && ' 64-bit' || '' }}
       ${{ matrix.link-blas && ' link-blas' || '' }}
       ${{ matrix.link-lapack && ' link-lapack' || '' }}
+      ${{ matrix.link-cblas && ' link-cblas' || '' }}
 
     strategy:
       # Allow other runners in the matrix to continue if some fail
@@ -30,6 +31,7 @@ jobs:
         cxx: [g++]
         link-blas: [1,0]
         link-lapack: [1,0]
+        link-cblas: [1,0]
         # include:
           # Building with Clang fails with a linker error:
           #   undefined reference to `csc_cycles'
@@ -95,6 +97,7 @@ jobs:
             ${{ matrix.integer8 && '-DINTEGER8=ON' || '' }} \
             ${{ matrix.link-blas && '-DSYS_BLAS_LIBRARY=$(dpkg -L libblas$I8SUFFIX-dev | grep "libblas$I8SUFFIX.so\$")' || '' }} \
             ${{ matrix.link-lapack && '-DLAPACK_API_VERSION=$(dpkg -s liblapack$I8SUFFIX-dev | perl -nE "say \$1 if /^Version: ([0-9.]+)/")' || '' }} \
+            ${{ matrix.link-cblas && '-DSYS_CBLAS_LIBRARY=$(dpkg -L libblas$I8SUFFIX-dev | grep "libblas$I8SUFFIX.so\$")' || '' }} \
             ..
 
       - name: build
