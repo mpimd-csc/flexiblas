@@ -18,6 +18,7 @@ jobs:
       ${{ matrix.link-blas && ' link-blas' || '' }}
       ${{ matrix.link-cblas && ' link-cblas' || '' }}
       ${{ matrix.link-lapack && ' link-lapack' || '' }}
+      ${{ matrix.link-lapacke && ' link-lapacke' || '' }}
 
     strategy:
       # Allow other runners in the matrix to continue if some fail
@@ -51,6 +52,15 @@ jobs:
             link-blas: true
             link-cblas: true
             link-lapack: true
+          - os: ubuntu-latest
+            compiler: gcc
+            compiler-pkgs: "g++ gcc"
+            cc: "gcc"
+            cxx: "g++"
+            link-blas: true
+            link-cblas: true
+            link-lapack: true
+            link-lapacke: true
           - os: ubuntu-24.04-arm
             compiler: gcc
             compiler-pkgs: "g++ gcc"
@@ -119,6 +129,7 @@ jobs:
             ${{ matrix.link-blas && '-DSYS_BLAS_LIBRARY=$(dpkg -L libblas-dev | grep "libblas.so\$")' || '' }} \
             ${{ matrix.link-cblas && '-DSYS_CBLAS_LIBRARY=$(dpkg -L libblas-dev | grep "libblas.so\$")' || '' }} \
             ${{ matrix.link-lapack && '-DSYS_LAPACK_LIBRARY=$(dpkg -L liblapack-dev | grep "liblapack.so\$")' || '' }} \
+            ${{ matrix.link-lapacke && '-DSYS_LAPACKE_LIBRARY=$(dpkg -L liblapacke-dev | grep "liblapacke.so\$")' || '' }} \
             ..
 
       - name: build
