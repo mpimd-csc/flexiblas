@@ -15,6 +15,7 @@ jobs:
 
     name: >-
       ${{ matrix.os }} (${{ matrix.compiler }})
+      ${{ matrix.integer8 && ' 64-bit' || '' }}
       ${{ matrix.link-blas && ' link-blas' || '' }}
       ${{ matrix.link-cblas && ' link-cblas' || '' }}
       ${{ matrix.link-lapack && ' link-lapack' || '' }}
@@ -61,11 +62,57 @@ jobs:
             link-cblas: true
             link-lapack: true
             link-lapacke: true
+          - os: ubuntu-latest
+            compiler: gcc
+            compiler-pkgs: "g++ gcc"
+            cc: "gcc"
+            cxx: "g++"
+            integer8: true
+          - os: ubuntu-latest
+            compiler: gcc
+            compiler-pkgs: "g++ gcc"
+            cc: "gcc"
+            cxx: "g++"
+            integer8: true
+            link-blas: true
+          - os: ubuntu-latest
+            compiler: gcc
+            compiler-pkgs: "g++ gcc"
+            cc: "gcc"
+            cxx: "g++"
+            integer8: true
+            link-blas: true
+            link-cblas: true
+          - os: ubuntu-latest
+            compiler: gcc
+            compiler-pkgs: "g++ gcc"
+            cc: "gcc"
+            cxx: "g++"
+            integer8: true
+            link-blas: true
+            link-cblas: true
+            link-lapack: true
+          - os: ubuntu-latest
+            compiler: gcc
+            compiler-pkgs: "g++ gcc"
+            cc: "gcc"
+            cxx: "g++"
+            integer8: true
+            link-blas: true
+            link-cblas: true
+            link-lapack: true
+            link-lapacke: true
           - os: ubuntu-24.04-arm
             compiler: gcc
             compiler-pkgs: "g++ gcc"
             cc: "gcc"
             cxx: "g++"
+          - os: ubuntu-24.04-arm
+            compiler: gcc
+            compiler-pkgs: "g++ gcc"
+            cc: "gcc"
+            cxx: "g++"
+            integer8: true
           # Building with Clang fails with a linker error:
           #   undefined reference to `csc_cycles'
           # Comment out for now.
@@ -89,9 +136,10 @@ jobs:
       - name: install dependencies
         run: |
           sudo apt -qq update
+          ${{ matrix.integer8 && 'I8SUFFIX=64' || '' }}
           sudo apt install -y ${{ matrix.compiler-pkgs }} gfortran cmake ccache \
             ${{ matrix.compiler == 'clang' && 'libomp-dev' || '' }} \
-            libblas-dev liblapack-dev liblapacke-dev libopenblas-dev
+            libblas$I8SUFFIX-dev liblapack$I8SUFFIX-dev liblapacke$I8SUFFIX-dev libopenblas$I8SUFFIX-dev
 
       - name: prepare ccache
         # create key with human readable timestamp
@@ -123,13 +171,15 @@ jobs:
         run: |
           mkdir ${GITHUB_WORKSPACE}/build
           cd ${GITHUB_WORKSPACE}/build
+          ${{ matrix.integer8 && 'I8SUFFIX=64' || '' }}
           cmake \
             -DCMAKE_BUILD_TYPE="Release" \
             -DCMAKE_INSTALL_PREFIX="${GITHUB_WORKSPACE}/usr" \
-            ${{ matrix.link-blas && '-DSYS_BLAS_LIBRARY=$(dpkg -L libblas-dev | grep "libblas.so\$")' || '' }} \
-            ${{ matrix.link-cblas && '-DSYS_CBLAS_LIBRARY=$(dpkg -L libblas-dev | grep "libblas.so\$")' || '' }} \
-            ${{ matrix.link-lapack && '-DSYS_LAPACK_LIBRARY=$(dpkg -L liblapack-dev | grep "liblapack.so\$")' || '' }} \
-            ${{ matrix.link-lapacke && '-DSYS_LAPACKE_LIBRARY=$(dpkg -L liblapacke-dev | grep "liblapacke.so\$")' || '' }} \
+            ${{ matrix.link-blas && '-DSYS_BLAS_LIBRARY=$(dpkg -L libblas$I8SUFFIX-dev | grep "libblas$I8SUFFIX.so\$")' || '' }} \
+            ${{ matrix.link-cblas && '-DSYS_CBLAS_LIBRARY=$(dpkg -L libblas$I8SUFFIX-dev | grep "libblas$I8SUFFIX.so\$")' || '' }} \
+            ${{ matrix.link-lapack && '-DSYS_LAPACK_LIBRARY=$(dpkg -L liblapack$I8SUFFIX-dev | grep "liblapack$I8SUFFIX.so\$")' || '' }} \
+            ${{ matrix.link-lapacke && '-DSYS_LAPACKE_LIBRARY=$(dpkg -L liblapacke$I8SUFFIX-dev | grep "liblapacke$I8SUFFIX.so\$")' || '' }} \
+            ${{ matrix.integer8 && '-DINTEGER8=ON' || '' }} \
             ..
 
       - name: build
