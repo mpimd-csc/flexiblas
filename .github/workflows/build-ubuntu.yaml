@@ -146,7 +146,7 @@ jobs:
         # used in action/cache/restore and action/cache/save steps
         id: ccache-prepare
         run: |
-          echo "key=ccache:${{ matrix.os }}:${{ matrix.compiler }}:${{ github.ref }}:$(date +"%Y-%m-%d_%H-%M-%S"):${{ github.sha }}" >> $GITHUB_OUTPUT
+          echo "key=ccache:${{ matrix.os }}:${{ matrix.compiler }}:${{ matrix.integer8 && '64' || '32' }}bit:${{ github.ref }}:$(date +"%Y-%m-%d_%H-%M-%S"):${{ github.sha }}" >> $GITHUB_OUTPUT
 
       - name: restore ccache
         # setup the GitHub cache used to maintain the ccache from one job to the next
@@ -156,8 +156,8 @@ jobs:
           key: ${{ steps.ccache-prepare.outputs.key }}
           # Prefer caches from the same branch. Fall back to caches from the dev branch.
           restore-keys: |
-            ccache:${{ matrix.os }}:${{ matrix.compiler }}:${{ github.ref }}:
-            ccache:${{ matrix.os }}:${{ matrix.compiler }}:
+            ccache:${{ matrix.os }}:${{ matrix.compiler }}:${{ matrix.integer8 && '64' || '32' }}bit:${{ github.ref }}:
+            ccache:${{ matrix.os }}:${{ matrix.compiler }}:${{ matrix.integer8 && '64' || '32' }}bit:
 
       - name: configure ccache
         run: |
