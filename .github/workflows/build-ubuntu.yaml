@@ -173,7 +173,7 @@ jobs:
           cd ${GITHUB_WORKSPACE}/build
           ${{ matrix.integer8 && 'I8SUFFIX=64' || '' }}
           cmake \
-            -DCMAKE_BUILD_TYPE="Release" \
+            -DCMAKE_BUILD_TYPE="Debug" \
             -DCMAKE_INSTALL_PREFIX="${GITHUB_WORKSPACE}/usr" \
             ${{ matrix.link-blas && '-DSYS_BLAS_LIBRARY=$(dpkg -L libblas$I8SUFFIX-dev | grep "libblas$I8SUFFIX.so\$")' || '' }} \
             ${{ matrix.link-cblas && '-DSYS_CBLAS_LIBRARY=$(dpkg -L libblas$I8SUFFIX-dev | grep "libblas$I8SUFFIX.so\$")' || '' }} \
