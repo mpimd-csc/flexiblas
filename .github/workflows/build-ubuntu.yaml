@@ -14,6 +14,10 @@ jobs:
     name: >-
       ${{ matrix.os }} (${{ matrix.compiler }})
       ${{ matrix.integer8 && ' 64-bit' || '' }}
+      ${{ matrix.links.link-blas && ' link-blas' || '' }}
+      ${{ matrix.links.link-lapack && ' link-lapack' || '' }}
+      ${{ matrix.links.link-cblas && ' link-cblas' || '' }}
+      ${{ matrix.links.link-lapacke && ' link-lapacke' || '' }}
 
     strategy:
       # Allow other runners in the matrix to continue if some fail
@@ -26,7 +30,14 @@ jobs:
         integer8: [1,0]
         cc: [gcc]
         cxx: [g++]
-        # include:
+        links:
+          - link-blas: 0
+          - link-blas: 1
+            link-lapack: 1
+          - link-blas: 1
+            link-lapack: 1
+            link-cblas: 1
+            link-lapacke: 1
           # Building with Clang fails with a linker error:
           #   undefined reference to `csc_cycles'
           # Comment out for now.
@@ -52,7 +63,8 @@ jobs:
           sudo apt -qq update
           I8SUFFIX=${{ matrix.integer8 && '64' || '' }}
           sudo apt install -y ${{ matrix.compiler-pkgs }} gfortran cmake ccache \
-            libblas$I8SUFFIX-dev liblapack$I8SUFFIX-dev libopenblas$I8SUFFIX-dev
+            libblas$I8SUFFIX-dev liblapack$I8SUFFIX-dev \
+            liblapacke$I8SUFFIX-dev libopenblas$I8SUFFIX-dev
 
       - name: prepare ccache
         # create key with human readable timestamp
@@ -89,6 +101,10 @@ jobs:
             -DCMAKE_BUILD_TYPE="Debug" \
             -DCMAKE_INSTALL_PREFIX="${GITHUB_WORKSPACE}/usr" \
             ${{ matrix.integer8 && '-DINTEGER8=ON' || '' }} \
+            ${{ matrix.links.link-blas && '-DSYS_BLAS_LIBRARY=$(dpkg -L libblas$I8SUFFIX-dev | grep "libblas$I8SUFFIX.so\$")' || '' }} \
+            ${{ matrix.links.link-lapack && '-DLAPACK_API_VERSION=$(dpkg -s liblapack$I8SUFFIX-dev | perl -nE "say \$1 if /^Version: ([0-9.]+)/")' || '' }} \
+            ${{ matrix.links.link-cblas && '-DSYS_CBLAS_LIBRARY=$(dpkg -L libblas$I8SUFFIX-dev | grep "libblas$I8SUFFIX.so\$")' || '' }} \
+            ${{ matrix.links.link-lapacke && '-DSYS_LAPACKE_LIBRARY=$(dpkg -L liblapacke$I8SUFFIX-dev | grep "liblapacke$I8SUFFIX.so\$")' || '' }} \
             ..
 
       - name: build
