@@ -17,6 +17,7 @@ jobs:
       ${{ matrix.os }} (${{ matrix.compiler }})
       ${{ matrix.link-blas && ' link-blas' || '' }}
       ${{ matrix.link-cblas && ' link-cblas' || '' }}
+      ${{ matrix.link-lapack && ' link-lapack' || '' }}
 
     strategy:
       # Allow other runners in the matrix to continue if some fail
@@ -42,6 +43,14 @@ jobs:
             cxx: "g++"
             link-blas: true
             link-cblas: true
+          - os: ubuntu-latest
+            compiler: gcc
+            compiler-pkgs: "g++ gcc"
+            cc: "gcc"
+            cxx: "g++"
+            link-blas: true
+            link-cblas: true
+            link-lapack: true
           - os: ubuntu-24.04-arm
             compiler: gcc
             compiler-pkgs: "g++ gcc"
@@ -109,6 +118,7 @@ jobs:
             -DCMAKE_INSTALL_PREFIX="${GITHUB_WORKSPACE}/usr" \
             ${{ matrix.link-blas && '-DSYS_BLAS_LIBRARY=$(dpkg -L libblas-dev | grep "libblas.so\$")' || '' }} \
             ${{ matrix.link-cblas && '-DSYS_CBLAS_LIBRARY=$(dpkg -L libblas-dev | grep "libblas.so\$")' || '' }} \
+            ${{ matrix.link-lapack && '-DSYS_LAPACK_LIBRARY=$(dpkg -L liblapack-dev | grep "liblapack.so\$")' || '' }} \
             ..
 
       - name: build
