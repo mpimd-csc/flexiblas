@@ -13,21 +13,27 @@ jobs:
     # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
     runs-on: ${{ matrix.os }}
 
-    name: ${{ matrix.os }} (${{ matrix.compiler }})
+    name: >-
+      ${{ matrix.os }} (${{ matrix.compiler }})
+      ${{ matrix.link-blas && ' link-blas' || '' }}
 
     strategy:
       # Allow other runners in the matrix to continue if some fail
       fail-fast: false
 
       matrix:
-        os: [ubuntu-latest]
-        compiler: [gcc]
         include:
           - os: ubuntu-latest
             compiler: gcc
             compiler-pkgs: "g++ gcc"
             cc: "gcc"
             cxx: "g++"
+          - os: ubuntu-latest
+            compiler: gcc
+            compiler-pkgs: "g++ gcc"
+            cc: "gcc"
+            cxx: "g++"
+            link-blas: true
           - os: ubuntu-24.04-arm
             compiler: gcc
             compiler-pkgs: "g++ gcc"
@@ -58,7 +64,7 @@ jobs:
           sudo apt -qq update
           sudo apt install -y ${{ matrix.compiler-pkgs }} gfortran cmake ccache \
             ${{ matrix.compiler == 'clang' && 'libomp-dev' || '' }} \
-            libblas-dev liblapack-dev libopenblas-dev
+            libblas-dev liblapack-dev liblapacke-dev libopenblas-dev
 
       - name: prepare ccache
         # create key with human readable timestamp
@@ -93,6 +99,7 @@ jobs:
           cmake \
             -DCMAKE_BUILD_TYPE="Release" \
             -DCMAKE_INSTALL_PREFIX="${GITHUB_WORKSPACE}/usr" \
+            ${{ matrix.link-blas && '-DSYS_BLAS_LIBRARY=$(dpkg -L libblas-dev | grep "libblas.so\$")' || '' }} \
             ..
 
       - name: build
