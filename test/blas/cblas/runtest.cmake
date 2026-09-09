@@ -1,5 +1,5 @@
 # Replace INTDIR with the value of $ENV{CMAKE_CONFIG_TYPE} that is set
-# by ctest when -C Debug|Releaes|etc is given, and INDIR is passed
+# by ctest when -C Debug|Release|etc is given, and INDIR is passed
 # in from the main cmake run and is the variable that is used
 # by the build system to specify the build directory
 if(NOT "${INTDIR}" STREQUAL ".")
