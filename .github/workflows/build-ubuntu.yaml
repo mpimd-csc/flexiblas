@@ -14,6 +14,7 @@ jobs:
     name: >-
       ${{ matrix.os }} (${{ matrix.compiler }})
       ${{ matrix.integer8 && ' 64-bit' || '' }}
+      ${{ matrix.link-blas && ' link-blas' || '' }}
 
     strategy:
       # Allow other runners in the matrix to continue if some fail
@@ -26,6 +27,7 @@ jobs:
         integer8: [1,0]
         cc: [gcc]
         cxx: [g++]
+        link-blas: [1,0]
         # include:
           # Building with Clang fails with a linker error:
           #   undefined reference to `csc_cycles'
@@ -89,6 +91,7 @@ jobs:
             -DCMAKE_BUILD_TYPE="Debug" \
             -DCMAKE_INSTALL_PREFIX="${GITHUB_WORKSPACE}/usr" \
             ${{ matrix.integer8 && '-DINTEGER8=ON' || '' }} \
+            ${{ matrix.link-blas && '-DSYS_BLAS_LIBRARY=$(dpkg -L libblas$I8SUFFIX-dev | grep "libblas$I8SUFFIX.so\$")' || '' }} \
             ..
 
       - name: build
