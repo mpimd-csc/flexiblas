@@ -139,7 +139,8 @@ jobs:
           ${{ matrix.integer8 && 'I8SUFFIX=64' || '' }}
           sudo apt install -y ${{ matrix.compiler-pkgs }} gfortran cmake ccache \
             ${{ matrix.compiler == 'clang' && 'libomp-dev' || '' }} \
-            libblas$I8SUFFIX-dev liblapack$I8SUFFIX-dev liblapacke$I8SUFFIX-dev libopenblas$I8SUFFIX-dev
+            libopenblas$I8SUFFIX-dev \
+            libblas$I8SUFFIX-dev liblapack$I8SUFFIX-dev liblapacke$I8SUFFIX-dev
 
       - name: prepare ccache
         # create key with human readable timestamp
@@ -178,6 +179,7 @@ jobs:
             ${{ matrix.link-blas && '-DSYS_BLAS_LIBRARY=$(dpkg -L libblas$I8SUFFIX-dev | grep "libblas$I8SUFFIX.so\$")' || '' }} \
             ${{ matrix.link-cblas && '-DSYS_CBLAS_LIBRARY=$(dpkg -L libblas$I8SUFFIX-dev | grep "libblas$I8SUFFIX.so\$")' || '' }} \
             ${{ matrix.link-lapack && '-DSYS_LAPACK_LIBRARY=$(dpkg -L liblapack$I8SUFFIX-dev | grep "liblapack$I8SUFFIX.so\$")' || '' }} \
+            ${{ matrix.link-lapack && '-DLAPACK_API_VERSION=$(dpkg -s liblapack$I8SUFFIX-dev | perl -nE "say \$1 if /^Version: ([0-9.]+)/")' || '' }} \
             ${{ matrix.link-lapacke && '-DSYS_LAPACKE_LIBRARY=$(dpkg -L liblapacke$I8SUFFIX-dev | grep "liblapacke$I8SUFFIX.so\$")' || '' }} \
             ${{ matrix.integer8 && '-DINTEGER8=ON' || '' }} \
             ..
