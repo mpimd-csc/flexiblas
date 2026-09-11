@@ -1,10 +1,17 @@
 prefix=@prefix@
 libdir=@libdir@
 includedir=${prefix}/include/${flexiblasname}
+fcflags=-I${includedir} @PKGCONF_VAR_INTEGER8@
+i8cflag=@PKGCONF_VAR_INTEGER8@
+i8fcflag=@FLEXIBLAS_FC_I8FLAG@
+i8=@PKGCONF_VAR_I8@
+backenddir=${libdir}/@FLEXIBLAS_LIBRARY_DIR@
+sysconfdir="@CMAKE_INSTALL_FULL_SYSCONFDIR@"
+rcdir="@CMAKE_INSTALL_FULL_SYSCONFDIR@/@FLEXIBLAS_RC_DIR@"
 Name: flexiblas_api
 Description: BLAS wrapper library mimicing Netlib Reference but providing any installed BLAS Implementation(Non-BLAS API Only)
 Version: @FLEXIBLAS_VERSION@
 URL: http://www.mpi-magdeburg.mpg.de/mpcsc/software/FlexiBLAS/
 Libs: -L${libdir} -l${flexiblasname}_api
 Libs.private: -lm
-Cflags: -I${includedir}
+Cflags: -I${includedir} @PKGCONF_VAR_INTEGER8@
