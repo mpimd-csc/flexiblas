@@ -81,58 +81,59 @@ int main(int argc, char *argv[])
     }
 
     char * basedir = dirname(libdir);
-    char * includedir = malloc(strlen(basedir) + 1 + strlen("include") + 1);
+#if defined(__WIN32__)
+    char * dirsep = "\\";
+#else
+    char * dirsep = "/";
+#endif
+    char * includedir = malloc(
+        strlen(basedir) + 1 /* dirsep */
+        + strlen("include") + 1 /* dirsep */
+        + strlen(FLEXIBLAS_LIBRARY_NAME)
+        + 1 /* terminating NUL */
+    );
     strcpy(includedir, basedir);
+    strcat(includedir, dirsep);
+    strcat(includedir, "include");
+    strcat(includedir, dirsep);
+    strcat(includedir, FLEXIBLAS_LIBRARY_NAME);
 
     /* Compile time related */
     if (strcmp(argv[1], "--incdir") == 0 ) {
-#if defined(__WIN32__)
-        strcat(includedir, "\\include");
-        printf("%s\\%s", includedir, FLEXIBLAS_LIBRARY_NAME);
-#else
-        strcat(includedir, "/include");
-        printf("%s/%s", includedir, FLEXIBLAS_LIBRARY_NAME);
-#endif
+        printf("%s", includedir);
     }
 
-    if (strcmp(argv[1], "--cflags") == 0 ) {
-        printf("-I%s/%s",includedir, FLEXIBLAS_LIBRARY_NAME);
-#ifdef FLEXIBLAS_INTEGER8
-        printf(" -DFLEXIBLAS_INTEGER8");
-#else
-        printf(" -UFLEXIBLAS_INTEGER8");
-#endif
-
+    int is_cflags = strcmp(argv[1], "--cflags") == 0,
+        is_fcflags = strcmp(argv[1], "--fcflags") == 0,
+        is_i8cflag = strcmp(argv[1], "--i8cflag") == 0,
+        is_i8fcflag = strcmp(argv[1],"--i8fcflag") == 0,
+        need_space = 0;
+    if (is_cflags || is_fcflags) {
+        if (need_space) printf(" "); need_space = 1;
+        printf("-I%s", includedir);
     }
 
-    if (strcmp(argv[1], "--fcflags") == 0 ) {
-        printf("-I%s/%s",includedir, FLEXIBLAS_LIBRARY_NAME);
-#ifdef FLEXIBLAS_INTEGER8
-        printf(" -DFLEXIBLAS_INTEGER8");
-#else
-        printf(" -UFLEXIBLAS_INTEGER8");
-#endif
+    if (is_fcflags) {
 #ifdef FLEXIBLAS_FC_I8FLAG
-        printf(" %s", FLEXIBLAS_FC_I8FLAG);
-#else
-        printf(" ");
+        if (need_space) printf(" "); need_space = 1;
+        printf("%s", FLEXIBLAS_FC_I8FLAG);
 #endif
     }
 
     /* 64 Bit integer related */
-    if (strcmp(argv[1], "--i8cflag") == 0) {
+    if (is_i8cflag || is_cflags || is_fcflags) {
+        if (need_space) printf(" "); need_space = 1;
 #ifdef FLEXIBLAS_INTEGER8
-        printf(" -DFLEXIBLAS_INTEGER8");
+        printf("-DFLEXIBLAS_INTEGER8");
 #else
-        printf(" -UFLEXIBLAS_INTEGER8");
+        printf("-UFLEXIBLAS_INTEGER8");
 #endif
     }
 
-    if (strcmp(argv[1],"--i8fcflag") == 0) {
+    if (is_i8fcflag || is_fcflags) {
 #ifdef FLEXIBLAS_FC_I8FLAG
+        if (need_space) printf(" "); need_space = 1;
         printf("%s", FLEXIBLAS_FC_I8FLAG);
-#else
-        printf(" ");
 #endif
     }
 
@@ -146,53 +147,35 @@ int main(int argc, char *argv[])
 
     /* Directory related */
 
-    char * backenddir = malloc(strlen(libdir) + 1 + strlen(FLEXIBLAS_LIBRARY_DIR) + 1);
-    strcpy(backenddir, libdir);
-
     if (strcmp(argv[1],"--backenddir") == 0 ) {
-#if defined(__WIN32__)
-        strcat(backenddir, "\\");
+        char * backenddir = malloc(strlen(libdir) + 1 + strlen(FLEXIBLAS_LIBRARY_DIR) + 1);
+        strcpy(backenddir, libdir);
+        strcat(backenddir, dirsep);
         strcat(backenddir, FLEXIBLAS_LIBRARY_DIR);
-        printf("%s\\%s", backenddir, FLEXIBLAS_LIBRARY_DIR);
-#else
-        strcat(backenddir, "/");
-        strcat(backenddir, FLEXIBLAS_LIBRARY_DIR);
-        printf("%s/%s", backenddir, FLEXIBLAS_LIBRARY_DIR);
-#endif
+        printf("%s", backenddir);
+        free(backenddir);
     }
-
-    char * sysconfdir = malloc(strlen(basedir) + 1 + strlen("etc") + 1);
-    strcpy(sysconfdir, basedir);
 
     if (strcmp(argv[1],"--sysconfdir") == 0 ) {
-#if defined(__WIN32__)
-        strcat(sysconfdir, "\\etc");
-#else
-        strcat(sysconfdir, "/etc");
-#endif
+        char * sysconfdir = malloc(strlen(basedir) + 1 + strlen("etc") + 1);
+        strcpy(sysconfdir, basedir);
+        strcat(sysconfdir, dirsep);
+        strcat(sysconfdir, "etc");
         printf("%s", sysconfdir);
+        free(sysconfdir);
     }
 
-    char * rcdir = malloc(strlen(basedir) + 1 + strlen(FLEXIBLAS_RC_DIR) + 1);
-    strcpy(rcdir, basedir);
-
     if (strcmp(argv[1],"--rcdir") == 0 ) {
-#if defined(__WIN32__)
-        strcat(rcdir, "\\");
+        char * rcdir = malloc(strlen(basedir) + 1 + strlen(FLEXIBLAS_RC_DIR) + 1);
+        strcpy(rcdir, basedir);
+        strcat(rcdir, dirsep);
         strcat(rcdir, FLEXIBLAS_RC_DIR);
         printf("%s", rcdir);
-#else
-        strcat(rcdir, "/");
-        strcat(rcdir, FLEXIBLAS_RC_DIR);
-        printf("%s", rcdir);
-#endif
+        free(rcdir);
     }
 
     free(folder);
     free(includedir);
-    free(backenddir);
-    free(sysconfdir);
-    free(rcdir);
 
     /* Misc  */
     if ( strcmp(argv[1],"--version") == 0) {
