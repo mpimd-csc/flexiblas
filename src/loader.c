@@ -198,7 +198,7 @@ HIDDEN int __flexiblas_get_f2c_float_return(void *handle)
     if (handle == NULL) {
         return 0;
     }
-    void *sdot_ptr = __flexiblas_lookup_fortran_function(handle, "sdot");
+    void *sdot_ptr = __flexiblas_lookup_fortran_function(handle, "sdot", NULL);
     if ( sdot_ptr == NULL) {
         DPRINTF(2, "Could not check for defect of functions with real return value. SDOT not found.\n");
         return 0;
