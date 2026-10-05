@@ -142,11 +142,11 @@ HIDDEN flexiblas_complex_interface_t __flexiblas_get_complex_interface(void *han
 #ifdef FLEXIBLAS_INTEGER8
     double complex (*zdotc_gnu)(                  int64_t *, double complex *, int64_t *, double complex *, int64_t *);
     void           (*zdotc_intel)(double complex *, int64_t *, double complex *, int64_t *, double complex *, int64_t *);
-    int64_t        zero = 0;
+    int64_t        one = 1;
 #else
     double complex (*zdotc_gnu)(                  int32_t *, double complex *, int32_t *, double complex *, int32_t *);
     void           (*zdotc_intel)(double complex *, int32_t *, double complex *, int32_t *, double complex *, int32_t *);
-    int32_t        zero = 1;
+    int32_t        one = 1;
 #endif
 
     FUNCTION_POINTER_ASSIGN(zdotc_gnu, zdotc_ptr);
@@ -155,15 +155,15 @@ HIDDEN flexiblas_complex_interface_t __flexiblas_get_complex_interface(void *han
 #if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
     double complex retval = 0.0 + 0.0*I;
     double complex zeroc = 0.0 + 0.0*I;
-    /** retval = zdotc_gnu(&zero, &zeroc, &zero, &zeroc, &zero); */
+    /** retval = zdotc_gnu(&one, &zeroc, &one, &zeroc, &one); */
 
-    zdotc_intel(&retval, &zero, &zeroc, &zero, &zeroc, &zero);
+    zdotc_intel(&retval, &one, &zeroc, &one, &zeroc, &one);
     if (creal(retval) == 0.0 && cimag(retval) == 0.0) {
         return FLEXIBLAS_COMPLEX_INTEL_INTERFACE;
     }
 
     retval = 0.0 + 1.0*I;
-    retval = zdotc_gnu(&zero, &zeroc, &zero, &zeroc, &zero);
+    retval = zdotc_gnu(&one, &zeroc, &one, &zeroc, &one);
     if (creal(retval) == 0.0 && cimag(retval) == 0.0) {
         return FLEXIBLAS_COMPLEX_GNU_INTERFACE;
     }
@@ -176,13 +176,13 @@ HIDDEN flexiblas_complex_interface_t __flexiblas_get_complex_interface(void *han
     double complex retval = 0.0 + 1.0*I;
     double complex zeroc = 0.0 + 0.0*I;
 
-    zdotc_intel(&retval, &zero, &zeroc, &zero, &zeroc, &zero);
+    zdotc_intel(&retval, &one, &zeroc, &one, &zeroc, &one);
     if (creal(retval) == 0.0 && cimag(retval) == 0.0) {
         return FLEXIBLAS_COMPLEX_INTEL_INTERFACE;
     }
 
     retval = 0.0 + 1.0*I;
-    retval = zdotc_gnu(&zero, &zeroc, &zero, &zeroc, &zero);
+    retval = zdotc_gnu(&one, &zeroc, &one, &zeroc, &one);
     if (creal(retval) == 0.0 && cimag(retval) == 0.0) {
         return FLEXIBLAS_COMPLEX_GNU_INTERFACE;
     }
@@ -198,7 +198,7 @@ HIDDEN int __flexiblas_get_f2c_float_return(void *handle)
     if (handle == NULL) {
         return 0;
     }
-    void *sdot_ptr = __flexiblas_lookup_fortran_function(handle, "sdot");
+    void *sdot_ptr = __flexiblas_lookup_fortran_function(handle, "sdot", NULL);
     if ( sdot_ptr == NULL) {
         DPRINTF(2, "Could not check for defect of functions with real return value. SDOT not found.\n");
         return 0;
