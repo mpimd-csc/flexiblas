@@ -42,18 +42,13 @@ void flexiblas_internal_xerbla(char *SNAME, Int *Info, flexiblas_fortran_charlen
 #ifdef __ELF__
 #pragma weak xerbla_
 #pragma weak xerbla
-#pragma weak XERBLA
 void xerbla_(char *, Int *, flexiblas_fortran_charlen_t) __attribute__ (( alias ("flexiblas_internal_xerbla")));
 void xerbla(char *, Int *, flexiblas_fortran_charlen_t) __attribute__ (( alias ("flexiblas_internal_xerbla")));
-void XERBLA(char *, Int *, flexiblas_fortran_charlen_t) __attribute__ (( alias ("flexiblas_internal_xerbla")));
 #else
 void xerbla_(char *SNAME, Int *Info, flexiblas_fortran_charlen_t) {
     flexiblas_internal_xerbla(SNAME, Info, len);
 }
 void xerbla(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len) {
-    flexiblas_internal_xerbla(SNAME, Info, len);
-}
-void XERBLA(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len) {
     flexiblas_internal_xerbla(SNAME, Info, len);
 }
 #endif
@@ -63,7 +58,6 @@ void XERBLA(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len) {
 #if defined(__ELF__) || ((defined (__PGI) || defined(__NVCOMPILER)) && (defined(__linux__)  || defined(__unix__)))
 void xerbla_(char *, Int *, flexiblas_fortran_charlen_t) __attribute__ ((weak, alias ("flexiblas_internal_xerbla")));
 void xerbla (char *, Int *, flexiblas_fortran_charlen_t) __attribute__ ((weak, alias ("flexiblas_internal_xerbla")));
-void XERBLA (char *, Int *, flexiblas_fortran_charlen_t) __attribute__ ((weak, alias ("flexiblas_internal_xerbla")));
 
 #else
 /* #pragma weak xerbla_
