@@ -31,6 +31,14 @@
 #else
   #define FLEXIBLAS_LOAD_INT_T int32_t
 #endif
+#if (defined(_WIN64) || defined(__MINGW64__)) && (defined(_M_AMD64) || defined(__x86_64__))
+  #define FLEXIBLAS_LOAD_CPLX_FUNC "cdotc" /* F64 gives false positive */
+  #define FLEXIBLAS_LOAD_CPLX_TYPE float complex
+#else
+  #define FLEXIBLAS_LOAD_CPLX_FUNC "zdotc"
+  #define FLEXIBLAS_LOAD_CPLX_TYPE double complex
+#endif
+#define STRINGIFY(x) #x
 
 /*-----------------------------------------------------------------------------
  *  Load CBLAS
@@ -138,31 +146,31 @@ HIDDEN flexiblas_complex_interface_t __flexiblas_get_complex_interface(void *han
 #if defined(__i386__) || defined (__i686__)
     return FLEXIBLAS_COMPLEX_NONE_INTERFACE;
 #endif
-    void *zdotc_ptr = __flexiblas_lookup_fortran_function(handle, "zdotc", NULL);
-    if ( zdotc_ptr == NULL) {
-        DPRINTF(2, "Could not check complex return value interface. ZDOTC not found.\n");
+    void *cplx_func_ptr = __flexiblas_lookup_fortran_function(handle, FLEXIBLAS_LOAD_CPLX_FUNC, NULL);
+    if ( cplx_func_ptr == NULL) {
+        DPRINTF(2, "Could not check complex return value interface. " STRINGIFY(FLEXIBLAS_LOAD_CPLX_FUNC) " not found.\n");
         return FLEXIBLAS_COMPLEX_NONE_INTERFACE;
     }
 
-    double complex (*zdotc_gnu)(                  FLEXIBLAS_LOAD_INT_T *, double complex *, FLEXIBLAS_LOAD_INT_T *, double complex *, FLEXIBLAS_LOAD_INT_T *);
-    void           (*zdotc_intel)(double complex *, FLEXIBLAS_LOAD_INT_T *, double complex *, FLEXIBLAS_LOAD_INT_T *, double complex *, FLEXIBLAS_LOAD_INT_T *);
+    FLEXIBLAS_LOAD_CPLX_TYPE (*cplx_func_gnu)(                  FLEXIBLAS_LOAD_INT_T *, FLEXIBLAS_LOAD_CPLX_TYPE *, FLEXIBLAS_LOAD_INT_T *, FLEXIBLAS_LOAD_CPLX_TYPE *, FLEXIBLAS_LOAD_INT_T *);
+    void           (*cplx_func_intel)(FLEXIBLAS_LOAD_CPLX_TYPE *, FLEXIBLAS_LOAD_INT_T *, FLEXIBLAS_LOAD_CPLX_TYPE *, FLEXIBLAS_LOAD_INT_T *, FLEXIBLAS_LOAD_CPLX_TYPE *, FLEXIBLAS_LOAD_INT_T *);
     FLEXIBLAS_LOAD_INT_T        one = 1;
 
-    FUNCTION_POINTER_ASSIGN(zdotc_gnu, zdotc_ptr);
-    FUNCTION_POINTER_ASSIGN(zdotc_intel, zdotc_ptr);
+    FUNCTION_POINTER_ASSIGN(cplx_func_gnu, cplx_func_ptr);
+    FUNCTION_POINTER_ASSIGN(cplx_func_intel, cplx_func_ptr);
 
 #if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-    double complex retval = 0.0 + 0.0*I;
-    double complex zeroc = 0.0 + 0.0*I;
-    /** retval = zdotc_gnu(&one, &zeroc, &one, &zeroc, &one); */
+    FLEXIBLAS_LOAD_CPLX_TYPE retval = 0.0 + 0.0*I;
+    FLEXIBLAS_LOAD_CPLX_TYPE zeroc = 0.0 + 0.0*I;
+    /** retval = cplx_func_gnu(&one, &zeroc, &one, &zeroc, &one); */
 
-    zdotc_intel(&retval, &one, &zeroc, &one, &zeroc, &one);
+    cplx_func_intel(&retval, &one, &zeroc, &one, &zeroc, &one);
     if (creal(retval) == 0.0 && cimag(retval) == 0.0) {
         return FLEXIBLAS_COMPLEX_INTEL_INTERFACE;
     }
 
     retval = 0.0 + 1.0*I;
-    retval = zdotc_gnu(&one, &zeroc, &one, &zeroc, &one);
+    retval = cplx_func_gnu(&one, &zeroc, &one, &zeroc, &one);
     if (creal(retval) == 0.0 && cimag(retval) == 0.0) {
         return FLEXIBLAS_COMPLEX_GNU_INTERFACE;
     }
@@ -172,16 +180,16 @@ HIDDEN flexiblas_complex_interface_t __flexiblas_get_complex_interface(void *han
      * Ifi the the retval arguments gets zero, we are using the "Intel" calling convention.
      */
 
-    double complex retval = 0.0 + 1.0*I;
-    double complex zeroc = 0.0 + 0.0*I;
+    FLEXIBLAS_LOAD_CPLX_TYPE retval = 0.0 + 1.0*I;
+    FLEXIBLAS_LOAD_CPLX_TYPE zeroc = 0.0 + 0.0*I;
 
-    zdotc_intel(&retval, &one, &zeroc, &one, &zeroc, &one);
+    cplx_func_intel(&retval, &one, &zeroc, &one, &zeroc, &one);
     if (creal(retval) == 0.0 && cimag(retval) == 0.0) {
         return FLEXIBLAS_COMPLEX_INTEL_INTERFACE;
     }
 
     retval = 0.0 + 1.0*I;
-    retval = zdotc_gnu(&one, &zeroc, &one, &zeroc, &one);
+    retval = cplx_func_gnu(&one, &zeroc, &one, &zeroc, &one);
     if (creal(retval) == 0.0 && cimag(retval) == 0.0) {
         return FLEXIBLAS_COMPLEX_GNU_INTERFACE;
     }
