@@ -31,7 +31,9 @@
  *-----------------------------------------------------------------------------*/
 HIDDEN void * __flexiblas_lookup_cblas_function( void * handle , ...)
 {
-#ifdef FLEXIBLAS_CBLAS
+#ifndef FLEXIBLAS_CBLAS
+    return NULL;
+#endif
     va_list args;
     void *ptr_csymbol = NULL;
     char *name = NULL;
@@ -56,9 +58,6 @@ HIDDEN void * __flexiblas_lookup_cblas_function( void * handle , ...)
     }
     va_end(args);
     return ptr_csymbol;
-#else
-    return NULL;
-#endif
 }
 
 /*-----------------------------------------------------------------------------
@@ -132,7 +131,7 @@ HIDDEN flexiblas_complex_interface_t __flexiblas_get_complex_interface(void *han
     }
 #if defined(__i386__) || defined (__i686__)
     return FLEXIBLAS_COMPLEX_NONE_INTERFACE;
-#else
+#endif
     void *zdotc_ptr = __flexiblas_lookup_fortran_function(handle, "zdotc", NULL);
     if ( zdotc_ptr == NULL) {
         DPRINTF(2, "Could not check complex return value interface. ZDOTC not found.\n");
@@ -188,8 +187,6 @@ HIDDEN flexiblas_complex_interface_t __flexiblas_get_complex_interface(void *han
     }
 #endif
     return FLEXIBLAS_COMPLEX_NONE_INTERFACE;
-
-#endif
 }
 
 
@@ -238,7 +235,7 @@ HIDDEN flexiblas_interface_t __flexiblas_get_interface(void *handle)
 
 #if defined(__i386__) || defined(__i686__)
     return FLEXIBLAS_INTERFACE_LP64;
-#else
+#endif
     int64_t (*isamax_function)(int64_t *, float *, int64_t *);
     void *isamax_ptr = __flexiblas_lookup_fortran_function(handle, "isamax", NULL);
     if ( isamax_ptr == NULL) {
@@ -282,10 +279,8 @@ HIDDEN flexiblas_interface_t __flexiblas_get_interface(void *handle)
     if (idx == 2) {
         return FLEXIBLAS_INTERFACE_LP64;
     }
-
 #endif
     return FLEXIBLAS_INTERFACE_NONE;
-#endif
 }
 
 
