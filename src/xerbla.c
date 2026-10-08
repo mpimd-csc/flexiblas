@@ -341,10 +341,10 @@ int __flexiblas_setup_cblas_xerbla(flexiblas_backend_t *backend)
         }
 
         if ( user_xerbla == 0 ){
-            DPRINTF(1,"Use XERBLA of the BLAS backend.\n");
+            DPRINTF(1,"Use CBLAS_XERBLA of the BLAS backend.\n");
             backend->cblas_xerbla = xerbla_symbol1;
         } else {
-            DPRINTF(1, "Use XERBLA supplied by the user.\n");
+            DPRINTF(1, "Use CBLAS_XERBLA supplied by the user.\n");
             backend->cblas_xerbla = xerbla_symbol2;
         }
     }
