@@ -1,10 +1,15 @@
 # This Makefile compiles the CBLAS routines
 
-include(CheckCSourceCompiles)
-check_c_source_compiles("int __attribute__((weak)) main() {};"
-                        HAS_ATTRIBUTE_WEAK_SUPPORT)
-
-
+if (WIN32)
+  # MSVC does not support __attribute__((weak)) and the Intel compiler supports
+  # it but produces linker errors when used in CBLAS, so we disable it for all
+  # Windows builds.
+  set(HAS_ATTRIBUTE_WEAK_SUPPORT FALSE)
+else()
+  include(CheckCSourceCompiles)
+  check_c_source_compiles("int __attribute__((weak)) main() {};"
+                          HAS_ATTRIBUTE_WEAK_SUPPORT)
+endif()
 
 set(CBLASLIB cblas)
 # Error handling routines for level 2 & 3
