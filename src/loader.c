@@ -26,6 +26,12 @@
 #include "flexiblas_fortran_mangle.h"
 #include <stdarg.h>
 
+#ifdef FLEXIBLAS_INTEGER8
+  #define FLEXIBLAS_LOAD_INT_T int64_t
+#else
+  #define FLEXIBLAS_LOAD_INT_T int32_t
+#endif
+
 /*-----------------------------------------------------------------------------
  *  Load CBLAS
  *-----------------------------------------------------------------------------*/
@@ -138,15 +144,9 @@ HIDDEN flexiblas_complex_interface_t __flexiblas_get_complex_interface(void *han
         return FLEXIBLAS_COMPLEX_NONE_INTERFACE;
     }
 
-#ifdef FLEXIBLAS_INTEGER8
-    double complex (*zdotc_gnu)(                  int64_t *, double complex *, int64_t *, double complex *, int64_t *);
-    void           (*zdotc_intel)(double complex *, int64_t *, double complex *, int64_t *, double complex *, int64_t *);
-    int64_t        one = 1;
-#else
-    double complex (*zdotc_gnu)(                  int32_t *, double complex *, int32_t *, double complex *, int32_t *);
-    void           (*zdotc_intel)(double complex *, int32_t *, double complex *, int32_t *, double complex *, int32_t *);
-    int32_t        one = 1;
-#endif
+    double complex (*zdotc_gnu)(                  FLEXIBLAS_LOAD_INT_T *, double complex *, FLEXIBLAS_LOAD_INT_T *, double complex *, FLEXIBLAS_LOAD_INT_T *);
+    void           (*zdotc_intel)(double complex *, FLEXIBLAS_LOAD_INT_T *, double complex *, FLEXIBLAS_LOAD_INT_T *, double complex *, FLEXIBLAS_LOAD_INT_T *);
+    FLEXIBLAS_LOAD_INT_T        one = 1;
 
     FUNCTION_POINTER_ASSIGN(zdotc_gnu, zdotc_ptr);
     FUNCTION_POINTER_ASSIGN(zdotc_intel, zdotc_ptr);
@@ -204,19 +204,10 @@ HIDDEN int __flexiblas_get_f2c_float_return(void *handle)
     float retval = 0.0;
     float x[2] = {1.0, 2.0};
     float y[2] = {3.0, 4.0};
-#ifdef FLEXIBLAS_INTEGER8
-    int64_t n = 2;
-    int64_t one = 1;
-#else
-    int32_t n = 2;
-    int32_t one = 1;
-#endif
-#ifdef FLEXIBLAS_INTEGER8
-    float (*sdot_run)(int64_t *, float *, int64_t *, float *, int64_t *);
-#else
-    float (*sdot_run)(int32_t *, float *, int32_t *, float *, int32_t *);
-#endif
-	FUNCTION_POINTER_ASSIGN(sdot_run, sdot_ptr);
+    FLEXIBLAS_LOAD_INT_T n = 2;
+    FLEXIBLAS_LOAD_INT_T one = 1;
+    float (*sdot_run)(FLEXIBLAS_LOAD_INT_T *, float *, FLEXIBLAS_LOAD_INT_T *, float *, FLEXIBLAS_LOAD_INT_T *);
+    FUNCTION_POINTER_ASSIGN(sdot_run, sdot_ptr);
 
     retval = sdot_run(&n, x, &one, y, &one);
 
