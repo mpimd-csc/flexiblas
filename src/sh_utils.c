@@ -407,7 +407,7 @@ HIDDEN void __flexiblas_dlclose(void *lib) {
     return;
 }
 
-HIDDEN char* __flexiblas_dlerror()
+HIDDEN char* __flexiblas_dlerror(void)
 {
     return dlerror();
 
