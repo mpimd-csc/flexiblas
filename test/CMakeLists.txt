@@ -1,9 +1,3 @@
-IF ( APPLE AND (NOT CMAKE_C_COMPILER_ID STREQUAL CMAKE_Fortran_COMPILER_ID))
-	MESSAGE(WARNING "On MacOS the C and the Fortran Compiler needs to be from the same vendor") 
-	RETURN()
-ENDIF()
-	
-
 MESSAGE( STATUS "Enable Testing...")
 add_subdirectory(blas)
 SET(SUBDIR "none")
