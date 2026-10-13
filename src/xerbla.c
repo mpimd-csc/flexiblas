@@ -309,7 +309,6 @@ void cblas_xerbla(int info, const char *rout, const char *form, ...)
 
 int __flexiblas_setup_cblas_xerbla(flexiblas_backend_t *backend)
 {
-#ifndef __WIN32__
     /* Check if the user supplied a XERBLA function  */
     {
         int user_xerbla = 0;
@@ -348,7 +347,6 @@ int __flexiblas_setup_cblas_xerbla(flexiblas_backend_t *backend)
             backend->cblas_xerbla = xerbla_symbol2;
         }
     }
-#endif
     return 0;
 }
 
