@@ -308,61 +308,11 @@ CBLAS_FUNC(void, cblas_ctrsv, , return,
   (CBLAS_LAYOUT layout, CBLAS_UPLO Uplo, CBLAS_TRANSPOSE TransA, CBLAS_DIAG Diag, const CBLAS_INT N, const void *A, const CBLAS_INT lda, void *X, const CBLAS_INT incX),
   (layout, Uplo, TransA, Diag, N, A, lda, X, incX),
   cblas)
-#ifdef FLEXIBLAS_HOOK_API
-static TLS_STORE uint8_t hook_pos_cblas_dasum = 0;
-#endif
-
-/* Wrapper for cblas_dasum */
-double  cblas_dasum (const CBLAS_INT N, const double *X, const CBLAS_INT incX)
-{
-    double (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    #ifdef FLEXIBLAS_HOOK_API
-    double (*fn_hook) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    hook_pos_cblas_dasum = 0;
-    #endif
-
-    /* Post init if necessary */
-    if ( unlikely(current_backend->post_init != 0) ) {
-        __flexiblas_backend_init(current_backend);
-        current_backend->post_init = 0;
-    }
-
-    *(void **) &fn = current_backend->cblas.cblas_dasum;
-    #ifdef FLEXIBLAS_HOOK_API
-    *(void **) &fn_hook = __flexiblas_hooks->cblas_dasum.hook_function[0];
-
-    if ( fn_hook != NULL ) {
-        return fn_hook(N, X, incX);
-    } else {
-        return fn(N, X, incX);
-    }
-    #else
-    return fn(N, X, incX);
-    #endif
-}
-
-#ifdef FLEXIBLAS_HOOK_API
-double  flexiblas_real_cblas_dasum(const CBLAS_INT N, const double *X, const CBLAS_INT incX)
-{
-    double (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    *(void **) &fn = current_backend->cblas.cblas_dasum;
-    return fn(N, X, incX);
-}
-
-double flexiblas_chain_cblas_dasum(const CBLAS_INT N, const void *X, const CBLAS_INT incX)
-{
-    double (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    hook_pos_cblas_dasum++;
-    if ( hook_pos_cblas_dasum < __flexiblas_hooks->cblas_dasum.nhook ) {
-        *(void **) &fn = __flexiblas_hooks->cblas_dasum.hook_function[hook_pos_cblas_dasum];
-    } else {
-        hook_pos_cblas_dasum = 0;
-        *(void **) &fn = current_backend->cblas.cblas_dasum;
-    }
-    return fn(N, X, incX);
-}
-
-#endif
+CBLAS_FUNC(double, cblas_dasum, return, ,
+  (const CBLAS_INT N, const double *X, const CBLAS_INT incX),
+  (const CBLAS_INT N, const void *X, const CBLAS_INT incX),
+  (N, X, incX),
+  cblas)
 CBLAS_FUNC(void, cblas_daxpby, , return,
   (const CBLAS_INT N, const double alpha, const double *X, const CBLAS_INT incX, const double beta, double *Y, const CBLAS_INT incY),
   (const CBLAS_INT N, const double alpha, const void *X, const CBLAS_INT incX, const double beta, void *Y, const CBLAS_INT incY),
@@ -378,61 +328,11 @@ CBLAS_FUNC(void, cblas_dcopy, , return,
   (const CBLAS_INT N, const void *X, const CBLAS_INT incX, void *Y, const CBLAS_INT incY),
   (N, X, incX, Y, incY),
   cblas)
-#ifdef FLEXIBLAS_HOOK_API
-static TLS_STORE uint8_t hook_pos_cblas_ddot = 0;
-#endif
-
-/* Wrapper for cblas_ddot */
-double  cblas_ddot (const CBLAS_INT N, const double *X, const CBLAS_INT incX, const double *Y, const CBLAS_INT incY)
-{
-    double (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY);
-    #ifdef FLEXIBLAS_HOOK_API
-    double (*fn_hook) (const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY);
-    hook_pos_cblas_ddot = 0;
-    #endif
-
-    /* Post init if necessary */
-    if ( unlikely(current_backend->post_init != 0) ) {
-        __flexiblas_backend_init(current_backend);
-        current_backend->post_init = 0;
-    }
-
-    *(void **) &fn = current_backend->cblas.cblas_ddot;
-    #ifdef FLEXIBLAS_HOOK_API
-    *(void **) &fn_hook = __flexiblas_hooks->cblas_ddot.hook_function[0];
-
-    if ( fn_hook != NULL ) {
-        return fn_hook(N, X, incX, Y, incY);
-    } else {
-        return fn(N, X, incX, Y, incY);
-    }
-    #else
-    return fn(N, X, incX, Y, incY);
-    #endif
-}
-
-#ifdef FLEXIBLAS_HOOK_API
-double  flexiblas_real_cblas_ddot(const CBLAS_INT N, const double *X, const CBLAS_INT incX, const double *Y, const CBLAS_INT incY)
-{
-    double (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY);
-    *(void **) &fn = current_backend->cblas.cblas_ddot;
-    return fn(N, X, incX, Y, incY);
-}
-
-double flexiblas_chain_cblas_ddot(const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY)
-{
-    double (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY);
-    hook_pos_cblas_ddot++;
-    if ( hook_pos_cblas_ddot < __flexiblas_hooks->cblas_ddot.nhook ) {
-        *(void **) &fn = __flexiblas_hooks->cblas_ddot.hook_function[hook_pos_cblas_ddot];
-    } else {
-        hook_pos_cblas_ddot = 0;
-        *(void **) &fn = current_backend->cblas.cblas_ddot;
-    }
-    return fn(N, X, incX, Y, incY);
-}
-
-#endif
+CBLAS_FUNC(double, cblas_ddot, return, ,
+  (const CBLAS_INT N, const double *X, const CBLAS_INT incX, const double *Y, const CBLAS_INT incY),
+  (const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY),
+  (N, X, incX, Y, incY),
+  cblas)
 CBLAS_FUNC(void, cblas_dgbmv, , return,
   (CBLAS_LAYOUT layout, CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N, const CBLAS_INT KL, const CBLAS_INT KU, const double alpha, const double *A, const CBLAS_INT lda, const double *X, const CBLAS_INT incX, const double beta, double *Y, const CBLAS_INT incY),
   (CBLAS_LAYOUT layout, CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N, const CBLAS_INT KL, const CBLAS_INT KU, const double alpha, const void *A, const CBLAS_INT lda, const void *X, const CBLAS_INT incX, const double beta, void *Y, const CBLAS_INT incY),
@@ -479,61 +379,11 @@ CBLAS_FUNC(void, cblas_dimatcopy, , return,
   (const CBLAS_ORDER CORDER, const CBLAS_TRANSPOSE CTRANS, const CBLAS_INT crows, const CBLAS_INT ccols, const double calpha, void *a, const CBLAS_INT clda, const CBLAS_INT cldb),
   (CORDER, CTRANS, crows, ccols, calpha, a, clda, cldb),
   cblas)
-#ifdef FLEXIBLAS_HOOK_API
-static TLS_STORE uint8_t hook_pos_cblas_dnrm2 = 0;
-#endif
-
-/* Wrapper for cblas_dnrm2 */
-double  cblas_dnrm2 (const CBLAS_INT N, const double *X, const CBLAS_INT incX)
-{
-    double (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    #ifdef FLEXIBLAS_HOOK_API
-    double (*fn_hook) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    hook_pos_cblas_dnrm2 = 0;
-    #endif
-
-    /* Post init if necessary */
-    if ( unlikely(current_backend->post_init != 0) ) {
-        __flexiblas_backend_init(current_backend);
-        current_backend->post_init = 0;
-    }
-
-    *(void **) &fn = current_backend->cblas.cblas_dnrm2;
-    #ifdef FLEXIBLAS_HOOK_API
-    *(void **) &fn_hook = __flexiblas_hooks->cblas_dnrm2.hook_function[0];
-
-    if ( fn_hook != NULL ) {
-        return fn_hook(N, X, incX);
-    } else {
-        return fn(N, X, incX);
-    }
-    #else
-    return fn(N, X, incX);
-    #endif
-}
-
-#ifdef FLEXIBLAS_HOOK_API
-double  flexiblas_real_cblas_dnrm2(const CBLAS_INT N, const double *X, const CBLAS_INT incX)
-{
-    double (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    *(void **) &fn = current_backend->cblas.cblas_dnrm2;
-    return fn(N, X, incX);
-}
-
-double flexiblas_chain_cblas_dnrm2(const CBLAS_INT N, const void *X, const CBLAS_INT incX)
-{
-    double (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    hook_pos_cblas_dnrm2++;
-    if ( hook_pos_cblas_dnrm2 < __flexiblas_hooks->cblas_dnrm2.nhook ) {
-        *(void **) &fn = __flexiblas_hooks->cblas_dnrm2.hook_function[hook_pos_cblas_dnrm2];
-    } else {
-        hook_pos_cblas_dnrm2 = 0;
-        *(void **) &fn = current_backend->cblas.cblas_dnrm2;
-    }
-    return fn(N, X, incX);
-}
-
-#endif
+CBLAS_FUNC(double, cblas_dnrm2, return, ,
+  (const CBLAS_INT N, const double *X, const CBLAS_INT incX),
+  (const CBLAS_INT N, const void *X, const CBLAS_INT incX),
+  (N, X, incX),
+  cblas)
 CBLAS_FUNC(void, cblas_domatcopy, , return,
   (const CBLAS_ORDER CORDER, const CBLAS_TRANSPOSE CTRANS, const CBLAS_INT crows, const CBLAS_INT ccols, const double calpha, const double *a, const CBLAS_INT clda, double *b, const CBLAS_INT cldb),
   (const CBLAS_ORDER CORDER, const CBLAS_TRANSPOSE CTRANS, const CBLAS_INT crows, const CBLAS_INT ccols, const double calpha, const void *a, const CBLAS_INT clda, void *b, const CBLAS_INT cldb),
@@ -569,61 +419,11 @@ CBLAS_FUNC(void, cblas_dscal, , return,
   (const CBLAS_INT N, const double alpha, void *X, const CBLAS_INT incX),
   (N, alpha, X, incX),
   cblas)
-#ifdef FLEXIBLAS_HOOK_API
-static TLS_STORE uint8_t hook_pos_cblas_dsdot = 0;
-#endif
-
-/* Wrapper for cblas_dsdot */
-double  cblas_dsdot (const CBLAS_INT N, const float *X, const CBLAS_INT incX, const float *Y, const CBLAS_INT incY)
-{
-    double (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY);
-    #ifdef FLEXIBLAS_HOOK_API
-    double (*fn_hook) (const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY);
-    hook_pos_cblas_dsdot = 0;
-    #endif
-
-    /* Post init if necessary */
-    if ( unlikely(current_backend->post_init != 0) ) {
-        __flexiblas_backend_init(current_backend);
-        current_backend->post_init = 0;
-    }
-
-    *(void **) &fn = current_backend->cblas.cblas_dsdot;
-    #ifdef FLEXIBLAS_HOOK_API
-    *(void **) &fn_hook = __flexiblas_hooks->cblas_dsdot.hook_function[0];
-
-    if ( fn_hook != NULL ) {
-        return fn_hook(N, X, incX, Y, incY);
-    } else {
-        return fn(N, X, incX, Y, incY);
-    }
-    #else
-    return fn(N, X, incX, Y, incY);
-    #endif
-}
-
-#ifdef FLEXIBLAS_HOOK_API
-double  flexiblas_real_cblas_dsdot(const CBLAS_INT N, const float *X, const CBLAS_INT incX, const float *Y, const CBLAS_INT incY)
-{
-    double (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY);
-    *(void **) &fn = current_backend->cblas.cblas_dsdot;
-    return fn(N, X, incX, Y, incY);
-}
-
-double flexiblas_chain_cblas_dsdot(const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY)
-{
-    double (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY);
-    hook_pos_cblas_dsdot++;
-    if ( hook_pos_cblas_dsdot < __flexiblas_hooks->cblas_dsdot.nhook ) {
-        *(void **) &fn = __flexiblas_hooks->cblas_dsdot.hook_function[hook_pos_cblas_dsdot];
-    } else {
-        hook_pos_cblas_dsdot = 0;
-        *(void **) &fn = current_backend->cblas.cblas_dsdot;
-    }
-    return fn(N, X, incX, Y, incY);
-}
-
-#endif
+CBLAS_FUNC(double, cblas_dsdot, return, ,
+  (const CBLAS_INT N, const float *X, const CBLAS_INT incX, const float *Y, const CBLAS_INT incY),
+  (const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY),
+  (N, X, incX, Y, incY),
+  cblas)
 CBLAS_FUNC(void, cblas_dspmv, , return,
   (CBLAS_LAYOUT layout, CBLAS_UPLO Uplo, const CBLAS_INT N, const double alpha, const double *Ap, const double *X, const CBLAS_INT incX, const double beta, double *Y, const CBLAS_INT incY),
   (CBLAS_LAYOUT layout, CBLAS_UPLO Uplo, const CBLAS_INT N, const double alpha, const void *Ap, const void *X, const CBLAS_INT incX, const double beta, void *Y, const CBLAS_INT incY),
@@ -714,391 +514,41 @@ CBLAS_FUNC(void, cblas_dtrsv, , return,
   (CBLAS_LAYOUT layout, CBLAS_UPLO Uplo, CBLAS_TRANSPOSE TransA, CBLAS_DIAG Diag, const CBLAS_INT N, const void *A, const CBLAS_INT lda, void *X, const CBLAS_INT incX),
   (layout, Uplo, TransA, Diag, N, A, lda, X, incX),
   cblas)
-#ifdef FLEXIBLAS_HOOK_API
-static TLS_STORE uint8_t hook_pos_cblas_dzasum = 0;
-#endif
-
-/* Wrapper for cblas_dzasum */
-double  cblas_dzasum (const CBLAS_INT N, const void *X, const CBLAS_INT incX)
-{
-    double (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    #ifdef FLEXIBLAS_HOOK_API
-    double (*fn_hook) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    hook_pos_cblas_dzasum = 0;
-    #endif
-
-    /* Post init if necessary */
-    if ( unlikely(current_backend->post_init != 0) ) {
-        __flexiblas_backend_init(current_backend);
-        current_backend->post_init = 0;
-    }
-
-    *(void **) &fn = current_backend->cblas.cblas_dzasum;
-    #ifdef FLEXIBLAS_HOOK_API
-    *(void **) &fn_hook = __flexiblas_hooks->cblas_dzasum.hook_function[0];
-
-    if ( fn_hook != NULL ) {
-        return fn_hook(N, X, incX);
-    } else {
-        return fn(N, X, incX);
-    }
-    #else
-    return fn(N, X, incX);
-    #endif
-}
-
-#ifdef FLEXIBLAS_HOOK_API
-double  flexiblas_real_cblas_dzasum(const CBLAS_INT N, const void *X, const CBLAS_INT incX)
-{
-    double (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    *(void **) &fn = current_backend->cblas.cblas_dzasum;
-    return fn(N, X, incX);
-}
-
-double flexiblas_chain_cblas_dzasum(const CBLAS_INT N, const void *X, const CBLAS_INT incX)
-{
-    double (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    hook_pos_cblas_dzasum++;
-    if ( hook_pos_cblas_dzasum < __flexiblas_hooks->cblas_dzasum.nhook ) {
-        *(void **) &fn = __flexiblas_hooks->cblas_dzasum.hook_function[hook_pos_cblas_dzasum];
-    } else {
-        hook_pos_cblas_dzasum = 0;
-        *(void **) &fn = current_backend->cblas.cblas_dzasum;
-    }
-    return fn(N, X, incX);
-}
-
-#endif
-#ifdef FLEXIBLAS_HOOK_API
-static TLS_STORE uint8_t hook_pos_cblas_dznrm2 = 0;
-#endif
-
-/* Wrapper for cblas_dznrm2 */
-double  cblas_dznrm2 (const CBLAS_INT N, const void *X, const CBLAS_INT incX)
-{
-    double (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    #ifdef FLEXIBLAS_HOOK_API
-    double (*fn_hook) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    hook_pos_cblas_dznrm2 = 0;
-    #endif
-
-    /* Post init if necessary */
-    if ( unlikely(current_backend->post_init != 0) ) {
-        __flexiblas_backend_init(current_backend);
-        current_backend->post_init = 0;
-    }
-
-    *(void **) &fn = current_backend->cblas.cblas_dznrm2;
-    #ifdef FLEXIBLAS_HOOK_API
-    *(void **) &fn_hook = __flexiblas_hooks->cblas_dznrm2.hook_function[0];
-
-    if ( fn_hook != NULL ) {
-        return fn_hook(N, X, incX);
-    } else {
-        return fn(N, X, incX);
-    }
-    #else
-    return fn(N, X, incX);
-    #endif
-}
-
-#ifdef FLEXIBLAS_HOOK_API
-double  flexiblas_real_cblas_dznrm2(const CBLAS_INT N, const void *X, const CBLAS_INT incX)
-{
-    double (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    *(void **) &fn = current_backend->cblas.cblas_dznrm2;
-    return fn(N, X, incX);
-}
-
-double flexiblas_chain_cblas_dznrm2(const CBLAS_INT N, const void *X, const CBLAS_INT incX)
-{
-    double (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    hook_pos_cblas_dznrm2++;
-    if ( hook_pos_cblas_dznrm2 < __flexiblas_hooks->cblas_dznrm2.nhook ) {
-        *(void **) &fn = __flexiblas_hooks->cblas_dznrm2.hook_function[hook_pos_cblas_dznrm2];
-    } else {
-        hook_pos_cblas_dznrm2 = 0;
-        *(void **) &fn = current_backend->cblas.cblas_dznrm2;
-    }
-    return fn(N, X, incX);
-}
-
-#endif
-#ifdef FLEXIBLAS_HOOK_API
-static TLS_STORE uint8_t hook_pos_cblas_icamax = 0;
-#endif
-
-/* Wrapper for cblas_icamax */
-size_t  cblas_icamax (const CBLAS_INT N, const void *X, const CBLAS_INT incX)
-{
-    size_t (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    #ifdef FLEXIBLAS_HOOK_API
-    size_t (*fn_hook) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    hook_pos_cblas_icamax = 0;
-    #endif
-
-    /* Post init if necessary */
-    if ( unlikely(current_backend->post_init != 0) ) {
-        __flexiblas_backend_init(current_backend);
-        current_backend->post_init = 0;
-    }
-
-    *(void **) &fn = current_backend->cblas.cblas_icamax;
-    #ifdef FLEXIBLAS_HOOK_API
-    *(void **) &fn_hook = __flexiblas_hooks->cblas_icamax.hook_function[0];
-
-    if ( fn_hook != NULL ) {
-        return fn_hook(N, X, incX);
-    } else {
-        return fn(N, X, incX);
-    }
-    #else
-    return fn(N, X, incX);
-    #endif
-}
-
-#ifdef FLEXIBLAS_HOOK_API
-size_t  flexiblas_real_cblas_icamax(const CBLAS_INT N, const void *X, const CBLAS_INT incX)
-{
-    size_t (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    *(void **) &fn = current_backend->cblas.cblas_icamax;
-    return fn(N, X, incX);
-}
-
-size_t flexiblas_chain_cblas_icamax(const CBLAS_INT N, const void *X, const CBLAS_INT incX)
-{
-    size_t (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    hook_pos_cblas_icamax++;
-    if ( hook_pos_cblas_icamax < __flexiblas_hooks->cblas_icamax.nhook ) {
-        *(void **) &fn = __flexiblas_hooks->cblas_icamax.hook_function[hook_pos_cblas_icamax];
-    } else {
-        hook_pos_cblas_icamax = 0;
-        *(void **) &fn = current_backend->cblas.cblas_icamax;
-    }
-    return fn(N, X, incX);
-}
-
-#endif
-#ifdef FLEXIBLAS_HOOK_API
-static TLS_STORE uint8_t hook_pos_cblas_idamax = 0;
-#endif
-
-/* Wrapper for cblas_idamax */
-size_t  cblas_idamax (const CBLAS_INT N, const double *X, const CBLAS_INT incX)
-{
-    size_t (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    #ifdef FLEXIBLAS_HOOK_API
-    size_t (*fn_hook) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    hook_pos_cblas_idamax = 0;
-    #endif
-
-    /* Post init if necessary */
-    if ( unlikely(current_backend->post_init != 0) ) {
-        __flexiblas_backend_init(current_backend);
-        current_backend->post_init = 0;
-    }
-
-    *(void **) &fn = current_backend->cblas.cblas_idamax;
-    #ifdef FLEXIBLAS_HOOK_API
-    *(void **) &fn_hook = __flexiblas_hooks->cblas_idamax.hook_function[0];
-
-    if ( fn_hook != NULL ) {
-        return fn_hook(N, X, incX);
-    } else {
-        return fn(N, X, incX);
-    }
-    #else
-    return fn(N, X, incX);
-    #endif
-}
-
-#ifdef FLEXIBLAS_HOOK_API
-size_t  flexiblas_real_cblas_idamax(const CBLAS_INT N, const double *X, const CBLAS_INT incX)
-{
-    size_t (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    *(void **) &fn = current_backend->cblas.cblas_idamax;
-    return fn(N, X, incX);
-}
-
-size_t flexiblas_chain_cblas_idamax(const CBLAS_INT N, const void *X, const CBLAS_INT incX)
-{
-    size_t (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    hook_pos_cblas_idamax++;
-    if ( hook_pos_cblas_idamax < __flexiblas_hooks->cblas_idamax.nhook ) {
-        *(void **) &fn = __flexiblas_hooks->cblas_idamax.hook_function[hook_pos_cblas_idamax];
-    } else {
-        hook_pos_cblas_idamax = 0;
-        *(void **) &fn = current_backend->cblas.cblas_idamax;
-    }
-    return fn(N, X, incX);
-}
-
-#endif
-#ifdef FLEXIBLAS_HOOK_API
-static TLS_STORE uint8_t hook_pos_cblas_isamax = 0;
-#endif
-
-/* Wrapper for cblas_isamax */
-size_t  cblas_isamax (const CBLAS_INT N, const float *X, const CBLAS_INT incX)
-{
-    size_t (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    #ifdef FLEXIBLAS_HOOK_API
-    size_t (*fn_hook) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    hook_pos_cblas_isamax = 0;
-    #endif
-
-    /* Post init if necessary */
-    if ( unlikely(current_backend->post_init != 0) ) {
-        __flexiblas_backend_init(current_backend);
-        current_backend->post_init = 0;
-    }
-
-    *(void **) &fn = current_backend->cblas.cblas_isamax;
-    #ifdef FLEXIBLAS_HOOK_API
-    *(void **) &fn_hook = __flexiblas_hooks->cblas_isamax.hook_function[0];
-
-    if ( fn_hook != NULL ) {
-        return fn_hook(N, X, incX);
-    } else {
-        return fn(N, X, incX);
-    }
-    #else
-    return fn(N, X, incX);
-    #endif
-}
-
-#ifdef FLEXIBLAS_HOOK_API
-size_t  flexiblas_real_cblas_isamax(const CBLAS_INT N, const float *X, const CBLAS_INT incX)
-{
-    size_t (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    *(void **) &fn = current_backend->cblas.cblas_isamax;
-    return fn(N, X, incX);
-}
-
-size_t flexiblas_chain_cblas_isamax(const CBLAS_INT N, const void *X, const CBLAS_INT incX)
-{
-    size_t (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    hook_pos_cblas_isamax++;
-    if ( hook_pos_cblas_isamax < __flexiblas_hooks->cblas_isamax.nhook ) {
-        *(void **) &fn = __flexiblas_hooks->cblas_isamax.hook_function[hook_pos_cblas_isamax];
-    } else {
-        hook_pos_cblas_isamax = 0;
-        *(void **) &fn = current_backend->cblas.cblas_isamax;
-    }
-    return fn(N, X, incX);
-}
-
-#endif
-#ifdef FLEXIBLAS_HOOK_API
-static TLS_STORE uint8_t hook_pos_cblas_izamax = 0;
-#endif
-
-/* Wrapper for cblas_izamax */
-size_t  cblas_izamax (const CBLAS_INT N, const void *X, const CBLAS_INT incX)
-{
-    size_t (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    #ifdef FLEXIBLAS_HOOK_API
-    size_t (*fn_hook) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    hook_pos_cblas_izamax = 0;
-    #endif
-
-    /* Post init if necessary */
-    if ( unlikely(current_backend->post_init != 0) ) {
-        __flexiblas_backend_init(current_backend);
-        current_backend->post_init = 0;
-    }
-
-    *(void **) &fn = current_backend->cblas.cblas_izamax;
-    #ifdef FLEXIBLAS_HOOK_API
-    *(void **) &fn_hook = __flexiblas_hooks->cblas_izamax.hook_function[0];
-
-    if ( fn_hook != NULL ) {
-        return fn_hook(N, X, incX);
-    } else {
-        return fn(N, X, incX);
-    }
-    #else
-    return fn(N, X, incX);
-    #endif
-}
-
-#ifdef FLEXIBLAS_HOOK_API
-size_t  flexiblas_real_cblas_izamax(const CBLAS_INT N, const void *X, const CBLAS_INT incX)
-{
-    size_t (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    *(void **) &fn = current_backend->cblas.cblas_izamax;
-    return fn(N, X, incX);
-}
-
-size_t flexiblas_chain_cblas_izamax(const CBLAS_INT N, const void *X, const CBLAS_INT incX)
-{
-    size_t (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    hook_pos_cblas_izamax++;
-    if ( hook_pos_cblas_izamax < __flexiblas_hooks->cblas_izamax.nhook ) {
-        *(void **) &fn = __flexiblas_hooks->cblas_izamax.hook_function[hook_pos_cblas_izamax];
-    } else {
-        hook_pos_cblas_izamax = 0;
-        *(void **) &fn = current_backend->cblas.cblas_izamax;
-    }
-    return fn(N, X, incX);
-}
-
-#endif
-#ifdef FLEXIBLAS_HOOK_API
-static TLS_STORE uint8_t hook_pos_cblas_sasum = 0;
-#endif
-
-/* Wrapper for cblas_sasum */
-float  cblas_sasum (const CBLAS_INT N, const float *X, const CBLAS_INT incX)
-{
-    float (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    #ifdef FLEXIBLAS_HOOK_API
-    float (*fn_hook) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    hook_pos_cblas_sasum = 0;
-    #endif
-
-    /* Post init if necessary */
-    if ( unlikely(current_backend->post_init != 0) ) {
-        __flexiblas_backend_init(current_backend);
-        current_backend->post_init = 0;
-    }
-
-    *(void **) &fn = current_backend->cblas.cblas_sasum;
-    #ifdef FLEXIBLAS_HOOK_API
-    *(void **) &fn_hook = __flexiblas_hooks->cblas_sasum.hook_function[0];
-
-    if ( fn_hook != NULL ) {
-        return fn_hook(N, X, incX);
-    } else {
-        return fn(N, X, incX);
-    }
-    #else
-    return fn(N, X, incX);
-    #endif
-}
-
-#ifdef FLEXIBLAS_HOOK_API
-float  flexiblas_real_cblas_sasum(const CBLAS_INT N, const float *X, const CBLAS_INT incX)
-{
-    float (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    *(void **) &fn = current_backend->cblas.cblas_sasum;
-    return fn(N, X, incX);
-}
-
-float flexiblas_chain_cblas_sasum(const CBLAS_INT N, const void *X, const CBLAS_INT incX)
-{
-    float (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    hook_pos_cblas_sasum++;
-    if ( hook_pos_cblas_sasum < __flexiblas_hooks->cblas_sasum.nhook ) {
-        *(void **) &fn = __flexiblas_hooks->cblas_sasum.hook_function[hook_pos_cblas_sasum];
-    } else {
-        hook_pos_cblas_sasum = 0;
-        *(void **) &fn = current_backend->cblas.cblas_sasum;
-    }
-    return fn(N, X, incX);
-}
-
-#endif
+CBLAS_FUNC(double, cblas_dzasum, return, ,
+  (const CBLAS_INT N, const void *X, const CBLAS_INT incX),
+  (const CBLAS_INT N, const void *X, const CBLAS_INT incX),
+  (N, X, incX),
+  cblas)
+CBLAS_FUNC(double, cblas_dznrm2, return, ,
+  (const CBLAS_INT N, const void *X, const CBLAS_INT incX),
+  (const CBLAS_INT N, const void *X, const CBLAS_INT incX),
+  (N, X, incX),
+  cblas)
+CBLAS_FUNC(size_t, cblas_icamax, return, ,
+  (const CBLAS_INT N, const void *X, const CBLAS_INT incX),
+  (const CBLAS_INT N, const void *X, const CBLAS_INT incX),
+  (N, X, incX),
+  cblas)
+CBLAS_FUNC(size_t, cblas_idamax, return, ,
+  (const CBLAS_INT N, const double *X, const CBLAS_INT incX),
+  (const CBLAS_INT N, const void *X, const CBLAS_INT incX),
+  (N, X, incX),
+  cblas)
+CBLAS_FUNC(size_t, cblas_isamax, return, ,
+  (const CBLAS_INT N, const float *X, const CBLAS_INT incX),
+  (const CBLAS_INT N, const void *X, const CBLAS_INT incX),
+  (N, X, incX),
+  cblas)
+CBLAS_FUNC(size_t, cblas_izamax, return, ,
+  (const CBLAS_INT N, const void *X, const CBLAS_INT incX),
+  (const CBLAS_INT N, const void *X, const CBLAS_INT incX),
+  (N, X, incX),
+  cblas)
+CBLAS_FUNC(float, cblas_sasum, return, ,
+  (const CBLAS_INT N, const float *X, const CBLAS_INT incX),
+  (const CBLAS_INT N, const void *X, const CBLAS_INT incX),
+  (N, X, incX),
+  cblas)
 CBLAS_FUNC(void, cblas_saxpby, , return,
   (const CBLAS_INT N, const float alpha, const float *X, const CBLAS_INT incX, const float beta, float *Y, const CBLAS_INT incY),
   (const CBLAS_INT N, const float alpha, const void *X, const CBLAS_INT incX, const float beta, void *Y, const CBLAS_INT incY),
@@ -1109,231 +559,31 @@ CBLAS_FUNC(void, cblas_saxpy, , return,
   (const CBLAS_INT N, const float alpha, const void *X, const CBLAS_INT incX, void *Y, const CBLAS_INT incY),
   (N, alpha, X, incX, Y, incY),
   cblas)
-#ifdef FLEXIBLAS_HOOK_API
-static TLS_STORE uint8_t hook_pos_cblas_scasum = 0;
-#endif
-
-/* Wrapper for cblas_scasum */
-float  cblas_scasum (const CBLAS_INT N, const void *X, const CBLAS_INT incX)
-{
-    float (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    #ifdef FLEXIBLAS_HOOK_API
-    float (*fn_hook) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    hook_pos_cblas_scasum = 0;
-    #endif
-
-    /* Post init if necessary */
-    if ( unlikely(current_backend->post_init != 0) ) {
-        __flexiblas_backend_init(current_backend);
-        current_backend->post_init = 0;
-    }
-
-    *(void **) &fn = current_backend->cblas.cblas_scasum;
-    #ifdef FLEXIBLAS_HOOK_API
-    *(void **) &fn_hook = __flexiblas_hooks->cblas_scasum.hook_function[0];
-
-    if ( fn_hook != NULL ) {
-        return fn_hook(N, X, incX);
-    } else {
-        return fn(N, X, incX);
-    }
-    #else
-    return fn(N, X, incX);
-    #endif
-}
-
-#ifdef FLEXIBLAS_HOOK_API
-float  flexiblas_real_cblas_scasum(const CBLAS_INT N, const void *X, const CBLAS_INT incX)
-{
-    float (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    *(void **) &fn = current_backend->cblas.cblas_scasum;
-    return fn(N, X, incX);
-}
-
-float flexiblas_chain_cblas_scasum(const CBLAS_INT N, const void *X, const CBLAS_INT incX)
-{
-    float (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    hook_pos_cblas_scasum++;
-    if ( hook_pos_cblas_scasum < __flexiblas_hooks->cblas_scasum.nhook ) {
-        *(void **) &fn = __flexiblas_hooks->cblas_scasum.hook_function[hook_pos_cblas_scasum];
-    } else {
-        hook_pos_cblas_scasum = 0;
-        *(void **) &fn = current_backend->cblas.cblas_scasum;
-    }
-    return fn(N, X, incX);
-}
-
-#endif
-#ifdef FLEXIBLAS_HOOK_API
-static TLS_STORE uint8_t hook_pos_cblas_scnrm2 = 0;
-#endif
-
-/* Wrapper for cblas_scnrm2 */
-float  cblas_scnrm2 (const CBLAS_INT N, const void *X, const CBLAS_INT incX)
-{
-    float (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    #ifdef FLEXIBLAS_HOOK_API
-    float (*fn_hook) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    hook_pos_cblas_scnrm2 = 0;
-    #endif
-
-    /* Post init if necessary */
-    if ( unlikely(current_backend->post_init != 0) ) {
-        __flexiblas_backend_init(current_backend);
-        current_backend->post_init = 0;
-    }
-
-    *(void **) &fn = current_backend->cblas.cblas_scnrm2;
-    #ifdef FLEXIBLAS_HOOK_API
-    *(void **) &fn_hook = __flexiblas_hooks->cblas_scnrm2.hook_function[0];
-
-    if ( fn_hook != NULL ) {
-        return fn_hook(N, X, incX);
-    } else {
-        return fn(N, X, incX);
-    }
-    #else
-    return fn(N, X, incX);
-    #endif
-}
-
-#ifdef FLEXIBLAS_HOOK_API
-float  flexiblas_real_cblas_scnrm2(const CBLAS_INT N, const void *X, const CBLAS_INT incX)
-{
-    float (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    *(void **) &fn = current_backend->cblas.cblas_scnrm2;
-    return fn(N, X, incX);
-}
-
-float flexiblas_chain_cblas_scnrm2(const CBLAS_INT N, const void *X, const CBLAS_INT incX)
-{
-    float (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    hook_pos_cblas_scnrm2++;
-    if ( hook_pos_cblas_scnrm2 < __flexiblas_hooks->cblas_scnrm2.nhook ) {
-        *(void **) &fn = __flexiblas_hooks->cblas_scnrm2.hook_function[hook_pos_cblas_scnrm2];
-    } else {
-        hook_pos_cblas_scnrm2 = 0;
-        *(void **) &fn = current_backend->cblas.cblas_scnrm2;
-    }
-    return fn(N, X, incX);
-}
-
-#endif
+CBLAS_FUNC(float, cblas_scasum, return, ,
+  (const CBLAS_INT N, const void *X, const CBLAS_INT incX),
+  (const CBLAS_INT N, const void *X, const CBLAS_INT incX),
+  (N, X, incX),
+  cblas)
+CBLAS_FUNC(float, cblas_scnrm2, return, ,
+  (const CBLAS_INT N, const void *X, const CBLAS_INT incX),
+  (const CBLAS_INT N, const void *X, const CBLAS_INT incX),
+  (N, X, incX),
+  cblas)
 CBLAS_FUNC(void, cblas_scopy, , return,
   (const CBLAS_INT N, const float *X, const CBLAS_INT incX, float *Y, const CBLAS_INT incY),
   (const CBLAS_INT N, const void *X, const CBLAS_INT incX, void *Y, const CBLAS_INT incY),
   (N, X, incX, Y, incY),
   cblas)
-#ifdef FLEXIBLAS_HOOK_API
-static TLS_STORE uint8_t hook_pos_cblas_sdot = 0;
-#endif
-
-/* Wrapper for cblas_sdot */
-float  cblas_sdot (const CBLAS_INT N, const float *X, const CBLAS_INT incX, const float *Y, const CBLAS_INT incY)
-{
-    float (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY);
-    #ifdef FLEXIBLAS_HOOK_API
-    float (*fn_hook) (const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY);
-    hook_pos_cblas_sdot = 0;
-    #endif
-
-    /* Post init if necessary */
-    if ( unlikely(current_backend->post_init != 0) ) {
-        __flexiblas_backend_init(current_backend);
-        current_backend->post_init = 0;
-    }
-
-    *(void **) &fn = current_backend->cblas.cblas_sdot;
-    #ifdef FLEXIBLAS_HOOK_API
-    *(void **) &fn_hook = __flexiblas_hooks->cblas_sdot.hook_function[0];
-
-    if ( fn_hook != NULL ) {
-        return fn_hook(N, X, incX, Y, incY);
-    } else {
-        return fn(N, X, incX, Y, incY);
-    }
-    #else
-    return fn(N, X, incX, Y, incY);
-    #endif
-}
-
-#ifdef FLEXIBLAS_HOOK_API
-float  flexiblas_real_cblas_sdot(const CBLAS_INT N, const float *X, const CBLAS_INT incX, const float *Y, const CBLAS_INT incY)
-{
-    float (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY);
-    *(void **) &fn = current_backend->cblas.cblas_sdot;
-    return fn(N, X, incX, Y, incY);
-}
-
-float flexiblas_chain_cblas_sdot(const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY)
-{
-    float (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY);
-    hook_pos_cblas_sdot++;
-    if ( hook_pos_cblas_sdot < __flexiblas_hooks->cblas_sdot.nhook ) {
-        *(void **) &fn = __flexiblas_hooks->cblas_sdot.hook_function[hook_pos_cblas_sdot];
-    } else {
-        hook_pos_cblas_sdot = 0;
-        *(void **) &fn = current_backend->cblas.cblas_sdot;
-    }
-    return fn(N, X, incX, Y, incY);
-}
-
-#endif
-#ifdef FLEXIBLAS_HOOK_API
-static TLS_STORE uint8_t hook_pos_cblas_sdsdot = 0;
-#endif
-
-/* Wrapper for cblas_sdsdot */
-float  cblas_sdsdot (const CBLAS_INT N, const float alpha, const float *X, const CBLAS_INT incX, const float *Y, const CBLAS_INT incY)
-{
-    float (*fn) (const CBLAS_INT N, const float alpha, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY);
-    #ifdef FLEXIBLAS_HOOK_API
-    float (*fn_hook) (const CBLAS_INT N, const float alpha, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY);
-    hook_pos_cblas_sdsdot = 0;
-    #endif
-
-    /* Post init if necessary */
-    if ( unlikely(current_backend->post_init != 0) ) {
-        __flexiblas_backend_init(current_backend);
-        current_backend->post_init = 0;
-    }
-
-    *(void **) &fn = current_backend->cblas.cblas_sdsdot;
-    #ifdef FLEXIBLAS_HOOK_API
-    *(void **) &fn_hook = __flexiblas_hooks->cblas_sdsdot.hook_function[0];
-
-    if ( fn_hook != NULL ) {
-        return fn_hook(N, alpha, X, incX, Y, incY);
-    } else {
-        return fn(N, alpha, X, incX, Y, incY);
-    }
-    #else
-    return fn(N, alpha, X, incX, Y, incY);
-    #endif
-}
-
-#ifdef FLEXIBLAS_HOOK_API
-float  flexiblas_real_cblas_sdsdot(const CBLAS_INT N, const float alpha, const float *X, const CBLAS_INT incX, const float *Y, const CBLAS_INT incY)
-{
-    float (*fn) (const CBLAS_INT N, const float alpha, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY);
-    *(void **) &fn = current_backend->cblas.cblas_sdsdot;
-    return fn(N, alpha, X, incX, Y, incY);
-}
-
-float flexiblas_chain_cblas_sdsdot(const CBLAS_INT N, const float alpha, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY)
-{
-    float (*fn) (const CBLAS_INT N, const float alpha, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY);
-    hook_pos_cblas_sdsdot++;
-    if ( hook_pos_cblas_sdsdot < __flexiblas_hooks->cblas_sdsdot.nhook ) {
-        *(void **) &fn = __flexiblas_hooks->cblas_sdsdot.hook_function[hook_pos_cblas_sdsdot];
-    } else {
-        hook_pos_cblas_sdsdot = 0;
-        *(void **) &fn = current_backend->cblas.cblas_sdsdot;
-    }
-    return fn(N, alpha, X, incX, Y, incY);
-}
-
-#endif
+CBLAS_FUNC(float, cblas_sdot, return, ,
+  (const CBLAS_INT N, const float *X, const CBLAS_INT incX, const float *Y, const CBLAS_INT incY),
+  (const CBLAS_INT N, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY),
+  (N, X, incX, Y, incY),
+  cblas)
+CBLAS_FUNC(float, cblas_sdsdot, return, ,
+  (const CBLAS_INT N, const float alpha, const float *X, const CBLAS_INT incX, const float *Y, const CBLAS_INT incY),
+  (const CBLAS_INT N, const float alpha, const void *X, const CBLAS_INT incX, const void *Y, const CBLAS_INT incY),
+  (N, alpha, X, incX, Y, incY),
+  cblas)
 CBLAS_FUNC(void, cblas_sgbmv, , return,
   (CBLAS_LAYOUT layout, CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N, const CBLAS_INT KL, const CBLAS_INT KU, const float alpha, const float *A, const CBLAS_INT lda, const float *X, const CBLAS_INT incX, const float beta, float *Y, const CBLAS_INT incY),
   (CBLAS_LAYOUT layout, CBLAS_TRANSPOSE TransA, const CBLAS_INT M, const CBLAS_INT N, const CBLAS_INT KL, const CBLAS_INT KU, const float alpha, const void *A, const CBLAS_INT lda, const void *X, const CBLAS_INT incX, const float beta, void *Y, const CBLAS_INT incY),
@@ -1380,61 +630,11 @@ CBLAS_FUNC(void, cblas_simatcopy, , return,
   (const CBLAS_ORDER CORDER, const CBLAS_TRANSPOSE CTRANS, const CBLAS_INT crows, const CBLAS_INT ccols, const float calpha, void *a, const CBLAS_INT clda, const CBLAS_INT cldb),
   (CORDER, CTRANS, crows, ccols, calpha, a, clda, cldb),
   cblas)
-#ifdef FLEXIBLAS_HOOK_API
-static TLS_STORE uint8_t hook_pos_cblas_snrm2 = 0;
-#endif
-
-/* Wrapper for cblas_snrm2 */
-float  cblas_snrm2 (const CBLAS_INT N, const float *X, const CBLAS_INT incX)
-{
-    float (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    #ifdef FLEXIBLAS_HOOK_API
-    float (*fn_hook) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    hook_pos_cblas_snrm2 = 0;
-    #endif
-
-    /* Post init if necessary */
-    if ( unlikely(current_backend->post_init != 0) ) {
-        __flexiblas_backend_init(current_backend);
-        current_backend->post_init = 0;
-    }
-
-    *(void **) &fn = current_backend->cblas.cblas_snrm2;
-    #ifdef FLEXIBLAS_HOOK_API
-    *(void **) &fn_hook = __flexiblas_hooks->cblas_snrm2.hook_function[0];
-
-    if ( fn_hook != NULL ) {
-        return fn_hook(N, X, incX);
-    } else {
-        return fn(N, X, incX);
-    }
-    #else
-    return fn(N, X, incX);
-    #endif
-}
-
-#ifdef FLEXIBLAS_HOOK_API
-float  flexiblas_real_cblas_snrm2(const CBLAS_INT N, const float *X, const CBLAS_INT incX)
-{
-    float (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    *(void **) &fn = current_backend->cblas.cblas_snrm2;
-    return fn(N, X, incX);
-}
-
-float flexiblas_chain_cblas_snrm2(const CBLAS_INT N, const void *X, const CBLAS_INT incX)
-{
-    float (*fn) (const CBLAS_INT N, const void *X, const CBLAS_INT incX);
-    hook_pos_cblas_snrm2++;
-    if ( hook_pos_cblas_snrm2 < __flexiblas_hooks->cblas_snrm2.nhook ) {
-        *(void **) &fn = __flexiblas_hooks->cblas_snrm2.hook_function[hook_pos_cblas_snrm2];
-    } else {
-        hook_pos_cblas_snrm2 = 0;
-        *(void **) &fn = current_backend->cblas.cblas_snrm2;
-    }
-    return fn(N, X, incX);
-}
-
-#endif
+CBLAS_FUNC(float, cblas_snrm2, return, ,
+  (const CBLAS_INT N, const float *X, const CBLAS_INT incX),
+  (const CBLAS_INT N, const void *X, const CBLAS_INT incX),
+  (N, X, incX),
+  cblas)
 CBLAS_FUNC(void, cblas_somatcopy, , return,
   (const CBLAS_ORDER CORDER, const CBLAS_TRANSPOSE CTRANS, const CBLAS_INT crows, const CBLAS_INT ccols, const float calpha, const float *a, const CBLAS_INT clda, float *b, const CBLAS_INT cldb),
   (const CBLAS_ORDER CORDER, const CBLAS_TRANSPOSE CTRANS, const CBLAS_INT crows, const CBLAS_INT ccols, const float calpha, const void *a, const CBLAS_INT clda, void *b, const CBLAS_INT cldb),
