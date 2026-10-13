@@ -36,7 +36,6 @@
 # define RTLD_DEFAULT   ((void *) 0)
 #endif
 
-// static int user_xerbla = 0;
 void flexiblas_internal_xerbla(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len);
 #ifdef FLEXIBLAS_ABI_IBM
 #ifdef __ELF__
@@ -98,7 +97,6 @@ int __flexiblas_setup_xerbla(flexiblas_backend_t *backend)
 {
     /* Check if the user supplied a XERBLA function  */
     {
-        int user_xerbla = 0;
         void *xerbla_symbol1 = __flexiblas_dlsym(backend->library_handle,"xerbla_");
         void *xerbla_symbol2 = __flexiblas_dlsym(RTLD_DEFAULT,"xerbla_");
         void (*flexiblas_internal) (char *, Int *, flexiblas_fortran_charlen_t);
@@ -111,12 +109,6 @@ int __flexiblas_setup_xerbla(flexiblas_backend_t *backend)
                 (unsigned long)((void*)internal));
 
         if (internal == xerbla_symbol2) {
-            user_xerbla = 0;
-        } else {
-            user_xerbla = 1;
-        }
-
-        if ( user_xerbla == 0 ){
             DPRINTF(1,"Use XERBLA of the BLAS backend.\n");
             backend->xerbla = xerbla_symbol1;
         } else {
@@ -311,7 +303,6 @@ int __flexiblas_setup_cblas_xerbla(flexiblas_backend_t *backend)
 {
     /* Check if the user supplied a XERBLA function  */
     {
-        int user_xerbla = 0;
         void *xerbla_symbol1 = __flexiblas_dlsym(backend->library_handle,"cblas_xerbla");
         void *xerbla_symbol2 = __flexiblas_dlsym(RTLD_DEFAULT,"cblas_xerbla");
         void *internal;
@@ -327,12 +318,6 @@ int __flexiblas_setup_cblas_xerbla(flexiblas_backend_t *backend)
                 (unsigned long)((void*)xerbla_symbol2),
                 (unsigned long)((void*)internal));
         if (internal == xerbla_symbol2) {
-            user_xerbla = 0;
-        } else {
-            user_xerbla = 1;
-        }
-
-        if ( user_xerbla == 0 ){
             DPRINTF(1,"Use CBLAS_XERBLA of the BLAS backend.\n");
             backend->cblas_xerbla = xerbla_symbol1;
         } else {
