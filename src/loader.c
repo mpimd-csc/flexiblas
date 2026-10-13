@@ -136,9 +136,6 @@ HIDDEN void * __flexiblas_lookup_fortran_function(void * handle, ...)
 }
 
 
-
-#define FUNCTION_POINTER_ASSIGN(DST, SRC) *(void **)&(DST) = (void *)(SRC)
-
 HIDDEN flexiblas_complex_interface_t __flexiblas_get_complex_interface(void *handle)
 {
     if (handle == NULL) {
@@ -157,8 +154,8 @@ HIDDEN flexiblas_complex_interface_t __flexiblas_get_complex_interface(void *han
     void           (*cplx_func_intel)(FLEXIBLAS_LOAD_CPLX_TYPE *, FLEXIBLAS_LOAD_INT_T *, FLEXIBLAS_LOAD_CPLX_TYPE *, FLEXIBLAS_LOAD_INT_T *, FLEXIBLAS_LOAD_CPLX_TYPE *, FLEXIBLAS_LOAD_INT_T *);
     FLEXIBLAS_LOAD_INT_T        one = 1;
 
-    FUNCTION_POINTER_ASSIGN(cplx_func_gnu, cplx_func_ptr);
-    FUNCTION_POINTER_ASSIGN(cplx_func_intel, cplx_func_ptr);
+    FLEXIBLAS_FUNCTION_POINTER_ASSIGN(cplx_func_gnu, cplx_func_ptr);
+    FLEXIBLAS_FUNCTION_POINTER_ASSIGN(cplx_func_intel, cplx_func_ptr);
 
 #if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
     FLEXIBLAS_LOAD_CPLX_TYPE retval = 0.0 + 0.0*I;
@@ -218,7 +215,7 @@ HIDDEN int __flexiblas_get_f2c_float_return(void *handle)
     FLEXIBLAS_LOAD_INT_T n = 2;
     FLEXIBLAS_LOAD_INT_T one = 1;
     float (*sdot_run)(FLEXIBLAS_LOAD_INT_T *, float *, FLEXIBLAS_LOAD_INT_T *, float *, FLEXIBLAS_LOAD_INT_T *);
-    FUNCTION_POINTER_ASSIGN(sdot_run, sdot_ptr);
+    FLEXIBLAS_FUNCTION_POINTER_ASSIGN(sdot_run, sdot_ptr);
 
     retval = sdot_run(&n, x, &one, y, &one);
 
@@ -245,7 +242,7 @@ HIDDEN flexiblas_interface_t __flexiblas_get_interface(void *handle)
         return FLEXIBLAS_INTERFACE_NONE;
     }
 
-    FUNCTION_POINTER_ASSIGN(isamax_function, isamax_ptr);
+    FLEXIBLAS_FUNCTION_POINTER_ASSIGN(isamax_function, isamax_ptr);
 
 #if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
     float X[3] = {1.0f, 100.0f, 1.0f};
