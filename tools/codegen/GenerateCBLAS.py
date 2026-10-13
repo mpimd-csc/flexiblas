@@ -28,10 +28,10 @@ from tqdm.contrib.concurrent import process_map
 base = '../../'
 n_cores = os.cpu_count()
 
-def read_file(file_path): 
+def read_file(file_path):
     with open(file_path, 'r') as file:
         file_content = file.read()
-    return file_content 
+    return file_content
 
 def load_yaml(inp):
     with open(inp,'r') as istream:
@@ -90,9 +90,9 @@ HIDDEN int __flexiblas_load_cblas_hooks ( flexiblas_hook_t *hooks, void *hook_ha
 
 {body:s}
 
-    return 0; 
+    return 0;
 }}
-#endif 
+#endif
 """
 hook_loader_snippet = "    LOAD_CHOOK(hooks,hook_handle,{function_blas_name:s},{name:s});"
 
@@ -110,16 +110,16 @@ def generate_loader_snippet(y, fallback = False):
             symbol_names_api += ", \"{}_64\"".format(load_name[k])
     if not fallback:
         return loader_snippet.format(
-                                name = name, 
+                                name = name,
                                 function_blas_name = function_blas_name,
-                                symbol_names = symbol_names, 
-                                symbol_names_api = symbol_names_api) 
+                                symbol_names = symbol_names,
+                                symbol_names_api = symbol_names_api)
     else:
          return loader_fallback_snippet.format(
                                 component = component,
-                                name = name, 
-                                symbol_names = symbol_names, 
-                                symbol_names_api = symbol_names_api) 
+                                name = name,
+                                symbol_names = symbol_names,
+                                symbol_names_api = symbol_names_api)
 
 
 
@@ -143,7 +143,7 @@ def generate_subroutine(y, intel_interface = False, component = "cblas"):
     alt_body = cblas_altnames_void_body
     # header = subroutine_header
     hook_header = void_hook_header
-    
+
     if y["return_type"] != "void":
         body = cblas_function_body
         alt_body = cblas_altnames_function_body
@@ -151,10 +151,10 @@ def generate_subroutine(y, intel_interface = False, component = "cblas"):
         hook_header = function_hook_header
         function = True
         return_type = y["return_type"];
-        if return_type == "int": 
-            return_type = "blasint";            
-    h = ""       
-    
+        if return_type == "int":
+            return_type = "blasint";
+    h = ""
+
     first = True;
     for a in y['args']:
         if not first:
@@ -168,11 +168,11 @@ def generate_subroutine(y, intel_interface = False, component = "cblas"):
             quals = ""
         type_ = a['type']
         if type_ == 'int':
-            type_ = 'blasint' 
+            type_ = 'blasint'
         if type_ == "float _Complex":
             type_ = 'lapack_complex_float'
         if type_ == "double _Complex":
-            type_ = 'lapack_complex_double'            
+            type_ = 'lapack_complex_double'
         if a['pointer']:
             arg_list += quals+ type_ + " *" + a['name']
             arg_list_void += quals + "void *" + a['name']
@@ -185,46 +185,46 @@ def generate_subroutine(y, intel_interface = False, component = "cblas"):
         arg_list = "void"
     if len(arg_list_void) == 0:
         arg_list_void = "void"
- 
+
 #    h += "    "+ header.format(
 #                      return_type = return_type,
-#                      function_name = function_name, 
-#                      arg_list = arg_list, 
+#                      function_name = function_name,
+#                      arg_list = arg_list,
 #                      component = component) + "\n"
     alt_names = ""
     for alt in y["alt_names"]:
         alt_name = alt
         ALT_NAME = alt.upper()
-        
+
         alt_names += alt_body.format(
                                     return_type = return_type,
-                                    function_name = alt_name, 
-                                    function_blas_name = function_blas_name, 
+                                    function_name = alt_name,
+                                    function_blas_name = function_blas_name,
                                     function_name_orig = function_name,
                                     arg_list = arg_list,
-                                    arg_list_void = arg_list_void, 
-                                    call_list = call_list, 
+                                    arg_list_void = arg_list_void,
+                                    call_list = call_list,
                                     component = component) + "\n"
 #        h += "    " + header.format(
 #                      return_type = return_type,
-#                      function_name = alt_name, 
-#                      FUNCTION_NAME = ALT_NAME, 
-#                      arg_list = arg_list, 
-#                      component = component) + "\n"  
+#                      function_name = alt_name,
+#                      FUNCTION_NAME = ALT_NAME,
+#                      arg_list = arg_list,
+#                      component = component) + "\n"
     hook_header = hook_header.format(
                       return_type = return_type,
-                      function_name = function_name, 
-                      function_blas_name = function_blas_name, 
+                      function_name = function_name,
+                      function_blas_name = function_blas_name,
                       arg_list = arg_list,
-                      arg_list_void = arg_list_void, 
+                      arg_list_void = arg_list_void,
                       component = component)
- 
+
     return body.format(
                       return_type = return_type,
                       function_name = function_name,
-                      function_blas_name = function_blas_name, 
+                      function_blas_name = function_blas_name,
                       arg_list = arg_list,
-                      arg_list_void = arg_list_void, 
+                      arg_list_void = arg_list_void,
                       call_list = call_list,
                       component = component) + alt_names, h, hook_header
 
@@ -233,7 +233,65 @@ def generate_hook_loader_snippet(y):
     function_blas_name = "_".join(name.split("_")[1:])
     return hook_loader_snippet.format(name = name, function_blas_name = function_blas_name)
 
-
+cblas_macro_header = """
+#ifdef FLEXIBLAS_HOOK_API
+#define CBLAS_FUNC_HOOK_VAR(function_name) \\
+  static TLS_STORE uint8_t hook_pos_ ## function_name = 0;
+#define CBLAS_FUNC_HOOK_FUNCS(return_type, function_name, call_kw, aftercall_kw, arg_list, arg_list_void, call_list, component) \\
+  return_type flexiblas_real_ ## function_name ## _ arg_list \\
+  {{ \\
+      return_type (*fn) arg_list_void; \\
+      *(void **) &fn = current_backend->component.function_name; \\
+      call_kw fn call_list; \\
+      aftercall_kw; \\
+  }} \\
+  return_type flexiblas_chain_ ## function_name ## _ arg_list_void \\
+  {{ \\
+      return_type (*fn) arg_list_void; \\
+      hook_pos_ ## function_name++; \\
+      if ( hook_pos_ ## function_name < __flexiblas_hooks->function_name.nhook ) {{ \\
+          *(void **) &fn = __flexiblas_hooks->function_name.hook_function[hook_pos_ ## function_name]; \\
+      }} else {{ \\
+          hook_pos_ ## function_name = 0; \\
+          *(void **) &fn = current_backend->component.function_name; \\
+      }} \\
+      call_kw fn call_list; \\
+      aftercall_kw; \\
+  }}
+#define CBLAS_FUNC_HOOK_BEFORE(return_type, function_name, arg_list_void) \\
+    return_type (*fn_hook) arg_list_void; \\
+    hook_pos_ ## function_name = 0;
+#define CBLAS_FUNC_HOOK_AFTER(function_name, call_kw, call_list) \\
+    *(void **) &fn_hook = __flexiblas_hooks->function_name.hook_function[0]; \\
+    if ( fn_hook != NULL ) {{ \\
+        call_kw fn_hook call_list; \\
+    }} else {{ \\
+        call_kw fn call_list; \\
+    }}
+#else
+#define CBLAS_FUNC_HOOK_VAR(function_name)
+#define CBLAS_FUNC_HOOK_FUNCS(return_type, function_name, call_kw, aftercall_kw, arg_list, arg_list_void, call_list, component)
+#define CBLAS_FUNC_HOOK_BEFORE(return_type, function_name, arg_list_void)
+#define CBLAS_FUNC_HOOK_AFTER(function_name, call_kw, call_list) \\
+    call_kw fn call_list;
+#endif
+#define CBLAS_FUNC(return_type, function_name, call_kw, aftercall_kw, arg_list, arg_list_void, call_list, component) \\
+  CBLAS_FUNC_HOOK_VAR(function_name) \\
+  return_type function_name arg_list \\
+  {{ \\
+      return_type (*fn) arg_list_void; \\
+      CBLAS_FUNC_HOOK_BEFORE(return_type, function_name, arg_list_void) \\
+      /* Post init if necessary */ \\
+      if ( unlikely(current_backend->post_init != 0) ) {{ \\
+          __flexiblas_backend_init(current_backend); \\
+          current_backend->post_init = 0; \\
+      }} \\
+      *(void **) &fn = current_backend->component.function_name; \\
+      CBLAS_FUNC_HOOK_AFTER(function_name, call_kw, call_list) \\
+      aftercall_kw; \\
+  }} \\
+  CBLAS_FUNC_HOOK_FUNCS(return_type, function_name, call_kw, aftercall_kw, arg_list, arg_list_void, call_list, component)
+"""
 
 # %%
 def generate_all(inputs, outputs, ignore = list()):
@@ -241,29 +299,30 @@ def generate_all(inputs, outputs, ignore = list()):
     fp = open(outputs["wrapper"],'w')
     fp.write(generate_file_header() + "\n")
     fp.write("#include \"cblas.h\""+"\n")
- 
+    fp.write(cblas_macro_header + "\n");
+
     struct_code = ""
     struct_template = "    flexiblas_blasfn {function_name:s};\n"
- 
+
     loader_code = ""
     hook_loader_code = ""
     loader_fallback_code = ""
-    header_body = "" 
+    header_body = ""
     hook_header_body =""
-    
+
     #r = process_map(load_yaml, inputs, max_workers = n_cores, chunksize=1)
     r = load_yaml(inputs)
     for y in tqdm(r):
         # print("Generate Code for {}.".format(y[0]['name']))
         name = y["name"]
-        if name in ignore: 
+        if name in ignore:
             continue
-            
+
         code, header, hook_header = generate_subroutine(y, intel_interface = False)
         fp.write(code)
-      
+
         loader_code += generate_loader_snippet(y)
-        hook_loader_code += generate_hook_loader_snippet(y) + "\n" ; 
+        hook_loader_code += generate_hook_loader_snippet(y) + "\n" ;
         header_body += header
         hook_header_body += hook_header + '\n'
         struct_code += struct_template.format(function_name = name)
@@ -274,19 +333,19 @@ def generate_all(inputs, outputs, ignore = list()):
     #    fp_intel.write(loader_function_body.format(body = loader_fallback_code,component = component+"_fallback")+"\n\n")
     fp.write(hook_loader_function_body.format(component = "blas", body = hook_loader_code)+"\n\n")
     fp.close()
-    
+
     # fp_header = open(outputs["header"],'w')
-    # 
+    #
     # fp_header.write(header_code_tmpl.format(
-    #                    year = datetime.date.today().year, 
-    #                    guard_name = outputs["header_guard"], 
+    #                    year = datetime.date.today().year,
+    #                    guard_name = outputs["header_guard"],
     #                    body = header_body))
     # fp_header.close()
 
     fp_hook_header = open (outputs["real_call_header" ],'w')
     fp_hook_header.write(header_code_tmpl.format(
-                        year = datetime.date.today().year, 
-                        guard_name = outputs["real_call_header_guard" ], 
+                        year = datetime.date.today().year,
+                        guard_name = outputs["real_call_header_guard" ],
                         body = hook_header_body))
     fp_hook_header.close()
     if "structure_file" in outputs:
@@ -299,7 +358,7 @@ def generate_all(inputs, outputs, ignore = list()):
 
 
 # %%
-# Generate BLAS 
+# Generate BLAS
 inputs = './cblas/yaml.yaml'
 
 ignore = ['cblas_dcabs1','cblas_scabs1' ]
