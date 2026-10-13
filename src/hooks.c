@@ -230,14 +230,16 @@ HIDDEN char *  __flexiblas_hook_add_from_file(char *path)
     reg = __flexiblas_dlsym(handle, "flexiblas_register");
     if ( !reg ) return NULL;
 
-    ret = strdup(reg->cfg_name);
+    /* The map owns its keys and the hook library is closed below, so store an
+     * upper-case copy of the name, as the directory scan does. */
+    ret = __struppercase(strdup(reg->cfg_name));
 
-    if ( csc_map_has_key(hook_map, reg->cfg_name)) {
-        DPRINTF_WARN(0, "Hook %s from %s already exists in the configuration.\n", reg->cfg_name, path);
-        DPRINTF_WARN(0, "The previously found hook (%s) will be replaced.\n", csc_map_get(hook_map, reg->cfg_name));
-        csc_map_replace(hook_map, reg->cfg_name, strdup(path));
+    if ( csc_map_has_key(hook_map, ret)) {
+        DPRINTF_WARN(0, "Hook %s from %s already exists in the configuration.\n", ret, path);
+        DPRINTF_WARN(0, "The previously found hook (%s) will be replaced.\n", csc_map_get(hook_map, ret));
+        csc_map_replace(hook_map, ret, strdup(path));
     } else {
-        csc_map_insert(hook_map, reg->cfg_name, strdup(path));
+        csc_map_insert(hook_map, strdup(ret), strdup(path));
     }
 
     __flexiblas_dlclose(handle);
