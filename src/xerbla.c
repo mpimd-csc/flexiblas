@@ -314,25 +314,18 @@ int __flexiblas_setup_cblas_xerbla(flexiblas_backend_t *backend)
         int user_xerbla = 0;
         void *xerbla_symbol1 = __flexiblas_dlsym(backend->library_handle,"cblas_xerbla");
         void *xerbla_symbol2 = __flexiblas_dlsym(RTLD_DEFAULT,"cblas_xerbla");
+        void *internal;
 #ifndef __APPLE__
         void (*flexiblas_internal)(int, const char *, const char *, ...);
         flexiblas_internal = internal_cblas_xerbla;
-        void *internal;
         *(void **) &internal = *((void**) & flexiblas_internal);
+#else
+        *(void**) &internal = (void*) &cblas_xerbla;
+#endif
         DPRINTF(1, "Available CBLAS_XERBLA ( backend: 0x%lx, user defined: 0x%lx, FlexiBLAS: 0x%lx )\n",
                 (unsigned long)((void*)xerbla_symbol1),
                 (unsigned long)((void*)xerbla_symbol2),
                 (unsigned long)((void*)internal));
-#else
-        void (*flexiblas_internal) (int, const char *, const char *, ...);
-        void *internal;
-        *(void**) &internal = (void*) &cblas_xerbla;
-        DPRINTF(1, "Available CBLAS_XERBLA ( backend: 0x%lx, user defined: 0x%lx, FlexiBLAS: 0x%lx)\n",
-                (unsigned long)((void*)xerbla_symbol1),
-                (unsigned long)((void*)xerbla_symbol2),
-                (unsigned long)((void*)internal));
-
-#endif
         if (internal == xerbla_symbol2) {
             user_xerbla = 0;
         } else {
@@ -351,5 +344,3 @@ int __flexiblas_setup_cblas_xerbla(flexiblas_backend_t *backend)
 }
 
 #endif
-
-
