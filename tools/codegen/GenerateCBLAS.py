@@ -53,6 +53,23 @@ header_code_tmpl = read_file('templates/blas_header.tmpl')
 cblas_structure_tmpl = read_file('templates/cblas/cblas_structure_template.tmpl')
 
 loader_function_body = """
+#define REMOVE_BRACKETS(...) __VA_ARGS__
+#define FBLAS_CBLAS_LOAD(name, function_blas_name, symbol_names, symbol_names_api) \\
+  do {{ \\
+    void *ptr_library = __flexiblas_lookup_cblas_function(backend->library_handle, REMOVE_BRACKETS symbol_names, NULL); \\
+    void *ptr_fallback = __flexiblas_lookup_cblas_function(__flexiblas_blas_fallback, REMOVE_BRACKETS symbol_names, NULL); \\
+    if ( ptr_library == NULL && ptr_fallback == NULL ) {{ \\
+        flexiblas_print_error("flexiblas",__FILE__, __LINE__, "Can not load " #name ".\\n"); \\
+        failed++; \\
+        break; \\
+    }}  \\
+    if ( only_fallback || ptr_library == NULL) {{ \\
+        DPRINTF(2, "Load " #name " from internal fallback BLAS.\\n"); \\
+        backend->cblas.name = ptr_fallback; \\
+    }} else {{ \\
+        backend->cblas.name = ptr_library; \\
+    }} \\
+  }} while(0)
 HIDDEN int __flexiblas_load_cblas( flexiblas_backend_t *backend )  {{
     int only_fallback = 0;
     int failed = 0;
@@ -62,7 +79,7 @@ HIDDEN int __flexiblas_load_cblas( flexiblas_backend_t *backend )  {{
         only_fallback = 1;
     }}
 
-    {body:s}
+{body:s}
     return failed;
 }}
 """
@@ -79,23 +96,7 @@ HIDDEN int __flexiblas_load_cblas_hooks ( flexiblas_hook_t *hooks, void *hook_ha
 """
 hook_loader_snippet = "    LOAD_CHOOK(hooks,hook_handle,{function_blas_name:s},{name:s});"
 
-loader_snippet = """
-    do {{
-        void *ptr_library = __flexiblas_lookup_cblas_function(backend->library_handle, {symbol_names:s}, NULL);
-        void *ptr_fallback = __flexiblas_lookup_cblas_function(__flexiblas_blas_fallback, {symbol_names:s}, NULL);
-        if ( ptr_library == NULL && ptr_fallback == NULL ) {{
-            flexiblas_print_error("flexiblas",__FILE__, __LINE__, "Can not load {name:s}.\\n");
-            failed++;
-            break;
-        }} 
-        if ( only_fallback || ptr_library == NULL) {{
-            DPRINTF(2, "Load {name:s} from internal fallback BLAS.\\n");
-            backend->cblas.{name:s} = ptr_fallback;
-        }} else {{
-            backend->cblas.{name:s} = ptr_library;
-        }}
-    }} while(0);
-"""
+loader_snippet = "    FBLAS_CBLAS_LOAD({name:s}, {function_blas_name:s}, ({symbol_names:s}), ({symbol_names_api:s}));\n"
 
 def generate_loader_snippet(y, fallback = False):
     name = y["name"]
@@ -261,13 +262,13 @@ def generate_all(inputs, outputs, ignore = list()):
         code, header, hook_header = generate_subroutine(y, intel_interface = False)
         fp.write(code)
       
-        loader_code += generate_loader_snippet(y) + "\n\n"
+        loader_code += generate_loader_snippet(y)
         hook_loader_code += generate_hook_loader_snippet(y) + "\n" ; 
         header_body += header
         hook_header_body += hook_header + '\n'
         struct_code += struct_template.format(function_name = name)
 
-    fp.write(loader_function_body.format(body = loader_code)+"\n\n")
+    fp.write(loader_function_body.format(body = loader_code))
     # if len(loader_fallback_code) > 1:
     #    fp_gnu.write(loader_function_body.format(body = loader_fallback_code, component = component+"_fallback")+"\n\n")
     #    fp_intel.write(loader_function_body.format(body = loader_fallback_code,component = component+"_fallback")+"\n\n")
