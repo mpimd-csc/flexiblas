@@ -22,7 +22,7 @@ TARGET_LINK_LIBRARIES(flexiblas_hook_profile flexiblas cscutils $<$<BOOL:${OpenM
 set_target_properties(flexiblas_hook_profile PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/${FLEXIBLAS_LIBRARY_DIR}/)
 
 if (APPLE)
-    set_target_properties(flexiblas_hook_profile PROPERTIES LINK_FLAGS "-undefined dynamic_lookup -flat_namespace")
+    set_target_properties(flexiblas_hook_profile PROPERTIES LINK_FLAGS "-Wl,-undefined,dynamic_lookup")
 endif()
 
 IF (WIN32)

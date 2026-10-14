@@ -145,7 +145,7 @@ target_include_directories(flexiblas_netlib PRIVATE
 set_target_properties(flexiblas_netlib PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/${FLEXIBLAS_LIBRARY_DIR}/)
 
 if (APPLE)
-    set_target_properties(flexiblas_netlib PROPERTIES LINK_FLAGS "-undefined dynamic_lookup -flat_namespace")
+    set_target_properties(flexiblas_netlib PROPERTIES LINK_FLAGS "-Wl,-undefined,dynamic_lookup")
 endif()
 
 if(INTEGER8)
