@@ -185,9 +185,9 @@ static void flexiblas_load_info(void *library, flexiblas_backend_t *backend)
 {
     memset(&(backend->info),0,sizeof(flexiblas_info_t));
     backend->info.flexiblas_integer_size = sizeof(Int);
-    *(void **) &backend->info_function = __flexiblas_dlsym(library, FLEXIBLAS_INFO_FUNCTION_NAME);
-    *(void **) &backend->init_function = __flexiblas_dlsym(library, FLEXIBLAS_INIT_FUNCTION_NAME);
-    *(void **) &backend->exit_function = __flexiblas_dlsym(library, FLEXIBLAS_EXIT_FUNCTION_NAME);
+    FLEXIBLAS_FUNCTION_POINTER_ASSIGN(backend->info_function, __flexiblas_dlsym(library, FLEXIBLAS_INFO_FUNCTION_NAME));
+    FLEXIBLAS_FUNCTION_POINTER_ASSIGN(backend->init_function, __flexiblas_dlsym(library, FLEXIBLAS_INIT_FUNCTION_NAME));
+    FLEXIBLAS_FUNCTION_POINTER_ASSIGN(backend->exit_function, __flexiblas_dlsym(library, FLEXIBLAS_EXIT_FUNCTION_NAME));
 
     backend->library_handle = library;
 
@@ -860,8 +860,8 @@ __attribute__((constructor))
 
 
             __flexiblas_hooks->handles[k] = handle;
-            *(void **) &__flexiblas_hooks->hook_init[k] = __flexiblas_dlsym(handle, FLEXIBLAS_HOOK_INIT_FUNCTION_NAME);
-            *(void **) &__flexiblas_hooks->hook_exit[k] = __flexiblas_dlsym(handle, FLEXIBLAS_HOOK_EXIT_FUNCTION_NAME);
+            FLEXIBLAS_FUNCTION_POINTER_ASSIGN(__flexiblas_hooks->hook_init[k], __flexiblas_dlsym(handle, FLEXIBLAS_HOOK_INIT_FUNCTION_NAME));
+            FLEXIBLAS_FUNCTION_POINTER_ASSIGN(__flexiblas_hooks->hook_exit[k], __flexiblas_dlsym(handle, FLEXIBLAS_HOOK_EXIT_FUNCTION_NAME));
 
 #ifdef FLEXIBLAS_HOOK_API
             __flexiblas_load_blas_hooks(__flexiblas_hooks, handle);

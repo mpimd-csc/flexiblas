@@ -202,6 +202,8 @@ HIDDEN int __flexiblas_file_exist(const char *path);
     } else { *loaded = *loaded +1; }\
 } while(0);
 
+#define FLEXIBLAS_FUNCTION_POINTER_ASSIGN(dst, src) *(void **)&(dst) = (void *)(src)
+
 
 /*
  * Hook Releated Functions
