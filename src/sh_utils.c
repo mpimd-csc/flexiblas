@@ -114,6 +114,7 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
 
     if (libname == NULL) return NULL;
 
+    DPRINTF(2, "dlopen '%s' flags: 0x%x\n", libname, flags);
 
     if ( strstr(libname,"/") == NULL ) {
         for ( path_count = -1 ; path_count < __flexiblas_count_additional_paths; path_count++){
@@ -242,6 +243,7 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
                 DPRINTF(1, "Load backend with RTLD_GLOBAL\n");
             } else {
                 flags = RTLD_LOCAL;
+                DPRINTF(2, "Load backend with RTLD_LOCAL\n");
             }
 
             if ( ld_flags_lazy != 0 ) {
@@ -249,6 +251,7 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
                 DPRINTF(1, "Load backend with RTLD_LAZY\n");
             } else {
                 flags |= RTLD_NOW;
+                DPRINTF(2, "Load backend with RTLD_NOW\n");
             }
 
 #if defined(__linux__) || defined(__WIN32__)
@@ -262,9 +265,8 @@ HIDDEN void * __flexiblas_dlopen( const char *libname, int flags, char ** sofile
 #endif  */
         }
 
+        DPRINTF(2, "  dlopen flags: 0x%x\n", flags);
         handle = dlopen(filepath, flags);
-
-
 
         if (handle == NULL){
 #ifdef __WIN32__
@@ -372,6 +374,7 @@ HIDDEN int __flexiblas_dl_symbol_exist( const char *libname, const char *symbol_
 
     if( found ) {
         void *sym = NULL;
+        DPRINTF(2, "  shared library does exist: %s\n", filepath);
         csc_strremovedup(filepath,'/');
         __flexiblas_dlerror();
         handle = dlopen(filepath, RTLD_LAZY | RTLD_LOCAL);

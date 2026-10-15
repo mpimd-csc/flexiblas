@@ -178,10 +178,8 @@ int RowMajorStrg = 0;
 #if defined(__ELF__) || ((defined (__PGI) || defined(__NVCOMPILER)) && (defined(__linux__)  || defined(__unix__)))
 void internal_cblas_xerbla(CBLAS_INT info, const char *rout, const char *form, ...);
 void cblas_xerbla(CBLAS_INT info, const char *, const char *, ...) __attribute__ ((weak, alias ("internal_cblas_xerbla")));
-void internal_cblas_xerbla(CBLAS_INT _info, const char *rout, const char *form, ...)
-#else
-void internal_cblas_xerbla(CBLAS_INT _info, const char *rout, const char *form, ...)
 #endif
+void internal_cblas_xerbla(CBLAS_INT _info, const char *rout, const char *form, ...)
 {
     extern int RowMajorStrg;
     char empty[1] = "";

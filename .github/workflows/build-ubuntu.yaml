@@ -1,4 +1,4 @@
-name: build
+name: build-ubuntu
 on:
   workflow_dispatch:
   push:
@@ -51,7 +51,7 @@ jobs:
         run: lscpu
 
       - name: checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: install dependencies
         run: |
@@ -65,11 +65,11 @@ jobs:
         # used in action/cache/restore and action/cache/save steps
         id: ccache-prepare
         run: |
-          echo "key=ccache:${{ matrix.os }}:${{ matrix.compiler }}::${{ github.ref }}:$(date +"%Y-%m-%d_%H-%M-%S"):${{ github.sha }}" >> $GITHUB_OUTPUT
+          echo "key=ccache:${{ matrix.os }}:${{ matrix.compiler }}:${{ github.ref }}:$(date +"%Y-%m-%d_%H-%M-%S"):${{ github.sha }}" >> $GITHUB_OUTPUT
 
       - name: restore ccache
         # setup the GitHub cache used to maintain the ccache from one job to the next
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: ~/.ccache
           key: ${{ steps.ccache-prepare.outputs.key }}
@@ -107,7 +107,7 @@ jobs:
       - name: save ccache
         # Save the cache after we are done (successfully) building
         # This helps to retain the ccache even if the subsequent steps are failing.
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v6
         with:
           path: ~/.ccache
           key: ${{ steps.ccache-prepare.outputs.key }}
