@@ -4,8 +4,6 @@ on:
   push:
   pull_request:
 
-concurrency: ci-ubuntu-${{ github.ref }}
-
 jobs:
 
   ubuntu:
