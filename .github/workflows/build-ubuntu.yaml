@@ -34,7 +34,7 @@ jobs:
           # Comment out for now.
           # - os: ubuntu-latest
           #   compiler: clang
-          #   compiler-pkgs: "clang"
+          #   compiler-pkgs: "clang libomp-dev"
           #   cc: "clang"
           #   cxx: "clang++"
 
@@ -54,7 +54,6 @@ jobs:
           sudo apt -qq update
           I8SUFFIX=${{ matrix.integer8 && '64' || '' }}
           sudo apt install -y ${{ matrix.compiler-pkgs }} gfortran cmake ccache \
-            ${{ matrix.compiler == 'clang' && 'libomp-dev' || '' }} \
             libblas$I8SUFFIX-dev liblapack$I8SUFFIX-dev libopenblas$I8SUFFIX-dev
 
       - name: prepare ccache
