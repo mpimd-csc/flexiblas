@@ -263,6 +263,7 @@ ENDIF()
 
 IF(FLEXIBLAS_INTEGER8)
     SET_TARGET_PROPERTIES(flexiblas      PROPERTIES OUTPUT_NAME ${flexiblasname})
+    target_compile_definitions(flexiblas PRIVATE WeirdNEC) # so CBLAS_INT is 64-bit
     SET_TARGET_PROPERTIES(flexiblas_api  PROPERTIES OUTPUT_NAME ${flexiblasname}_api)
     SET_TARGET_PROPERTIES(flexiblas_mgmt PROPERTIES OUTPUT_NAME ${flexiblasname}_mgmt)
     IF (WIN32)
