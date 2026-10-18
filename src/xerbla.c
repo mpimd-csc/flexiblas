@@ -142,7 +142,7 @@ void xerbla_array_ (char *srname_array, Int *srname_len, Int *info, flexiblas_fo
 {
     size_t k = 0;
     size_t len = 0;
-    if (*srname_len > 0 ) len = (int) *srname_len;
+    if (*srname_len > 0 ) len = (size_t) *srname_len;
     (void) srname_array_len;
     char tmp[len+1];
     tmp[len] = '\0';
@@ -170,10 +170,9 @@ void XERBLA_ARRAY(char *srname_array, Int *srname_len, Int *info, flexiblas_fort
  */
 
 #ifdef FLEXIBLAS_CBLAS
+
+#include "cblas.h"
 int RowMajorStrg = 0;
-
-
-#define CBLAS_INT int32_t
 
 #if defined(__ELF__) || ((defined (__PGI) || defined(__NVCOMPILER)) && (defined(__linux__)  || defined(__unix__)))
 void internal_cblas_xerbla(CBLAS_INT info, const char *rout, const char *form, ...);
@@ -271,13 +270,13 @@ CBLAS_INT cblas_errprn(CBLAS_INT ierr, CBLAS_INT info,const char *form, ...)
 }
 #if (defined(__APPLE__) || defined(__WIN32__))
 /* This routine is designed for MacOS */
-void internal_cblas_xerbla(int info, const char *rout, const char *form, ...);
-void cblas_xerbla(int info, const char *rout, const char *form, ...)
+void internal_cblas_xerbla(CBLAS_INT info, const char *rout, const char *form, ...);
+void cblas_xerbla(CBLAS_INT info, const char *rout, const char *form, ...)
 {
     // printf("Hier in xerbla.c (0x%lx) backend = 0x%lx \n", (unsigned long)(void*) & cblas_xerbla, (unsigned long) current_backend->xerbla.cblas_function);
     if ( current_backend->cblas_xerbla != NULL) {
         va_list ap;
-        void (*fn) ( int, const char*, const char*, ...);
+        void (*fn) ( CBLAS_INT, const char*, const char*, ...);
         size_t a1, a2, a3, a4, a5;
 
         fn = current_backend->cblas_xerbla;
@@ -286,7 +285,7 @@ void cblas_xerbla(int info, const char *rout, const char *form, ...)
         va_end(ap);
     } else {
         va_list ap;
-        void (*fn) ( int, const char*, const char*, ...);
+        void (*fn) ( CBLAS_INT, const char*, const char*, ...);
         size_t a1, a2, a3, a4, a5;
 
         fn = current_backend->cblas_xerbla;
@@ -305,7 +304,7 @@ int __flexiblas_setup_cblas_xerbla(flexiblas_backend_t *backend)
         void *xerbla_symbol2 = __flexiblas_dlsym(RTLD_DEFAULT,"cblas_xerbla");
         void *internal;
 #ifndef __APPLE__
-        void (*flexiblas_internal)(int, const char *, const char *, ...);
+        void (*flexiblas_internal)(CBLAS_INT, const char *, const char *, ...);
         flexiblas_internal = internal_cblas_xerbla;
         *(void **) &internal = *((void**) & flexiblas_internal);
 #else
