@@ -1,5 +1,3 @@
-INCLUDE(CheckFortranFunctionExists)
-
 if (NEED_LINKING_AGAINST_LIBM)
     SET(LIBM ${LIBM_NAME})
 else()
@@ -25,14 +23,21 @@ if( (CMAKE_Fortran_COMPILER_ID STREQUAL "VisualAge" ) OR  # CMake 2.6
     endif()
 endif()
 
+include(CheckLinkerFlag)
+check_linker_flag(C "LINKER:--no-as-needed" LINKER_SUPPORTS_NO_AS_NEEDED)
+
+# save CMAKE_REQUIRED_LIBRARIES
+SET(_CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES})
+
 if (SYS_BLAS_LIBRARY)
     message(STATUS "Use system provided NETLIB BLAS for fallback generation. SYS_BLAS_LIBRARY = ${SYS_BLAS_LIBRARY}")
-    add_library(flexiblas_netlib_import STATIC IMPORTED)
+    add_library(flexiblas_netlib_import UNKNOWN IMPORTED)
     set_property(TARGET flexiblas_netlib_import PROPERTY IMPORTED_LOCATION ${SYS_BLAS_LIBRARY})
+    if (LINKER_SUPPORTS_NO_AS_NEEDED)
+        target_link_options(flexiblas_netlib_import INTERFACE "LINKER:--no-as-needed")
+    endif()
 
-    SET(_CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES})
-    SET(CMAKE_REQUIRED_LIBRARIES flexiblas_netlib_import ${LIBM})
-
+    INCLUDE(CheckFortranFunctionExists)
     MACRO(add_blas_function check)
         CHECK_FORTRAN_FUNCTION_EXISTS(${check} ${check}_EXISTS)
         if(NOT ${check}_EXISTS)
@@ -40,13 +45,12 @@ if (SYS_BLAS_LIBRARY)
         endif()
     ENDMACRO()
 
+    SET(CMAKE_REQUIRED_LIBRARIES flexiblas_netlib_import ${LIBM})
     add_blas_function(dgemmtr   dgemmtr.f sgemmtr.f cgemmtr.f zgemmtr.f)
     add_blas_function(daxpby    daxpby.f90 saxpby.f90 caxpby.f90 zaxpby.f90)
     add_blas_function(dgeadd    dgeadd.f90 sgeadd.f90 cgeadd.f90 zgeadd.f90)
     add_blas_function(domatcopy domatcopy.c somatcopy.c comatcopy.c zomatcopy.c )
     add_blas_function(dimatcopy dimatcopy.c simatcopy.c cimatcopy.c zimatcopy.c )
-
-    MESSAGE(STATUS "BLAS sources to add: ${SRC}")
 else()
     SET(SRC ${SRC} dgemmtr.f sgemmtr.f cgemmtr.f zgemmtr.f)
     SET(SRC ${SRC} daxpby.f90 saxpby.f90 caxpby.f90 zaxpby.f90)
@@ -58,10 +62,32 @@ endif()
 IF (FLEXIBLAS_CBLAS)
     if (SYS_CBLAS_LIBRARY)
         message(STATUS "Use system provided NETLIB CBLAS. SYS_CBLAS_LIBRARY = ${SYS_CBLAS_LIBRARY}")
-        add_library(flexiblas_netlib_cblas_import STATIC IMPORTED)
+        add_library(flexiblas_netlib_cblas_import UNKNOWN IMPORTED)
         set_property(TARGET flexiblas_netlib_cblas_import PROPERTY IMPORTED_LOCATION ${SYS_CBLAS_LIBRARY})
-        SET(_CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES})
+        if (LINKER_SUPPORTS_NO_AS_NEEDED)
+            target_link_options(flexiblas_netlib_cblas_import INTERFACE "LINKER:--no-as-needed")
+        endif()
+
+        INCLUDE(CheckCSourceCompiles)
+        MACRO(add_cblas_function check)
+            check_c_source_compiles("
+                #include <cblas.h>
+                int main(void) {
+                    void (*func_ptr)() = (void (*)())${check};
+                    return func_ptr ? 0 : 1;
+                }
+            " ${check}_EXISTS)
+            if(NOT ${check}_EXISTS)
+                SET(SRC ${SRC} ${ARGN})
+            endif()
+        ENDMACRO()
+
         SET(CMAKE_REQUIRED_LIBRARIES flexiblas_netlib_cblas_import ${LIBM})
+        add_cblas_function(cblas_daxpby    cblas_daxpby.c cblas_saxpby.c cblas_caxpby.c cblas_zaxpby.c)
+        add_cblas_function(cblas_dgeadd    cblas_dgeadd.c cblas_sgeadd.c cblas_cgeadd.c cblas_zgeadd.c)
+        add_cblas_function(cblas_dgemmtr   cblas_dgemmtr.c cblas_sgemmtr.c cblas_cgemmtr.c cblas_zgemmtr.c)
+        add_cblas_function(cblas_domatcopy cblas_domatcopy.c cblas_somatcopy.c cblas_comatcopy.c cblas_zomatcopy.c)
+        add_cblas_function(cblas_dimatcopy cblas_dimatcopy.c cblas_simatcopy.c cblas_cimatcopy.c cblas_zimatcopy.c)
     else()
         SET(SRC ${SRC}
             cblas_daxpby.c cblas_saxpby.c cblas_caxpby.c cblas_zaxpby.c
@@ -73,36 +99,30 @@ IF (FLEXIBLAS_CBLAS)
     endif()
 ENDIF()
 
+# restore CMAKE_REQUIRED_LIBRARIES
 SET(CMAKE_REQUIRED_LIBRARIES ${_CMAKE_REQUIRED_LIBRARIES})
 
+MESSAGE(STATUS "(C)BLAS sources to add: ${SRC}")
 
+
+set(FLEXIBLAS_NETLIB_LINK)
 if ( SYS_BLAS_LIBRARY )
-    if (FLEXIBLAS_CBLAS)
-        if (SYS_CBLAS_LIBRARY)
-            add_library(flexiblas_netlib SHARED ${SRC})
-            target_link_libraries(flexiblas_netlib PUBLIC flexiblas_netlib_import flexiblas_netlib_cblas_import PRIVATE ${LIBM})
-        else()
-            add_library(flexiblas_netlib SHARED ${SRC} $<TARGET_OBJECTS:cblas_obj>)
-            target_link_libraries(flexiblas_netlib PUBLIC flexiblas_netlib_import PRIVATE ${LIBM})
-        endif()
-    else()
-        add_library(flexiblas_netlib SHARED ${SRC})
-        target_link_libraries(flexiblas_netlib PUBLIC flexiblas_netlib_import PRIVATE ${LIBM})
-    endif()
+    set(FLEXIBLAS_NETLIB_LINK PUBLIC flexiblas_netlib_import)
 else()
-    if (FLEXIBLAS_CBLAS)
-        if (SYS_CBLAS_LIBRARY)
-            add_library(flexiblas_netlib SHARED ${SRC} $<TARGET_OBJECTS:flexiblas_netlib_objs>)
-            target_link_libraries(flexiblas_netlib PUBLIC flexiblas_netlib_cblas_import PRIVATE ${LIBM})
-        else()
-            add_library(flexiblas_netlib SHARED ${SRC} $<TARGET_OBJECTS:flexiblas_netlib_objs> $<TARGET_OBJECTS:cblas_obj>)
-            target_link_libraries(flexiblas_netlib PRIVATE ${LIBM})
+    list(APPEND SRC $<TARGET_OBJECTS:flexiblas_netlib_objs>)
+endif()
+if (FLEXIBLAS_CBLAS)
+    if (SYS_CBLAS_LIBRARY)
+        if (NOT FLEXIBLAS_NETLIB_LINK)
+            set(FLEXIBLAS_NETLIB_LINK PUBLIC)
         endif()
+        list(APPEND FLEXIBLAS_NETLIB_LINK flexiblas_netlib_cblas_import)
     else()
-        add_library(flexiblas_netlib SHARED ${SRC} $<TARGET_OBJECTS:flexiblas_netlib_objs> )
-        target_link_libraries(flexiblas_netlib PRIVATE ${LIBM})
+        list(APPEND SRC $<TARGET_OBJECTS:cblas_obj>)
     endif()
 endif()
+add_library(flexiblas_netlib SHARED ${SRC})
+target_link_libraries(flexiblas_netlib ${FLEXIBLAS_NETLIB_LINK} PRIVATE ${LIBM})
 
 
 target_include_directories(flexiblas_netlib PRIVATE

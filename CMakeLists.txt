@@ -1,8 +1,4 @@
-IF (WIN32)
-    cmake_minimum_required(VERSION 3.18.0)
-ELSE()
-    cmake_minimum_required(VERSION 3.10.0)
-ENDIF()
+cmake_minimum_required(VERSION 3.20.0) # LINKER:--no-as-needed
 INCLUDE(libcscutils/CMakeModules/CheckPolicy.cmake)
 CheckPolicy(CMP0048 NEW)
 CheckPolicy(CMP0054 NEW)
