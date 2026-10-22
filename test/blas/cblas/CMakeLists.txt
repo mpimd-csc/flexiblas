@@ -28,7 +28,8 @@ macro(add_cblas_test output input target)
       set_property(TEST CBLAS-${testName} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS64=NETLIB)
       set_property(TEST CBLAS-${testName} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS64_CONFIG=${PROJECT_BINARY_DIR}/${FLEXIBLAS64_RC})
       set_property(TEST CBLAS-${testName} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS64RC_DIR="${PROJECT_BINARY_DIR}/flexiblas64rc.d")
-
+      target_compile_definitions(${target} PRIVATE F77_INT=int64_t)
+      target_compile_definitions(${target} PRIVATE WeirdNEC) # so CBLAS_INT is 64-bit
   else()
       set_property(TEST CBLAS-${testName} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS_LIBRARY_PATH="${PROJECT_BINARY_DIR}/lib")
       set_property(TEST CBLAS-${testName} APPEND PROPERTY ENVIRONMENT  FLEXIBLAS=NETLIB)
