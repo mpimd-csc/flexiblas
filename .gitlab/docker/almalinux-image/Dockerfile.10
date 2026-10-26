@@ -1,0 +1,9 @@
+FROM gitlab.mpi-magdeburg.mpg.de/ci-images/minimal/almalinux:10
+
+RUN dnf update -y ; \
+    dnf install -y bash mock git fedora-packager rpmdevtools gcc gcc-gfortran ; \
+    dnf install -y cmake gcc-c++ openssh-clients blas-static lapack-static ; \
+    dnf install -y libarchive cmake blas-devel atlas-devel ; \
+    dnf install -y openblas-devel cmake blas-devel python3 sqlite-devel
+
+

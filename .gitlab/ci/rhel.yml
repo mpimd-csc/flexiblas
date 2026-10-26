@@ -1,0 +1,41 @@
+almalinux:
+    stage: build
+    image: ${CI_REGISTRY_IMAGE}/${OS}:${OSVERSION}
+    rules:
+        - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+        - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+        - if: $CI_COMMIT_TAG
+        - if: $CI_COMMIT_TITLE =~ /^\[ALL\].*/
+
+    needs: []
+    tags:
+      - haswell
+    parallel:
+        matrix:
+            - OS: [ "almalinux" ]
+              OSVERSION: [ '8', '9', '10' ]
+              LAPACK: [ 'LAPACK_ON', 'LAPACK_OFF' ]
+              LAPACKE: [ 'LAPACKE_ON', 'LAPACKE_OFF' ]
+              CBLAS: [ 'CBLAS_ON' ]
+              INTEGER8: [ 'INTEGER8_ON', 'INTEGER8_OFF' ]
+            - OS: [ "almalinux" ]
+              OSVERSION: [ '8', '9', '10' ]
+              LAPACK: [ 'LAPACK_ON' ]
+              LAPACKE: [ 'LAPACKE_OFF' ]
+              CBLAS: [ 'CBLAS_OFF' ]
+              INTEGER8: [ 'INTEGER8_ON', 'INTEGER8_OFF' ]
+
+    script:
+        - mkdir build
+        - cd build
+        - export LAPACK=${LAPACK##LAPACK_}
+        - export LAPACKE=${LAPACKE##LAPACKE_}
+        - export CBLAS=${CBLAS##CBLAS_}
+        - export INTEGER8=${INTEGER8##INTEGER8_}
+        - export LAPACK=${LAPACK:-ON}; export LAPACKE=${LAPACKE:-ON}; export CBLAS=${CBLAS:-ON}; export INTEGER8=${INTEGER8:-OFF};
+        - cmake ../ -DDEV=ON -DDEBUG=ON -DLAPACK=${LAPACK} -DLAPACKE=${LAPACKE} -DCBLAS=${CBLAS} -DINTEGER8=${INTEGER8}
+        - make 2>&1 | tee build.log
+        - OMP_NUM_THREADS=1 ctest  --output-on-failure
+        - cat build.log | grep -- \\[-W | sed 's/.*\[//; s/\]//' | sort | uniq -c | sort -nr
+
+

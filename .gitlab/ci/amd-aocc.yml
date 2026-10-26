@@ -1,0 +1,27 @@
+amd-aocc-build:
+        variables:
+          USE_CCACHE: "OFF"
+        stage: build-compiler
+        parallel:
+            matrix:
+                - UBUNTU: "jammy"
+                  AOCC_VERSION:
+                      - "4.2.0"
+                      - "4.1.0"
+                  INTEGER8: [ 'INTEGER8_ON', 'INTEGER8_OFF' ]
+                - UBUNTU: "noble"
+                  AOCC_VERSION:
+                      - "4.2.0"
+                      - "4.1.0"
+                  INTEGER8: [ 'INTEGER8_ON', 'INTEGER8_OFF' ]
+
+        image: gitlab.mpi-magdeburg.mpg.de/ci-images/aocc-compiler/$UBUNTU:$AOCC_VERSION
+        needs: []
+        script:
+                - mkdir build
+                - cd build
+                - CC=clang CXX=clang++ FC=flang cmake ../ -DDEV=ON -DDEBUG=ON -DINTEGER8=${INTEGER8}
+                - make 2>&1 | tee build.log
+                - OMP_NUM_THREADS=1 ctest  --output-on-failure
+                - cat build.log | grep -- \\[-W | sed 's/.*\[//; s/\]//' | sort | uniq -c | sort -nr
+

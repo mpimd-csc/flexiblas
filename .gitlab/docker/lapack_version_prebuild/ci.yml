@@ -1,0 +1,13 @@
+lapack-version-prebuild:
+        stage: prereq
+        image: docker:latest
+        before_script:
+                - echo "Build prebuild container"
+        script:
+                - apk add bash
+                - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+                - cd tools/docker/lapack_version_prebuild
+                - bash ./build.sh
+        allow_failure: true
+        when: manual
+

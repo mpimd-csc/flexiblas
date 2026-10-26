@@ -1,0 +1,37 @@
+fedora:
+        stage: build
+        image: ${CI_REGISTRY_IMAGE}/fedora:$FEDORA_VERSION
+        rules:
+            - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+            - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+            - if: $CI_COMMIT_TAG
+            - if: $CI_COMMIT_TITLE =~ /^\[ALL\].*/
+
+        needs:
+            - []
+        parallel:
+            matrix:
+                - FEDORA_VERSION: [43, 44, 45]
+                  LAAPI_VERSION: [ "3.12.0" ]
+                  INTEGER8: [ 'INTEGER8_ON', 'INTEGER8_OFF' ]
+                - FEDORA_VERSION: [ "rawhide" ]
+                  LAAPI_VERSION: [ "3.12.1" ]
+                  INTEGER8: [ 'INTEGER8_ON', 'INTEGER8_OFF' ]
+
+        script:
+                - source ./.gitlab/compiler-flags/fc${FEDORA_VERSION}-flags.sh
+                - export INTEGER8=${INTEGER8##INTEGER8_}
+                - export INTEGER8=${INTEGER8:-OFF}
+                - if [ "$INTEGER8" == "OFF" ]; then BLAS="/usr/lib64/libblas.a"; LAPACK="/usr/lib64/liblapack_pic.a"; LIB_SUFFIX=""; else BLAS="/usr/lib64/libblas64.a"; LAPACK="/usr/lib64/liblapack_pic64.a"; LIB_SUFFIX=64; fi
+                - >
+                  if [ "${FEDORA_VERSION}" = "rawhide" ]; then IVERSION=9999; else IVERSION=${FEDORA_VERSION}; fi;
+                  if [ "${IVERSION}" -ge 43 ]; then
+                    cmake -S . -B build -DCMAKE_C_FLAGS_RELEASE:STRING=-DNDEBUG -DCMAKE_CXX_FLAGS_RELEASE:STRING=-DNDEBUG -DCMAKE_Fortran_FLAGS_RELEASE:STRING=-DNDEBUG -DCMAKE_VERBOSE_MAKEFILE:BOOL=OFF -DCMAKE_INSTALL_DO_STRIP:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=/usr -DINCLUDE_INSTALL_DIR:PATH=/usr/include -DLIB_INSTALL_DIR:PATH=/usr/lib64 -DSYSCONF_INSTALL_DIR:PATH=/etc -DSHARE_INSTALL_PREFIX:PATH=/usr/share -DLIB_SUFFIX=${LIB_SUFFIX} -DBUILD_SHARED_LIBS:BOOL=ON -DLAPACK_API_VERSION=${LAAPI_VERSION} -DINTEGER8=${INTEGER8} -DCMAKE_SKIP_INSTALL_RPATH=ON -DTESTS=ON ;
+                  else
+                    cmake -S . -B build -DCMAKE_C_FLAGS_RELEASE:STRING=-DNDEBUG -DCMAKE_CXX_FLAGS_RELEASE:STRING=-DNDEBUG -DCMAKE_Fortran_FLAGS_RELEASE:STRING=-DNDEBUG -DCMAKE_VERBOSE_MAKEFILE:BOOL=OFF -DCMAKE_INSTALL_DO_STRIP:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=/usr -DINCLUDE_INSTALL_DIR:PATH=/usr/include -DLIB_INSTALL_DIR:PATH=/usr/lib64 -DSYSCONF_INSTALL_DIR:PATH=/etc -DSHARE_INSTALL_PREFIX:PATH=/usr/share -DLIB_SUFFIX=${LIB_SUFFIX} -DBUILD_SHARED_LIBS:BOOL=ON -DLAPACK_API_VERSION=${LAAPI_VERSION} -DSYS_BLAS_LIBRARY=${BLAS} -DSYS_LAPACK_LIBRARY=${LAPACK} -DINTEGER8=${INTEGER8} -DCMAKE_SKIP_INSTALL_RPATH=ON -DTESTS=ON ;
+                  fi
+                - cd build
+                - make 2>&1 | tee build.log
+                - OMP_NUM_THREADS=1 ctest --output-on-failure
+                - cat build.log | grep -- \\[-W | sed 's/.*\[//; s/\]//' | sort | uniq -c | sort -nr
+

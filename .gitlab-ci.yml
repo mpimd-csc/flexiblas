@@ -1,9 +1,128 @@
+default:
+    retry: 1
+    interruptible: true
+    artifacts:
+        expire_in: 7d
+
+variables:
+    LAPACK_VERSION_IMAGE: gitlab.mpi-magdeburg.mpg.de/ci-images/minimal/ubuntu:jammy
+    GIT_SUBMODULE_STRATEGY: recursive
+    USE_CCACHE: "ON"
+
+before_script:
+    - echo "Pipeline Source - ${CI_PIPELINE_SOURCE}"
+    # - git submodule update --init --recursive
+    - export CCACHE_BASEDIR="$PWD"
+    - export CCACHE_DIR="$PWD/ccache"
+    - export CCACHE_COMPILERCHECK=content
+    - ccache -M 1G
+    - ccache --zero-stats || true
+    - ccache --show-stats || true
+after_script:
+    - export CCACHE_DIR="$PWD/ccache"
+    - ccache --show-stats
+
+default:
+    cache:
+        key: "$CI_JOB_NAME"
+        paths:
+            - ccache
+        policy: pull-push
+        when: 'always'
+
 stages:
-    - release
+        - publish
+        - prereq
+        - misc_tests
+        - build
+        - build-compiler
+        - lapack_versions
+        - prebuilt
+        - packaging
+        - release
+
+logos:
+        stage: prereq
+        image: gitlab.mpi-magdeburg.mpg.de/ci-images/minimal/latex:bionic
+        script:
+                - cd doc/logo
+                - apt update &&  apt install --yes optipng make graphicsmagick-imagemagick-compat
+                - make
+        when: manual
+
+include:
+    - '/.gitlab/docker/lapack_version_prebuild/ci.yml'
+    - '/.gitlab/ci/lapack-prebuilt-test.yml'
+    - '/.gitlab/ci/ubuntu.yml'
+    - '/.gitlab/ci/debian.yml'
+    - '/.gitlab/ci/intel-oneapi.yml'
+    - '/.gitlab/ci/rhel.yml'
+    - '/.gitlab/ci/fedora.yml'
+#    - '/.gitlab/ci/nvhpc-x86.yml'
+    - '/.gitlab/ci/packaging.yml'
+
+lapack-version-test:
+    stage: lapack_versions
+    image: ${LAPACK_VERSION_IMAGE}
+    rules:
+        - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+        - if: $CI_COMMIT_TAG
+        - if: $CI_COMMIT_BRANCH != $CI_COMMIT_BRANCH
+          changes:
+            paths:
+                - contributed/lapacke-*/lapacke_joined.c
+                - contributed/cblas/cblas_joined.c
+            compare_to: "master"
+    needs: []
+
+    script:
+        - mkdir build
+        - cd build
+        - cmake ../ -DDEV=ON -DDEBUG=ON -DLAPACK_API_VERSION="${API_VERSION}" -DCMAKE_Fortran_FLAGS="-fallow-argument-mismatch" -DAGGREGATE_FILES=${AGGREGATE_FILES}
+        - make 2>&1 | tee build.log
+        - OMP_NUM_THREADS=1 ctest  --output-on-failure
+        - cat build.log | grep -- \\[-W | sed 's/.*\[//; s/\]//' | sort | uniq -c | sort -nr
+
+    parallel:
+        matrix:
+            - API_VERSION:
+                - "3.3.0"
+                - "3.3.1"
+                - "3.4.0"
+                - "3.4.1"
+                - "3.4.2"
+                - "3.5.0"
+                - "3.6.0"
+                - "3.6.0-wodprc"
+                - "3.6.1"
+                - "3.6.1-wodprc"
+                - "3.7.0"
+                - "3.7.0-wodprc"
+                - "3.8.0"
+                - "3.8.0-wodprc"
+                - "3.9.0"
+                - "3.9.0-wodprc"
+                - "3.9.1"
+                - "3.9.1-wodprc"
+                - "3.10.0"
+                - "3.10.0-wodprc"
+                - "3.10.1"
+                - "3.10.1-wodprc"
+                - "3.11.0"
+                - "3.11.0-wodprc"
+                - "3.12.0"
+                - "3.12.0-wodprc"
+                - "3.12.1"
+                - "3.12.1-wodprc"
+              AGGREGATE_FILES:
+                - "OFF"
+                - "ON"
+
+
 
 release-job:
         rules:
-            - if: $CI_COMMIT_TAG
+           - if: $CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+(-.*)?$/
         stage: release
         image: gitlab.mpi-magdeburg.mpg.de/ci-images/minimal/ubuntu:jammy
         script:

@@ -1,0 +1,23 @@
+deb-packages:
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == "165-debian-packaging-with-automatic-versioning"
+    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH
+      changes:
+       - debian/*
+  stage: packaging
+  image: ${CI_REGISTRY_IMAGE}/${OS}:${OSVERSION}
+  needs: []
+  parallel:
+    matrix:
+      - OS: [ "debian" ]
+        OSVERSION: [ 'bookworm', 'trixie' ]
+      - OS: [ "ubuntu" ]
+        OSVERSION: [ 'jammy', 'noble' , 'resolute' ]
+  script:
+      - export DEB_FULLNAME="CSC Package Building"
+      - export DEBEMAIL="noreply@mpi-magdeburg.mpg.de"
+      - sh debian/bootstrap_debian.sh
+      - dpkg-buildpackage -us -uc --build=binary
+

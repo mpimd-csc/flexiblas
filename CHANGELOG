@@ -1,3 +1,18 @@
+Next:
+-----
+- Import various bugfixes from GITHUB
+  - Fix: use after free in src/hooks.c
+  - Fix: Spell Check from lintian
+  - Fix: if FlexiBLAS was used with dlmopen, it crashes.
+  - Fix: Symbol search in interface detection
+  - Fix: GITHUB CI now running
+- Deprecation: Ubuntu 20.04 is no longer support. Minimum required cmake version
+  is now 3.20.
+- Deprecation: Intel Classic compilers are not longer test, do not report bugs
+  caused by them.
+
+
+
 3.5.0 (October 24, 2025)
 ------------------------
 - Import LAPACK 3.12.1

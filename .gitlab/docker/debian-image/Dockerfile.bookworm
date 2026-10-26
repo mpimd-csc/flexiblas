@@ -1,0 +1,12 @@
+FROM gitlab.mpi-magdeburg.mpg.de/ci-images/minimal/debian:bookworm
+RUN apt update ; \
+    apt install -y debhelper devscripts cmake gfortran gcc \
+    libatlas-base-dev \
+	libopenblas-openmp-dev libopenblas-pthread-dev libopenblas-serial-dev \
+	libopenblas64-openmp-dev libopenblas64-pthread-dev \
+	libopenblas64-serial-dev libblis-openmp-dev libblis-pthread-dev \
+	libblis-serial-dev libblis64-openmp-dev libblis64-pthread-dev \
+	libblis64-serial-dev libblas-dev libblas64-dev liblapack-dev \
+	liblapack64-dev \
+    libmkl-dev
+

@@ -1,0 +1,91 @@
+.job_template: &lapack-version-prebuild-tmp
+        stage: prebuilt
+
+prebuilt-test:
+    stage: prebuilt
+    image: ${CI_REGISTRY_IMAGE}/lapack-version-prebuild:${VERSION}
+    rules:
+        - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+        - if: $CI_COMMIT_TAG
+        - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH
+          changes:
+            - src/lapack/*
+            - src/fallback_lapack/*
+
+
+    needs: []
+    script:
+        - |
+          export VERSION=${VERSION}
+          if [ "${API_VERSION}" == "X" ]; then
+            export API_VERSION=""
+          fi
+          export BASE=/opt/lapack/
+          bash ./.gitlab/ci/lapack-prebuilt-test.sh
+    parallel:
+        matrix:
+            - VERSION: "3.3.0"
+              API_VERSION: "X"
+            - VERSION: "3.3.1"
+              API_VERSION: "X"
+            - VERSION:  "3.4.0"
+              API_VERSION: "X"
+            - VERSION: "3.4.1"
+              API_VERSION: "X"
+            - VERSION: "3.4.2"
+              API_VERSION: "X"
+            - VERSION: "3.5.0"
+              API_VERSION: "X"
+            - VERSION: "3.6.0"
+              API_VERSION: "X"
+            - VERSION: "3.6.0"
+              API_VERSION: "3.6.0-wodprc"
+            - VERSION: "3.6.1"
+              API_VERSION: "X"
+            - VERSION: "3.6.1"
+              API_VERSION: "3.6.1-wodprc"
+            - VERSION: "3.7.0"
+              API_VERSION: "X"
+            - VERSION: "3.7.0"
+              API_VERSION: "3.7.0-wodprc"
+            - VERSION: "3.7.1"
+              API_VERSION: "X"
+            - VERSION: "3.7.1"
+              API_VERSION: "3.7.1-wodprc"
+            - VERSION: "3.8.0"
+              API_VERSION: "X"
+            - VERSION: "3.8.0"
+              API_VERSION: "3.8.0-wodprc"
+            - VERSION: "3.9.0"
+              API_VERSION: "X"
+            - VERSION: "3.9.0"
+              API_VERSION: "3.9.0-wodprc"
+            - VERSION: "3.9.1"
+              API_VERSION: "X"
+            - VERSION: "3.9.1"
+              API_VERSION: "3.9.1-wodprc"
+            - VERSION: "3.10.0"
+              API_VERSION: "X"
+            - VERSION: "3.10.0"
+              API_VERSION: "3.10.0-wodprc"
+            - VERSION: "3.10.1"
+              API_VERSION: "X"
+            - VERSION: "3.10.1"
+              API_VERSION: "3.10.1-wodprc"
+            - VERSION: "3.11.0"
+              API_VERSION: "X"
+            - VERSION: "3.11.0"
+              API_VERSION: "3.11.0-wodprc"
+            - VERSION: "3.12.0"
+              API_VERSION: "X"
+            - VERSION: "3.12.0"
+              API_VERSION: "3.12.0-wodprc"
+            - VERSION: "3.12.1"
+              API_VERSION: "X"
+            - VERSION: "3.12.1"
+              API_VERSION: "3.12.1-wodprc"
+
+
+
+
+

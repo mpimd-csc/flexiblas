@@ -1,0 +1,54 @@
+nvhpc-x86-64-build32:
+        variables:
+          USE_CCACHE: "OFF"
+        stage: build-compiler
+        tags:
+          - haswell
+        parallel:
+            matrix:
+                - UBUNTU: "jammy"
+                  NVHPC_VERSION:
+                      - "23.11"
+                      - "24.5"
+                      - "24.9"
+                - UBUNTU: "noble"
+                  NVHPC_VERSION:
+                      - "24.5"
+                      - "24.7"
+
+        image: gitlab.mpi-magdeburg.mpg.de/ci-images/nvidia-compiler/$UBUNTU:$NVHPC_VERSION
+        needs: []
+        script:
+                - mkdir build
+                - cd build
+                - CC=nvc CXX=nvc++ FC=nvfortran cmake ../ -DDEV=ON -DDEBUG=ON
+                - make -j2
+                - ctest --rerun-failed --output-on-failure
+
+nvhpc-x86-64-build64:
+        variables:
+          USE_CCACHE: "OFF"
+        stage: build-compiler
+        tags:
+          - haswell
+        parallel:
+            matrix:
+                - UBUNTU: "jammy"
+                  NVHPC_VERSION:
+                      - "23.11"
+                      - "24.5"
+                      - "24.9"
+                - UBUNTU: "noble"
+                  NVHPC_VERSION:
+                      - "24.5"
+                      - "24.7"
+
+        image: gitlab.mpi-magdeburg.mpg.de/ci-images/nvidia-compiler/$UBUNTU:$NVHPC_VERSION
+        needs: []
+        script:
+                - mkdir build
+                - cd build
+                - CC=nvc CXX=nvc++ FC=nvfortran cmake ../ -DDEV=ON -DDEBUG=ON -DINTEGER8=ON
+                - make -j2
+                - ctest --rerun-failed --output-on-failure
+
