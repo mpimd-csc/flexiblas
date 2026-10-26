@@ -96,25 +96,23 @@ void XERBLA(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len) {
 int __flexiblas_setup_xerbla(flexiblas_backend_t *backend)
 {
     /* Check if the user supplied a XERBLA function  */
-    {
-        void *xerbla_symbol1 = __flexiblas_dlsym(backend->library_handle,"xerbla_");
-        void *xerbla_symbol2 = __flexiblas_dlsym(RTLD_DEFAULT,"xerbla_");
-        void (*flexiblas_internal) (char *, Int *, flexiblas_fortran_charlen_t);
-        void *internal;
-        flexiblas_internal = flexiblas_internal_xerbla;
-        *(void **) &internal = *((void**) & flexiblas_internal);
-        DPRINTF(1, "Available XERBLA ( backend: 0x%lx, user defined: 0x%lx, FlexiBLAS: 0x%lx )\n",
-                (unsigned long)((void*)xerbla_symbol1),
-                (unsigned long)((void*)xerbla_symbol2),
-                (unsigned long)((void*)internal));
+    void *xerbla_symbol1 = __flexiblas_dlsym(backend->library_handle,"xerbla_");
+    void *xerbla_symbol2 = __flexiblas_dlsym(RTLD_DEFAULT,"xerbla_");
+    void (*flexiblas_internal) (char *, Int *, flexiblas_fortran_charlen_t);
+    void *internal;
+    flexiblas_internal = flexiblas_internal_xerbla;
+    *(void **) &internal = *((void**) & flexiblas_internal);
+    DPRINTF(1, "Available XERBLA ( backend: 0x%lx, user defined: 0x%lx, FlexiBLAS: 0x%lx )\n",
+            (unsigned long)((void*)xerbla_symbol1),
+            (unsigned long)((void*)xerbla_symbol2),
+            (unsigned long)((void*)internal));
 
-        if (internal == xerbla_symbol2) {
-            DPRINTF(1,"Use XERBLA of the BLAS backend.\n");
-            backend->xerbla = xerbla_symbol1;
-        } else {
-            DPRINTF(1,"Use XERBLA supplied by the user.\n");
-            backend->xerbla = xerbla_symbol2;
-        }
+    if (internal == xerbla_symbol2) {
+        DPRINTF(1,"Use XERBLA of the BLAS backend.\n");
+        backend->xerbla = xerbla_symbol1;
+    } else {
+        DPRINTF(1,"Use XERBLA supplied by the user.\n");
+        backend->xerbla = xerbla_symbol2;
     }
     return 0;
 }
@@ -299,28 +297,26 @@ void cblas_xerbla(CBLAS_INT info, const char *rout, const char *form, ...)
 int __flexiblas_setup_cblas_xerbla(flexiblas_backend_t *backend)
 {
     /* Check if the user supplied a XERBLA function  */
-    {
-        void *xerbla_symbol1 = __flexiblas_dlsym(backend->library_handle,"cblas_xerbla");
-        void *xerbla_symbol2 = __flexiblas_dlsym(RTLD_DEFAULT,"cblas_xerbla");
-        void *internal;
+    void *xerbla_symbol1 = __flexiblas_dlsym(backend->library_handle,"cblas_xerbla");
+    void *xerbla_symbol2 = __flexiblas_dlsym(RTLD_DEFAULT,"cblas_xerbla");
+    void *internal;
 #ifndef __APPLE__
-        void (*flexiblas_internal)(CBLAS_INT, const char *, const char *, ...);
-        flexiblas_internal = internal_cblas_xerbla;
-        *(void **) &internal = *((void**) & flexiblas_internal);
+    void (*flexiblas_internal)(CBLAS_INT, const char *, const char *, ...);
+    flexiblas_internal = internal_cblas_xerbla;
+    *(void **) &internal = *((void**) & flexiblas_internal);
 #else
-        *(void**) &internal = (void*) &cblas_xerbla;
+    *(void**) &internal = (void*) &cblas_xerbla;
 #endif
-        DPRINTF(1, "Available CBLAS_XERBLA ( backend: 0x%lx, user defined: 0x%lx, FlexiBLAS: 0x%lx )\n",
-                (unsigned long)((void*)xerbla_symbol1),
-                (unsigned long)((void*)xerbla_symbol2),
-                (unsigned long)((void*)internal));
-        if (internal == xerbla_symbol2) {
-            DPRINTF(1,"Use CBLAS_XERBLA of the BLAS backend.\n");
-            backend->cblas_xerbla = xerbla_symbol1;
-        } else {
-            DPRINTF(1, "Use CBLAS_XERBLA supplied by the user.\n");
-            backend->cblas_xerbla = xerbla_symbol2;
-        }
+    DPRINTF(1, "Available CBLAS_XERBLA ( backend: 0x%lx, user defined: 0x%lx, FlexiBLAS: 0x%lx )\n",
+            (unsigned long)((void*)xerbla_symbol1),
+            (unsigned long)((void*)xerbla_symbol2),
+            (unsigned long)((void*)internal));
+    if (internal == xerbla_symbol2) {
+        DPRINTF(1,"Use CBLAS_XERBLA of the BLAS backend.\n");
+        backend->cblas_xerbla = xerbla_symbol1;
+    } else {
+        DPRINTF(1, "Use CBLAS_XERBLA supplied by the user.\n");
+        backend->cblas_xerbla = xerbla_symbol2;
     }
     return 0;
 }
