@@ -6,10 +6,57 @@ Next:
   - Fix: if FlexiBLAS was used with dlmopen, it crashes.
   - Fix: Symbol search in interface detection
   - Fix: GITHUB CI now running
+  - Fix: complex return value interface detection with 64-bit integers (GH #104)
+  - Fix: invalid sentinel value in a fixed size array
+  - Fix: wrong verbose message when overriding CBLAS_XERBLA
+  - Cleanup: remove duplicated internal_cblas_xerbla definitions
 - Deprecation: Ubuntu 20.04 is no longer support. Minimum required cmake version
   is now 3.20.
 - Deprecation: Intel Classic compilers are not longer test, do not report bugs
   caused by them.
+- Improve support for Windows (MinGW/MSYS2):
+  - Fix missing symbol in uname.c on Win32
+  - Require dlfcn-win32 for dynamic loading on Windows
+  - Instead of a weak symbol, probe for a supplied cblas_xerbla on Windows
+    (Windows does not support the weak attribute)
+  - Use cdotc for the complex return value probe on Win64
+  - Fix the xerbla_ argument handling
+- Fix some 64-bit (INTEGER8) build issues:
+  - Propagate CBLAS_INT to the flexiblas target libraries and tests
+  - src/xerbla.c now uses cblas.h instead of forcing CBLAS_INT to 32-bit
+  - Fix the complex interface detection size for 64-bit integers
+- CBLAS:
+  - Check the system CBLAS for missing functions and supply them
+  - Add the sometimes-missing CBLAS ?gemmtr wrappers
+- New CMake options SYS_CBLAS_LIBRARY and SYS_LAPACKE_LIBRARY to use a system
+  provided CBLAS/LAPACKE library instead of the fallback implementation.
+- Simplify the LAPACK/CBLAS fallback configurations and add
+  `INTERFACE "LINKER:--no-as-needed"` to avoid unnecessary link dependencies.
+- flexiblas-config:
+  - Fix --cflags/--fcflags using the wrong includedir
+  - Fix --backenddir appending FLEXIBLAS_LIBRARY_DIR twice
+  - Only compute rcdir and sysconfdir when requested
+- pkg-config:
+  - Add the variables fcflags, i8cflag, i8fcflag, i8, backenddir, rcdir,
+    and sysconfdir
+  - Make the .pc --cflags match `flexiblas-config --cflags` incl. INTEGER8
+  - Fix .pc file generation (See GH #100, GH #99)
+- Expose FLEXIBLAS_FUNCTION_POINTER_ASSIGN via flexiblas.h (also requested in GH #102)
+- Add more verbose debug messages for dlopen errors and backend loading.
+- Replace the cmake and src symlinks with their paths in CMakeLists.txt,
+  cmake_minimum_required() must be before project(), various CMake cleanups,
+  and add maintainer helper scripts in tools/ (new-version.sh,
+  update-copyright.sh, ...)
+  (See GH #92, GH #93, GH #94, GH #95, GH #91)
+- Documentation: update CONTRIBUTING.md, extend INSTALL.md/ISSUES.md with
+  MinGW build notes and known compiler bug workarounds, note the Homebrew
+  packaging. (GH #89, GH #96, GH #97)
+- CI:
+  - Add Ubuntu jobs linking against system BLAS+LAPACK and CBLAS+LAPACKE (GH #101)
+  - Add Ubuntu jobs configuring 64-bit integer builds (GH #112)
+  - Build in Debug mode so re-run test stack traces and dumped test logs are useful
+  - Add Dependabot configuration
+- Fix spelling issues (GH #87)
 
 
 
