@@ -1,7 +1,7 @@
 //    SPDX-License-Identifier: LGPL-3.0-or-later
 /*
    This file is part of FlexiBLAS, a BLAS/LAPACK interface wrapper library.
-   Copyright (C) 2013-2025 Martin Koehler
+   Copyright (C) 2013-2026 Martin Koehler
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

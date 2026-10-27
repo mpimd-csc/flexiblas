@@ -7,7 +7,7 @@ FlexiBLAS - A BLAS and LAPACK wrapper library with runtime exchangeable backends
 
 **Git Repository:** https://gitlab.mpi-magdeburg.mpg.de/software/flexiblas-release
 
-Copyright 2013-2025 by *Martin Köhler* (ORCID: 0000-0003-2338-9904)
+Copyright 2013-2026 by *Martin Köhler* (ORCID: 0000-0003-2338-9904)
                    and *Jens Saak* (ORCID: 0000-0001-5567-9637)
 
 ## Documentation
