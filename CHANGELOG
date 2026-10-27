@@ -31,7 +31,7 @@ Next:
 - New CMake options SYS_CBLAS_LIBRARY and SYS_LAPACKE_LIBRARY to use a system
   provided CBLAS/LAPACKE library instead of the fallback implementation.
 - Simplify the LAPACK/CBLAS fallback configurations and add
-  `INTERFACE "LINKER:--no-as-needed"` to avoid unnecessary link dependencies.
+  `INTERFACE "LINKER:--no-as-needed"` to keep necessary link dependencies.
 - flexiblas-config:
   - Fix --cflags/--fcflags using the wrong includedir
   - Fix --backenddir appending FLEXIBLAS_LIBRARY_DIR twice
