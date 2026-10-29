@@ -26,7 +26,8 @@ endif()
 include(CheckLinkerFlag)
 check_linker_flag(C "LINKER:--no-as-needed" LINKER_SUPPORTS_NO_AS_NEEDED)
 
-# save CMAKE_REQUIRED_LIBRARIES
+# save CMAKE_REQUIRED_LIBRARIES etc
+set(_CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES})
 SET(_CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES})
 
 if (SYS_BLAS_LIBRARY)
@@ -68,13 +69,17 @@ IF (FLEXIBLAS_CBLAS)
             target_link_options(flexiblas_netlib_cblas_import INTERFACE "LINKER:--no-as-needed")
         endif()
 
-        INCLUDE(CheckCSourceCompiles)
+        include(CheckCSourceCompiles)
         MACRO(add_cblas_function check)
+            unset(${check}_EXISTS CACHE)
             check_c_source_compiles("
                 #include <cblas.h>
-                int main(void) {
-                    void (*func_ptr)() = (void (*)())${check};
-                    return func_ptr ? 0 : 1;
+                typedef void (*func_t)(void);
+                int main(int argc, char** argv) {
+                    volatile func_t runtime_trigger = (func_t)${check};
+                    if (argc > 10)
+                        runtime_trigger();
+                    return 0;
                 }
             " ${check}_EXISTS)
             if(NOT ${check}_EXISTS)
@@ -82,6 +87,7 @@ IF (FLEXIBLAS_CBLAS)
             endif()
         ENDMACRO()
 
+        set(CMAKE_REQUIRED_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/../../include")
         SET(CMAKE_REQUIRED_LIBRARIES flexiblas_netlib_cblas_import ${LIBM})
         add_cblas_function(cblas_daxpby    cblas_daxpby.c cblas_saxpby.c cblas_caxpby.c cblas_zaxpby.c)
         add_cblas_function(cblas_dgeadd    cblas_dgeadd.c cblas_sgeadd.c cblas_cgeadd.c cblas_zgeadd.c)
@@ -99,7 +105,8 @@ IF (FLEXIBLAS_CBLAS)
     endif()
 ENDIF()
 
-# restore CMAKE_REQUIRED_LIBRARIES
+# restore CMAKE_REQUIRED_LIBRARIES etc
+set(CMAKE_REQUIRED_INCLUDES ${_CMAKE_REQUIRED_INCLUDES})
 SET(CMAKE_REQUIRED_LIBRARIES ${_CMAKE_REQUIRED_LIBRARIES})
 
 MESSAGE(STATUS "(C)BLAS sources to add: ${SRC}")
