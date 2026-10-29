@@ -10,6 +10,7 @@
 
 #include "cblas.h"
 #include "cblas_f77.h"
+#include "cblas_f77_ext.h"
 void API_SUFFIX(cblas_sgemmtr)(const CBLAS_LAYOUT layout, const CBLAS_UPLO Uplo, const CBLAS_TRANSPOSE TransA,
         const CBLAS_TRANSPOSE TransB, const CBLAS_INT N,
         const CBLAS_INT K, const float alpha, const float  *A,

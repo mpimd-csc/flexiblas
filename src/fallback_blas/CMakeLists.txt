@@ -89,6 +89,8 @@ IF (FLEXIBLAS_CBLAS)
 
         set(CMAKE_REQUIRED_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/../../include")
         SET(CMAKE_REQUIRED_LIBRARIES flexiblas_netlib_cblas_import ${LIBM})
+        # if add to this, must insert #include "cblas_f77_ext.h" to .c,
+        # and add #define in that file
         add_cblas_function(cblas_daxpby    cblas_daxpby.c cblas_saxpby.c cblas_caxpby.c cblas_zaxpby.c)
         add_cblas_function(cblas_dgeadd    cblas_dgeadd.c cblas_sgeadd.c cblas_cgeadd.c cblas_zgeadd.c)
         add_cblas_function(cblas_dgemmtr   cblas_dgemmtr.c cblas_sgemmtr.c cblas_cgemmtr.c cblas_zgemmtr.c)

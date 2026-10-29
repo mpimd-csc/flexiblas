@@ -35,6 +35,11 @@
 #define F77_cgeadd_base        F77_GLOBAL_SUFFIX(cgeadd,CGEADD)
 #define F77_zgeadd_base        F77_GLOBAL_SUFFIX(zgeadd,ZGEADD)
 
+#define F77_sgemmtr_base        F77_GLOBAL_SUFFIX(sgemmtr,SGEMMTR)
+#define F77_dgemmtr_base        F77_GLOBAL_SUFFIX(dgemmtr,DGEMMTR)
+#define F77_cgemmtr_base        F77_GLOBAL_SUFFIX(cgemmtr,CGEMMTR)
+#define F77_zgemmtr_base        F77_GLOBAL_SUFFIX(zgemmtr,ZGEMMTR)
+
 #define F77_somatcopy_base        F77_GLOBAL_SUFFIX(somatcopy,SOMATCOPY)
 #define F77_domatcopy_base        F77_GLOBAL_SUFFIX(domatcopy,DOMATCOPY)
 #define F77_comatcopy_base        F77_GLOBAL_SUFFIX(comatcopy,COMATCOPY)
@@ -78,6 +83,11 @@
 /*
  * Level 3 Fortran variadic definitions with BLAS_FORTRAN_STRLEN_END
  */
+#define F77_sgemmtr(...)          F77_sgemmtr_base(__VA_ARGS__, 1, 1, 1)
+#define F77_dgemmtr(...)          F77_dgemmtr_base(__VA_ARGS__, 1, 1, 1)
+#define F77_cgemmtr(...)          F77_cgemmtr_base(__VA_ARGS__, 1, 1, 1)
+#define F77_zgemmtr(...)          F77_zgemmtr_base(__VA_ARGS__, 1, 1, 1)
+
 #define F77_somatcopy(...)        F77_somatcopy_base(__VA_ARGS__,1,1)
 #define F77_domatcopy(...)        F77_domatcopy_base(__VA_ARGS__,1,1)
 #define F77_comatcopy(...)        F77_comatcopy_base(__VA_ARGS__,1,1)
@@ -97,6 +107,11 @@
 /*
  * Level 3 Fortran variadic definitions without BLAS_FORTRAN_STRLEN_END
  */
+#define F77_sgemmtr(...)          F77_sgemmtr_base(__VA_ARGS__)
+#define F77_dgemmtr(...)          F77_dgemmtr_base(__VA_ARGS__)
+#define F77_cgemmtr(...)          F77_cgemmtr_base(__VA_ARGS__)
+#define F77_zgemmtr(...)          F77_zgemmtr_base(__VA_ARGS__)
+
 #define F77_somatcopy(...)        F77_somatcopy_base(__VA_ARGS__)
 #define F77_domatcopy(...)        F77_domatcopy_base(__VA_ARGS__)
 #define F77_comatcopy(...)        F77_comatcopy_base(__VA_ARGS__)
@@ -133,6 +148,27 @@ extern "C" {
     /*
      * Level 3 Fortran Prototypes
      */
+    void F77_sgemmtr_base(FCHAR, FCHAR, FCHAR, FINT, FINT, const float *, const float *, FINT, const float *, FINT, const float *, float *, FINT
+#ifdef BLAS_FORTRAN_STRLEN_END
+            , FORTRAN_STRLEN, FORTRAN_STRLEN, FORTRAN_STRLEN
+#endif
+            );
+    void F77_dgemmtr_base(FCHAR, FCHAR, FCHAR, FINT, FINT, const double *, const double *, FINT, const double *, FINT, const double *, double *, FINT
+#ifdef BLAS_FORTRAN_STRLEN_END
+            , FORTRAN_STRLEN, FORTRAN_STRLEN, FORTRAN_STRLEN
+#endif
+            );
+    void F77_cgemmtr_base(FCHAR, FCHAR, FCHAR, FINT, FINT, const void*, const void*, FINT, const void*, FINT, const void*, void*, FINT
+#ifdef BLAS_FORTRAN_STRLEN_END
+            , FORTRAN_STRLEN, FORTRAN_STRLEN, FORTRAN_STRLEN
+#endif
+            );
+    void F77_zgemmtr_base(FCHAR, FCHAR, FCHAR, FINT, FINT, const void*, const void*, FINT, const void*, FINT, const void*, void*, FINT
+#ifdef BLAS_FORTRAN_STRLEN_END
+            , FORTRAN_STRLEN, FORTRAN_STRLEN, FORTRAN_STRLEN
+#endif
+            );
+
     void F77_sgeadd_base(FINT, FINT, const float *, const float *, FINT, const float *, float *, FINT );
     void F77_dgeadd_base(FINT, FINT, const double *, const double *, FINT, const double *, double *, FINT );
     void F77_cgeadd_base(FINT, FINT, const void *, const void *, FINT, const void *, void *, FINT );
