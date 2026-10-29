@@ -60,6 +60,15 @@
  * Level 2 Fortran variadic definitions without FCHAR
  */
 
+/*
+ * Level 3 Fortran variadic definitions without FCHAR
+ */
+
+#define F77_sgeadd(...)        F77_sgeadd_base(__VA_ARGS__)
+#define F77_dgeadd(...)        F77_dgeadd_base(__VA_ARGS__)
+#define F77_cgeadd(...)        F77_cgeadd_base(__VA_ARGS__)
+#define F77_zgeadd(...)        F77_zgeadd_base(__VA_ARGS__)
+
 #ifdef BLAS_FORTRAN_STRLEN_END
 
 /*
@@ -69,11 +78,6 @@
 /*
  * Level 3 Fortran variadic definitions with BLAS_FORTRAN_STRLEN_END
  */
-#define F77_sgeadd(...)        F77_sgeadd_base(__VA_ARGS__)
-#define F77_dgeadd(...)        F77_dgeadd_base(__VA_ARGS__)
-#define F77_cgeadd(...)        F77_cgeadd_base(__VA_ARGS__)
-#define F77_zgeadd(...)        F77_zgeadd_base(__VA_ARGS__)
-
 #define F77_somatcopy(...)        F77_somatcopy_base(__VA_ARGS__,1,1)
 #define F77_domatcopy(...)        F77_domatcopy_base(__VA_ARGS__,1,1)
 #define F77_comatcopy(...)        F77_comatcopy_base(__VA_ARGS__,1,1)
@@ -84,9 +88,6 @@
 #define F77_cimatcopy(...)        F77_cimatcopy_base(__VA_ARGS__,1,1)
 #define F77_zimatcopy(...)        F77_zimatcopy_base(__VA_ARGS__,1,1)
 
-
-
-
 #else
 
 /*
@@ -96,11 +97,6 @@
 /*
  * Level 3 Fortran variadic definitions without BLAS_FORTRAN_STRLEN_END
  */
-#define F77_sgeadd(...)        F77_sgeadd_base(__VA_ARGS__)
-#define F77_dgeadd(...)        F77_dgeadd_base(__VA_ARGS__)
-#define F77_cgeadd(...)        F77_cgeadd_base(__VA_ARGS__)
-#define F77_zgeadd(...)        F77_zgeadd_base(__VA_ARGS__)
-
 #define F77_somatcopy(...)        F77_somatcopy_base(__VA_ARGS__)
 #define F77_domatcopy(...)        F77_domatcopy_base(__VA_ARGS__)
 #define F77_comatcopy(...)        F77_comatcopy_base(__VA_ARGS__)
@@ -110,8 +106,6 @@
 #define F77_dimatcopy(...)        F77_dimatcopy_base(__VA_ARGS__)
 #define F77_cimatcopy(...)        F77_cimatcopy_base(__VA_ARGS__)
 #define F77_zimatcopy(...)        F77_zimatcopy_base(__VA_ARGS__)
-
-
 
 #endif
 
