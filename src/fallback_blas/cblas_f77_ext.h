@@ -11,6 +11,37 @@
 
 #include "fc.h"
 
+#ifndef F77_INT
+#ifdef WeirdNEC
+#define F77_INT int64_t
+#else
+#define F77_INT int32_t
+#endif
+#endif
+
+#ifdef  F77_CHAR
+#define FCHAR F77_CHAR
+#else
+#define FCHAR char *
+#endif
+
+#define FINT const F77_INT *
+#define FINT2 F77_INT *
+
+/*
+ * Integer specific API
+ */
+#ifndef API_SUFFIX
+#ifdef CBLAS_API64
+#define API_SUFFIX(a) a##_64
+#else
+#define API_SUFFIX(a) a
+#endif
+#endif
+
+#define F77_GLOBAL_SUFFIX(a,b) F77_GLOBAL_SUFFIX_(API_SUFFIX(a),API_SUFFIX(b))
+#define F77_GLOBAL_SUFFIX_(a,b) FC_GLOBAL(a,b)
+
 #include <stdarg.h>
 #include <stdint.h>
 /*
