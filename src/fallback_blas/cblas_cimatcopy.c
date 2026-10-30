@@ -18,7 +18,6 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
    */
 #include "cblas.h"
-#include "cblas_f77.h"
 #include "cblas_f77_ext.h"
 
 void cblas_cimatcopy(const CBLAS_ORDER CORDER, const CBLAS_TRANSPOSE CTRANS,

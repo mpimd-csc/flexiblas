@@ -8,7 +8,6 @@
  *
  */
 #include "cblas.h"
-#include "cblas_f77.h"
 #include "cblas_f77_ext.h"
 
 void API_SUFFIX(cblas_saxpby)( const CBLAS_INT N, const float alpha, const float *X,
