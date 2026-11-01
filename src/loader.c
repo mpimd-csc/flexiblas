@@ -150,37 +150,24 @@ HIDDEN flexiblas_complex_interface_t __flexiblas_get_complex_interface(void *han
         return FLEXIBLAS_COMPLEX_NONE_INTERFACE;
     }
 
-    FLEXIBLAS_LOAD_CPLX_TYPE (*cplx_func_gnu)(                  FLEXIBLAS_LOAD_INT_T *, FLEXIBLAS_LOAD_CPLX_TYPE *, FLEXIBLAS_LOAD_INT_T *, FLEXIBLAS_LOAD_CPLX_TYPE *, FLEXIBLAS_LOAD_INT_T *);
+    FLEXIBLAS_LOAD_CPLX_TYPE (*cplx_func_gnu)(                    FLEXIBLAS_LOAD_INT_T *, FLEXIBLAS_LOAD_CPLX_TYPE *, FLEXIBLAS_LOAD_INT_T *, FLEXIBLAS_LOAD_CPLX_TYPE *, FLEXIBLAS_LOAD_INT_T *);
     void           (*cplx_func_intel)(FLEXIBLAS_LOAD_CPLX_TYPE *, FLEXIBLAS_LOAD_INT_T *, FLEXIBLAS_LOAD_CPLX_TYPE *, FLEXIBLAS_LOAD_INT_T *, FLEXIBLAS_LOAD_CPLX_TYPE *, FLEXIBLAS_LOAD_INT_T *);
     FLEXIBLAS_LOAD_INT_T        one = 1;
 
     FLEXIBLAS_FUNCTION_POINTER_ASSIGN(cplx_func_gnu, cplx_func_ptr);
     FLEXIBLAS_FUNCTION_POINTER_ASSIGN(cplx_func_intel, cplx_func_ptr);
 
+    FLEXIBLAS_LOAD_CPLX_TYPE zeroc = 0.0 + 0.0*I;
 #if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
     FLEXIBLAS_LOAD_CPLX_TYPE retval = 0.0 + 0.0*I;
-    FLEXIBLAS_LOAD_CPLX_TYPE zeroc = 0.0 + 0.0*I;
     /** retval = cplx_func_gnu(&one, &zeroc, &one, &zeroc, &one); */
-
-    cplx_func_intel(&retval, &one, &zeroc, &one, &zeroc, &one);
-    if (creal(retval) == 0.0 && cimag(retval) == 0.0) {
-        return FLEXIBLAS_COMPLEX_INTEL_INTERFACE;
-    }
-
-    retval = 0.0 + 1.0*I;
-    retval = cplx_func_gnu(&one, &zeroc, &one, &zeroc, &one);
-    if (creal(retval) == 0.0 && cimag(retval) == 0.0) {
-        return FLEXIBLAS_COMPLEX_GNU_INTERFACE;
-    }
 #else
     /*
      * ZDOTC will return zero if all inputs are zero. Especially it overwrites existing data.
      * Ifi the the retval arguments gets zero, we are using the "Intel" calling convention.
      */
-
     FLEXIBLAS_LOAD_CPLX_TYPE retval = 0.0 + 1.0*I;
-    FLEXIBLAS_LOAD_CPLX_TYPE zeroc = 0.0 + 0.0*I;
-
+#endif
     cplx_func_intel(&retval, &one, &zeroc, &one, &zeroc, &one);
     if (creal(retval) == 0.0 && cimag(retval) == 0.0) {
         return FLEXIBLAS_COMPLEX_INTEL_INTERFACE;
@@ -191,7 +178,6 @@ HIDDEN flexiblas_complex_interface_t __flexiblas_get_complex_interface(void *han
     if (creal(retval) == 0.0 && cimag(retval) == 0.0) {
         return FLEXIBLAS_COMPLEX_GNU_INTERFACE;
     }
-#endif
     return FLEXIBLAS_COMPLEX_NONE_INTERFACE;
 
 #endif
