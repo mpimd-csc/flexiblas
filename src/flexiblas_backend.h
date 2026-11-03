@@ -104,20 +104,16 @@ extern "C" {
   (char *SNAME, Int *Info, flexiblas_fortran_charlen_t len)
 
 #ifdef __cplusplus
-#define FLEXIBLAS_INFO_FUNCTION(info) extern "C" void __flexiblas_info(flexiblas_info_t *info)
-#define FLEXIBLAS_INIT_FUNCTION extern "C" void __flexiblas_initialize
-#define FLEXIBLAS_EXIT_FUNCTION extern "C" void __flexiblas_finalize
-#define FLEXIBLAS_HOOK_INIT_FUNCTION extern "C" void __flexiblas_hook_initialize
-#define FLEXIBLAS_HOOK_EXIT_FUNCTION extern "C" void __flexiblas_hook_finalize
-
+#define FLEXIBLAS_EXTERN_C extern "C"
 #else
-#define FLEXIBLAS_INFO_FUNCTION(info) void __flexiblas_info(flexiblas_info_t *info)
-#define FLEXIBLAS_INIT_FUNCTION int __flexiblas_initialize
-#define FLEXIBLAS_EXIT_FUNCTION void __flexiblas_finalize
-#define FLEXIBLAS_HOOK_INIT_FUNCTION void __flexiblas_hook_initialize
-#define FLEXIBLAS_HOOK_EXIT_FUNCTION void __flexiblas_hook_finalize
-
+#define FLEXIBLAS_EXTERN_C
 #endif
+
+#define FLEXIBLAS_INFO_FUNCTION(info) FLEXIBLAS_EXTERN_C void __flexiblas_info(flexiblas_info_t *info)
+#define FLEXIBLAS_INIT_FUNCTION FLEXIBLAS_EXTERN_C int __flexiblas_initialize
+#define FLEXIBLAS_EXIT_FUNCTION FLEXIBLAS_EXTERN_C void __flexiblas_finalize
+#define FLEXIBLAS_HOOK_INIT_FUNCTION FLEXIBLAS_EXTERN_C void __flexiblas_hook_initialize
+#define FLEXIBLAS_HOOK_EXIT_FUNCTION FLEXIBLAS_EXTERN_C void __flexiblas_hook_finalize
 
 #define FLEXIBLAS_HOOK_REGISTER(hookname, secname, nsp, desc, authors) \
     flexiblas_hook_register_t flexiblas_register = { hookname, secname, desc, authors }; \
