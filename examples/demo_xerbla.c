@@ -73,6 +73,7 @@ int main(int argc, const char *argv[])
     alpha = beta = 1;
     // printf("xerbla_: %lx\n", (unsigned long)((void*)&xerbla_));
     FC_GLOBAL(dgemm,DGEMM)("N", "N", &m, &n, &k, &alpha, A, &lda, B, &ldb, &beta, C, &ldc, 1, 1);
+    printf("demo_xerbla survived the error.\n");
 
 
     return 0;
