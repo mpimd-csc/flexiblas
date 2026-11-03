@@ -187,7 +187,7 @@ options:
     `ON`. This option requires `LAPACK=ON` and an API version of at least
     3.6.1
 
-* `-DFLEXIBLAS_DEFAULT=NAME`
+* `-DFLEXIBLAS_DEFAULT_BLAS=NAME`
 
     Set the default *BLAS* at compile time. If the option is not set `NETLIB` is
     used by default.
