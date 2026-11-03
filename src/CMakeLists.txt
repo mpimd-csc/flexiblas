@@ -303,7 +303,25 @@ INCLUDE(CheckBlasZdotcMKL)
 INCLUDE(CheckFortranFunctionExists)
 INCLUDE(CheckFunctionExists)
 
-# SET(BLA_STATIC TRUE)
+macro(BackendDumpVars VENDOR LABEL)
+  message(STATUS "${LABEL}(${VENDOR}): ${${VENDOR}_BLAS_LIBRARIES} - ${${VENDOR}_BLAS_LINKER_FLAGS} - ${${VENDOR}_BLAS_EXTRA_FLAGS}")
+endmacro()
+
+macro(BackendSetVars VENDOR LIBRARIES LINKER_FLAGS EXTRA_FLAGS)
+  LIST(APPEND EXTRA_BLAS ${VENDOR})
+  set(${VENDOR}_BLAS_LIBRARIES "${LIBRARIES}")
+  set(${VENDOR}_BLAS_LINKER_FLAGS "${LINKER_FLAGS}")
+  set(${VENDOR}_BLAS_EXTRA_FLAGS "${EXTRA_FLAGS}")
+#  BackendDumpVars(${VENDOR} "BackendSetVars")
+endmacro()
+
+macro(BackendUpScope VENDOR)
+  SET(EXTRA_BLAS "${EXTRA_BLAS}" PARENT_SCOPE)
+#  BackendDumpVars(${VENDOR} "BackendUpScope")
+  set(${VENDOR}_BLAS_LIBRARIES "${${VENDOR}_BLAS_LIBRARIES}" PARENT_SCOPE)
+  set(${VENDOR}_BLAS_LINKER_FLAGS "${${VENDOR}_BLAS_LINKER_FLAGS}" PARENT_SCOPE)
+  set(${VENDOR}_BLAS_EXTRA_FLAGS "${${VENDOR}_BLAS_EXTRA_FLAGS}" PARENT_SCOPE)
+endmacro()
 
 MACRO(BuildNVPL)
     SET(BACKEND_CODE backends/nvpl/backend.c )
@@ -345,13 +363,8 @@ MACRO(BuildNVPL)
             INSTALL(TARGETS flexiblas_nvpl_${LP}_${THR} LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR} RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}/${FLEXIBLAS_LIBRARY_DIR})
 
             SET(VENDOR "NVPL_${THR}")
-            LIST(APPEND EXTRA_BLAS "NVPL_${THR}")
-            SET(${VENDOR}_BLAS_LIBRARIES "nvpl::blas_${LP}_${THR};nvpl::lapack_${LP}_${THR}" PARENT_SCOPE)
-            IF (NOT EXTRA_FLAGS)
-                SET(${VENDOR}_BLAS_EXTRA_FLAGS "")
-            ELSE()
-                SET(${VENDOR}_BLAS_EXTRA_FLAGS "${EXTRA_FLAGS}" PARENT_SCOPE)
-            ENDIF()
+            BackendSetVars(${VENDOR} "nvpl::blas_${LP}_${THR};nvpl::lapack_${LP}_${THR}" "${LINKER_FLAGS}" "${EXTRA_FLAGS}")
+            BackendUpScope(${VENDOR})
 
             UNSET(LIBNAME CACHE)
             SET(LIBNAME "${CMAKE_SHARED_LIBRARY_PREFIX}flexiblas_nvpl_${LP}_${THR}${CMAKE_SHARED_LIBRARY_SUFFIX}")
@@ -412,7 +425,6 @@ MACRO(BuildBackendBlas VENDOR LIBRARY LINKER_FLAGS BACKEND_CODE)
         UNSET(EXTRA_FLAGS CACHE)
         string(TOLOWER ${VENDOR} ivendor)
 
-
         #
         # Create the wrapper
         #
@@ -435,7 +447,6 @@ MACRO(BuildBackendBlas VENDOR LIBRARY LINKER_FLAGS BACKEND_CODE)
         SET_TARGET_PROPERTIES(flexiblas_${ivendor} PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS}")
         IF (LINKER_FLAGS)
             SET_TARGET_PROPERTIES(flexiblas_${ivendor} PROPERTIES LINK_FLAGS "${LINKER_FLAGS}")
-            SET(${VENDOR}_BLAS_LINKER_FLAGS "${LINKER_FLAGS}" PARENT_SCOPE)
         ENDIF()
 
         IF (CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
@@ -446,13 +457,8 @@ MACRO(BuildBackendBlas VENDOR LIBRARY LINKER_FLAGS BACKEND_CODE)
         set_target_properties(flexiblas_${ivendor} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/${FLEXIBLAS_LIBRARY_DIR}/)
         INSTALL(TARGETS flexiblas_${ivendor} LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR} RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}/${FLEXIBLAS_LIBRARY_DIR} )
 
-        LIST(APPEND EXTRA_BLAS "${VENDOR}")
-        SET(${VENDOR}_BLAS_LIBRARIES "${LIBRARY}" PARENT_SCOPE)
-        IF (NOT EXTRA_FLAGS)
-            SET(${VENDOR}_BLAS_EXTRA_FLAGS "")
-        ELSE()
-            SET(${VENDOR}_BLAS_EXTRA_FLAGS "${EXTRA_FLAGS}" PARENT_SCOPE)
-        ENDIF()
+        BackendSetVars(${VENDOR} "${LIBRARY}" "${LINKER_FLAGS}" "${EXTRA_FLAGS}")
+        BackendUpScope(${VENDOR})
 
         UNSET(LIBNAME CACHE)
         SET(LIBNAME "${CMAKE_SHARED_LIBRARY_PREFIX}flexiblas_${ivendor}${CMAKE_SHARED_LIBRARY_SUFFIX} ")
@@ -632,12 +638,10 @@ IF ( MKL_BUILDER STREQUAL ON)
     ADD_DEPENDENCIES(flexiblas_intel_mkl mkl_parallel)
     ADD_DEPENDENCIES(flexiblas_intel_mkl_seq mkl_sequential)
 
-    LIST(APPEND EXTRA_BLAS "INTEL_MKL")
-    LIST(APPEND EXTRA_BLAS "INTEL_MKL_SEQ")
-
-    SET(INTEL_MKL_BLAS_LIBRARIES "flexiblas_intel_mkl" PARENT_SCOPE)
-    SET(INTEL_MKL_SEQ_BLAS_LIBRARIES "flexiblas_intel_mkl_seq" PARENT_SCOPE)
-
+    BackendSetVars("INTEL_MKL" "flexiblas_intel_mkl" "" "")
+    BackendUpScope("INTEL_MKL")
+    BackendSetVars("INTEL_SEQ" "flexiblas_intel_mkl_seq" "" "")
+    BackendUpScope("INTEL_SEQ")
 
     set_target_properties(flexiblas_intel_mkl PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/${FLEXIBLAS_LIBRARY_DIR}/)
     set_target_properties(flexiblas_intel_mkl_seq PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/${FLEXIBLAS_LIBRARY_DIR}/)
@@ -659,5 +663,3 @@ IF( EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/hooks" )
     MESSAGE(STATUS "Found hook directory.")
     ADD_SUBDIRECTORY(hooks)
 ENDIF()
-
-SET(EXTRA_BLAS "${EXTRA_BLAS}" PARENT_SCOPE)

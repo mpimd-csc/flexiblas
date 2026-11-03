@@ -88,7 +88,8 @@ FOREACH(EBLAS ${EXTRA_BLAS})
     SET(EXTRA_FLAGS ${${EBLAS}_BLAS_EXTRA_FLAGS})
     SET(LINKER_FLAGS ${${EBLAS}_BLAS_LINKER_FLAGS})
 
-    MESSAGE(STATUS "${EBLAS} - ${BLAS_LIBS} - ${LINKER_FLAGS}")
+    MESSAGE(STATUS "${EBLAS} - ${BLAS_LIBS} - ${LINKER_FLAGS} - ${EXTRA_FLAGS}")
+
     add_executable (benchmark.${EBLAS} benchmark.c)
 
     target_link_libraries (benchmark.${EBLAS} ${BLAS_LIBS} flexiblas_api cscutils ${LIBS})
