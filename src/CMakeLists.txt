@@ -394,6 +394,7 @@ MACRO(BuildBackendBlas VENDOR BACKEND_CODE)
     IF(_MKL_VERSION)
         SET(BACKEND_CODE backends/intel_mkl/backend.c)
     ENDIF()
+    MESSAGE(STATUS "-- backend code: ${BACKEND_CODE}")
 
     SET(CMAKE_REQUIRED_LIBRARIES ${__CMAKE_REQUIRED_LIBRARIES})
 
