@@ -48,12 +48,14 @@ typedef void* pthread_mutexattr_t;
 extern "C" {
 #endif
 #include "flexiblas_backend.h"
+#include "flexiblas_fortran_char_len.h"
 
     typedef void (*flexiblas_info_function_t)(flexiblas_info_t *);
     typedef int (*flexiblas_init_function_t)(void);
     typedef void (*flexiblas_exit_function_t)(void);
     typedef void (*flexiblas_set_num_threads_function_t)(int threads);
     typedef int (*flexiblas_get_num_threads_function_t)(void);
+    typedef void (*flexiblas_fortran_xerbla_t) FLEXIBLAS_FORTRAN_XERBLA_ARGS;
     typedef int (*flexiblas_get_num_procs_function_t)(void);			// TODO is this procedure implemented yet, if so where and what EXACTLY does it return?
 
 
@@ -243,7 +245,7 @@ extern "C" {
         flexiblas_set_num_threads_function_t set_num_threads_function[2];
         flexiblas_get_num_threads_function_t get_num_threads_function[2];
         flexiblas_get_num_procs_function_t   get_num_procs_function[2];
-        flexiblas_blasfn xerbla;
+        flexiblas_fortran_xerbla_t xerbla;
         flexiblas_blasfn cblas_xerbla;
 
         flexiblas_blas_backend_t    blas;

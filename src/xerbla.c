@@ -96,18 +96,14 @@ void XERBLA FLEXIBLAS_FORTRAN_XERBLA_ARGS {
 int __flexiblas_setup_xerbla(flexiblas_backend_t *backend)
 {
     /* Check if the user supplied a XERBLA function  */
-    void *xerbla_symbol1 = __flexiblas_lookup_fortran_function(backend->library_handle,"xerbla");
-    void *xerbla_symbol2 = __flexiblas_lookup_fortran_function(RTLD_DEFAULT,"xerbla");
-    void (*flexiblas_internal) FLEXIBLAS_FORTRAN_XERBLA_ARGS;
-    void *internal;
-    flexiblas_internal = flexiblas_internal_xerbla;
-    *(void **) &internal = *((void**) & flexiblas_internal);
+    flexiblas_fortran_xerbla_t xerbla_symbol1, xerbla_symbol2;
+    FLEXIBLAS_FUNCTION_POINTER_ASSIGN(xerbla_symbol1, __flexiblas_lookup_fortran_function(backend->library_handle,"xerbla"));
+    FLEXIBLAS_FUNCTION_POINTER_ASSIGN(xerbla_symbol2, __flexiblas_lookup_fortran_function(RTLD_DEFAULT,"xerbla"));
     DPRINTF(1, "Available XERBLA ( backend: 0x%lx, user defined: 0x%lx, FlexiBLAS: 0x%lx )\n",
             (unsigned long)((void*)xerbla_symbol1),
             (unsigned long)((void*)xerbla_symbol2),
-            (unsigned long)((void*)internal));
-
-    if (internal == xerbla_symbol2) {
+            (unsigned long)((void*)flexiblas_internal_xerbla));
+    if (flexiblas_internal_xerbla == xerbla_symbol2) {
         DPRINTF(1,"Use XERBLA of the BLAS backend.\n");
         backend->xerbla = xerbla_symbol1;
     } else {
@@ -118,10 +114,7 @@ int __flexiblas_setup_xerbla(flexiblas_backend_t *backend)
 }
 
 void flexiblas_internal_xerbla FLEXIBLAS_FORTRAN_XERBLA_ARGS {
-    void (*fn)  FLEXIBLAS_FORTRAN_XERBLA_ARGS;
-    *(void**) &fn = current_backend->xerbla;
-
-    if ( fn == NULL ) {
+    if (current_backend->xerbla == NULL) {
         int _info = (int) *Info;
         char * ptr = malloc ( sizeof(char) * (len + 1));
         strncpy(ptr, SNAME, len);
@@ -130,7 +123,7 @@ void flexiblas_internal_xerbla FLEXIBLAS_FORTRAN_XERBLA_ARGS {
         free(ptr);
         return;
     }
-    fn (SNAME, Info, len);
+    current_backend->xerbla(SNAME, Info, len);
     return;
 }
 
