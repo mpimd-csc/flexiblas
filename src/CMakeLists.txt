@@ -633,11 +633,6 @@ IF( BLAS_AUTO_DETECT STREQUAL ON)
         BuildFindPackage(MklSerial backends/intel_mkl/backend.c)
         BuildFindPackage(MklOpenMP backends/intel_mkl/backend.c)
         BuildFindPackage(MklTBB backends/intel_mkl/backend.c)
-
-        BuildNVPL()
-
-
-
     ELSE()
         BuildFindPackage(OpenBLASSerial64 backends/generic/backend.c)
         BuildFindPackage(OpenBLASPThread64 backends/generic/backend.c)
@@ -650,12 +645,8 @@ IF( BLAS_AUTO_DETECT STREQUAL ON)
         BuildFindPackage(MklSerial64 backends/intel_mkl/backend.c)
         BuildFindPackage(MklOpenMP64 backends/intel_mkl/backend.c)
         BuildFindPackage(MklTBB64 backends/intel_mkl/backend.c)
-
-        BuildNVPL()
-
-
-
     ENDIF()
+    BuildNVPL()
 
     if(FLEXIBLAS_INTEGER8)
         MESSAGE(STATUS "ATLAS does not support 64-bit integers by default, thus it is not searched. If you need ATLAS with 64-bit integers, please give it as extra argument.")
