@@ -96,8 +96,8 @@ void XERBLA FLEXIBLAS_FORTRAN_XERBLA_ARGS {
 int __flexiblas_setup_xerbla(flexiblas_backend_t *backend)
 {
     /* Check if the user supplied a XERBLA function  */
-    void *xerbla_symbol1 = __flexiblas_dlsym(backend->library_handle,"xerbla_");
-    void *xerbla_symbol2 = __flexiblas_dlsym(RTLD_DEFAULT,"xerbla_");
+    void *xerbla_symbol1 = __flexiblas_lookup_fortran_function(backend->library_handle,"xerbla");
+    void *xerbla_symbol2 = __flexiblas_lookup_fortran_function(RTLD_DEFAULT,"xerbla");
     void (*flexiblas_internal) FLEXIBLAS_FORTRAN_XERBLA_ARGS;
     void *internal;
     flexiblas_internal = flexiblas_internal_xerbla;
