@@ -56,6 +56,7 @@ extern "C" {
     typedef void (*flexiblas_set_num_threads_function_t)(int threads);
     typedef int (*flexiblas_get_num_threads_function_t)(void);
     typedef void (*flexiblas_fortran_xerbla_t) FLEXIBLAS_FORTRAN_XERBLA_ARGS;
+    typedef void (*flexiblas_set_xerbla_function_t)(flexiblas_fortran_xerbla_t);
     typedef int (*flexiblas_get_num_procs_function_t)(void);			// TODO is this procedure implemented yet, if so where and what EXACTLY does it return?
 
 
@@ -242,6 +243,7 @@ extern "C" {
         flexiblas_init_function_t init_function;
         flexiblas_exit_function_t exit_function;
         flexiblas_info_function_t info_function;
+        flexiblas_set_xerbla_function_t set_xerbla_function;
         flexiblas_set_num_threads_function_t set_num_threads_function[2];
         flexiblas_get_num_threads_function_t get_num_threads_function[2];
         flexiblas_get_num_procs_function_t   get_num_procs_function[2];

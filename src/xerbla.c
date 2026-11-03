@@ -109,6 +109,8 @@ int __flexiblas_setup_xerbla(flexiblas_backend_t *backend)
     } else {
         DPRINTF(1,"Use XERBLA supplied by the user.\n");
         backend->xerbla = xerbla_symbol2;
+        if (backend->set_xerbla_function)
+            backend->set_xerbla_function(xerbla_symbol2);
     }
     return 0;
 }

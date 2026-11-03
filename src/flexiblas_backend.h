@@ -89,6 +89,7 @@ extern "C" {
 #define FLEXIBLAS_INIT_FUNCTION_NAME "__flexiblas_initialize"
 #define FLEXIBLAS_EXIT_FUNCTION_NAME "__flexiblas_finalize"
 #define FLEXIBLAS_INFO_FUNCTION_NAME "__flexiblas_info"
+#define FLEXIBLAS_SET_XERBLA_FUNCTION_NAME "__flexiblas_set_xerbla"
 
 #define FLEXIBLAS_HOOK_INIT_FUNCTION_NAME "__flexiblas_hook_initialize"
 #define FLEXIBLAS_HOOK_EXIT_FUNCTION_NAME "__flexiblas_hook_finalize"
@@ -112,6 +113,7 @@ extern "C" {
 #define FLEXIBLAS_INFO_FUNCTION(info) FLEXIBLAS_EXTERN_C void __flexiblas_info(flexiblas_info_t *info)
 #define FLEXIBLAS_INIT_FUNCTION FLEXIBLAS_EXTERN_C int __flexiblas_initialize
 #define FLEXIBLAS_EXIT_FUNCTION FLEXIBLAS_EXTERN_C void __flexiblas_finalize
+#define FLEXIBLAS_SET_XERBLA_FUNCTION(fn) FLEXIBLAS_EXTERN_C void __flexiblas_set_xerbla(flexiblas_fortran_xerbla_t fn)
 #define FLEXIBLAS_HOOK_INIT_FUNCTION FLEXIBLAS_EXTERN_C void __flexiblas_hook_initialize
 #define FLEXIBLAS_HOOK_EXIT_FUNCTION FLEXIBLAS_EXTERN_C void __flexiblas_hook_finalize
 
