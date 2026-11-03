@@ -473,9 +473,13 @@ MACRO(BuildBackendBlas VENDOR LIBRARY LINKER_FLAGS BACKEND_CODE)
 ENDMACRO()
 
 function(BuildFindPackage VENDOR BACKEND_CODE)
-    list(LENGTH ARGN extra_count)
-    if (extra_count GREATER 0)
-        set(PACKAGE ${ARGV2})
+    set(oneValueArgs PACKAGE)
+    cmake_parse_arguments(arg_bfp
+        "" "${oneValueArgs}" ""
+        ${ARGN}
+    )
+    if (arg_bfp_PACKAGE)
+        set(PACKAGE ${arg_bfp_PACKAGE})
         if (${PACKAGE} STREQUAL BLAS)
             SET(BLA_VENDOR ${VENDOR})
         endif()
@@ -550,7 +554,7 @@ IF( BLAS_AUTO_DETECT STREQUAL ON)
     endif()
     IF ( APPLE AND NOT FLEXIBLAS_INTEGER8)
 	MESSAGE(STATUS "On MacOS... search for Accelerate")
-	BuildFindPackage(Apple          backends/generic/backend.c BLAS)
+	BuildFindPackage(Apple          backends/generic/backend.c PACKAGE BLAS)
     ENDIF()
 ENDIF()
 
