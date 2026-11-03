@@ -19,7 +19,6 @@
    */
 
 #include "cblas.h"
-#include "cblas_f77.h"
 #include "cblas_f77_ext.h"
 
 

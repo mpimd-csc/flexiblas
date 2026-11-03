@@ -115,6 +115,8 @@ extern "C" {
 #define FLEXIBLAS_HOOK_INIT_FUNCTION void __flexiblas_hook_initialize
 #define FLEXIBLAS_HOOK_EXIT_FUNCTION void __flexiblas_hook_finalize
 
+#endif
+
 #define FLEXIBLAS_HOOK_REGISTER(hookname, secname, nsp, desc, authors) \
     flexiblas_hook_register_t flexiblas_register = { hookname, secname, desc, authors }; \
     int flexiblas_hook_ ## nsp ##_get_int (char *option) { \
@@ -168,8 +170,6 @@ extern "C" {
 #define FLEXIBLAS_HOOK_OPTIONS(...) flexiblas_option_t flexiblas_options[] = { __VA_ARGS__ };
 #define FLEXIBLAS_HOOK_OPTION(name, desc, type, def) { name, desc, type, def }
 #define FLEXIBLAS_HOOK_OPTIONS_END {NULL, NULL, FLEXIBLAS_OPTIONS_INT, NULL}
-
-#endif
 
 #ifdef __cplusplus
 };

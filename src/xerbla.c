@@ -272,25 +272,17 @@ void internal_cblas_xerbla(CBLAS_INT info, const char *rout, const char *form, .
 void cblas_xerbla(CBLAS_INT info, const char *rout, const char *form, ...)
 {
     // printf("Hier in xerbla.c (0x%lx) backend = 0x%lx \n", (unsigned long)(void*) & cblas_xerbla, (unsigned long) current_backend->xerbla.cblas_function);
+    va_list ap;
+    void (*fn) ( CBLAS_INT, const char*, const char*, ...);
+    size_t a1, a2, a3, a4, a5;
+    va_start(ap, form);
     if ( current_backend->cblas_xerbla != NULL) {
-        va_list ap;
-        void (*fn) ( CBLAS_INT, const char*, const char*, ...);
-        size_t a1, a2, a3, a4, a5;
-
-        fn = current_backend->cblas_xerbla;
-        va_start(ap, form);
+        FLEXIBLAS_FUNCTION_POINTER_ASSIGN(fn, current_backend->cblas_xerbla);
         fn(info, rout, form, a1, a2, a3, a4, a5);
-        va_end(ap);
     } else {
-        va_list ap;
-        void (*fn) ( CBLAS_INT, const char*, const char*, ...);
-        size_t a1, a2, a3, a4, a5;
-
-        fn = current_backend->cblas_xerbla;
-        va_start(ap, form);
         internal_cblas_xerbla(info, rout, form, a1, a2, a3, a4, a5);
-        va_end(ap);
     }
+    va_end(ap);
 }
 #endif
 

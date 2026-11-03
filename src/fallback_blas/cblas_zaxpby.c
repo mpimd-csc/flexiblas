@@ -7,7 +7,6 @@
  *
  */
 #include "cblas.h"
-#include "cblas_f77.h"
 #include "cblas_f77_ext.h"
 void API_SUFFIX(cblas_zaxpby)( const CBLAS_INT N, const void *alpha, const void *X,
                        const CBLAS_INT incX, const void *beta, void *Y, const CBLAS_INT incY)
