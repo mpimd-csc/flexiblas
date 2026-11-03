@@ -367,21 +367,20 @@ MACRO(BuildNVPL)
     ENDIF()
 ENDMACRO()
 
-MACRO(BuildBackendBlas VENDOR BACKEND_CODE)
+MACRO(BuildBackendBlas VENDOR LIBRARY LINKER_FLAGS BACKEND_CODE)
     MESSAGE(STATUS "Build additional BLAS interface: ${VENDOR}")
-    MESSAGE(STATUS "-- Libs: ${${VENDOR}_LIBRARY}")
-    MESSAGE(STATUS "-- Linker Flags: ${${VENDOR}_LINKER_FLAGS}")
+    MESSAGE(STATUS "-- Libs: ${LIBRARY}")
+    MESSAGE(STATUS "-- Linker Flags: ${LINKER_FLAGS}")
 
     #
     # Configure the found backend
     #
-    CheckBlasZdotcMKL("${${VENDOR}_LIBRARY}" "" ${FLEXIBLAS_INTEGER8})
+    CheckBlasZdotcMKL("${LIBRARY}" "" ${FLEXIBLAS_INTEGER8})
     SET(__CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES})
-    SET(CMAKE_REQUIRED_LIBRARIES ${${VENDOR}_LIBRARY})
+    SET(CMAKE_REQUIRED_LIBRARIES ${LIBRARY})
 
     UNSET(ISFLEXIBLAS CACHE)
     UNSET(DAXPY CACHE)
-    UNSET(MKL_OMATCOPY CACHE)
     UNSET(CBLAS_DAXPY CACHE)
     UNSET(_MKL_VERSION CACHE)
     UNSET(_BUILD CACHE)
@@ -405,7 +404,7 @@ MACRO(BuildBackendBlas VENDOR BACKEND_CODE)
     ENDIF()
 
     IF(ISFLEXIBLAS)
-        MESSAGE(WARNING "${VENDOR} (${${VENDOR}_LIBRARY}) contains FlexiBLAS. Disable the use with -D${VENDOR}=OFF")
+        MESSAGE(WARNING "${VENDOR} (${LIBRARY}) contains FlexiBLAS. Disable the use with -D${VENDOR}=OFF")
         SET(_BUILD 0)
     ENDIF()
 
@@ -434,21 +433,21 @@ MACRO(BuildBackendBlas VENDOR BACKEND_CODE)
         ENDIF()
 
         SET_TARGET_PROPERTIES(flexiblas_${ivendor} PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS}")
-        IF ( ${VENDOR}_LINKER_FLAGS)
-            SET_TARGET_PROPERTIES(flexiblas_${ivendor} PROPERTIES LINK_FLAGS "${${VENDOR}_LINKER_FLAGS}")
-            SET(${VENDOR}_BLAS_LINKER_FLAGS "${${VENDOR}_LINKER_FLAGS}" PARENT_SCOPE)
+        IF (LINKER_FLAGS)
+            SET_TARGET_PROPERTIES(flexiblas_${ivendor} PROPERTIES LINK_FLAGS "${LINKER_FLAGS}")
+            SET(${VENDOR}_BLAS_LINKER_FLAGS "${LINKER_FLAGS}" PARENT_SCOPE)
         ENDIF()
 
         IF (CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
             SET(BLAS_LIBRARIES ${BLAS_LIBRARIES} gfortran)
         ENDIF()
 
-        TARGET_LINK_LIBRARIES(flexiblas_${ivendor} ${${VENDOR}_LIBRARY})
+        TARGET_LINK_LIBRARIES(flexiblas_${ivendor} ${LIBRARY})
         set_target_properties(flexiblas_${ivendor} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/${FLEXIBLAS_LIBRARY_DIR}/)
         INSTALL(TARGETS flexiblas_${ivendor} LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${FLEXIBLAS_LIBRARY_DIR} RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}/${FLEXIBLAS_LIBRARY_DIR} )
 
         LIST(APPEND EXTRA_BLAS "${VENDOR}")
-        SET(${VENDOR}_BLAS_LIBRARIES "${${VENDOR}_LIBRARY}" PARENT_SCOPE)
+        SET(${VENDOR}_BLAS_LIBRARIES "${LIBRARY}" PARENT_SCOPE)
         IF (NOT EXTRA_FLAGS)
             SET(${VENDOR}_BLAS_EXTRA_FLAGS "")
         ELSE()
@@ -472,15 +471,13 @@ MACRO(BuildFindPackage VENDOR BACKEND_CODE)
     IF ( ${VENDOR}_FOUND AND NOT "${${VENDOR}}" STREQUAL "OFF" )
         MESSAGE(STATUS "Build BLAS interface: ${VENDOR}")
         MESSAGE(STATUS "Libs: ${${VENDOR}_LIBRARY}")
-        BuildBackendBlas(${VENDOR} ${BACKEND_CODE})
+        BuildBackendBlas(${VENDOR} ${${VENDOR}_LIBRARY} "${${VENDOR}_LINKER_FLAGS}" ${BACKEND_CODE})
     ELSEIF(NOT ${VENDOR}_FOUND)
         MESSAGE(STATUS "${VENDOR} not found.")
     ELSE()
         MESSAGE(STATUS "Found ${VENDOR} but deactivated manually.")
     ENDIF()
 ENDMACRO()
-
-
 
 MACRO(Build_Extra_BLAS VENDOR BACKEND_CODE)
     MESSAGE(STATUS "")
@@ -525,15 +522,12 @@ MACRO(Build_Extra_BLAS VENDOR BACKEND_CODE)
         CheckBlasZdotcMKL("${BLAS_LIBRARIES}" "${BLAS_LINKER_FLAGS}" ${FLEXIBLAS_INTEGER8})
         SET(__CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES})
         SET(CMAKE_REQUIRED_LIBRARIES ${BLAS_LIBRARIES} ${BLAS_LINKER_FLAGS})
-        #UNSET(SCABS1_EXIST CACHE)
         UNSET(ISFLEXIBLAS CACHE)
         UNSET(DAXPY CACHE)
-        UNSET(MKL_OMATCOPY CACHE)
         UNSET(CBLAS_DAXPY CACHE)
         Check_Fortran_Function_Exists(SCABS1 SCABS1_EXIST)
         Check_Function_Exists(flexiblas_exit ISFLEXIBLAS)
         Check_Fortran_Function_Exists(DAXPY  DAXPY)
-        Check_Fortran_Function_Exists(MKL_DOMATCOPY MKL_OMATCOPY)
         Check_Function_Exists(cblas_daxpy  CBLAS_DAXPY)
         SET(CMAKE_REQUIRED_LIBRARIES ${__CMAKE_REQUIRED_LIBRARIES})
         IF(NOT DAXPY)
@@ -565,15 +559,9 @@ MACRO(Build_Extra_BLAS VENDOR BACKEND_CODE)
                 ENDIF()
             ENDIF()
 
-            #IF ( MKL_OMATCOPY )
-            #	MESSAGE(STATUS "BLAS ${ivendor}$ seem to be an Intel MKL")
-            #		SET_TARGET_PROPERTIES(blas_${ivendor} PROPERTIES COMPILE_DEFINITIONS "MKL")
-            #ENDIF()
             MESSAGE(STATUS "Extra Linker Flags: ${BLAS_LINKER_FLAGS}")
             SET_TARGET_PROPERTIES(flexiblas_${ivendor} PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS}")
             set_target_properties(flexiblas_${ivendor} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/${FLEXIBLAS_LIBRARY_DIR}/)
-
-            # SET_TARGET_PROPERTIES(blas_${ivendor} PROPERTIES COMPILE_FLAGS "${EXTRA_FLAGS}" LINK_FLAGS "${BLAS_LINKER_FLAGS}")
 
             IF (CMAKE_C_COMPILER_ID STREQUAL "GNU")
                 SET(BLAS_LIBRARIES ${BLAS_LIBRARIES} gfortran)
@@ -613,7 +601,6 @@ FILE(WRITE "${CMAKE_BINARY_DIR}/${FLEXIBLASRC}" "verbose = 0\n\n[NETLIB]\nlibrar
 #
 # Build Additional BLAS interfaces
 #
-#Build_Extra_BLAS(Generic)
 
 SET(DEFAULT_FOUND FALSE)
 IF (FLEXIBLAS_DEFAULT STREQUAL "NETLIB")
@@ -663,7 +650,7 @@ ENDIF()
 FOREACH(ADDITIONAL_BLAS ${EXTRA})
     MESSAGE(STATUS "Build additional BLAS backend with ${ADDITIONAL_BLAS}")
     IF (${ADDITIONAL_BLAS}_LIBRARY)
-        BuildBackendBlas(${ADDITIONAL_BLAS} backends/generic/backend.c)
+        BuildBackendBlas(${ADDITIONAL_BLAS} ${${ADDITIONAL_BLAS}_LIBRARY} "${${ADDITIONAL_BLAS}_LINKER_FLAGS}" backends/generic/backend.c)
     ELSE()
         MESSAGE(FATAL_ERROR "-- ${ADDITIONAL_BLAS}_LIBRARY is not set.")
     ENDIF()
@@ -752,9 +739,4 @@ IF( EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/hooks" )
     ADD_SUBDIRECTORY(hooks)
 ENDIF()
 
-#Build_Extra_BLAS(Generic)
 SET(EXTRA_BLAS "${EXTRA_BLAS}" PARENT_SCOPE)
-#SET(EXTRA_BLAS_VENDOR "${EXTRA_BLAS_VENDOR}" PARENT_SCOPE)
-
-
-
