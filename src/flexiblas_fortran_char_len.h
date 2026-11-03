@@ -18,9 +18,6 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
    */
 
-
-
-
 #ifndef FLEIXBLAS_FORTRAN_CHAR_LEN_H_
 #define FLEIXBLAS_FORTRAN_CHAR_LEN_H_
 #include <stdint.h>
@@ -74,6 +71,5 @@ typedef int flexiblas_fortran_charlen_t;
 #define blasint int
 #endif
 #endif
-
 
 #endif

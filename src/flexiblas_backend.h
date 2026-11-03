@@ -100,6 +100,8 @@ extern "C" {
 #define FLEXIBLAS_LOCAL_BINDING int32_t flexiblas_ld_global = 0;
 #define FLEXIBLAS_DEEP_BINDING int32_t flexiblas_ld_deep = 1;
 
+#define FLEXIBLAS_FORTRAN_XERBLA_ARGS \
+  (char *SNAME, Int *Info, flexiblas_fortran_charlen_t len)
 
 #ifdef __cplusplus
 #define FLEXIBLAS_INFO_FUNCTION(info) extern "C" void __flexiblas_info(flexiblas_info_t *info)
