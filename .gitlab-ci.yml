@@ -22,13 +22,13 @@ after_script:
     - export CCACHE_DIR="$PWD/ccache"
     - ccache --show-stats
 
-default:
-    cache:
-        key: "$CI_JOB_NAME"
-        paths:
-            - ccache
-        policy: pull-push
-        when: 'always'
+#default:
+#    cache:
+#        key: "$CI_JOB_NAME"
+#        paths:
+#            - ccache
+#        policy: pull-push
+#        when: 'always'
 
 stages:
         - publish
