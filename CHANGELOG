@@ -58,7 +58,7 @@ Next:
   - Build in Debug mode so re-run test stack traces and dumped test logs are useful
   - Add Dependabot configuration
 - Fix spelling issues (GH #87)
-
+- Import the new Xerbla handling from LAPACK 3.13
 
 
 3.5.0 (October 24, 2025)
