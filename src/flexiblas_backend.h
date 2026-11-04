@@ -89,6 +89,7 @@ extern "C" {
 #define FLEXIBLAS_INIT_FUNCTION_NAME "__flexiblas_initialize"
 #define FLEXIBLAS_EXIT_FUNCTION_NAME "__flexiblas_finalize"
 #define FLEXIBLAS_INFO_FUNCTION_NAME "__flexiblas_info"
+#define FLEXIBLAS_SET_XERBLA_FUNCTION_NAME "__flexiblas_set_xerbla"
 
 #define FLEXIBLAS_HOOK_INIT_FUNCTION_NAME "__flexiblas_hook_initialize"
 #define FLEXIBLAS_HOOK_EXIT_FUNCTION_NAME "__flexiblas_hook_finalize"
@@ -100,22 +101,21 @@ extern "C" {
 #define FLEXIBLAS_LOCAL_BINDING int32_t flexiblas_ld_global = 0;
 #define FLEXIBLAS_DEEP_BINDING int32_t flexiblas_ld_deep = 1;
 
+#define FLEXIBLAS_FORTRAN_XERBLA_ARGS \
+  (char *SNAME, Int *Info, flexiblas_fortran_charlen_t len)
 
 #ifdef __cplusplus
-#define FLEXIBLAS_INFO_FUNCTION(info) extern "C" void __flexiblas_info(flexiblas_info_t *info)
-#define FLEXIBLAS_INIT_FUNCTION extern "C" void __flexiblas_initialize
-#define FLEXIBLAS_EXIT_FUNCTION extern "C" void __flexiblas_finalize
-#define FLEXIBLAS_HOOK_INIT_FUNCTION extern "C" void __flexiblas_hook_initialize
-#define FLEXIBLAS_HOOK_EXIT_FUNCTION extern "C" void __flexiblas_hook_finalize
-
+#define FLEXIBLAS_EXTERN_C extern "C"
 #else
-#define FLEXIBLAS_INFO_FUNCTION(info) void __flexiblas_info(flexiblas_info_t *info)
-#define FLEXIBLAS_INIT_FUNCTION int __flexiblas_initialize
-#define FLEXIBLAS_EXIT_FUNCTION void __flexiblas_finalize
-#define FLEXIBLAS_HOOK_INIT_FUNCTION void __flexiblas_hook_initialize
-#define FLEXIBLAS_HOOK_EXIT_FUNCTION void __flexiblas_hook_finalize
-
+#define FLEXIBLAS_EXTERN_C
 #endif
+
+#define FLEXIBLAS_INFO_FUNCTION(info) FLEXIBLAS_EXTERN_C void __flexiblas_info(flexiblas_info_t *info)
+#define FLEXIBLAS_INIT_FUNCTION FLEXIBLAS_EXTERN_C int __flexiblas_initialize
+#define FLEXIBLAS_EXIT_FUNCTION FLEXIBLAS_EXTERN_C void __flexiblas_finalize
+#define FLEXIBLAS_SET_XERBLA_FUNCTION(fn) FLEXIBLAS_EXTERN_C void __flexiblas_set_xerbla(flexiblas_fortran_xerbla_t fn)
+#define FLEXIBLAS_HOOK_INIT_FUNCTION FLEXIBLAS_EXTERN_C void __flexiblas_hook_initialize
+#define FLEXIBLAS_HOOK_EXIT_FUNCTION FLEXIBLAS_EXTERN_C void __flexiblas_hook_finalize
 
 #define FLEXIBLAS_HOOK_REGISTER(hookname, secname, nsp, desc, authors) \
     flexiblas_hook_register_t flexiblas_register = { hookname, secname, desc, authors }; \

@@ -9,6 +9,7 @@ Next:
   - Fix: complex return value interface detection with 64-bit integers (GH #104)
   - Fix: invalid sentinel value in a fixed size array
   - Fix: wrong verbose message when overriding CBLAS_XERBLA
+  - Fix: Setting default BLAS with FLEXIBLAS_DEFAULT_BLAS had wrong variable
   - Cleanup: remove duplicated internal_cblas_xerbla definitions
 - Deprecation: Ubuntu 20.04 is no longer support. Minimum required cmake version
   is now 3.20.

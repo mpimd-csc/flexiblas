@@ -36,18 +36,18 @@
 # define RTLD_DEFAULT   ((void *) 0)
 #endif
 
-void flexiblas_internal_xerbla(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len);
+void flexiblas_internal_xerbla FLEXIBLAS_FORTRAN_XERBLA_ARGS;
 #ifdef FLEXIBLAS_ABI_IBM
 #ifdef __ELF__
 #pragma weak xerbla_
 #pragma weak xerbla
-void xerbla_(char *, Int *, flexiblas_fortran_charlen_t) __attribute__ (( alias ("flexiblas_internal_xerbla")));
-void xerbla(char *, Int *, flexiblas_fortran_charlen_t) __attribute__ (( alias ("flexiblas_internal_xerbla")));
+void xerbla_ FLEXIBLAS_FORTRAN_XERBLA_ARGS __attribute__ (( alias ("flexiblas_internal_xerbla")));
+void xerbla FLEXIBLAS_FORTRAN_XERBLA_ARGS __attribute__ (( alias ("flexiblas_internal_xerbla")));
 #else
-void xerbla_(char *SNAME, Int *Info, flexiblas_fortran_charlen_t) {
+void xerbla_ FLEXIBLAS_FORTRAN_XERBLA_ARGS {
     flexiblas_internal_xerbla(SNAME, Info, len);
 }
-void xerbla(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len) {
+void xerbla FLEXIBLAS_FORTRAN_XERBLA_ARGS {
     flexiblas_internal_xerbla(SNAME, Info, len);
 }
 #endif
@@ -55,8 +55,8 @@ void xerbla(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len) {
 #else
 
 #if defined(__ELF__) || ((defined (__PGI) || defined(__NVCOMPILER)) && (defined(__linux__)  || defined(__unix__)))
-void xerbla_(char *, Int *, flexiblas_fortran_charlen_t) __attribute__ ((weak, alias ("flexiblas_internal_xerbla")));
-void xerbla (char *, Int *, flexiblas_fortran_charlen_t) __attribute__ ((weak, alias ("flexiblas_internal_xerbla")));
+void xerbla_ FLEXIBLAS_FORTRAN_XERBLA_ARGS __attribute__ ((weak, alias ("flexiblas_internal_xerbla")));
+void xerbla  FLEXIBLAS_FORTRAN_XERBLA_ARGS __attribute__ ((weak, alias ("flexiblas_internal_xerbla")));
 
 #else
 /* #pragma weak xerbla_
@@ -68,7 +68,7 @@ void xerbla (char *, Int *, flexiblas_fortran_charlen_t) __attribute__ ((weak, a
 #ifdef _WIN32 
 __declspec(dllexport)
 #endif */
-void xerbla_(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len) {
+void xerbla_ FLEXIBLAS_FORTRAN_XERBLA_ARGS {
     flexiblas_internal_xerbla(SNAME, Info, len);
 }
 
@@ -77,7 +77,7 @@ void xerbla_(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len) {
 __declspec(dllexport)
 #endif
 */
-void xerbla(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len) {
+void xerbla FLEXIBLAS_FORTRAN_XERBLA_ARGS {
     flexiblas_internal_xerbla(SNAME, Info, len);
 }
 
@@ -86,7 +86,7 @@ __declspec(dllexport)
 #endif
 */ 
 
-void XERBLA(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len) {
+void XERBLA FLEXIBLAS_FORTRAN_XERBLA_ARGS {
     	flexiblas_internal_xerbla(SNAME, Info, len);
 }
 #endif
@@ -96,32 +96,27 @@ void XERBLA(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len) {
 int __flexiblas_setup_xerbla(flexiblas_backend_t *backend)
 {
     /* Check if the user supplied a XERBLA function  */
-    void *xerbla_symbol1 = __flexiblas_dlsym(backend->library_handle,"xerbla_");
-    void *xerbla_symbol2 = __flexiblas_dlsym(RTLD_DEFAULT,"xerbla_");
-    void (*flexiblas_internal) (char *, Int *, flexiblas_fortran_charlen_t);
-    void *internal;
-    flexiblas_internal = flexiblas_internal_xerbla;
-    *(void **) &internal = *((void**) & flexiblas_internal);
+    flexiblas_fortran_xerbla_t xerbla_symbol1, xerbla_symbol2;
+    FLEXIBLAS_FUNCTION_POINTER_ASSIGN(xerbla_symbol1, __flexiblas_lookup_fortran_function(backend->library_handle,"xerbla"));
+    FLEXIBLAS_FUNCTION_POINTER_ASSIGN(xerbla_symbol2, __flexiblas_lookup_fortran_function(RTLD_DEFAULT,"xerbla"));
     DPRINTF(1, "Available XERBLA ( backend: 0x%lx, user defined: 0x%lx, FlexiBLAS: 0x%lx )\n",
             (unsigned long)((void*)xerbla_symbol1),
             (unsigned long)((void*)xerbla_symbol2),
-            (unsigned long)((void*)internal));
-
-    if (internal == xerbla_symbol2) {
+            (unsigned long)((void*)flexiblas_internal_xerbla));
+    if (flexiblas_internal_xerbla == xerbla_symbol2) {
         DPRINTF(1,"Use XERBLA of the BLAS backend.\n");
         backend->xerbla = xerbla_symbol1;
     } else {
         DPRINTF(1,"Use XERBLA supplied by the user.\n");
         backend->xerbla = xerbla_symbol2;
+        if (backend->set_xerbla_function)
+            backend->set_xerbla_function(xerbla_symbol2);
     }
     return 0;
 }
 
-void flexiblas_internal_xerbla(char *SNAME, Int *Info, flexiblas_fortran_charlen_t len)  {
-    void (*fn) (char *SNAME, Int *info, flexiblas_fortran_charlen_t len)  ;
-    *(void**) &fn = current_backend->xerbla;
-
-    if ( fn == NULL ) {
+void flexiblas_internal_xerbla FLEXIBLAS_FORTRAN_XERBLA_ARGS {
+    if (current_backend->xerbla == NULL) {
         int _info = (int) *Info;
         char * ptr = malloc ( sizeof(char) * (len + 1));
         strncpy(ptr, SNAME, len);
@@ -130,7 +125,7 @@ void flexiblas_internal_xerbla(char *SNAME, Int *Info, flexiblas_fortran_charlen
         free(ptr);
         return;
     }
-    fn (SNAME, Info, len);
+    current_backend->xerbla(SNAME, Info, len);
     return;
 }
 
@@ -172,7 +167,7 @@ void XERBLA_ARRAY(char *srname_array, Int *srname_len, Int *info, flexiblas_fort
 #include "cblas.h"
 int RowMajorStrg = 0;
 
-#if defined(__ELF__) || ((defined (__PGI) || defined(__NVCOMPILER)) && (defined(__linux__)  || defined(__unix__)))
+#if defined(__ELF__) || ((defined (__PGI) || defined(__NVCOMPILER)) && (defined(__linux__) || defined(__unix__)))
 void internal_cblas_xerbla(CBLAS_INT info, const char *rout, const char *form, ...);
 void cblas_xerbla(CBLAS_INT info, const char *, const char *, ...) __attribute__ ((weak, alias ("internal_cblas_xerbla")));
 #endif
@@ -288,7 +283,7 @@ void cblas_xerbla(CBLAS_INT info, const char *rout, const char *form, ...)
 
 int __flexiblas_setup_cblas_xerbla(flexiblas_backend_t *backend)
 {
-    /* Check if the user supplied a XERBLA function  */
+    /* Check if the user supplied a XERBLA function */
     void *xerbla_symbol1 = __flexiblas_dlsym(backend->library_handle,"cblas_xerbla");
     void *xerbla_symbol2 = __flexiblas_dlsym(RTLD_DEFAULT,"cblas_xerbla");
     void *internal;

@@ -188,6 +188,7 @@ static void flexiblas_load_info(void *library, flexiblas_backend_t *backend)
     FLEXIBLAS_FUNCTION_POINTER_ASSIGN(backend->info_function, __flexiblas_dlsym(library, FLEXIBLAS_INFO_FUNCTION_NAME));
     FLEXIBLAS_FUNCTION_POINTER_ASSIGN(backend->init_function, __flexiblas_dlsym(library, FLEXIBLAS_INIT_FUNCTION_NAME));
     FLEXIBLAS_FUNCTION_POINTER_ASSIGN(backend->exit_function, __flexiblas_dlsym(library, FLEXIBLAS_EXIT_FUNCTION_NAME));
+    FLEXIBLAS_FUNCTION_POINTER_ASSIGN(backend->set_xerbla_function, __flexiblas_dlsym(library, FLEXIBLAS_SET_XERBLA_FUNCTION_NAME));
 
     backend->library_handle = library;
 
