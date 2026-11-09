@@ -125,6 +125,7 @@ jobs:
         timeout-minutes: 150
         env:
           CTEST_OUTPUT_ON_FAILURE: 1
+          FLEXIBLAS_VERBOSE: 1
         run: |
           ctest --test-dir ${GITHUB_WORKSPACE}/build \
             -j$(nproc) \
