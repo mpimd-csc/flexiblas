@@ -12,7 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     name: >-
-      ${{ matrix.os }} (${{ matrix.compiler }})
+      ${{ matrix.os }} (${{ matrix.cc }})
       ${{ matrix.integer8 && ' 64-bit' || '' }}
       ${{ matrix.links.link-blas && ' link-blas' || '' }}
       ${{ matrix.links.link-lapack && ' link-lapack' || '' }}
@@ -25,11 +25,9 @@ jobs:
 
       matrix:
         os: [ubuntu-latest,ubuntu-24.04-arm]
-        compiler: [gcc]
         compiler-pkgs: ["g++ gcc"]
         integer8: [1,0]
         cc: [gcc]
-        cxx: [g++]
         links:
           - link-blas: 0
           - link-blas: 1
@@ -42,14 +40,11 @@ jobs:
           #   undefined reference to `csc_cycles'
           # Comment out for now.
           # - os: ubuntu-latest
-          #   compiler: clang
           #   compiler-pkgs: "clang libomp-dev"
           #   cc: "clang"
-          #   cxx: "clang++"
 
     env:
       CC: ${{ matrix.cc }}
-      CXX: ${{ matrix.cxx }}
 
     steps:
       - name: get CPU information
@@ -71,7 +66,7 @@ jobs:
         # used in action/cache/restore and action/cache/save steps
         id: ccache-prepare
         run: |
-          echo "key=ccache:${{ matrix.os }}:${{ matrix.compiler }}:${{ matrix.integer8 && '64' || '32' }}bit:${{ github.ref }}:$(date +"%Y-%m-%d_%H-%M-%S"):${{ github.sha }}" >> $GITHUB_OUTPUT
+          echo "key=ccache:${{ matrix.os }}:${{ matrix.cc }}:${{ matrix.integer8 && '64' || '32' }}bit:${{ github.ref }}:$(date +"%Y-%m-%d_%H-%M-%S"):${{ github.sha }}" >> $GITHUB_OUTPUT
 
       - name: restore ccache
         # setup the GitHub cache used to maintain the ccache from one job to the next
@@ -81,8 +76,8 @@ jobs:
           key: ${{ steps.ccache-prepare.outputs.key }}
           # Prefer caches from the same branch. Fall back to caches from the dev branch.
           restore-keys: |
-            ccache:${{ matrix.os }}:${{ matrix.compiler }}:${{ matrix.integer8 && '64' || '32' }}bit:${{ github.ref }}:
-            ccache:${{ matrix.os }}:${{ matrix.compiler }}:${{ matrix.integer8 && '64' || '32' }}bit:
+            ccache:${{ matrix.os }}:${{ matrix.cc }}:${{ matrix.integer8 && '64' || '32' }}bit:${{ github.ref }}:
+            ccache:${{ matrix.os }}:${{ matrix.cc }}:${{ matrix.integer8 && '64' || '32' }}bit:
 
       - name: configure ccache
         run: |
