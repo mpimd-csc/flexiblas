@@ -48,6 +48,26 @@ jobs:
               link-lapacke: 1
             cc: clang
             defaultblas: OpenBLASOpenMP
+          - os: ubuntu-26.04-arm
+            integer8: 0
+            links:
+              link-blas: 1
+              link-lapack: 1
+              link-cblas: 1
+              link-lapacke: 1
+            compiler-pkgs: "g++ gcc"
+            cc: gcc
+            defaultblas: OpenBLASPThread
+          - os: ubuntu-26.04-arm
+            integer8: 1
+            links:
+              link-blas: 1
+              link-lapack: 1
+              link-cblas: 1
+              link-lapacke: 1
+            compiler-pkgs: "g++ gcc"
+            cc: gcc
+            defaultblas: OpenBLASPThread
           # Building with Clang fails with a linker error:
           #   undefined reference to `csc_cycles'
           # Comment out for now.
