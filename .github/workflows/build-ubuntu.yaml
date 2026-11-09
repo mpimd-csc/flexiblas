@@ -89,10 +89,8 @@ jobs:
 
       - name: configure
         run: |
-          mkdir ${GITHUB_WORKSPACE}/build
-          cd ${GITHUB_WORKSPACE}/build
           I8SUFFIX=${{ matrix.integer8 && '64' || '' }}
-          cmake \
+          cmake -B ${GITHUB_WORKSPACE}/build \
             -DCMAKE_BUILD_TYPE="Debug" \
             -DCMAKE_INSTALL_PREFIX="${GITHUB_WORKSPACE}/usr" \
             ${{ matrix.integer8 && '-DINTEGER8=ON' || '' }} \
@@ -101,12 +99,10 @@ jobs:
             ${{ matrix.links.link-lapack && '-DSYS_LAPACK_LIBRARY=$(dpkg -L liblapack$I8SUFFIX-dev | grep "liblapack$I8SUFFIX.so\$")' || '' }} \
             ${{ matrix.links.link-cblas && '-DSYS_CBLAS_LIBRARY=$(dpkg -L libblas$I8SUFFIX-dev | grep "libblas$I8SUFFIX.so\$")' || '' }} \
             ${{ matrix.links.link-lapacke && '-DSYS_LAPACKE_LIBRARY=$(dpkg -L liblapacke$I8SUFFIX-dev | grep "liblapacke$I8SUFFIX.so\$")' || '' }} \
-            ..
 
       - name: build
         run: |
-          cd ${GITHUB_WORKSPACE}/build
-          cmake --build . -j$(nproc)
+          cmake --build ${GITHUB_WORKSPACE}/build -j$(nproc)
 
       - name: ccache status
         continue-on-error: true
@@ -122,8 +118,7 @@ jobs:
 
       - name: install
         run: |
-          cd ${GITHUB_WORKSPACE}/build
-          cmake --install .
+          cmake --install ${GITHUB_WORKSPACE}/build
 
       - name: check
         id: run-ctest
@@ -131,8 +126,7 @@ jobs:
         env:
           CTEST_OUTPUT_ON_FAILURE: 1
         run: |
-          cd ${GITHUB_WORKSPACE}/build
-          ctest . \
+          ctest --test-dir ${GITHUB_WORKSPACE}/build \
             -j$(nproc) \
             --timeout 300 && RESULT=true || RESULT=false
           echo "::group::Log from these tests"
