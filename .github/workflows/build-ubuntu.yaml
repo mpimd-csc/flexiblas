@@ -38,6 +38,16 @@ jobs:
             link-lapack: 1
             link-cblas: 1
             link-lapacke: 1
+        include:
+          - os: macos-latest
+            integer8: 0
+            links:
+              link-blas: 1
+              link-lapack: 1
+              link-cblas: 1
+              link-lapacke: 1
+            cc: clang
+            defaultblas: OpenBLASOpenMP
           # Building with Clang fails with a linker error:
           #   undefined reference to `csc_cycles'
           # Comment out for now.
@@ -52,6 +62,9 @@ jobs:
       - name: get CPU information (Linux)
         if: runner.os == 'Linux'
         run: lscpu
+      - name: get CPU information (macOS)
+        if: runner.os == 'macOS'
+        run: sysctl -a | grep machdep.cpu
 
       - name: set SYSTEM_CORES (Linux)
         shell: bash
@@ -77,6 +90,11 @@ jobs:
           sudo apt install -y ${{ matrix.compiler-pkgs }} gfortran cmake ccache \
             libblas$I8SUFFIX-dev liblapack$I8SUFFIX-dev \
             liblapacke$I8SUFFIX-dev libopenblas$I8SUFFIX-dev
+
+      - name: install dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install gfortran cmake ccache lapack openblas
 
       - name: prepare ccache
         # create key with human readable timestamp
@@ -115,6 +133,17 @@ jobs:
             echo "CI_LIB_LAPACK=${{ matrix.links.link-lapack && '$(dpkg -L liblapack$I8SUFFIX-dev | grep "liblapack$I8SUFFIX.so\$")' || '' }}"
             echo "CI_LIB_CBLAS=${{ matrix.links.link-cblas && '$(dpkg -L libblas$I8SUFFIX-dev | grep "libblas$I8SUFFIX.so\$")' || '' }}"
             echo "CI_LIB_LAPACKE=${{ matrix.links.link-lapacke && '$(dpkg -L liblapacke$I8SUFFIX-dev | grep "liblapacke$I8SUFFIX.so\$")' || '' }}"
+          ) >> "$GITHUB_ENV"
+
+      - name: configure per-OS variable setup (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          (
+            echo "CI_LIB_BLAS=${{ matrix.links.link-blas && '$(brew --prefix lapack)/lib/libblas.dylib' || '' }}"
+            echo "CI_LAPACK_API=${{ matrix.links.link-lapack && '$(brew list --versions lapack | perl -nE "/([\d.]+)/ && say \$1")' || '' }}"
+            echo "CI_LIB_LAPACK=${{ matrix.links.link-lapack && '$(brew --prefix lapack)/lib/liblapack.dylib' || '' }}"
+            echo "CI_LIB_CBLAS=${{ matrix.links.link-cblas && '$(brew --prefix lapack)/lib/libcblas.dylib' || '' }}"
+            echo "CI_LIB_LAPACKE=${{ matrix.links.link-lapacke && '$(brew --prefix lapack)/lib/liblapacke.dylib' || '' }}"
           ) >> "$GITHUB_ENV"
 
       - name: configure
