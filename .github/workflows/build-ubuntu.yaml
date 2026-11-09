@@ -47,13 +47,28 @@ jobs:
       CC: ${{ matrix.cc }}
 
     steps:
-      - name: get CPU information
+      - name: get CPU information (Linux)
+        if: runner.os == 'Linux'
         run: lscpu
+
+      - name: set SYSTEM_CORES (Linux)
+        shell: bash
+        if: runner.os == 'Linux'
+        run: echo SYSTEM_CORES="$(grep -c ^processor /proc/cpuinfo 2>/dev/null || echo 1 )" >> $GITHUB_ENV
+      - name: set SYSTEM_CORES (macOS)
+        shell: bash
+        if: runner.os == 'macOS'
+        run: echo SYSTEM_CORES="$(sysctl -n hw.ncpu || echo 1)" >> $GITHUB_ENV
+      - name: set SYSTEM_CORES (Windows)
+        shell: bash
+        if: runner.os == 'Windows'
+        run: echo SYSTEM_CORES=$( powershell -NoProfile -Command "& { Get-WmiObject Win32_Processor | Select-Object -Property NumberOfCores }" | perl -0777 -ne 'print $1, "\n" while /(\d+)/g' ) >> $GITHUB_ENV
 
       - name: checkout repository
         uses: actions/checkout@v7
 
-      - name: install dependencies
+      - name: install dependencies (Linux)
+        if: runner.os == 'Linux'
         run: |
           sudo apt -qq update
           I8SUFFIX=${{ matrix.integer8 && '64' || '' }}
@@ -87,22 +102,34 @@ jobs:
           ccache -s
           echo "/usr/lib/ccache" >> $GITHUB_PATH
 
-      - name: configure
+      - name: configure per-OS variable setup (Linux)
+        if: runner.os == 'Linux'
         run: |
           I8SUFFIX=${{ matrix.integer8 && '64' || '' }}
+          (
+            echo "I8SUFFIX=$I8SUFFIX"
+            echo "CI_LIB_BLAS=${{ matrix.links.link-blas && '$(dpkg -L libblas$I8SUFFIX-dev | grep "libblas$I8SUFFIX.so\$")' || '' }}"
+            echo "CI_LAPACK_API=${{ matrix.links.link-lapack && '$(dpkg -s liblapack$I8SUFFIX-dev | perl -nE "say \$1 if /^Version: ([0-9.]+)/")' || '' }}"
+            echo "CI_LIB_LAPACK=${{ matrix.links.link-lapack && '$(dpkg -L liblapack$I8SUFFIX-dev | grep "liblapack$I8SUFFIX.so\$")' || '' }}"
+            echo "CI_LIB_CBLAS=${{ matrix.links.link-cblas && '$(dpkg -L libblas$I8SUFFIX-dev | grep "libblas$I8SUFFIX.so\$")' || '' }}"
+            echo "CI_LIB_LAPACKE=${{ matrix.links.link-lapacke && '$(dpkg -L liblapacke$I8SUFFIX-dev | grep "liblapacke$I8SUFFIX.so\$")' || '' }}"
+          ) >> "$GITHUB_ENV"
+
+      - name: configure
+        run: |
           cmake -B ${GITHUB_WORKSPACE}/build \
             -DCMAKE_BUILD_TYPE="Debug" \
             -DCMAKE_INSTALL_PREFIX="${GITHUB_WORKSPACE}/usr" \
             ${{ matrix.integer8 && '-DINTEGER8=ON' || '' }} \
-            ${{ matrix.links.link-blas && '-DSYS_BLAS_LIBRARY=$(dpkg -L libblas$I8SUFFIX-dev | grep "libblas$I8SUFFIX.so\$")' || '' }} \
-            ${{ matrix.links.link-lapack && '-DLAPACK_API_VERSION=$(dpkg -s liblapack$I8SUFFIX-dev | perl -nE "say \$1 if /^Version: ([0-9.]+)/")' || '' }} \
-            ${{ matrix.links.link-lapack && '-DSYS_LAPACK_LIBRARY=$(dpkg -L liblapack$I8SUFFIX-dev | grep "liblapack$I8SUFFIX.so\$")' || '' }} \
-            ${{ matrix.links.link-cblas && '-DSYS_CBLAS_LIBRARY=$(dpkg -L libblas$I8SUFFIX-dev | grep "libblas$I8SUFFIX.so\$")' || '' }} \
-            ${{ matrix.links.link-lapacke && '-DSYS_LAPACKE_LIBRARY=$(dpkg -L liblapacke$I8SUFFIX-dev | grep "liblapacke$I8SUFFIX.so\$")' || '' }} \
+            ${{ matrix.links.link-blas && '-DSYS_BLAS_LIBRARY=$CI_LIB_BLAS' || '' }} \
+            ${{ matrix.links.link-lapack && '-DLAPACK_API_VERSION=$CI_LAPACK_API' || '' }} \
+            ${{ matrix.links.link-lapack && '-DSYS_LAPACK_LIBRARY=$CI_LIB_LAPACK' || '' }} \
+            ${{ matrix.links.link-cblas && '-DSYS_CBLAS_LIBRARY=$CI_LIB_CBLAS' || '' }} \
+            ${{ matrix.links.link-lapacke && '-DSYS_LAPACKE_LIBRARY=$CI_LIB_LAPACKE' || '' }} \
 
       - name: build
         run: |
-          cmake --build ${GITHUB_WORKSPACE}/build -j$(nproc)
+          cmake --build ${GITHUB_WORKSPACE}/build -j$SYSTEM_CORES
 
       - name: ccache status
         continue-on-error: true
@@ -128,7 +155,7 @@ jobs:
           FLEXIBLAS_VERBOSE: 1
         run: |
           ctest --test-dir ${GITHUB_WORKSPACE}/build \
-            -j$(nproc) \
+            -j$SYSTEM_CORES \
             --timeout 300 && RESULT=true || RESULT=false
           echo "::group::Log from these tests"
           [ -f Testing/Temporary/LastTest.log ] && cat Testing/Temporary/LastTest.log
