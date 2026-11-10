@@ -125,7 +125,7 @@ add_library(flexiblas_fallback_lapack SHARED ${SRC})
 target_link_libraries(flexiblas_fallback_lapack ${FLEXIBLAS_LAPACK_LINK} PRIVATE ${LIBM} $<$<BOOL:WIN32>:flexiblas>)
 
 if (APPLE)
-    set_target_properties(flexiblas_fallback_lapack PROPERTIES LINK_FLAGS "-undefined dynamic_lookup -flat_namespace")
+    set_target_properties(flexiblas_fallback_lapack PROPERTIES LINK_FLAGS "-Wl,-undefined,dynamic_lookup")
 endif()
 set_target_properties(flexiblas_fallback_lapack PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/${FLEXIBLAS_LIBRARY_DIR}/)
 

@@ -21,7 +21,7 @@ IF ( NOT DUMMY_HOOK)
     set_target_properties(flexiblas_hook_dummy PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/${FLEXIBLAS_LIBRARY_DIR}/)
 
     if (APPLE)
-       set_target_properties(flexiblas_hook_dummy PROPERTIES LINK_FLAGS "-undefined dynamic_lookup -flat_namespace")
+        set_target_properties(flexiblas_hook_dummy PROPERTIES LINK_FLAGS "-Wl,-undefined,dynamic_lookup")
     endif()
 
     IF (WIN32)
