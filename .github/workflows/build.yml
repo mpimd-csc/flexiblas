@@ -6,7 +6,7 @@ on:
 
 jobs:
 
-  ubuntu:
+  CI:
     # For available GitHub-hosted runners, see:
     # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
     runs-on: ${{ matrix.os }}
