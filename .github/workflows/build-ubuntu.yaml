@@ -18,6 +18,7 @@ jobs:
       ${{ matrix.links.link-lapack && ' link-lapack' || '' }}
       ${{ matrix.links.link-cblas && ' link-cblas' || '' }}
       ${{ matrix.links.link-lapacke && ' link-lapacke' || '' }}
+      ${{ matrix.defaultblas && format(' default={0}',matrix.defaultblas) || '' }}
 
     strategy:
       # Allow other runners in the matrix to continue if some fail
@@ -28,6 +29,7 @@ jobs:
         compiler-pkgs: ["g++ gcc"]
         integer8: [1,0]
         cc: [gcc]
+        defaultblas: [0]
         links:
           - link-blas: 0
           - link-blas: 1
@@ -126,6 +128,7 @@ jobs:
             ${{ matrix.links.link-lapack && '-DSYS_LAPACK_LIBRARY=$CI_LIB_LAPACK' || '' }} \
             ${{ matrix.links.link-cblas && '-DSYS_CBLAS_LIBRARY=$CI_LIB_CBLAS' || '' }} \
             ${{ matrix.links.link-lapacke && '-DSYS_LAPACKE_LIBRARY=$CI_LIB_LAPACKE' || '' }} \
+            ${{ matrix.defaultblas && format('-DFLEXIBLAS_DEFAULT_BLAS={0}$I8SUFFIX',matrix.defaultblas) || '' }} \
 
       - name: build
         run: |
