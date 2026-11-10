@@ -103,7 +103,7 @@ int __flexiblas_setup_xerbla(flexiblas_backend_t *backend)
             (unsigned long)((void*)xerbla_symbol1),
             (unsigned long)((void*)xerbla_symbol2),
             (unsigned long)((void*)flexiblas_internal_xerbla));
-    if (flexiblas_internal_xerbla == xerbla_symbol2) {
+    if (flexiblas_internal_xerbla == xerbla_symbol2 || xerbla_symbol2 == NULL) {
         DPRINTF(1,"Use XERBLA of the BLAS backend.\n");
         backend->xerbla = xerbla_symbol1;
     } else {
@@ -283,7 +283,7 @@ void cblas_xerbla(CBLAS_INT info, const char *rout, const char *form, ...)
 
 int __flexiblas_setup_cblas_xerbla(flexiblas_backend_t *backend)
 {
-    /* Check if the user supplied a XERBLA function */
+    /* Check if the user supplied a cblas_xerbla function */
     void *xerbla_symbol1 = __flexiblas_dlsym(backend->library_handle,"cblas_xerbla");
     void *xerbla_symbol2 = __flexiblas_dlsym(RTLD_DEFAULT,"cblas_xerbla");
     void *internal;
