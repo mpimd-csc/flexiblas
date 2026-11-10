@@ -55,6 +55,14 @@ jobs:
               link-lapacke: 1
             cc: clang
             defaultblas: OpenBLASOpenMP
+          - os: windows-latest
+            links:
+              link-blas: 1
+              link-lapack: 1
+              link-cblas: 1
+              link-lapacke: 1
+            cc: gcc
+            defaultblas: OpenBLASOpenMP
           - os: ubuntu-26.04-arm
             integer8: 0
             links:
@@ -130,6 +138,25 @@ jobs:
         run: |
           brew install gfortran cmake ccache lapack openblas
 
+      - name: install dependencies (Windows)
+        if: runner.os == 'Windows'
+        env:
+          MSYSTEM: UCRT64
+          I8SUFFIX: ${{ matrix.integer8 && '64' || '' }}
+          TRIPLET: mingw-w64-ucrt-x86_64
+        shell: cmd
+        # keep all at same indent else YAML preserves newlines
+        run: >
+          C:\msys64\usr\bin\bash.exe -leo pipefail -c "
+          pacman -S --noconfirm --needed $TRIPLET-ccache
+          $TRIPLET-gcc $TRIPLET-gcc-fortran
+          $TRIPLET-cmake $TRIPLET-ninja $TRIPLET-dlfcn
+          $TRIPLET-openblas$I8SUFFIX
+          $TRIPLET-cblas$I8SUFFIX $TRIPLET-lapack$I8SUFFIX
+          $TRIPLET-lapacke$I8SUFFIX
+          " &&
+          echo C:\msys64\ucrt64\bin>> "%GITHUB_PATH%"
+
       - name: prepare ccache
         # create key with human readable timestamp
         # used in action/cache/restore and action/cache/save steps
@@ -178,6 +205,25 @@ jobs:
             echo "CI_LIB_LAPACK=${{ matrix.links.link-lapack && '$(brew --prefix lapack)/lib/liblapack.dylib' || '' }}"
             echo "CI_LIB_CBLAS=${{ matrix.links.link-cblas && '$(brew --prefix lapack)/lib/libcblas.dylib' || '' }}"
             echo "CI_LIB_LAPACKE=${{ matrix.links.link-lapacke && '$(brew --prefix lapack)/lib/liblapacke.dylib' || '' }}"
+          ) >> "$GITHUB_ENV"
+
+      - name: configure per-OS variable setup (Windows)
+        if: runner.os == 'Windows'
+        env:
+          I8SUFFIX: ${{ matrix.integer8 && '64' || '' }}
+          TRIPLET: mingw-w64-ucrt-x86_64
+        run: |
+          GCC_BIN="$(dirname "$(which gcc)")"
+          PREFIX_WIN="$(cygpath -m "$(dirname "$GCC_BIN")")"
+          (
+            echo "I8SUFFIX=$I8SUFFIX"
+            echo "GENERATOR_FLAG=-G Ninja"
+            cygpath -w "$GCC_BIN" >> "$GITHUB_PATH"
+            echo "CI_LIB_BLAS=${{ matrix.links.link-blas && '${PREFIX_WIN}/lib/libblas$I8SUFFIX.dll.a' || '' }}"
+            echo "CI_LAPACK_API=${{ matrix.links.link-lapack && '$(/c/msys64/usr/bin/pacman.exe -Q "$TRIPLET-lapack$I8SUFFIX" | perl -pe "s#.* (.*)-.*#\$1#")' || '' }}"
+            echo "CI_LIB_LAPACK=${{ matrix.links.link-lapack && '${PREFIX_WIN}/lib/liblapack$I8SUFFIX.dll.a' || '' }}"
+            echo "CI_LIB_CBLAS=${{ matrix.links.link-cblas && '${PREFIX_WIN}/lib/libcblas$I8SUFFIX.dll.a' || '' }}"
+            echo "CI_LIB_LAPACKE=${{ matrix.links.link-lapacke && '${PREFIX_WIN}/lib/liblapacke$I8SUFFIX.dll.a' || '' }}"
           ) >> "$GITHUB_ENV"
 
       - name: configure
