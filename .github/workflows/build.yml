@@ -1,8 +1,15 @@
-name: build-ubuntu
+name: build
 on:
   workflow_dispatch:
   push:
   pull_request:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
 
@@ -89,17 +96,20 @@ jobs:
       - name: get CPU information (macOS)
         if: runner.os == 'macOS'
         run: sysctl -a | grep machdep.cpu
+      - name: get CPU information (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run : |
+          Get-PSDrive -PSProvider FileSystem
+          Get-CIMInstance -Class Win32_Processor | Select-Object -Property Name
 
       - name: set SYSTEM_CORES (Linux)
-        shell: bash
         if: runner.os == 'Linux'
         run: echo SYSTEM_CORES="$(grep -c ^processor /proc/cpuinfo 2>/dev/null || echo 1 )" >> $GITHUB_ENV
       - name: set SYSTEM_CORES (macOS)
-        shell: bash
         if: runner.os == 'macOS'
         run: echo SYSTEM_CORES="$(sysctl -n hw.ncpu || echo 1)" >> $GITHUB_ENV
       - name: set SYSTEM_CORES (Windows)
-        shell: bash
         if: runner.os == 'Windows'
         run: echo SYSTEM_CORES=$( powershell -NoProfile -Command "& { Get-WmiObject Win32_Processor | Select-Object -Property NumberOfCores }" | perl -0777 -ne 'print $1, "\n" while /(\d+)/g' ) >> $GITHUB_ENV
 
@@ -172,7 +182,7 @@ jobs:
 
       - name: configure
         run: |
-          cmake -B ${GITHUB_WORKSPACE}/build \
+          cmake -B ${GITHUB_WORKSPACE}/build $GENERATOR_FLAG \
             -DCMAKE_BUILD_TYPE="Debug" \
             -DCMAKE_INSTALL_PREFIX="${GITHUB_WORKSPACE}/usr" \
             ${{ matrix.integer8 && '-DINTEGER8=ON' || '' }} \
