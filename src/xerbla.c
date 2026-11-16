@@ -167,10 +167,6 @@ void XERBLA_ARRAY(char *srname_array, Int *srname_len, Int *info, flexiblas_fort
 #include "cblas.h"
 int RowMajorStrg = 0;
 
-#if defined(__ELF__) || ((defined (__PGI) || defined(__NVCOMPILER)) && (defined(__linux__) || defined(__unix__)))
-void internal_cblas_xerbla(CBLAS_INT info, const char *rout, const char *form, ...);
-void cblas_xerbla(CBLAS_INT info, const char *, const char *, ...) __attribute__ ((weak, alias ("internal_cblas_xerbla")));
-#endif
 void internal_cblas_xerbla(CBLAS_INT _info, const char *rout, const char *form, ...)
 {
     extern int RowMajorStrg;
@@ -236,6 +232,24 @@ void internal_cblas_xerbla(CBLAS_INT _info, const char *rout, const char *form, 
         }
     }
 }
+void cblas_xerbla(CBLAS_INT info, const char *rout, const char *form, ...)
+#if defined(__ELF__) || ((defined (__PGI) || defined(__NVCOMPILER)) && (defined(__linux__) || defined(__unix__)))
+ __attribute__ ((weak, alias ("internal_cblas_xerbla")));
+#else
+{
+    va_list ap;
+    void (*fn) ( CBLAS_INT, const char*, const char*, ...);
+    size_t a1, a2, a3, a4, a5;
+    va_start(ap, form);
+    if ( current_backend->cblas_xerbla != NULL) {
+        FLEXIBLAS_FUNCTION_POINTER_ASSIGN(fn, current_backend->cblas_xerbla);
+        fn(info, rout, form, a1, a2, a3, a4, a5);
+    } else {
+        internal_cblas_xerbla(info, rout, form, a1, a2, a3, a4, a5);
+    }
+    va_end(ap);
+}
+#endif
 
 
 #ifdef __ELF__
@@ -261,25 +275,6 @@ CBLAS_INT cblas_errprn(CBLAS_INT ierr, CBLAS_INT info,const char *form, ...)
     else
         return info;
 }
-#if (defined(__APPLE__) || defined(__WIN32__))
-/* This routine is designed for MacOS */
-void internal_cblas_xerbla(CBLAS_INT info, const char *rout, const char *form, ...);
-void cblas_xerbla(CBLAS_INT info, const char *rout, const char *form, ...)
-{
-    // printf("Hier in xerbla.c (0x%lx) backend = 0x%lx \n", (unsigned long)(void*) & cblas_xerbla, (unsigned long) current_backend->xerbla.cblas_function);
-    va_list ap;
-    void (*fn) ( CBLAS_INT, const char*, const char*, ...);
-    size_t a1, a2, a3, a4, a5;
-    va_start(ap, form);
-    if ( current_backend->cblas_xerbla != NULL) {
-        FLEXIBLAS_FUNCTION_POINTER_ASSIGN(fn, current_backend->cblas_xerbla);
-        fn(info, rout, form, a1, a2, a3, a4, a5);
-    } else {
-        internal_cblas_xerbla(info, rout, form, a1, a2, a3, a4, a5);
-    }
-    va_end(ap);
-}
-#endif
 
 int __flexiblas_setup_cblas_xerbla(flexiblas_backend_t *backend)
 {

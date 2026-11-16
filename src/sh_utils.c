@@ -392,13 +392,56 @@ HIDDEN int __flexiblas_dl_symbol_exist( const char *libname, const char *symbol_
     return 0;
 }
 
+#ifdef _WIN32
+static int is_system_module(HMODULE mod) {
+  char mod_path[MAX_PATH], sys_dir[MAX_PATH];
+  DWORD mlen = GetModuleFileNameA(mod, mod_path, MAX_PATH);
+  DWORD slen = GetSystemDirectoryA(sys_dir, MAX_PATH);
+  return mlen > slen && slen > 0 &&
+    _strnicmp(mod_path, sys_dir, slen) == 0 &&
+    (mod_path[slen] == '\\' || mod_path[slen] == '/');
+}
+
+#define FLEXIBLAS_QUEUE 64
+static void *win32_dlsym_transitive(void *handle, const char *symbol) {
+  if (!handle || !symbol) return dlsym(handle, symbol);
+  HMODULE queue[FLEXIBLAS_QUEUE] = { (HMODULE)handle };
+  size_t head = 0, tail = 1;
+  while (head < tail) {
+    HMODULE mod = queue[head++];
+    FARPROC sym = GetProcAddress(mod, symbol);
+    if (sym) return (void *)(uintptr_t)sym;
+    const BYTE *base = (const BYTE *)mod;
+    const IMAGE_DOS_HEADER *dos = (const IMAGE_DOS_HEADER *)base;
+    if (dos->e_magic != IMAGE_DOS_SIGNATURE) continue;
+    const IMAGE_NT_HEADERS *nt = (const IMAGE_NT_HEADERS *)(base + dos->e_lfanew);
+    if (nt->Signature != IMAGE_NT_SIGNATURE ||
+      nt->OptionalHeader.NumberOfRvaAndSizes <= IMAGE_DIRECTORY_ENTRY_IMPORT
+    ) continue;
+    const IMAGE_DATA_DIRECTORY *dir =
+      &nt->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT];
+    if (!dir->VirtualAddress || !dir->Size) continue;
+    const IMAGE_IMPORT_DESCRIPTOR *imp = (const IMAGE_IMPORT_DESCRIPTOR *)(base + dir->VirtualAddress);
+    for (; imp->Name && tail < FLEXIBLAS_QUEUE; ++imp) {
+      HMODULE dep = GetModuleHandleA((const char *)(base + imp->Name));
+      if (!dep || is_system_module(dep)) continue;
+      int seen = 0, i;
+      for (i = 0; i < tail; ++i)
+        if (queue[i] == dep) { seen = 1; break; }
+      if (!seen) queue[tail++] = dep;
+    }
+  }
+  return dlsym(handle, symbol);
+}
+#endif
+
 HIDDEN void * __flexiblas_dlsym(void *lib, const char *fname)
 {
-/** #ifdef __WIN32__ */
-    /** return (void *) GetProcAddress(lib, fname); */
-/** #else */
-    return dlsym(lib, fname);
-/** #endif */
+#ifdef __WIN32__
+  return win32_dlsym_transitive(lib, fname);
+#else
+  return dlsym(lib, fname);
+#endif
 }
 
 HIDDEN void __flexiblas_dlclose(void *lib) {

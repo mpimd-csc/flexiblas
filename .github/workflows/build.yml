@@ -1,8 +1,15 @@
-name: build-ubuntu
+name: build
 on:
   workflow_dispatch:
   push:
   pull_request:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
 
@@ -48,6 +55,14 @@ jobs:
               link-lapacke: 1
             cc: clang
             defaultblas: OpenBLASOpenMP
+          - os: windows-latest
+            links:
+              link-blas: 1
+              link-lapack: 1
+              link-cblas: 1
+              link-lapacke: 1
+            cc: gcc
+            defaultblas: OpenBLASOpenMP
           - os: ubuntu-26.04-arm
             integer8: 0
             links:
@@ -89,17 +104,20 @@ jobs:
       - name: get CPU information (macOS)
         if: runner.os == 'macOS'
         run: sysctl -a | grep machdep.cpu
+      - name: get CPU information (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run : |
+          Get-PSDrive -PSProvider FileSystem
+          Get-CIMInstance -Class Win32_Processor | Select-Object -Property Name
 
       - name: set SYSTEM_CORES (Linux)
-        shell: bash
         if: runner.os == 'Linux'
         run: echo SYSTEM_CORES="$(grep -c ^processor /proc/cpuinfo 2>/dev/null || echo 1 )" >> $GITHUB_ENV
       - name: set SYSTEM_CORES (macOS)
-        shell: bash
         if: runner.os == 'macOS'
         run: echo SYSTEM_CORES="$(sysctl -n hw.ncpu || echo 1)" >> $GITHUB_ENV
       - name: set SYSTEM_CORES (Windows)
-        shell: bash
         if: runner.os == 'Windows'
         run: echo SYSTEM_CORES=$( powershell -NoProfile -Command "& { Get-WmiObject Win32_Processor | Select-Object -Property NumberOfCores }" | perl -0777 -ne 'print $1, "\n" while /(\d+)/g' ) >> $GITHUB_ENV
 
@@ -119,6 +137,25 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew install gfortran cmake ccache lapack openblas
+
+      - name: install dependencies (Windows)
+        if: runner.os == 'Windows'
+        env:
+          MSYSTEM: UCRT64
+          I8SUFFIX: ${{ matrix.integer8 && '64' || '' }}
+          TRIPLET: mingw-w64-ucrt-x86_64
+        shell: cmd
+        # keep all at same indent else YAML preserves newlines
+        run: >
+          C:\msys64\usr\bin\bash.exe -leo pipefail -c "
+          pacman -S --noconfirm --needed $TRIPLET-ccache
+          $TRIPLET-gcc $TRIPLET-gcc-fortran
+          $TRIPLET-cmake $TRIPLET-ninja $TRIPLET-dlfcn
+          $TRIPLET-openblas$I8SUFFIX
+          $TRIPLET-cblas$I8SUFFIX $TRIPLET-lapack$I8SUFFIX
+          $TRIPLET-lapacke$I8SUFFIX
+          " &&
+          echo C:\msys64\ucrt64\bin>> "%GITHUB_PATH%"
 
       - name: prepare ccache
         # create key with human readable timestamp
@@ -170,9 +207,28 @@ jobs:
             echo "CI_LIB_LAPACKE=${{ matrix.links.link-lapacke && '$(brew --prefix lapack)/lib/liblapacke.dylib' || '' }}"
           ) >> "$GITHUB_ENV"
 
+      - name: configure per-OS variable setup (Windows)
+        if: runner.os == 'Windows'
+        env:
+          I8SUFFIX: ${{ matrix.integer8 && '64' || '' }}
+          TRIPLET: mingw-w64-ucrt-x86_64
+        run: |
+          GCC_BIN="$(dirname "$(which gcc)")"
+          PREFIX_WIN="$(cygpath -m "$(dirname "$GCC_BIN")")"
+          (
+            echo "I8SUFFIX=$I8SUFFIX"
+            echo "GENERATOR_FLAG=-G Ninja"
+            cygpath -w "$GCC_BIN" >> "$GITHUB_PATH"
+            echo "CI_LIB_BLAS=${{ matrix.links.link-blas && '${PREFIX_WIN}/lib/libblas$I8SUFFIX.dll.a' || '' }}"
+            echo "CI_LAPACK_API=${{ matrix.links.link-lapack && '$(/c/msys64/usr/bin/pacman.exe -Q "$TRIPLET-lapack$I8SUFFIX" | perl -pe "s#.* (.*)-.*#\$1#")' || '' }}"
+            echo "CI_LIB_LAPACK=${{ matrix.links.link-lapack && '${PREFIX_WIN}/lib/liblapack$I8SUFFIX.dll.a' || '' }}"
+            echo "CI_LIB_CBLAS=${{ matrix.links.link-cblas && '${PREFIX_WIN}/lib/libcblas$I8SUFFIX.dll.a' || '' }}"
+            echo "CI_LIB_LAPACKE=${{ matrix.links.link-lapacke && '${PREFIX_WIN}/lib/liblapacke$I8SUFFIX.dll.a' || '' }}"
+          ) >> "$GITHUB_ENV"
+
       - name: configure
         run: |
-          cmake -B ${GITHUB_WORKSPACE}/build \
+          cmake -B ${GITHUB_WORKSPACE}/build $GENERATOR_FLAG \
             -DCMAKE_BUILD_TYPE="Debug" \
             -DCMAKE_INSTALL_PREFIX="${GITHUB_WORKSPACE}/usr" \
             ${{ matrix.integer8 && '-DINTEGER8=ON' || '' }} \
