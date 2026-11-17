@@ -157,7 +157,9 @@ void csc_table_comment_sysinfo(csc_table_t * t)
     #include <crt_externs.h>
     #define environ (*_NSGetEnviron())
 #else
+#  ifndef _WIN32
     extern char **environ;
+#  endif
 #endif
 
 void csc_table_comment_openmp_info(csc_table_t *t)
