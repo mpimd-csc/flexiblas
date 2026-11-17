@@ -151,6 +151,7 @@ jobs:
             echo "CI_LIB_LAPACK=${{ matrix.links.link-lapack && '$(brew --prefix lapack)/lib/liblapack.dylib' || '' }}"
             echo "CI_LIB_CBLAS=${{ matrix.links.link-cblas && '$(brew --prefix lapack)/lib/libcblas.dylib' || '' }}"
             echo "CI_LIB_LAPACKE=${{ matrix.links.link-lapacke && '$(brew --prefix lapack)/lib/liblapacke.dylib' || '' }}"
+            echo "GENERATOR_FLAG=-DCMAKE_C_COMPILER_LAUNCHER=ccache"
           ) >> "$GITHUB_ENV"
 
       - name: install dependencies (MinGW)
@@ -182,7 +183,7 @@ jobs:
           PREFIX_WIN="$(cygpath -m "$(dirname "$GCC_BIN")")"
           (
             echo "I8SUFFIX=$I8SUFFIX"
-            echo "GENERATOR_FLAG=-G Ninja"
+            echo "GENERATOR_FLAG=-G Ninja -DCMAKE_C_COMPILER_LAUNCHER=ccache"
             cygpath -w "$GCC_BIN" >> "$GITHUB_PATH"
             echo "CI_LIB_BLAS=${{ matrix.links.link-blas && '${PREFIX_WIN}/lib/libblas$I8SUFFIX.dll.a' || '' }}"
             echo "CI_LAPACK_API=${{ matrix.links.link-lapack && '$(/c/msys64/usr/bin/pacman.exe -Q "$TRIPLET-lapack$I8SUFFIX" | perl -pe "s#.* (.*)-.*#\$1#")' || '' }}"
