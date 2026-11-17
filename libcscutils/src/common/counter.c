@@ -146,7 +146,9 @@ int64_t csc_cycles_(void)
 }
 #endif
 #else
+#if __STDC_VERSION__ >= 202311L
 #warning RDTSC is not supported on this platform. DO NOT TRUST THE RESULTS
+#endif
 int64_t csc_cycles(void)
 {
     static int64_t counter = 0;
