@@ -224,6 +224,11 @@ jobs:
             ${{ matrix.links.link-cblas && '-DSYS_CBLAS_LIBRARY=$CI_LIB_CBLAS' || '' }} \
             ${{ matrix.links.link-lapacke && '-DSYS_LAPACKE_LIBRARY=$CI_LIB_LAPACKE' || '' }} \
             ${{ matrix.defaultblas && format('-DFLEXIBLAS_DEFAULT_BLAS={0}$I8SUFFIX',matrix.defaultblas) || '' }} \
+            && RESULT=true || RESULT=false
+          echo "::group::Log from the configure"
+          cat ${GITHUB_WORKSPACE}/build/CMakeFiles/CMakeConfigureLog.yaml
+          echo "::endgroup::"
+          $RESULT
 
       - name: build
         run: |
@@ -257,6 +262,6 @@ jobs:
             -j$SYSTEM_CORES \
             --timeout 300 && RESULT=true || RESULT=false
           echo "::group::Log from these tests"
-          [ -f Testing/Temporary/LastTest.log ] && cat Testing/Temporary/LastTest.log
+          cat ${GITHUB_WORKSPACE}/build/Testing/Temporary/LastTest.log
           echo "::endgroup::"
           $RESULT
