@@ -191,19 +191,13 @@ jobs:
             echo "CI_LIB_LAPACKE=${{ matrix.links.link-lapacke && '${PREFIX_WIN}/lib/liblapacke$I8SUFFIX.dll.a' || '' }}"
           ) >> "$GITHUB_ENV"
 
-      - name: prepare ccache
-        # create key with human readable timestamp
-        # used in action/cache/restore and action/cache/save steps
-        id: ccache-prepare
-        run: |
-          echo "key=ccache:${{ matrix.os }}:${{ matrix.cc }}:${{ matrix.integer8 && '64' || '32' }}bit:${{ github.ref }}:$(date +"%Y-%m-%d_%H-%M-%S"):${{ github.sha }}" >> $GITHUB_OUTPUT
-
       - name: restore ccache
         # setup the GitHub cache used to maintain the ccache from one job to the next
         uses: actions/cache/restore@v6
         with:
           path: ~/.ccache
-          key: ${{ steps.ccache-prepare.outputs.key }}
+          # ensure is same as "save ccache" step
+          key: ccache:${{ matrix.os }}:${{ matrix.cc }}:${{ matrix.integer8 && '64' || '32' }}bit:${{ github.ref }}:${{ github.sha }}
           # Prefer caches from the same branch. Fall back to caches from the dev branch.
           restore-keys: |
             ccache:${{ matrix.os }}:${{ matrix.cc }}:${{ matrix.integer8 && '64' || '32' }}bit:${{ github.ref }}:
@@ -244,7 +238,8 @@ jobs:
         uses: actions/cache/save@v6
         with:
           path: ~/.ccache
-          key: ${{ steps.ccache-prepare.outputs.key }}
+          # ensure is same as "restore ccache" step
+          key: ccache:${{ matrix.os }}:${{ matrix.cc }}:${{ matrix.integer8 && '64' || '32' }}bit:${{ github.ref }}:${{ github.sha }}
 
       - name: install
         run: |
