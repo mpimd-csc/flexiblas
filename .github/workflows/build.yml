@@ -204,8 +204,11 @@ jobs:
       - name: install dependencies (MSVC + ifx)
         if: runner.os == 'Windows' && matrix.cc == 'cl'
         shell: cmd
+        # micromamba because conda 26.9.4-26.10.0 is getting 400 in downloads
         run: |
-          "%CONDA%\Scripts\conda.exe" install -c https://software.repos.intel.com/python/conda/ -c conda-forge ifx_win-64 ccache "blas-devel=*=*netlib" openblas dlfcn-win32
+          set "CHAN=conda-forge/label/lapack_rc"
+          "%CONDA%\Scripts\conda.exe" install -y -c conda-forge micromamba
+          "%CONDA%\Library\bin\micromamba.exe" install -y -c https://software.repos.intel.com/python/conda/ -c "%CHAN%" -c conda-forge ifx_win-64 ccache "%CHAN%::libblas>3.11.0=*netlib" "%CHAN%::libcblas=*=*netlib" "%CHAN%::liblapack=*=*netlib" "%CHAN%::liblapacke=*=*netlib" libopenblas dlfcn-win32
           call "%CONDA%\Scripts\activate.bat" "%CONDA%"
           set "LDFLAGS="
           set "FFLAGS="
