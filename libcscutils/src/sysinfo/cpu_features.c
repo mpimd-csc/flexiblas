@@ -222,6 +222,11 @@ uint32_t csc_sysinfo_cpuid_query
 			// Call xgetbv to get xcr0 (the extended control register) copied
 			// to [edx:eax]. This encodes whether software supports various
 			// register state-saving features.
+#ifdef _MSC_VER
+                        uint64_t _xcr_val = _xgetbv(xcr);
+                        eax = (uint32_t)_xcr_val;
+                        edx = (uint32_t)(_xcr_val >> 32);
+#else
 			__asm__ __volatile__
 			(
 				".byte 0x0F, 0x01, 0xD0"
@@ -230,6 +235,7 @@ uint32_t csc_sysinfo_cpuid_query
 				: "c"  (xcr)
 				: "cc"
 			);
+#endif
 
 			// The OS can manage the state of 512-bit zmm (AVX-512) registers
 			// only if the xcr[7:5] bits are set. If they are not set, then
