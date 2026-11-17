@@ -176,6 +176,7 @@ void csc_table_comment_openmp_info(csc_table_t *t)
     csc_table_comment_add(t->comment, "omp_get_num_procs: %d", omp_get_num_procs());
     csc_table_comment_add(t->comment, "omp_get_dynamic: %d", omp_get_dynamic());
     csc_table_comment_add(t->comment, "omp_get_nested: %d", omp_get_nested());
+#if _OPENMP >= 200805
     omp_sched_t sched;
     int mod;
     omp_get_schedule(&sched, &mod);
@@ -220,6 +221,7 @@ void csc_table_comment_openmp_info(csc_table_t *t)
         default:
             csc_table_comment_add(t->comment, "omp_get_proc_bind: %d", (int) pr);
     }
+#endif
 #endif
     csc_table_comment_add(t->comment, "===========================");
     csc_table_comment_add(t->comment, "");
