@@ -63,6 +63,15 @@ jobs:
               link-lapacke: 1
             cc: gcc
             defaultblas: OpenBLASOpenMP
+#          - os: windows-latest
+#            links:
+#              link-blas: 1
+#              link-lapack: 1
+#              link-cblas: 1
+#              link-lapacke: 1
+#            cc: cl
+#            fc: ifx
+#            defaultblas: OpenBLASPThread
           - os: ubuntu-26.04-arm
             integer8: 0
             links:
@@ -190,6 +199,58 @@ jobs:
             echo "CI_LIB_LAPACK=${{ matrix.links.link-lapack && '${PREFIX_WIN}/lib/liblapack$I8SUFFIX.dll.a' || '' }}"
             echo "CI_LIB_CBLAS=${{ matrix.links.link-cblas && '${PREFIX_WIN}/lib/libcblas$I8SUFFIX.dll.a' || '' }}"
             echo "CI_LIB_LAPACKE=${{ matrix.links.link-lapacke && '${PREFIX_WIN}/lib/liblapacke$I8SUFFIX.dll.a' || '' }}"
+          ) >> "$GITHUB_ENV"
+
+      - name: install dependencies (MSVC + ifx)
+        if: runner.os == 'Windows' && matrix.cc == 'cl'
+        shell: cmd
+        run: |
+          "%CONDA%\Scripts\conda.exe" install -c https://software.repos.intel.com/python/conda/ -c conda-forge ifx_win-64 ccache "blas-devel=*=*netlib" openblas dlfcn-win32
+          call "%CONDA%\Scripts\activate.bat" "%CONDA%"
+          set "LDFLAGS="
+          set "FFLAGS="
+          set "CFLAGS="
+          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath`) do set "VS_PATH=%%i"
+          call "%VS_PATH%\VC\Auxiliary\Build\vcvars64.bat"
+          set "CMAKE_PREFIX_PATH=%CONDA:\=/%/Library"
+          set >> "%GITHUB_ENV%"
+          for %%p in ("%PATH:;=" "%") do if not "%%~p"=="" echo %%~p>> "%GITHUB_PATH%"
+          if exist "%ProgramFiles%\Git\usr\bin\link.exe" del /f "%ProgramFiles%\Git\usr\bin\link.exe"
+
+      - name: configure per-OS variable setup (MSVC + ifx)
+        if: runner.os == 'Windows' && matrix.cc == 'cl'
+        run: |
+          conda_json() {
+            "$CONDA/python.exe" -c '
+          import glob, os, sys
+          prefix = os.environ["CONDA"].replace("\\", "/")
+          for meta in glob.glob(f"{prefix}/conda-meta/{sys.argv[1]}-[0-9]*.json"):
+              print(meta)
+          ' "$@"
+          }
+          conda_get() {
+            "$CONDA/python.exe" -c '
+          import json, os, sys
+          for meta in sys.argv[2:]:
+              meta_json = json.load(open(meta))
+              if sys.argv[1] == "lib":
+                  prefix = os.environ["CONDA"].replace("\\", "/")
+                  for f in meta_json.get("files", []):
+                      if f.endswith(".lib"):
+                          print(f"{prefix}/{f}")
+                          sys.exit(0)
+              elif sys.argv[1] == "version":
+                  print(meta_json["version"])
+                  sys.exit(0)
+          ' "$@"
+          }
+          (
+            echo "GENERATOR_FLAG=-G Ninja -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded -DCMAKE_POLICY_DEFAULT_CMP0141=NEW"
+            echo "CI_LIB_BLAS=${{ matrix.links.link-blas && '$(conda_get lib $(conda_json libblas))' || '' }}"
+            echo "CI_LAPACK_API=${{ matrix.links.link-lapack && '$(conda_get version $(conda_json liblapack))' || '' }}"
+            echo "CI_LIB_CBLAS=${{ matrix.links.link-cblas && '$(conda_get lib $(conda_json libcblas))' || '' }}"
+            echo "CI_LIB_LAPACK=${{ matrix.links.link-lapack && '$(conda_get lib $(conda_json liblapack))' || '' }}"
+            echo "CI_LIB_LAPACKE=${{ matrix.links.link-lapacke && '$(conda_get lib $(conda_json liblapacke))' || '' }}"
           ) >> "$GITHUB_ENV"
 
       - name: restore ccache
