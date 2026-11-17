@@ -124,7 +124,7 @@ jobs:
       - name: checkout repository
         uses: actions/checkout@v7
 
-      - name: install dependencies (Linux)
+      - name: install dependencies, configure variables (Linux)
         if: runner.os == 'Linux'
         run: |
           sudo apt -qq update
@@ -132,14 +132,29 @@ jobs:
           sudo apt install -y ${{ matrix.compiler-pkgs }} gfortran cmake ccache \
             libblas$I8SUFFIX-dev liblapack$I8SUFFIX-dev \
             liblapacke$I8SUFFIX-dev libopenblas$I8SUFFIX-dev
+          (
+            echo "I8SUFFIX=$I8SUFFIX"
+            echo "CI_LIB_BLAS=${{ matrix.links.link-blas && '$(dpkg -L libblas$I8SUFFIX-dev | grep "libblas$I8SUFFIX.so\$")' || '' }}"
+            echo "CI_LAPACK_API=${{ matrix.links.link-lapack && '$(dpkg -s liblapack$I8SUFFIX-dev | perl -nE "say \$1 if /^Version: ([0-9.]+)/")' || '' }}"
+            echo "CI_LIB_LAPACK=${{ matrix.links.link-lapack && '$(dpkg -L liblapack$I8SUFFIX-dev | grep "liblapack$I8SUFFIX.so\$")' || '' }}"
+            echo "CI_LIB_CBLAS=${{ matrix.links.link-cblas && '$(dpkg -L libblas$I8SUFFIX-dev | grep "libblas$I8SUFFIX.so\$")' || '' }}"
+            echo "CI_LIB_LAPACKE=${{ matrix.links.link-lapacke && '$(dpkg -L liblapacke$I8SUFFIX-dev | grep "liblapacke$I8SUFFIX.so\$")' || '' }}"
+          ) >> "$GITHUB_ENV"
 
-      - name: install dependencies (macOS)
+      - name: install dependencies, configure variables (macOS)
         if: runner.os == 'macOS'
         run: |
           brew install gfortran cmake ccache lapack openblas
+          (
+            echo "CI_LIB_BLAS=${{ matrix.links.link-blas && '$(brew --prefix lapack)/lib/libblas.dylib' || '' }}"
+            echo "CI_LAPACK_API=${{ matrix.links.link-lapack && '$(brew list --versions lapack | perl -nE "/([\d.]+)/ && say \$1")' || '' }}"
+            echo "CI_LIB_LAPACK=${{ matrix.links.link-lapack && '$(brew --prefix lapack)/lib/liblapack.dylib' || '' }}"
+            echo "CI_LIB_CBLAS=${{ matrix.links.link-cblas && '$(brew --prefix lapack)/lib/libcblas.dylib' || '' }}"
+            echo "CI_LIB_LAPACKE=${{ matrix.links.link-lapacke && '$(brew --prefix lapack)/lib/liblapacke.dylib' || '' }}"
+          ) >> "$GITHUB_ENV"
 
-      - name: install dependencies (Windows)
-        if: runner.os == 'Windows'
+      - name: install dependencies (MinGW)
+        if: runner.os == 'Windows' && matrix.cc == 'gcc'
         env:
           MSYSTEM: UCRT64
           I8SUFFIX: ${{ matrix.integer8 && '64' || '' }}
@@ -156,6 +171,25 @@ jobs:
           $TRIPLET-lapacke$I8SUFFIX
           " &&
           echo C:\msys64\ucrt64\bin>> "%GITHUB_PATH%"
+
+      - name: configure per-OS variable setup (MinGW)
+        if: runner.os == 'Windows' && matrix.cc == 'gcc'
+        env:
+          I8SUFFIX: ${{ matrix.integer8 && '64' || '' }}
+          TRIPLET: mingw-w64-ucrt-x86_64
+        run: |
+          GCC_BIN="$(dirname "$(which gcc)")"
+          PREFIX_WIN="$(cygpath -m "$(dirname "$GCC_BIN")")"
+          (
+            echo "I8SUFFIX=$I8SUFFIX"
+            echo "GENERATOR_FLAG=-G Ninja"
+            cygpath -w "$GCC_BIN" >> "$GITHUB_PATH"
+            echo "CI_LIB_BLAS=${{ matrix.links.link-blas && '${PREFIX_WIN}/lib/libblas$I8SUFFIX.dll.a' || '' }}"
+            echo "CI_LAPACK_API=${{ matrix.links.link-lapack && '$(/c/msys64/usr/bin/pacman.exe -Q "$TRIPLET-lapack$I8SUFFIX" | perl -pe "s#.* (.*)-.*#\$1#")' || '' }}"
+            echo "CI_LIB_LAPACK=${{ matrix.links.link-lapack && '${PREFIX_WIN}/lib/liblapack$I8SUFFIX.dll.a' || '' }}"
+            echo "CI_LIB_CBLAS=${{ matrix.links.link-cblas && '${PREFIX_WIN}/lib/libcblas$I8SUFFIX.dll.a' || '' }}"
+            echo "CI_LIB_LAPACKE=${{ matrix.links.link-lapacke && '${PREFIX_WIN}/lib/liblapacke$I8SUFFIX.dll.a' || '' }}"
+          ) >> "$GITHUB_ENV"
 
       - name: prepare ccache
         # create key with human readable timestamp
@@ -182,49 +216,6 @@ jobs:
           echo "compression = true" >> ~/.ccache/ccache.conf
           ccache -s
           echo "/usr/lib/ccache" >> $GITHUB_PATH
-
-      - name: configure per-OS variable setup (Linux)
-        if: runner.os == 'Linux'
-        run: |
-          I8SUFFIX=${{ matrix.integer8 && '64' || '' }}
-          (
-            echo "I8SUFFIX=$I8SUFFIX"
-            echo "CI_LIB_BLAS=${{ matrix.links.link-blas && '$(dpkg -L libblas$I8SUFFIX-dev | grep "libblas$I8SUFFIX.so\$")' || '' }}"
-            echo "CI_LAPACK_API=${{ matrix.links.link-lapack && '$(dpkg -s liblapack$I8SUFFIX-dev | perl -nE "say \$1 if /^Version: ([0-9.]+)/")' || '' }}"
-            echo "CI_LIB_LAPACK=${{ matrix.links.link-lapack && '$(dpkg -L liblapack$I8SUFFIX-dev | grep "liblapack$I8SUFFIX.so\$")' || '' }}"
-            echo "CI_LIB_CBLAS=${{ matrix.links.link-cblas && '$(dpkg -L libblas$I8SUFFIX-dev | grep "libblas$I8SUFFIX.so\$")' || '' }}"
-            echo "CI_LIB_LAPACKE=${{ matrix.links.link-lapacke && '$(dpkg -L liblapacke$I8SUFFIX-dev | grep "liblapacke$I8SUFFIX.so\$")' || '' }}"
-          ) >> "$GITHUB_ENV"
-
-      - name: configure per-OS variable setup (macOS)
-        if: runner.os == 'macOS'
-        run: |
-          (
-            echo "CI_LIB_BLAS=${{ matrix.links.link-blas && '$(brew --prefix lapack)/lib/libblas.dylib' || '' }}"
-            echo "CI_LAPACK_API=${{ matrix.links.link-lapack && '$(brew list --versions lapack | perl -nE "/([\d.]+)/ && say \$1")' || '' }}"
-            echo "CI_LIB_LAPACK=${{ matrix.links.link-lapack && '$(brew --prefix lapack)/lib/liblapack.dylib' || '' }}"
-            echo "CI_LIB_CBLAS=${{ matrix.links.link-cblas && '$(brew --prefix lapack)/lib/libcblas.dylib' || '' }}"
-            echo "CI_LIB_LAPACKE=${{ matrix.links.link-lapacke && '$(brew --prefix lapack)/lib/liblapacke.dylib' || '' }}"
-          ) >> "$GITHUB_ENV"
-
-      - name: configure per-OS variable setup (Windows)
-        if: runner.os == 'Windows'
-        env:
-          I8SUFFIX: ${{ matrix.integer8 && '64' || '' }}
-          TRIPLET: mingw-w64-ucrt-x86_64
-        run: |
-          GCC_BIN="$(dirname "$(which gcc)")"
-          PREFIX_WIN="$(cygpath -m "$(dirname "$GCC_BIN")")"
-          (
-            echo "I8SUFFIX=$I8SUFFIX"
-            echo "GENERATOR_FLAG=-G Ninja"
-            cygpath -w "$GCC_BIN" >> "$GITHUB_PATH"
-            echo "CI_LIB_BLAS=${{ matrix.links.link-blas && '${PREFIX_WIN}/lib/libblas$I8SUFFIX.dll.a' || '' }}"
-            echo "CI_LAPACK_API=${{ matrix.links.link-lapack && '$(/c/msys64/usr/bin/pacman.exe -Q "$TRIPLET-lapack$I8SUFFIX" | perl -pe "s#.* (.*)-.*#\$1#")' || '' }}"
-            echo "CI_LIB_LAPACK=${{ matrix.links.link-lapack && '${PREFIX_WIN}/lib/liblapack$I8SUFFIX.dll.a' || '' }}"
-            echo "CI_LIB_CBLAS=${{ matrix.links.link-cblas && '${PREFIX_WIN}/lib/libcblas$I8SUFFIX.dll.a' || '' }}"
-            echo "CI_LIB_LAPACKE=${{ matrix.links.link-lapacke && '${PREFIX_WIN}/lib/liblapacke$I8SUFFIX.dll.a' || '' }}"
-          ) >> "$GITHUB_ENV"
 
       - name: configure
         run: |
