@@ -146,13 +146,15 @@ void flexiblas_internal_xerbla FLEXIBLAS_FORTRAN_XERBLA_ARGS {
 
 /* XERBLA_ARRAY handler */
 
+#define FLEXIBLAS_MAX_ROUTINE_NAME 32
 void xerbla_array_ (char *srname_array, Int *srname_len, Int *info, flexiblas_fortran_charlen_t srname_array_len)
 {
     size_t k = 0;
     size_t len = 0;
     if (*srname_len > 0 ) len = (size_t) *srname_len;
     (void) srname_array_len;
-    char tmp[len+1];
+    char tmp[FLEXIBLAS_MAX_ROUTINE_NAME];
+    if (len >= FLEXIBLAS_MAX_ROUTINE_NAME) len = FLEXIBLAS_MAX_ROUTINE_NAME-1;
     tmp[len] = '\0';
 
     for(k = 0; k < len; k++) tmp[k] = srname_array[k];
