@@ -62,10 +62,10 @@ void xerbla  FLEXIBLAS_FORTRAN_XERBLA_ARGS __attribute__ ((weak, alias ("flexibl
 /* #pragma weak xerbla_
 #pragma weak xerbla
 #pragma weak XERBLA
-*/ 
+*/
 
 /*
-#ifdef _WIN32 
+#ifdef _WIN32
 __declspec(dllexport)
 #endif */
 void xerbla_ FLEXIBLAS_FORTRAN_XERBLA_ARGS {
@@ -73,7 +73,7 @@ void xerbla_ FLEXIBLAS_FORTRAN_XERBLA_ARGS {
 }
 
 /*
-#ifdef _WIN32 
+#ifdef _WIN32
 __declspec(dllexport)
 #endif
 */
@@ -81,10 +81,10 @@ void xerbla FLEXIBLAS_FORTRAN_XERBLA_ARGS {
     flexiblas_internal_xerbla(SNAME, Info, len);
 }
 
-/* #ifdef _WIN32 
+/* #ifdef _WIN32
 __declspec(dllexport)
 #endif
-*/ 
+*/
 
 void XERBLA FLEXIBLAS_FORTRAN_XERBLA_ARGS {
     	flexiblas_internal_xerbla(SNAME, Info, len);
@@ -93,16 +93,31 @@ void XERBLA FLEXIBLAS_FORTRAN_XERBLA_ARGS {
 #endif
 
 
+#define FLEXIBLAS_FUNCTION_POINTER_ASSIGN2(dst, src) \
+    do {                                             \
+        __typeof__(dst) _tmp = (src);                \
+        memcpy(&(dst), &_tmp, sizeof(dst));          \
+    } while (0)
+
 int __flexiblas_setup_xerbla(flexiblas_backend_t *backend)
 {
     /* Check if the user supplied a XERBLA function  */
-    flexiblas_fortran_xerbla_t xerbla_symbol1, xerbla_symbol2;
+    flexiblas_fortran_xerbla_t xerbla_symbol1, xerbla_symbol2, flexiblas_xerbla_symbol;
     FLEXIBLAS_FUNCTION_POINTER_ASSIGN(xerbla_symbol1, __flexiblas_lookup_fortran_function(backend->library_handle,"xerbla"));
     FLEXIBLAS_FUNCTION_POINTER_ASSIGN(xerbla_symbol2, __flexiblas_lookup_fortran_function(RTLD_DEFAULT,"xerbla"));
+    FLEXIBLAS_FUNCTION_POINTER_ASSIGN2(flexiblas_xerbla_symbol, flexiblas_internal_xerbla);
+    intptr_t xerbla_symbol1_int;
+    intptr_t xerbla_symbol2_int;
+    intptr_t flexiblas_xerbla_symbol_int;
+
+    memcpy(&xerbla_symbol1_int, &xerbla_symbol1, sizeof(void*));
+    memcpy(&xerbla_symbol2_int, &xerbla_symbol2, sizeof(void*));
+    memcpy(&flexiblas_xerbla_symbol_int, &flexiblas_xerbla_symbol, sizeof(void*));
+
     DPRINTF(1, "Available XERBLA ( backend: 0x%lx, user defined: 0x%lx, FlexiBLAS: 0x%lx )\n",
-            (unsigned long)((void*)xerbla_symbol1),
-            (unsigned long)((void*)xerbla_symbol2),
-            (unsigned long)((void*)flexiblas_internal_xerbla));
+            (unsigned long)(xerbla_symbol1_int),
+            (unsigned long)(xerbla_symbol2_int),
+            (unsigned long)(flexiblas_xerbla_symbol_int));
     if (flexiblas_internal_xerbla == xerbla_symbol2 || xerbla_symbol2 == NULL) {
         DPRINTF(1,"Use XERBLA of the BLAS backend.\n");
         backend->xerbla = xerbla_symbol1;
