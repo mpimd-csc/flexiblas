@@ -18,8 +18,8 @@
  */
 
 #if defined(_WIN32) || defined(_WIN64)
+#include <winsock2.h> /* do not sort this alphabetically. order matters */
 #include <windows.h>
-#include <winsock2.h>
 #endif
 
 #include <errno.h>
