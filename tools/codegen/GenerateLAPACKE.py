@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.17.1
+#       jupytext_version: 1.19.6
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -26,7 +26,9 @@ from tqdm import tqdm
 from tqdm.contrib.concurrent import process_map
 import shutil
 
-base = '../../'
+base = os.getenv("FLEXIBLAS_DIR", "../..")
+print(f"Using FlexiBLAS in {base}")
+
 n_cores = os.cpu_count()
 
 def read_file(file_path): 
@@ -162,6 +164,7 @@ def generate_subroutine(y, intel_interface = False, component = "blas"):
         else:
             quals = ""
         type_ = a['type']
+        # print(f"function_name {function_name} - arg {a.name} Type {type_}")
         if type_ == 'int':
             type_ = 'int' 
         if type_ == "float _Complex":
@@ -197,7 +200,7 @@ def generate_subroutine(y, intel_interface = False, component = "blas"):
                                     function_blas_name = function_blas_name, 
                                     function_name_orig = function_name,
                                     arg_list = arg_list,
-                                    arg_list_void = arg_list_void, 
+                                    arg_list_void = arg_list, 
                                     call_list = call_list, 
                                     component = component) + "\n"
 #        h += "    " + header.format(
@@ -211,7 +214,7 @@ def generate_subroutine(y, intel_interface = False, component = "blas"):
                       function_name = function_name, 
                       function_blas_name = function_blas_name, 
                       arg_list = arg_list,
-                      arg_list_void = arg_list_void, 
+                      arg_list_void = arg_list, 
                       component = component)
  
     return body.format(
@@ -219,7 +222,7 @@ def generate_subroutine(y, intel_interface = False, component = "blas"):
                       function_name = function_name,
                       function_blas_name = function_blas_name, 
                       arg_list = arg_list,
-                      arg_list_void = arg_list_void, 
+                      arg_list_void = arg_list, 
                       call_list = call_list,
                       component = component) + alt_names, h, hook_header
 
