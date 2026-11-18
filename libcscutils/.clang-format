@@ -1,0 +1,9 @@
+BasedOnStyle: LLVM
+BreakBeforeBraces: Allman
+UseTab: Never
+DerivePointerAlignment: false
+PointerAlignment: Left
+IndentWidth: 4
+TabWidth: 4
+ColumnLimit: 134
+InsertNewlineAtEOF: true
