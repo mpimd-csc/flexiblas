@@ -21,9 +21,11 @@
 #define CSCUTILS_LUA_H
 
 #include "cscutils/cscutils_config.h"
+#include <stddef.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
     /**
@@ -75,8 +77,7 @@ extern "C" {
      * \sa csc_lua_loadstring
      *
      */
-    int csc_lua_loadfile(csc_lua_t lua, const char * filename);
-
+    int csc_lua_loadfile(csc_lua_t lua, const char* filename);
 
     /**
      * \brief Load a LUA script from a string.
@@ -93,7 +94,7 @@ extern "C" {
      * \sa csc_lua_loadfile
      *
      */
-    int csc_lua_loadstring(csc_lua_t lua, const char * code );
+    int csc_lua_loadstring(csc_lua_t lua, const char* code);
 
     /**
      * \brief Run the LUA scripts loaded into an interpreter
@@ -130,7 +131,7 @@ extern "C" {
      * executed.
      *
      */
-    int csc_lua_global_int(csc_lua_t lua, const char *name, int value);
+    int csc_lua_global_int(csc_lua_t lua, const char* name, int value);
 
     /**
      * \brief Set a global floating point variable.
@@ -144,7 +145,7 @@ extern "C" {
      * executed.
      *
      */
-    int csc_lua_global_double(csc_lua_t lua, const char *name, double value);
+    int csc_lua_global_double(csc_lua_t lua, const char* name, double value);
 
     /**
      * \brief Set a global string variable.
@@ -158,7 +159,7 @@ extern "C" {
      * executed.
      *
      */
-    int csc_lua_global_string(csc_lua_t lua, const char *name, const char *value);
+    int csc_lua_global_string(csc_lua_t lua, const char* name, const char* value);
 
     /**
      * \brief Check if a LUA function exists
@@ -170,7 +171,7 @@ extern "C" {
      * given instance of the LUA interpreter.
      *
      */
-    int csc_lua_function_exists(csc_lua_t lua, const char *name);
+    int csc_lua_function_exists(csc_lua_t lua, const char* name);
 
     /**
      * \brief Call a LUA function with 0 Inputs and 0 Outputs
@@ -182,7 +183,7 @@ extern "C" {
      * and zero outputs.
      *
      */
-    int csc_lua_call_arg_0_ret_0(csc_lua_t lua, const char * name );
+    int csc_lua_call_arg_0_ret_0(csc_lua_t lua, const char* name);
 
     /**
      * \brief Call a LUA function with 0 Inputs and 1 Outputs
@@ -195,7 +196,7 @@ extern "C" {
      * integer return value and zero inputs.
      *
      */
-    int csc_lua_call_arg_0_ret_i(csc_lua_t lua, const char * name , int *r1);
+    int csc_lua_call_arg_0_ret_i(csc_lua_t lua, const char* name, int* r1);
 
     /**
      * \brief Call a LUA function with 0 Inputs and 2 Outputs
@@ -209,7 +210,7 @@ extern "C" {
      * integer return value and zero inputs.
      *
      */
-    int csc_lua_call_arg_0_ret_ii(csc_lua_t lua, const char * name , int *r1, int *r2);
+    int csc_lua_call_arg_0_ret_ii(csc_lua_t lua, const char* name, int* r1, int* r2);
 
     /**
      * \brief Call a LUA function with 1 Inputs and 1 Outputs
@@ -223,7 +224,7 @@ extern "C" {
      * integer return value and one integer intput.
      *
      */
-    int csc_lua_call_arg_i_ret_i(csc_lua_t lua, const char * name , int i1, int *r1);
+    int csc_lua_call_arg_i_ret_i(csc_lua_t lua, const char* name, int i1, int* r1);
 
     /**
      * \brief Call a LUA function with 2 Inputs and 1 Outputs
@@ -238,7 +239,7 @@ extern "C" {
      * integer return value and two integer intputs.
      *
      */
-    int csc_lua_call_arg_ii_ret_i(csc_lua_t lua, const char * name , int i1, int i2, int *r1);
+    int csc_lua_call_arg_ii_ret_i(csc_lua_t lua, const char* name, int i1, int i2, int* r1);
 
     /**
      * \brief Call a LUA function with 3 Inputs and 1 Outputs
@@ -254,7 +255,7 @@ extern "C" {
      * integer return value and three integer intputs.
      *
      */
-    int csc_lua_call_arg_iii_ret_i(csc_lua_t lua, const char * name , int i1, int i2, int i3, int *r1);
+    int csc_lua_call_arg_iii_ret_i(csc_lua_t lua, const char* name, int i1, int i2, int i3, int* r1);
 
     /**
      * \brief Call a LUA function with 3 Inputs and 1 Outputs
@@ -270,7 +271,7 @@ extern "C" {
      * integer return value, a string input and two integer intputs.
      *
      */
-    int csc_lua_call_arg_sii_ret_i(csc_lua_t lua, const char * name , const char * i1, int i2, int i3, int *r1);
+    int csc_lua_call_arg_sii_ret_i(csc_lua_t lua, const char* name, const char* i1, int i2, int i3, int* r1);
 
     /** @} */
 
@@ -278,4 +279,3 @@ extern "C" {
 };
 #endif
 #endif /* end of include guard: CSCUTILS_LUA_H */
-

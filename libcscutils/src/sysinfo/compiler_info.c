@@ -17,20 +17,20 @@
  *
  */
 
+#include <math.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h>
-#include <math.h>
 #include <string.h>
 
-#include "cscutils/sysinfo.h"
-#include "cscutils/strutils.h"
 #include "cscutils/error_message.h"
+#include "cscutils/strutils.h"
+#include "cscutils/sysinfo.h"
 
-static char * make_message(const char *fmt, ...)
+static char* make_message(const char* fmt, ...)
 {
     int size = 0;
-    char *p = NULL;
+    char* p = NULL;
     va_list ap;
 
     /* Determine required size */
@@ -42,7 +42,7 @@ static char * make_message(const char *fmt, ...)
     if (size < 0)
         return NULL;
 
-    size++;             /* For '\0' */
+    size++; /* For '\0' */
     p = malloc(size);
     if (p == NULL)
         return NULL;
@@ -51,7 +51,8 @@ static char * make_message(const char *fmt, ...)
     size = vsnprintf(p, size, fmt, ap);
     va_end(ap);
 
-    if (size < 0) {
+    if (size < 0)
+    {
         free(p);
         return NULL;
     }
@@ -59,10 +60,9 @@ static char * make_message(const char *fmt, ...)
     return p;
 }
 
-
-char *csc_sysinfo_ccompiler(void)
+char* csc_sysinfo_ccompiler(void)
 {
-#if defined(__GNUC__) && !( defined(__clang__) || defined(__ICC))
+#if defined(__GNUC__) && !(defined(__clang__) || defined(__ICC))
     // GCC
     return make_message("GCC %d.%d.%d", __GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__);
 #elif defined(__clang__) && !defined(__ibmxl__)
@@ -79,15 +79,15 @@ char *csc_sysinfo_ccompiler(void)
     return make_message("IBM XLC (Old, non Clang version) -- Please look yourself");
 #elif defined(__ICC)
     // Intel
-    return make_message("Intel C/C++ Classic %d.%d.%d", __INTEL_COMPILER/100, 0, __INTEL_COMPILER_UPDATE);
+    return make_message("Intel C/C++ Classic %d.%d.%d", __INTEL_COMPILER / 100, 0, __INTEL_COMPILER_UPDATE);
 #elif defined(__INTEL_CLANG_COMPILER)
-    return make_message("Intel LLVM C/C++ %d.%d", __INTEL_CLANG_COMPILER/10000, __INTEL_CLANG_COMPILER % 10000);
+    return make_message("Intel LLVM C/C++ %d.%d", __INTEL_CLANG_COMPILER / 10000, __INTEL_CLANG_COMPILER % 10000);
 #elif defined(__PGI)
     // PGI
     return make_message("PGI %d.%d.%d", __PGIC__, __PGIC_MINOR__, __PGIC_PATCHLEVEL__);
 #elif defined(__NVCOMPILER)
     // Nvidia HPC SDK
-    return make_message("Nvidia HPC SDK %d.%d.%d",__NVCOMPILER_MAJOR,__NVCOMPILER_MINOR,__NVCOMPILER_PATCHLEVEL);
+    return make_message("Nvidia HPC SDK %d.%d.%d", __NVCOMPILER_MAJOR, __NVCOMPILER_MINOR, __NVCOMPILER_PATCHLEVEL);
 #elif defined(__TINYC__)
     int major, minor, patch;
     patch = __TINYC__ % 100;

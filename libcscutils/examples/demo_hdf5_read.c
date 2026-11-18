@@ -18,27 +18,23 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-
-
-
+#include <complex.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
-#include <complex.h>
 #include <string.h>
 
 // #define H5_NO_DEPRECATED_SYMBOLS
 #include "cscutils/hdf.h"
 
-
-
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
     hid_t h5file;
-    char *dset;
-    int ret= 0;
+    char* dset;
+    int ret = 0;
 
-    if ( argc != 3 ) {
+    if (argc != 3)
+    {
         printf("%s hdf5.h5 dset\n", argv[0]);
         exit(1);
     }
@@ -104,22 +100,29 @@ int main(int argc, char **argv)
 
 #else
     size_t rows, cols, nnz;
-    if ( csc_hdf5_sparse_size(h5file, dset, &rows, &cols, &nnz)) {
-        fprintf(stderr, "Failed to read size properties from %s.\n",dset);
+    if (csc_hdf5_sparse_size(h5file, dset, &rows, &cols, &nnz))
+    {
+        fprintf(stderr, "Failed to read size properties from %s.\n", dset);
     }
     printf("rows = %lu\n", rows);
     printf("cols = %lu\n", cols);
     printf("nnz  = %lu\n", nnz);
 
     csc_hdf5_field_t field = 0;
-    if (csc_hdf5_sparse_get_datatype(h5file, dset, &field)){
+    if (csc_hdf5_sparse_get_datatype(h5file, dset, &field))
+    {
         fprintf(stderr, "Failed to read field from %s\n", dset);
     }
-    if ( field == CSC_HDF5_DOUBLE ){
+    if (field == CSC_HDF5_DOUBLE)
+    {
         printf("Double Precision / Real Matrix\n");
-    } else if ( field == CSC_HDF5_DOUBLE_COMPLEX ) {
+    }
+    else if (field == CSC_HDF5_DOUBLE_COMPLEX)
+    {
         printf("Complex Matrix.\n");
-    } else {
+    }
+    else
+    {
         printf("Unsupported for Sparse.\n");
     }
 #endif

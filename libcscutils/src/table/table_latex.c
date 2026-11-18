@@ -17,114 +17,120 @@
  *
  */
 
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdarg.h>
 #include "cscutils/error_message.h"
 #include "cscutils/strutils.h"
 #include "cscutils/table.h"
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
+#define MIN(A, B) ((A) < (B)) ? (A) : (B)
 
-#define MIN(A,B) ((A)<(B))?(A):(B)
-
-static void print_row_latex(FILE *stream, csc_table_t *t, int r )
+static void print_row_latex(FILE* stream, csc_table_t* t, int r)
 {
     int i;
-    char tmp[CSC_TABLE_MAXLEN+1];
-    char output[CSC_TABLE_MAXLEN+1];
+    char tmp[CSC_TABLE_MAXLEN + 1];
+    char output[CSC_TABLE_MAXLEN + 1];
 
-    for (i = 0; i < t->number_of_columns; i++) {
-        if ( t->columns[i].formater) {
-            switch (t->columns[i].type) {
-                case CSC_TABLE_INTEGER:
-                    t->columns[i].formater(tmp, CSC_TABLE_MAXLEN, CSC_TABLE_INTEGER, t->columns[i].v.integer_values[r]);
-                    break;
-                case CSC_TABLE_FLOAT:
-                    t->columns[i].formater(tmp, CSC_TABLE_MAXLEN, CSC_TABLE_FLOAT, t->columns[i].v.float_values[r]);
-                    break;
-                case CSC_TABLE_STRING:
-                    t->columns[i].formater(tmp, CSC_TABLE_MAXLEN, CSC_TABLE_STRING, t->columns[i].v.string_values[r]);
-                    break;
-            }
-        } else {
-            switch (t->columns[i].type) {
-                case CSC_TABLE_INTEGER:
-                    snprintf(tmp, CSC_TABLE_MAXLEN, t->columns[i].format_str, t->columns[i].v.integer_values[r]);
-                    break;
-                case CSC_TABLE_FLOAT:
-                    snprintf(tmp, CSC_TABLE_MAXLEN, t->columns[i].format_str, t->columns[i].v.float_values[r]);
-                    break;
-                case CSC_TABLE_STRING:
-                    snprintf(tmp, CSC_TABLE_MAXLEN, t->columns[i].format_str, t->columns[i].v.string_values[r]);
-                    break;
-
+    for (i = 0; i < t->number_of_columns; i++)
+    {
+        if (t->columns[i].formater)
+        {
+            switch (t->columns[i].type)
+            {
+            case CSC_TABLE_INTEGER:
+                t->columns[i].formater(tmp, CSC_TABLE_MAXLEN, CSC_TABLE_INTEGER, t->columns[i].v.integer_values[r]);
+                break;
+            case CSC_TABLE_FLOAT:
+                t->columns[i].formater(tmp, CSC_TABLE_MAXLEN, CSC_TABLE_FLOAT, t->columns[i].v.float_values[r]);
+                break;
+            case CSC_TABLE_STRING:
+                t->columns[i].formater(tmp, CSC_TABLE_MAXLEN, CSC_TABLE_STRING, t->columns[i].v.string_values[r]);
+                break;
             }
         }
-        switch (t->columns[i].align ) {
-            case CSC_TABLE_LEFT:
-                csc_strleftalign(tmp, t->columns[i].width, output);
+        else
+        {
+            switch (t->columns[i].type)
+            {
+            case CSC_TABLE_INTEGER:
+                snprintf(tmp, CSC_TABLE_MAXLEN, t->columns[i].format_str, t->columns[i].v.integer_values[r]);
                 break;
-            case CSC_TABLE_RIGHT:
-                csc_strrightalign(tmp, t->columns[i].width, output);
-
+            case CSC_TABLE_FLOAT:
+                snprintf(tmp, CSC_TABLE_MAXLEN, t->columns[i].format_str, t->columns[i].v.float_values[r]);
                 break;
-            case CSC_TABLE_CENTER:
-                csc_strcenter(tmp, t->columns[i].width, output);
+            case CSC_TABLE_STRING:
+                snprintf(tmp, CSC_TABLE_MAXLEN, t->columns[i].format_str, t->columns[i].v.string_values[r]);
                 break;
+            }
         }
-        fprintf(stream,"%s", output);
-        if ( i < t->number_of_columns-1) {
-            fprintf(stream," & ");
+        switch (t->columns[i].align)
+        {
+        case CSC_TABLE_LEFT:
+            csc_strleftalign(tmp, t->columns[i].width, output);
+            break;
+        case CSC_TABLE_RIGHT:
+            csc_strrightalign(tmp, t->columns[i].width, output);
+
+            break;
+        case CSC_TABLE_CENTER:
+            csc_strcenter(tmp, t->columns[i].width, output);
+            break;
+        }
+        fprintf(stream, "%s", output);
+        if (i < t->number_of_columns - 1)
+        {
+            fprintf(stream, " & ");
         }
     }
-    fprintf(stream,"\\\\\n");
-
-
+    fprintf(stream, "\\\\\n");
 }
 
-static void print_header_latex(FILE *stream, csc_table_t *t)
+static void print_header_latex(FILE* stream, csc_table_t* t)
 {
     int i;
-    char tmp[CSC_TABLE_MAXLEN+1];
+    char tmp[CSC_TABLE_MAXLEN + 1];
 
-    for (i = 0; i < t->number_of_columns; i++) {
+    for (i = 0; i < t->number_of_columns; i++)
+    {
         csc_strcenter(t->columns[i].name, t->columns[i].width, tmp);
-        fprintf(stream,"%s",tmp);
-        if ( i < t->number_of_columns-1) {
-            fprintf(stream," & ");
+        fprintf(stream, "%s", tmp);
+        if (i < t->number_of_columns - 1)
+        {
+            fprintf(stream, " & ");
         }
     }
-    fprintf(stream,"\\\\\\hline\n");
-
+    fprintf(stream, "\\\\\\hline\n");
 }
 
-
-
-int csc_table_save_latex(const char *filename, csc_table_t *t, int standalone)
+int csc_table_save_latex(const char* filename, csc_table_t* t, int standalone)
 {
-    FILE *fp;
+    FILE* fp;
     int c;
     int r;
-    char SAVE_COMMENT[CSC_TABLE_MAXLEN+1];
+    char SAVE_COMMENT[CSC_TABLE_MAXLEN + 1];
 
-    if (!filename) return -1;
-    if (!t) return -1;
+    if (!filename)
+        return -1;
+    if (!t)
+        return -1;
 
-    fp = fopen (filename, "w");
-    if (!fp ) {
+    fp = fopen(filename, "w");
+    if (!fp)
+    {
         csc_error_message("Failed to open %s for writing.\n", filename);
         return -1;
     }
 
-    size_t ml = MIN(strlen(t->comment->start), CSC_TABLE_MAXLEN)+1;
-    memcpy(SAVE_COMMENT, t->comment->start, ml*sizeof(char));
+    size_t ml = MIN(strlen(t->comment->start), CSC_TABLE_MAXLEN) + 1;
+    memcpy(SAVE_COMMENT, t->comment->start, ml * sizeof(char));
     t->comment->start[ml] = 0;
     strncpy(t->comment->start, "% ", CSC_TABLE_MAXLEN);
 
     /* Standalone    */
-    if ( standalone ) {
+    if (standalone)
+    {
         fprintf(fp, "\\documentclass[a4paper,10pt]{article}\n");
         fprintf(fp, "\\usepackage[utf8]{inputenc}\n");
         fprintf(fp, "\\usepackage[english]{babel}\n");
@@ -140,43 +146,49 @@ int csc_table_save_latex(const char *filename, csc_table_t *t, int standalone)
 
     /* Header  */
     fprintf(fp, "\\begin{tabular}{");
-    for (c = 0; c < t->number_of_columns; c++) {
-        if ( c == 0 ) fprintf(fp, "|");
-        if ( t->columns[c].align == CSC_TABLE_LEFT )   fprintf(fp, "l|");
-        if ( t->columns[c].align == CSC_TABLE_CENTER ) fprintf(fp, "c|");
-        if ( t->columns[c].align == CSC_TABLE_RIGHT ) fprintf(fp, "r|");
+    for (c = 0; c < t->number_of_columns; c++)
+    {
+        if (c == 0)
+            fprintf(fp, "|");
+        if (t->columns[c].align == CSC_TABLE_LEFT)
+            fprintf(fp, "l|");
+        if (t->columns[c].align == CSC_TABLE_CENTER)
+            fprintf(fp, "c|");
+        if (t->columns[c].align == CSC_TABLE_RIGHT)
+            fprintf(fp, "r|");
     }
     fprintf(fp, "}\\hline\n");
 
     print_header_latex(fp, t);
 
-    for (r = 0; r < t->number_of_rows; r++) {
+    for (r = 0; r < t->number_of_rows; r++)
+    {
         print_row_latex(fp, t, r);
     }
 
     fprintf(fp, "\\hline\n");
 
-
-
     fprintf(fp, "\\end{tabular}\n");
-    if ( standalone ) {
+    if (standalone)
+    {
         fprintf(fp, "\\end{document}\n");
     }
 
-    memcpy(t->comment->start, SAVE_COMMENT, ml*sizeof(char));
+    memcpy(t->comment->start, SAVE_COMMENT, ml * sizeof(char));
     t->comment->start[ml] = 0;
     fclose(fp);
     return 0;
 }
 
-void csc_table_formater_integer_latex(char *out, int len, csc_table_value_t type, ...)
+void csc_table_formater_integer_latex(char* out, int len, csc_table_value_t type, ...)
 {
-    long v, vtmp, p ;
+    long v, vtmp, p;
     int c;
-    char *ptr;
+    char* ptr;
     va_list ap;
 
-    if ( type != CSC_TABLE_INTEGER ) {
+    if (type != CSC_TABLE_INTEGER)
+    {
         strncpy(out, "", len);
         return;
     }
@@ -185,40 +197,48 @@ void csc_table_formater_integer_latex(char *out, int len, csc_table_value_t type
 
     vtmp = v;
     p = 1;
-    while ( v != 0 ) {
-        v = v /1000;
+    while (v != 0)
+    {
+        v = v / 1000;
         p *= 1000;
     }
     v = vtmp;
-    if ( p >= 1000 ) p = p/1000;
+    if (p >= 1000)
+        p = p / 1000;
     /* printf("p %d v %d  \n", p, v); */
     ptr = out;
     c = 0;
-    while ( p != 0 ) {
+    while (p != 0)
+    {
         int add;
-        if (  c == 0 ) {
+        if (c == 0)
+        {
             add = snprintf(ptr, 4, "%3ld", (v / p) % 1000);
-        } else {
+        }
+        else
+        {
             add = snprintf(ptr, 4, "%03ld", (v / p) % 1000);
         }
         c = c + add;
         p /= 1000;
-        if ( p > 0 ) {
+        if (p > 0)
+        {
             ptr[add] = '\\';
-            ptr[add+1] = ',';
-            ptr += add+2;
-            c+=2;
-        } else {
+            ptr[add + 1] = ',';
+            ptr += add + 2;
+            c += 2;
+        }
+        else
+        {
             ptr += add;
         }
-        if ( len - c < 5) {
+        if (len - c < 5)
+        {
             csc_error_message("Buffer too short to format value.\n");
             strncpy(out, "", CSC_TABLE_MAXLEN);
             return;
         }
     }
-    *ptr ='\0';
+    *ptr = '\0';
     return;
-
 }
-

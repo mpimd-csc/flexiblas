@@ -21,11 +21,12 @@
 #define CSC_FILTER_HDF5_ZSTD
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-    /* Filter number, see https://support.hdfgroup.org/services/contributions.html  */
-    #define H5Z_FILTER_ZSTD 32015
+/* Filter number, see https://support.hdfgroup.org/services/contributions.html  */
+#define H5Z_FILTER_ZSTD 32015
 
     int csc_hdf5_register_zstd(void);
 
@@ -33,12 +34,4 @@ extern "C" {
 };
 #endif
 
-
-
 #endif /* end of include guard: CSC_FILTER_HDF5_ZSTD */
-
-
-
-
-
-

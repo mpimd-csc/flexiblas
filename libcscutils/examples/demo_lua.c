@@ -18,69 +18,69 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-
-
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
 
 #include "cscutils/lua.h"
 
-const char * incode_func();
+const char* incode_func();
 
+char code[] = "function incode(x)\n"
+              " print(\"incode\\n\")\n"
+              " print(4*x)\n"
+              " return 10\n"
+              "end\n";
 
-char code[] =
- "function incode(x)\n"
- " print(\"incode\\n\")\n"
- " print(4*x)\n"
- " return 10\n"
- "end\n";
-
-
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
     csc_lua_t lua;
 
-    if ( argc != 2) {
+    if (argc != 2)
+    {
         printf("Need a script as argument.\n");
         exit(-1);
     }
 
     lua = csc_lua_init();
-    if ( !lua ) {
+    if (!lua)
+    {
         printf("init lua failed.\n");
         exit(-1);
     }
 
-    if ( csc_lua_loadstring(lua, code)) {
+    if (csc_lua_loadstring(lua, code))
+    {
         printf("Load LUA script from string failed.\n");
     }
 
-    if ( csc_lua_run(lua)) {
+    if (csc_lua_run(lua))
+    {
         printf("Execution failed.\n");
     }
 
-    if ( csc_lua_loadstring(lua, incode_func())) {
-       printf("Load LUA script from CMAKE include failed.\n");
+    if (csc_lua_loadstring(lua, incode_func()))
+    {
+        printf("Load LUA script from CMAKE include failed.\n");
     }
 
-    if ( csc_lua_run(lua)) {
+    if (csc_lua_run(lua))
+    {
         printf("Execution failed.\n");
     }
 
-    if ( csc_lua_loadfile(lua, argv[1]))
+    if (csc_lua_loadfile(lua, argv[1]))
     {
         printf("Load %s failed.\n", argv[1]);
     }
-
-
 
     csc_lua_global_int(lua, "testint", 12345);
     csc_lua_global_double(lua, "testnumber", 1.2345);
     csc_lua_global_string(lua, "teststring", "Hello World");
 
-    if ( csc_lua_run(lua)) {
+    if (csc_lua_run(lua))
+    {
         printf("Execution failed.\n");
     }
 
@@ -94,23 +94,23 @@ int main(int argc, char **argv)
     csc_lua_call_arg_0_ret_ii(lua, "arg0retii", &r, &r2);
     printf("returned : %d , %d\n", r, r2);
 
-    csc_lua_call_arg_i_ret_i(lua, "argireti", 123,  &r);
+    csc_lua_call_arg_i_ret_i(lua, "argireti", 123, &r);
     printf("returned value: %d\n", r);
 
     csc_lua_call_arg_ii_ret_i(lua, "argiireti", 123, 10, &r);
     printf("returned value: %d\n", r);
 
-    csc_lua_call_arg_iii_ret_i(lua, "argiiireti", 123, 10, 5,  &r);
+    csc_lua_call_arg_iii_ret_i(lua, "argiiireti", 123, 10, 5, &r);
     printf("returned value: %d\n", r);
 
     csc_lua_call_arg_sii_ret_i(lua, "argsiireti", "test", 123, 10, &r);
     printf("returned value: %d\n", r);
 
     csc_lua_call_arg_i_ret_i(lua, "incode", 20, &r);
-    printf("returned from incode : %d\n", r );
+    printf("returned from incode : %d\n", r);
 
     csc_lua_call_arg_i_ret_i(lua, "inlinecode", 20, &r);
-    printf("returned from inlinecode : %d\n", r );
+    printf("returned from inlinecode : %d\n", r);
 
     csc_lua_finalize(lua);
     return 0;

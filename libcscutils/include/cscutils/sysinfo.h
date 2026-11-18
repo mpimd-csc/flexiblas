@@ -1,29 +1,31 @@
 /*
-* CSCUTILS - A collection of various software routines uses in CSC projects
-* Copyright (C) 2015 Martin Koehler
-*
-* This library is free software; you can redistribute it and/or modify
-* it under the terms of the GNU Lesser General Public License as published
-* by the Free Software Foundation; either version 2.1 of the License, or
-* (at your option) any later version.
-*
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public License
-* along with this library; if not, see <http://www.gnu.org/licenses/>.
-*
-*/
+ * CSCUTILS - A collection of various software routines uses in CSC projects
+ * Copyright (C) 2015 Martin Koehler
+ *
+ * This library is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 
 #ifndef CSC_HARDWARE_H
 #define CSC_HARDWARE_H
 #include "cscutils/cscutils_config.h"
+#include <stddef.h>
 #include <stdint.h>
 
-#ifdef  __cplusplus
-extern "C" {
+#ifdef __cplusplus
+extern "C"
+{
 #endif
 
     /**
@@ -58,7 +60,7 @@ extern "C" {
      * memory and the swap space. The sizes are returned in bytes. If a value
      * is not wanted, set it to zero during the function call.
      */
-    int csc_sysinfo_memory(size_t *total_ram, size_t *free_ram, size_t *total_swap, size_t *free_swap);
+    int csc_sysinfo_memory(size_t* total_ram, size_t* free_ram, size_t* total_swap, size_t* free_swap);
 
     /**
      * @brief Return the current hostname.
@@ -68,7 +70,16 @@ extern "C" {
      * as malloced string. The result needs to be freed afterwards.
      *
      */
-    char *csc_sysinfo_hostname(void);
+    char* csc_sysinfo_hostname(void);
+
+    /**
+     * @brief Return the current process ID.
+     * @return The process ID of the current process.
+     *
+     * The csc_sysinfo_getpid function returns the process ID of the calling process.
+     *
+     */
+    int csc_sysinfo_getpid(void);
 
     /**
      * @brief Return the system name.
@@ -78,8 +89,7 @@ extern "C" {
      * as reported by \b uname as malloced string. The result needs to be freed afterwards.
      *
      */
-    char *csc_sysinfo_sysname(void);
-
+    char* csc_sysinfo_sysname(void);
 
     /**
      * @brief Return the node name.
@@ -90,10 +100,9 @@ extern "C" {
      *
      * @sa csc_sysinfo_hostname
      */
-    char *csc_sysinfo_nodename(void);
+    char* csc_sysinfo_nodename(void);
 
-
-     /**
+    /**
      * @brief Return the kernel release.
      * @return A malloced string or NULL on failure.
      *
@@ -101,7 +110,7 @@ extern "C" {
      * as reported by \b uname as malloced string. The result needs to be freed afterwards.
      *
      */
-    char *csc_sysinfo_release(void);
+    char* csc_sysinfo_release(void);
 
     /**
      * @brief Return the kernel version.
@@ -111,7 +120,7 @@ extern "C" {
      * as reported by \b uname as malloced string. The result needs to be freed afterwards.
      *
      */
-    char *csc_sysinfo_version(void);
+    char* csc_sysinfo_version(void);
 
     /**
      * @brief Return the machine architecture.
@@ -121,7 +130,7 @@ extern "C" {
      * as reported by \b uname as malloced string. The result needs to be freed afterwards.
      *
      */
-    char *csc_sysinfo_machine(void);
+    char* csc_sysinfo_machine(void);
 
     /**
      * @brief Return the CPU's name.
@@ -130,7 +139,7 @@ extern "C" {
      * The csc_sysinfo_cpuname  function returns the CPU's name as reported by
      * the kernel in /proc/cpuinfo. The string needs to be freed afterwards.
      */
-    char *csc_sysinfo_cpuname(void);
+    char* csc_sysinfo_cpuname(void);
 
     /**
      * @brief Return the compiler name and version as human-readable string.
@@ -139,7 +148,7 @@ extern "C" {
      * The csc_sysinfo_ccompiler function returns the name and the version of the
      * use C compiler as human-readable string. The string needs to be freed afterwards.
      */
-    char *csc_sysinfo_ccompiler(void);
+    char* csc_sysinfo_ccompiler(void);
 
     /**
      * @brief Return the number of CPU cores
@@ -150,7 +159,6 @@ extern "C" {
      *
      */
     unsigned int csc_sysinfo_cpu_count(void);
-
 
     /**
      * @brief Check if cpufreq is available.
@@ -195,7 +203,7 @@ extern "C" {
      * to be freed afterwards. The last entry in the array is always zero. The
      * frequencies are given in kilo-Hertz.
      */
-    unsigned long *csc_cpufreq_available_freq(unsigned int cpu);
+    unsigned long* csc_cpufreq_available_freq(unsigned int cpu);
 
     /**
      * @brief Check if a cpufreq governor is available.
@@ -207,7 +215,7 @@ extern "C" {
      * is available for a desired CPU core.
      *
      */
-    int csc_cpufreq_governor_available(unsigned int cpu, const char *governor);
+    int csc_cpufreq_governor_available(unsigned int cpu, const char* governor);
 
     /**
      * @brief Return an iterator over all available cpufreq governors.
@@ -234,7 +242,7 @@ extern "C" {
      * @attention The function is not thread-safe / reentrant.
      *
      */
-    char * csc_cpufreq_available_governors(char*buffer, size_t maxlen, unsigned int cpu, void **state);
+    char* csc_cpufreq_available_governors(char* buffer, size_t maxlen, unsigned int cpu, void** state);
 
     /**
      * @brief Set a cpufreq governor on a CPU core.
@@ -246,8 +254,7 @@ extern "C" {
      * be used by a CPU core.
      *
      */
-    int csc_cpufreq_set_governor(unsigned int cpu, char * governor);
-
+    int csc_cpufreq_set_governor(unsigned int cpu, char* governor);
 
     /**
      * @brief Check if a cpufreq governor is set for a CPU core.
@@ -259,7 +266,7 @@ extern "C" {
      * set of a given CPU core.
      *
      */
-    int csc_cpufreq_check_governor(unsigned int cpu, char *governor);
+    int csc_cpufreq_check_governor(unsigned int cpu, char* governor);
 
     /**
      * @brief Get information from CPU.
@@ -278,8 +285,7 @@ extern "C" {
      * under software and platform hardware configuration.
      */
 
-    int csc_sysinfo_cpuinfo(int *lcpu, int *pcpu, int *ht);
-
+    int csc_sysinfo_cpuinfo(int* lcpu, int* pcpu, int* ht);
 
     /**
      * @brief Get the CMake command line from compile time.
@@ -289,7 +295,7 @@ extern "C" {
      * the CMake command line parameters from compile-time. This is only possible
      * on Linux due to restrictions in CMake. On all other platforms, NULL is returned.
      */
-    const char *csc_sysinfo_cmake_args(void);
+    const char* csc_sysinfo_cmake_args(void);
 
     /**
      * @brief Return the C flags used in compilation.
@@ -299,7 +305,7 @@ extern "C" {
      * the C flags used during compilation. If C is not supported or enabled
      * NULL is returned.
      */
-    const char *csc_sysinfo_c_flags(void);
+    const char* csc_sysinfo_c_flags(void);
 
     /**
      * @brief Return the C++ flags used in compilation.
@@ -309,7 +315,7 @@ extern "C" {
      * the C++ flags used during compilation. If C++ is not supported or enabled
      * NULL is returned.
      */
-    const char *csc_sysinfo_cxx_flags(void);
+    const char* csc_sysinfo_cxx_flags(void);
 
     /**
      * @brief Return the Fortran flags used in compilation.
@@ -319,7 +325,7 @@ extern "C" {
      * the Fortran flags used during compilation. If Fortran is not supported or enabled
      * NULL is returned.
      */
-    const char *csc_sysinfo_fortran_flags(void);
+    const char* csc_sysinfo_fortran_flags(void);
 
     /**
      * @brief Return the HIP flags used in compilation.
@@ -329,7 +335,7 @@ extern "C" {
      * the HIP flags used during compilation. If HIP is not supported or enabled
      * NULL is returned.
      */
-    const char *csc_sysinfo_hip_flags(void);
+    const char* csc_sysinfo_hip_flags(void);
 
     /**
      * @brief Return the CUDA flags used in compilation.
@@ -339,58 +345,145 @@ extern "C" {
      * the CUDA flags used during compilation. If CUDA is not supported or enabled
      * NULL is returned.
      */
-    const char *csc_sysinfo_cuda_flags(void);
-
+    const char* csc_sysinfo_cuda_flags(void);
 
 #if defined(__x86_64__) || defined(_M_X64) || defined(__i386) || defined(_M_IX86)
     enum
     {
-    	CSC_CPU_VENDOR_INTEL = 0,
-    	CSC_CPU_VENDOR_AMD,
-    	CSC_CPU_VENDOR_UNKNOWN
+        CSC_CPU_VENDOR_INTEL = 0,
+        CSC_CPU_VENDOR_AMD,
+        CSC_CPU_VENDOR_UNKNOWN
     };
     enum
     {
-    	CSC_CPU_FEATURE_SSE3     = 0x0001,
-    	CSC_CPU_FEATURE_SSSE3    = 0x0002,
-    	CSC_CPU_FEATURE_SSE41    = 0x0004,
-    	CSC_CPU_FEATURE_SSE42    = 0x0008,
-    	CSC_CPU_FEATURE_AVX      = 0x0010,
-    	CSC_CPU_FEATURE_AVX2     = 0x0020,
-    	CSC_CPU_FEATURE_FMA3     = 0x0040,
-    	CSC_CPU_FEATURE_FMA4     = 0x0080,
-    	CSC_CPU_FEATURE_AVX512F  = 0x0100,
-    	CSC_CPU_FEATURE_AVX512DQ = 0x0200,
-    	CSC_CPU_FEATURE_AVX512PF = 0x0400,
-    	CSC_CPU_FEATURE_AVX512ER = 0x0800,
-    	CSC_CPU_FEATURE_AVX512CD = 0x1000,
-    	CSC_CPU_FEATURE_AVX512BW = 0x2000,
-    	CSC_CPU_FEATURE_AVX512VL = 0x4000,
+        CSC_CPU_FEATURE_SSE3 = 0x0001,
+        CSC_CPU_FEATURE_SSSE3 = 0x0002,
+        CSC_CPU_FEATURE_SSE41 = 0x0004,
+        CSC_CPU_FEATURE_SSE42 = 0x0008,
+        CSC_CPU_FEATURE_AVX = 0x0010,
+        CSC_CPU_FEATURE_AVX2 = 0x0020,
+        CSC_CPU_FEATURE_FMA3 = 0x0040,
+        CSC_CPU_FEATURE_FMA4 = 0x0080,
+        CSC_CPU_FEATURE_AVX512F = 0x0100,
+        CSC_CPU_FEATURE_AVX512DQ = 0x0200,
+        CSC_CPU_FEATURE_AVX512PF = 0x0400,
+        CSC_CPU_FEATURE_AVX512ER = 0x0800,
+        CSC_CPU_FEATURE_AVX512CD = 0x1000,
+        CSC_CPU_FEATURE_AVX512BW = 0x2000,
+        CSC_CPU_FEATURE_AVX512VL = 0x4000,
         CSC_CPU_FEATURE_AVX512VNNI = 0x8000,
         CSC_CPU_FEATURE_AVX512BF16 = 0x10000
     };
 #endif
 
-    // Intel CPUs
-    int csc_sysinfo_cpuid_is_skx( void );
-    int csc_sysinfo_cpuid_is_knl( void );
-    int csc_sysinfo_cpuid_is_haswell( void );
-    int csc_sysinfo_cpuid_is_sandybridge( void );
-    int csc_sysinfo_cpuid_is_penryn( void );
+    /**
+     * @brief Check if the CPU is an Intel Skylake-X processor.
+     * @return 1 if the CPU is Skylake-X, 0 otherwise.
+     *
+     * The csc_sysinfo_cpuid_is_skx function checks if the CPU is an Intel Skylake-X processor.
+     */
+    int csc_sysinfo_cpuid_is_skx(void);
+
+    /**
+     * @brief Check if the CPU is an Intel Knight's Landing processor.
+     * @return 1 if the CPU is Knight's Landing, 0 otherwise.
+     *
+     * The csc_sysinfo_cpuid_is_knl function checks if the CPU is an Intel Knight's Landing processor.
+     */
+    int csc_sysinfo_cpuid_is_knl(void);
+
+    /**
+     * @brief Check if the CPU is an Intel Haswell processor.
+     * @return 1 if the CPU is Haswell, 0 otherwise.
+     *
+     * The csc_sysinfo_cpuid_is_haswell function checks if the CPU is an Intel Haswell processor.
+     */
+    int csc_sysinfo_cpuid_is_haswell(void);
+
+    /**
+     * @brief Check if the CPU is an Intel Sandy Bridge processor.
+     * @return 1 if the CPU is Sandy Bridge, 0 otherwise.
+     *
+     * The csc_sysinfo_cpuid_is_sandybridge function checks if the CPU is an Intel Sandy Bridge processor.
+     */
+    int csc_sysinfo_cpuid_is_sandybridge(void);
+
+    /**
+     * @brief Check if the CPU is an Intel Penryn processor.
+     * @return 1 if the CPU is Penryn, 0 otherwise.
+     *
+     * The csc_sysinfo_cpuid_is_penryn function checks if the CPU is an Intel Penryn processor.
+     */
+    int csc_sysinfo_cpuid_is_penryn(void);
 
     // AMD
-    int csc_sysinfo_cpuid_is_zen4( void );
-    int csc_sysinfo_cpuid_is_zen3( void );
-    int csc_sysinfo_cpuid_is_zen2( void );
-    int csc_sysinfo_cpuid_is_zen( void );
-    int csc_sysinfo_cpuid_is_excavator( void );
-    int csc_sysinfo_cpuid_is_steamroller( void );
-    int csc_sysinfo_cpuid_is_piledriver( void );
-    int csc_sysinfo_cpuid_is_bulldozer( void );
 
+    /**
+     * @brief Check if the CPU is an AMD Zen 4 processor.
+     * @return 1 if the CPU is Zen 4, 0 otherwise.
+     *
+     * The csc_sysinfo_cpuid_is_zen4 function checks if the CPU is an AMD Zen 4 processor.
+     */
+    int csc_sysinfo_cpuid_is_zen4(void);
+
+    /**
+     * @brief Check if the CPU is an AMD Zen 3 processor.
+     * @return 1 if the CPU is Zen 3, 0 otherwise.
+     *
+     * The csc_sysinfo_cpuid_is_zen3 function checks if the CPU is an AMD Zen 3 processor.
+     */
+    int csc_sysinfo_cpuid_is_zen3(void);
+
+    /**
+     * @brief Check if the CPU is an AMD Zen 2 processor.
+     * @return 1 if the CPU is Zen 2, 0 otherwise.
+     *
+     * The csc_sysinfo_cpuid_is_zen2 function checks if the CPU is an AMD Zen 2 processor.
+     */
+    int csc_sysinfo_cpuid_is_zen2(void);
+
+    /**
+     * @brief Check if the CPU is an AMD Zen processor.
+     * @return 1 if the CPU is Zen, 0 otherwise.
+     *
+     * The csc_sysinfo_cpuid_is_zen function checks if the CPU is an AMD Zen processor.
+     */
+    int csc_sysinfo_cpuid_is_zen(void);
+
+    /**
+     * @brief Check if the CPU is an AMD Excavator processor.
+     * @return 1 if the CPU is Excavator, 0 otherwise.
+     *
+     * The csc_sysinfo_cpuid_is_excavator function checks if the CPU is an AMD Excavator processor.
+     */
+    int csc_sysinfo_cpuid_is_excavator(void);
+
+    /**
+     * @brief Check if the CPU is an AMD Steamroller processor.
+     * @return 1 if the CPU is Steamroller, 0 otherwise.
+     *
+     * The csc_sysinfo_cpuid_is_steamroller function checks if the CPU is an AMD Steamroller processor.
+     */
+    int csc_sysinfo_cpuid_is_steamroller(void);
+
+    /**
+     * @brief Check if the CPU is an AMD Piledriver processor.
+     * @return 1 if the CPU is Piledriver, 0 otherwise.
+     *
+     * The csc_sysinfo_cpuid_is_piledriver function checks if the CPU is an AMD Piledriver processor.
+     */
+    int csc_sysinfo_cpuid_is_piledriver(void);
+
+    /**
+     * @brief Check if the CPU is an AMD Bulldozer processor.
+     * @return 1 if the CPU is Bulldozer, 0 otherwise.
+     *
+     * The csc_sysinfo_cpuid_is_bulldozer function checks if the CPU is an AMD Bulldozer processor.
+     */
+    int csc_sysinfo_cpuid_is_bulldozer(void);
 
     /** @} */
-#ifdef  __cplusplus
+#ifdef __cplusplus
 }
 #endif
 #endif /* end of include guard: ERROR_MESSAGE_H */

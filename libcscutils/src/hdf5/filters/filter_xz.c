@@ -16,72 +16,67 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  *
  */
-#include <stdlib.h>
-#include <stdio.h>
-#include <hdf5.h>
 #include "filter_xz.h"
-#include "cscutils/error_message.h"
 #include "cscutils/cscutils_config.h"
+#include "cscutils/error_message.h"
+#include <hdf5.h>
 #include <omp.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #ifdef CSC_HAVE_LZMA
 
 #define XZ_PRESET 3
 #include <lzma.h>
 
+static size_t H5Z_filter_xz(unsigned int flags, size_t cd_nelmts, const unsigned int cd_values[], size_t nbytes, size_t* buf_size,
+                            void** buf);
 
-static size_t H5Z_filter_xz(unsigned int flags, size_t cd_nelmts,
-        const unsigned int cd_values[], size_t nbytes,
-        size_t *buf_size, void **buf);
-
-
-const H5Z_class2_t H5Z_XZ[1] = {
-    {
-        H5Z_CLASS_T_VERS,       /* H5Z_class_t version */
-        (H5Z_filter_t)H5Z_FILTER_XZ,         /* Filter id number             */
-        1,              /* encoder_present flag (set to true) */
-        1,              /* decoder_present flag (set to true) */
-        "xz",                  /* Filter name for debugging    */
-        NULL,                       /* The "can apply" callback     */
-        NULL,                       /* The "set local" callback     */
-        (H5Z_func_t)H5Z_filter_xz,         /* The actual filter function   */
-    }
-};
+const H5Z_class2_t H5Z_XZ[1] = {{
+    H5Z_CLASS_T_VERS,            /* H5Z_class_t version */
+    (H5Z_filter_t)H5Z_FILTER_XZ, /* Filter id number             */
+    1,                           /* encoder_present flag (set to true) */
+    1,                           /* decoder_present flag (set to true) */
+    "xz",                        /* Filter name for debugging    */
+    NULL,                        /* The "can apply" callback     */
+    NULL,                        /* The "set local" callback     */
+    (H5Z_func_t)H5Z_filter_xz,   /* The actual filter function   */
+}};
 
 #define SINGLE_THREAD
 #ifdef SINGLE_THREAD
-static int init_encoder(lzma_stream *strm, uint32_t preset)
+static int init_encoder(lzma_stream* strm, uint32_t preset)
 {
     lzma_ret ret = lzma_easy_encoder(strm, preset, LZMA_CHECK_CRC64);
     // Return successfully if the initialization went fine.
     if (ret == LZMA_OK)
         return 1;
 
-    const char *msg;
-    switch (ret) {
-        case LZMA_MEM_ERROR:
-            msg = "Memory allocation failed";
-            break;
+    const char* msg;
+    switch (ret)
+    {
+    case LZMA_MEM_ERROR:
+        msg = "Memory allocation failed";
+        break;
 
-        case LZMA_OPTIONS_ERROR:
-            msg = "Specified preset is not supported";
-            break;
+    case LZMA_OPTIONS_ERROR:
+        msg = "Specified preset is not supported";
+        break;
 
-        case LZMA_UNSUPPORTED_CHECK:
-            msg = "Specified integrity check is not supported";
-            break;
+    case LZMA_UNSUPPORTED_CHECK:
+        msg = "Specified integrity check is not supported";
+        break;
 
-        default:
-            msg = "Unknown error, possibly a bug";
-            break;
+    default:
+        msg = "Unknown error, possibly a bug";
+        break;
     }
     csc_error_message("Error initializing the encoder: %s (error code %u)\n", msg, ret);
     return 0;
 }
 #else
 
-static bool
-init_encoder(lzma_stream *strm, uint32_t preset)
+static bool init_encoder(lzma_stream* strm, uint32_t preset)
 {
     lzma_mt mt = {
         .flags = 0,
@@ -104,72 +99,71 @@ init_encoder(lzma_stream *strm, uint32_t preset)
     if (ret == LZMA_OK)
         return true;
 
-    const char *msg;
-    switch (ret) {
-        case LZMA_MEM_ERROR:
-            msg = "Memory allocation failed";
-            break;
+    const char* msg;
+    switch (ret)
+    {
+    case LZMA_MEM_ERROR:
+        msg = "Memory allocation failed";
+        break;
 
-        case LZMA_OPTIONS_ERROR:
-            msg = "Specified preset is not supported";
-            break;
+    case LZMA_OPTIONS_ERROR:
+        msg = "Specified preset is not supported";
+        break;
 
-        case LZMA_UNSUPPORTED_CHECK:
-            msg = "Specified integrity check is not supported";
-            break;
+    case LZMA_UNSUPPORTED_CHECK:
+        msg = "Specified integrity check is not supported";
+        break;
 
-        default:
-            msg = "Unknown error, possibly a bug";
-            break;
+    default:
+        msg = "Unknown error, possibly a bug";
+        break;
     }
     csc_error_message("Error initializing the encoder: %s (error code %u)\n", msg, ret);
     return 0;
 }
 
-
-
 #endif
 
-static int init_decoder(lzma_stream *strm)
+static int init_decoder(lzma_stream* strm)
 {
-    lzma_ret ret = lzma_stream_decoder( strm, UINT64_MAX, 0x00 | LZMA_CONCATENATED );
+    lzma_ret ret = lzma_stream_decoder(strm, UINT64_MAX, 0x00 | LZMA_CONCATENATED);
 
     // Return successfully if the initialization went fine.
     if (ret == LZMA_OK)
         return 1;
 
-    const char *msg;
-    switch (ret) {
-        case LZMA_MEM_ERROR:
-            msg = "Memory allocation failed";
-            break;
+    const char* msg;
+    switch (ret)
+    {
+    case LZMA_MEM_ERROR:
+        msg = "Memory allocation failed";
+        break;
 
-        case LZMA_OPTIONS_ERROR:
-            msg = "Unsupported decompressor flags";
-            break;
+    case LZMA_OPTIONS_ERROR:
+        msg = "Unsupported decompressor flags";
+        break;
 
-        default:
-            msg = "Unknown error, possibly a bug";
-            break;
+    default:
+        msg = "Unknown error, possibly a bug";
+        break;
     }
 
-    csc_error_message("Error initializing the decoder: %s (error code %u)\n",msg, ret);
+    csc_error_message("Error initializing the decoder: %s (error code %u)\n", msg, ret);
     return 0;
 }
 
-
-static size_t H5Z_filter_xz(unsigned int flags, size_t cd_nelmts,
-        const unsigned int cd_values[], size_t nbytes,
-        size_t *buf_size, void **buf)
+static size_t H5Z_filter_xz(unsigned int flags, size_t cd_nelmts, const unsigned int cd_values[], size_t nbytes, size_t* buf_size,
+                            void** buf)
 {
-    char *outbuf = NULL;
+    char* outbuf = NULL;
     size_t outbuflen, outdatalen;
     int ret;
 
-    (void) (cd_values);
-    (void) (cd_nelmts);
+    (void)(cd_values);
+    (void)(cd_nelmts);
 
-    if (flags & H5Z_FLAG_REVERSE) {
+    if (flags & H5Z_FLAG_REVERSE)
+    {
         /** Decompress data.
          **
          ** This process is troublesome since the size of uncompressed data
@@ -182,51 +176,58 @@ static size_t H5Z_filter_xz(unsigned int flags, size_t cd_nelmts,
         int err = 0;
         lzma_action action = LZMA_RUN;
         lzma_stream strm = LZMA_STREAM_INIT;
-        if ( !(ret = init_decoder(&strm)) ) {
+        if (!(ret = init_decoder(&strm)))
+        {
             csc_error_message("xz decompression start failed with error %d\n", ret);
             goto cleanupAndFail;
-
         }
 
         /* Prepare the output buffer. */
-        outbuflen = nbytes * 4 + 1;  /* average xz compression ratio is 4:1 */
+        outbuflen = nbytes * 4 + 1; /* average xz compression ratio is 4:1 */
         outbuf = malloc(outbuflen);
-        if (outbuf == NULL) {
+        if (outbuf == NULL)
+        {
             csc_error_message("memory allocation failed for xz decompression\n");
             goto cleanupAndFail;
         }
 
-
         /* Feed data to the decompression process and get decompressed data. */
-        strm.next_in  = (unsigned char *) *buf ;
+        strm.next_in = (unsigned char*)*buf;
         strm.avail_in = *buf_size;
-        strm.next_out = (unsigned char *) outbuf;
+        strm.next_out = (unsigned char*)outbuf;
         strm.avail_out = outbuflen;
 
         /* printf("bufsize = %lu\n", *buf_size); */
         /* printf("outbuflen = %lu\n", outbuflen); */
 
-		while (1) {
+        while (1)
+        {
             // Fill the input buffer if it is empty.
-            if (strm.avail_in == 0)  {
+            if (strm.avail_in == 0)
+            {
                 action = LZMA_FINISH;
             }
 
             lzma_ret retu = lzma_code(&strm, action);
 
-            if (strm.avail_out == 0 || retu == LZMA_STREAM_END) {
-                if ( ! (retu == LZMA_STREAM_END)){
+            if (strm.avail_out == 0 || retu == LZMA_STREAM_END)
+            {
+                if (!(retu == LZMA_STREAM_END))
+                {
                     size_t s = outbuflen;
                     outbuflen = outbuflen + nbytes;
                     outbuf = realloc(outbuf, outbuflen);
-                    strm.next_out = (unsigned char *) outbuf + s;
+                    strm.next_out = (unsigned char*)outbuf + s;
                     strm.avail_out = nbytes;
-                } else {
+                }
+                else
+                {
                     outdatalen = outbuflen - strm.avail_out;
                 }
             }
 
-    		if (retu != LZMA_OK) {
+            if (retu != LZMA_OK)
+            {
                 // Once everything has been encoded successfully, the
                 // return value of lzma_code() will be LZMA_STREAM_END.
                 //
@@ -244,31 +245,34 @@ static size_t H5Z_filter_xz(unsigned int flags, size_t cd_nelmts,
                 // install prefix) for the list and documentation of
                 // possible values. Most values listen in lzma_ret
                 // enumeration aren't possible in this example.
-                switch (retu) {
-                    case LZMA_MEM_ERROR:
-                        csc_error_message("Memory allocation failed for xz\n");
-                        break;
-                    case LZMA_DATA_ERROR:
-                        csc_error_message("File size limits exceeded for xz\n");
-                        break;
-                    default:
-                        csc_error_message("Unknown error, possibly a bug in xz\n");
-                        break;
-    			}
-			    break;
-		    }
+                switch (retu)
+                {
+                case LZMA_MEM_ERROR:
+                    csc_error_message("Memory allocation failed for xz\n");
+                    break;
+                case LZMA_DATA_ERROR:
+                    csc_error_message("File size limits exceeded for xz\n");
+                    break;
+                default:
+                    csc_error_message("Unknown error, possibly a bug in xz\n");
+                    break;
+                }
+                break;
+            }
         }
         /* End compression. */
         outdatalen = strm.total_out;
 
         lzma_end(&strm);
-        if ( err ) {
+        if (err)
+        {
             goto cleanupAndFail;
         }
 
         /* printf("written = %lu\n", outdatalen); */
-
-    } else {
+    }
+    else
+    {
 
         /** Compress data.
          **
@@ -281,48 +285,56 @@ static size_t H5Z_filter_xz(unsigned int flags, size_t cd_nelmts,
         int err = 0;
 
         lzma_stream strm = LZMA_STREAM_INIT;
-        if ( ! (ret =  init_encoder(&strm, XZ_PRESET)) ) {
+        if (!(ret = init_encoder(&strm, XZ_PRESET)))
+        {
             csc_error_message("xz decompression start failed with error %d\n", ret);
             goto cleanupAndFail;
-
         }
         /* Prepare the output buffer. */
         outbuflen = nbytes + nbytes / 100 + 2000;
         outbuf = malloc(outbuflen);
-        if (outbuf == NULL) {
+        if (outbuf == NULL)
+        {
             csc_error_message("memory allocation failed for xz compression\n");
             goto cleanupAndFail;
         }
         lzma_action action = LZMA_RUN;
 
-        strm.next_in  = (unsigned char *) *buf ;
+        strm.next_in = (unsigned char*)*buf;
         strm.avail_in = *buf_size;
-        strm.next_out = (unsigned char *) outbuf;
+        strm.next_out = (unsigned char*)outbuf;
         strm.avail_out = outbuflen;
 
         /* printf("bufsize = %lu\n", *buf_size); */
         /* printf("outbuflen = %lu\n", outbuflen); */
 
-		while (1) {
-            if (strm.avail_in == 0)  {
+        while (1)
+        {
+            if (strm.avail_in == 0)
+            {
                 action = LZMA_FINISH;
             }
 
             lzma_ret retu = lzma_code(&strm, action);
 
-            if (strm.avail_out == 0 || retu == LZMA_STREAM_END) {
-                if ( ! (retu == LZMA_STREAM_END)){
+            if (strm.avail_out == 0 || retu == LZMA_STREAM_END)
+            {
+                if (!(retu == LZMA_STREAM_END))
+                {
                     size_t s = outbuflen;
                     outbuflen = outbuflen + nbytes;
                     outbuf = realloc(outbuf, outbuflen);
-                    strm.next_out = (unsigned char *) outbuf + s;
+                    strm.next_out = (unsigned char*)outbuf + s;
                     strm.avail_out = nbytes;
-                } else {
+                }
+                else
+                {
                     outdatalen = outbuflen - strm.avail_out;
                 }
             }
 
-    		if (retu != LZMA_OK) {
+            if (retu != LZMA_OK)
+            {
                 if (retu == LZMA_STREAM_END)
                     break;
 
@@ -334,28 +346,30 @@ static size_t H5Z_filter_xz(unsigned int flags, size_t cd_nelmts,
                 // install prefix) for the list and documentation of
                 // possible values. Most values listen in lzma_ret
                 // enumeration aren't possible in this example.
-                switch (retu) {
-                    case LZMA_MEM_ERROR:
-                        csc_error_message("Memory allocation failed for xz\n");
-                        break;
-                    case LZMA_DATA_ERROR:
-                        csc_error_message("File size limits exceeded for xz\n");
-                        break;
-                    default:
-                        csc_error_message("Unknown error, possibly a bug in xz\n");
-                        break;
-    			}
-			    break;
-		    }
+                switch (retu)
+                {
+                case LZMA_MEM_ERROR:
+                    csc_error_message("Memory allocation failed for xz\n");
+                    break;
+                case LZMA_DATA_ERROR:
+                    csc_error_message("File size limits exceeded for xz\n");
+                    break;
+                default:
+                    csc_error_message("Unknown error, possibly a bug in xz\n");
+                    break;
+                }
+                break;
+            }
         }
 
         outdatalen = strm.total_out;
         lzma_end(&strm);
 
-        if ( err ) {
+        if (err)
+        {
             goto cleanupAndFail;
         }
-               /* printf("written = %lu\n", outdatalen); */
+        /* printf("written = %lu\n", outdatalen); */
     }
 
     /* Always replace the input buffer with the output buffer. */
@@ -374,19 +388,14 @@ int csc_hdf5_register_xz(void)
 {
     herr_t status;
     status = H5Zregister(H5Z_XZ);
-    if ( status < 0 )
+    if (status < 0)
         return -1;
     else
         return 0;
 }
 
-
-
 #else
 
 /* Filter not available  */
-int csc_hdf5_register_xz(void)
-{
-    return -1;
-}
+int csc_hdf5_register_xz(void) { return -1; }
 #endif

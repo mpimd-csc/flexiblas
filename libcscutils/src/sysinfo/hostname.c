@@ -18,43 +18,54 @@
  */
 
 #if defined(_WIN32) || defined(_WIN64)
-#include <winsock2.h>
 #include <windows.h>
+#include <winsock2.h>
 #endif
 
+#include <errno.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
 #include <unistd.h>
-#include <errno.h>
 
 #include "cscutils/sysinfo.h"
 
-char *csc_sysinfo_hostname(void)
+char* csc_sysinfo_hostname(void)
 {
 #if defined(_WIN32) || defined(_WIN64)
     // The string returned by gethostname is at most 256 bytes long
     char* ret = calloc(256, sizeof(char));
-    if (gethostname(ret, 256)) {
+    if (gethostname(ret, 256))
+    {
         free(ret);
         return NULL;
-    } else {
+    }
+    else
+    {
         return ret;
     }
 #else
-    char * ret = NULL;
+    char* ret = NULL;
     int err = 0;
     size_t len = 128;
-    do {
-        if ( ret ) free(ret);
+    do
+    {
+        if (ret)
+            free(ret);
         ret = calloc(len, sizeof(char));
-        if (!ret) return NULL;
-        if ( gethostname(ret, len) ) {
+        if (!ret)
+            return NULL;
+        if (gethostname(ret, len))
+        {
             err = errno;
-            if ( errno == ENAMETOOLONG ) len+= 128;
-            else return NULL;
-        } else {
+            if (errno == ENAMETOOLONG)
+                len += 128;
+            else
+                return NULL;
+        }
+        else
+        {
             err = 0;
         }
     } while (err);

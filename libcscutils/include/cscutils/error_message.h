@@ -1,30 +1,31 @@
 /*
-* CSCUTILS - A collection of various software routines uses in CSC projects
-* Copyright (C) 2015 Martin Koehler
-*
-* This library is free software; you can redistribute it and/or modify
-* it under the terms of the GNU Lesser General Public License as published
-* by the Free Software Foundation; either version 2.1 of the License, or
-* (at your option) any later version.
-*
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public License
-* along with this library; if not, see <http://www.gnu.org/licenses/>.
-*
-*/
+ * CSCUTILS - A collection of various software routines uses in CSC projects
+ * Copyright (C) 2015 Martin Koehler
+ *
+ * This library is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 
 #ifndef ERROR_MESSAGE_H
 #define ERROR_MESSAGE_H
 
-#ifdef  __cplusplus
-extern "C" {
+#ifdef __cplusplus
+extern "C"
+{
 #endif
 #include "cscutils/cscutils_config.h"
-
+#include <stddef.h>
 
 #ifdef CSC_HAVE_IOCTL
 #include <sys/ioctl.h>
@@ -33,11 +34,11 @@ extern "C" {
 #include <unistd.h>
 #endif
 
-
-
+#include "cscutils/sysinfo.h"
 #include <stdarg.h>
+
     /**
-     @file libcscutils/include/cscutils/error_message.h
+      @file libcscutils/include/cscutils/error_message.h
       @defgroup error_message  Error Message: Global functions for display error messages.
 
       This part of the library contains routines to display error messages. This can be used
@@ -48,7 +49,21 @@ extern "C" {
 
       @addtogroup error_message
       @{
-    */
+      */
+
+    /**
+     * @brief Log Levels for structured logging
+     *
+     * The csc_log_level_t enum defines the available log levels for structured logging.
+     */
+    typedef enum
+    {
+        CSC_LOG_LEVEL_DEBUG = 0,
+        CSC_LOG_LEVEL_INFO,
+        CSC_LOG_LEVEL_WARN,
+        CSC_LOG_LEVEL_ERROR,
+        CSC_LOG_LEVEL_CRITICAL,
+    } csc_log_level_t;
 
     /**
      * @brief Return width of Terminal
@@ -66,69 +81,61 @@ extern "C" {
      * The csc_error_print_t typedef defines the prototype of for the error/waring/info
      * print functions.
      * */
-    typedef void (* csc_error_print_t) (const char *str);
-
+    typedef void (*csc_error_print_t)(const char* str);
 
     /**
      * @brief Print an error message.
      * @param[in] fmt  Error message to print.
      * @param[in] ...  Additional arguments for the message string.
      *
-     * The csc_error_message function prints an error message. The fmt parameter
-     * contains a string which may contain printf-like placeholders. If any placeholder
-     * is given, one has to specify the additional argument linke in printf.
+     * The csc_error_message function prints an error message to the screen.
      *
      * \attention
      * The function is defined as weak symbol. That means it can be redefined and completely
      * replaced.
      */
-    void csc_error_message(const char *fmt, ...);
+    void csc_error_message(const char* fmt, ...);
 
     /**
      * @brief Print a warning  message.
      * @param[in] fmt  Warning message to print.
      * @param[in] ...  Additional arguments for the message string.
      *
-     * The csc_warn_message function prints a warning message. The fmt parameter
-     * contains a string which may contain printf-like placeholders. If any placeholder
-     * is given, one has to specify the additional argument linke in printf.
+     * The csc_warn_message function prints a warning message on the screen.
      *
      * \attention
      * The function is defined as weak symbol. That means it can be redefined and completely
      * replaced.
      */
 
-    void csc_warn_message(const char *fmt, ...);
+    void csc_warn_message(const char* fmt, ...);
 
     /**
      * @brief Print an information message.
      * @param[in] fmt  Information message to print.
      * @param[in] ...  Additional arguments for the message string.
      *
-     * The csc_info_message function prints an information message. The fmt parameter
-     * contains a string which may contain printf-like placeholders. If any placeholder
-     * is given, one has to specify the additional argument linke in printf.
+     * The csc_info_message function prints an information message on the screen.
      *
      * \attention
      * The function is defined as weak symbol. That means it can be redefined and completely
      * replaced.
      */
-    void csc_info_message(const char *fmt, ...);
+    void csc_info_message(const char* fmt, ...);
 
     /**
      * @brief Print a usual message like @c printf.
      * @param[in] fmt  Message to print.
      * @param[in] ...  Additional arguments for the message string.
      *
-     * The csc_print_message function prints a usual message. The fmt parameter
-     * contains a string which may contain printf-like placeholders. If any placeholder
-     * is given, one has to specify the additional argument linke in printf.
+     * The csc_print_message function prints a message. Just an
+     * wrapper of a function like printf.
      *
      * \attention
      * The function is defined as weak symbol. That means it can be redefined and completely
      * replaced.
      */
-    void csc_print_message(const char *fmt, ...);
+    void csc_print_message(const char* fmt, ...);
 
     /**
      * @brief Set a new callback function for displaying error messages.
@@ -144,7 +151,7 @@ extern "C" {
      * }
      * \endcode
      */
-    void * csc_error_message_handle( csc_error_print_t  fn);
+    void* csc_error_message_handle(csc_error_print_t fn);
 
     /**
      * @brief Set a new callback function for displaying warning messages.
@@ -160,7 +167,7 @@ extern "C" {
      * }
      * \endcode
      */
-    void *csc_warn_message_handle(  csc_error_print_t  fn);
+    void* csc_warn_message_handle(csc_error_print_t fn);
 
     /**
      * @brief Set a new callback function for displaying information messages.
@@ -176,7 +183,7 @@ extern "C" {
      * }
      * \endcode
      */
-    void *csc_info_message_handle(  csc_error_print_t  fn);
+    void* csc_info_message_handle(csc_error_print_t fn);
 
     /**
      * @brief Set a new callback function for displaying usual messages.
@@ -192,7 +199,7 @@ extern "C" {
      * }
      * \endcode
      */
-    void *csc_print_message_handle(  csc_error_print_t  fn);
+    void* csc_print_message_handle(csc_error_print_t fn);
 
     /**
      * @brief Change the memory management system used by the error message functions .
@@ -208,8 +215,134 @@ extern "C" {
      *   csc_error_message_memory((void *) mxMalloc, (void*) mxRealloc, (void *) mxFree);    *
      * \endcode
      */
-    void csc_error_message_memory(void *m, void *r, void *f );
+    void csc_error_message_memory(void* m, void* r, void* f);
 
+    /**
+     * @brief Set the prefix of the logfmt output.
+     * @param[in] prefix   Prefix for the logfmt output.
+     *
+     * The csc_log_prefix function set the prefix for the logfmt output.
+     *
+     * @see csc_log_message
+     * @see csc_log_debug_message
+     * @see csc_log_info_message
+     * @see csc_log_warn_message
+     * @see csc_log_error_message
+     * @see csc_log_critical_message
+     */
+    void csc_log_prefix(const char* prefix);
+
+    /**
+     * @brief Print a log message in logfmt format.
+     * @param[in] level  Log level (debug, info, warn, error, critical)
+     * @param[in] fmt  Message format string with optional printf-like placeholders.
+     * @param[in] ...  Additional arguments for the message string.
+     *
+     * The csc_log_message function prints a structured log message in logfmt format.
+     * The message includes level, message content, hostname, and pid.
+     *
+     * Example output:
+     * @code
+     * libufget: level=info message="Downloading Matrix 21% (123 KiB / 585 KiB) @ 123 KiB/s" matrix=HB/lund_a hostname=pc1463 pid=42
+     * @endcode
+     *
+     * \attention
+     * The function is defined as weak symbol. That means it can be redefined and completely
+     * replaced.
+     */
+    void csc_log_message(csc_log_level_t level, const char* fmt, ...);
+
+    /**
+     * @brief Print a debug log message in logfmt format.
+     * @param[in] sublevel  Debug sublevel (0-9, higher = more verbose)
+     * @param[in] fmt  Message format string with optional printf-like placeholders.
+     * @param[in] ...  Additional arguments for the message string.
+     *
+     * The csc_log_debug_message function prints a debug log message in logfmt format.
+     * Debug messages include the sublevel and are only printed when debugging is enabled.
+     *
+     * Example output:
+     * @code
+     * libufget: level=debug:1 message="Waiting to obtain lock" lockname=foo lockdesc="bar" hostname=pc1463 pid=42
+     * @endcode
+     *
+     * \attention
+     * The function is defined as weak symbol. That means it can be redefined and completely
+     * replaced.
+     */
+    void csc_log_debug_message(int sublevel, const char* fmt, ...);
+
+    /**
+     * @brief Print an info log message in logfmt format.
+     * @param[in] fmt  Message format string with optional printf-like placeholders.
+     * @param[in] ...  Additional arguments for the message string.
+     *
+     * The csc_log_info_message function prints an info log message in logfmt format.
+     *
+     * Example output:
+     * @code
+     * libufget: level=info message="Information message" hostname=pc1463 pid=42
+     * @endcode
+     *
+     * \attention
+     * The function is defined as weak symbol. That means it can be redefined and completely
+     * replaced.
+     */
+    void csc_log_info_message(const char* fmt, ...);
+
+    /**
+     * @brief Print a warning log message in logfmt format.
+     * @param[in] fmt  Message format string with optional printf-like placeholders.
+     * @param[in] ...  Additional arguments for the message string.
+     *
+     * The csc_log_warn_message function prints a warning log message in logfmt format.
+     *
+     * Example output:
+     * @code
+     * libufget: level=warn message="Warning message" hostname=pc1463 pid=42
+     * @endcode
+     *
+     * \attention
+     * The function is defined as weak symbol. That means it can be redefined and completely
+     * replaced.
+     */
+    void csc_log_warn_message(const char* fmt, ...);
+
+    /**
+     * @brief Print an error log message in logfmt format.
+     * @param[in] fmt  Message format string with optional printf-like placeholders.
+     * @param[in] ...  Additional arguments for the message string.
+     *
+     * The csc_log_error_message function prints an error log message in logfmt format.
+     *
+     * Example output:
+     * @code
+     * libufget: level=error message="Error message" hostname=pc1463 pid=42
+     * @endcode
+     *
+     * \attention
+     * The function is defined as weak symbol. That means it can be redefined and completely
+     * replaced.
+     */
+    void csc_log_error_message(const char* fmt, ...);
+
+    /**
+     * @brief Print a critical log message in logfmt format.
+     * @param[in] fmt  Message format string with optional printf-like placeholders.
+     * @param[in] ...  Additional arguments for the message string.
+     *
+     * The csc_log_critical_message function prints a critical log message in logfmt format.
+     *
+     * Example output:
+     * @code
+     * libufget: level=critical message="Critical message" hostname=pc1463 pid=42
+     * @endcode
+     *
+     * \attention
+     * The function is defined as weak symbol. That means it can be redefined and completely
+     * replaced.
+     */
+    void csc_log_critical_message(const char* fmt, ...);
 
     /**
      * @brief Show the current backtrace of a function.
@@ -222,13 +355,12 @@ extern "C" {
      */
     int csc_show_backtrace(void);
 
-
     /** Definition to identify a successful return from a function */
-    #define CSC_SUCCESS 0
+#define CSC_SUCCESS 0
     /** Definition to identify a bad return value.  */
-    #define CSC_ERROR   -1
+#define CSC_ERROR -1
     /** @} */
-#ifdef  __cplusplus
+#ifdef __cplusplus
 }
 #endif
 #endif /* end of include guard: ERROR_MESSAGE_H */

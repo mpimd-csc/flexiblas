@@ -1,42 +1,43 @@
 /*
-* CSCUTILS - A collection of various software routines uses in CSC projects
-* Copyright (C) 2015 Martin Koehler
-*
-* This library is free software; you can redistribute it and/or modify
-* it under the terms of the GNU Lesser General Public License as published
-* by the Free Software Foundation; either version 2.1 of the License, or
-* (at your option) any later version.
-*
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public License
-* along with this library; if not, see <http://www.gnu.org/licenses/>.
-*
-*/
+ * CSCUTILS - A collection of various software routines uses in CSC projects
+ * Copyright (C) 2015 Martin Koehler
+ *
+ * This library is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 
 #ifndef CSC_IO_H
 
 #define CSC_IO_H
 
 #include "cscutils/cscutils_config.h"
+#include <stddef.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 #if __GNUC__ >= 4
-#define CSC_ATTR_SCANF(pos1, pos2)   __attribute__ ((format (scanf, pos1, pos2)))
+#define CSC_ATTR_SCANF(pos1, pos2) __attribute__((format(scanf, pos1, pos2)))
 #else
 #define CSC_ATTR_SCANF(pos1, pos2)
 #endif
 
-
-    #include <stdio.h>
-    #include <stdlib.h>
-    #include <stdarg.h>
-    #include <sys/stat.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h>
     /**
      @file libcscutils/include/cscutils/io.h
       @defgroup io IO: File io with compression support.
@@ -65,7 +66,8 @@ extern "C" {
      * The csc_io_compress_type_t enumerator defines an enum to represent the
      * use compression of a file.
      * */
-    typedef enum {
+    typedef enum
+    {
         CSC_IO_FILE_ERROR = -1,       /**< Indicates that an error occurred during the compresseion detection. */
         CSC_IO_FILE_UNCOMPRESSED = 0, /**< Indicates that the file is uncompressed. */
         CSC_IO_FILE_GZIP = 1,         /**< Indicates that the file is compressed using gzip. */
@@ -78,19 +80,20 @@ extern "C" {
      *
      * The csc_io_mode_t enumerator specifies the access mode to a file.
      */
-    typedef enum {
-        CSC_IO_FILE_READ = 0,   /**< Specifies that the file is opened to read.  */
-        CSC_IO_FILE_WRITE = 1,  /**< Specifies that the file is opened to write. */
+    typedef enum
+    {
+        CSC_IO_FILE_READ = 0,  /**< Specifies that the file is opened to read.  */
+        CSC_IO_FILE_WRITE = 1, /**< Specifies that the file is opened to write. */
     } csc_io_mode_t;
 
-    /**
-     * @brief Size of the static buffer case for the file IO.
-     *
-     * The CSC_IO_FILE_BUFFER_SIZE macro defines the size of the buffer cache for
-     * the file IO. All write operations need to fill this buffer before they are written
-     * to disk. Alternatively one has to use \ref csc_io_flush to write the buffer.
-     */
-    #define CSC_IO_FILE_BUFFER_SIZE 4096
+/**
+ * @brief Size of the static buffer case for the file IO.
+ *
+ * The CSC_IO_FILE_BUFFER_SIZE macro defines the size of the buffer cache for
+ * the file IO. All write operations need to fill this buffer before they are written
+ * to disk. Alternatively one has to use \ref csc_io_flush to write the buffer.
+ */
+#define CSC_IO_FILE_BUFFER_SIZE 4096
 
     /**
      * @brief Representation of a file including compression support.
@@ -99,16 +102,16 @@ extern "C" {
      * a handler for the IO operations. It does not have the same functionality as the libc fopen system
      * but it is enough for most of out tasks.
      * */
-    typedef struct __csc_io_file_t {
-        void *handler;                          /**< Handle of the underlying io handler. */
-        void *data;                             /**< Auxiliary data for the io handler. */
-        char buffer[CSC_IO_FILE_BUFFER_SIZE];   /**< Buffer cache of size \ref CSC_IO_FILE_BUFFER_SIZE. */
-        size_t pos;                             /**< Current position in the buffer cache. */
-        size_t avail;                           /**< Available bytes in the buffer cache (Reading) */
-        csc_io_mode_t mode;                     /**< Access mode.  */
-        int  eof;                               /**< Indicate the end of the file */
+    typedef struct __csc_io_file_t
+    {
+        void* handler;                        /**< Handle of the underlying io handler. */
+        void* data;                           /**< Auxiliary data for the io handler. */
+        char buffer[CSC_IO_FILE_BUFFER_SIZE]; /**< Buffer cache of size \ref CSC_IO_FILE_BUFFER_SIZE. */
+        size_t pos;                           /**< Current position in the buffer cache. */
+        size_t avail;                         /**< Available bytes in the buffer cache (Reading) */
+        csc_io_mode_t mode;                   /**< Access mode.  */
+        int eof;                              /**< Indicate the end of the file */
     } csc_io_file_t;
-
 
     /**
      * @brief Return which compression is used for the given file.
@@ -119,8 +122,7 @@ extern "C" {
      * The csc_io_is_compressed function checks a given file if it is compressed or not. If the file does
      * not exists the filename is checked for its extension otherwise the magic key of the file is used.
      */
-    csc_io_compress_type_t  csc_io_is_compressed (const char *path);
-
+    csc_io_compress_type_t csc_io_is_compressed(const char* path);
 
     /**
      * @brief Open an eventually  compressed file.
@@ -142,8 +144,7 @@ extern "C" {
      *
      * \see csc_io_close.
      */
-    csc_io_file_t* csc_io_open(const char * path, csc_io_mode_t mode);
-
+    csc_io_file_t* csc_io_open(const char* path, csc_io_mode_t mode);
 
     /**
      * @brief Flush the buffer cache during writing.
@@ -153,8 +154,7 @@ extern "C" {
      * The csc_io_flush function flushes the buffer cache. That means all data stored in the cache is written
      * to disk now. Calling this function ensures that all data is stored on the disk now.
      */
-    int csc_io_flush (csc_io_file_t  *f );
-
+    int csc_io_flush(csc_io_file_t* f);
 
     /**
      * @brief Closes a given file.
@@ -164,8 +164,7 @@ extern "C" {
      * The csc_io_close function closes a given file. If the file was opened for writing the buffer cache is
      * flushed using \ref csc_io_flush before. The file pointer can be used afterwards again for a new file.
      */
-    int csc_io_close (csc_io_file_t  *f );
-
+    int csc_io_close(csc_io_file_t* f);
 
     /**
      * @brief Test if the end of the file is reached.
@@ -175,7 +174,7 @@ extern "C" {
      * The csc_io_eof function checks if the end of a file is reached and return a non zero value
      * if this is the case.
      */
-    int csc_io_eof(csc_io_file_t *f);
+    int csc_io_eof(csc_io_file_t* f);
 
     /*  Read  */
 
@@ -187,7 +186,7 @@ extern "C" {
      * The csc_io_getc function reads one character from the given file, If no more characters are left, it returns EOF.
      *
      */
-    int     csc_io_getc (csc_io_file_t  * f );
+    int csc_io_getc(csc_io_file_t* f);
 
     /**
      * @brief Read a string from a file.
@@ -199,8 +198,7 @@ extern "C" {
      * The csc_io_gets functions reads the next characters from f.  Reading stops after a
      * newline, EOF or len characters.
      */
-    char*   csc_io_gets( char *buf, int len, csc_io_file_t * file );
-
+    char* csc_io_gets(char* buf, int len, csc_io_file_t* file);
 
     /**
      * @brief Get the next line from a file.
@@ -211,11 +209,10 @@ extern "C" {
      *
      * The csc_io_getline function gets the next line from the file and stores it to the buffer. If the buffer is
      * too short it is reallocated using realloc. The number of read characters is stored in len. The newline character is copied
-     * to the buffer as well. This behaviour is a contrast to \ref csc_io_gets. If buf == NULL and len == 0 the buffer will be allocated
-     * using malloc.
+     * to the buffer as well. This behaviour is a contrast to \ref csc_io_gets. If buf == NULL and len == 0 the buffer will be
+     * allocated using malloc.
      */
-    ssize_t csc_io_getline( char **buf, size_t *len, csc_io_file_t *file);
-
+    ssize_t csc_io_getline(char** buf, size_t* len, csc_io_file_t* file);
 
     /**
      * @brief Read a line from a file and parse it.
@@ -229,8 +226,7 @@ extern "C" {
      *
      * \attention The function is only available if the standard C library provides a vsscanf function.
      */
-    int     csc_io_scanf(csc_io_file_t * f, const char *fmt, ...) CSC_ATTR_SCANF(2,3);
-
+    int csc_io_scanf(csc_io_file_t* f, const char* fmt, ...) CSC_ATTR_SCANF(2, 3);
 
     /**
      * @brief Read binary data from a file.
@@ -243,7 +239,7 @@ extern "C" {
      * The csc_io_read function reads nelem elements of size selem from a given file. If the return value is not
      * equal to nelem, an error occured.  The buffer represented by ptr must be preallocated.
      */
-    size_t  csc_io_read(void *ptr, size_t selem, size_t nelem, csc_io_file_t *f);
+    size_t csc_io_read(void* ptr, size_t selem, size_t nelem, csc_io_file_t* f);
 
     /* Write */
 
@@ -255,7 +251,7 @@ extern "C" {
      *
      * The csc_io_putc function write on character to the file addressed by f.
      */
-    int csc_io_putc ( int c, csc_io_file_t *f  );
+    int csc_io_putc(int c, csc_io_file_t* f);
 
     /**
      * @brief Write a string to a file
@@ -266,7 +262,7 @@ extern "C" {
      * The csc_io_puts function writes a null-terminated string to a file. The
      * trailing '\0' is not written.
      */
-    int csc_io_puts ( const char *buf, csc_io_file_t * f);
+    int csc_io_puts(const char* buf, csc_io_file_t* f);
 
     /**
      * @brief Write a formated string to a file
@@ -279,8 +275,7 @@ extern "C" {
      *
      * \attention This function is only available if the standard C library supports vsnprintf.
      */
-    int csc_io_printf( csc_io_file_t * f, const char * fmt, ...);
-
+    int csc_io_printf(csc_io_file_t* f, const char* fmt, ...);
 
     /**
      * @brief Write binary data to a file.
@@ -293,10 +288,7 @@ extern "C" {
      * The csc_io_write function writes nelems of size selem from the given buffer to a file. If the return value is not
      * equal to nelem, an error occured.
      */
-    size_t csc_io_write( void * ptr, size_t selem, size_t nelem, csc_io_file_t *f);
-
-
-
+    size_t csc_io_write(void* ptr, size_t selem, size_t nelem, csc_io_file_t* f);
 
     /**
      * @brief Wrapper around mkdir(3) for recusive creation of directories
@@ -308,8 +300,7 @@ extern "C" {
      * the directories will be created recusively. The mode parameter is described in the man pages
      * of mkdir(3). A good choice is S_IRUSR|S_IWUSR|S_IXUSR.
      */
-    int csc_file_mkdir(const char *dir, mode_t m);
-
+    int csc_file_mkdir(const char* dir, mode_t m);
 
     /**
      * @brief Check if a file exists.
@@ -318,20 +309,13 @@ extern "C" {
      *
      * The csc_file_exist function checks if a file exists and can be accessed.
      */
-    int csc_file_exist(const char *path);
+    int csc_file_exist(const char* path);
     /**
      * @}
      */
-
 
 #ifdef __cplusplus
 };
 #endif
 
-
-
 #endif /* end of include guard: CSC_IO_H */
-
-
-
-

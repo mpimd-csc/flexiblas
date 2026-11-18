@@ -17,82 +17,88 @@
  *
  */
 
+#include <complex.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
-#include <complex.h>
 #include <string.h>
 
 #include <hdf5.h>
 
-#include "cscutils/hdf.h"
 #include "csc_hdf5_common.h"
+#include "cscutils/hdf.h"
 
-int csc_hdf5_group_exist(hid_t base, const char *path)
+int csc_hdf5_group_exist(hid_t base, const char* path)
 {
-	hid_t last = base, next;
+    hid_t last = base, next;
     herr_t err;
     H5O_info_t info;
     int ret = 0;
-	char *pch;
-	char *pathc;
-    char *saveptr = NULL;
-	pathc = strdup(path);
-	pch = strtok_r(pathc, "/", &saveptr);
-	while (pch != NULL) {
-		int exists = H5Lexists(last, pch, H5P_DEFAULT);
-		if (!exists) {
+    char* pch;
+    char* pathc;
+    char* saveptr = NULL;
+    pathc = strdup(path);
+    pch = strtok_r(pathc, "/", &saveptr);
+    while (pch != NULL)
+    {
+        int exists = H5Lexists(last, pch, H5P_DEFAULT);
+        if (!exists)
+        {
             ret = 0;
             goto end;
-		}
+        }
 
         exists = H5Oexists_by_name(last, pch, H5P_DEFAULT);
-        if ( !exists) {
+        if (!exists)
+        {
             ret = 0;
             goto end;
         }
 
-        #if H5_VERSION_GE(1,12,0)
-        err = H5Oget_info_by_name3(last, pch, &info, H5O_INFO_ALL,H5P_DEFAULT);
-        #elif H5_VERSION_GE(1,10,3)
-        err = H5Oget_info_by_name2(last, pch, &info, H5O_INFO_ALL,H5P_DEFAULT);
-        #else
+#if H5_VERSION_GE(1, 12, 0)
+        err = H5Oget_info_by_name3(last, pch, &info, H5O_INFO_ALL, H5P_DEFAULT);
+#elif H5_VERSION_GE(1, 10, 3)
+        err = H5Oget_info_by_name2(last, pch, &info, H5O_INFO_ALL, H5P_DEFAULT);
+#else
         err = H5Oget_info_by_name(last, pch, &info, H5P_DEFAULT);
-        #endif
-        if ( err < 0 ) {
+#endif
+        if (err < 0)
+        {
             ret = 0;
             goto end;
         }
 
-        if ( info.type != H5O_TYPE_GROUP ) {
+        if (info.type != H5O_TYPE_GROUP)
+        {
             ret = 0;
             goto end;
         }
 
-    	next = H5Gopen(last, pch, H5P_DEFAULT);
-		if (last != base) H5Gclose(last);
-		last = next;
-		pch = strtok_r(NULL, "/", &saveptr);
-	}
+        next = H5Gopen(last, pch, H5P_DEFAULT);
+        if (last != base)
+            H5Gclose(last);
+        last = next;
+        pch = strtok_r(NULL, "/", &saveptr);
+    }
     ret = 1;
 end:
-	if (last != base) H5Gclose(last);
+    if (last != base)
+        H5Gclose(last);
     free(pathc);
-	return ret;
+    return ret;
 }
 
-int csc_hdf5_group_path_create(hid_t root, const char * path, int last)
+int csc_hdf5_group_path_create(hid_t root, const char* path, int last)
 {
-    char *saveptr = NULL;
-    char *tok = NULL;
-    char *dset_name_dup = NULL;
-    char *tmp = NULL;
+    char* saveptr = NULL;
+    char* tok = NULL;
+    char* dset_name_dup = NULL;
+    char* tmp = NULL;
     size_t len;
     int depth;
     int ret = 0;
     hid_t gid;
     int k;
-
 
     len = strlen(path);
 
@@ -102,43 +108,55 @@ int csc_hdf5_group_path_create(hid_t root, const char * path, int last)
 
     tok = strtok_r(dset_name_dup, "/", &saveptr);
     depth = 0;
-    while (tok) {
+    while (tok)
+    {
         tok = strtok_r(NULL, "/", &saveptr);
-        depth ++;
+        depth++;
     }
 
     /* create the path if necessary.  */
-    strncpy(dset_name_dup, path, len+1);
+    strncpy(dset_name_dup, path, len + 1);
     saveptr = NULL;
     tok = strtok_r(dset_name_dup, "/", &saveptr);
     tmp[0] = '\0';
 
-    if ( ! last ) depth--;
+    if (!last)
+        depth--;
 
-    for (k = 0; k < depth; k++) {
-        if ( k > 0 ) strcat(tmp,"/");
+    for (k = 0; k < depth; k++)
+    {
+        if (k > 0)
+            strcat(tmp, "/");
         strcat(tmp, tok);
 
-        if ( csc_hdf5_dataset_exist(root, tmp) ) {
-            if ( H5Ldelete(root, tmp, H5P_DEFAULT) < 0 ) {
+        if (csc_hdf5_dataset_exist(root, tmp))
+        {
+            if (H5Ldelete(root, tmp, H5P_DEFAULT) < 0)
+            {
                 csc_error_message("Failed to remove previous entry %s\n", path);
                 ret = -1;
                 goto end;
             }
         }
-        if ( ! csc_hdf5_group_exist(root, tmp)) {
+        if (!csc_hdf5_group_exist(root, tmp))
+        {
             htri_t le = H5Lexists(root, tmp, H5P_DEFAULT);
-            if ( le > 0 ) {
-                if ( H5Ldelete(root, tmp, H5P_DEFAULT) < 0 ) {
+            if (le > 0)
+            {
+                if (H5Ldelete(root, tmp, H5P_DEFAULT) < 0)
+                {
                     csc_error_message("Failed to remove previous entry %s\n", path);
                     ret = -1;
                     goto end;
                 }
-            } else if ( le < 0 ) {
+            }
+            else if (le < 0)
+            {
                 csc_error_message("H5Lexists failed.\n");
             }
             gid = H5Gcreate(root, tmp, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-            if ( gid < 0 ) {
+            if (gid < 0)
+            {
                 csc_error_message("Failed to create group %s\n", tmp);
                 ret = -1;
                 goto end;
@@ -150,7 +168,9 @@ int csc_hdf5_group_path_create(hid_t root, const char * path, int last)
 
     ret = 0;
 end:
-    if ( dset_name_dup ) free(dset_name_dup);
-    if ( tmp )  free(tmp);
+    if (dset_name_dup)
+        free(dset_name_dup);
+    if (tmp)
+        free(tmp);
     return ret;
 }

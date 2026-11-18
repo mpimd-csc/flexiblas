@@ -17,13 +17,12 @@
  *
  */
 
-
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <sys/time.h>
-#include <stdint.h>
 #include <time.h>
+#include <unistd.h>
 
 #include "cscutils/counter.h"
 
@@ -31,7 +30,7 @@ double csc_wtime(void)
 {
 #if defined(_WIN32)
     struct timeval tv;
-    gettimeofday (&tv, NULL);
+    gettimeofday(&tv, NULL);
     return tv.tv_sec + tv.tv_usec / 1e6;
 #else
     /** struct timeval tv; */
@@ -53,8 +52,9 @@ double csc_wtime_()
 }
 #endif
 
-double csc_ctime(void) {
-    clock_t  t = clock();
+double csc_ctime(void)
+{
+    clock_t t = clock();
     return t / (double)(CLOCKS_PER_SEC);
 }
 
@@ -71,8 +71,8 @@ double csc_ctime_() {
 int64_t csc_cycles(void)
 {
     unsigned long long int x;
-    __asm__ volatile (".byte 0x0f, 0x31" : "=A" (x));
-    return (uint64_t) x;
+    __asm__ volatile(".byte 0x0f, 0x31" : "=A"(x));
+    return (uint64_t)x;
 }
 
 #if 0
@@ -89,8 +89,8 @@ int64_t csc_cycles_(void)
 int64_t csc_cycles(void)
 {
     unsigned hi, lo;
-    __asm__ __volatile__ ("rdtsc" : "=a"(lo), "=d"(hi));
-    return (int64_t) (( (unsigned long long)lo)|( ((unsigned long long)hi)<<32 ));
+    __asm__ __volatile__("rdtsc" : "=a"(lo), "=d"(hi));
+    return (int64_t)(((unsigned long long)lo) | (((unsigned long long)hi) << 32));
 }
 
 #if 0
@@ -106,22 +106,20 @@ int64_t csc_cycles_(void)
 
 int64_t csc_cycles(void)
 {
-    unsigned long long int result=0;
-    unsigned long int upper, lower,tmp;
-    __asm__ volatile(
-            "0:                  \n"
-            "\tmftbu   %0           \n"
-            "\tmftb    %1           \n"
-            "\tmftbu   %2           \n"
-            "\tcmpw    %2,%0        \n"
-            "\tbne     0b         \n"
-            : "=r"(upper),"=r"(lower),"=r"(tmp)
-            );
+    unsigned long long int result = 0;
+    unsigned long int upper, lower, tmp;
+    __asm__ volatile("0:                  \n"
+                     "\tmftbu   %0           \n"
+                     "\tmftb    %1           \n"
+                     "\tmftbu   %2           \n"
+                     "\tcmpw    %2,%0        \n"
+                     "\tbne     0b         \n"
+                     : "=r"(upper), "=r"(lower), "=r"(tmp));
     result = upper;
-    result = result<<32;
-    result = result|lower;
+    result = result << 32;
+    result = result | lower;
 
-    return (int64_t) (result);
+    return (int64_t)(result);
 }
 
 #if 0
@@ -163,4 +161,3 @@ int64_t csc_cycles_(void)
 }
 #endif
 #endif
-

@@ -25,7 +25,8 @@
   \code
   git submodule add git@gitlab.mpi-magdeburg.mpg.de:software/libcscutils.git
   \endcode
-  Afterwards, add <tt>licscutils/include</tt> to you include path and add the necessary source files from <tt>libcscutils/src</tt> to your \c Makefile.
+  Afterwards, add <tt>licscutils/include</tt> to you include path and add the necessary source files from <tt>libcscutils/src</tt> to
+  your \c Makefile.
 
   If you are using a CMake based build system you only need to add
   \code
@@ -35,7 +36,6 @@
   \endcode
   to your master \c CMakeLists.txt and link cscutils to all targets where you need it.
   */
-
 
 /**
  * @defgroup threading Threading: Helper functions for multi-threaded application.

@@ -17,37 +17,40 @@
  *
  */
 
+#include <errno.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
 #include <unistd.h>
-#include <errno.h>
 
 #if defined(_WIN32) || defined(_WIN64)
-    #include <intrin.h>
+#include <intrin.h>
 #endif
 
-#include "cscutils/sysinfo.h"
 #include "cscutils/posix_impl.h"
 #include "cscutils/strutils.h"
+#include "cscutils/sysinfo.h"
 
 #if defined(__linux__)
 
-char *csc_sysinfo_cpuname(void)
+char* csc_sysinfo_cpuname(void)
 {
-    FILE *fp = NULL;
-    char *line = NULL;
-    char *cpuname;
-    char *pos;
+    FILE* fp = NULL;
+    char* line = NULL;
+    char* cpuname;
+    char* pos;
     size_t len = 0;
     fp = fopen("/proc/cpuinfo", "r");
 
-    while ( csc_getline(&line, &len, fp) >=0 ){
+    while (csc_getline(&line, &len, fp) >= 0)
+    {
         // x86
-        if ( strstr(line, "model name") == line) {
+        if (strstr(line, "model name") == line)
+        {
             pos = strstr(line, ":");
-            if (!pos) continue;
+            if (!pos)
+                continue;
             pos++;
             cpuname = strdup(pos);
             cpuname = csc_str_rtrim(csc_str_ltrim(cpuname));
@@ -56,9 +59,11 @@ char *csc_sysinfo_cpuname(void)
         }
         // POWER
 #if defined(__powerpc__) || defined(__powerpc64__)
-        if ( strstr(line, "cpu") == line) {
+        if (strstr(line, "cpu") == line)
+        {
             pos = strstr(line, ":");
-            if (!pos) continue;
+            if (!pos)
+                continue;
             pos++;
             cpuname = strdup(pos);
             cpuname = csc_str_rtrim(csc_str_ltrim(cpuname));
@@ -66,7 +71,6 @@ char *csc_sysinfo_cpuname(void)
             return cpuname;
         }
 #endif
-
     }
     free(line);
 
@@ -76,42 +80,42 @@ char *csc_sysinfo_cpuname(void)
 
 #elif defined(__amd64__) || defined(__amd64) || defined(__x86_64__) || defined(__x86_64) || defined(_M_AMD64)
 
-static inline void __cpuid_intrinsic(unsigned int* reg, unsigned int input) {
+static inline void __cpuid_intrinsic(unsigned int* reg, unsigned int input)
+{
 #if defined(_WIN32) || defined(_WIN64)
-    __cpuid((int*)reg,(int)input);
+    __cpuid((int*)reg, (int)input);
 #elif defined(__GNUC__) || defined(__clang__) || defined(__INTEL_COMPILER)
     unsigned int* eax = reg + 0;
     unsigned int* ebx = reg + 1;
     unsigned int* ecx = reg + 2;
     unsigned int* edx = reg + 3;
-    __asm__ volatile("cpuid" : "=a"(*eax),"=b"(*ebx),"=c"(*ecx),"=d"(*edx) : "0"(input), "2"(0));
+    __asm__ volatile("cpuid" : "=a"(*eax), "=b"(*ebx), "=c"(*ecx), "=d"(*edx) : "0"(input), "2"(0));
 #else
     reg[0] = 0;
     (void)input;
 #endif
 }
 
-char *csc_sysinfo_cpuname(void)
+char* csc_sysinfo_cpuname(void)
 {
     unsigned int brand[12];
 
     __cpuid_intrinsic(brand, 0x80000000);
-    if (brand[0] < 0x80000004) {
+    if (brand[0] < 0x80000004)
+    {
         return strdup("Unknown");
     }
 
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 3; i++)
+    {
         __cpuid_intrinsic(brand + 4 * i, 0x80000002 + i);
     }
 
-    return strdup((char*) &brand);
+    return strdup((char*)&brand);
 }
 
 #else
 
-char *csc_sysinfo_cpuname(void)
-{
-    return strdup("Unknown");
-}
+char* csc_sysinfo_cpuname(void) { return strdup("Unknown"); }
 
 #endif

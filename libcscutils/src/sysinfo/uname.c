@@ -17,12 +17,12 @@
  *
  */
 
+#include <errno.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
 #include <unistd.h>
-#include <errno.h>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
@@ -33,31 +33,31 @@
 
 #include "cscutils/sysinfo.h"
 
-char * csc_sysinfo_sysname(void)
+char* csc_sysinfo_sysname(void)
 {
 #if defined(_WIN32) || defined(_WIN64)
     return strdup("Windows_NT");
 #else
     struct utsname buf;
-    if ( uname(&buf))
+    if (uname(&buf))
         return NULL;
     return strdup(buf.sysname);
 #endif
 }
 
-char * csc_sysinfo_nodename(void)
+char* csc_sysinfo_nodename(void)
 {
 #if defined(_WIN32) || defined(_WIN64)
     return strdup("Unknown");
 #else
     struct utsname buf;
-    if ( uname(&buf))
+    if (uname(&buf))
         return NULL;
     return strdup(buf.nodename);
 #endif
 }
 
-char * csc_sysinfo_release(void)
+char* csc_sysinfo_release(void)
 {
 #if defined(_WIN32) || defined(_WIN64)
     DWORD dwVersion = 0;
@@ -70,40 +70,42 @@ char * csc_sysinfo_release(void)
     dwMajorVersion = (DWORD)(LOBYTE(LOWORD(dwVersion)));
     dwMinorVersion = (DWORD)(HIBYTE(LOWORD(dwVersion)));
 
-    if (dwVersion < 0x80000000) {
+    if (dwVersion < 0x80000000)
+    {
         dwBuild = (DWORD)(HIWORD(dwVersion));
     }
 
     int len = 128;
     char* ret = malloc(len * sizeof(char));
-    int req = snprintf(ret, len * sizeof(char), "%lu.%lu %lu",dwMajorVersion,dwMinorVersion,dwBuild);
-    if (req >= len) {
+    int req = snprintf(ret, len * sizeof(char), "%lu.%lu %lu", dwMajorVersion, dwMinorVersion, dwBuild);
+    if (req >= len)
+    {
         ret = realloc(ret, (req + 1) * sizeof(char));
-        sprintf(ret, "%lu.%lu %lu",dwMajorVersion,dwMinorVersion,dwBuild);
+        sprintf(ret, "%lu.%lu %lu", dwMajorVersion, dwMinorVersion, dwBuild);
     }
 
     return ret;
 #else
     struct utsname buf;
-    if ( uname(&buf))
+    if (uname(&buf))
         return NULL;
     return strdup(buf.release);
 #endif
 }
 
-char * csc_sysinfo_version(void)
+char* csc_sysinfo_version(void)
 {
 #if defined(_WIN32) || defined(_WIN64)
     return strdup("Unknown");
 #else
     struct utsname buf;
-    if ( uname(&buf))
+    if (uname(&buf))
         return NULL;
     return strdup(buf.version);
 #endif
 }
 
-char * csc_sysinfo_machine(void)
+char* csc_sysinfo_machine(void)
 {
 #if defined(_WIN32) || defined(_WIN64)
     SYSTEM_INFO sysinfo;
@@ -112,34 +114,35 @@ char * csc_sysinfo_machine(void)
 
     char* ret = NULL;
 
-    switch(arch) {
-        case PROCESSOR_ARCHITECTURE_INTEL:
-            ret = strdup("i686");
-            break;
-        case PROCESSOR_ARCHITECTURE_ARM:
-            ret = strdup("ARM");
-            break;
-        case PROCESSOR_ARCHITECTURE_IA64:
-            ret = strdup("IA64");
-            break;
-        case PROCESSOR_ARCHITECTURE_AMD64:
-            ret = strdup("x86_64");
-            break;
+    switch (arch)
+    {
+    case PROCESSOR_ARCHITECTURE_INTEL:
+        ret = strdup("i686");
+        break;
+    case PROCESSOR_ARCHITECTURE_ARM:
+        ret = strdup("ARM");
+        break;
+    case PROCESSOR_ARCHITECTURE_IA64:
+        ret = strdup("IA64");
+        break;
+    case PROCESSOR_ARCHITECTURE_AMD64:
+        ret = strdup("x86_64");
+        break;
 #ifdef PROCESSOR_ARCHITECTURE_ARM64
-        case PROCESSOR_ARCHITECTURE_ARM64:
-            ret = strdup("ARM64");
-            break;
+    case PROCESSOR_ARCHITECTURE_ARM64:
+        ret = strdup("ARM64");
+        break;
 #endif
-        case PROCESSOR_ARCHITECTURE_UNKNOWN:
-        default:
-            ret = strdup("Unknown");
-            break;
+    case PROCESSOR_ARCHITECTURE_UNKNOWN:
+    default:
+        ret = strdup("Unknown");
+        break;
     }
 
     return ret;
 #else
     struct utsname buf;
-    if ( uname(&buf))
+    if (uname(&buf))
         return NULL;
     return strdup(buf.machine);
 #endif

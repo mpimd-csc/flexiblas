@@ -32,80 +32,92 @@
 #define MUTEX_LOCK
 #endif
 
-
 /** common initfunction */
-int csc_ds_common_init(csc_ds_t * ds)
+int csc_ds_common_init(csc_ds_t* ds)
 {
 #ifdef CSC_HAVE_PTHREAD
     pthread_mutex_init(&(ds->mutex), NULL);
 #else
-    ds->mutex = (void *) 0;
+    ds->mutex = (void*)0;
 #endif
     return CSC_SUCCESS;
 }
 
-int csc_ds_insert(csc_ds_t *ds, csc_ds_object_t obj)
+int csc_ds_insert(csc_ds_t* ds, csc_ds_object_t obj)
 {
     int ret = 0;
-    if ( ds == NULL) return CSC_ERROR;
-    if ( ds->insert == NULL) return CSC_ERROR;
+    if (ds == NULL)
+        return CSC_ERROR;
+    if (ds->insert == NULL)
+        return CSC_ERROR;
     MUTEX_LOCK;
     ret = ds->insert(ds, obj);
     MUTEX_UNLOCK;
     return ret;
 }
 
-int csc_ds_insert_at( csc_ds_t *ds, csc_ds_object_t obj, int pos)
+int csc_ds_insert_at(csc_ds_t* ds, csc_ds_object_t obj, int pos)
 {
-    int ret ;
-    if ( !ds) return CSC_ERROR;
+    int ret;
+    if (!ds)
+        return CSC_ERROR;
     MUTEX_LOCK;
-    if ( ds->insert_at ) {
+    if (ds->insert_at)
+    {
         ret = ds->insert_at(ds, obj, pos);
-    } else {
+    }
+    else
+    {
         ret = ds->insert(ds, obj);
     }
     MUTEX_UNLOCK;
     return ret;
 }
 
-
-csc_ds_object_t csc_ds_find(csc_ds_t *ds, const void *key)
+csc_ds_object_t csc_ds_find(csc_ds_t* ds, const void* key)
 {
     csc_ds_object_t ret = NULL;
-    if (ds == NULL ) return NULL;
-    if (ds->find == NULL) return NULL;
+    if (ds == NULL)
+        return NULL;
+    if (ds->find == NULL)
+        return NULL;
     MUTEX_LOCK;
     ret = ds->find(ds, key);
     MUTEX_UNLOCK;
     return ret;
 }
 
-int csc_ds_remove(csc_ds_t *ds, const void *key)
+int csc_ds_remove(csc_ds_t* ds, const void* key)
 {
-    int ret ;
-    if ( ds == NULL) return CSC_ERROR;
-    if ( ds->remove == NULL) return CSC_ERROR;
+    int ret;
+    if (ds == NULL)
+        return CSC_ERROR;
+    if (ds->remove == NULL)
+        return CSC_ERROR;
     MUTEX_LOCK;
     ret = ds->remove(ds, key);
     MUTEX_UNLOCK;
     return ret;
 }
 
-void csc_ds_dump(FILE *out, csc_ds_t *ds)
+void csc_ds_dump(FILE* out, csc_ds_t* ds)
 {
-    if ( ds == NULL) return;
-    if ( ds->dump == NULL) return;
+    if (ds == NULL)
+        return;
+    if (ds->dump == NULL)
+        return;
     MUTEX_LOCK;
     ds->dump(out, ds);
     MUTEX_UNLOCK;
     return;
 }
 
-void csc_ds_free(csc_ds_t *ds)
+void csc_ds_free(csc_ds_t* ds)
 {
-    if ( ds == NULL) return;
-    if ( ds->remove_all == NULL) return;
+    if (ds == NULL)
+        return;
+    if (ds->remove_all == NULL)
+        return;
 
     MUTEX_LOCK;
     ds->remove_all(ds);
@@ -116,5 +128,3 @@ void csc_ds_free(csc_ds_t *ds)
     free(ds);
     return;
 }
-
-

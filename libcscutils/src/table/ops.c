@@ -17,46 +17,57 @@
  *
  */
 
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdarg.h>
-#include <math.h>
 #include "cscutils/error_message.h"
 #include "cscutils/strutils.h"
 #include "cscutils/table.h"
+#include <math.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 /* Select the row with the maximum value in column    */
-int csc_table_max_row(csc_table_t * t, int column)
+int csc_table_max_row(csc_table_t* t, int column)
 {
     int i;
     int maxpos = 0;
 
-    if (!t) return -1;
-    if ( t->number_of_rows < 1 ) return -1;
-    if ( t->number_of_columns <= column) return -1;
+    if (!t)
+        return -1;
+    if (t->number_of_rows < 1)
+        return -1;
+    if (t->number_of_columns <= column)
+        return -1;
 
     i = 0;
-    while ( i < t->number_of_rows && t->columns[column].set[i] == 0 )
+    while (i < t->number_of_rows && t->columns[column].set[i] == 0)
         i++;
-    if ( i == t->number_of_rows) {
+    if (i == t->number_of_rows)
+    {
         return -1;
     }
     maxpos = i;
 
-    for (i = 0; i < t->number_of_rows ; i++) {
-        if ( t->columns[column].type == CSC_TABLE_INTEGER && t->columns[column].set[i] ) {
-            if ( t->columns[column].v.integer_values[i] >= t->columns[column].v.integer_values[maxpos] )  {
+    for (i = 0; i < t->number_of_rows; i++)
+    {
+        if (t->columns[column].type == CSC_TABLE_INTEGER && t->columns[column].set[i])
+        {
+            if (t->columns[column].v.integer_values[i] >= t->columns[column].v.integer_values[maxpos])
+            {
                 maxpos = i;
             }
-        } else if ( t->columns[column].type == CSC_TABLE_FLOAT && t->columns[column].set[i] ) {
-            if ( t->columns[column].v.float_values[i] >= t->columns[column].v.float_values[maxpos] )  {
+        }
+        else if (t->columns[column].type == CSC_TABLE_FLOAT && t->columns[column].set[i])
+        {
+            if (t->columns[column].v.float_values[i] >= t->columns[column].v.float_values[maxpos])
+            {
                 maxpos = i;
             }
-
-        } else if ( t->columns[column].type == CSC_TABLE_STRING && t->columns[column].set[i] ) {
-            if ( strncmp(t->columns[column].v.string_values[i], t->columns[column].v.string_values[maxpos], CSC_TABLE_MAXLEN) >= 0  )  {
+        }
+        else if (t->columns[column].type == CSC_TABLE_STRING && t->columns[column].set[i])
+        {
+            if (strncmp(t->columns[column].v.string_values[i], t->columns[column].v.string_values[maxpos], CSC_TABLE_MAXLEN) >= 0)
+            {
                 maxpos = i;
             }
         }
@@ -64,35 +75,47 @@ int csc_table_max_row(csc_table_t * t, int column)
     return maxpos;
 }
 
-int csc_table_amax_row(csc_table_t * t, int column)
+int csc_table_amax_row(csc_table_t* t, int column)
 {
     int i;
     int maxpos = 0;
 
-    if (!t) return -1;
-    if ( t->number_of_rows < 1 ) return -1;
-    if ( t->number_of_columns <= column) return -1;
+    if (!t)
+        return -1;
+    if (t->number_of_rows < 1)
+        return -1;
+    if (t->number_of_columns <= column)
+        return -1;
 
     i = 0;
-    while ( i < t->number_of_rows && t->columns[column].set[i] == 0 )
+    while (i < t->number_of_rows && t->columns[column].set[i] == 0)
         i++;
-    if ( i == t->number_of_rows) {
+    if (i == t->number_of_rows)
+    {
         return -1;
     }
     maxpos = i;
 
-    for (i = 0; i < t->number_of_rows ; i++) {
-        if ( t->columns[column].type == CSC_TABLE_INTEGER && t->columns[column].set[i] ) {
-            if ( labs(t->columns[column].v.integer_values[i]) >= labs(t->columns[column].v.integer_values[maxpos]) )  {
+    for (i = 0; i < t->number_of_rows; i++)
+    {
+        if (t->columns[column].type == CSC_TABLE_INTEGER && t->columns[column].set[i])
+        {
+            if (labs(t->columns[column].v.integer_values[i]) >= labs(t->columns[column].v.integer_values[maxpos]))
+            {
                 maxpos = i;
             }
-        } else if ( t->columns[column].type == CSC_TABLE_FLOAT && t->columns[column].set[i] ) {
-            if ( fabs(t->columns[column].v.float_values[i]) >= fabs(t->columns[column].v.float_values[maxpos] ))  {
+        }
+        else if (t->columns[column].type == CSC_TABLE_FLOAT && t->columns[column].set[i])
+        {
+            if (fabs(t->columns[column].v.float_values[i]) >= fabs(t->columns[column].v.float_values[maxpos]))
+            {
                 maxpos = i;
             }
-
-        } else if ( t->columns[column].type == CSC_TABLE_STRING && t->columns[column].set[i] ) {
-            if ( strncmp(t->columns[column].v.string_values[i], t->columns[column].v.string_values[maxpos], CSC_TABLE_MAXLEN) >= 0  )  {
+        }
+        else if (t->columns[column].type == CSC_TABLE_STRING && t->columns[column].set[i])
+        {
+            if (strncmp(t->columns[column].v.string_values[i], t->columns[column].v.string_values[maxpos], CSC_TABLE_MAXLEN) >= 0)
+            {
                 maxpos = i;
             }
         }
@@ -100,79 +123,98 @@ int csc_table_amax_row(csc_table_t * t, int column)
     return maxpos;
 }
 
-int csc_table_min_row(csc_table_t * t, int column)
+int csc_table_min_row(csc_table_t* t, int column)
 {
     int i;
     int minpos = 0;
 
-    if (!t) return -1;
-    if ( t->number_of_rows < 1 ) return -1;
-    if ( t->number_of_columns <= column) return -1;
+    if (!t)
+        return -1;
+    if (t->number_of_rows < 1)
+        return -1;
+    if (t->number_of_columns <= column)
+        return -1;
 
     i = 0;
-    while ( i < t->number_of_rows && t->columns[column].set[i] == 0 )
+    while (i < t->number_of_rows && t->columns[column].set[i] == 0)
         i++;
-    if ( i == t->number_of_rows) {
+    if (i == t->number_of_rows)
+    {
         return -1;
     }
     minpos = i;
 
-    for (i = 0; i < t->number_of_rows ; i++) {
-        if ( t->columns[column].type == CSC_TABLE_INTEGER && t->columns[column].set[i] ) {
-            if ( t->columns[column].v.integer_values[i] <= t->columns[column].v.integer_values[minpos] )  {
+    for (i = 0; i < t->number_of_rows; i++)
+    {
+        if (t->columns[column].type == CSC_TABLE_INTEGER && t->columns[column].set[i])
+        {
+            if (t->columns[column].v.integer_values[i] <= t->columns[column].v.integer_values[minpos])
+            {
                 minpos = i;
             }
-        } else if ( t->columns[column].type == CSC_TABLE_FLOAT && t->columns[column].set[i] ) {
-            if ( t->columns[column].v.float_values[i] <= t->columns[column].v.float_values[minpos] )  {
+        }
+        else if (t->columns[column].type == CSC_TABLE_FLOAT && t->columns[column].set[i])
+        {
+            if (t->columns[column].v.float_values[i] <= t->columns[column].v.float_values[minpos])
+            {
                 minpos = i;
             }
-
-        } else if ( t->columns[column].type == CSC_TABLE_STRING && t->columns[column].set[i] ) {
-            if ( strncmp(t->columns[column].v.string_values[i], t->columns[column].v.string_values[minpos], CSC_TABLE_MAXLEN) <= 0  )  {
+        }
+        else if (t->columns[column].type == CSC_TABLE_STRING && t->columns[column].set[i])
+        {
+            if (strncmp(t->columns[column].v.string_values[i], t->columns[column].v.string_values[minpos], CSC_TABLE_MAXLEN) <= 0)
+            {
                 minpos = i;
             }
         }
     }
     return minpos;
-
 }
 
-
-int csc_table_amin_row(csc_table_t * t, int column)
+int csc_table_amin_row(csc_table_t* t, int column)
 {
     int i;
     int minpos = 0;
 
-    if (!t) return -1;
-    if ( t->number_of_rows < 1 ) return -1;
-    if ( t->number_of_columns <= column) return -1;
+    if (!t)
+        return -1;
+    if (t->number_of_rows < 1)
+        return -1;
+    if (t->number_of_columns <= column)
+        return -1;
 
     i = 0;
-    while ( i < t->number_of_rows && t->columns[column].set[i] == 0 )
+    while (i < t->number_of_rows && t->columns[column].set[i] == 0)
         i++;
-    if ( i == t->number_of_rows) {
+    if (i == t->number_of_rows)
+    {
         return -1;
     }
     minpos = i;
 
-    for (i = 0; i < t->number_of_rows ; i++) {
-        if ( t->columns[column].type == CSC_TABLE_INTEGER && t->columns[column].set[i] ) {
-            if ( labs(t->columns[column].v.integer_values[i]) <= labs(t->columns[column].v.integer_values[minpos]) )  {
+    for (i = 0; i < t->number_of_rows; i++)
+    {
+        if (t->columns[column].type == CSC_TABLE_INTEGER && t->columns[column].set[i])
+        {
+            if (labs(t->columns[column].v.integer_values[i]) <= labs(t->columns[column].v.integer_values[minpos]))
+            {
                 minpos = i;
             }
-        } else if ( t->columns[column].type == CSC_TABLE_FLOAT && t->columns[column].set[i] ) {
-            if ( fabs(t->columns[column].v.float_values[i]) <= fabs(t->columns[column].v.float_values[minpos]) )  {
+        }
+        else if (t->columns[column].type == CSC_TABLE_FLOAT && t->columns[column].set[i])
+        {
+            if (fabs(t->columns[column].v.float_values[i]) <= fabs(t->columns[column].v.float_values[minpos]))
+            {
                 minpos = i;
             }
-
-        } else if ( t->columns[column].type == CSC_TABLE_STRING && t->columns[column].set[i] ) {
-            if ( strncmp(t->columns[column].v.string_values[i], t->columns[column].v.string_values[minpos], CSC_TABLE_MAXLEN) <= 0  )  {
+        }
+        else if (t->columns[column].type == CSC_TABLE_STRING && t->columns[column].set[i])
+        {
+            if (strncmp(t->columns[column].v.string_values[i], t->columns[column].v.string_values[minpos], CSC_TABLE_MAXLEN) <= 0)
+            {
                 minpos = i;
             }
         }
     }
     return minpos;
-
 }
-
-

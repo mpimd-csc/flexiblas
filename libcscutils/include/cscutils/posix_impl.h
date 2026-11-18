@@ -19,9 +19,11 @@
 
 #ifndef POSIX_IMPL_H
 #define POSIX_IMPL_H
+#include <stddef.h>
 
-#ifdef  __cplusplus
-extern "C" {
+#ifdef __cplusplus
+extern "C"
+{
 
 #if !defined(restrict)
 
@@ -46,10 +48,10 @@ extern "C" {
 #include <stdint.h>
 #include <stdio.h>
 
-#if defined (_WIN64)
+#if defined(_WIN64)
     typedef long long int ssize_t;
-#elif defined (_WIN32)
-    typedef long ssize_t;
+#elif defined(_WIN32)
+typedef long ssize_t;
 #endif
 
     /**
@@ -83,7 +85,7 @@ extern "C" {
      */
     ssize_t csc_getdelim(char** restrict lineptr, size_t* restrict n, int delim, FILE* restrict stream);
 
-#ifdef  __cplusplus
+#ifdef __cplusplus
 }
 #endif
 

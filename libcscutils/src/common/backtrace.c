@@ -17,24 +17,26 @@
  *
  */
 
+#include "cscutils/error_message.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "cscutils/error_message.h"
 
 #ifdef CSC_HAVE_BACKTRACE
 #include <execinfo.h>
 #include <unistd.h>
 
-int csc_show_backtrace(void) {
+int csc_show_backtrace(void)
+{
     int j, nptrs;
 #define SIZE 200
-    void *buffer[SIZE];
-    char **strings;
+    void* buffer[SIZE];
+    char** strings;
 
     nptrs = backtrace(buffer, SIZE);
     strings = backtrace_symbols(buffer, nptrs);
 
-    if (strings == NULL) {
+    if (strings == NULL)
+    {
         perror("backtrace_symbols");
         return 1;
     }
@@ -47,7 +49,8 @@ int csc_show_backtrace(void) {
 
 #else
 
-int csc_show_backtrace(void) {
+int csc_show_backtrace(void)
+{
     csc_info_message("Backtrace is not available.\n");
     return 1;
 }

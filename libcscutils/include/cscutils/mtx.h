@@ -1,21 +1,21 @@
 /*
-* CSCUTILS - A collection of various software routines uses in CSC projects
-* Copyright (C) 2018 Martin Koehler
-*
-* This library is free software; you can redistribute it and/or modify
-* it under the terms of the GNU Lesser General Public License as published
-* by the Free Software Foundation; either version 2.1 of the License, or
-* (at your option) any later version.
-*
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public License
-* along with this library; if not, see <http://www.gnu.org/licenses/>.
-*
-*/
+ * CSCUTILS - A collection of various software routines uses in CSC projects
+ * Copyright (C) 2018 Martin Koehler
+ *
+ * This library is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 
 #ifndef CSC_MTX_H
 
@@ -23,14 +23,16 @@
 #include "cscutils/cscutils_config.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
+#include <stddef.h>
 
-    #include <stdio.h>
-    #include <stdlib.h>
-    #include <stdint.h>
-    #include <stdarg.h>
-    #include <sys/stat.h>
+#include <stdarg.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h>
     /**
      * @file libcscutils/include/cscutils/mtx.h
      * @defgroup mtx MatrixMarket File Support
@@ -46,7 +48,7 @@ extern "C" {
      *
      * @addtogroup mtx
      * @{
-    */
+     */
 
     /**
      * @brief Enumeration to identify the data type of the matrix.
@@ -54,11 +56,12 @@ extern "C" {
      * The csc_mtx_datatype_t enumeration is used to identify the data type of the
      * values used to store the matrix.
      */
-    typedef enum {
-        CSC_MTX_INTEGER = 0,    /**< The matrix uses integer values. */
-        CSC_MTX_REAL    = 1,    /**< The matrix uses real values. */
-        CSC_MTX_COMPLEX = 2,    /**< The matrix uses complex values. */
-        CSC_MTX_PATTERN = 3     /**< The matrix contains only the sparse pattern and stores no values. */
+    typedef enum
+    {
+        CSC_MTX_INTEGER = 0, /**< The matrix uses integer values. */
+        CSC_MTX_REAL = 1,    /**< The matrix uses real values. */
+        CSC_MTX_COMPLEX = 2, /**< The matrix uses complex values. */
+        CSC_MTX_PATTERN = 3  /**< The matrix contains only the sparse pattern and stores no values. */
     } csc_mtx_datatype_t;
 
     /**
@@ -66,11 +69,12 @@ extern "C" {
      *
      * The csc_mtx_symmetry_t enumeration is used to identify the structure of the stored matrix.
      */
-    typedef enum {
-        CSC_MTX_GENERAL = 0,            /**< The stored matrix has no special structure. It is a generic one. */
-        CSC_MTX_SYMMETRIC = 1,          /**< The stored matrix is symmatric. Only one triangle is stored in the file. */
-        CSC_MTX_SKEWSYMMETRIC = 2,      /**< The stored matrix is skew-symmatric. Only one triangle is stored in the file. */
-        CSC_MTX_HERMITIAN = 3           /**< The stored matrix is hermitian-symmatric. Only one triangle is stored in the file. */
+    typedef enum
+    {
+        CSC_MTX_GENERAL = 0,       /**< The stored matrix has no special structure. It is a generic one. */
+        CSC_MTX_SYMMETRIC = 1,     /**< The stored matrix is symmatric. Only one triangle is stored in the file. */
+        CSC_MTX_SKEWSYMMETRIC = 2, /**< The stored matrix is skew-symmatric. Only one triangle is stored in the file. */
+        CSC_MTX_HERMITIAN = 3      /**< The stored matrix is hermitian-symmatric. Only one triangle is stored in the file. */
     } csc_mtx_symmetry_t;
 
     /**
@@ -79,9 +83,10 @@ extern "C" {
      * The csc_mtx_storetype_t enumeration is used to distinguish between sparse and dense matrices
      * stored in a file.
      */
-    typedef enum {
-        CSC_MTX_COORDINATE = 0,         /**< The matrix is sparse and stored in the coordinate format. */
-        CSC_MTX_ARRAY = 1               /**< The matrix is dense and stored in the array format. */
+    typedef enum
+    {
+        CSC_MTX_COORDINATE = 0, /**< The matrix is sparse and stored in the coordinate format. */
+        CSC_MTX_ARRAY = 1       /**< The matrix is dense and stored in the array format. */
     } csc_mtx_storetype_t;
 
     /**
@@ -97,7 +102,7 @@ extern "C" {
      * The matrix is stored with general structure and using the array format.
      *
      */
-    int csc_mtx_write_double_dense(char * filename, int m, int n, double *A, int lda);
+    int csc_mtx_write_double_dense(char* filename, int m, int n, double* A, int lda);
 
     /**
      * @brief Read the size from an array-storage MatrixMarket file.
@@ -113,7 +118,7 @@ extern "C" {
      * @attention The function does not support to read from compressed files yet.
      *
      */
-    int csc_mtx_read_dense_size(const char *filename, int64_t *M, int64_t*N);
+    int csc_mtx_read_dense_size(const char* filename, int64_t* M, int64_t* N);
 
     /**
      * @brief Read a dense matrix form a MatrixMarket file.
@@ -133,21 +138,14 @@ extern "C" {
      * @attention The function deos not support to read from compressed files yet.
      *
      */
-    int csc_mtx_read_double_dense(const char *filename, int64_t M, int64_t N, double *A, int64_t lda);
-
+    int csc_mtx_read_double_dense(const char* filename, int64_t M, int64_t N, double* A, int64_t lda);
 
     /**
      * @}
      */
 
-
 #ifdef __cplusplus
 };
 #endif
 
-
-
 #endif /* end of include guard: CSC_IO_H */
-
-
-

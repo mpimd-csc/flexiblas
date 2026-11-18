@@ -1,4 +1,5 @@
 SET(SRC
+    hello_world
     demo_table
     demo_sysinfo
     )

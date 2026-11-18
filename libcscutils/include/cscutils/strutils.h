@@ -1,29 +1,33 @@
 /*
-* CSCUTILS - A collection of various software routines uses in CSC projects
-* Copyright (C) 2015 Martin Koehler
-*
-* This library is free software; you can redistribute it and/or modify
-* it under the terms of the GNU Lesser General Public License as published
-* by the Free Software Foundation; either version 2.1 of the License, or
-* (at your option) any later version.
-*
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public License
-* along with this library; if not, see <http://www.gnu.org/licenses/>.
-*
-*/
+ * CSCUTILS - A collection of various software routines uses in CSC projects
+ * Copyright (C) 2015 Martin Koehler
+ *
+ * This library is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 
 #ifndef CSC_STRUTILS_H
 #define CSC_STRUTILS_H
 
 #include "cscutils/cscutils_config.h"
+#include <stddef.h>
 
-#ifdef  __cplusplus
-extern "C" {
+#include <stddef.h>
+
+#ifdef __cplusplus
+extern "C"
+{
 #endif
     /**
      * @file libcscutils/include/cscutils/strutils.h
@@ -36,31 +40,31 @@ extern "C" {
      *
      * @addtogroup strutils
      * @{
-    */
+     */
 
     /**
-      * \brief Return a pointer to a null-terminated byte string.
-      * \param[in] str      pointer to the null-terminated byte string to duplicate
-      * \param[in] size     max number of bytes to copy from @p str
-      * \return A pointer to the newly allocated string, or a null pointer if an error occurred.
-      *
-      * The function csc_strndup returns a null-terminated byte string, which contains copies
-      * of at most @p size bytes from the string pointed to by @p str.
-      * If the function @c strndup is available, it gets called.
-      *
-      */
-    char *csc_strndup(const char *str, size_t size);
+     * \brief Return a pointer to a null-terminated byte string.
+     * \param[in] str      pointer to the null-terminated byte string to duplicate
+     * \param[in] size     max number of bytes to copy from @p str
+     * \return A pointer to the newly allocated string, or a null pointer if an error occurred.
+     *
+     * The function csc_strndup returns a null-terminated byte string, which contains copies
+     * of at most @p size bytes from the string pointed to by @p str.
+     * If the function @c strndup is available, it gets called.
+     *
+     */
+    char* csc_strndup(const char* str, size_t size);
 
-     /**
-      * \brief Compare two strings ignoring the case.
-      * \param[in] s1   Frist String
-      * \param[in] s2   Second String
-      * \return A value <0, ==0, or >0 depending if s1 < s2, s1 == s2, or s1>s2.
-      *
-      * The function csc_strcasecmp  function compares to strings ignoring the case.
-      *
-      */
-    int csc_strcasecmp (const char *s1, const char *s2);
+    /**
+     * \brief Compare two strings ignoring the case.
+     * \param[in] s1   Frist String
+     * \param[in] s2   Second String
+     * \return A value <0, ==0, or >0 depending if s1 < s2, s1 == s2, or s1>s2.
+     *
+     * The function csc_strcasecmp  function compares to strings ignoring the case.
+     *
+     */
+    int csc_strcasecmp(const char* s1, const char* s2);
 
     /**
      * \brief Compare two strings with a given maximum length.
@@ -73,7 +77,7 @@ extern "C" {
      * strings s1 or s2 are longer only the first n characters will be checked,
      *
      */
-    int csc_strncmp(const char *s1, const char *s2, size_t n);
+    int csc_strncmp(const char* s1, const char* s2, size_t n);
 
     /**
      * \brief Compare two strings with a given maximum length ignoring the case.
@@ -87,7 +91,7 @@ extern "C" {
      * In contrast to \ref csc_strncmp it ignores the case.
      *
      */
-    int csc_strncasecmp(const char *s1, const char *s2, size_t n);
+    int csc_strncasecmp(const char* s1, const char* s2, size_t n);
 
     /**
      * \brief Center a strings inside a given space.
@@ -102,7 +106,7 @@ extern "C" {
      * it will be cut off.
      *
      */
-    void csc_strcenter(const char *str, int width, char *output);
+    void csc_strcenter(const char* str, int width, char* output);
 
     /**
      * \brief Left align a string inside a given space.
@@ -118,7 +122,7 @@ extern "C" {
      * "\0" as well. If the given string is longer it will be truncated to width characters.
      *
      */
-    void csc_strleftalign(const char *str, int width, char *output);
+    void csc_strleftalign(const char* str, int width, char* output);
 
     /**
      * \brief Left align a string inside a given space.
@@ -134,7 +138,7 @@ extern "C" {
      * "\0" as well. If the given string is longer it will be truncated to width characters.
      *
      */
-    void csc_strrightalign(const char *str, int width, char *output);
+    void csc_strrightalign(const char* str, int width, char* output);
 
     /**
      * \brief Check if a string begins with a given sequence,
@@ -147,7 +151,7 @@ extern "C" {
      *
      * \sa csc_strcasebegin
      */
-    int csc_strbegin(const char * haystack, const char *needle);
+    int csc_strbegin(const char* haystack, const char* needle);
 
     /**
      * \brief Check if a string begins with a given sequence ignoring the case,
@@ -162,7 +166,7 @@ extern "C" {
      * \sa csc_strcasebegin
      */
 
-    int csc_strcasebegin(const char * haystack, const char *needle);
+    int csc_strcasebegin(const char* haystack, const char* needle);
 
     /**
      * \brief Convert a string to upper case
@@ -172,7 +176,7 @@ extern "C" {
      * The csc_struppercase functions converts a string in-place to upper case and returns
      * the pointer to its start for easy usage.
      * */
-    char *csc_struppercase(char *str);
+    char* csc_struppercase(char* str);
 
     /**
      * \brief Convert a string to lower case
@@ -182,8 +186,7 @@ extern "C" {
      * The csc_strlowercase functions converts a string in-place to lower case and returns
      * the pointer to its start for easy usage.
      * */
-    char *csc_strlowercase(char *str);
-
+    char* csc_strlowercase(char* str);
 
     /**
      * \brief Check if a string is a valid integer value.
@@ -192,7 +195,7 @@ extern "C" {
      *
      * The csc_str_is_valid_int function checks if a string contains a valid integer value.
      * */
-    int csc_str_is_valid_int(const char *str);
+    int csc_str_is_valid_int(const char* str);
 
     /**
      * \brief Removing subsequent doublings of a character
@@ -209,7 +212,7 @@ extern "C" {
      *  printf("%s\n", str);   // will print "/home/user/test"
      * \endcode
      */
-    void csc_strremovedup(char * str, char dup);
+    void csc_strremovedup(char* str, char dup);
 
     /**
      * \brief Remove all beginning whitespace from the left of a string.
@@ -221,7 +224,7 @@ extern "C" {
      *
      * \see csc_str_rtrim
      */
-    char *csc_str_ltrim(char *str);
+    char* csc_str_ltrim(char* str);
 
     /**
      * \brief Remove all trailing whitespace from the right of a string
@@ -233,7 +236,7 @@ extern "C" {
      *
      * \see csc_str_ltrim
      */
-    char *csc_str_rtrim(char *str);
+    char* csc_str_rtrim(char* str);
 
     /**
      * \brief Remove all occurrences of the a character from a string.
@@ -245,9 +248,9 @@ extern "C" {
      * from the string str.
      *
      */
-    char *csc_str_remove_char(char *str, char c);
+    char* csc_str_remove_char(char* str, char c);
     /** @} */
-#ifdef  __cplusplus
+#ifdef __cplusplus
 }
 #endif
 #endif

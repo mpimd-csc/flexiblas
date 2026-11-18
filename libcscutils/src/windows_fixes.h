@@ -22,49 +22,48 @@
    November 2024 modified by Siemens and/or its affiliates by adding Windows support
 */
 
-
 #ifndef WINDOWS_FIXES_H
 #define WINDOWS_FIXES_H 1
 
 #if defined(_WIN32) || defined(_WIN64)
 
 #ifndef strtok_r
-#define strtok_r(s,d,p) strtok_s(s,d,p)
+#define strtok_r(s, d, p) strtok_s(s, d, p)
 #endif
 
-inline char * dirname( char const * pathname)
+inline char* dirname(char const* pathname)
 {
-  // Parameter Validation
-  if( pathname == NULL)
-  {
-    return NULL;
-  }
-
-  char * base_dir = NULL;
-
-  // Returns a pointer to the last occurrence of \ in pathname or NULL if it is not found
-  char const * p_end_of_path = strrchr( pathname, '\\' );
-  if( p_end_of_path != NULL )
-  {
-    size_t path_length = (size_t)( p_end_of_path - pathname );
-    if (path_length > 0)
+    // Parameter Validation
+    if (pathname == NULL)
     {
-      base_dir = (char*) malloc(sizeof(char) * path_length + 1);
-      if (base_dir)
-      {
-        // Copy the base path into the out variable
-        if( strncpy( base_dir, pathname, path_length ) == NULL )
-        {
-          free(base_dir);
-          return NULL;
-        }
-
-        base_dir[path_length] = '\0';
-      }
+        return NULL;
     }
-  }
 
-  return base_dir;
+    char* base_dir = NULL;
+
+    // Returns a pointer to the last occurrence of \ in pathname or NULL if it is not found
+    char const* p_end_of_path = strrchr(pathname, '\\');
+    if (p_end_of_path != NULL)
+    {
+        size_t path_length = (size_t)(p_end_of_path - pathname);
+        if (path_length > 0)
+        {
+            base_dir = (char*)malloc(sizeof(char) * path_length + 1);
+            if (base_dir)
+            {
+                // Copy the base path into the out variable
+                if (strncpy(base_dir, pathname, path_length) == NULL)
+                {
+                    free(base_dir);
+                    return NULL;
+                }
+
+                base_dir[path_length] = '\0';
+            }
+        }
+    }
+
+    return base_dir;
 }
 
 #include <windows.h>
@@ -73,29 +72,29 @@ inline char * dirname( char const * pathname)
 typedef CRITICAL_SECTION pthread_mutex_t;
 typedef void* pthread_mutexattr_t;
 
-inline int pthread_mutex_init(pthread_mutex_t * mutex, const pthread_mutexattr_t * attr)
+inline int pthread_mutex_init(pthread_mutex_t* mutex, const pthread_mutexattr_t* attr)
 {
-  (void) attr;
-  InitializeCriticalSection(mutex);
-  return 0;
+    (void)attr;
+    InitializeCriticalSection(mutex);
+    return 0;
 }
 
-inline int pthread_mutex_destroy(pthread_mutex_t *mutex)
+inline int pthread_mutex_destroy(pthread_mutex_t* mutex)
 {
-  DeleteCriticalSection(mutex);
-  return 0;
+    DeleteCriticalSection(mutex);
+    return 0;
 }
 
-inline int pthread_mutex_lock(pthread_mutex_t *mutex)
+inline int pthread_mutex_lock(pthread_mutex_t* mutex)
 {
-  EnterCriticalSection(mutex);
-  return 0;
+    EnterCriticalSection(mutex);
+    return 0;
 }
 
-inline int pthread_mutex_unlock(pthread_mutex_t *mutex)
+inline int pthread_mutex_unlock(pthread_mutex_t* mutex)
 {
-  LeaveCriticalSection(mutex);
-  return 0;
+    LeaveCriticalSection(mutex);
+    return 0;
 }
 
 #endif /* defined(_WIN32) || defined(_WIN64) */

@@ -27,31 +27,32 @@
 #include <windows.h>
 #endif
 
-
+#include <errno.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
 #include <unistd.h>
-#include <errno.h>
 
 unsigned int csc_sysinfo_cpu_count(void)
 {
 #if defined(__linux__)
 #define LINE_LEN 10
 
-    FILE *fp;
+    FILE* fp;
     char value[LINE_LEN];
     unsigned int ret = 0;
     unsigned int cpunr = 0;
 
     fp = fopen("/proc/stat", "r");
-    if (!fp) {
+    if (!fp)
+    {
         printf("Couldn't count the number of CPUs (%s: %s), assuming 1\n", "/proc/stat", strerror(errno));
         return 1;
     }
 
-    while (!feof(fp)) {
+    while (!feof(fp))
+    {
         if (!fgets(value, LINE_LEN, fp))
             continue;
         value[LINE_LEN - 1] = '\0';

@@ -17,12 +17,12 @@
  *
  */
 
+#include <ctype.h>
+#include <errno.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
-#include <ctype.h>
-#include <errno.h>
 #ifndef __WIN32__
 #include <pthread.h>
 #endif
@@ -30,30 +30,35 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "cscutils/inifile.h"
 #include "cscutils/error_message.h"
+#include "cscutils/inifile.h"
 
-int csc_ini_easy_get_int(const char *filename, const char * section, const char *key, int *val)
+int csc_ini_easy_get_int(const char* filename, const char* section, const char* key, int* val)
 {
 
-    const char * s;
+    const char* s;
     csc_ini_file_t inifile;
 
     /*  empty file */
     csc_ini_empty(&inifile);
 
-    if ( csc_ini_load(filename, &inifile,0) != CSC_INI_SUCCESS) {
+    if (csc_ini_load(filename, &inifile, 0) != CSC_INI_SUCCESS)
+    {
         csc_error_message("Failed to open %s. \n", filename);
         csc_ini_free(&inifile);
         return CSC_INI_FILEOPEN;
     }
-    if ( section == NULL || strlen(section) == 0 ) {
+    if (section == NULL || strlen(section) == 0)
+    {
         s = NULL;
-    } else {
+    }
+    else
+    {
         s = section;
     }
 
-    if ( csc_ini_getinteger( &inifile, s, key, val) != CSC_INI_SUCCESS) {
+    if (csc_ini_getinteger(&inifile, s, key, val) != CSC_INI_SUCCESS)
+    {
         csc_ini_free(&inifile);
         return CSC_INI_NOKEY;
     }
@@ -61,29 +66,33 @@ int csc_ini_easy_get_int(const char *filename, const char * section, const char 
     return CSC_INI_SUCCESS;
 }
 
-int csc_ini_easy_get_double(const char *filename, const char * section, const char *key, double *val)
+int csc_ini_easy_get_double(const char* filename, const char* section, const char* key, double* val)
 {
 
-    const char *s;
+    const char* s;
     csc_ini_file_t inifile;
 
     /*  empty file */
     csc_ini_empty(&inifile);
 
-    if ( csc_ini_load(filename, &inifile,0) != CSC_INI_SUCCESS) {
+    if (csc_ini_load(filename, &inifile, 0) != CSC_INI_SUCCESS)
+    {
         csc_error_message("Failed to open %s. \n", filename);
         csc_ini_free(&inifile);
         return CSC_INI_FILEOPEN;
     }
 
-    if ( section==NULL ||  strlen(section) == 0 ) {
+    if (section == NULL || strlen(section) == 0)
+    {
         s = NULL;
-    } else {
+    }
+    else
+    {
         s = section;
     }
 
-
-    if ( csc_ini_getfloat( &inifile, s, key, val) != CSC_INI_SUCCESS) {
+    if (csc_ini_getfloat(&inifile, s, key, val) != CSC_INI_SUCCESS)
+    {
         csc_ini_free(&inifile);
         return CSC_INI_NOKEY;
     }
@@ -91,30 +100,34 @@ int csc_ini_easy_get_double(const char *filename, const char * section, const ch
     return CSC_INI_SUCCESS;
 }
 
-int csc_ini_easy_get_string(const char *filename, const char * section, const char *key, char *val, int maxlen)
+int csc_ini_easy_get_string(const char* filename, const char* section, const char* key, char* val, int maxlen)
 {
 
-    const char *s;
-    char *inval;
+    const char* s;
+    char* inval;
     csc_ini_file_t inifile;
 
     /*  empty file */
     csc_ini_empty(&inifile);
 
-    if ( csc_ini_load(filename, &inifile,0) != CSC_INI_SUCCESS) {
+    if (csc_ini_load(filename, &inifile, 0) != CSC_INI_SUCCESS)
+    {
         csc_error_message("Failed to open %s. \n", filename);
         csc_ini_free(&inifile);
         return CSC_INI_FILEOPEN;
     }
 
-    if ( section==NULL ||  strlen(section) == 0 ) {
+    if (section == NULL || strlen(section) == 0)
+    {
         s = NULL;
-    } else {
+    }
+    else
+    {
         s = section;
     }
 
-
-    if ( csc_ini_getstring( &inifile, s, key, &inval) != CSC_INI_SUCCESS) {
+    if (csc_ini_getstring(&inifile, s, key, &inval) != CSC_INI_SUCCESS)
+    {
         csc_ini_free(&inifile);
         return CSC_INI_NOKEY;
     }
@@ -123,7 +136,3 @@ int csc_ini_easy_get_string(const char *filename, const char * section, const ch
     csc_ini_free(&inifile);
     return CSC_INI_SUCCESS;
 }
-
-
-
-

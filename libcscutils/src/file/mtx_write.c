@@ -20,18 +20,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "cscutils/error_message.h"
 #include "cscutils/io.h"
 #include "cscutils/mtx.h"
-#include "cscutils/error_message.h"
 
-
-int csc_mtx_write_double_dense(char * filename, int m, int n, double *A, int lda)
+int csc_mtx_write_double_dense(char* filename, int m, int n, double* A, int lda)
 {
-    csc_io_file_t *file;
+    csc_io_file_t* file;
     size_t _m, _n, k, l, _lda;
 
     file = csc_io_open(filename, CSC_IO_FILE_WRITE);
-    if ( file == NULL) {
+    if (file == NULL)
+    {
         csc_error_message("Failed to open %s for writing.\n", filename);
         return -1;
     }
@@ -43,12 +43,13 @@ int csc_mtx_write_double_dense(char * filename, int m, int n, double *A, int lda
     _n = n;
     _lda = lda;
 
-    for ( l = 0; l < _n; l++) {
-        for (k = 0; k < _m; k++) {
-            csc_io_printf(file, "%20.17e\n", A[_lda*l+k]);
+    for (l = 0; l < _n; l++)
+    {
+        for (k = 0; k < _m; k++)
+        {
+            csc_io_printf(file, "%20.17e\n", A[_lda * l + k]);
         }
     }
     csc_io_close(file);
     return 0;
 }
-

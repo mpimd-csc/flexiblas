@@ -17,24 +17,22 @@
  *
  */
 
+#include <errno.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
 #include <unistd.h>
-#include <errno.h>
 
 #include "cscutils/sysinfo.h"
 
-
-const char *csc_sysinfo_cmake_args(void)
+const char* csc_sysinfo_cmake_args(void)
 {
-    #ifdef CMAKE_ARGS
-    const char *s = CMAKE_ARGS;
-    #else
-    const char *s = NULL;
-    #endif
+#ifdef CMAKE_ARGS
+    const char* s = CMAKE_ARGS;
+#else
+    const char* s = NULL;
+#endif
 
     return s;
-
 }

@@ -17,17 +17,14 @@
  *
  */
 
+#include <errno.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <errno.h>
 
 #include "cscutils/sysinfo.h"
 
-int csc_sysinfo_getpid(void)
-{
-    return (int) getpid();
-}
+int csc_sysinfo_getpid(void) { return (int)getpid(); }

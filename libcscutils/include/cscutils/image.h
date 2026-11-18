@@ -1,30 +1,32 @@
 /*
-* CSCUTILS - A collection of various software routines uses in CSC projects
-* Copyright (C) 2015 Martin Koehler
-*
-* This library is free software; you can redistribute it and/or modify
-* it under the terms of the GNU Lesser General Public License as published
-* by the Free Software Foundation; either version 2.1 of the License, or
-* (at your option) any later version.
-*
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public License
-* along with this library; if not, see <http://www.gnu.org/licenses/>.
-*
-*/
+ * CSCUTILS - A collection of various software routines uses in CSC projects
+ * Copyright (C) 2015 Martin Koehler
+ *
+ * This library is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 
 #ifndef CSC_IMAGE_H
 
 #define CSC_IMAGE_H
 
 #include "cscutils/cscutils_config.h"
+#include <stddef.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
     /**
      @file libcscutils/include/cscutils/image.h
@@ -45,13 +47,14 @@ extern "C" {
      *
      * The csc_image_bmp structure contains functions to represent a bitmap file.
      */
-    typedef struct {
-        unsigned char *red; /**< Array representing colour red   */
-        unsigned char *green;   /**< Array representing colour green */
-        unsigned char *blue;    /**< Array representing colour blue */
-        int bpp;        /**< Bits per pixel */
-        int width;      /**< Width of BMP file */
-        int height;     /**< Height of BMP file */
+    typedef struct
+    {
+        unsigned char* red;   /**< Array representing colour red   */
+        unsigned char* green; /**< Array representing colour green */
+        unsigned char* blue;  /**< Array representing colour blue */
+        int bpp;              /**< Bits per pixel */
+        int width;            /**< Width of BMP file */
+        int height;           /**< Height of BMP file */
     } csc_image_bmp;
 
     /**
@@ -70,7 +73,7 @@ extern "C" {
      * The csc_image_bmp_read function reads header information, palette information and image data of a bitmap file \f$ pic \f$.
      *
      */
-    int csc_image_bmp_read       ( char *filein_name, csc_image_bmp *pic);
+    int csc_image_bmp_read(char* filein_name, csc_image_bmp* pic);
 
     /**
      * @brief Write to a bitmap file.
@@ -81,7 +84,7 @@ extern "C" {
      * The csc_image_bmp_write function writes header information and image data to bitmap file \f$ pic \f$.
      *
      */
-    int csc_image_bmp_write      ( const char *fileout_name, csc_image_bmp pic);
+    int csc_image_bmp_write(const char* fileout_name, csc_image_bmp pic);
 
     /**
      * @brief Set pixel of a bitmap file.
@@ -95,7 +98,7 @@ extern "C" {
      * The csc_image_bmp_set_pixel function sets the colour of a pixel in a bitmap file.
      *
      */
-    void csc_image_bmp_set_pixel ( csc_image_bmp pic, int x, int y, csc_image_color r, csc_image_color g, csc_image_color b);
+    void csc_image_bmp_set_pixel(csc_image_bmp pic, int x, int y, csc_image_color r, csc_image_color g, csc_image_color b);
 
     /**
      * @brief Fill a bitmap file with colour.
@@ -113,7 +116,8 @@ extern "C" {
      * \sa csc_image_bmp_set_pixel
      *
      */
-    void csc_image_bmp_fill_rect ( csc_image_bmp pic, int x, int y, int width, int height, csc_image_color r, csc_image_color g, csc_image_color b);
+    void csc_image_bmp_fill_rect(csc_image_bmp pic, int x, int y, int width, int height, csc_image_color r, csc_image_color g,
+                                 csc_image_color b);
 
     /**
      * @brief Initialize a bitmap file.
@@ -125,7 +129,7 @@ extern "C" {
      * The csc_image_bmp_init function initializes a bitmap file \f$ pic \f$ with width \f$ width \f$ and height \f$ height \f$.
      *
      */
-    int csc_image_bmp_init           ( csc_image_bmp *pic, int width, int height );
+    int csc_image_bmp_init(csc_image_bmp* pic, int width, int height);
 
     /**
      * @brief Clean up a bitmap file.
@@ -134,17 +138,12 @@ extern "C" {
      * The csc_image_bmp_clear function cleans up a bitmap file.
      *
      */
-    void csc_image_bmp_clear     ( csc_image_bmp *pic);
-
-
-
+    void csc_image_bmp_clear(csc_image_bmp* pic);
 
     /** @}   */
-
 
 #ifdef __cplusplus
 };
 #endif
 
 #endif /* end of include guard: CSC_IMAGE_H */
-

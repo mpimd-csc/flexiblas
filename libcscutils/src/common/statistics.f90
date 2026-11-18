@@ -66,7 +66,7 @@ CONTAINS
         INTEGER :: N
         DOUBLE PRECISION :: A(N)
 
-        INTEGER :: I, J, INCREMENT
+        INTEGER :: I, J
         DOUBLE PRECISION :: TEMP
         LOGICAL :: SWAPPED
 

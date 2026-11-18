@@ -18,19 +18,15 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-
-
+#include "cscutils/sysinfo.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "cscutils/sysinfo.h"
 
-
-
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
     size_t total_ram, total_swap, free_ram, free_swap;
-    (void) argc;
-    (void) argv;
+    (void)argc;
+    (void)argv;
 
     printf("Memory Info:\n");
     csc_sysinfo_memory(&total_ram, &free_ram, &total_swap, &free_swap);
@@ -39,44 +35,52 @@ int main(int argc, char **argv)
     printf("TOTAL SWAP: %zu\n", total_swap);
     printf("FREE SWAP:  %zu\n", free_swap);
 
-    char *hn = csc_sysinfo_hostname();
+    char* hn = csc_sysinfo_hostname();
     printf("Hostname: %s\n", hn);
     free(hn);
 
-    char *sys = csc_sysinfo_sysname();
-    char *node = csc_sysinfo_nodename();
-    char *release = csc_sysinfo_release();
-    char *version = csc_sysinfo_version();
-    char *machine = csc_sysinfo_machine();
-
-
+    char* sys = csc_sysinfo_sysname();
+    char* node = csc_sysinfo_nodename();
+    char* release = csc_sysinfo_release();
+    char* version = csc_sysinfo_version();
+    char* machine = csc_sysinfo_machine();
 
     printf("sysname: %s\n", sys);
     printf("nodename: %s\n", node);
     printf("release: %s\n", release);
-    printf("version: %s \n",version);
-    printf("machine: %s \n",machine);
+    printf("version: %s \n", version);
+    printf("machine: %s \n", machine);
 
-    free(sys); free(node); free(release); free(version); free(machine);
+    free(sys);
+    free(node);
+    free(release);
+    free(version);
+    free(machine);
 
-    char *cpu;
+    char* cpu;
     cpu = csc_sysinfo_cpuname();
     printf("CPU-Name: '%s'\n", cpu);
     free(cpu);
 
     int physical_cores, logical_cores, hyper_threading;
 
-    if (csc_sysinfo_cpuinfo(&logical_cores,&physical_cores,&hyper_threading)) {
+    if (csc_sysinfo_cpuinfo(&logical_cores, &physical_cores, &hyper_threading))
+    {
         printf("CPU Cores: Unknown\n");
-    } else {
-        if (hyper_threading) {
+    }
+    else
+    {
+        if (hyper_threading)
+        {
             printf("CPU Cores: %d (%d logical)\n", physical_cores, logical_cores);
-        } else {
+        }
+        else
+        {
             printf("CPU Cores: %d\n", physical_cores);
         }
     }
 
-    char *comp = csc_sysinfo_ccompiler();
+    char* comp = csc_sysinfo_ccompiler();
     printf("Compiler: %s\n", comp);
     free(comp);
 

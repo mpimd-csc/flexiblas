@@ -27,60 +27,72 @@
 
 #include "cscutils/io.h"
 
-
 #if defined(_WIN32) || defined(_WIN64)
-    #define CSC_MKDIR(TMP,M) mkdir((TMP))
+#define CSC_MKDIR(TMP, M) mkdir((TMP))
 #else
-    #define CSC_MKDIR(TMP,M) mkdir((TMP),(M))
+#define CSC_MKDIR(TMP, M) mkdir((TMP), (M))
 #endif
 
-int csc_file_mkdir(const char *dir, mode_t m)
+int csc_file_mkdir(const char* dir, mode_t m)
 {
 #if defined(_WIN32) || defined(_WIN64)
     (void)m;
 #endif
 
-    char tmp[16*2048];
-    char *p = NULL;
+    char tmp[16 * 2048];
+    char* p = NULL;
     size_t len;
     int ret;
     struct stat buf;
 
-    snprintf(tmp, sizeof(tmp),"%s",dir);
+    snprintf(tmp, sizeof(tmp), "%s", dir);
     len = strlen(tmp);
-    if(tmp[len - 1] == '/')
+    if (tmp[len - 1] == '/')
         tmp[len - 1] = 0;
-    for(p = tmp + 1; *p; p++){
-        if(*p == '/') {
+    for (p = tmp + 1; *p; p++)
+    {
+        if (*p == '/')
+        {
             *p = 0;
 
-            ret = stat (tmp, &buf);
-            if ( ret == 0 ) {
-                if (S_ISDIR(buf.st_mode)) {
+            ret = stat(tmp, &buf);
+            if (ret == 0)
+            {
+                if (S_ISDIR(buf.st_mode))
+                {
                     *p = '/';
                     continue;
                 }
             }
             ret = CSC_MKDIR(tmp, m);
-            if ( ret != 0 ) return ret;
+            if (ret != 0)
+                return ret;
             *p = '/';
         }
     }
-    ret = stat (tmp, &buf);
-    if ( ret == 0 ) {
-        if (!S_ISDIR(buf.st_mode)) {
+    ret = stat(tmp, &buf);
+    if (ret == 0)
+    {
+        if (!S_ISDIR(buf.st_mode))
+        {
             return CSC_MKDIR(tmp, m);
         }
-    } else {
+    }
+    else
+    {
         return CSC_MKDIR(tmp, m);
     }
     return 0;
 }
 
-int csc_file_exist(const char *path) {
-    if( access( path, F_OK ) != -1 ) {
+int csc_file_exist(const char* path)
+{
+    if (access(path, F_OK) != -1)
+    {
         return -1;
-    } else {
+    }
+    else
+    {
         return 0;
     }
 }

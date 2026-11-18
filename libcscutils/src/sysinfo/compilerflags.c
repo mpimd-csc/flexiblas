@@ -17,64 +17,61 @@
  *
  */
 
+#include <errno.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
 #include <unistd.h>
-#include <errno.h>
 
 #include "cscutils/sysinfo.h"
 
-
-const char *csc_sysinfo_c_flags(void)
+const char* csc_sysinfo_c_flags(void)
 {
 #ifdef LANGUAGE_C
-    const char *s = CMAKE_C_FLAGS;
+    const char* s = CMAKE_C_FLAGS;
 #else
-    const char *s = NULL;
+    const char* s = NULL;
 #endif
     return s;
 }
 
-const char *csc_sysinfo_fortran_flags(void)
+const char* csc_sysinfo_fortran_flags(void)
 {
 #ifdef LANGUAGE_Fortran
-    const char *s = CMAKE_Fortran_FLAGS;
+    const char* s = CMAKE_Fortran_FLAGS;
 #else
-    const char *s = NULL;
+    const char* s = NULL;
 #endif
     return s;
 }
 
-const char *csc_sysinfo_cxx_flags(void)
+const char* csc_sysinfo_cxx_flags(void)
 {
 #ifdef LANGUAGE_CXX
-    const char *s = CMAKE_CXX_FLAGS;
+    const char* s = CMAKE_CXX_FLAGS;
 #else
-    const char *s = NULL;
+    const char* s = NULL;
 #endif
     return s;
 }
 
-const char *csc_sysinfo_cuda_flags(void)
+const char* csc_sysinfo_cuda_flags(void)
 {
 #ifdef LANGUAGE_CUDA
-    const char *s = CMAKE_CUDA_FLAGS;
+    const char* s = CMAKE_CUDA_FLAGS;
 #else
-    const char *s = NULL;
+    const char* s = NULL;
 #endif
     return s;
 }
 
-const char *csc_sysinfo_hip_flags(void)
+const char* csc_sysinfo_hip_flags(void)
 {
 #ifdef LANGUAGE_HIP
-    const char *s = CMAKE_HIP_FLAGS;
+    const char* s = CMAKE_HIP_FLAGS;
 #else
-    const char *s = NULL;
+    const char* s = NULL;
 #endif
     return s;
 }
-
-
