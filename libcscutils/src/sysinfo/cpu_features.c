@@ -33,7 +33,33 @@ int csc_sysinfo_cpuid_has_features( uint32_t have, uint32_t want )
 
 #if defined(__x86_64__) || defined(_M_X64) || defined(__i386) || defined(_M_IX86)
 
+#ifdef _MSC_VER
+#include <intrin.h>
+#define __cpuid(level, a, b, c, d) \
+  do { \
+    int _info[4]; \
+    __cpuidex(_info, (int)(level), 0); \
+    (a) = _info[0]; (b) = _info[1]; (c) = _info[2]; (d) = _info[3]; \
+  } while (0)
+#define __cpuid_count(level, count, a, b, c, d) \
+  do { \
+    int _info[4]; \
+    __cpuidex(_info, (int)(level), (int)(count)); \
+    (a) = _info[0]; (b) = _info[1]; (c) = _info[2]; (d) = _info[3]; \
+  } while (0)
+static __inline unsigned int __get_cpuid_max(unsigned int ext, unsigned int *sig) {
+  int info[4];
+  __cpuidex(info, (int)ext, 0);
+  if (sig) {
+    sig[0] = (unsigned int)info[1];
+    sig[1] = (unsigned int)info[3];
+    sig[2] = (unsigned int)info[2];
+  }
+  return (unsigned int)info[0];
+}
+#else
 #include <cpuid.h>
+#endif
 
 enum
 {
@@ -196,6 +222,11 @@ uint32_t csc_sysinfo_cpuid_query
 			// Call xgetbv to get xcr0 (the extended control register) copied
 			// to [edx:eax]. This encodes whether software supports various
 			// register state-saving features.
+#ifdef _MSC_VER
+                        uint64_t _xcr_val = _xgetbv(xcr);
+                        eax = (uint32_t)_xcr_val;
+                        edx = (uint32_t)(_xcr_val >> 32);
+#else
 			__asm__ __volatile__
 			(
 				".byte 0x0F, 0x01, 0xD0"
@@ -204,6 +235,7 @@ uint32_t csc_sysinfo_cpuid_query
 				: "c"  (xcr)
 				: "cc"
 			);
+#endif
 
 			// The OS can manage the state of 512-bit zmm (AVX-512) registers
 			// only if the xcr[7:5] bits are set. If they are not set, then

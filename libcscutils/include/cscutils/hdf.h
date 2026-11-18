@@ -33,7 +33,9 @@ extern "C" {
      #define DEPRECATE __attribute__((deprecated))
      #define DEPRECATE_MSG(X) __attribute__((deprecated(X)))
     #else
+#if __STDC_VERSION__ >= 202311L
      #warning "Your compiler does not support the deprecated attribute."
+#endif
      #define DEPRECATE
      #define DEPRECATE_MSG(X)
     #endif

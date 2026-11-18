@@ -75,7 +75,9 @@ unsigned int csc_sysinfo_cpu_count(void)
     GetSystemInfo(&sysinfo);
     return sysinfo.dwNumberOfProcessors;
 #else
+#if __STDC_VERSION__ >= 202311L
 #warning Not implemented yet
+#endif
     return 1;
 #endif
 }

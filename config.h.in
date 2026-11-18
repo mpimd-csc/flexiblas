@@ -127,7 +127,9 @@
 #define TLS_STORE thread_local
 #else
 #define TLS_STORE
+#if __STDC_VERSION__ >= 202311L
 #warning Thread Local Storage not available. FlexiBLAS might cause problems in multithreaded applications.
+#endif
 #endif
 
 #if (defined(__WIN32__) || defined(__WIN64__)) && ! (defined (__MINGW32__) || defined(__MINGW64__))

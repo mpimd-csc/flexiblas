@@ -178,7 +178,9 @@ int csc_sysinfo_memory(size_t *total_ram, size_t *free_ram, size_t *total_swap, 
 #endif
 
 #define NO_MEMORY_INFO 0
+#if __STDC_VERSION__ >= 202311L
 #warning untested
+#endif
 
 int csc_sysinfo_memory(size_t *total_ram, size_t *free_ram, size_t *total_swap, size_t *free_swap)
 {
@@ -320,7 +322,9 @@ int csc_sysinfo_memory(size_t *total_ram, size_t *free_ram, size_t *total_swap, 
 #include "cscutils/error_message.h"
 #include "cscutils/sysinfo.h"
 
+#if __STDC_VERSION__ >= 202311L
 #warning The memory information is not supported on the current OS.
+#endif
 
 /*-----------------------------------------------------------------------------
  *  Linux Implementation
