@@ -1,7 +1,6 @@
 
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/flexiblas_api.h.in ${CMAKE_BINARY_DIR}/include/flexiblas_api.h)
 
-
 ADD_SUBDIRECTORY(fallback_blas)
 
 IF(LAPACK)
