@@ -22,7 +22,6 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <complex.h>
 #include "cblas.h"
 #include "flexiblas_fortran_mangle.h"
 #ifdef BLAS_INTERFACE_INTEL
@@ -42,26 +41,23 @@
 #define Int int
 #endif
 
-
-
 int main ( int argc, char **argv ) {
     printf("zdotc gnu\n");
-    double complex a[]={1+I,2+I,3,4};
-    double complex b[]={1,1,1,1};
+    blas_complex_double a[]={flexiblas_make_complex_double(1,1),flexiblas_make_complex_double(2,1),flexiblas_make_complex_double(3,0),flexiblas_make_complex_double(4,0)};
+    blas_complex_double b[]={flexiblas_make_complex_double(1,0),flexiblas_make_complex_double(1,0),flexiblas_make_complex_double(1,0),flexiblas_make_complex_double(1,0)};
     Int n = 4;
     Int one = 1;
-    double complex ret = 0, ret2 = 0;
+    blas_complex_double ret = flexiblas_make_complex_double(0,0), ret2 = ret;
 
 #ifdef FLEXIBLAS_CBLAS
     n = 4;
     one = 1;
     cblas_zdotc_sub(n, a, one,b,one,&ret2);
-    printf("cblas_zdotc(test) = %lg + %lg\n", creal(ret2), cimag(ret2) );
+    printf("cblas_zdotc(test) = %lg + %lg\n", lapack_complex_double_real(ret2), lapack_complex_double_imag(ret2) );
 #endif
 
     ret = FC_GLOBAL(zdotc,ZDOTC)(&n, a, &one,b, &one);
-    printf("zdotc_(test)      = %lg  + %lg\n", creal(ret), cimag(ret) );
+    printf("zdotc_(test)      = %lg  + %lg\n", lapack_complex_double_real(ret), lapack_complex_double_imag(ret) );
 
     return 0;
 }
-

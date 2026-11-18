@@ -22,7 +22,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <complex.h>
 #include "flexiblas_fortran_mangle.h"
 #ifdef INTEGER8
 #define Int int64_t
@@ -154,10 +153,11 @@ int main(int argc, const char *argv[])
 
     /* Square matrices  */
     {
-        float complex  col_A[16] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
-        float complex  alpha = 2+I;
+        blas_complex_float  col_A[16];
+        blas_complex_float  alpha = flexiblas_make_complex_float(2,1);
         Int rows, cols, lda, ldb, i,j;
         Int rowst, colst;
+        for (i = 0; i < 16; i++) col_A[i] = flexiblas_make_complex_float(i+1,0);
         rows = lda = 4;
         cols = 4;
         ldb = 4;
@@ -170,7 +170,7 @@ int main(int argc, const char *argv[])
         printf("IMATCOPY_2N\n");
         for (i = 0; i < rows; i++) {
             for (j = 0; j < cols; j++) {
-                printf("%4g %4g\t", creal(col_A[i+j*ldb]), cimag(col_A[i+j*ldb]));
+                printf("%4g %4g\t", lapack_complex_float_real(col_A[i+j*ldb]), lapack_complex_float_imag(col_A[i+j*ldb]));
             }
             printf("\n");
         }
@@ -179,7 +179,7 @@ int main(int argc, const char *argv[])
         printf("IMATCOPY_2R\n");
         for (i = 0; i < rows; i++) {
             for (j = 0; j < cols; j++) {
-                printf("%4g %4g\t", creal(col_A[i+j*ldb]), cimag(col_A[i+j*ldb]));
+                printf("%4g %4g\t", lapack_complex_float_real(col_A[i+j*ldb]), lapack_complex_float_imag(col_A[i+j*ldb]));
             }
             printf("\n");
         }
@@ -188,7 +188,7 @@ int main(int argc, const char *argv[])
         printf("OMATCOPY_2T\n");
         for (i = 0; i < rowst; i++) {
             for (j = 0; j < colst; j++) {
-                printf("%4g %4g\t", creal(col_A[i+j*ldb]), cimag(col_A[i+j*ldb]));
+                printf("%4g %4g\t", lapack_complex_float_real(col_A[i+j*ldb]), lapack_complex_float_imag(col_A[i+j*ldb]));
             }
             printf("\n");
         }
@@ -197,7 +197,7 @@ int main(int argc, const char *argv[])
         printf("OMATCOPY_2C\n");
         for (i = 0; i < rowst; i++) {
             for (j = 0; j < colst; j++) {
-                printf("%4g %4g\t", creal(col_A[i+j*ldb]), cimag(col_A[i+j*ldb]));
+                printf("%4g %4g\t", lapack_complex_float_real(col_A[i+j*ldb]), lapack_complex_float_imag(col_A[i+j*ldb]));
             }
             printf("\n");
         }
@@ -206,10 +206,11 @@ int main(int argc, const char *argv[])
     }
 
     {
-        double complex  col_A[16] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
-        double complex  alpha = 2+I;
+        blas_complex_double  col_A[16];
+        blas_complex_double  alpha = flexiblas_make_complex_double(2,1);
         Int rows, cols, lda, ldb, i,j;
         Int rowst, colst;
+        for (i = 0; i < 16; i++) col_A[i] = flexiblas_make_complex_double(i+1,0);
         rows = lda = 4;
         cols = 4;
         ldb = 4;
@@ -222,7 +223,7 @@ int main(int argc, const char *argv[])
         printf("OMATCOPY_2N\n");
         for (i = 0; i < rows; i++) {
             for (j = 0; j < cols; j++) {
-                printf("%4g %4g\t", creal(col_A[i+j*ldb]), cimag(col_A[i+j*ldb]));
+                printf("%4g %4g\t", lapack_complex_double_real(col_A[i+j*ldb]), lapack_complex_double_imag(col_A[i+j*ldb]));
             }
             printf("\n");
         }
@@ -231,7 +232,7 @@ int main(int argc, const char *argv[])
         printf("OMATCOPY_2R\n");
         for (i = 0; i < rows; i++) {
             for (j = 0; j < cols; j++) {
-                printf("%4g %4g\t", creal(col_A[i+j*ldb]), cimag(col_A[i+j*ldb]));
+                printf("%4g %4g\t", lapack_complex_double_real(col_A[i+j*ldb]), lapack_complex_double_imag(col_A[i+j*ldb]));
             }
             printf("\n");
         }
@@ -240,7 +241,7 @@ int main(int argc, const char *argv[])
         printf("OMATCOPY_2T\n");
         for (i = 0; i < rowst; i++) {
             for (j = 0; j < colst; j++) {
-                printf("%4g %4g\t", creal(col_A[i+j*ldb]), cimag(col_A[i+j*ldb]));
+                printf("%4g %4g\t", lapack_complex_double_real(col_A[i+j*ldb]), lapack_complex_double_imag(col_A[i+j*ldb]));
             }
             printf("\n");
         }
@@ -249,7 +250,7 @@ int main(int argc, const char *argv[])
         printf("OMATCOPY_2C\n");
         for (i = 0; i < rowst; i++) {
             for (j = 0; j < colst; j++) {
-                printf("%4g %4g\t", creal(col_A[i+j*ldb]), cimag(col_A[i+j*ldb]));
+                printf("%4g %4g\t", lapack_complex_double_real(col_A[i+j*ldb]), lapack_complex_double_imag(col_A[i+j*ldb]));
             }
             printf("\n");
         }
@@ -368,10 +369,11 @@ int main(int argc, const char *argv[])
 
     /* Square matrices  */
     {
-        float complex  col_A[16] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
-        float complex  alpha = 2+I;
+        blas_complex_float  col_A[16];
+        blas_complex_float  alpha = flexiblas_make_complex_float(2,1);
         int rows, cols, lda, ldb, i,j;
         int rowst, colst;
+        for (i = 0; i < 16; i++) col_A[i] = flexiblas_make_complex_float(i+1,0);
         rows = lda = 4;
         cols = 4;
         ldb = 4;
@@ -384,7 +386,7 @@ int main(int argc, const char *argv[])
         printf("IMATCOPY_2N\n");
         for (i = 0; i < rows; i++) {
             for (j = 0; j < cols; j++) {
-                printf("%4g %4g\t", creal(col_A[i+j*ldb]), cimag(col_A[i+j*ldb]));
+                printf("%4g %4g\t", lapack_complex_float_real(col_A[i+j*ldb]), lapack_complex_float_imag(col_A[i+j*ldb]));
             }
             printf("\n");
         }
@@ -393,7 +395,7 @@ int main(int argc, const char *argv[])
         printf("IMATCOPY_2R\n");
         for (i = 0; i < rows; i++) {
             for (j = 0; j < cols; j++) {
-                printf("%4g %4g\t", creal(col_A[i+j*ldb]), cimag(col_A[i+j*ldb]));
+                printf("%4g %4g\t", lapack_complex_float_real(col_A[i+j*ldb]), lapack_complex_float_imag(col_A[i+j*ldb]));
             }
             printf("\n");
         }
@@ -402,7 +404,7 @@ int main(int argc, const char *argv[])
         printf("OMATCOPY_2T\n");
         for (i = 0; i < rowst; i++) {
             for (j = 0; j < colst; j++) {
-                printf("%4g %4g\t", creal(col_A[i+j*ldb]), cimag(col_A[i+j*ldb]));
+                printf("%4g %4g\t", lapack_complex_float_real(col_A[i+j*ldb]), lapack_complex_float_imag(col_A[i+j*ldb]));
             }
             printf("\n");
         }
@@ -411,7 +413,7 @@ int main(int argc, const char *argv[])
         printf("OMATCOPY_2C\n");
         for (i = 0; i < rowst; i++) {
             for (j = 0; j < colst; j++) {
-                printf("%4g %4g\t", creal(col_A[i+j*ldb]), cimag(col_A[i+j*ldb]));
+                printf("%4g %4g\t", lapack_complex_float_real(col_A[i+j*ldb]), lapack_complex_float_imag(col_A[i+j*ldb]));
             }
             printf("\n");
         }
@@ -420,10 +422,11 @@ int main(int argc, const char *argv[])
     }
 
     {
-        double complex  col_A[16] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
-        double complex  alpha = 2+I;
+        blas_complex_double  col_A[16];
+        blas_complex_double  alpha = flexiblas_make_complex_double(2,1);
         int rows, cols, lda, ldb, i,j;
         int rowst, colst;
+        for (i = 0; i < 16; i++) col_A[i] = flexiblas_make_complex_double(i+1,0);
         rows = lda = 4;
         cols = 4;
         ldb = 4;
@@ -436,7 +439,7 @@ int main(int argc, const char *argv[])
         printf("OMATCOPY_2N\n");
         for (i = 0; i < rows; i++) {
             for (j = 0; j < cols; j++) {
-                printf("%4g %4g\t", creal(col_A[i+j*ldb]), cimag(col_A[i+j*ldb]));
+                printf("%4g %4g\t", lapack_complex_double_real(col_A[i+j*ldb]), lapack_complex_double_imag(col_A[i+j*ldb]));
             }
             printf("\n");
         }
@@ -445,7 +448,7 @@ int main(int argc, const char *argv[])
         printf("OMATCOPY_2R\n");
         for (i = 0; i < rows; i++) {
             for (j = 0; j < cols; j++) {
-                printf("%4g %4g\t", creal(col_A[i+j*ldb]), cimag(col_A[i+j*ldb]));
+                printf("%4g %4g\t", lapack_complex_double_real(col_A[i+j*ldb]), lapack_complex_double_imag(col_A[i+j*ldb]));
             }
             printf("\n");
         }
@@ -454,7 +457,7 @@ int main(int argc, const char *argv[])
         printf("OMATCOPY_2T\n");
         for (i = 0; i < rowst; i++) {
             for (j = 0; j < colst; j++) {
-                printf("%4g %4g\t", creal(col_A[i+j*ldb]), cimag(col_A[i+j*ldb]));
+                printf("%4g %4g\t", lapack_complex_double_real(col_A[i+j*ldb]), lapack_complex_double_imag(col_A[i+j*ldb]));
             }
             printf("\n");
         }
@@ -463,7 +466,7 @@ int main(int argc, const char *argv[])
         printf("OMATCOPY_2C\n");
         for (i = 0; i < rowst; i++) {
             for (j = 0; j < colst; j++) {
-                printf("%4g %4g\t", creal(col_A[i+j*ldb]), cimag(col_A[i+j*ldb]));
+                printf("%4g %4g\t", lapack_complex_double_real(col_A[i+j*ldb]), lapack_complex_double_imag(col_A[i+j*ldb]));
             }
             printf("\n");
         }
