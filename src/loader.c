@@ -22,7 +22,6 @@
 
 #include "flexiblas.h"
 #include <errno.h>
-#include <complex.h>
 #include "flexiblas_fortran_mangle.h"
 #include <stdarg.h>
 
@@ -33,10 +32,16 @@
 #endif
 #if (defined(__i386__) || defined (__i686__)) || ((defined(_WIN64) || defined(__MINGW64__)) && (defined(_M_AMD64) || defined(__x86_64__)))
   #define FLEXIBLAS_LOAD_CPLX_FUNC "cdotc" /* F64 gives false positive */
-  #define FLEXIBLAS_LOAD_CPLX_TYPE float complex
+  #define FLEXIBLAS_LOAD_CPLX_TYPE lapack_complex_float
+  #define FLEXIBLAS_LOAD_MAKE_CPLX flexiblas_make_complex_float
+  #define FLEXIBLAS_LOAD_CPLX_REAL lapack_complex_float_real
+  #define FLEXIBLAS_LOAD_CPLX_IMAG lapack_complex_float_imag
 #else
   #define FLEXIBLAS_LOAD_CPLX_FUNC "zdotc"
-  #define FLEXIBLAS_LOAD_CPLX_TYPE double complex
+  #define FLEXIBLAS_LOAD_CPLX_TYPE lapack_complex_double
+  #define FLEXIBLAS_LOAD_MAKE_CPLX flexiblas_make_complex_double
+  #define FLEXIBLAS_LOAD_CPLX_REAL lapack_complex_double_real
+  #define FLEXIBLAS_LOAD_CPLX_IMAG lapack_complex_double_imag
 #endif
 #define STRINGIFY(x) #x
 
@@ -153,8 +158,8 @@ HIDDEN flexiblas_complex_interface_t __flexiblas_get_complex_interface(void *han
 
     FLEXIBLAS_FUNCTION_POINTER_ASSIGN(cplx_func_gnu, cplx_func_ptr);
     FLEXIBLAS_FUNCTION_POINTER_ASSIGN(cplx_func_intel, cplx_func_ptr);
-
-    FLEXIBLAS_LOAD_CPLX_TYPE zeroc = 0.0 + 0.0*I, onec = 1.0 + 0.0*I;
+    FLEXIBLAS_LOAD_CPLX_TYPE zeroc = FLEXIBLAS_LOAD_MAKE_CPLX(0.0,0.0),
+      onec = FLEXIBLAS_LOAD_MAKE_CPLX(1.0,0.0);
 #if defined(__i386__) || defined (__i686__)
     FLEXIBLAS_LOAD_CPLX_TYPE (*cplx_func_both)(FLEXIBLAS_LOAD_CPLX_TYPE *, FLEXIBLAS_LOAD_INT_T *, FLEXIBLAS_LOAD_CPLX_TYPE *, FLEXIBLAS_LOAD_INT_T *, FLEXIBLAS_LOAD_CPLX_TYPE *, FLEXIBLAS_LOAD_INT_T *);
     FLEXIBLAS_FUNCTION_POINTER_ASSIGN(cplx_func_both, cplx_func_ptr);
@@ -165,29 +170,29 @@ HIDDEN flexiblas_complex_interface_t __flexiblas_get_complex_interface(void *han
        to produce a complex 1 in retval. Take return value to reset
        FPU stack even if Intel. */
     FLEXIBLAS_LOAD_CPLX_TYPE gnu_maybe_ret = cplx_func_both(&retval, &one, &onec, &one, &onec, &one);
-    if (creal(retval) == 0.0 && cimag(retval) == 0.0) /* GNU, left as zero */
+    if (FLEXIBLAS_LOAD_CPLX_REAL(retval) == 0.0 && FLEXIBLAS_LOAD_CPLX_IMAG(retval) == 0.0) /* GNU, left as zero */
         return FLEXIBLAS_COMPLEX_GNU_INTERFACE;
     return FLEXIBLAS_COMPLEX_INTEL_INTERFACE; /* any other value */
 #else
 
 #  if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-    FLEXIBLAS_LOAD_CPLX_TYPE retval = 0.0 + 0.0*I;
+    FLEXIBLAS_LOAD_CPLX_TYPE retval = FLEXIBLAS_LOAD_MAKE_CPLX(0.0,0.0);
     /** retval = cplx_func_gnu(&one, &zeroc, &one, &zeroc, &one); */
 #  else
     /*
      * ZDOTC will return zero if all inputs are zero. Especially it overwrites existing data.
      * Ifi the the retval arguments gets zero, we are using the "Intel" calling convention.
      */
-    FLEXIBLAS_LOAD_CPLX_TYPE retval = 0.0 + 1.0*I;
+    FLEXIBLAS_LOAD_CPLX_TYPE retval = FLEXIBLAS_LOAD_MAKE_CPLX(0.0,1.0);
 #  endif
     cplx_func_intel(&retval, &one, &zeroc, &one, &zeroc, &one);
-    if (creal(retval) == 0.0 && cimag(retval) == 0.0) {
+    if (FLEXIBLAS_LOAD_CPLX_REAL(retval) == 0.0 && FLEXIBLAS_LOAD_CPLX_IMAG(retval) == 0.0) {
         return FLEXIBLAS_COMPLEX_INTEL_INTERFACE;
     }
 
-    retval = 0.0 + 1.0*I;
+    retval = FLEXIBLAS_LOAD_MAKE_CPLX(0.0,1.0);
     retval = cplx_func_gnu(&one, &zeroc, &one, &zeroc, &one);
-    if (creal(retval) == 0.0 && cimag(retval) == 0.0) {
+    if (FLEXIBLAS_LOAD_CPLX_REAL(retval) == 0.0 && FLEXIBLAS_LOAD_CPLX_IMAG(retval) == 0.0) {
         return FLEXIBLAS_COMPLEX_GNU_INTERFACE;
     }
     return FLEXIBLAS_COMPLEX_NONE_INTERFACE;

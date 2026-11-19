@@ -37,25 +37,25 @@ extern "C" {
 #include "flexiblas_config.h"
 
 
-    void FC_GLOBAL(caxpby,CAXPBY)(blasint* n, float complex* ca, float complex* cx, blasint* incx, float complex* cb, float complex* cy, blasint* incy);
+    void FC_GLOBAL(caxpby,CAXPBY)(blasint* n, blas_complex_float* ca, blas_complex_float* cx, blasint* incx, blas_complex_float* cb, blas_complex_float* cy, blasint* incy);
 
     void FC_GLOBAL(daxpby,DAXPBY)(blasint* n, double* da, double* dx, blasint* incx, double* db, double* dy, blasint* incy);
 
-    void FC_GLOBAL(zaxpby,ZAXPBY)(blasint* n, double complex* za, double complex* zx, blasint* incx, double complex* zb, double complex* zy, blasint* incy);
+    void FC_GLOBAL(zaxpby,ZAXPBY)(blasint* n, blas_complex_double* za, blas_complex_double* zx, blasint* incx, blas_complex_double* zb, blas_complex_double* zy, blasint* incy);
 
     void FC_GLOBAL(saxpby,SAXPBY)(blasint* n, float* sa, float* sx, blasint* incx, float* sb, float* sy, blasint* incy);
 
-    void FC_GLOBAL(comatcopy,COMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, float complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(comatcopy,COMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, blas_complex_float* alpha, blas_complex_float* a, blasint* lda, blas_complex_float* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zomatcopy,ZOMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, double complex* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zomatcopy,ZOMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, blas_complex_double* alpha, blas_complex_double* a, blasint* lda, blas_complex_double* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans);
 
     void FC_GLOBAL(domatcopy,DOMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, double* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans);
 
     void FC_GLOBAL(somatcopy,SOMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float* alpha, float* a, blasint* lda, float* b, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(cimatcopy,CIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, float complex* alpha, float complex* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(cimatcopy,CIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, blas_complex_float* alpha, blas_complex_float* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans);
 
-    void FC_GLOBAL(zimatcopy,ZIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double complex* alpha, double complex* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans);
+    void FC_GLOBAL(zimatcopy,ZIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, blas_complex_double* alpha, blas_complex_double* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans);
 
     void FC_GLOBAL(dimatcopy,DIMATCOPY)(char* order, char* trans, blasint* rows, blasint* cols, double* alpha, double* a, blasint* lda, blasint* ldb, flexiblas_fortran_charlen_t len_order, flexiblas_fortran_charlen_t len_trans);
 
@@ -65,9 +65,9 @@ extern "C" {
 
     void FC_GLOBAL(dgeadd,DGEADD)(blasint* m, blasint* n, double* alpha, double* a, blasint* lda, double* beta, double* b, blasint* ldb);
 
-    void FC_GLOBAL(cgeadd,CGEADD)(blasint* m, blasint* n, float complex* alpha, float complex* a, blasint* lda, float complex* beta, float complex* b, blasint* ldb);
+    void FC_GLOBAL(cgeadd,CGEADD)(blasint* m, blasint* n, blas_complex_float* alpha, blas_complex_float* a, blasint* lda, blas_complex_float* beta, blas_complex_float* b, blasint* ldb);
 
-    void FC_GLOBAL(zgeadd,ZGEADD)(blasint* m, blasint* n, double complex* alpha, double complex* a, blasint* lda, double complex* beta, double complex* b, blasint* ldb);
+    void FC_GLOBAL(zgeadd,ZGEADD)(blasint* m, blasint* n, blas_complex_double* alpha, blas_complex_double* a, blasint* lda, blas_complex_double* beta, blas_complex_double* b, blasint* ldb);
 
 
 #ifdef __cplusplus

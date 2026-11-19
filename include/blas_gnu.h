@@ -24,45 +24,14 @@
 #include <stdint.h>
 
 /* Complex type (single precision) */
-
-#ifndef lapack_complex_float
-#ifndef __cplusplus
-#include <complex.h>
-#else
-#include <complex>
-#endif
-#define lapack_complex_float    float _Complex
-#endif
-
 #ifndef blas_complex_float
-#ifndef __cplusplus
-#include <complex.h>
-#else
-#include <complex>
+#define blas_complex_float lapack_complex_float
 #endif
-#define blas_complex_float    float _Complex
-#endif
-
 
 /* Complex type (double precision) */
-#ifndef lapack_complex_double
-#ifndef __cplusplus
-#include <complex.h>
-#else
-#include <complex>
-#endif
-#define lapack_complex_double   double _Complex
-#endif
-
 #ifndef blas_complex_double
-#ifndef __cplusplus
-#include <complex.h>
-#else
-#include <complex>
+#define blas_complex_double lapack_complex_double
 #endif
-#define blas_complex_double   double _Complex
-#endif
-
 
 #ifdef __cplusplus
 extern "C" {

@@ -24,7 +24,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <complex.h>
 #include "flexiblas_fortran_mangle.h"
 
 #ifdef INTEGER8
@@ -85,30 +84,30 @@ int main(int argc, const char *argv[])
     {
         Int n = 4, incx = 1, incy = 1;
         int i;
-        double complex dx[4] = {1, 1, 1, 1};
-        double complex dy[4] = {2 + I, 2-I, 2+I, 2-I};
-        double complex da = 2;
-        double complex db = 1.5;
+        blas_complex_double dx[4] = {flexiblas_make_complex_double(1,0), flexiblas_make_complex_double(1,0), flexiblas_make_complex_double(1,0), flexiblas_make_complex_double(1,0)};
+        blas_complex_double dy[4] = {flexiblas_make_complex_double(2,1), flexiblas_make_complex_double(2,-1), flexiblas_make_complex_double(2,1), flexiblas_make_complex_double(2,-1)};
+        blas_complex_double da = flexiblas_make_complex_double(2,0);
+        blas_complex_double db = flexiblas_make_complex_double(1.5,0);
 
         FC_GLOBAL(zaxpby,ZAXPBY)(&n, &da, dx, &incx, &db, dy, &incy);
         printf("ZAXPBY:\n");
         for (i = 0; i < n; i++) {
-            printf("[%2d] = %lg + %lg\n", i, creal(dy[i]), cimag(dy[i]));
+            printf("[%2d] = %lg + %lg\n", i, lapack_complex_double_real(dy[i]), lapack_complex_double_imag(dy[i]));
         }
     }
 
     {
         Int n = 4, incx = 1, incy = 1;
         int i;
-        float complex dx[4] = {1, 1, 1, 1};
-        float complex dy[4] = {2 + I, 2-I, 2+I, 2-I};
-        float complex da = 2;
-        float complex db = 1.5;
+        blas_complex_float dx[4] = {flexiblas_make_complex_float(1,0), flexiblas_make_complex_float(1,0), flexiblas_make_complex_float(1,0), flexiblas_make_complex_float(1,0)};
+        blas_complex_float dy[4] = {flexiblas_make_complex_float(2,1), flexiblas_make_complex_float(2,-1), flexiblas_make_complex_float(2,1), flexiblas_make_complex_float(2,-1)};
+        blas_complex_float da = flexiblas_make_complex_float(2,0);
+        blas_complex_float db = flexiblas_make_complex_float(1.5,0);
 
         FC_GLOBAL(caxpby,CAXPBY)(&n, &da, dx, &incx, &db, dy, &incy);
         printf("CAXPBY:\n");
         for (i = 0; i < n; i++) {
-            printf("[%2d] = %lg + %lg\n", i, creal(dy[i]), cimag(dy[i]));
+            printf("[%2d] = %lg + %lg\n", i, lapack_complex_float_real(dy[i]), lapack_complex_float_imag(dy[i]));
         }
     }
 #ifdef FLEXIBLAS_CBLAS
@@ -142,29 +141,29 @@ int main(int argc, const char *argv[])
 
     {
         int n = 4, incx = 1, incy = 1, i;
-        double complex dx[4] = {1, 1, 1, 1};
-        double complex dy[4] = {2 + I, 2-I, 2+I, 2-I};
-        double complex da = 2;
-        double complex db = 1.5;
+        blas_complex_double dx[4] = {flexiblas_make_complex_double(1,0), flexiblas_make_complex_double(1,0), flexiblas_make_complex_double(1,0), flexiblas_make_complex_double(1,0)};
+        blas_complex_double dy[4] = {flexiblas_make_complex_double(2,1), flexiblas_make_complex_double(2,-1), flexiblas_make_complex_double(2,1), flexiblas_make_complex_double(2,-1)};
+        blas_complex_double da = flexiblas_make_complex_double(2,0);
+        blas_complex_double db = flexiblas_make_complex_double(1.5,0);
 
         cblas_zaxpby(n, &da, dx, incx, &db, dy, incy);
         printf("CBLAS_ZAXPBY:\n");
         for (i = 0; i < n; i++) {
-            printf("[%2d] = %lg + %lg\n", i, creal(dy[i]), cimag(dy[i]));
+            printf("[%2d] = %lg + %lg\n", i, lapack_complex_double_real(dy[i]), lapack_complex_double_imag(dy[i]));
         }
     }
 
     {
         int n = 4, incx = 1, incy = 1, i;
-        float complex dx[4] = {1, 1, 1, 1};
-        float complex dy[4] = {2 + I, 2-I, 2+I, 2-I};
-        float complex da = 2;
-        float complex db = 1.5;
+        blas_complex_float dx[4] = {flexiblas_make_complex_float(1,0), flexiblas_make_complex_float(1,0), flexiblas_make_complex_float(1,0), flexiblas_make_complex_float(1,0)};
+        blas_complex_float dy[4] = {flexiblas_make_complex_float(2,1), flexiblas_make_complex_float(2,-1), flexiblas_make_complex_float(2,1), flexiblas_make_complex_float(2,-1)};
+        blas_complex_float da = flexiblas_make_complex_float(2,0);
+        blas_complex_float db = flexiblas_make_complex_float(1.5,0);
 
         cblas_caxpby(n, &da, dx, incx, &db, dy, incy);
         printf("CBLAS_CAXPBY:\n");
         for (i = 0; i < n; i++) {
-            printf("[%2d] = %lg + %lg\n", i, creal(dy[i]), cimag(dy[i]));
+            printf("[%2d] = %lg + %lg\n", i, lapack_complex_float_real(dy[i]), lapack_complex_float_imag(dy[i]));
         }
     }
 

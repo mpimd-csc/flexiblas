@@ -61,7 +61,7 @@ void flexiblas_set_num_threads(int num)
     return;
 }
 
-#ifndef __APPLE__
+#ifdef HAVE_ATTR_ALIAS
 void openblas_set_num_threads(int num) __attribute__((weak,alias("flexiblas_set_num_threads")));
 void MKL_Set_Num_Threads(int num) __attribute__((weak,alias("flexiblas_set_num_threads")));
 void acmlsetnumthreads(int num) __attribute__((weak,alias("flexiblas_set_num_threads")));
@@ -105,7 +105,7 @@ int flexiblas_get_num_threads(void)
     return fn ();
 }
 
-#ifndef __APPLE__
+#ifdef HAVE_ATTR_ALIAS
 int  openblas_get_num_threads(void) __attribute__((weak,alias("flexiblas_get_num_threads")));
 int  MKL_Get_Num_Threads(void) __attribute__((weak,alias("flexiblas_get_num_threads")));
 int  MKL_Get_Max_Threads(void) __attribute__((weak,alias("flexiblas_get_num_threads")));
@@ -159,7 +159,7 @@ void flexiblas_set_num_threads_(Int* num)
     return;
 }
 
-#ifndef __APPLE__
+#ifdef HAVE_ATTR_ALIAS
 void openblas_set_num_threads_(Int *num) __attribute__((weak, alias("flexiblas_set_num_threads_")));
 void mkl_set_num_threads(Int *num) __attribute__((weak,alias("flexiblas_set_num_threads_")));
 void mkl_set_num_threads_(Int *num) __attribute__((weak,alias("flexiblas_set_num_threads_")));
@@ -211,7 +211,7 @@ Int flexiblas_get_num_threads_(void)
     return fn ();
 }
 
-#ifndef __APPLE__
+#ifdef HAVE_ATTR_ALIAS
 Int  openblas_get_num_threads_(void) __attribute__((weak, alias("flexiblas_get_num_threads_")));
 Int  mkl_get_num_threads_(void) __attribute__((weak,alias("flexiblas_get_num_threads_")));
 Int  mkl_get_num_threads(void) __attribute__((weak,alias("flexiblas_get_num_threads_")));

@@ -18,57 +18,52 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
    */
 
-
-
 #include "flexiblas_fortran_mangle.h"
-
-
 
 #include <stdio.h>
 #include <math.h>
-#include <complex.h>
 #include "flexiblas.h"
 
-double FC_GLOBAL(dcabs1,DCABS1)(const double complex *z)
+double FC_GLOBAL(dcabs1,DCABS1)(const lapack_complex_double *z)
 {
-    return fabs(creal(*z)) + fabs(cimag(*z));
+    return fabs(lapack_complex_double_real(*z)) + fabs(lapack_complex_double_imag(*z));
 }
 
-float FC_GLOBAL(scabs1,SCABS1)(const float complex *z)
+float FC_GLOBAL(scabs1,SCABS1)(const lapack_complex_float *z)
 {
-    return fabsf(crealf(*z)) + fabsf(cimagf(*z));
+    return fabsf(lapack_complex_float_real(*z)) + fabsf(lapack_complex_float_imag(*z));
 }
 
-double FC_GLOBAL2(dcabs1,DCABS1)(const double complex *z)
+double FC_GLOBAL2(dcabs1,DCABS1)(const lapack_complex_double *z)
 {
-    return fabs(creal(*z)) + fabs(cimag(*z));
+    return fabs(lapack_complex_double_real(*z)) + fabs(lapack_complex_double_imag(*z));
 }
 
-float FC_GLOBAL2(scabs1,SCABS1)(const float complex *z)
+float FC_GLOBAL2(scabs1,SCABS1)(const lapack_complex_float *z)
 {
-    return fabsf(crealf(*z)) + fabsf(cimagf(*z));
+    return fabsf(lapack_complex_float_real(*z)) + fabsf(lapack_complex_float_imag(*z));
 }
 
-double FC_GLOBAL3(dcabs1,DCABS1)(const double complex *z)
+double FC_GLOBAL3(dcabs1,DCABS1)(const lapack_complex_double *z)
 {
-    return fabs(creal(*z)) + fabs(cimag(*z));
+    return fabs(lapack_complex_double_real(*z)) + fabs(lapack_complex_double_imag(*z));
 }
 
-float FC_GLOBAL3(scabs1,SCABS1)(const float complex *z)
+float FC_GLOBAL3(scabs1,SCABS1)(const lapack_complex_float *z)
 {
-    return fabsf(crealf(*z)) + fabsf(cimagf(*z));
+    return fabsf(lapack_complex_float_real(*z)) + fabsf(lapack_complex_float_imag(*z));
 }
 
 
 #ifdef FLEXIBLAS_CBLAS
 double cblas_dcabs1(const void *c)
 {
-    return FC_GLOBAL(dcabs1,DCABS1)((const double complex *) c);
+    return FC_GLOBAL(dcabs1,DCABS1)((const lapack_complex_double *) c);
 }
 
 double cblas_scabs1(const void *c)
 {
-    return FC_GLOBAL(scabs1,SCABS1)((const float complex *) c);
+    return FC_GLOBAL(scabs1,SCABS1)((const lapack_complex_float *) c);
 }
 
 #endif

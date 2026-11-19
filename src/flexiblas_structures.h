@@ -23,8 +23,6 @@
 #ifndef FLEXIBLAS_STRUCTURES_H
 #define FLEXIBLAS_STRUCTURES_H
 
-#include <stdint.h>
-#include <complex.h>
 #ifndef __WIN32__
 #include <pthread.h>
 #endif
