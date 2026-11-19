@@ -56,7 +56,7 @@ HIDDEN int __flexiblas_count_additional_paths = 0;
 #include <dlfcn.h>
 
 
-__attribute__((noinline)) char *
+NOINLINE char *
 __flexiblas_get_library_location_impl(void)
 {
 #if defined(__WIN32__) || defined(__WIN64__)
@@ -104,7 +104,7 @@ __flexiblas_get_library_location_impl(void)
     return buffer;
 }
 
-HIDDEN __attribute__((noinline)) char *
+HIDDEN NOINLINE char *
 __flexiblas_get_library_location(void)
 {
   return __flexiblas_get_library_location_impl();

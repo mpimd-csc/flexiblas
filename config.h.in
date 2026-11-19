@@ -43,6 +43,7 @@
 #cmakedefine HAVE_ATTR_ALIAS
 #cmakedefine HAVE_ATTR_CONSTRUCTOR
 #cmakedefine HAVE_ATTR_HIDDEN
+#cmakedefine HAVE_ATTR_NOINLINE
 #cmakedefine HAVE_SYSMACRO_H
 #cmakedefine HAVE_SYS_STAT_H
 #cmakedefine FALLBACK_NAME
@@ -253,6 +254,13 @@ static inline lapack_complex_double flexiblas_make_complex_double( double re, do
 #define HIDDEN
 #endif
 
+#ifdef HAVE_ATTR_NOINLINE
+#define NOINLINE __attribute__((noinline))
+#elif defined(_MSC_VER)
+#define NOINLINE __declspec(noinline)
+#else
+#define NOINLINE
+#endif
 
 #ifdef FLEXIBLAS_INTEGER8
 #define     ENV_FLEXIBLAS "FLEXIBLAS64"

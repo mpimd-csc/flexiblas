@@ -407,7 +407,7 @@ INCLUDE(CheckAttributeExists)
 Check_Attribute_Exists( constructor HAVE_ATTR_CONSTRUCTOR)
 Check_Attribute_Exists( "alias(\"foo\")" HAVE_ATTR_ALIAS)
 Check_Attribute_Exists( "visibility(\"hidden\")" HAVE_ATTR_HIDDEN)
-Check_Attribute_Exists( "visibility(\"default\")" HAVE_ATTR_DEFAULT)
+Check_Attribute_Exists( "noinline" HAVE_ATTR_NOINLINE)
 Check_Attribute_Exists( unused HAVE_ATTR_UNUSED )
 SET(EXTRA_BLAS "")
 
