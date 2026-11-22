@@ -16,3 +16,5 @@ Please list yourself, optionally with an affiliation, and a one-liner of your co
   * interoperability of complex types with C++ code
   * adding Windows support
   * making FlexiBLAS relocatable
+* Michael C. Lehn, Universität Ulm, fixes for the backend hooks (number of
+  threads, XERBLA)

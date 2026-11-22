@@ -322,7 +322,7 @@ void __flexiblas_load_get_num_threads(flexiblas_backend_t * backend)
         else if ( i == 4 )
             strncpy(fn_name, "bli_thread_get_num_threads",127);
         else if ( i == 5 )
-            strncpy(fn_name, "flexiblas_backend_ge_num_threads", 127);
+            strncpy(fn_name, "flexiblas_backend_get_num_threads", 127);
         else if ( i == 6 ) {
             strncpy(fn_name, "armpl_omp_get_num_threads",127);
         } else if ( i == 7 ) {
