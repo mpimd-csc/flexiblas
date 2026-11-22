@@ -5,6 +5,8 @@ Next:
   - Fix: Spell Check from lintian
   - Fix: if FlexiBLAS was used with dlmopen, it crashes.
   - Fix: Symbol search in interface detection
+  - Fix: a XERBLA supplied by the user was not found with glibc (RTLD_DEFAULT
+    is NULL there), and the lookups of XERBLA lacked the NULL terminator
   - Fix: GITHUB CI now running
   - Fix: complex return value interface detection with 64-bit integers (GH #104)
   - Fix: invalid sentinel value in a fixed size array

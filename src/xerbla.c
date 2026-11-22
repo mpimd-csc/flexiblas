@@ -103,8 +103,14 @@ int __flexiblas_setup_xerbla(flexiblas_backend_t *backend)
 {
     /* Check if the user supplied a XERBLA function  */
     flexiblas_fortran_xerbla_t xerbla_symbol1, xerbla_symbol2, flexiblas_xerbla_symbol;
-    FLEXIBLAS_FUNCTION_POINTER_ASSIGN(xerbla_symbol1, __flexiblas_lookup_fortran_function(backend->library_handle,"xerbla"));
-    FLEXIBLAS_FUNCTION_POINTER_ASSIGN(xerbla_symbol2, __flexiblas_lookup_fortran_function(RTLD_DEFAULT,"xerbla"));
+    /* RTLD_DEFAULT is NULL with glibc, and __flexiblas_lookup_fortran_function
+     * returns NULL for a NULL handle: search the global scope through the
+     * handle of the program instead. */
+    void *program_handle = dlopen(NULL, RTLD_LAZY);
+    FLEXIBLAS_FUNCTION_POINTER_ASSIGN(xerbla_symbol1, __flexiblas_lookup_fortran_function(backend->library_handle,"xerbla", NULL));
+    FLEXIBLAS_FUNCTION_POINTER_ASSIGN(xerbla_symbol2, __flexiblas_lookup_fortran_function(program_handle,"xerbla", NULL));
+    if (program_handle != NULL)
+        dlclose(program_handle);
     FLEXIBLAS_FUNCTION_POINTER_ASSIGN2(flexiblas_xerbla_symbol, flexiblas_internal_xerbla);
     intptr_t xerbla_symbol1_int;
     intptr_t xerbla_symbol2_int;
